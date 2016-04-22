@@ -1,0 +1,17 @@
+.svn-base
+.svn
+.idea
+.DS_STORE
+/app/config/config.php
+/app/config/old_config.php
+/upload/*
+/media/*
+/var/caches/*
+/var/minify/*
+/var/templates_c/*
+/var/tpl_caches/*
+/var/tmp/*
+/admin/caching/minify/*
+/admin/caching/caches/*
+/admin/caching/templates_c/*
+/admin/caching/tpl_caches/*

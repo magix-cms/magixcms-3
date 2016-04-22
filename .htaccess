@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    #RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+#RewriteRule ^([a-zA-Z]{1,3})/(.*)$		/index.php?strLangue=$1&$2		[QSA,L]
+# ----------------------------------------------------------------------
+# Custom 404 page
+# ----------------------------------------------------------------------
+
+# You can add custom pages to handle 500 or 403 pretty easily, if you like.
+ErrorDocument 403 /index.php?http_error=403
+ErrorDocument 404 /index.php?http_error=404
+ErrorDocument 500 /index.php?http_error=500
