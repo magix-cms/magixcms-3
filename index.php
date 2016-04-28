@@ -3,14 +3,20 @@ require('lib/frontend.inc.php');
 
 $language = new component_core_language('strLangue');
 $language->run();
-
+$home = new frontend_controller_home();
+$home->run();
+/*
 // Create a Router
 $router = new router_route();
 // Before Router Middleware
 $router->before('GET', '/.*', function() use ($router) {
     header('X-Powered-By: Magix CMS');
 });
+$router->get('/fr', function(){
+    print 'test';
+});
 // Root
+/*
 if(http_request::isGet('strLangue')){
     // Mounting Routes
     $router->mount('/'.$_GET['strLangue'], function() use ($router) {
@@ -47,6 +53,6 @@ if(http_request::isGet('strLangue')){
 }else{
     $home = new frontend_controller_home($router);
     $home->run();
-}
+}*/
 // build router
-$router->build();
+//$router->build();

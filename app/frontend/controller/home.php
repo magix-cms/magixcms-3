@@ -42,8 +42,8 @@
 class frontend_controller_home{
     protected $router,$template;
     public $http_error;
-    public function __construct($router){
-        $this->router = $router;
+    public function __construct(){
+        
         $this->template = new frontend_model_template();
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
@@ -72,10 +72,11 @@ class frontend_controller_home{
 
             $this->template->display('error/index.tpl');
         }else{
+            print 'test';
             // Create a Router
-            $this->router->get('/', function(){
+            /*$this->router->get('/', function(){
                 print 'test';
-            });
+            });*/
         }
     }
 }
