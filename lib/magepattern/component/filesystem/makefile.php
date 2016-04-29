@@ -303,7 +303,6 @@ class filesystem_makefile{
             if($object->isDir($name)) continue;
             if($debug == true){
                 $dir[] .=  $name;
-                //magixcjquery_debug_magixfire::magixFireInfo($dir);
             }else{
                 $dir[] .=  @unlink($name);
             }

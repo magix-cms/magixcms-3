@@ -47,8 +47,8 @@ class component_files_upload{
      * @return size
      */
     public static function imageValid($filename,$debug=false){
+        $logger = new debug_logger(MP_LOG_DIR);
         try{
-            $firebug = new debug_firephp();
             if (!function_exists('exif_imagetype')){
                 $size = getimagesize($filename);
                 switch ($size['mime']) {
@@ -62,7 +62,8 @@ class component_files_upload{
                         break;
                 }
                 if($debug!=false){
-                    $firebug->log('exif_imagetype not exist');
+                    $logger->log('php', 'log', 'Log : exif_imagetype not exist', debug_logger::LOG_MONTH);
+                    print ('An error has occured : exif_imagetype not exist');
                 }
             }else{
                 $size = exif_imagetype($filename);
@@ -77,12 +78,12 @@ class component_files_upload{
                         break;
                 }
                 if($debug!=false){
-                    $firebug->log('exif_imagetype exist');
+                    $logger->log('php', 'log', 'Log : exif_imagetype exist', debug_logger::LOG_MONTH);
+                    print ('An error has occured : exif_imagetype exist');
                 }
             }
             return $size;
         }catch(Exception $e) {
-            $logger = new debug_logger(MP_LOG_DIR);
             $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }

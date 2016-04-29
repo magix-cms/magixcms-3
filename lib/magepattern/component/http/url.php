@@ -108,7 +108,7 @@ class http_url{
         array('dot'=>'display','ampersand'=>'strict','cspec'=>array('[\/]'),'rspec'=>array(''))
         );
      */
-    public static function clean($str,$option = array('dot'=>false,'ampersand'=>'strict','cspec'=>'','rspec'=>'')){
+    public static function clean($str,$option = array('dot'=>false,'ampersand'=>'none','cspec'=>'','rspec'=>'')){
         /**Clean accent*/
         $Caracs = array("¥" => "Y", "µ" => "u", "À" => "A", "Á" => "A",
             "Â" => "A", "Ã" => "A", "Ä" => "A", "Å" => "A",
