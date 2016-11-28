@@ -5,6 +5,7 @@ $language = new component_core_language('strLangue');
 $language->run();
 $home = new frontend_controller_home();
 $home->run();
+/* controller for test*/
 /*
 // Create a Router
 $router = new router_route();
