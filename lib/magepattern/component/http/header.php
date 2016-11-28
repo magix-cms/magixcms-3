@@ -224,6 +224,19 @@ class http_header{
         }
     }
 
+	/**
+	 * Definit les entêtes d'une réponse json
+	 */
+	public function set_json_headers()
+	{
+		$this->head_expires("Mon, 26 Jul 1997 05:00:00 GMT");
+		$this->head_last_modified(gmdate( "D, d M Y H:i:s" ) . "GMT");
+		$this->pragma();
+		$this->cache_control("nocache");
+		$this->getStatus('200');
+		$this->json_header("UTF-8");
+	}
+
     /**
      * retourne l'entete html
      * @param string $charset

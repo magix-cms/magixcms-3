@@ -108,7 +108,7 @@ class http_url{
         array('dot'=>'display','ampersand'=>'strict','cspec'=>array('[\/]'),'rspec'=>array(''))
         );
      */
-    public static function clean($str,$option = array('dot'=>false,'ampersand'=>'none','cspec'=>'','rspec'=>'')){
+    public static function clean($str,$option = array('dot'=>false,'ampersand'=>'strict','cspec'=>'','rspec'=>'')){
         /**Clean accent*/
         $Caracs = array("¥" => "Y", "µ" => "u", "À" => "A", "Á" => "A",
             "Â" => "A", "Ã" => "A", "Ä" => "A", "Å" => "A",
@@ -187,7 +187,7 @@ class http_url{
         /*Removes the indent if end of string*/
         $str = rtrim(preg_replace($cSpec,$rSpec,$str),"-");
         /*Convert UTF8 encode*/
-        $str = filter_htmlentities::decode_utf8($str);
+        $str = filter_htmlEntities::decode_utf8($str);
         /*Convert lower case*/
         $str = filter_string::strtolower($str);
         return $str;

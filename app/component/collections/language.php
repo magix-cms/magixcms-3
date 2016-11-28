@@ -44,7 +44,7 @@ class component_collections_language{
      * @return mixed
      */
     public function setDefault(){
-        $sql = 'SELECT idlang,iso FROM mc_lang as lang
+        $sql = 'SELECT id_lang,iso FROM mc_lang as lang
 		WHERE lang.default_lang = 1';
         return component_routing_db::layer()->fetch($sql);
     }
@@ -54,10 +54,10 @@ class component_collections_language{
      * Retourne la liste des langues disponible
      */
     public function setAvailableLang(){
-        $sql = 'SELECT l.idlang, l.iso, l.language
+        $sql = 'SELECT l.id_lang, l.iso, l.language
 	           FROM mc_lang AS l
 	           WHERE l.active_lang = 1
-	           ORDER BY l.idlang';
+	           ORDER BY l.id_lang';
         return component_routing_db::layer()->fetchAll($sql);
     }
 }

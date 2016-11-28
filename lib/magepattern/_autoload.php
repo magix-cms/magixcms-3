@@ -72,7 +72,7 @@ final class magepattern_bootstrap{
     /**
      * Constante Path swiftmailer lib
      */
-    private static $path_swiftmailer = '/package/Swift-5.0.0/lib/swift_required.php';
+    private static $path_swiftmailer = '/package/Swift-5.2.1/lib/swift_required.php';
     /**
      * Constante Path Autoloader magepattern
      */
@@ -86,6 +86,10 @@ final class magepattern_bootstrap{
      */
     private static $path_chrome_logger = '/package/chrome-logger/ChromePhp.php';
     /**
+     * @var string
+     */
+    private static $path_dompdf = '/package/dompdf/autoload.inc.php';
+    /**
      * @access private
      * @return array
      */
@@ -94,7 +98,8 @@ final class magepattern_bootstrap{
             'autoloader' => __DIR__.self::$path_autoloader,
             'firephp'    => __DIR__.self::$path_firephp,
             'chromephp'  => __DIR__.self::$path_chrome_logger,
-            'swift'      => __DIR__.self::$path_swiftmailer
+            'swift'      => __DIR__.self::$path_swiftmailer,
+            'dompdf'     => __DIR__.self::$path_dompdf
         );
     }
     /**

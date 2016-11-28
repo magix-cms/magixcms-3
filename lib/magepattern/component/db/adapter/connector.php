@@ -44,7 +44,7 @@
  * Time: 23:12
  *
  */
-abstract class db_adapter_connector {
+abstract class db_adapter_connector{
     /**
      * @access private
      * SGBD host

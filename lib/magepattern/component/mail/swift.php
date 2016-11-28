@@ -36,6 +36,7 @@
 # needs please refer to http://www.magepattern.com for more information.
 #
 # -- END LICENSE BLOCK -----------------------------------
+use CSSInliner\CSSInliner;
 
 class mail_swift{
 	/**
@@ -136,7 +137,7 @@ class mail_swift{
 		       ->setFrom($from)
 		       ->setTo($recipient)
 		       ->setBody($bodyhtml,'text/html')
-		       ->addPart(magixcjquery_form_helpersforms::inputTagClean($bodyhtml),'text/plain');
+		       ->addPart(form_inputEscape::tagClean($bodyhtml),'text/plain');
 		if($setReadReceiptTo){
 			$sw_message->setReadReceiptTo($setReadReceiptTo);
 		}
@@ -218,6 +219,33 @@ class mail_swift{
         }
     }
 
+	/**
+	 * CSS Inliner for responsive mail
+	 * @param $html
+	 * @param null $css
+	 * @param bool $debug
+	 * @return string
+	 */
+	public function plugin_css_inliner($html, $css = null, $debug = false) {
+		$inliner = new CSSInliner();
+
+		if($css != null) {
+			if(is_array($css)) {
+				foreach ($css as $dir => $c) {
+					if (is_array($c)) {
+						foreach ($c as $d => $file) {
+							$inliner->addCSS('skin/' .frontend_model_template::frontendTheme()->themeSelected(). $d . '/' . $file);
+						}
+					} else {
+						$inliner->addCSS('skin/' .frontend_model_template::frontendTheme()->themeSelected(). $dir . '/' . $c);
+					}
+				}
+			}
+		}
+
+		return $inliner->render($html,$debug);
+	}
+
     /**
      * Envoi du message avec la méthode batch send
      * @param string $message
@@ -229,12 +257,12 @@ class mail_swift{
      */
     public function batch_send_mail($message,$failures=false,$log=false){
     	if(!$this->_mailer->send($message)){
-            debug_firephp::dump("Failures: ", $failures);
+            print ("Failures: ". $failures);
     	}
     	if($log){
 	    	$echologger = new Swift_Plugins_Loggers_EchoLogger();
 			$this->_mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($echologger));
-	    	debug_firephp::dump("Failures: ",$echologger->dump());
+	    	print "Failures: ".$echologger->dump();
             $logger = new debug_logger(MP_LOG_DIR);
             $logger->log('mail', 'Failures', 'Failures : '.$echologger->dump(), debug_logger::LOG_VOID);
     	}

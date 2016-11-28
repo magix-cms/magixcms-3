@@ -49,11 +49,74 @@ class pagination_factory{
      * calculate page offset
      * @access public
      * @param int $limit
-     * @param $getpage
+     * @param $currentPage
      * @return int
      */
-    public function pageOffset($limit=10,$getpage){
-        return $limit * (abs($getpage)-1);
+    public function pageOffset($limit=10,$currentPage){
+        return $limit * (abs($currentPage)-1);
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    private function setPager($data)
+    {
+        $output = array();
+        if(is_array($data)) {
+            $total['items'] = $data['items'];
+            $total['perPage'] = $data['perPage'];
+            if (!isset($data['currentPage'])) {
+                $data['currentPage'] = 1;
+            }
+
+            if ($total['items'] >= $total['perPage']) {
+                $total['page'] = ceil($total['items'] / $total['perPage']);
+
+                // Si je ne suis pas sur la première page, je retourne les liens first et previous
+                if ($data['currentPage'] > 1) {
+                    $output[] = array(
+                        'name' => 'first',
+                        'url' => $data['baseUrl']
+                    );
+                    $output[] = array(
+                        'name' => 'previous',
+                        'url' => $data['baseUrl'] . ($data['currentPage'] - 1)
+                    );
+                }
+
+                // Construction de chaque numéro de page
+                for ($i = 1; $i <= $total['page']; $i++) {
+                    $output[] = array(
+                        'name' => $i,
+                        'url' => $data['baseUrl'] . $i
+                    );
+                }
+
+                // Si je ne suis pas sur la dernière page, je retourne les liens next et last
+                if ($data['currentPage'] < $total['page']) {
+                    $output[] = array(
+                        'name' => 'next',
+                        'url' => $data['baseUrl'] . ($data['currentPage'] + 1)
+                    );
+                    $output[] = array(
+                        'name' => 'last',
+                        'url' => $data['baseUrl'] . $total['page']
+                    );
+                }
+            }
+        }
+        return $output;
+    }
+
+    /**
+     * @param $data
+     * @return array
+     * @example :
+     * getPager(array('items'=>20,'perPage'=>5,'currentPage'=>1,'baseUrl'=>'/test.php?page='));
+     */
+    public function getPager($data){
+        return $this->setPager($data);
     }
     /**
      * @param $getdata
@@ -63,6 +126,7 @@ class pagination_factory{
      * @param array $css_param
      * @param bool $debug
      * @return string
+     * @deprecated
      * @example:
      *
         $max = 10

@@ -36,14 +36,6 @@
 # needs please refer to http://www.magepattern.com for more information.
 #
 # -- END LICENSE BLOCK -----------------------------------
-
-/**
- * Created by SC BOX.
- * User: Gerits Aurelien
- * Date: 2/07/12
- * Time: 23:55
- *
- */
 class db_layer{
     /**
      * @access protected
@@ -69,9 +61,9 @@ class db_layer{
      * @var array
      */
     protected static $setOption = array(
-        'mode'=>'assoc',
-        'closeCursor'=>true,
-        'debugParams'=>false
+        'mode'          =>  'assoc',
+        'closeCursor'   =>  true,
+        'debugParams'   =>  false
     );
 
     /**
@@ -83,8 +75,11 @@ class db_layer{
      * @var boolean
      */
     protected $isPrepared = false;
+
     /**
-     *  Construct
+     * db_layer constructor.
+     * @param bool $config
+     * @throws Exception
      */
     public function __construct($config = false){
         try{
@@ -100,6 +95,7 @@ class db_layer{
                     }else{
                         $this->config['port'] = '3306';
                     }
+                    //$this->config['options'] = array(PDO::ATTR_AUTOCOMMIT=>0);
                     /*if(array_key_exists('unix_socket', $config)){
                         $this->config['unix_socket'] = $config['unix_socket'];
                     }else{
@@ -107,14 +103,16 @@ class db_layer{
                     }*/
                 }
             }else{
+                //$this->config['options'] = array(PDO::ATTR_AUTOCOMMIT=>0);
                 $this->config['charset'] = 'utf8';
                 $this->config['port'] = '3306';
                 //$this->config['unix_socket'] = '3306';
             }
-            self::connection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            //$this->connection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         }catch (PDOException $e){
             $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+            $logger->log('statement', 'db', 'An Exception PDO has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
@@ -130,13 +128,19 @@ class db_layer{
      * Charge la class correspondant au driver sélectionné
      * @return PDO
      */
-    private function connection(){
+    public function connection(){
         switch(self::driver()){
-            case 'mysql':
+            case 'mysql' || 'mariadb':
                 $adapter = new db_adapter_mysql();
                 break;
             case 'pgsql':
                 $adapter = new db_adapter_postgres();
+                break;
+            case 'sqlite':
+                $adapter = new db_adapter_sqlite();
+                break;
+            default:
+                $adapter = null;
                 break;
         }
         return $adapter->connect($this->config);
@@ -202,24 +206,26 @@ class db_layer{
     public function query($query)
     {
         try{
-            return self::connection()->query($query);
+            return $this->connection()->query($query);
         }catch (PDOException $e){
             $logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
             $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
+
     /**
      *  Prepares a statement for execution and returns a statement object
      *
      * @param request containt $sql
-     * @return void
+     * @return PDOStatement
+     * @throws Exception
      */
     public function prepare($sql){
         try{
             if ($this->isPrepared) {
                 throw new Exception('This statement has been prepared already');
             }
-            return self::connection()->prepare($sql);
+            return $this->connection()->prepare($sql);
             $this->isPrepared = true;
 
         }catch (PDOException $e){
@@ -235,7 +241,52 @@ class db_layer{
     {
         return $this->isPrepared;
     }
-
+    /**
+     *  Initiates a beginTransaction
+     *
+     * @internal param void $sql
+     * @return void
+     */
+    public function beginTransaction(){
+        if ( $this->inTransaction ) {
+            return false;
+        } else {
+            $connection = $this->connection();
+            $connection->beginTransaction();
+            return $connection;
+        }
+        $this->inTransaction = true;
+    }
+    /**
+     * instance exec
+     *
+     * @param void $sql
+     */
+    public function exec($sql){
+        $this->connection()->exec($sql);
+    }
+    /**
+     * instance commit
+     *
+     */
+    public function commit(){
+        $this->connection()->commit();
+        $this->inTransaction = false;
+    }
+    /**
+     * instance rollback
+     *
+     */
+    public function rollBack(){
+        if($this->connection()->inTransaction()){
+            $this->connection()->rollBack();
+            $this->inTransaction = false;
+        }else{
+            // throw new Exception('Must call beginTransaction() before you can rollback');
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('statement', 'db', 'Must call beginTransaction() before you can rollback', debug_logger::LOG_MONTH);
+        }
+    }
     /**
      * Retourne un tableau contenant toutes les lignes du jeu d'enregistrements
      * @param $sql
@@ -293,10 +344,11 @@ class db_layer{
      * @param bool $execute
      * @param bool $setOption
      * @return mixed
+     * @throws Exception
      * @example:
      *
      * $select =  $db->fetch('SELECT id, color,name FROM fruit');
-        print $select['name'];
+     * print $select['name'];
      */
     public function fetch($sql,$execute=false,$setOption=false){
         try{
@@ -327,6 +379,7 @@ class db_layer{
      * @param bool $execute
      * @param bool $setOption
      * @return mixed
+     * @throws Exception
      */
     public function fetchObject($sql,$execute=false,$setOption=false){
         try{
@@ -432,62 +485,66 @@ class db_layer{
     }
 
     /**
-     *  Initiates a beginTransaction
+     * Effectuer une Transaction prépare
      *
-     * @internal param void $sql
-     * @return void
-     */
-    public function beginTransaction(){
-        self::connection()->beginTransaction();
-        $this->inTransaction = true;
-    }
-    /**
-     * instance exec
+     * @param $queries
+     * @param array $config
      *
-     * @param void $sql
-     */
-    public function exec($sql){
-        self::connection()->exec($sql);
-    }
-    /**
-     * instance commit
+     * Example (prepare request with named parameters)
+     * $queries = array(
+     *   array('request'=>'DELETE FROM mytable WHERE id =:id','params'=>array(':id' => $id))
+     * );
      *
-     */
-    public function commit(){
-        self::connection()->commit();
-        $this->inTransaction = false;
-    }
-    /**
-     * instance rollback
+     * OR (prepare request with question mark parameters)
      *
+     * $queries = array(
+     *   array('request'=>'DELETE FROM mytable WHERE id = ?','params'=>array($id))
+     * );
+     * component_routing_db::layer()->transaction($queries,array('type'=>'prepare'));
+     *
+     * Example (exec request)
+     * $sql = array(
+     *   'DELETE FROM mytable WHERE id ='.$id
+     * );
+     * component_routing_db::layer()->transaction($queries,array('type'=>'exec'));
      */
-    public function rollback(){
-        self::connection()->rollBack();
-        if (!$this->inTransaction) {
-            throw new Exception('Must call beginTransaction() before you can rollback');
-        }
-    }
-
-    /**
-     * Effetcuer une Transaction
-     * @param $sql
-     * @throws Exception
-     */
-    public function transaction($sql){
+    public function transaction($queries,$config = array('type'=>'prepare')){
         try{
-            $this->beginTransaction();
-            if(is_array($sql)){
-                foreach ($sql as $key){
-                    $this->exec($key);
+            $transaction = $this->beginTransaction();
+            if($transaction->inTransaction()){
+                if(is_array($queries)){
+                    foreach ($queries as $key => $value){
+                        if($config['type'] === 'prepare'){
+                            if(is_array($value)) {
+                                if (isset($value['request'])) {
+                                    $this->isPrepared = true;
+                                    $prepare = $transaction->prepare($value['request']);
+                                    if(is_object($prepare)) {
+                                        $value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
+                                    }else{
+                                        throw new Exception('delete Error with SQL prepare transaction');
+                                    }
+                                }
+                            }
+                        }elseif($config['type'] === 'exec'){
+                            if(!is_array($value)){
+                                $this->isPrepared = false;
+                                $transaction->exec($value);
+                            }
+                        }
+                    }
+                    $transaction->commit();
+                }else{
+                    throw new Exception("queries params is not array");
                 }
-                $this->commit();
             }else{
-                throw new Exception("Exec transaction is not array");
+                $logger = new debug_logger(MP_LOG_DIR);
+                $logger->log('statement', 'db', 'inTransaction : false', debug_logger::LOG_MONTH);
             }
         }catch(Exception $e){
-            $this->rollback();
             $logger = new debug_logger(MP_LOG_DIR);
             $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+            $this->rollBack();
         }
     }
 
@@ -697,20 +754,20 @@ class db_layer{
      * @param integer $column
      */
     public function getColumnMeta($column){
-        return self::connection()->getColumnMeta($column);
+        return $this->connection()->getColumnMeta($column);
     }
     /**
      * Return an array of available PDO drivers
      * @return array(void)
      */
     public function availableDrivers(){
-        return self::connection()->getAvailableDrivers();
+        return $this->connection()->getAvailableDrivers();
     }
     /**
      * Returns the ID of the last inserted row or sequence value
      */
     public function lastInsertId(){
-        return self::connection()->lastInsertId();
+        return $this->connection()->lastInsertId();
     }
     /**
      * Quotes a string for use in a query.
@@ -718,14 +775,14 @@ class db_layer{
      * @return string
      */
     public function quote($string){
-        return self::connection()->quote($string);
+        return $this->connection()->quote($string);
     }
     /**
      * Advances to the next rowset in a multi-rowset statement handle
      * @return void
      */
     public function nextRowset(){
-        return self::connection()->nextRowset();
+        return $this->connection()->nextRowset();
     }
 }
 ?>

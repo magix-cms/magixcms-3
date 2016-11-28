@@ -118,6 +118,7 @@ class file_finder{
     /**
      * return size directory in bytes
      * @param string $directory
+     * @return string
      */
     public function sizeDirectory($directory){
         try{
@@ -174,7 +175,7 @@ class file_finder{
 
     /**
      * filterFiles => filter files with extension
-     * $t = new magixcjquery_files_makefiles();
+     * $t = new file_finder();
      * var_dump($t->filterFiles('mydir',array('gif','png','jpe?g')));
      * or
      * var_dump($t->filterFiles('mydir','php'));

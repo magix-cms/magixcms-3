@@ -66,7 +66,7 @@ class http_curl{
      */
     public function copyRemoteFile($url, $directory, $status = null, $debug = false){
         try{
-            if (self::curl_exist()) {
+            if ($this->curl_exist()) {
                 //INIT curl
                 $ch = curl_init ($url);
                 curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -114,7 +114,7 @@ class http_curl{
             }
         }catch (Exception $e){
             $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('error', 'php', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_VOID);
+            $logger->log('error', 'php Curl', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_VOID);
         }
     }
 
@@ -129,7 +129,7 @@ class http_curl{
      */
     public function isDomainAvailible($url,$ssl = false,$debug=false) {
         try{
-            if (self::curl_exist()) {
+            if ($this->curl_exist()) {
                 //check, if a valid url is provided
                 if(!filter_var($url, FILTER_VALIDATE_URL)){
                     return false;
@@ -146,17 +146,260 @@ class http_curl{
                 }
                 //get answer
                 $response = curl_exec($curlInit);
+                $curlInfo = curl_getinfo($curlInit);
                 curl_close($curlInit);
-                if($debug){
-                    $firephp = new debug_firephp();
-                    $firephp->log($response);
+                if ($debug) {
+                    var_dump($curlInfo);
+                    var_dump($response);
                 }
-                if ($response) return true;
-                return false;
+                /*if ($response) return true;
+                return false;*/
+                if ($curlInfo['http_code'] == '200') {
+                    if ($response) {
+                        return true;
+                    }
+                }else{
+                    return false;
+                }
             }
         }catch (Exception $e){
             $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('error', 'php', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_VOID);
+            $logger->log('error', 'php Curl', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_VOID);
+        }
+    }
+    /* ##################################### Utility with Curl for External Web Service ##########################################*/
+    /**
+     * Prepare request Data with Curl (no files)
+     * @param $data
+     * @return mixed
+     *
+    $json = json_encode(array(
+    'category'=>array(
+    'id'  =>'16'
+    )));
+    print_r($json);
+    print $this->webservice->setPrepareSendData(array(
+    'wsAuthKey' => $this->setWsAuthKey(),
+    'method' => 'xml',
+    'data' => $test,
+    'customRequest' => 'DELETE',
+    'debug' => false,
+    'url' => 'http://www.mywebsite.tld/webservice/catalog/categories/'
+    ));
+     */
+    public function setPrepareSendData($data){
+        try {
+            if ($this->curl_exist()) {
+                $curl_params = array();
+                $encodedAuth = $data['wsAuthKey'];
+                $generatedData = urlencode($data['data']);
+                switch ($data['method']) {
+                    case 'json';
+                        $headers = array("Authorization : Basic " . $encodedAuth, 'Content-type: application/json', 'Accept: application/json');
+                        break;
+                    case 'xml';
+                        $headers = array("Authorization : Basic " . $encodedAuth, 'Content-type: text/xml', 'Accept: text/xml');
+                        break;
+                }
+
+                $options = array(
+                    CURLOPT_HEADER => 0,
+                    CURLINFO_HEADER_OUT => 1,                // For debugging
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_NOBODY => false,
+                    CURLOPT_URL => $data['url'],
+                    CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                    CURLOPT_USERPWD => $encodedAuth,
+                    CURLOPT_HTTPHEADER => $headers,
+                    //CURLOPT_POST          => true,
+                    //CURLOPT_FORBID_REUSE  => 1,
+                    //CURLOPT_FRESH_CONNECT =>1,
+                    CURLOPT_CONNECTTIMEOUT => 300,
+                    CURLOPT_CUSTOMREQUEST => $data['customRequest'],
+                    CURLOPT_POSTFIELDS => $generatedData
+                    //CURLOPT_SAFE_UPLOAD     => false*/
+                );
+                $ch = curl_init();
+                curl_setopt_array($ch, $options);
+                $response = curl_exec($ch);
+                $curlInfo = curl_getinfo($ch);
+                curl_close($ch);
+                // Data
+                /*$header = trim(substr($response, 0, $curlInfo['header_size']));
+                $body = substr($response, $curlInfo['header_size']);
+
+                print_r(array('status' => $curlInfo['http_code'], 'header' => $header, 'data' => json_decode($body)));*/
+                if (array_key_exists('debug', $data) && $data['debug']) {
+                    var_dump($curlInfo);
+                    var_dump($response);
+                }
+                if ($curlInfo['http_code'] == '200') {
+                    if ($response) {
+                        return $response;
+                    }
+                }
+            }
+        }catch (Exception $e){
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('error', 'php Curl', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+    }
+
+    /**
+     * Prepare post Img with Curl (files only)
+     * @param $data
+     * @return mixed
+    print $this->webservice->setPreparePostImg(array(
+    'wsAuthKey' =>  $this->setWsAuthKey(),
+    'url'       => 'http://www.website.tld/webservice/catalog/categories/3',
+    'debug' => false,
+    ));
+     */
+    public function setPreparePostImg($data){
+        try {
+            if ($this->curl_exist()) {
+                if (isset($_FILES)) {
+                    $ch = curl_init();
+
+                    $curl_params = array();
+                    $encodedAuth = $data['wsAuthKey'];
+
+                    $img = array(
+                        'img' =>
+                            '@' . $_FILES['img']['tmp_name']
+                            . ';filename=' . $_FILES['img']['name']
+                            . ';type=' . $_FILES['img']['type']
+                    );
+
+                    $options = array(
+                        CURLOPT_HEADER          => 0,
+                        CURLOPT_RETURNTRANSFER  => true,
+                        CURLINFO_HEADER_OUT     => true,
+                        CURLOPT_URL             => $data['url'],
+                        CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                        CURLOPT_USERPWD         => $encodedAuth,
+                        CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: multipart/form-data"*/),
+                        CURLOPT_CUSTOMREQUEST   => "POST",
+                        CURLOPT_POST            => true,
+                        CURLOPT_POSTFIELDS      => $img
+                        //CURLOPT_SAFE_UPLOAD   => false
+                    );
+                    $ch = curl_init();
+                    curl_setopt_array($ch, $options);
+                    $response = curl_exec($ch);
+                    $curlInfo = curl_getinfo($ch);
+                    curl_close($ch);
+                    if(array_key_exists('debug',$data) && $data['debug']){
+                        var_dump($curlInfo);
+                        var_dump($response);
+                    }
+                    if ($curlInfo['http_code'] == '200') {
+                        if ($response) {
+                            return $response;
+                        }
+                    }
+                }
+            }
+        }catch (Exception $e){
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('error', 'php Curl', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+    }
+
+    /**
+     * Send Copy file on remote url
+     * @param $data
+     * @return mixed
+     */
+    public function setSendCopyImg($data){
+        try {
+            if ($this->curl_exist()) {
+                if (isset($data['file'])) {
+                    $encodedAuth = $data['wsAuthKey'];
+                    $img = array(
+                        'img' =>
+                            '@' . $data['file']
+                            . ';filename=' . $data['filename'],
+                        //. ';type=image/jpeg'
+                        'data'  =>  $data['data']
+                    );
+
+                    $options = array(
+                        CURLOPT_HEADER          => 0,
+                        CURLOPT_RETURNTRANSFER  => true,
+                        CURLINFO_HEADER_OUT     => true,
+                        CURLOPT_URL             => $data['url'],
+                        CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                        CURLOPT_USERPWD         => $encodedAuth,
+                        CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
+                        //CURLOPT_CUSTOMREQUEST   => "POST",
+                        CURLOPT_POST            => true,
+                        CURLOPT_POSTFIELDS      => $img
+                        //CURLOPT_SAFE_UPLOAD   => false
+                    );
+                    $ch = curl_init();
+                    curl_setopt_array($ch, $options);
+                    $response = curl_exec($ch);
+                    $curlInfo = curl_getinfo($ch);
+                    curl_close($ch);
+                    if(array_key_exists('debug',$data) && $data['debug']){
+                        var_dump($curlInfo);
+                        var_dump($response);
+                    }
+
+                    if ($curlInfo['http_code'] == '200') {
+                        if ($response) {
+                            return $response;
+                        }
+                    }
+                }
+            }
+        }catch (Exception $e){
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('error', 'php Curl', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function setPrepareGet($data){
+        try {
+            if ($this->curl_exist()) {
+                $curl_params = array();
+                $encodedAuth = $data['wsAuthKey'];
+                $options = array(
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLINFO_HEADER_OUT => true,
+                    CURLOPT_URL => $data['url'],
+                    CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                    CURLOPT_USERPWD => $encodedAuth,
+                    CURLOPT_HTTPHEADER => array("Content-Type: text/xml; charset=utf-8"),
+                    CURLOPT_CUSTOMREQUEST => "GET"
+                );
+
+                $ch = curl_init();
+                curl_setopt_array($ch, $options);
+
+                $response = curl_exec($ch);
+                $curlInfo = curl_getinfo($ch);
+                curl_close($ch);
+                if (array_key_exists('debug', $data) && $data['debug']) {
+                    var_dump($curlInfo);
+                    var_dump($response);
+                }
+                if ($curlInfo['http_code'] == '200') {
+                    if ($response) {
+                        return $response;
+                    }
+                }
+
+            }
+        }catch
+            (Exception $e){
+                $logger = new debug_logger(MP_LOG_DIR);
+                $logger->log('error', 'php Curl', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 }

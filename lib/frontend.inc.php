@@ -43,6 +43,15 @@ if (file_exists($config_in)) {
 	throw new Exception('Error Ini Common Files');
 	exit;
 }
+
+$phpthumb = dirname(__FILE__).'/phpthumb/ThumbLib.inc.php';
+if (file_exists($phpthumb)) {
+    require ($phpthumb);
+}else{
+    print 'Error thumbnail Config';
+    exit;
+}
+
 /**
  * Chargement du Bootsrap
  */
@@ -52,6 +61,7 @@ if (file_exists($bootstrap)){
 }else{
     throw new Exception('Boostrap is not exist');
 }
+
 /**
  * Autoloader registerPrefixes pour les composants du CMS
  */

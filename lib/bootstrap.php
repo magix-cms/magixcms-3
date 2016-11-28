@@ -68,6 +68,16 @@ if (file_exists($smarty)) {
 	exit;
 }
 /**
+ * Include CSS Inliner
+ */
+$cssinliner = dirname(__FILE__).'/cssinliner/_init.php';
+if (file_exists($cssinliner)) {
+	require ($cssinliner);
+}else{
+	print 'Error CSSInliner Config';
+	exit;
+}
+/**
  * Constante Firephp
  */
 if(defined('MP_FIREPHP')){

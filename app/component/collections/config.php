@@ -40,7 +40,7 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_collections_config{
-    private static function buildClauseWhere ($filter,$ouput='both')
+    /*private static function buildClauseWhere ($filter,$ouput='both')
     {
         if (!empty($filter)) {
             $clause['where'] = ' WHERE ';
@@ -84,5 +84,26 @@ class component_collections_config{
     	WHERE attr_name = :attr_name';
         $query  .=  $clause['where'];
         return component_routing_db::layer()->fetch($query,$values);
+    }*/
+    /**
+     * @param $data
+     * @return array
+     */
+    public function fetchImg($data){
+        if(is_array($data)) {
+            if (array_key_exists('context', $data)) {
+                $context = $data['context'];
+            }
+            if($context === 'imgSize'){
+                $sql = 'SELECT csi.*
+                        FROM ap_config_size_img AS csi
+                        WHERE csi.attr_name = :attr_name
+                        ORDER BY csi.width DESC';
+                return component_routing_db::layer()->fetchAll($sql,array(
+                    ':attr_name' => $data['attr_name']
+                ));
+            }
+        }
+
     }
 }

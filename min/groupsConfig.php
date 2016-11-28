@@ -13,21 +13,33 @@
 
 return array(
     'publicjs' => array(
-        '//libjs/jquery-1.11.1.min.js',
-        '//libjs/jquery-ui-1.10.3.custom.min.js',
-        '//libjs/vendor/jquery.form.3.51.min.js',
-        '//libjs/vendor/jquery.validate.1.13.0.min.js'
+        '//skin/js/vendor/jquery-3.0.0.min.js',
+        '//skin/js/vendor/bootstrap.min.js',
+        '//skin/js/vendor/Chart.bundle.min.js',
+        '//skin/js/vendor/bootstrap2-toggle.min.js',
+        '//skin/js/vendor/jquery.form.3.51.min.js',
+        '//skin/js/vendor/jquery.validate.1.15.0.min.js',
+        '//skin/js/vendor/redirect.js'
     ),
 	'jimagine' => array(
-        '//libjs/jimagine/config.js',
-        '//libjs/jimagine/jmConstant.js',
-	    '//libjs/jimagine/plugins/jquery.nicenotify.js',
-        '//libjs/jimagine/plugins/jquery.jmShowIt.js'
+        '//skin/js/vendor/jimagine/config.js',
+        '//skin/js/vendor/jimagine/jmConstant.js',
+	    '//skin/js/vendor/jimagine/plugins/jquery.nicenotify.js',
+        '//skin/js/vendor/jimagine/plugins/jquery.jmShowIt.js'
     ),
-	'globalize'=> array(
-        '//libjs/globalize/globalize.js',
-        '//libjs/globalize/cultures/globalize.cultures.js'
+    'globalize'=> array(
+        '//skin/js/vendor/cldr.js',
+        '//skin/js/vendor/globalize.js',
+        '//skin/js/vendor/globalize/message.js'
     ),
+    'publiccss' => array(
+        '//skin/css/bootstrap/critical.min.css',
+        '//skin/css/bootstrap/bootstrap.min.css',
+        '//skin/css/bootstrap2-toggle.min.css'
+    ),
+	'pdfcss' => array(
+		'//skin/css/pdf/print.min.css',
+	),
     'maxAge' => 31536000,
     'setExpires' => time() + 86400 * 365
 );
