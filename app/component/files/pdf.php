@@ -14,6 +14,7 @@ class component_files_pdf{
     protected $dompdf,$message, $template, $header,$filesystem;
     protected $default = array(
         'template'  =>  '',
+        'lang'  	=>  '',
         'stream'    =>  false,
         'pathfile'  =>  '',
         'filename'  =>  '',
@@ -26,8 +27,8 @@ class component_files_pdf{
     function __construct($debug = false)
     {
         $this->message = new component_core_message();
-        $this->template = new frontend_model_template();
         $this->header = new http_header();
+		$this->template = new frontend_model_template();
         $formClean = new form_inputEscape();
         $this->filesystem = new filesystem_makefile();
         $options = new Options();
@@ -76,6 +77,7 @@ class component_files_pdf{
 
         //print_r($config);
         if(is_array($config)){
+        	if($config['lang'] != '') $this->template->configLangLoad($config['lang']);
             $fetch = $this->template->fetch($config['template']);
             $pdf = $this->dompdf;
             $pdf->output(['isRemoteEnabled' => true]);
@@ -86,7 +88,7 @@ class component_files_pdf{
             /*$file_name = md5(uniqid(mt_rand(), true));
             $pdf_file_name = $file_name . '.pdf';*/
             // Render the HTML as PDF
-            $pdf->render();
+			$pdf->render();
             // Create files
             if(file_exists(component_core_system::basePath().$config['pathfile'])){
                 file_put_contents(component_core_system::basePath().$config['pathfile'].$config['filename'], $this->dompdf->output());

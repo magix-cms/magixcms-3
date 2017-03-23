@@ -16,6 +16,7 @@ class component_core_message{
         $this->template = new frontend_model_template();
 		$this->header = new http_header();
     }
+
     /**
      * Retourne le message de notification
      * @param $notify

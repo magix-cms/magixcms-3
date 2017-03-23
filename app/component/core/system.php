@@ -4,11 +4,11 @@
 #
 # This file is part of MAGIX CMS.
 # MAGIX CMS, The content management system optimized for users
-# Copyright (C) 2008 - 2013 magix-cms.com <support@magix-cms.com>
+# Copyright (C) 2008 - 2017 magix-cms.com <support@magix-cms.com>
 #
 # OFFICIAL TEAM :
 #
-#   * Gerits Aurelien (Author - Developer) <aurelien@magix-cms.com> <contact@aurelien-gerits.be>
+#   * Gerits Aurelien (Author - Developer) <aurelien@magix-cms.com>
 #
 # Redistributions of files must retain the above copyright notice.
 # This program is free software: you can redistribute it and/or modify
@@ -32,13 +32,6 @@
 # versions in the future. If you wish to customize MAGIX CMS for your
 # needs please refer to http://www.magix-cms.com for more information.
 */
-/**
- * Author: Gerits Aurelien <aurelien[at]magix-cms[point]com>
- * Copyright: MAGIX CMS
- * Date: 13/12/13
- * Time: 00:32
- * License: Dual licensed under the MIT or GPL Version
- */
 class component_core_system{
     /**
      * Retourne le dossier base(ROOT) de Magix CMS

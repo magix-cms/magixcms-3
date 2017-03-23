@@ -80,9 +80,9 @@ if (file_exists($cssinliner)) {
 /**
  * Constante Firephp
  */
-if(defined('MP_FIREPHP')){
+/*if(defined('MP_FIREPHP')){
 	if(MP_FIREPHP){
 		debug_firephp::configErrorHandler();
 	}
-}
+}*/
 ?>

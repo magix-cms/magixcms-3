@@ -51,13 +51,13 @@ define('MP_DBUSER','root');
 define('MP_DBPASSWORD','root');
 
 // Database name
-define('MP_DBNAME','magixcms_2_4_0');
+define('MP_DBNAME','magixcms');
 
 // DEBUG ('debug' OR 'log' OR false)
-define('MP_LOG','debug');
+define('MP_LOG','log');
 
 // Path for error log
-define('MP_LOG_DIR','/Applications/MAMP/htdocs/magixcms3/var/caching/report');
+define('MP_LOG_DIR','C:\wamp\www\magixcms-3\var\logs');
 
 // FirePHP (false or true)
 define('MP_FIREPHP',false);

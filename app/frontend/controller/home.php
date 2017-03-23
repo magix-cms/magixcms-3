@@ -72,11 +72,7 @@ class frontend_controller_home{
 
             $this->template->display('error/index.tpl');
         }else{
-            print 'test';
-            // Create a Router
-            /*$this->router->get('/', function(){
-                print 'test';
-            });*/
+            $this->template->display('home/index.tpl');
         }
     }
 }

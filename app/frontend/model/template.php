@@ -139,7 +139,18 @@ class frontend_model_template{
 	 * @param string $section
 	 */
 	public static function configLoad($section = ''){
-		frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad(self::$ConfigFile), $section);
+	    try {
+            frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad(self::$ConfigFile), $section);
+            $theme = frontend_model_template::load_theme();
+            if ($theme !== 'default') {
+                if (file_exists(magixglobal_model_system::base_path() . '/skin/' . frontend_model_template::frontendTheme()->themeSelected() . '/i18n/')) {
+                    frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad('theme_'));
+                }
+            }
+        }catch(Exception $e) {
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
 	}
 
 	/**
