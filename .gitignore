@@ -2,14 +2,14 @@
 .svn
 .idea
 .DS_STORE
-/app/config/config.php
-/app/config/old_config.php
+/app/init/config.php
 /upload/*
 /media/*
 /var/caches/*
 /var/minify/*
 /var/templates_c/*
 /var/tpl_caches/*
+/var/logs/*
 /var/tmp/*
 /admin/caching/minify/*
 /admin/caching/caches/*

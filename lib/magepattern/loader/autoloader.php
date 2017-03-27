@@ -50,6 +50,7 @@ class autoloader{
      * @var array $prefixFallbacks
      */
     private $prefixFallbacks = array();
+    private $fallbackDirs = array();
 
     /**
      * Gets the configured class prefixes.
@@ -59,6 +60,16 @@ class autoloader{
     public function getPrefixes()
     {
         return $this->prefixes;
+    }
+
+    /**
+     * Returns fallback directories.
+     *
+     * @return array
+     */
+    public function getFallbackDirs()
+    {
+        return $this->fallbackDirs;
     }
 
     /**
@@ -98,6 +109,7 @@ class autoloader{
     }
 
     /**
+     * @deprecated
      * Registers an array of classes using the PEAR naming convention.
      *
      * @param array $classes An array of classes (prefixes as keys and locations as values)
@@ -116,6 +128,7 @@ class autoloader{
     }
 
     /**
+     * @deprecated
      * Registers a set of classes using the PEAR naming convention.
      *
      * @param string       $prefix  The classes prefix
@@ -127,6 +140,51 @@ class autoloader{
     {
         $prefix = rtrim($prefix, self::PREFIX_SEPARATOR). self::PREFIX_SEPARATOR;
         $this->prefixes[$prefix] = (array) $paths;
+    }
+
+    /**
+     * Adds prefixes.
+     *
+     * @param array $prefixes Prefixes to add
+     * @throws Exception
+     */
+    public function addPrefixes(array $prefixes)
+    {
+        if (!is_array($prefixes)) {
+            throw new Exception('Prefix pairs must be either an array or Traversable');
+        }
+        foreach ($prefixes as $prefix => $path) {
+            $this->addPrefix($prefix, $path);
+        }
+    }
+
+    /**
+     * Registers a set of classes.
+     *
+     * @param string       $prefix The classes prefix
+     * @param array|string $paths  The location(s) of the classes
+     */
+    public function addPrefix($prefix, $paths)
+    {
+        if (!$prefix) {
+            foreach ((array) $paths as $path) {
+                $this->fallbackDirs[] = $path;
+            }
+            return;
+        }
+
+        if (isset($this->prefixes[$prefix])) {
+            if (is_array($paths)) {
+                $this->prefixes[$prefix] = array_unique(array_merge(
+                    $this->prefixes[$prefix],
+                    $paths
+                ));
+            } elseif (!in_array($paths, $this->prefixes[$prefix])) {
+                $this->prefixes[$prefix][] = $paths;
+            }
+        } else {
+            $this->prefixes[$prefix] = array_unique((array) $paths);
+        }
     }
 
     /**
@@ -145,11 +203,13 @@ class autoloader{
      * Loads the given class or interface.
      *
      * @param string $class The name of the class
+     * @return bool
      */
     private function loadClass($class){
     	$file = $this->findFile($class);
         if ($file) {
             require $file;
+            return true;
         }
     }
 

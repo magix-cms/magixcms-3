@@ -66,9 +66,10 @@ if (file_exists($bootstrap)){
  * Autoloader registerPrefixes pour les composants du CMS
  */
 $loader = new autoloader();
-$loader->registerPrefixes(array(
+$loader->addPrefixes(array(
     'component' => 'app',
     'frontend' => 'app'
 ));
+$loader->addPrefix('plugins',filter_path::basePath(array('lib','magepattern')));
 $loader->register();
 ?>

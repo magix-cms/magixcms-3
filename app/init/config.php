@@ -51,7 +51,7 @@ define('MP_DBUSER','root');
 define('MP_DBPASSWORD','root');
 
 // Database name
-define('MP_DBNAME','magixcms');
+define('MP_DBNAME','magixcms_3');
 
 // DEBUG ('debug' OR 'log' OR false)
 define('MP_LOG','log');

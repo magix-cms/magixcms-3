@@ -40,7 +40,7 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_httpUtils_header{
-    protected $template;
+    protected $template,$header;
     /**
      * @var bool
      */
@@ -50,41 +50,12 @@ class component_httpUtils_header{
      */
     public function __construct(){
         $this->template = new frontend_model_template();
+        $this->header =  new http_header();
         if(http_request::isGet('getHeader')){
             $this->getHeader = form_inputFilter::isNumeric($_GET['getHeader']);
         }
     }
 
-    /**
-     * @var
-     */
-    private static $header;
-
-    /**
-     * @static
-     * @throws Exception
-     * @return db_layer
-     */
-    private static function init(){
-        if(class_exists('http_header')){
-            self::$header = new http_header();
-            if(self::$header instanceof http_header){
-                return self::$header;
-            }else{
-                throw new Exception('Error header');
-            }
-        }else{
-            throw new Exception('Class http_header is not exist');
-        }
-    }
-
-    /**
-     * Retourne l'entête suivant le code d'erreur
-     * @param $code
-     */
-    private function getStatus($code){
-        self::init()->getStatus($code);
-    }
     /**
      * @param $http_error
      * @return string
@@ -94,13 +65,13 @@ class component_httpUtils_header{
             switch($http_error){
                 case 404:
                     $message = $this->template->getConfigVars('title_status_404');
-                    self::getStatus(404);
-                    $status = self::init()->setStatusCode(404,$message);
+                    $this->header->getStatus(404);
+                    $status = $this->header->setStatusCode(404,$message);
                     break;
                 case 403:
                     $message = $this->template->getConfigVars('title_status_403');
-                    self::getStatus(403);
-                    $status = self::init()->setStatusCode(403,$message);
+                    $this->header->getStatus(403);
+                    $status = $this->header->setStatusCode(403,$message);
                     break;
             }
             return $status;
@@ -117,11 +88,11 @@ class component_httpUtils_header{
             switch($http_error){
                 case 404:
                     $message = $this->template->getConfigVars('txt_status_404');
-                    $status = self::init()->setStatusCode(404,$message);
+                    $status = $this->header->setStatusCode(404,$message);
                     break;
                 case 403:
                     $message = $this->template->getConfigVars('txt_status_403');
-                    $status = self::init()->setStatusCode(403,$message);
+                    $status = $this->header->setStatusCode(403,$message);
                     break;
             }
             return $status;
@@ -132,7 +103,7 @@ class component_httpUtils_header{
      * @return string
      */
     public function getTitleHeader($http_error){
-        return self::setTitleHeader($http_error);
+        return $this->setTitleHeader($http_error);
     }
 
     /**
@@ -140,6 +111,6 @@ class component_httpUtils_header{
      * @return mixed
      */
     public function getTxtHeader($http_error){
-        return self::setTxtHeader($http_error);
+        return $this->setTxtHeader($http_error);
     }
 }

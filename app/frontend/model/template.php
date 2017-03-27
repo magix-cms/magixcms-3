@@ -158,15 +158,15 @@ class frontend_model_template{
 	 */
 	public function load_theme(){
 		$db = self::$collectionsSetting->fetch('theme');
-		if($db['setting_value'] != null){
-			if($db['setting_value'] == 'default'){
-				$theme =  $db['setting_value'];
-			}elseif(file_exists(magixglobal_model_system::base_path().'/skin/'.$db['setting_value'].'/')){
-				$theme =  $db['setting_value'];
+		if($db['value'] != null){
+			if($db['value'] == 'default'){
+				$theme =  $db['value'];
+			}elseif(file_exists(magixglobal_model_system::base_path().'/skin/'.$db['value'].'/')){
+				$theme =  $db['value'];
 			}else{
 				try {
 					$theme = 'default';
-	        		throw new Exception('template '.$db['setting_value'].' is not found');
+	        		throw new Exception('template '.$db['value'].' is not found');
 				}catch(Exception $e) {
                     $logger = new debug_logger(MP_LOG_DIR);
                     $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
@@ -200,7 +200,7 @@ class frontend_model_template{
             throw new Exception('template instance is not found');
         }else{
             $config = self::$collectionsSetting->fetch('cache');
-            switch($config['setting_value']){
+            switch($config['value']){
                 case 'none':
                     $smarty->setCaching(false);
                     break;

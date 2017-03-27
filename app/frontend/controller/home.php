@@ -40,10 +40,20 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class frontend_controller_home{
-    protected $router,$template;
+    /**
+     * @var
+     */
+    protected $template;
+    /**
+     * @var bool
+     */
     public $http_error;
+
+    /**
+     * frontend_controller_home constructor.
+     */
     public function __construct(){
-        
+        $this->header = new component_httpUtils_header();
         $this->template = new frontend_model_template();
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
@@ -53,18 +63,18 @@ class frontend_controller_home{
         /**
          * Initalisation du système d'entête
          */
-        $header = new component_httpUtils_header();
+
         if(isset($this->http_error)){
             $this->template->assign(
                 'getTitleHeader',
-                $header->getTitleHeader(
+                $this->header->getTitleHeader(
                     $this->http_error
                 ),
                 true
             );
             $this->template->assign(
                 'getTxtHeader',
-                $header->getTxtHeader(
+                $this->header->getTxtHeader(
                     $this->http_error
                 ),
                 true

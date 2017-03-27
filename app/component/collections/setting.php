@@ -41,12 +41,12 @@
  */
 class component_collections_setting{
 
-    public function fetch($idSetting){
-        $sql = 'SELECT setting_label,setting_value
-    	FROM mc_setting WHERE setting_id = :idSetting';
+    public function fetch($name){
+        $sql = 'SELECT *
+    	FROM mc_setting WHERE name = :name';
         return component_routing_db::layer()->fetch($sql,
             array(
-                ':idSetting'	=>	$idSetting
+                ':name'	=>	$name
             )
         );
     }

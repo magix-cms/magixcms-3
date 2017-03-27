@@ -40,51 +40,6 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_collections_config{
-    /*private static function buildClauseWhere ($filter,$ouput='both')
-    {
-        if (!empty($filter)) {
-            $clause['where'] = ' WHERE ';
-            $first = true;
-            foreach ($filter as $col => $val) {
-                $clause['where'] .= ($first) ? '' : ' AND ';
-                $first = false;
-                $alias = $col;
-                $process = true;
-                switch ($col) {
-                    case 'attr_name':
-                        $col = 'config.attr_name';
-                        break;
-                    case 'idconfig':
-                        $col = 'config.idconfig';
-                        break;
-                }
-                if ($val == 'NOT NULL') {
-                    $clause['where'] .= $col.' IS NOT NULL';
-                } elseif ($val == 'NULL') {
-                    $clause['where'] .= $col.' IS NULL';
-                } elseif ($process) {
-                    $clause['where'] .= $col.' = :'.$alias;
-                    $values[':'.$alias] = $val;
-                }
-            }
-
-            return array('clause' => $clause['where'],'values' => $values);
-        }
-        return false;
-    }
-    public function fetch($where=array()){
-        $clause['where'] = '';
-        $values = array();
-        $buildedWhere = self::buildClauseWhere($where);
-        if ($buildedWhere) {
-            $clause['where'] = $buildedWhere['clause'];
-            $values = $buildedWhere['values'];
-        }
-        $query = 'SELECT attr_name,status FROM mc_config
-    	WHERE attr_name = :attr_name';
-        $query  .=  $clause['where'];
-        return component_routing_db::layer()->fetch($query,$values);
-    }*/
     /**
      * @param $data
      * @return array
