@@ -39,15 +39,15 @@
  * Time: 00:19
  * License: Dual licensed under the MIT or GPL Version
  */
-class frontend_controller_home{
+class frontend_controller_home extends frontend_db_home{
     /**
      * @var
      */
-    protected $template;
+    protected $template,$header;
     /**
      * @var bool
      */
-    public $http_error;
+    public $http_error,$getlang;
 
     /**
      * frontend_controller_home constructor.
@@ -58,7 +58,35 @@ class frontend_controller_home{
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
         }
+        $this->getlang = $this->template->currentLanguage();
     }
+    /**
+     * set Data from database
+     * @access private
+     */
+    private function setItems()
+    {
+        $collection = parent::fetch(array('iso'=>$this->getlang));
+        return array(
+            'name'      =>  $collection['title_page'],
+            'content'   =>  $collection['content_page'],
+            'seoTitle'  =>  $collection['seo_title_page'],
+            'seoDescr'  =>  $collection['seo_desc_page']
+        );
+
+    }
+
+    /**
+     * getData with smarty assign
+     */
+    private function getItems(){
+        $data = $this->setItems();
+        $this->template->assign('home',$data);
+    }
+
+    /**
+     *
+     */
     public function run(){
         /**
          * Initalisation du système d'entête
@@ -82,6 +110,7 @@ class frontend_controller_home{
 
             $this->template->display('error/index.tpl');
         }else{
+            $this->getItems();
             $this->template->display('home/index.tpl');
         }
     }

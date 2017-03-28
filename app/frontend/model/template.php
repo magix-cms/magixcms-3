@@ -93,7 +93,7 @@ class frontend_model_template{
 	 * @access public 
 	 * @static
 	 */
-	public static function currentLanguage(){
+	public function currentLanguage(){
         if(http_request::isGet('strLangue')){
             $lang = self::getLanguage();
         }else{
@@ -141,7 +141,7 @@ class frontend_model_template{
 	public static function configLoad($section = ''){
 	    try {
             frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad(self::$ConfigFile), $section);
-            $theme = frontend_model_template::load_theme();
+            $theme = frontend_model_template::loadTheme();
             if ($theme !== 'default') {
                 if (file_exists(magixglobal_model_system::base_path() . '/skin/' . frontend_model_template::frontendTheme()->themeSelected() . '/i18n/')) {
                     frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad('theme_'));
@@ -156,7 +156,7 @@ class frontend_model_template{
 	/**
 	 * Charge le theme selectionné ou le theme par défaut
 	 */
-	public function load_theme(){
+	public function loadTheme(){
 		$db = self::$collectionsSetting->fetch('theme');
 		if($db['value'] != null){
 			if($db['value'] == 'default'){
@@ -186,7 +186,7 @@ class frontend_model_template{
 		if (!self::frontendTheme() instanceof frontend_model_template){
 			throw new Exception('template load is not found');
 		}
-		return self::frontendTheme()->load_theme();
+		return self::frontendTheme()->loadTheme();
 	}
 
     /**
@@ -228,7 +228,7 @@ class frontend_model_template{
 		if (!self::frontendTheme() instanceof frontend_model_template){
 			throw new Exception('template instance is not found');
 		}else{
-			$add_widget_dir = $rootpath."skin/".self::frontendTheme()->load_theme().'/widget/';
+			$add_widget_dir = $rootpath."skin/".self::frontendTheme()->loadTheme().'/widget/';
 			if(file_exists($add_widget_dir)){
 				if(is_dir($add_widget_dir)){
 					$smarty->addPluginsDir($add_widget_dir);
