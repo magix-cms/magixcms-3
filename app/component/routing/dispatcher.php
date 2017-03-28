@@ -6,7 +6,7 @@ class component_routing_dispatcher{
      */
     public $router,$controller,$controller_name,$plugins;
 
-    public function __construct($router,$plugins = null){
+    public function __construct($router,$template,$plugins = null){
         $formClean = new form_inputEscape();
         $this->router = $router;
         $this->controller = $router.'_controller_';
@@ -18,8 +18,8 @@ class component_routing_dispatcher{
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
         }
         $this->plugins = $plugins;
-        $this->header = new component_httpUtils_header();
-        $this->template = new frontend_model_template();
+        $this->header = new component_httpUtils_header($template);
+        $this->template = $template;
         $this->pluginsCollection = new component_collections_plugins();
     }
 

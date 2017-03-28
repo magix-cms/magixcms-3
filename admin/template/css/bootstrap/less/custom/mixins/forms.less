@@ -1,0 +1,357 @@
+/*
+ * Custom rules for forms
+ */
+.help-block {
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.has-feedback label {
+    ~ .form-control-feedback {
+        top: 31px;
+    }
+
+    + select ~ .form-control-feedback {
+        right: 18px;
+    }
+}
+
+input[type="password"] {
+    font-family: "Open Sans",Helvetica,Arial,sans-serif,"FontAwesome" !important;
+}
+
+.form-group.radio-group > label {
+    float: left;
+    + .radio > label {
+        margin-left: 10px;
+    }
+}
+.radio > label {
+    margin-left: 12px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+}
+
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"],
+.radio input[type="radio"],
+.radio-inline input[type="radio"] {
+    margin-top: 2px;
+}
+
+.form-group.has-error {
+    label,
+    label.control-label {
+        color: @state-danger-text;
+    }
+    textarea,
+    input[type="text"],
+    input[type="password"],
+    input[type="search"] {
+        &, &.control-form {
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+
+            &:focus {
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 6px #ce8483;
+            }
+        }
+    }
+}
+.radio.has-error {
+    + .help-block.error {
+        color: #a94442;
+        position: absolute;
+        right: 0;
+        top: -5px;
+    }
+}
+
+.dropdown-select {
+    button {
+        position: relative;
+        text-align: left;
+    }
+    span.caret {
+        float: right;
+        position: relative;
+        top: 7px;
+    }
+    .dropdown-menu {
+        min-width: 100%;
+
+        .active a {
+            background-color: @main-color;
+            color: #ffffff;
+        }
+    }
+}
+
+label + .checkbox > label {
+    padding-left: 0;
+}
+
+// --- Input Files
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+
+    + label {
+        max-width: 80%;
+        font-size: 1.25rem;
+        /* 20px */
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        display: inline-block;
+        overflow: hidden;
+        padding: 0.625rem 1.25rem 0 0;
+        /* 10px 20px */
+        * {
+            /* pointer-events: none; */
+            /* in case of FastClick lib use */
+        }
+    }
+
+    &:focus,
+    &.has-focus {
+        + label {
+            outline: 1px dotted #000;
+            outline: -webkit-focus-ring-color auto 5px;
+        }
+    }
+}
+
+.no-js .inputfile + label {
+    display: none;
+}
+
+.inputfile.inputimg {
+    + label {
+        color: @main-color;
+
+        figure {
+            text-align: center;
+            position: relative;
+            float: left;
+
+            .fa-stack {
+                height: 8em;
+                width: 8em;
+                line-height: 8em;
+
+                span:first-child {
+                    font-size: 8em;
+                }
+                span:last-child {
+                    font-size: 3em;
+                }
+            }
+        }
+
+        .preview-img {
+            position: absolute;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 100px;
+            top: 50%;
+            left: 50%;
+            .translate(-50%,-50%);
+            width: 120px;
+            height: 120px;
+            overflow: hidden;
+
+            img {
+                .auto-transition(1s);
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                .translate(-50%,-50%);
+                max-width: 100%;
+                height: auto;
+
+                &.no-img {
+                    opacity: 0;
+                    z-index: 0;
+                }
+                &.preview {
+                    opacity: 1;
+                    z-index: 1;
+                }
+            }
+        }
+
+        #input-label {
+            display: block;
+            float: right;
+            margin-left: 8px;
+            margin-top: 57px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+}
+
+.inputfile:focus + label,
+.inputfile.has-focus + label,
+.inputfile + label:hover {
+    color: extract(@main-colors, 1);
+}
+
+.inputfile.inputpdf {
+    + label {
+        color: @main-color;
+
+        &.filled {
+            color: #C80203;
+
+            figure {
+                background-color: #C80203;
+
+                &::after {
+                    border-bottom: 20px solid darken(#C80203, 20%);
+                    border-right: 20px solid transparent;
+                }
+            }
+        }
+
+        figure {
+            width: 100px;
+            height: 135px;
+            background-color: @main-color;
+            display: block;
+            position: relative;
+            padding: 25px 10px;
+            margin: 0 auto 10px;
+
+            .fa-stack {
+                height: 5em;
+                width: 5em;
+                line-height: 5em;
+
+                span:last-child {
+                    font-size: 3em !important;
+                    bottom: calc(50% - 25px);
+                }
+            }
+
+            &::before, &::after {
+                width: 0;
+                height: 0;
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            &::before {
+                border-top: 20px solid #fff;
+                border-left: 20px solid transparent;
+            }
+
+            &::after {
+                border-bottom: 20px solid extract(@main-colors, 1);
+                border-right: 20px solid transparent;
+            }
+
+            svg {
+                width: 100%;
+                height: 100%;
+                fill: #fff;
+            }
+        }
+        .input-label {
+            display: block;
+            text-align: center;
+        }
+    }
+}
+
+.inputfile.inputpdf:focus + label,
+.inputfile.inputpdf.has-focus + label,
+.inputfile.inputpdf + label:hover {
+    color: extract(@main-colors, 1);
+
+    figure {
+        background-color: extract(@main-colors, 1);
+
+        &::after {
+            border-bottom-color: @main-color;
+        }
+    }
+}
+
+//.inputfile.inputpdf:focus + label.filled,
+//.inputfile.inputpdf.has-focus + label.filled,
+//.inputfile.inputpdf + label.filled:hover {
+//    color: darken(@brand-success, 20%);
+//
+//    figure {
+//        background-color: darken(@brand-success, 20%);
+//
+//        &::after {
+//            border-bottom-color: @brand-success;
+//        }
+//    }
+//}
+
+.inputfile.inputpdf:focus + label.filled,
+.inputfile.inputpdf.has-focus + label.filled,
+.inputfile.inputpdf + label.filled:hover {
+    color: darken(#C80203, 20%);
+
+    figure {
+        background-color: darken(#C80203, 20%);
+
+        &::after {
+            border-bottom-color: #C80203;
+        }
+    }
+}
+
+.checkbox.checkbox-toggle {
+    margin: 0;
+}
+
+.additional-fields {
+    &.in {
+        margin-top: 15px;
+        margin-bottom: 15px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    &:first-child {
+        +.additional-fields {
+            &.in {
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+textarea.form-control {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+}
+
+.form-gen {
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 17px;
+}

@@ -12,8 +12,8 @@ class component_core_message{
     /**
      *
      */
-    public function __construct(){
-        $this->template = new frontend_model_template();
+    public function __construct($template){
+        $this->template = $template;
 		$this->header = new http_header();
     }
 

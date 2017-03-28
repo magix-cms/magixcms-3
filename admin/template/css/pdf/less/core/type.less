@@ -1,0 +1,67 @@
+body {
+	font-family: "Times New Roman", serif;
+	line-height: 1.428;
+
+	&.display {
+		font-size: 20px;
+	}
+	&.paper {
+		font-size: 16px;
+	}
+}
+
+// --- Headers
+h1, .h1 { font-size: 2.375rem; }
+h2, .h2 { font-size: 1.875rem; }
+h3, .h3 { font-size: 1.625rem; }
+h4, .h4 { font-size: 1.5rem; }
+h5, .h5 { font-size: 1.375rem; }
+h6, .h6 { font-size: 1.25rem; }
+
+// --- Text Classes
+.extra-small { font-size: .5em; }
+.lead, .big { font-size: 1.2em; }
+.sans-serif { font-family: @sans-serif; }
+
+// --- Text transform
+.upper {
+	text-transform: uppercase;
+}
+.tit {
+	font-style: italic;
+}
+
+// --- French quote
+.quote {
+	&:before {
+		content: "«";
+		//width: 1em;
+		display: inline;
+		margin-right: .75em;
+	}
+	&:after {
+		content: "»";
+		//width: 1em;
+		display: inline;
+		margin-left: .25em;
+	}
+}
+
+// --- Alignment
+.tac { text-align: center; }
+.tal { text-align: left; }
+.tar { text-align: right; }
+.indent { padding-left: 2em; }
+
+// --- Decoration
+.underline {
+	text-decoration: underline;
+}
+
+.to_fill {
+	display: inline-block;
+	border-bottom: dotted;
+	padding-bottom: 3px;
+	width: 250px;
+	height: 1em;
+}

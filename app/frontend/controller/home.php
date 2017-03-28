@@ -53,8 +53,8 @@ class frontend_controller_home extends frontend_db_home{
      * frontend_controller_home constructor.
      */
     public function __construct(){
-        $this->header = new component_httpUtils_header();
         $this->template = new frontend_model_template();
+        $this->header = new component_httpUtils_header($this->template);
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
         }

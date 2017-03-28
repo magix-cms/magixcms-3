@@ -1,0 +1,53 @@
+#bill-pdf {
+	font-size: 12px;
+	.sans-serif;
+
+	.center {
+		width: 50%;
+		margin: 0 auto;
+	}
+
+	#footer_page {
+		bottom: -30px;
+	}
+
+	table.table.table-bordered {
+		tfoot td.text-right {
+			font-weight: 600;
+		}
+		//thead th,
+		tfoot td {
+			background-color: #f5f5f5;
+			&.tar {
+				font-weight: 600;
+			}
+		}
+		td {
+			padding: 3px 5px;
+			vertical-align: middle;
+		}
+		.sub-total {
+			font-size: 10px;
+		}
+		.total-line {
+			td {
+				border-top-style: double !important;
+				border-top-width: 3px !important;
+				border-bottom-style: double !important;
+				border-bottom-width: 3px !important;
+			}
+			//font-size: 14px;
+			&.total {
+				font-size: 16px;
+				> td {
+					background-color: transparent;
+					border-bottom: none !important;
+				}
+			}
+		}
+	}
+
+	#cond-gen {
+		font-size: 12px;
+	}
+}

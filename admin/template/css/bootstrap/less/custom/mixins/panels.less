@@ -1,0 +1,132 @@
+.panels {
+	.panel {
+		background-color: transparent;
+		border: none;
+		border-radius: 0;
+		box-shadow: none;
+
+		header,
+		.panel-header {
+			padding: 10px 0 7px;
+			border-bottom: 1px solid #555;
+
+			.panel-heading {
+				border: none;
+				border-radius: 0;
+				padding: 0;
+			}
+
+			.actions {
+				position: absolute;
+				right: 15px;
+				top: 11px;
+
+				a.btn-link {
+					color: #555;
+					font-size: 14px;
+
+					.fa {
+						padding-right: 3px;
+					}
+				}
+			}
+		}
+
+		header.panel-header{
+			&.panel-nav {
+				padding: 10px 0 0 !important;
+			}
+			&.panel-subnav {
+				margin: -41px -40px 40px !important;
+			}
+			&.panel-innernav {
+				margin-top: 20px;
+				margin-bottom: 20px;
+
+				ul {
+					border-top-color: #eee !important;
+				}
+
+				+ .panel-body {
+					padding: 15px 0 0 !important;
+				}
+			}
+
+			&.panel-nav,
+			&.panel-innernav,
+			&.panel-subnav {
+				border-bottom: 1px solid #ccc !important;
+
+				ul.nav-tabs {
+					background-color: #fff;
+					padding: 10px 0;
+					border-bottom: none;
+					border-top: 1px solid #555;
+
+					> li {
+						margin-bottom: 0;
+						font-size: 16px;
+
+						> a {
+							padding: 4px 15px;
+							border-top: none;
+							border-left: none;
+							border-bottom: none;
+							border-right: 1px solid #ccc;
+							color: #ccc;
+
+							&:hover, &:active, &:focus {
+								background-color: transparent;
+								color: #555;
+								border-top: none;
+								border-left: none;
+								border-bottom: none;
+								box-shadow: none;
+							}
+						}
+
+						&.active > a {
+							border-top: none;
+							border-left: none;
+							border-bottom: none;
+							color: #555;
+						}
+
+						&:last-child > a {
+							border-right: none;
+						}
+					}
+				}
+			}
+		}
+
+		.panel-body {
+			background-color: #fff;
+			min-height: 0;
+
+			header {
+				border-bottom: 0 !important;
+				padding: 0 !important;
+
+				.checkbox {
+					margin: 0;
+					position: absolute;
+					right: 15px;
+					top: -3px;
+				}
+			}
+
+			h3 {
+				padding-bottom: 10px;
+				border-bottom: 1px solid #eee;
+				margin-bottom: 20px;
+				margin-top: 0;
+				font-weight: 300;
+			}
+
+			&.panel-body-form {
+				padding: 40px;
+			}
+		}
+	}
+}

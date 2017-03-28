@@ -31,8 +31,8 @@ class backend_controller_employee extends backend_db_employee
      */
     function __construct()
     {
-        $this->message = new component_core_message();
         $this->template = new backend_model_template();
+        $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $formClean = new form_inputEscape();
         if (http_request::isPost('lastname_admin')) {

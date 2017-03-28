@@ -40,15 +40,30 @@ if (file_exists($config_in)) {
 	throw new Exception('Error Ini Common Files');
 	exit;
 }
+
+$phpthumb = dirname(__FILE__).'/phpthumb/ThumbLib.inc.php';
+if (file_exists($phpthumb)) {
+    require ($phpthumb);
+}else{
+    print 'Error thumbnail Config';
+    exit;
+}
+
+/**
+ * Chargement du Bootsrap
+ */
 $bootstrap = __DIR__.'/bootstrap.php';
 if (file_exists($bootstrap)){
-	require $bootstrap;
+    require $bootstrap;
+}else{
+    throw new Exception('Boostrap is not exist');
 }
 
 $loader = new autoloader();
-$loader->registerPrefixes(array(
+$loader->addPrefixes(array(
 	'component' => '../app',
 	'backend' => '../app',
 ));
+$loader->addPrefix('plugins',filter_path::basePath(array('lib','magepattern')));
 $loader->register();
 ?>

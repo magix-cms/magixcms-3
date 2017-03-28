@@ -79,40 +79,32 @@ class backend_model_smarty extends Smarty{
 	 * Les paramètres pour la configuration de smarty 3
 	 */
 	protected function setParams(){
-		/**
-		 * Path -> configs
-		 */
+        /**
+         * Path -> configs
+         */
         $this->setConfigDir(array(
-            self::setPath()."locali18n/"
+            self::setPath().PATHADMIN.'/i18n/'
         ));
-		/**
-		 * Path -> templates
-		 */
+        /**
+         * Path -> templates
+         */
         $this->setTemplateDir(array(
-            self::setPath()."skin/"
+            self::setPath().PATHADMIN.'/template/'
         ));
-		/**
-		 * path plugins
-		 * @var void
-		 */
+        /**
+         * path plugins
+         * @var void
+         */
         $this->setPluginsDir(array(
-			self::setPath().'lib/smarty3/plugins/'
+            self::setPath().'lib/smarty3/plugins/'
 			,self::setPath().'app/wdcore/'
-			,self::setPath().'widget/'
-		));
-		/**
-		 * Ajout du dossier additionnels des plugins smarty dans le template courant
-		 */
-		backend_model_template::backendTheme()->addWidgetDir(
-            $this,
-            self::setPath(),
-            false
-        );
-		/**
-		 * Path -> compile
-		 */
+			,self::setPath().PATHADMIN.'/template/widget/'
+        ));
+        /**
+         * Path -> compile
+         */
         $this->setCompileDir(
-            self::setPath().'var/templates_c/'
+            self::setPath().PATHADMIN.'/caching/templates_c/'
         );
 		/**
 		 * debugging (true/false)
@@ -131,20 +123,16 @@ class backend_model_smarty extends Smarty{
 		/**
 		 * caching (true/false)
 		 */
-        //backend_model_template::backendTheme()->setCache($this);
         $this->setCaching(false);
         //$this->setCachingType('apc');
-
-		/**
-		 * Use sub dirs (true/false)
-		 */
-		$this->use_sub_dirs = false;
-		/**
-		 * cache_dir -> cache
-		 */
-        $this->setCacheDir(
-            self::setPath().'var/tpl_caches/'
-        );
+        /**
+         * Use sub dirs (true/false)
+         */
+        $this->use_sub_dirs = false;
+        /**
+         * cache_dir -> cache
+         */
+        $this->setCacheDir(self::setPath().PATHADMIN.'/caching/tpl_caches/');
 		/**
 		 * load pre filter
 		 */

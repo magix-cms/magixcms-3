@@ -50,4 +50,9 @@ class component_collections_setting{
             )
         );
     }
+    public function fetchAll(){
+        $sql = 'SELECT st.id_setting,st.value 
+        FROM mc_setting AS st';
+        return component_routing_db::layer()->fetchAll($sql);
+    }
 }

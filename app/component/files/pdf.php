@@ -24,11 +24,11 @@ class component_files_pdf{
     /**
      * component_files_pdf constructor.
      */
-    function __construct($debug = false)
+    function __construct($template,$debug = false)
     {
-        $this->message = new component_core_message();
         $this->header = new http_header();
-		$this->template = new frontend_model_template();
+		$this->template = $template;
+        $this->message = new component_core_message($this->template);
         $formClean = new form_inputEscape();
         $this->filesystem = new filesystem_makefile();
         $options = new Options();
@@ -72,7 +72,7 @@ class component_files_pdf{
         $config = $config + $this->default;
         /*
         $canvas = $this->dompdf->getCanvas();
-        $canvas->image(http_url::getUrl().'/skin/img/logo/dubois-tanier.png',0, 0, 125, 125);
+        $canvas->image(http_url::getUrl().'/skin/img/logo/test.png',0, 0, 125, 125);
         */
 
         //print_r($config);

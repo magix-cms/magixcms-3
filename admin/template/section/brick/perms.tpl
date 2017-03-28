@@ -1,0 +1,1 @@
+<div class="alert alert-warning"><span class="fa fa-warning"></span> Vous n'avez pas les permissions suffisante pour effectuer cette action</div>

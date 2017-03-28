@@ -1,0 +1,141 @@
+/*
+ * Different block style
+ */
+#page {
+	section {
+		header {
+			padding: 10px 0 7px;
+			border-bottom: 1px solid #555;
+		}
+		> div {
+			background-color: #fff;
+			min-height: 100px;
+		}
+	}
+}
+
+.folder-box {
+	padding: 10px 15px;
+	border-bottom: 1px solid #eee;
+
+	> div {
+		> p {
+			&:first-child {
+				.normalize-link(#555);
+			}
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		&:first-child {
+			p {
+				.fa {
+					padding-right: 4px;
+				}
+			}
+		}
+	}
+
+	.text-ready,
+	.text-pending,
+	.text-done {
+		margin-top: 12px;
+	}
+	.text-ready{ color: rgb(59,97,169); }
+	.text-pending{ color: rgb(229,119,46); }
+	.text-done{ color: rgb(61,168,63); }
+}
+
+#quick-access {
+	.normalize-link(#555,same,none);
+	ul li a .fa {
+		padding-right: 8px;
+	}
+}
+
+#photo {
+	button[type="submit"] {
+		margin-top: -138px;
+	}
+}
+
+.progress {
+	border-radius: 0;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05) inset;
+	min-height: 28px;
+	padding: 5px 0;
+	position: relative;
+	text-align: center;
+	color: rgb(59,97,169);
+
+	&-bar {
+		width: 0%;
+		font-size: 12px;
+		padding: 5px 0;
+		background-color: rgb(59,97,169);
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+
+		&-success {
+			background-color: rgb(61, 168, 63);
+		}
+		&-warning {
+			background-color: #f0ad4e;
+		}
+		&-danger {
+			 background-color: #d9534f;
+		 }
+
+		&-state {
+			height: 18px;
+			position: absolute;
+			left: 0;
+			z-index: 2;
+			color: #fff;
+			text-align: center;
+		}
+	}
+
+	.loader.etc {
+		display: inline-block;
+		min-height: 4px;
+		min-width: 10px;
+		text-align: left;
+	}
+}
+
+a.downpdf {
+	padding: 5px 15px 5px 40px;
+	position: relative;
+	font-size: 16px;
+	display: inline-block;
+
+	&::before {
+		position: absolute;
+		content: "";
+		display: block;
+		background: url('/skin/img/icon/icon_pdf.png') no-repeat top left;
+		width: 32px;
+		height: 32px;
+		top: 0;
+		left: 0;
+	}
+}
+
+@media (min-width: @screen-lg-min) and (max-width: 1350px) {
+	#tasks .folder-box {
+		.col-xs-6 {
+			width: 80%;
+
+			&:last-child {
+				width: 20%;
+			}
+		}
+		.status {
+			display: none;
+		}
+	}
+}

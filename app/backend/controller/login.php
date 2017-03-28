@@ -63,12 +63,12 @@ class backend_controller_login extends backend_db_employee{
      * Constructor
      */
     public function __construct(){
-        $this->message = new component_core_message();
         $this->header = new http_header();
         $this->template = new backend_model_template();
+        $this->message = new component_core_message($this->template);
 		$this->mail = new mail_swift('mail');
 		$this->setting = new backend_model_setting();
-		$this->settings = $this->setting->get_settings();
+		$this->settings = $this->setting->getSetting();
 		$formClean = new form_inputEscape();
 
         // --- LOGIN
@@ -340,7 +340,7 @@ class backend_controller_login extends backend_db_employee{
 		$this->template->configLoad();
 		$title = $this->template->getConfigVars('titlemail');
 		$subject = $this->template->getConfigVars($type);
-		return sprintf($title,$subject,'gestion.dubois-tanier.be');
+		return sprintf($title,$subject,'monsite.be/admin/');
     }
 
 	/**

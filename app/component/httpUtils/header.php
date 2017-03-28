@@ -48,8 +48,8 @@ class component_httpUtils_header{
     /**
      * Constructor
      */
-    public function __construct(){
-        $this->template = new frontend_model_template();
+    public function __construct($template){
+        $this->template = $template;
         $this->header =  new http_header();
         if(http_request::isGet('getHeader')){
             $this->getHeader = form_inputFilter::isNumeric($_GET['getHeader']);
