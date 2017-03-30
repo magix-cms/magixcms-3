@@ -51,11 +51,11 @@ class backend_model_session{
     public function redirect($connexion=false){
         if($connexion){
             if (!headers_sent()) {
-                header('location: '.http_url::getUrl().'/index.php');
+                header('location: '.http_url::getUrl().'/admin/index.php?strLanguage=fr&controller=dashboard');
             }
         }else{
             if (!headers_sent()) {
-                header('location: '.http_url::getUrl().'/login.php');
+                header('location: '.http_url::getUrl().'/admin/index.php?strLanguage=fr&controller=login');
             }
         }
     }

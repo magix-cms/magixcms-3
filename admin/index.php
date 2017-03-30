@@ -16,6 +16,8 @@ if(http_request::isSession('keyuniqid_admin')) {
     $home = new frontend_controller_home();
     $home->run();
 }*/
+/*$members = new backend_controller_login();
+$members->checkout();*/
 $template = new backend_model_template();
 $controllerCollection = array('dashboard','login','home','news','catalog','webservice');
 $formClean = new form_inputEscape();
@@ -24,11 +26,26 @@ if(http_request::isGet('controller')){
     if(in_array($controller_name,$controllerCollection)){
         $routes = 'backend';
         $plugins = null;
+        if($_GET['controller'] != 'login'){
+            $members = new backend_controller_login();
+            $members->checkout();
+            if (http_request::isSession('keyuniqid_admin')) {
+                $dispatcher = new component_routing_dispatcher($routes, $template, $plugins);
+                $dispatcher->dispatch();
+            }
+        }else{
+            $dispatcher = new component_routing_dispatcher($routes, $template, $plugins);
+            $dispatcher->dispatch();
+        }
     }else{
         $routes = 'admin';
         $plugins = 'public';
+        if (http_request::isSession('keyuniqid_admin')) {
+            $dispatcher = new component_routing_dispatcher($routes, $template, $plugins);
+            $dispatcher->dispatch();
+        }
     }
-    $dispatcher = new component_routing_dispatcher($routes,$template,$plugins);
-    $dispatcher->dispatch();
+}else{
+    $members = new backend_controller_login();
+    $members->checkout();
 }
-print_r($_GET);

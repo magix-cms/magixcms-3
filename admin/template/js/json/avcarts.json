@@ -1,0 +1,26 @@
+[
+  {
+    "month" : "January",
+    "mychart" : 120
+  },
+  {
+    "month" : "February",
+    "mychart" : 69
+  },
+  {
+    "month" : "March",
+    "mychart" : 30
+  },
+  {
+    "month" : "April",
+    "mychart" : 85
+  },
+  {
+    "month" : "May",
+    "mychart" : 22
+  },
+  {
+    "month" : "June",
+    "mychart" : 28
+  }
+]

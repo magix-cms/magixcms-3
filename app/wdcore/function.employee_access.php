@@ -25,8 +25,8 @@ function smarty_function_employee_access($params, $template){
     if (!isset($type) || empty($type) || $type === '') {
         $type = 'view_access';
     }
-    if(class_exists('frontend_model_access')){
-        $model_access = new frontend_model_access();
+    if(class_exists('backend_model_access')){
+        $model_access = new backend_model_access();
     }
     $all_access = $model_access->allDataEmployee($model_access->dataSession());
     return $all_access[$class_name][$type];

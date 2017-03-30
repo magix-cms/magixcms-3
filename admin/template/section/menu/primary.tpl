@@ -20,35 +20,35 @@
             <span class="fa fa-wrench"></span> Outils <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-            {if {employee_access type="view_access" class_name="frontend_controller_provider"} eq 1}
+            {if {employee_access type="view_access" class_name="backend_controller_provider"} eq 1}
             <li>
                 <a href="{geturl}/provider.php">
                     <span class="fa fa-users"></span> {#provider#|ucfirst}
                 </a>
             </li>
             {/if}
-            {if {employee_access type="view_access" class_name="frontend_controller_township"} eq 1}
+            {if {employee_access type="view_access" class_name="backend_controller_township"} eq 1}
             <li>
                 <a href="{geturl}/township.php">
                     <span class="fa fa-home"></span> {#township#|ucfirst}
                 </a>
             </li>
             {/if}
-            {if {employee_access type="view_access" class_name="frontend_controller_sentence"} eq 1}
+            {if {employee_access type="view_access" class_name="backend_controller_sentence"} eq 1}
             <li>
                 <a href="{geturl}/sentence.php">
                     <span class="fa fa-list"></span> {#sentence#|ucfirst}
                 </a>
             </li>
             {/if}
-            {if {employee_access type="view_access" class_name="frontend_controller_service"} eq 1}
+            {if {employee_access type="view_access" class_name="backend_controller_service"} eq 1}
             <li>
                 <a href="{geturl}/service.php">
                     <span class="fa fa-puzzle-piece"></span> {#service#|ucfirst}
                 </a>
             </li>
             {/if}
-            {if {employee_access type="view_access" class_name="frontend_controller_webservice"} eq 1}
+            {if {employee_access type="view_access" class_name="backend_controller_webservice"} eq 1}
             <li>
                 <a href="{geturl}/webservice.php">
                     <span class="fa fa-cloud"></span> Web Service
@@ -75,7 +75,7 @@
         </a>
     </li>
     <li>
-        <a href="{geturl}/index.php?logout=1">
+        <a href="{geturl}/admin/index.php?strLanguage=fr&controller=dashboard&logout=1">
             <span class="fa fa-power-off"></span>
         </a>
     </li>

@@ -13,7 +13,7 @@
  * Définir les valeurs par defaut pour le mode de notification
  * *
  $.jmRequest.notifier = {
-    class : '.mc-message'
+    cssClass : '.mc-message'
 };
 
  $.jmRequest({
@@ -82,13 +82,13 @@
             cache: false,
             dataFilter: function (response) {},
             beforeSend: function(){},
-            xhr: function() {},
+            xhr: false,
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log(xhr);
                 console.log(ajaxOptions);
                 console.log(thrownError);
             },
-            success: function(e){
+            success: function(e, textStatus, XMLHttpRequest){
                 $.jmRequest.initbox(e);
             },
             complete: function () {}
@@ -105,21 +105,37 @@
         var initHandler = {
             jmAjax: function(){
                 // --- Default options of the ajax request
-                $.ajax({
-                    method: opt.method,
-                    type: opt.method,
-                    url: opt.url,
-                    dataType: opt.dataType,
-                    statusCode: opt.statusCode,
-                    async: opt.async,
-                    cache: opt.cache,
-                    data: opt.data,
-                    dataFilter: opt.dataFilter,
-                    xhr: opt.xhr,
-                    beforeSend: opt.beforeSend,
-                    success: opt.success
-
-                }).done(function ( data ) {
+                if(opt.xhr != false){
+                    var xhrParams = $.ajax({
+                        method: opt.method,
+                        type: opt.method,
+                        url: opt.url,
+                        dataType: opt.dataType,
+                        statusCode: opt.statusCode,
+                        async: opt.async,
+                        cache: opt.cache,
+                        data: opt.data,
+                        //dataFilter: opt.dataFilter,
+                        xhr: opt.xhr,
+                        beforeSend: opt.beforeSend,
+                        success: opt.success
+                    })
+                }else{
+                    var xhrParams = $.ajax({
+                        method: opt.method,
+                        type: opt.method,
+                        url: opt.url,
+                        dataType: opt.dataType,
+                        statusCode: opt.statusCode,
+                        async: opt.async,
+                        cache: opt.cache,
+                        data: opt.data,
+                        //dataFilter: opt.dataFilter,
+                        beforeSend: opt.beforeSend,
+                        success: opt.success
+                    })
+                }
+                xhrParams.done(function ( data ) {
                     if(opt.debug == true){
                         if( console && console.log ) {
                             console.log(data);
@@ -129,6 +145,8 @@
                     console.group('Error jmRequest');
                     console.error('Status %s ',status);
                     console.error('URL: '+opt.url+' %s',error);
+                    console.error('xhr %s ',xhr);
+                    console.log(opt);
                     console.groupEnd();
                 });
             },
@@ -218,7 +236,7 @@
      * @type {Object}
      */
     $.jmRequest.notifier = {
-        class : '.mc-message'
+        cssClass : '.mc-message'
     };
 
     /**
@@ -249,20 +267,20 @@
     function setBoxParams(setting){
         var optDefault = $.jmRequest.notifier;
         if(setting != null){
-            if(typeof(setting.class) === "undefined"){
-                setClass = optDefault.class;
+            if(typeof(setting.cssClass) === "undefined"){
+                setClass = optDefault.cssClass;
             }else{
-                setClass = setting.class;
+                setClass = setting.cssClass;
             }
         }else{
-            if(typeof(optDefault.class) === "undefined" || optDefault.class === ""){
+            if(typeof(optDefault.cssClass) === "undefined" || optDefault.cssClass === ""){
                 setClass = "";
             }else{
-                setClass = optDefault.class;
+                setClass = optDefault.cssClass;
             }
         }
         var config = {
-            class : setClass
+            cssClass : setClass
         };
         if ( typeof config != 'object' ){
             console.log("%s: %o","config is not objet");
@@ -290,8 +308,8 @@
         }
         if(opts.display !== false){
 
-            if(optsNotifier.class !== '' || optsNotifier.class !==null){
-                var classContainer = optsNotifier.class;
+            if(optsNotifier.cssClass !== '' || optsNotifier.cssClass !==null){
+                var classContainer = optsNotifier.cssClass;
             }else{
                 var classContainer = '';
             }

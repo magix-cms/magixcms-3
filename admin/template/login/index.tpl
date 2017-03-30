@@ -15,12 +15,12 @@
                 {$debug}
             {/if}
             <div id="logo">
-                <img src="/skin/img/logo/magix-cms.png" alt="Magix CMS" width="120" height="120">
+                <img src="/{baseadmin}/template/img/logo/logo-magix_cms.png" alt="Magix CMS" width="269" height="50">
             </div>
             <div class="flip-container">
                 <div class="flipper">
-                    <div class="login-box front panel">
-                        <form id="login_form" method="post" action="{geturl}{$smarty.server.PHP_SELF}">
+                    <div class="login-box front panel">{* {$smarty.server.PHP_SELF} *}
+                        <form id="login_form" method="post" action="{geturl}/admin/index.php?strLanguage=fr&controller=login">
                             <div class="form-group">
                                 <label class="control-label" for="email_admin">Adresse e-mail</label>
                                 <input type="text" class="form-control" placeholder=" {#placeholder_login#}" id="email_admin" name="email_admin" value="" />
@@ -75,7 +75,7 @@
         </div>
     </main>
 {/block}
-
+{block name="footer"}{/block}
 {block name="foot" append}
-    {script src="/min/?f=/skin/js/login.min.js" type="javascript"}
+    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/login.min.js" type="javascript"}
 {/block}

@@ -82,8 +82,8 @@ class backend_model_template{
      * Paramètre de langue get
      */
 	public static function getLanguage(){
-        if(http_request::isGet('strLangue')){
-            return form_inputFilter::isAlphaNumericMax($_GET['strLangue'],3);
+        if(http_request::isGet('strLanguage')){
+            return form_inputFilter::isAlphaNumericMax($_GET['strLanguage'],3);
         }
 	}
 
@@ -94,12 +94,12 @@ class backend_model_template{
 	 * @static
 	 */
 	public static function currentLanguage(){
-        if(http_request::isGet('strLangue')){
+        if(http_request::isGet('strLanguage')){
             $lang = self::getLanguage();
         }else{
             /*if(self::$collectionsLang instanceof component_collections_language){
-                if(http_request::isSession('strLangue')){
-                    $lang = form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
+                if(http_request::isSession('strLanguage')){
+                    $lang = form_inputFilter::isAlphaNumericMax($_SESSION['strLanguage'],3);
                 }else{
                     $data = self::$collectionsLang->setDefault();
                     if($data != null){
@@ -107,8 +107,8 @@ class backend_model_template{
                     }
                 }
             }*/
-			if(http_request::isSession('strLangue')){
-				$lang = form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
+			if(http_request::isSession('strLanguage')){
+				$lang = form_inputFilter::isAlphaNumericMax($_SESSION['strLanguage'],3);
 			} else {
 				$lang = 'fr';
 			}

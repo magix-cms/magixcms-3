@@ -11,8 +11,8 @@ class backend_db_employee
         if(is_array($config)) {
             if ($config['type'] === 'auth') {
                 //Return Auth status
-                $query='SELECT em.* from ap_admin_employee AS em
-                JOIN ap_admin_access_rel AS acrel ON ( em.id_admin = acrel.id_admin )
+                $query='SELECT em.* from mc_admin_employee AS em
+                JOIN mc_admin_access_rel AS acrel ON ( em.id_admin = acrel.id_admin )
                 WHERE em.email_admin = :email_admin AND em.passwd_admin = :passwd_admin
                 AND em.active_admin = 1 AND acrel.id_admin=em.id_admin';
                 return component_routing_db::layer()->fetch($query,array(
@@ -23,9 +23,9 @@ class backend_db_employee
             } elseif ($config['type'] === 'session') {
                 // return session data
                 $sql='SELECT em.*, pr.role_name, pr.id_role
-                FROM ap_admin_employee AS em
-                JOIN ap_admin_access_rel AS acrel ON ( em.id_admin = acrel.id_admin )
-                JOIN ap_admin_role_user AS pr ON ( acrel.id_role = pr.id_role )
+                FROM mc_admin_employee AS em
+                JOIN mc_admin_access_rel AS acrel ON ( em.id_admin = acrel.id_admin )
+                JOIN mc_admin_role_user AS pr ON ( acrel.id_role = pr.id_role )
                 WHERE em.keyuniqid_admin = :keyuniqid_admin';
                 return component_routing_db::layer()->fetch($sql,
                     array(
@@ -35,7 +35,7 @@ class backend_db_employee
             } elseif($config['type'] === 'sid') {
                 //return session id for compare
                 $sql = 'SELECT id_admin_session,id_admin
-		        FROM ap_admin_session WHERE id_admin_session = :id_admin_session';
+		        FROM mc_admin_session WHERE id_admin_session = :id_admin_session';
                 return component_routing_db::layer()->fetch($sql,
                     array(
                         ':id_admin_session'=>session_id()
@@ -44,8 +44,8 @@ class backend_db_employee
             } elseif($config['type'] === 'uniq_session') {
                 //return session id for compare
                 $sql = 'SELECT id_admin_session,email_admin,sess.keyuniqid_admin
-		        FROM ap_admin_session as sess
-		        LEFT JOIN ap_admin_employee as emp
+		        FROM mc_admin_session as sess
+		        LEFT JOIN mc_admin_employee as emp
 		        USING(id_admin)
 		        WHERE email_admin = :email_admin
 		        AND sess.keyuniqid_admin = :keyuniqid_admin
@@ -59,8 +59,8 @@ class backend_db_employee
                 );
             } elseif($config['type'] === 'currentAccess') {
                 // return current access (permission)
-                $sql='SELECT * FROM ap_admin_access
-                JOIN ap_module as module ON(access.id_module = module.id_module)
+                $sql='SELECT * FROM mc_admin_access
+                JOIN mc_module as module ON(access.id_module = module.id_module)
                 WHERE id_role = :id_role AND class_name = :class_name';
                 return component_routing_db::layer()->fetch($sql,
                     array(
@@ -71,8 +71,8 @@ class backend_db_employee
             } elseif($config['type'] === 'access') {
                 // return listing access
                 $sql='SELECT access.* ,module.*
-                FROM ap_admin_access AS access
-                JOIN ap_module as module ON(access.id_module = module.id_module)
+                FROM mc_admin_access AS access
+                JOIN mc_module as module ON(access.id_module = module.id_module)
                 WHERE access.id_role = :id_role';
                 return component_routing_db::layer()->fetchAll($sql,
                     array(
@@ -81,12 +81,12 @@ class backend_db_employee
                 );
             } elseif($config['type'] === 'role') {
                 //Return role list
-                $sql='SELECT * FROM ap_admin_role_user';
+                $sql='SELECT * FROM mc_admin_role_user';
                 return component_routing_db::layer()->fetchAll($sql);
                 
             } elseif($config['type'] === 'currentRole') {
-                $sql='SELECT role.* FROM ap_admin_role_user AS role
-                JOIN ap_admin_access_rel AS rel_access ON(role.id_role = rel_access.id_role)
+                $sql='SELECT role.* FROM mc_admin_role_user AS role
+                JOIN mc_admin_access_rel AS rel_access ON(role.id_role = rel_access.id_role)
                 WHERE rel_access.id_admin = :id_admin';
                 return component_routing_db::layer()->fetch($sql,
                     array(
@@ -94,7 +94,7 @@ class backend_db_employee
                     )
                 );
             } elseif($config['type'] === 'key') {
-                $sql='SELECT keyuniqid_admin FROM ap_admin_employee
+                $sql='SELECT keyuniqid_admin FROM mc_admin_employee
                 WHERE email_admin = :email_forgot';
                 return component_routing_db::layer()->fetch($sql,
                     array(
@@ -102,7 +102,7 @@ class backend_db_employee
                     )
                 );
             } elseif($config['type'] === 'by_key') {
-                $sql='SELECT email_admin FROM ap_admin_employee
+                $sql='SELECT email_admin FROM mc_admin_employee
                 WHERE change_passwd = :ticket
                 AND keyuniqid_admin = :keyuniqid_admin';
                 return component_routing_db::layer()->fetch($sql,
@@ -145,16 +145,16 @@ class backend_db_employee
 					}
 				}
                 $sql="SELECT em.*,pr.*
-                FROM ap_admin_employee AS em
-                JOIN ap_admin_access_rel AS acrel ON( em.id_admin = acrel.id_admin )
-                JOIN ap_admin_role_user AS pr ON( acrel.id_role = pr.id_role )
+                FROM mc_admin_employee AS em
+                JOIN mc_admin_access_rel AS acrel ON( em.id_admin = acrel.id_admin )
+                JOIN mc_admin_role_user AS pr ON( acrel.id_role = pr.id_role )
                 $cond ORDER BY em.id_admin DESC";
                 return component_routing_db::layer()->fetchAll($sql);
             } elseif($config['type'] === 'employee') {
 				$sql="SELECT em.*,pr.*
-                FROM ap_admin_employee AS em
-                JOIN ap_admin_access_rel AS acrel ON( em.id_admin = acrel.id_admin )
-                JOIN ap_admin_role_user AS pr ON( acrel.id_role = pr.id_role )
+                FROM mc_admin_employee AS em
+                JOIN mc_admin_access_rel AS acrel ON( em.id_admin = acrel.id_admin )
+                JOIN mc_admin_role_user AS pr ON( acrel.id_role = pr.id_role )
                 WHERE em.id_admin = :id_admin";
                 return component_routing_db::layer()->fetch($sql,array(
                 	':id_admin' => $data['id_admin']
@@ -162,17 +162,17 @@ class backend_db_employee
             } elseif($config['type'] === 'lastEmployee') {
                 //Last employee
                 $sql = 'SELECT em.*
-                FROM ap_admin_employee AS em ORDER BY em.id_admin DESC LIMIT 0,1';
+                FROM mc_admin_employee AS em ORDER BY em.id_admin DESC LIMIT 0,1';
                 return component_routing_db::layer()->fetch($sql);
             } elseif($config['type'] === 'jobs') {
                 //List job
                 $sql = 'SELECT jobs.* 
-                FROM ap_admin_jobs AS jobs';
+                FROM mc_admin_jobs AS jobs';
                 return component_routing_db::layer()->fetchAll($sql);
             } elseif($config['type'] === 'LastJobs') {
                 //List job
                 $sql = 'SELECT jobs.* 
-                FROM ap_admin_jobs AS jobs ORDER BY jobs.id_job DESC LIMIT 0,1';
+                FROM mc_admin_jobs AS jobs ORDER BY jobs.id_job DESC LIMIT 0,1';
                 return component_routing_db::layer()->fetchAll($sql);
             }
         }
@@ -187,7 +187,7 @@ class backend_db_employee
         if (is_array($config)) {
         	if($config['context'] === 'session') {
 				if ($config['type'] === 'lastSession') {
-					$sql = 'DELETE FROM ap_admin_session
+					$sql = 'DELETE FROM mc_admin_session
                 WHERE TO_DAYS(DATE_FORMAT(NOW(), "%Y%m%d")) - TO_DAYS(DATE_FORMAT(last_modified_session, "%Y%m%d")) > :limit AND id_admin = :id_admin';
 					component_routing_db::layer()->delete($sql,
 						array(
@@ -196,14 +196,14 @@ class backend_db_employee
 						)
 					);
 				}elseif($config['type'] === 'currentSession'){
-					$sql = 'DELETE FROM ap_admin_session
+					$sql = 'DELETE FROM mc_admin_session
                 WHERE id_admin = :id_admin';
 					component_routing_db::layer()->delete($sql,
 						array(
 							':id_admin' => $data['id_admin']
 						));
 				}elseif($config['type'] === 'sidSession'){
-					$sql = 'DELETE FROM ap_admin_session
+					$sql = 'DELETE FROM mc_admin_session
                 WHERE id_admin_session = :id_admin_session';
 					component_routing_db::layer()->delete($sql,
 						array(
@@ -213,8 +213,8 @@ class backend_db_employee
 			}elseif($config['context'] === 'employee'){
 				if($config['type'] === 'delEmployees') {
                     $queries = array(
-                        array('request'=>'DELETE emp.*, acr.* FROM ap_admin_employee AS emp LEFT JOIN ap_admin_access_rel AS acr ON emp.id_admin = acr.id_admin WHERE emp.id_admin IN('.$data['id'].')','params'=>array()),
-                        array('request'=>'DELETE FROM ap_admin_session WHERE id_admin IN('.$data['id'].')','params'=>array()),
+                        array('request'=>'DELETE emp.*, acr.* FROM mc_admin_employee AS emp LEFT JOIN mc_admin_access_rel AS acr ON emp.id_admin = acr.id_admin WHERE emp.id_admin IN('.$data['id'].')','params'=>array()),
+                        array('request'=>'DELETE FROM mc_admin_session WHERE id_admin IN('.$data['id'].')','params'=>array()),
                     );
 					component_routing_db::layer()->transaction($queries);
 				}
@@ -231,7 +231,7 @@ class backend_db_employee
 		if (is_array($config)) {
 			if ($config['context'] === 'session') {
 				if ($config['type'] === 'newSession') {
-					$sql = 'INSERT INTO ap_admin_session (id_admin_session,id_admin,ip_session,browser_admin,keyuniqid_admin)
+					$sql = 'INSERT INTO mc_admin_session (id_admin_session,id_admin,ip_session,browser_admin,keyuniqid_admin)
                     VALUE (:id_admin_session,:id_admin,:ip_session,:browser_admin,:keyuniqid_admin)';
 					component_routing_db::layer()->insert($sql,
 						array(
@@ -244,7 +244,7 @@ class backend_db_employee
 				}
 			}elseif ($config['context'] === 'employee') {
 				if ($config['type'] === 'newEmployee') {
-					$sql = 'INSERT INTO ap_admin_employee (keyuniqid_admin,title_admin,lastname_admin,firstname_admin,email_admin,phone_admin,address_admin,postcode_admin,city_admin,country_admin,active_admin,passwd_admin,last_change_admin)
+					$sql = 'INSERT INTO mc_admin_employee (keyuniqid_admin,title_admin,lastname_admin,firstname_admin,email_admin,phone_admin,address_admin,postcode_admin,city_admin,country_admin,active_admin,passwd_admin,last_change_admin)
                 			VALUE (:keyuniqid_admin,:title_admin,:lastname_admin,:firstname_admin,:email_admin,:phone_admin,:address_admin,:postcode_admin,:city_admin,:country_admin,:active_admin,:passwd_admin,NOW())';
 					component_routing_db::layer()->insert($sql,
 						array(
@@ -263,7 +263,7 @@ class backend_db_employee
 						)
 					);
 				} else if ($config['type'] === 'employeeRel') {
-					$sql = 'INSERT INTO ap_admin_access_rel (id_admin,id_role)
+					$sql = 'INSERT INTO mc_admin_access_rel (id_admin,id_role)
                 			VALUE (:id_admin,:id_role)';
 					component_routing_db::layer()->insert($sql,
 						array(
@@ -284,7 +284,7 @@ class backend_db_employee
 		if (is_array($config)) {
 			if ($config['context'] === 'session') {
 				if ($config['type'] === 'newSession') {
-					$sql = 'INSERT INTO ap_admin_session (id_admin_session,id_admin,ip_session,browser_admin,keyuniqid_admin)
+					$sql = 'INSERT INTO mc_admin_session (id_admin_session,id_admin,ip_session,browser_admin,keyuniqid_admin)
                     VALUE (:id_admin_session,:id_admin,:ip_session,:browser_admin,:keyuniqid_admin)';
 					component_routing_db::layer()->update($sql,
 						array(
@@ -297,7 +297,7 @@ class backend_db_employee
 				}
 			}elseif ($config['context'] === 'employee') {
 				if ($config['type'] === 'employee') {
-					$sql = 'UPDATE ap_admin_employee SET
+					$sql = 'UPDATE mc_admin_employee SET
 								title_admin = :title_admin,
 								lastname_admin = :lastname_admin,
 								firstname_admin = :firstname_admin,
@@ -326,7 +326,7 @@ class backend_db_employee
 						)
 					);
 				} elseif ($config['type'] === 'employeePwd') {
-					$sql = 'UPDATE ap_admin_employee SET passwd_admin = :passwd_admin WHERE id_admin = :id_admin';
+					$sql = 'UPDATE mc_admin_employee SET passwd_admin = :passwd_admin WHERE id_admin = :id_admin';
 					component_routing_db::layer()->update($sql,
 						array(
 							':passwd_admin' => $data['passwd_admin'],
@@ -334,14 +334,14 @@ class backend_db_employee
 						)
 					);
 				} elseif ($config['type'] === 'employeeActive') {
-					$sql = 'UPDATE ap_admin_employee SET active_admin = :active_admin WHERE id_admin IN ('.$data['id_admin'].')';
+					$sql = 'UPDATE mc_admin_employee SET active_admin = :active_admin WHERE id_admin IN ('.$data['id_admin'].')';
 					component_routing_db::layer()->update($sql,
 						array(
 							':active_admin' => $data['active_admin']
 						)
 					);
 				} elseif ($config['type'] === 'askPassword') {
-					$sql = 'UPDATE ap_admin_employee SET change_passwd = :change_passwd WHERE email_admin = :email_admin';
+					$sql = 'UPDATE mc_admin_employee SET change_passwd = :change_passwd WHERE email_admin = :email_admin';
 					component_routing_db::layer()->update($sql,
 						array(
 							':change_passwd' => $data['token'],
@@ -349,7 +349,7 @@ class backend_db_employee
 						)
 					);
 				} elseif ($config['type'] === 'newPassword') {
-					$sql = 'UPDATE ap_admin_employee SET passwd_admin = :passwd_admin, change_passwd = NULL WHERE email_admin = :email_admin';
+					$sql = 'UPDATE mc_admin_employee SET passwd_admin = :passwd_admin, change_passwd = NULL WHERE email_admin = :email_admin';
 					component_routing_db::layer()->update($sql,
 						array(
 							':passwd_admin' => $data['newPassword'],

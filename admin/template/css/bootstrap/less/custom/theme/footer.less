@@ -2,7 +2,7 @@
  * Rules for footer
  */
 #footer {
-	background: @footer-bg;
+	//background: @footer-bg;
 	color: @footer-color;
 	position: absolute;
 	bottom: 34px;
@@ -46,93 +46,6 @@
 
 	&-blocks {
 		padding: 20px 0;
-	}
-}
-
-#block {
-	&-contact {
-		.normalize-link(@main-color);
-	}
-
-	&-last-news {
-		.news-list-last {
-			h5 {
-				color: @footer-color;
-				.semiBold;
-				line-height: 1.428;
-			}
-
-			a {
-				color: @footer-color;
-				text-decoration: none;
-				h5 {
-					color: @footer-color;
-					text-decoration: none;
-				}
-				&:hover {
-					color: @footer-color;
-					text-decoration: none;
-					p, h5 {
-						color: @footer-color;
-						text-decoration: none;
-					}
-				}
-			}
-
-			.media-footer {
-				border-bottom: 1px dotted @light-gray;
-				color: @light-gray;
-				padding-bottom: 10px;
-				p {
-					font-size: 12px;
-					margin-bottom: 5px;
-				}
-				small {
-					color: @footer-color;
-				}
-			}
-		}
-	}
-
-	// --- Block contact
-	&-contact {
-		color: @light-gray;
-		font-size: 12px;
-
-		strong/*, .mailto a*/ {
-			font-weight: 600;
-		}
-
-		h4 + p {
-			font-size: 14px;
-		}
-	}
-
-	// --- Facebook widget Page Box
-	&-facebook {
-		// Widget forced style
-		.fb-page.fb_iframe_widget, .fb-page.fb_iframe_widget > span, .fb-page.fb_iframe_widget iframe, ._li div, #u_0_0, iframe ._h7r, ._1drm {
-			width: 100% !important;
-			min-width: 100% !important;
-			max-width: 100% !important;
-			height: 100% !important;
-			min-height: 100% !important;
-			max-height: 100% !important;
-		}
-		._1drr._2ph- {
-			bottom: 200px !important;
-			z-index: 1 !important;
-		}
-	}
-
-	// --- Block links
-	&-cms {
-		li {
-			a {
-				display: block;
-				padding: 2px 0 3px;
-			}
-		}
 	}
 }
 
@@ -205,6 +118,7 @@ ul#nav-footer.link-bar {
 		display: block;
 		width: 100%;
 		z-index: 2;
+		padding-bottom: 0;
 
 		.wrapper {
 			background: @main-color;

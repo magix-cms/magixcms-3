@@ -58,15 +58,17 @@
         </div>
     </main>
 {/block}
+{block name="footer"}{include file="section/footer.tpl"}{/block}
 {block name="foot"}
-   {* {script src="/min/?g=publicjs,globalize,jimagine" type="javascript"}
-    {script src="/min/?f=/skin/js/global.min.js,/skin/js/vendor/jquery.formatter.min.js" type="javascript"}
-    {script src="/skin/js/form.min.js" type="javascript"}
+    {script src="/{baseadmin}/min/?g=publicjs,globalize,jimagine" type="javascript"}
+    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/global.min.js,libjs/vendor/jquery.formatter.min.js" type="javascript"}
+    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/form.min.js" type="javascript"}
     <script type="text/javascript">
-        $.nicenotify.notifier = {
-            box:"",
-            elemclass : '.mc-message'
+        $.jmRequest.notifier = {
+            cssClass : '.mc-message'
         };
+        var editor_version = "{$smarty.const.VERSION_EDITOR}";
+        var baseadmin = "{baseadmin}";
         $(function(){
             if (typeof globalForm == "undefined")
             {
@@ -76,7 +78,7 @@
                 globalForm.run(controller);
             }
         });
-    </script>*}
+    </script>
 {/block}
 </body>
 </html>
