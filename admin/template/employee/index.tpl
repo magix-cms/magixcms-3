@@ -6,7 +6,7 @@
     {if {employee_access type="append" class_name=$cClass} eq 1}
     <div class="pull-right">
         <p class="text-right">
-            {#nbr_employee#|ucfirst}: {$getItemsEmployee|count}<a href="{geturl}/admin/index.php?controller=employee&amp;action=add" title="Ajouter un employé" class="btn btn-link">
+            {#nbr_employee#|ucfirst}: {$getItemsEmployee|count}<a href="{geturl}/{baseadmin}/index.php?controller={$smarty.get.controller}&amp;action=add" title="Ajouter un employé" class="btn btn-link">
                 <span class="fa fa-plus"></span> {#add_employee#|ucfirst}
             </a>
         </p>
