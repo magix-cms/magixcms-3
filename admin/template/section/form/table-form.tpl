@@ -177,7 +177,7 @@
                         <span class="fa fa-power-off text-danger"></span> <span class="hidden-sm hidden-md">{#unactive_selected#|ucfirst}</span>
                     </button>
                     {/if}
-                    {if {employee_access type="delete_access" class_name=$cClass} eq 1}
+                    {if {employee_access type="del" class_name=$cClass} eq 1}
                         &mdash;
                     <button class="btn btn-link modal_action" data-target="#delete_modal" data-controller="{$controller}"{if $subcontroller} data-sub="{$subcontroller}"{/if}>
                         <span class="fa fa-trash"></span> <span class="hidden-sm hidden-md">{#delete_selected#|ucfirst}</span>
@@ -215,7 +215,7 @@
                     </li>
                     <li role="separator" class="divider"></li>
                     {/if}
-                    {if {employee_access type="delete_access" class_name=$cClass} eq 1}
+                    {if {employee_access type="del" class_name=$cClass} eq 1}
                     <li>
                         <button class="btn btn-link modal_action" data-target="#delete_modal" data-controller="{$controller}"{if $subcontroller} data-sub="{$subcontroller}"{/if}>
                             <span class="fa fa-trash"></span> <span>{#delete_selected#|ucfirst}</span>

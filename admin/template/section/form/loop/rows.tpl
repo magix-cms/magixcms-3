@@ -24,10 +24,10 @@
             </td>
         {/foreach}
         <td class="actions text-center">
-            {if {employee_access type="edit_access" class_name=$cClass} eq 1}
-            <a href="{$smarty.server.SCRIPT_NAME}?action=edit&edit={$data[$section]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="btn btn-link action_on_record"><span class="fa fa-pencil-square-o"></span></a>
+            {if {employee_access type="edit" class_name=$cClass} eq 1}
+            <a href="/{baseadmin}/index.php?controller={$controller}&action=edit&edit={$data[$section]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="btn btn-link action_on_record"><span class="fa fa-pencil-square-o"></span></a>
             {/if}
-            {if {employee_access type="delete_access" class_name=$cClass} eq 1}
+            {if {employee_access type="del" class_name=$cClass} eq 1}
             {if !$data[$section]|in_array:$readonly}
                 <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$data[$section]}" data-controller="{$controller}" {if $subcontroller} data-sub="{$subcontroller}"{/if} data-target="#delete_modal"><span class="fa fa-trash"></span></a>
             {/if}

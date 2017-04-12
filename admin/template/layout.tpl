@@ -1,4 +1,4 @@
-{autoload_i18n}{$cClass = "frontend_controller_"|cat:{$smarty.server.SCRIPT_NAME|substr:1:-4}}<!DOCTYPE html>
+{autoload_i18n}{$cClass = "backend_controller_"|cat:$smarty.get.controller}<!DOCTYPE html>
 <!--[if lt IE 7]><html lang="fr" class="lt-ie9 lt-ie8 lt-ie7"><![endif]-->
 <!--[if IE 7]><html lang="fr" class="lt-ie9 lt-ie8"><![endif]-->
 <!--[if IE 8]><html lang="fr" class="lt-ie9"><![endif]-->

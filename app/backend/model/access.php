@@ -79,11 +79,11 @@ class backend_model_access extends backend_db_employee{
                 'class_name'  =>  $class_name
             )
         );
-        $access['view']   = $data_access['view_access'];
-        $access['add']    = $data_access['add_access'];
-        $access['edit']   = $data_access['edit_access'];
-        $access['delete'] = $data_access['delete_access'];
-        $access['action'] = $data_access['action_access'];
+        $access['view']   = $data_access['view'];
+        $access['add']    = $data_access['append'];
+        $access['edit']   = $data_access['edit'];
+        $access['delete'] = $data_access['del'];
+        $access['action'] = $data_access['action'];
         return $access;
     }
 
@@ -102,13 +102,14 @@ class backend_model_access extends backend_db_employee{
                 'id_role'  =>  $id_role
             )
         );
+
         foreach($array_access as $key){
             $class_name[$key['class_name']]= array(
-                'view_access'   =>  $key['view_access'],
-                'add_access'    =>  $key['add_access'],
-                'edit_access'   =>  $key['edit_access'],
-                'delete_access' =>  $key['delete_access'],
-                'action_access' =>  $key['action_access']
+                'view'   =>  $key['view'],
+                'append'    =>  $key['append'],
+                'edit'   =>  $key['edit'],
+                'del' =>  $key['del'],
+                'action' =>  $key['action']
             );
         }
         return $class_name;
@@ -120,11 +121,11 @@ class backend_model_access extends backend_db_employee{
      */
     public function module_access($class_name){
         $all_access = self::allDataEmployee(self::dataSession());
-        $access['view']   = $all_access[$class_name]['view_access'];
-        $access['add']    = $all_access[$class_name]['add_access'];
-        $access['edit']   = $all_access[$class_name]['edit_access'];
-        $access['delete'] = $all_access[$class_name]['delete_access'];
-        $access['action'] = $all_access[$class_name]['action_access'];
+        $access['view']   = $all_access[$class_name]['view'];
+        $access['add']    = $all_access[$class_name]['append'];
+        $access['edit']   = $all_access[$class_name]['edit'];
+        $access['delete'] = $all_access[$class_name]['del'];
+        $access['action'] = $all_access[$class_name]['action'];
         return $access;
     }
 }

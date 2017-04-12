@@ -1,4 +1,4 @@
-{$eClass = $smarty.server.SCRIPT_NAME|substr:1:-4}
+{$eClass = $smarty.get.controller}
 <div class="panels row">
     <section class="panel col-xs-12">
         {if $debug}

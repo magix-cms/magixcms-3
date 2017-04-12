@@ -23,7 +23,7 @@ function smarty_function_employee_access($params, $template){
         return;
     }
     if (!isset($type) || empty($type) || $type === '') {
-        $type = 'view_access';
+        $type = 'view';
     }
     if(class_exists('backend_model_access')){
         $model_access = new backend_model_access();

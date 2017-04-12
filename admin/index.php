@@ -19,7 +19,7 @@ if(http_request::isSession('keyuniqid_admin')) {
 /*$members = new backend_controller_login();
 $members->checkout();*/
 $template = new backend_model_template();
-$controllerCollection = array('dashboard','login','home','news','catalog','webservice');
+$controllerCollection = array('dashboard','login','employee','home','news','catalog','webservice');
 $formClean = new form_inputEscape();
 if(http_request::isGet('controller')){
     $controller_name = $formClean->simpleClean($_GET['controller']);
