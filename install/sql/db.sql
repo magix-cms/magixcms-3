@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `mc_config` (
   `attr_name` varchar(20) NOT NULL,
   `status` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`idconfig`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 INSERT INTO `mc_config` (`idconfig`, `attr_name`, `status`) VALUES
 (1, 'pages', 1),
@@ -91,14 +91,14 @@ INSERT INTO `mc_css_inliner_color` (`id_cssi`, `property_cssi`, `color_cssi`) VA
 
 CREATE TABLE IF NOT EXISTS `mc_lang` (
   `id_lang` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
-  `iso_lang` varchar(10) NOT NULL,
-  `name_lang` varchar(40) DEFAULT NULL,
-  `default_lang` smallint(1) unsigned NOT NULL DEFAULT '0',
-  `active_lang` smallint(1) unsigned NOT NULL DEFAULT '0',
+  `iso` varchar(10) NOT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `by_default` smallint(1) unsigned NOT NULL DEFAULT '0',
+  `active` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_lang`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-INSERT INTO `mc_lang` (`id_lang`, `iso_lang`, `name_lang`, `default_lang`, `active_lang`) VALUES
+INSERT INTO `mc_lang` (`id_lang`, `iso`, `name`, `by_default`, `active`) VALUES
 (1, 'fr', 'francais', 1, 1);
 
 CREATE TABLE IF NOT EXISTS `mc_module` (
@@ -129,3 +129,27 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`) VALUES
 (9, 'googleplus', NULL, 'string', 'Google plus'),
 (10, 'robots', 'noindex,nofollow', 'string', 'metas robots'),
 (11, 'css_inliner', '1', 'string', 'CSS inliner');
+
+CREATE TABLE IF NOT EXISTS `mc_plugins` (
+  `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`id_plugins`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_home_page` (
+  `id_page` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_page`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_home_page_content` (
+  `id_content` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `id_page` smallint(3) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `content` text,
+  `seo_title` varchar(180) DEFAULT NULL,
+  `seo_desc` varchar(180) DEFAULT NULL,
+  `published` smallint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_content`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

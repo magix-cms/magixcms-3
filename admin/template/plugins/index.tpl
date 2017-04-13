@@ -1,0 +1,27 @@
+{extends file="layout.tpl"}
+{block name='head:title'}Extensions{/block}
+{block name='body:id'}extensions{/block}
+{block name='article:header'}
+    <h1 class="h2">Extensions</h1>
+{/block}
+{block name='article:content'}
+    {if is_array($getListPlugins) && !empty($getListPlugins)}
+        {foreach $getListPlugins as $item}
+            <section class="col-xs-12 col-md-6 col-lg-3">
+                <header>
+                    <h2 class="h5">{$item.name}</h2>
+                </header>
+                <div>
+                    <div class="row folder-box">
+                        <div class="col-xs-6">
+                            <p><span class="fa fa-check"></span> Installé</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p class="text-right">Désinstallé</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {/foreach}
+    {/if}
+{/block}

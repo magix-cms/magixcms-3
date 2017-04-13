@@ -32,6 +32,7 @@
                 {function cleanTextArea}
                     {$field|escape:'html':'UTF-8':TRUE}
                 {/function}
+                {widget_plugins}
                 {*{cleanTextArea field=$s_content}*}
                 <div id="content" class="col-xs-12 col-sm-9 col-md-10 pull-right">
                     <header>
