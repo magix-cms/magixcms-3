@@ -4,7 +4,6 @@
  *
  * Type:     function
  * Name:     employee_access
- * Date:     23/09/2012
  * Purpose:  Retourne les accès de l'employée courant
  * Examples: {if employee_access type="view_access" class_name="" eq 1}{/if}
  * Output:   

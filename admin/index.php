@@ -38,9 +38,13 @@ if(http_request::isGet('controller')){
             $dispatcher->dispatch();
         }
     }else{
-        $routes = 'admin';
-        $plugins = 'public';
+        $routes = 'plugins';
+        $plugins = 'admin';
+        $members = new backend_controller_login();
+        $members->checkout();
         if (http_request::isSession('keyuniqid_admin')) {
+            $pluginsSetConfig = new backend_model_plugins();
+            $pluginsSetConfig->templateDir($routes, $template, $plugins);
             $dispatcher = new component_routing_dispatcher($routes, $template, $plugins);
             $dispatcher->dispatch();
         }

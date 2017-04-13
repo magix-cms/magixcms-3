@@ -192,7 +192,7 @@ class backend_model_template{
      * @throws Exception
      * @return void
      */
-    public static function setCache($smarty){
+    public function setCache($smarty){
         if (!self::frontendTheme() instanceof backend_model_template){
             throw new Exception('template instance is not found');
         }else{
@@ -221,7 +221,7 @@ class backend_model_template{
      * @throws Exception
      * @return void
      */
-	public static function addWidgetDir($smarty,$rootpath,$debug=false){
+	public function addWidgetDir($smarty,$rootpath,$debug=false){
 		if (!self::frontendTheme() instanceof backend_model_template){
 			throw new Exception('template instance is not found');
 		}else{
@@ -239,6 +239,12 @@ class backend_model_template{
 	}
 
     /**
+     * @param $template_dir
+     */
+    public function addTemplateDir($template_dir){
+        backend_model_smarty::getInstance()->addTemplateDir($template_dir);
+    }
+    /**
      * @access public
      * Affiche le template
      * @param string|object $template
@@ -246,7 +252,7 @@ class backend_model_template{
      * @param mixed $compile_id
      * @param object $parent
      */
-    public static function display($template = null, $cache_id = null, $compile_id = null, $parent = null){
+    public function display($template = null, $cache_id = null, $compile_id = null, $parent = null){
         if(!self::isCached($template, $cache_id, $compile_id, $parent)){
             backend_model_smarty::getInstance()->display($template, $cache_id, $compile_id, $parent);
         }else{
@@ -266,7 +272,7 @@ class backend_model_template{
      * @param bool   $no_output_filter  if true do not run output filter
      * @return string rendered template output
      */
-    public static function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false){
+    public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false){
         if(!self::isCached($template, $cache_id, $compile_id, $parent)){
             return backend_model_smarty::getInstance()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
         }else{
@@ -283,7 +289,7 @@ class backend_model_template{
      * @throws Exception
      * @return void
      */
-	public static function assign($tpl_var, $value = null, $nocache = false){
+	public function assign($tpl_var, $value = null, $nocache = false){
 		if (is_array($tpl_var)){
 			backend_model_smarty::getInstance()->assign($tpl_var);
 		}else{
@@ -302,7 +308,7 @@ class backend_model_template{
 	 * @param mixed $compile_id
 	 * @param object $parent
 	 */
-	public static function isCached($template = null, $cache_id = null, $compile_id = null, $parent = null){
+	public function isCached($template = null, $cache_id = null, $compile_id = null, $parent = null){
 		backend_model_smarty::getInstance()->isCached($template, $cache_id, $compile_id, $parent);
 	}
 
@@ -312,7 +318,7 @@ class backend_model_template{
      * @param bool $search_parents
      * @return string
      */
-	public static function getConfigVars($varname = null, $search_parents = true){
+	public function getConfigVars($varname = null, $search_parents = true){
 		return backend_model_smarty::getInstance()->getConfigVars($varname, $search_parents);
 	}
 
@@ -336,7 +342,7 @@ class backend_model_template{
 	 * @param bool $debug
 	 * @throws Exception
 	 */
-	public static function addConfigFile(array $addConfigDir,array $load_files,$debug=false){
+	public function addConfigFile(array $addConfigDir,array $load_files,$debug=false){
 		if(is_array($addConfigDir)){
 			backend_model_smarty::getInstance()->addConfigDir($addConfigDir);
 		}else{
