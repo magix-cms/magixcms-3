@@ -1,6 +1,6 @@
 <?php
 class backend_model_data {
-	protected $template, $db, $providers, $caller;
+	protected $template, $db, $caller;
 	public $search;
 
 	/**
@@ -11,7 +11,6 @@ class backend_model_data {
 	{
 		$this->db = (new ReflectionClass(get_parent_class($caller)))->newInstance();
 		$this->template = new backend_model_template();
-		$this->providers = new backend_model_provider();
 		$formClean = new form_inputEscape();
 
 		// --- Search
@@ -63,22 +62,5 @@ class backend_model_data {
 		}
 	}
 
-	/**
-	 * Get all providers of the same $type
-	 * @param $type
-	 * @return mixed
-	 */
-	public function getProviders($type) {
-		$data = $this->providers->getItems($type);
-		switch ($type) {
-			case 'church':
-				$varName = 'churches';
-				break;
-
-			default:
-				$varName = $type.'s';
-		}
-		$this->template->assign($varName,$data);
-	}
 }
 ?>

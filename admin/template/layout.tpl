@@ -29,6 +29,10 @@
     <main id="page" class="container-fluid">
         <div class="row">
             {block name='article'}
+                {function cleanTextArea}
+                    {$field|escape:'html':'UTF-8':TRUE}
+                {/function}
+                {*{cleanTextArea field=$s_content}*}
                 <div id="content" class="col-xs-12 col-sm-9 col-md-10 pull-right">
                     <header>
                         <button id="toggle-menu" type="button" class="open-menu navbar-toggle" data-target="#mobile-menu1">
@@ -43,7 +47,8 @@
                         </button>
                         {block name='article:header'}{/block}
                     </header>
-                    {block name='article:content'}{/block}
+                    {block name='article:content'}
+                    {/block}
                 </div>
             {/block}
 

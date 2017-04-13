@@ -1,5 +1,5 @@
 <?php
-function smarty_function_widget_profil($params, $template){
+function smarty_function_widget_employee($params, $template){
     $employeeData = new backend_db_employee();
     $assign = isset($params['assign']) ? $params['assign'] : 'employeeData';
     $data = $employeeData->fetchData(

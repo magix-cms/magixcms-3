@@ -34,8 +34,8 @@
         localStorage.setItem("k", kpl.k);
         localStorage.setItem("t", kpl.t);
 
-        if(window.location.pathname == '/'+baseadmin+'/index.php?strLanguage=fr&controller=login') {
-            window.location.href = '/'+baseadmin+'/index.php?strLanguage=fr&controller=dashboard';
+        if(window.location.pathname == '/'+baseadmin+'/index.php?controller=login') {
+            window.location.href = '/'+baseadmin+'/index.php?controller=dashboard';
         } else {
             window.location.reload();
         }
@@ -56,13 +56,13 @@
         data.ticket = ticket;
         $.jmRequest({
             handler: "ajax",
-            url: '/'+baseadmin+'/index.php?strLanguage=fr&controller=login',
+            url: '/'+baseadmin+'/index.php?controller=login',
             method: 'post',
             data: data,
             success: function (d) {
                 if(!d) {
                     localStorage.clear();
-                    window.location.href = '/'+baseadmin+'/index.php?strLanguage=fr&controller=login';
+                    window.location.href = '/'+baseadmin+'/index.php?controller=login';
                 } else {
                     store(d);
                 }

@@ -40,6 +40,12 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class backend_model_core{
+    protected $setUrl;
+    public function __construct()
+    {
+        $this->setUrl = new http_url();
+    }
+
     /**
      * Retourne un tableaux contenant les identifiant actif (int OR string)
      * @access public
@@ -47,7 +53,7 @@ class backend_model_core{
      * @param array $setRouter
      * @return array
      */
-    public static function setCurrentId (array $setRouter)
+    public function setCurrentId (array $setRouter)
     {
         $ModelTemplate  =   new backend_model_template();
         //$HelperClean    =   new form_inputFilter();
@@ -91,5 +97,13 @@ class backend_model_core{
 
         return $current;
 
+    }
+
+    /**
+     * @param $controller
+     * @return string
+     */
+    public function setUrlController($controller){
+        return $this->setUrl->getUrl().PATHADMIN.'/index.php?controller'.$controller;
     }
 }

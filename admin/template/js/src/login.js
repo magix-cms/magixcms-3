@@ -59,7 +59,7 @@ $(document).ready(function() {
             e.preventDefault();
             $.jmRequest({
                 handler: "submit",
-                url: '/admin/index.php?strLanguage=fr&controller=login&action=rstpwd',
+                url: '/admin/index.php?controller=login&action=rstpwd',
                 method: 'post',
                 form: $(f),
                 resetForm:true,

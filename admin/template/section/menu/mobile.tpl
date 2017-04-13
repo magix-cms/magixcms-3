@@ -1,74 +1,8 @@
 <nav id="mobile-menu1" class="mobile-menu visible-xs">
-    {*<ul class="nav">
-        <li class="has-submenu">
-            <button type="button" class="navbar-toggle{if $smarty.server.SCRIPT_NAME =="/client.php"} open{/if}" data-toggle="collapse" data-target="#menu-client">
-                <span class="fa fa-plus"></span>
-            </button>
-            <a href="#">
-                <span class="fa fa-users"></span> Clients
-            </a>
-            <nav id="menu-client" class="collapse navbar-collapse{if $smarty.server.SCRIPT_NAME =="/client.php"} in{/if}">
-                <ul>
-                    <li>
-                        <a href="#">Listes des clients</a>
-                    </li>
-                    <li>
-                        <a href="#">Ajouter un client</a>
-                    </li>
-                </ul>
-            </nav>
-        </li>
-        <li class="has-submenu">
-            <button type="button" class="navbar-toggle{if $smarty.server.SCRIPT_NAME =="/defunct.php"} open{/if}" data-toggle="collapse" data-target="#menu-defunct">
-                <span class="fa fa-plus"></span>
-            </button>
-            <a href="#">
-                <span class="fa fa-folder"></span> Défunts
-            </a>
-            <nav id="menu-defunct" class="collapse navbar-collapse{if $smarty.server.SCRIPT_NAME =="/defunct.php"} in{/if}">
-                <ul>
-                    <li>
-                        <a href="#">Listes des défunts</a>
-                    </li>
-                    <li>
-                        <a href="#">Ajouter un défunt</a>
-                    </li>
-                </ul>
-            </nav>
-        </li>
-        <li>
-            <a href="#">
-                <span class="fa fa-home"></span> Funérailles
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <span class="fa fa-file"></span> Documents
-            </a>
-        </li>
-        <li class="has-submenu{if $smarty.server.SCRIPT_NAME =="/employee.php"} active{/if}">
-            <button type="button" class="navbar-toggle{if $smarty.server.SCRIPT_NAME =="/employee.php"} open{/if}" data-toggle="collapse" data-target="#menu-employee">
-                <span class="fa fa-plus"></span>
-            </button>
-            <a href="{geturl}/employee.php">
-                <span class="fa fa-user"></span> Personnel
-            </a>
-            <nav id="menu-employee" class="collapse navbar-collapse{if $smarty.server.SCRIPT_NAME =="/employee.php"} in{/if}">
-                <ul>
-                    <li>
-                        <a href="{geturl}/employee.php">Listes des employés</a>
-                    </li>
-                    <li>
-                        <a href="#">Ajouter un employé</a>
-                    </li>
-                </ul>
-            </nav>
-        </li>
-    </ul>*}
     {include file="section/menu/section.tpl" mobile=true}
 </nav>
 <nav id="mobile-menu2" class="mobile-menu visible-xs">
-    {widget_profil}
+    {widget_employee}
     <ul class="nav">
         <li>
             <ul class="nav">
@@ -78,7 +12,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{geturl}/index.php?logout=1" class="pull-left">
+                    <a href="{geturl}/admin/index.php?controller=dashboard&logout=1" class="pull-left">
                         <span class="fa fa-power-off"></span>
                     </a>
                 </li>
@@ -108,26 +42,13 @@
             </a>
             <nav id="menu-tools" class="collapse navbar-collapse">
                 <ul>
+                    {if {employee_access type="view" class_name="backend_controller_webservice"} eq 1}
                     <li>
-                        <a href="{geturl}/provider.php">
-                            <span class="fa fa-users"></span> {#provider#|ucfirst}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{geturl}/township.php">
-                            <span class="fa fa-home"></span> {#township#|ucfirst}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{geturl}/sentence.php">
-                            <span class="fa fa-list"></span> {#sentence#|ucfirst}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{geturl}/webservice.php">
+                        <a href="{geturl}/{baseadmin}/index.php?controller=webservice.php">
                             <span class="fa fa-cloud"></span> Web Service
                         </a>
                     </li>
+                    {/if}
                 </ul>
             </nav>
         </li>

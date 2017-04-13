@@ -20,7 +20,7 @@
             <div class="flip-container">
                 <div class="flipper">
                     <div class="login-box front panel">{* {$smarty.server.PHP_SELF} *}
-                        <form id="login_form" method="post" action="{geturl}/admin/index.php?strLanguage=fr&controller=login">
+                        <form id="login_form" method="post" action="{geturl}/admin/index.php?controller=login">
                             <div class="form-group">
                                 <label class="control-label" for="email_admin">Adresse e-mail</label>
                                 <input type="text" class="form-control" placeholder=" {#placeholder_login#}" id="email_admin" name="email_admin" value="" />
