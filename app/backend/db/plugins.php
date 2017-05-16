@@ -46,7 +46,7 @@ class backend_db_plugins{
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
                 if ($config['type'] === 'register') {
-                    $sql = 'SELECT * FROM mc_plugins WHERE id_plugins = :id';
+                    $sql = 'SELECT * FROM mc_plugins WHERE name = :id';
                     $params = $data;
                 }
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;

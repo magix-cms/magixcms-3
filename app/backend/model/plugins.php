@@ -37,7 +37,8 @@ class backend_model_plugins{
         if($data['id_plugins'] != null){
             return;
         }else{
-            print_r(array('type'=>'register'),array('name'=>$id));
+            //print_r(array('type'=>'register'));
+            //print_r(array('name'=>$id));
             //$this->dbPlugins->insert(array('type'=>'register'),array('name'=>$id));
             return;
         }
