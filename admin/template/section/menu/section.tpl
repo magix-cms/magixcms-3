@@ -24,8 +24,8 @@
         </ul>
     </li>
     {/if}
-    <li class="has-submenu">
-        <a href="#">
+    <li class="has-submenu{if $smarty.get.controller == 'plugins'} active{/if}">
+        <a href="{geturl}/{baseadmin}/index.php?controller=plugins">
             <span class="fa fa-cogs"></span> Extensions
         </a>
         {if is_array($getItemsPlugins) && !empty($getItemsPlugins)}

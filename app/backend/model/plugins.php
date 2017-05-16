@@ -14,11 +14,33 @@ class backend_model_plugins{
         $this->dbPlugins = new backend_db_plugins();
         //$this->data = new backend_model_data($this);
     }
+
+    /**
+     * @return mixed|null
+     */
     private function setItems(){
-        return $this->dbPlugins->fetchAll(array('type'=>'list'));
+        return $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
     }
+
+    /**
+     * @return mixed|null
+     */
     public function getItems(){
         return $this->setItems();
+    }
+
+    /**
+     * @param $id
+     */
+    public function register($id){
+        $data = $this->dbPlugins->fetchData(array('context'=>'unique','type'=>'register'),array(':id'=>$id));
+        if($data['id_plugins'] != null){
+            return;
+        }else{
+            print_r(array('type'=>'register'),array('name'=>$id));
+            //$this->dbPlugins->insert(array('type'=>'register'),array('name'=>$id));
+            return;
+        }
     }
     /**
      * @param $routes

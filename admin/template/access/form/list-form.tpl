@@ -2,7 +2,7 @@
 {if !isset($class_table)}{$class_table = "col-xs-12 col-md-6"}{/if}
 <div class="row">
     <h3>Ajouter un module</h3>
-    <form id="add_{$sub}" action="{$smarty.server.SCRIPT_NAME}?action=add&tabs={$sub}&edit={$id}" method="post" class="validate_form add_to_list {$class_form}">
+    <form id="add_{$sub}" action="{geturl}/{baseadmin}/index.php?controller=access&amp;action=add&tabs={$sub}&edit={$id}" method="post" class="validate_form add_to_list {$class_form}">
         {include file="{$controller}/form/{$sub}.tpl"}
     </form>
     <div class="{$class_table}">

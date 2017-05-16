@@ -1,4 +1,4 @@
-<form id="add_setup" action="{$smarty.server.SCRIPT_NAME}?action=edit&edit={$role.id_role}" method="post" class="validate_form edit_form">
+<form id="add_setup" action="{geturl}/{baseadmin}/index.php?controller=access&amp;action=edit&edit={$role.id_role}" method="post" class="validate_form edit_form">
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-lg-4">
             <div class="form-group">

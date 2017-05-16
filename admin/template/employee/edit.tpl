@@ -3,7 +3,7 @@
 {block name='body:id'}employee{/block}
 
 {block name='article:header'}
-    <h1 class="h2"><a href="{geturl}/employee.php" title="Afficher la liste des employés">{#employees#|ucfirst}</a></h1>
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des employés">{#employees#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="append" class_name=$cClass} eq 1}
@@ -20,7 +20,7 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="row">
-                    <form id="edit_employee" action="{$smarty.server.SCRIPT_NAME}?action=edit&edit={$employee.id_admin}" method="post" class="validate_form edit_form col-xs-12 col-md-6">
+                    <form id="edit_employee" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$employee.id_admin}" method="post" class="validate_form edit_form col-xs-12 col-md-6">
                         <div class="form-group radio-group">
                             <label>{#title#|ucfirst}&nbsp;*</label>
                             <div class="radio">

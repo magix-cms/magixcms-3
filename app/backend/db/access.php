@@ -84,11 +84,11 @@ class backend_db_access{
                     array(
                         ':id_role'      => $data['id_role'],
                         ':id_module'    => $data['id_module'],
-                        ':view'  => $data['view'],
-                        ':append'   => $data['append'],
-                        ':edit'  => $data['edit'],
-                        ':del'=> $data['del'],
-                        ':action'=> $data['action']
+                        ':view'         => $data['view'],
+                        ':append'       => $data['append'],
+                        ':edit'         => $data['edit_access'],
+                        ':del'          => $data['del'],
+                        ':action'       => $data['action_access']
                     )
                 );
             }
@@ -113,6 +113,7 @@ class backend_db_access{
                 ));
 
             }elseif ($config['type'] === 'access') {
+
                 $sql = 'UPDATE mc_admin_access
 								SET view = :view,
 									append = :append,
@@ -124,9 +125,9 @@ class backend_db_access{
                         ':id_access'    => $data['id_access'],
                         ':view'  => $data['view'],
                         ':append'   => $data['append'],
-                        ':edit'  => $data['edit'],
+                        ':edit'  => $data['edit_access'],
                         ':del'=> $data['del'],
-                        ':action'=> $data['action']
+                        ':action'=> $data['action_access']
                     )
                 );
             }

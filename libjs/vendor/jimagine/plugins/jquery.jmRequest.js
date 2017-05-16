@@ -35,7 +35,7 @@
                 $.jmRequest.initbox(e,{
                         display: true
                     },{
-                        class : '.mc-message'
+                        cssClass : '.mc-message'
                     }
                 );
             }
@@ -226,7 +226,7 @@
     $.jmRequest.defaults = {
         display: true,
         refresh: false,
-        redirectUrl: null,
+        redirectUrl: false,
         timeout: 2800,
         debug: false
     };
@@ -320,7 +320,7 @@
             $(classContainer).html(response);
         }
 
-        if(opts.redirectUrl !== null || opts.redirectUrl !== ""){
+        if(opts.redirectUrl != false || opts.redirectUrl != ""){
             redirect(opts.redirectUrl,opts.timeout);
         }
 

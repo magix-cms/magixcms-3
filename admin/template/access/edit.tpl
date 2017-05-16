@@ -3,7 +3,7 @@
 {block name='body:id'}access{/block}
 
 {block name='article:header'}
-    <h1 class="h2"><a href="{geturl}/access.php" title="Afficher la liste des rôles">{#access#|ucfirst}</a></h1>
+    <h1 class="h2"><a href="{geturl}/{baseadmin}/index.php?controller=access" title="Afficher la liste des rôles">{#access#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="edit" class_name=$cClass} eq 1}
@@ -46,8 +46,8 @@
 {/block}
 
 {block name="foot" append}
-    {script src="/min/?f=skin/js/vendor/tabcomplete.min.js,skin/js/vendor/livefilter.min.js,skin/js/vendor/bootstrap-select.min.js,skin/js/vendor/filterlist.min.js" type="javascript"}
-    {script src="/min/?f=/skin/js/access.min.js" type="javascript"}
+    {script src="/{baseadmin}/min/?f=libjs/vendor/tabcomplete.min.js,libjs/vendor/livefilter.min.js,libjs/vendor/bootstrap-select.min.js,libjs/vendor/filterlist.min.js" type="javascript"}
+    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/access.min.js" type="javascript"}
     <script type="text/javascript">
         $(function(){
             if (typeof access == "undefined")

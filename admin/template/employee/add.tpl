@@ -3,7 +3,7 @@
 {block name='body:id'}employee{/block}
 
 {block name='article:header'}
-    <h1 class="h2"><a href="{geturl}/employee.php" title="Afficher la liste des employés">{#employees#|ucfirst}</a></h1>
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des employés">{#employees#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="append" class_name=$cClass} eq 1}

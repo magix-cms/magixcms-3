@@ -25,7 +25,7 @@
 {if $editableRow}
 <tr class="collapse" id="{$sub}Form{$id}">
     <td colspan="4">
-        <form action="{$smarty.server.SCRIPT_NAME}?action=edit&tabs={$sub}&edit={$id}" method="post" class="validate_form edit_in_list edit_loc">
+        <form action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&tabs={$sub}&edit={$id}" method="post" class="validate_form edit_in_list edit_loc">
             {include file="{$controller}/form/{$sub}.tpl"}
         </form>
     </td>

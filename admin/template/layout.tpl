@@ -26,7 +26,7 @@
 <body id="{block name='body:id'}layout{/block}">
 {block name="header"}{include file="section/header.tpl"}{/block}
 {block name="main"}
-    <main id="page" class="container-fluid">
+    <main id="{block name='main:id'}page{/block}" class="container-fluid">
         <div class="row">
             {block name='article'}
                 {function cleanTextArea}
