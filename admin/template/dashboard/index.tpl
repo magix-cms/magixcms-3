@@ -28,15 +28,13 @@
                 </header>
                 <div>
                     <ul class="nav">
-                       {* {if {employee_access type="add_access" class_name="frontend_controller_customer"} eq 1}
-                        <li><a href="{geturl}/customer.php?action=add"><span class="fa fa-plus"></span> Ajouter un client</a></li>
+                        {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
+                            <li>
+                                <a href="{geturl}/{baseadmin}/index.php?controller=employee">
+                                    {#employees#|ucfirst}
+                                </a>
+                            </li>
                         {/if}
-                        {if {employee_access type="view_access" class_name="frontend_controller_customer"} eq 1}
-                        <li><a href="{geturl}/customer.php"><span class="fa fa-list"></span> Liste des clients</a></li>
-                        {/if}
-                        {if {employee_access type="view_access" class_name="frontend_controller_defunct"} eq 1}
-                        <li><a href="{geturl}/defunct.php"><span class="fa fa-list-alt"></span> Liste des défunts</a></li>
-                        {/if}*}
                     </ul>
                 </div>
             </section>
@@ -70,21 +68,31 @@
                     </div>
                 </div>
             </section>
+            {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
             <section class="col-xs-12 col-md-6 col-lg-3 pull-left">
                 <header>
-                    <h2 class="h5">Derniers </h2>
+                    <h2 class="h5"><a href="{geturl}/{baseadmin}/index.php?controller=employee">
+                            <span class="fa fa-user"></span> {#employees#|ucfirst}
+                        </a>
+                    </h2>
                 </header>
+                {if is_array($getItemsEmployee) && !empty($getItemsEmployee)}
+                    {foreach $getItemsEmployee as $item}
+                    {$title_admin = "title_"|cat:$item.title_admin}
                 <div>
                     <div class="row folder-box">
                         <div class="col-xs-6">
-                            <p><a href="#">ma page</a></p>
+                            <p>{#$title_admin#} {$item.lastname_admin} {$item.firstname_admin}</p>
                         </div>
                         <div class="col-xs-6">
-                            <p class="text-right">02/11/2016</p>
+                            <p class="text-right">{$item.role_name|ucfirst}</p>
                         </div>
                     </div>
                 </div>
+                {/foreach}
+                {/if}
             </section>
+            {/if}
             <section class="col-xs-12 col-lg-9">
                 <header>
                     <h2 class="h5">Statistiques</h2>

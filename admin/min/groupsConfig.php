@@ -14,12 +14,12 @@
 return array(
     'publicjs' => array(
         '//libjs/vendor/jquery-3.0.0.min.js',
-        '//libjs/vendor/bootstrap.min.js',
+        '//'.PATHADMIN.'/template/js/vendor/bootstrap.min.js',
         '//libjs/vendor/Chart.bundle.min.js',
         '//libjs/vendor/bootstrap2-toggle.min.js',
         '//libjs/vendor/jquery.form.3.51.min.js',
         '//libjs/vendor/jquery.validate.1.15.0.min.js',
-        '//libjs/vendor/redirect.js'
+        '//libjs/vendor/redirect.min.js'
     ),
 	'jimagine' => array(
         '//libjs/vendor/jimagine/config.js',

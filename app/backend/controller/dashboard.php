@@ -40,10 +40,10 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class backend_controller_dashboard{
-    protected $router,$template;
+    protected $router,$template,$employee;
     public $http_error;
     public function __construct(){
-        
+        $this->employee = new backend_controller_employee();
         $this->template = new backend_model_template();
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
@@ -73,7 +73,7 @@ class backend_controller_dashboard{
 
             $this->template->display('error/index.tpl');
         }else{
-
+            $this->employee->getItemsEmployee();
             $this->template->display('dashboard/index.tpl');
             // Create a Router
             /*$this->router->get('/', function(){

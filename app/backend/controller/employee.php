@@ -147,7 +147,7 @@ class backend_controller_employee extends backend_db_employee
     /**
      * Assign setItemsEmployee
      */
-    private function getItemsEmployee($id_admin = null){
+    public function getItemsEmployee($id_admin = null){
     	if($id_admin) {
 			$data = parent::fetchData(array('type'=>'employee'),array('id_admin' => $id_admin));
 			$this->template->assign('employee',$data);
