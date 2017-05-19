@@ -25,7 +25,7 @@ class backend_controller_plugins extends backend_db_plugins{
     /**
      * @return array
      */
-    private function setRegistrationItems(){
+    private function setNotRegisterItems(){
         $newsItems = array();
         $pluginsDir = $this->finder->scanRecursiveDir(component_core_system::basePath().'/plugins');
         $pluginsRegister = $this->getItems('list',null,'return');
@@ -35,7 +35,7 @@ class backend_controller_plugins extends backend_db_plugins{
         $newRegisterItems = array_flip($registerItems);
         foreach($pluginsDir as $item){
             if(!isset($newRegisterItems[$item])){
-                if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.'admin.php')){
+                /*if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.'admin.php')){
                     //Nom de la classe pour le test de la méthode
                     $class = 'plugins_'.$item.'_admin';
                     if(class_exists($class)){
@@ -44,7 +44,8 @@ class backend_controller_plugins extends backend_db_plugins{
                             $newsItems[]=$item;
                         }
                     }
-                }
+                }*/
+                $newsItems[]=$item;
             }
         }
         return $newsItems;
@@ -80,10 +81,9 @@ class backend_controller_plugins extends backend_db_plugins{
      *
      */
     public function run(){
-        $data = $this->getItems('list',null,'return');
-        //print_r($data);
+        $data = $this->modelPlugins->getItems();
         $this->template->assign('getListPlugins',$data);
-        $this->template->assign('getListPluginsRegistration',$this->setRegistrationItems());
+        $this->template->assign('getListPluginsNotRegister',$this->setNotRegisterItems());
         $this->template->display('plugins/index.tpl');
     }
 }

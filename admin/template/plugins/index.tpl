@@ -30,8 +30,8 @@
     </div>
     <div class="row">
         <h2 class="col-xs-12">liste des extensions non installées</h2>
-    {if is_array($getListPluginsRegistration) && !empty($getListPluginsRegistration)}
-        {foreach $getListPluginsRegistration as $item}
+    {if is_array($getListPluginsNotRegister) && !empty($getListPluginsNotRegister)}
+        {foreach $getListPluginsNotRegister as $item}
             <section class="col-xs-12 col-md-6 col-lg-3">
                 <header>
                     <h2 class="h5">{$item}</h2>

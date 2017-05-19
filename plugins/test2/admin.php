@@ -11,8 +11,8 @@ class plugins_test2_admin{
         $this->template = new backend_model_template();
         $this->plugins = new backend_model_plugins();
     }
-    public function run(){
+    /*public function run(){
         $this->template->display('index.tpl');
-    }
+    }*/
 }
 ?>
