@@ -24,14 +24,14 @@
         </ul>
     </li>
     {/if}
-    <li class="has-submenu{if $smarty.get.controller == 'plugins'} active{/if}">
+    <li class="{if $smarty.get.controller == 'plugins'}active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=plugins">
             <span class="fa fa-cogs"></span> Extensions
         </a>
         {if is_array($getItemsPlugins) && !empty($getItemsPlugins)}
         <ul class="nav list-unstyled">
             {foreach $getItemsPlugins as $item}
-            <li>
+            <li class="{if $smarty.get.controller == {$item.name}}active{/if}">
                 <a href="{geturl}/{baseadmin}/index.php?controller={$item.name}">{$item.name}</a>
             </li>
             {/foreach}
