@@ -21,11 +21,13 @@ class backend_model_plugins{
     private function setItems(){
         $data =  $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
         foreach($data as $item){
-            $class = 'plugins_'.$item['name'].'_admin';
-            if(class_exists($class)){
-                //Si la méthode run existe on ajoute le plugin dans le menu
-                if(method_exists($class,'run')){
-                    $newsItems[]=$item;
+            if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'admin.php')) {
+                $class = 'plugins_' . $item['name'] . '_admin';
+                if (class_exists($class)) {
+                    //Si la méthode run existe on ajoute le plugin dans le menu
+                    if (method_exists($class, 'run')) {
+                        $newsItems[] = $item;
+                    }
                 }
             }
         }
