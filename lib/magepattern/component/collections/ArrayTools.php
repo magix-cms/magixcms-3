@@ -420,6 +420,13 @@ class collections_ArrayTools{
     public function defaultLanguage(){
         return self::$default_language;
     }
+
+    /**
+     * @param null $input
+     * @param null $columnKey
+     * @param null $indexKey
+     * @return array|null
+     */
     public function array_column($input = null, $columnKey = null, $indexKey = null){
         if (!function_exists('array_column')) {
             /**
