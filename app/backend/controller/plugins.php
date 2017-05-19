@@ -51,6 +51,32 @@ class backend_controller_plugins extends backend_db_plugins{
     }
 
     /**
+     * @param $id
+     */
+    private function setSQLProcess($id){
+        $routingDB = new component_routing_db();
+        $files = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.'db.sql';
+        if(file_exists($files)){
+            $routingDB->setupSQL($files);
+        }
+    }
+    /**
+     * @param $id
+     */
+    public function register($id){
+        $data = parent::fetchData(array('context'=>'unique','type'=>'register'),array(':id'=>$id));
+        if($data['id_plugins'] != null){
+            $this->message->getNotify('setup_info',array('method'=>'fetch','assignFetch'=>'message'));
+            $this->template->display('plugins/setup.tpl');
+        }else{
+            $this->setSQLProcess($id);
+            parent::insert(array('type'=>'register'),array('name'=>$id));
+            $this->message->getNotify('setup_succes',array('method'=>'fetch','assignFetch'=>'message'));
+            $this->template->display('plugins/setup.tpl');
+        }
+    }
+
+    /**
      *
      */
     public function run(){

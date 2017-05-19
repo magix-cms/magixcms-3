@@ -62,6 +62,7 @@ class component_httpUtils_header{
      */
     private function setTitleHeader($http_error){
         if(isset($http_error)){
+            $this->template->configLoad();
             switch($http_error){
                 case 404:
                     $message = $this->template->getConfigVars('title_status_404');

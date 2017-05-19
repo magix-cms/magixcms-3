@@ -69,6 +69,27 @@
 {capture name="alert_message"}
     {#request_success_remote_data#}
 {/capture}
+    {** Install **}
+{case 'setup_succes' break}
+{capture name="alert_type"}{strip}
+    success
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    check
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_success_setup#}
+{/capture}
+{case 'setup_info' break}
+{capture name="alert_type"}{strip}
+    info
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    info-circle
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_info_setup#}
+{/capture}
 {********* Warning *********}
     {** Empty **}
 {case 'empty' break}

@@ -4,7 +4,7 @@ class component_routing_dispatcher{
     /**
      * @var Dispatcher
      */
-    public $router,$controller,$controller_name,$plugins;
+    public $router,$controller,$controller_name,$plugins,$action;
 
     public function __construct($router,$template,$plugins = null){
         $formClean = new form_inputEscape();
@@ -13,6 +13,9 @@ class component_routing_dispatcher{
         //$this->plugins = $plugins;
         if(http_request::isGet('controller')){
             $this->controller_name = $formClean->simpleClean($_GET['controller']);
+        }
+        if(http_request::isGet('action')){
+            $this->action = $formClean->simpleClean($_GET['action']);
         }
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
@@ -50,24 +53,53 @@ class component_routing_dispatcher{
                     $pluginLoadFiles = array('public','admin');
                     if(in_array($this->plugins,$pluginLoadFiles)){
                         $pluginsDir = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$this->controller_name;
-                        if($this->pluginsRegister() != null && file_exists($pluginsDir)){
-                            $controller_class = $this->router.'_'.$this->controller_name.'_'.$this->plugins;
+                        if($this->plugins !== 'admin'){
+                            if($this->pluginsRegister() != null && file_exists($pluginsDir)){
+                                $controller_class = $this->router.'_'.$this->controller_name.'_'.$this->plugins;
+                            }else{
+                                $this->template->assign(
+                                    'getTitleHeader',
+                                    $this->header->getTitleHeader(
+                                        404
+                                    ),
+                                    true
+                                );
+                                $this->template->assign(
+                                    'getTxtHeader',
+                                    $this->header->getTxtHeader(
+                                        404
+                                    ),
+                                    true
+                                );
+                                $this->template->display('error/index.tpl');
+                            }
                         }else{
-                            $this->template->assign(
-                                'getTitleHeader',
-                                $this->header->getTitleHeader(
-                                    $this->http_error
-                                ),
-                                true
-                            );
-                            $this->template->assign(
-                                'getTxtHeader',
-                                $this->header->getTxtHeader(
-                                    $this->http_error
-                                ),
-                                true
-                            );
-                            $this->template->display('error/index.tpl');
+                            if($this->action === 'setup'){
+                                if(class_exists('backend_controller_plugins')) {
+                                    $pluginsController = new backend_controller_plugins();
+                                    $pluginsController->register($this->controller_name);
+                                }
+                            }else{
+                                if($this->pluginsRegister() != null && file_exists($pluginsDir)){
+                                    $controller_class = $this->router.'_'.$this->controller_name.'_'.$this->plugins;
+                                }else{
+                                    $this->template->assign(
+                                        'getTitleHeader',
+                                        $this->header->getTitleHeader(
+                                            404
+                                        ),
+                                        true
+                                    );
+                                    $this->template->assign(
+                                        'getTxtHeader',
+                                        $this->header->getTxtHeader(
+                                            404
+                                        ),
+                                        true
+                                    );
+                                    $this->template->display('error/index.tpl');
+                                }
+                            }
                         }
                     }else{
                         $logger = new debug_logger(MP_LOG_DIR);

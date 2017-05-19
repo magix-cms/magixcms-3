@@ -19,7 +19,17 @@ class backend_model_plugins{
      * @return mixed|null
      */
     private function setItems(){
-        return $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
+        $data =  $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
+        foreach($data as $item){
+            $class = 'plugins_'.$item['name'].'_admin';
+            if(class_exists($class)){
+                //Si la méthode run existe on ajoute le plugin dans le menu
+                if(method_exists($class,'run')){
+                    $newsItems[]=$item;
+                }
+            }
+        }
+        return $newsItems;
     }
 
     /**
@@ -29,20 +39,6 @@ class backend_model_plugins{
         return $this->setItems();
     }
 
-    /**
-     * @param $id
-     */
-    public function register($id){
-        $data = $this->dbPlugins->fetchData(array('context'=>'unique','type'=>'register'),array(':id'=>$id));
-        if($data['id_plugins'] != null){
-            return;
-        }else{
-            //print_r(array('type'=>'register'));
-            //print_r(array('name'=>$id));
-            //$this->dbPlugins->insert(array('type'=>'register'),array('name'=>$id));
-            return;
-        }
-    }
     /**
      * @param $routes
      * @param $template

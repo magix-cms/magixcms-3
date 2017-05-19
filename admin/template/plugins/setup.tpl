@@ -1,8 +1,8 @@
 {extends file="layout.tpl"}
-{block name='head:title'}{$getTitleHeader}{/block}
-{block name='body:id'}error{/block}
+{block name='head:title'}Installation du plugin {$smarty.get.controller}{/block}
+{block name='body:id'}install{/block}
 {block name='article:header'}
-    <h1 class="h2">Gestionnaire d'erreur</h1>
+    <h1 class="h2">Installation du plugin {$smarty.get.controller}</h1>
 {/block}
 {block name='article:content'}
     <div class="panels row">
@@ -11,15 +11,13 @@
                 {$debug}
             {/if}
             <header class="panel-header">
-                <h2 class="panel-heading h5">{$getTitleHeader}</h2>
+                <h2 class="panel-heading h5">Résultat de l'installation</h2>
             </header>
             <div class="panel-body panel-body-form">
                 <div class="mc-message-container clearfix">
                     <div class="mc-message"></div>
                 </div>
-                <p>
-                    <span class="fa fa-warning"></span> {$getTxtHeader}
-                </p>
+                {$message}
             </div>
         </section>
     </div>

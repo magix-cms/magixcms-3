@@ -32,7 +32,7 @@
         <ul class="nav list-unstyled">
             {foreach $getItemsPlugins as $item}
             <li>
-                <a href="{geturl}/{baseadmin}/index.php?controller={$item.name}">test</a>
+                <a href="{geturl}/{baseadmin}/index.php?controller={$item.name}">{$item.name}</a>
             </li>
             {/foreach}
         </ul>

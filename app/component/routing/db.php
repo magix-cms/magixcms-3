@@ -77,7 +77,7 @@ class component_routing_db{
      * @throws Exception
      * @return array|bool|string
      */
-    private function load_sql_file($sqlfile){
+    private function importSQLFile($sqlfile){
         try{
             $db_structure = "";
             $structureFile = $sqlfile;
@@ -88,7 +88,7 @@ class component_routing_db{
                 if($db_structure != null){
                     $tables = $db_structure;
                 }else{
-                    debug_firephp::error("Error : SQL File is empty");
+                    throw new Exception("Error : SQL File is empty");
                     return false;
                 }
             }
@@ -98,15 +98,17 @@ class component_routing_db{
             $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
+
     /**
+     * @param $files
+     * @return bool
      * Création des tables avec la lecture du fichier SQL
-     * @param void $sqlfile
      */
-    public static function createTable($sqlfile){
-        if(self::load_sql_file($sqlfile) != false){
-            foreach(self::load_sql_file($sqlfile) as $query){
-                $query = magixcjquery_filter_var::trimText($query);
-                self::layerDB()->createTable($query);
+    public function setupSQL($files){
+        if($this->importSQLFile($files) != false){
+            foreach($this->importSQLFile($files) as $query){
+                $query = filter_escapeHtml::trim($query);
+                self::layer()->createTable($query);
             }
             return true;
         }

@@ -647,7 +647,7 @@ class db_layer{
             /**
              * Charge la configuration
              */
-            $setConfig = $this->setConfig($sql,$setOption=false);
+            $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
                 $prepare->execute();
