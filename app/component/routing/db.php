@@ -85,8 +85,13 @@ class component_routing_db{
                 throw new Exception("Error : Not File exist .sql");
             }else{
                 $db_structure = preg_split("/;\\s*[\r\n]+/",file_get_contents($structureFile));
-                if($db_structure != null){
-                    $tables = $db_structure;
+                if(file_get_contents($structureFile) != ''){
+                    if($db_structure != ''){
+                        $tables = $db_structure;
+                    }else{
+                        throw new Exception("Error : SQL File is empty");
+                        return false;
+                    }
                 }else{
                     throw new Exception("Error : SQL File is empty");
                     return false;

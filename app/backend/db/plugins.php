@@ -56,11 +56,25 @@ class backend_db_plugins{
     public function insert($config,$data = false){
         if (is_array($config)) {
             if ($config['type'] === 'register') {
-                $sql = 'INSERT INTO mc_plugins (name)
-                VALUE (:name)';
+                $sql = 'INSERT INTO mc_plugins (name,version)
+                VALUE (:name,:version)';
                 component_routing_db::layer()->insert($sql,
                     array(
-                        ':name' => $data['name']
+                        ':name' => $data['name'],
+                        ':version'  => $data['version']
+                    )
+                );
+            }
+        }
+    }
+    public function update($config,$data = false){
+        if (is_array($config)) {
+            if ($config['type'] === 'version') {
+                $sql = 'UPDATE mc_plugins SET version = :version WHERE name = :name';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':name'     => $data['name'],
+                        ':version'  => $data['version']
                     )
                 );
             }

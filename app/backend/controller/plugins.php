@@ -70,10 +70,54 @@ class backend_controller_plugins extends backend_db_plugins{
             $this->message->getNotify('setup_info',array('method'=>'fetch','assignFetch'=>'message'));
             $this->template->display('plugins/setup.tpl');
         }else{
-            $this->setSQLProcess($id);
-            parent::insert(array('type'=>'register'),array('name'=>$id));
-            $this->message->getNotify('setup_succes',array('method'=>'fetch','assignFetch'=>'message'));
-            $this->template->display('plugins/setup.tpl');
+            $config = $this->modelPlugins->readConfigXML($id);
+            if($config){
+                if(isset($config['release']['version'])){
+                    $this->setSQLProcess($id);
+                    parent::insert(array('type'=>'register'),array('name'=>$id,'version'=>$config['release']['version']));
+                    $this->message->getNotify('setup_success',array('method'=>'fetch','assignFetch'=>'message'));
+                    $this->template->display('plugins/setup.tpl');
+                }else{
+                    $this->message->getNotify('setup_error',array('method'=>'fetch','assignFetch'=>'message'));
+                    $this->template->display('plugins/setup.tpl');
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $id
+     */
+    public function upgrade($id){
+        if(isset($id)){
+            $data = parent::fetchData(array('context'=>'unique','type'=>'register'),array(':id'=>$id));
+            $routingDB = new component_routing_db();
+            $currentVersion = $data['version'];
+            $SQLDir = component_core_system::basePath().'/plugins/'.$id.'/sql/version/';
+            if(file_exists($SQLDir)) {
+                $SQLFiles = $this->finder->scanDir($SQLDir);
+                foreach ($SQLFiles as $item => $value) {
+                    $extension = strpos($value, '.sql');
+                    $version = substr($value, 0, $extension);
+                    if ($version > $currentVersion) {
+                        //print floatval($config['version']);
+                        //$newItems[] = explode(".", substr($value,0,$extension));
+                        $newItems[] = $value;
+                        $countItem = count($item);
+                        if (file_exists($SQLDir . $value)) {
+                            if ($routingDB->setupSQL($SQLDir . $value)) {
+                                parent::update(array('type'=>'version'),array('name'=>$id,'version'=>$version));
+                                $this->message->getNotify('upgrade_success', array('method' => 'fetch', 'assignFetch' => 'message'));
+                            }
+                        }
+                    }else{
+                        $this->message->getNotify('upgrade_empty', array('method' => 'fetch', 'assignFetch' => 'message'));
+                    }
+                }
+            }else{
+                $this->message->getNotify('upgrade_empty', array('method' => 'fetch', 'assignFetch' => 'message'));
+            }
+            $this->template->display('plugins/upgrade.tpl');
         }
     }
 

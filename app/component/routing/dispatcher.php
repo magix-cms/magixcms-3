@@ -79,6 +79,11 @@ class component_routing_dispatcher{
                                     $pluginsController = new backend_controller_plugins();
                                     $pluginsController->register($this->controller_name);
                                 }
+                            }elseif($this->action === 'upgrade'){
+                                if(class_exists('backend_controller_plugins')) {
+                                    $pluginsController = new backend_controller_plugins();
+                                    $pluginsController->upgrade($this->controller_name);
+                                }
                             }else{
                                 if($this->pluginsRegister() != null && file_exists($pluginsDir)){
                                     $controller_class = $this->router.'_'.$this->controller_name.'_'.$this->plugins;

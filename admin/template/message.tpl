@@ -70,7 +70,7 @@
     {#request_success_remote_data#}
 {/capture}
     {** Install **}
-{case 'setup_succes' break}
+{case 'setup_success' break}
 {capture name="alert_type"}{strip}
     success
 {/strip}{/capture}
@@ -89,6 +89,36 @@
 {/strip}{/capture}
 {capture name="alert_message"}
     {#request_info_setup#}
+{/capture}
+{case 'setup_error' break}
+{capture name="alert_type"}{strip}
+    danger
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    warning
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_error_setup#}
+{/capture}
+{case 'upgrade_succes' break}
+{capture name="alert_type"}{strip}
+    success
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    check
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_success_upgrade#}
+{/capture}
+{case 'upgrade_empty' break}
+{capture name="alert_type"}{strip}
+    warning
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    warning
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_empty_upgrade#}
 {/capture}
 {********* Warning *********}
     {** Empty **}
