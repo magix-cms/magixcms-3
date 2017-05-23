@@ -19,7 +19,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message"></div>
                 </div>
-                <form id="add_employee" action="{$smarty.server.SCRIPT_NAME}?action=add" method="post" class="validate_form add_form collapse in">
+                <form id="add_employee" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" method="post" class="validate_form add_form collapse in">
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group radio-group">

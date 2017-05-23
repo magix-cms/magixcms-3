@@ -59,11 +59,26 @@
                     {$col['title'] = $k}
                 {/if}
 
+                {if $pre == 'default'}
+                    {$col['title'] = $k}
+                    {$col['enum'] = 'bin_'}
+                    {$col['type'] = 'bin'}
+                    {$col['input'] = ['type' => 'select', 'values' => [['v' => 1, 'name' => 'Oui'],['v' => 0, 'name' => 'Non']]]}
+                {/if}
+
                 {if $pre == 'title'}
                     {$col['class'] = 'fixed-td-md'}
                     {$col['enum'] = 'title_'}
                     {$col['type'] = 'enum'}
                     {$col['input'] = ['type' => 'select','values' => [['v' => 'm', 'name' => {#title_m#}],['v' => 'w', 'name' => {#title_w#}]]]}
+                {/if}
+
+                {if $pre == 'name'}
+                    {$col['title'] = $k}
+                {/if}
+
+                {if $pre == 'iso'}
+                    {$col['title'] = $k}
                 {/if}
 
                 {if $pre == 'status'}

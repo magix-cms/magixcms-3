@@ -133,6 +133,7 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`) VALUES
 CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
+  `version` varchar(10) NOT NULL,
   PRIMARY KEY (`id_plugins`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

@@ -80,7 +80,7 @@
             {
                 console.log("globalForm is not defined");
             }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}";
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 globalForm.run(controller);
             }
         });

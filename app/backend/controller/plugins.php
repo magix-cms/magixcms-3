@@ -23,6 +23,7 @@ class backend_controller_plugins extends backend_db_plugins{
     }
 
     /**
+     * List of unregistered plugins
      * @return array
      */
     private function setNotRegisterItems(){
@@ -52,6 +53,7 @@ class backend_controller_plugins extends backend_db_plugins{
     }
 
     /**
+     * set SQL Process (setup SQL
      * @param $id
      */
     private function setSQLProcess($id){
@@ -62,6 +64,7 @@ class backend_controller_plugins extends backend_db_plugins{
         }
     }
     /**
+     * Register Plugin
      * @param $id
      */
     public function register($id){
@@ -86,6 +89,7 @@ class backend_controller_plugins extends backend_db_plugins{
     }
 
     /**
+     * system for upgrade Plugin
      * @param $id
      */
     public function upgrade($id){
