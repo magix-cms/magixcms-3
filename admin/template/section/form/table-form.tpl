@@ -119,6 +119,7 @@
     {/strip}
     <div class="table-responsive{if empty($data) || !count($data)} hide{/if}" id="table-{if $subcontroller}{$subcontroller}{else}{$controller}{/if}">
         <form action="#" method="get">
+            <input type="hidden" name="controller" value="{$smarty.get.controller}" />
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>

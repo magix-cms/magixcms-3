@@ -22,11 +22,32 @@
         <ul class="dropdown-menu">
             {if {employee_access type="view" class_name="backend_controller_webservice"} eq 1}
             <li>
-                <a href="{geturl}/{baseadmin}/index.php?controller=webservice.php">
+                <a href="{geturl}/{baseadmin}/index.php?controller=webservice">
                     <span class="fa fa-cloud"></span> Web Service
                 </a>
             </li>
             {/if}
+        </ul>
+    </li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="fa fa-location-arrow"></span> Localisation <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            {if {employee_access type="view" class_name="backend_controller_language"} eq 1}
+                <li>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=language">
+                        <span class="fa fa-flag"></span> {#language#}
+                    </a>
+                </li>
+            {/if}
+            {*{if {employee_access type="view" class_name="backend_controller_language"} eq 1}*}
+                <li>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=country">
+                        <span class="fa fa-globe"></span> {#country#}
+                    </a>
+                </li>
+            {*{/if}*}
         </ul>
     </li>
     <li class="dropdown">

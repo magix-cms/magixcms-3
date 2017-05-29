@@ -39,7 +39,7 @@ var tableForm = (function ($, undefined) {
     function delete_data(modal, id, controller, subcontroller) {
         $(modal+' input[type="hidden"]').val(id);
         $(modal).modal('show');
-        var url = '/'+controller+'.php?action=delete';
+        var url = '/'+controller+'&action=delete';
         if(subcontroller)
             url += '&tabs='+subcontroller;
 

@@ -166,8 +166,8 @@ var globalForm = (function ($, undefined) {
 
         // --- Rules form classic add form
         if($(f).hasClass('add_form')) {
-            options.beforeParams = function(){ displayLoader(f); };
-            options.successParams = function (d) {
+            options.beforeSend = function(){ displayLoader(f); };
+            options.success = function (d) {
                 removeLoader(f);
                 $.jmRequest.initbox(d.notify,{ display:true });
                 redirect(controller);
@@ -291,8 +291,8 @@ var globalForm = (function ($, undefined) {
     function delete_data(modal, id, controller, sub) {
         $(modal+' input[type="hidden"]').val(id);
         $(modal).modal('show');
-        controller = '/'+controller+'.php';
-        $(modal).find('form').attr('action',controller+'?action=delete'+(sub?'&tabs='+sub:''));
+        controller = '/'+controller;
+        $(modal).find('form').attr('action',controller+'&action=delete'+(sub?'&tabs='+sub:''));
 
         initValidation(controller,'#delete_form',sub);
     }
@@ -475,7 +475,7 @@ var globalForm = (function ($, undefined) {
 
                                 $.jmRequest({
                                     handler: "ajax",
-                                    url: controller+'?action=get&content='+type+'&id='+id,
+                                    url: controller+'&action=get&content='+type+'&id='+id,
                                     method: 'get',
                                     success: function(d){
                                         content.push(d);
