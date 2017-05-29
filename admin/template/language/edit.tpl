@@ -50,7 +50,7 @@
                                     <label for="iso_lang">{#language#|ucfirst}</label>
                                     <select name="iso_lang" id="iso_lang" class="form-control required" required>
                                         <option value="">{#ph_language#|ucfirst}</option>
-                                        {foreach $getCollection as $key => $val}
+                                        {foreach $getLanguageCollection as $key => $val}
                                             <option value="{$key}"{if $lang.iso_lang == $key} selected{/if}>{$val|ucfirst}</option>
                                         {/foreach}
                                     </select>

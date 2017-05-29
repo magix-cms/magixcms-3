@@ -51,7 +51,7 @@
                                     <label for="iso_lang">{#language#|ucfirst}</label>
                                     <select name="iso_lang" id="iso_lang" class="form-control">
                                         <option value="">{#ph_language#|ucfirst}</option>
-                                        {foreach $getCollection as $key => $val}
+                                        {foreach $getLanguageCollection as $key => $val}
                                             <option value="{$key}">{$val|ucfirst}</option>
                                         {/foreach}
                                     </select>

@@ -1,7 +1,7 @@
 <?php
 class backend_controller_language extends backend_db_language{
     public $edit, $action, $tabs;
-    protected $message, $template, $header, $data;
+    protected $message, $template, $header, $data, $arrayTools;
     public $search,$default_lang,$id_lang,$active_lang,$iso_lang,$name_lang;
     public function __construct()
     {
@@ -70,7 +70,7 @@ class backend_controller_language extends backend_db_language{
      */
     public function getCollection(){
         $data = $this->setCollection();
-        $this->template->assign('getCollection',$data);
+        $this->template->assign('getLanguageCollection',$data);
     }
 
     /**
