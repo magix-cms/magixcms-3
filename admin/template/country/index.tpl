@@ -6,8 +6,8 @@
     {if {employee_access type="append" class_name=$cClass} eq 1}
     <div class="pull-right">
         <p class="text-right">
-            {#nbr_country#|ucfirst}: {$country|count}<a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" title="{#add_country#}" class="btn btn-link">
-                <span class="fa fa-plus"></span> {#add_language#|ucfirst}
+            {#nbr_country#|ucfirst}: {$countries|count}<a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" title="{#add_country#}" class="btn btn-link">
+                <span class="fa fa-plus"></span> {#add_country#|ucfirst}
             </a>
         </p>
     </div>
@@ -26,9 +26,9 @@
             </header>
             <div class="panel-body">
                 <div class="mc-message-container clearfix">
-                    <div class="mc-message mc-message-employee">{if isset($message)}{$message}{/if}</div>
+                    <div class="mc-message mc-message-country">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form.tpl" data=$country activation=true controller="country"}
+                {include file="section/form/table-form.tpl" data=$countries activation=false sortable=true controller="country"}
             </div>
         </section>
     </div>
@@ -40,7 +40,14 @@
 {/block}
 
 {block name="foot" append}
-    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/table-form.min.js" type="javascript"}
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        libjs/vendor/jquery-ui-1.12.min.js,
+        {baseadmin}/template/js/table-form.min.js,
+        {baseadmin}/template/js/country.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
+
     <script type="text/javascript">
         $(function(){
             if (typeof tableForm == "undefined")
@@ -48,6 +55,13 @@
                 console.log("tableForm is not defined");
             }else{
                 tableForm.run();
+            }
+            if (typeof country == "undefined")
+            {
+                console.log("country is not defined");
+            }else{
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+                country.run(controller);
             }
         });
     </script>

@@ -25,8 +25,13 @@
                         <div class="row">
                             <div class="col-xs-8">
                                 <div class="form-group">
-                                    <label for="name_lang">{#name_lang#|ucfirst}</label>
-                                    <input type="text" class="form-control" name="name_lang" id="name_lang" placeholder="{#ph_name_lang#|ucfirst}">
+                                    <label for="name_lang">{#language#|ucfirst}</label>
+                                    <select name="name_lang" id="name_lang" class="form-control required">
+                                        <option value="">{#ph_language#|ucfirst}</option>
+                                        {foreach $getLanguageCollection as $key => $val}
+                                            <option value="{$val}" data-iso="{$key}">{$val|ucfirst}</option>
+                                        {/foreach}
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xs-4">
@@ -48,13 +53,8 @@
                         <div class="row">
                             <div class="col-xs-8">
                                 <div class="form-group">
-                                    <label for="iso_lang">{#language#|ucfirst}</label>
-                                    <select name="iso_lang" id="iso_lang" class="form-control">
-                                        <option value="">{#ph_language#|ucfirst}</option>
-                                        {foreach $getLanguageCollection as $key => $val}
-                                            <option value="{$key}">{$val|ucfirst}</option>
-                                        {/foreach}
-                                    </select>
+                                    <label for="iso_lang">{#iso_lang#|ucfirst}</label>
+                                    <input type="text" class="form-control" name="iso_lang" id="iso_lang" readonly placeholder="{#ph_iso_lang#|ucfirst}">
                                 </div>
                             </div>
                             <div class="col-xs-4">
@@ -85,4 +85,22 @@
     </section>
 </div>
 {/if}
+{/block}
+{block name="foot" append}
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        {baseadmin}/template/js/language.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
+
+    <script type="text/javascript">
+        $(function(){
+            if (typeof language == "undefined")
+            {
+                console.log("language is not defined");
+            }else{
+                language.runEdit();
+            }
+        });
+    </script>
 {/block}

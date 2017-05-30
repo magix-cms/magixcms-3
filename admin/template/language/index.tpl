@@ -26,7 +26,7 @@
             </header>
             <div class="panel-body">
                 <div class="mc-message-container clearfix">
-                    <div class="mc-message mc-message-employee">{if isset($message)}{$message}{/if}</div>
+                    <div class="mc-message mc-message-language">{if isset($message)}{$message}{/if}</div>
                 </div>
                 {include file="section/form/table-form.tpl" data=$langs activation=true controller="language"}
             </div>
@@ -40,7 +40,11 @@
 {/block}
 
 {block name="foot" append}
-    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/table-form.min.js" type="javascript"}
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        {baseadmin}/template/js/table-form.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
             if (typeof tableForm == "undefined")

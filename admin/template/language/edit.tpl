@@ -24,8 +24,13 @@
                         <div class="row">
                             <div class="col-xs-8">
                                 <div class="form-group">
-                                    <label for="name_lang">{#name_lang#|ucfirst}</label>
-                                    <input type="text" class="form-control" name="name_lang" id="name_lang" placeholder="{#ph_name_lang#|ucfirst}"{if $lang.name_lang != null} value="{$lang.name_lang}"{/if}>
+                                    <label for="name_lang">{#language#|ucfirst}</label>
+                                    <select name="name_lang" id="name_lang" class="form-control required" required>
+                                        <option value="">{#ph_language#|ucfirst}</option>
+                                        {foreach $getLanguageCollection as $key => $val}
+                                            <option value="{$val}" data-iso="{$key}" {if $lang.iso_lang == $key} selected{/if}>{$val|ucfirst}</option>
+                                        {/foreach}
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xs-4">
@@ -47,13 +52,8 @@
                         <div class="row">
                             <div class="col-xs-8">
                                 <div class="form-group">
-                                    <label for="iso_lang">{#language#|ucfirst}</label>
-                                    <select name="iso_lang" id="iso_lang" class="form-control required" required>
-                                        <option value="">{#ph_language#|ucfirst}</option>
-                                        {foreach $getLanguageCollection as $key => $val}
-                                            <option value="{$key}"{if $lang.iso_lang == $key} selected{/if}>{$val|ucfirst}</option>
-                                        {/foreach}
-                                    </select>
+                                    <label for="iso_lang">{#iso_lang#|ucfirst}</label>
+                                    <input type="text" class="form-control" name="iso_lang" id="iso_lang" readonly placeholder="{#ph_iso_lang#|ucfirst}"{if $lang.iso_lang != null} value="{$lang.iso_lang}"{/if}>
                                 </div>
                             </div>
                             <div class="col-xs-4">

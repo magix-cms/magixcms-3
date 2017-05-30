@@ -40,7 +40,11 @@
 {/block}
 
 {block name="foot" append}
-    {script src="/min/?f=/skin/js/table-form.min.js" type="javascript"}
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        {baseadmin}/template/js/table-form.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
             if (typeof tableForm == "undefined")

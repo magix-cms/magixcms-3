@@ -32,16 +32,68 @@ class backend_db_country{
                             }
                         }
                     }
-                    $sql = "SELECT country.* FROM mc_country AS country $cond";
+                    $sql = "SELECT country.id_country,country.iso_country,country.name_country FROM mc_country AS country $cond"." ORDER BY order_country ASC";
                     //$params = $data;
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
                 if ($config['type'] === 'country') {
-                    $sql = 'SELECT * FROM mc_lang WHERE id_lang = :id';
+                    $sql = 'SELECT * FROM mc_country WHERE id_country = :id';
                     $params = $data;
+                }elseif ($config['type'] === 'count') {
+                    $sql = 'SELECT count(id_country) AS nb FROM mc_country';
                 }
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+            }
+        }
+    }
+
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function update($config,$data = false)
+    {
+        if (is_array($config)) {
+            if ($config['type'] === 'country') {
+                $sql = 'UPDATE mc_country SET iso_country = :iso_country, name_country=:name_country 
+                WHERE id_country = :id_country';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_country'	    => $data['id_country'],
+                        ':iso_country'	    => $data['iso_country'],
+                        ':name_country'	    => $data['name_country']
+                    )
+                );
+            }elseif ($config['type'] === 'order') {
+                $sql = 'UPDATE mc_country SET order_country = :order_country
+                WHERE id_country = :id_country';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_country'	    => $data['id_country'],
+                        ':order_country'	=> $data['order_country']
+                    )
+                );
+            }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function insert($config,$data = false)
+    {
+        if (is_array($config)) {
+            if ($config['type'] === 'newCountry') {
+                $sql = 'INSERT INTO mc_country (iso_country,name_country,order_country)
+                VALUE (:iso_country,:name_country,:order_country)';
+                component_routing_db::layer()->insert($sql,
+                    array(
+                        ':iso_country'	    => $data['iso_country'],
+                        ':name_country'	    => $data['name_country'],
+                        ':order_country'	=> $data['order_country']
+                    )
+                );
             }
         }
     }

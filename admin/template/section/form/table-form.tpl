@@ -7,6 +7,9 @@
 {if !isset($readonly)}
     {$readonly = []}
 {/if}
+{if !isset($sortable)}
+    {$sortable = false}
+{/if}
 {if isset($data) && is_array($data)}
     {strip}
         {$table['rows'] = $data}
@@ -169,7 +172,7 @@
                 </tr>
                 {/if}
                 </thead>
-                <tbody>
+                <tbody{if $sortable} class="ui-sortable"{/if}>
                 {foreach $table.rows as $row}
                     {include file="section/form/loop/rows.tpl" data=$row section=$table['section'] controller=$controller subcontroller=$subcontroller readonly=$readonly}
                 {/foreach}

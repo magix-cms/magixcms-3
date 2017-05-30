@@ -110,8 +110,11 @@
     </div>
 {/block}
 {block name="foot" append}
-    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/dashboard.min.js" type="javascript"}
-
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        {baseadmin}/template/js/dashboard.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
             if (typeof dashboard == "undefined")
