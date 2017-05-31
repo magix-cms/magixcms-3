@@ -27,7 +27,7 @@ class backend_controller_language extends backend_db_language{
         // --- POST
 
         if (http_request::isPost('id')) {
-            $this->id_lang = $formClean->numeric($_POST['id']);
+            $this->id_lang = $formClean->simpleClean($_POST['id']);
         }
         if (http_request::isPost('default_lang')) {
             $this->default_lang = $formClean->numeric($_POST['default_lang']);
@@ -45,6 +45,10 @@ class backend_controller_language extends backend_db_language{
         // --- Search
         if (http_request::isGet('search')) {
             $this->search = $formClean->arrayClean($_GET['search']);
+        }
+        // --- Recursive Actions
+        if (http_request::isGet('language')) {
+            $this->language = $formClean->arrayClean($_GET['language']);
         }
     }
     /**
@@ -128,9 +132,43 @@ class backend_controller_language extends backend_db_language{
                     )
                 );
                 break;
+            case 'langActive':
+                parent::update(
+                    array(
+                        'context'   =>    'lang',
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                break;
         }
     }
-
+    /**
+     * Insertion de données
+     * @param $data
+     */
+    private function del($data){
+        switch($data['type']){
+            case 'delLang':
+                $fetchData = parent::fetchData(array('context'=>'unique','type'=>'count'));
+                $countID = count(explode(',',$data['data']['id']));
+                if(($fetchData['nb'] > 1) && ($fetchData['nb'] > $countID)){
+                    $this->header->set_json_headers();
+                    $this->message->json_post_response(true,'delete',$data['data']);
+                    parent::delete(
+                        array(
+                            'context'   =>    'language',
+                            'type'      =>    $data['type']
+                        ),
+                        $data['data']
+                    );
+                }else{
+                    $this->header->set_json_headers();
+                    $this->message->json_post_response(false,'delete_min');
+                }
+                break;
+        }
+    }
     /**
      *
      */
@@ -164,6 +202,35 @@ class backend_controller_language extends backend_db_language{
                         $this->getItemsLanguage($this->edit);
                         $this->template->display('language/edit.tpl');
                     }
+                    break;
+                case 'delete':
+                    if(isset($this->id_lang)) {
+                        $this->del(
+                            array(
+                                'type'=>'delLang',
+                                'data'=>array(
+                                    'id' => $this->id_lang
+                                )
+                            )
+                        );
+                    }
+                    break;
+                case 'active-selected':
+                case 'unactive-selected':
+                    if(isset($this->language) && is_array($this->language) && !empty($this->language)) {
+                        $this->upd(
+                            array(
+                                'type'=>'langActive',
+                                'data'=>array(
+                                    'active_lang' => ($this->action == 'active-selected'?1:0),
+                                    'id_lang' => implode($this->language, ',')
+                                )
+                            )
+                        );
+                    }
+                    $this->getItemsLanguage();
+                    $this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
+                    $this->template->display('language/index.tpl');
                     break;
             }
         }else{

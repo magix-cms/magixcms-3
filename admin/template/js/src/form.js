@@ -180,7 +180,7 @@ var globalForm = (function ($, undefined) {
                 initAlert(d.notify,4000);
                 $('#add_modal').modal('hide');
                 if(d.statut && d.result) {
-                    controller = controller.substr(1,(controller.indexOf('.')-1));
+                    //controller = controller.substr(1,(controller.indexOf('.')-1));
                     var table = '#table-'+controller;
                     var nbr = $(table).find('tbody').find('tr').length;
                     if(!nbr) {
@@ -226,10 +226,14 @@ var globalForm = (function ($, undefined) {
         // --- Rules for delete form, will remove the deleted rows form the record list based on their id
         else if($(f).hasClass('delete_form')) {
             options.resetForm = true;
-            controller = sub?sub:controller.substr(1,(controller.indexOf('.')-1));
+            //controller = sub?sub:controller.substr(1,(controller.indexOf('.')-1));
+            controller = sub?sub:controller;
             options.success = function (d) {
                 $('#delete_modal').modal('hide');
-                $.jmRequest.notifier.cssClass = '.mc-message-'+controller;
+                //$.jmRequest.notifier.cssClass = '.mc-message-'+controller;
+                $.jmRequest.notifier = {
+                    cssClass : '.mc-message-'+controller
+                };
                 initAlert(d.notify,4000);
                 if(d.statut && d.result) {
                     var ids = d.result.id.split(',');
@@ -291,8 +295,8 @@ var globalForm = (function ($, undefined) {
     function delete_data(modal, id, controller, sub) {
         $(modal+' input[type="hidden"]').val(id);
         $(modal).modal('show');
-        controller = '/'+controller;
-        $(modal).find('form').attr('action',controller+'&action=delete'+(sub?'&tabs='+sub:''));
+        //var url = $('#delete_form').attr('action');
+        //$(modal).find('form').attr('action','&action=delete'+(sub?'&tabs='+sub:''));
 
         initValidation(controller,'#delete_form',sub);
     }

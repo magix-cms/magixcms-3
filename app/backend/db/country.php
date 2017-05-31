@@ -32,7 +32,8 @@ class backend_db_country{
                             }
                         }
                     }
-                    $sql = "SELECT country.id_country,country.iso_country,country.name_country FROM mc_country AS country $cond"." ORDER BY order_country ASC";
+                    $sql = "SELECT country.id_country,country.iso_country,country.name_country 
+                    FROM mc_country AS country $cond"." ORDER BY order_country ASC";
                     //$params = $data;
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
@@ -94,6 +95,20 @@ class backend_db_country{
                         ':order_country'	=> $data['order_country']
                     )
                 );
+            }
+        }
+    }
+
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function delete($config,$data = false)
+    {
+        if (is_array($config)) {
+            if($config['type'] === 'delCountry'){
+                $sql = 'DELETE FROM mc_country WHERE id_country IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
             }
         }
     }

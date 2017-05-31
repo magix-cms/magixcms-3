@@ -43,6 +43,8 @@ class backend_db_language{
                 if ($config['type'] === 'lang') {
                     $sql = 'SELECT * FROM mc_lang WHERE id_lang = :id';
                     $params = $data;
+                }elseif ($config['type'] === 'count') {
+                    $sql = 'SELECT count(id_lang) AS nb FROM mc_lang';
                 }
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
@@ -67,6 +69,13 @@ class backend_db_language{
                         ':active_lang'	=> $data['active_lang']
                     )
                 );
+            }elseif ($config['type'] === 'langActive') {
+                $sql = 'UPDATE mc_lang SET active_lang = :active_lang WHERE id_lang IN ('.$data['id_lang'].')';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':active_lang' => $data['active_lang']
+                    )
+                );
             }
         }
     }
@@ -88,6 +97,20 @@ class backend_db_language{
                         ':active_lang'	=> $data['active_lang']
                     )
                 );
+            }
+        }
+    }
+
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function delete($config,$data = false)
+    {
+        if (is_array($config)) {
+            if($config['type'] === 'delLang'){
+                $sql = 'DELETE FROM mc_lang WHERE id_lang IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
             }
         }
     }

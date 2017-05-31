@@ -30,7 +30,7 @@ class backend_controller_country extends backend_db_country
         // --- POST
 
         if (http_request::isPost('id')) {
-            $this->id_country = $formClean->numeric($_POST['id']);
+            $this->id_country = $formClean->simpleClean($_POST['id']);
         }
         if (http_request::isPost('iso_country')) {
             $this->iso_country = $formClean->simpleClean($_POST['iso_country']);
@@ -151,6 +151,26 @@ class backend_controller_country extends backend_db_country
     }
 
     /**
+     * Insertion de données
+     * @param $data
+     */
+    private function del($data){
+        switch($data['type']){
+            case 'delCountry':
+                parent::delete(
+                    array(
+                        'context'   =>    'country',
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'delete',$data['data']);
+                break;
+        }
+    }
+
+    /**
      *
      */
     public function run(){
@@ -192,6 +212,18 @@ class backend_controller_country extends backend_db_country
                             )
                         );
                         print 'test';
+                    }
+                    break;
+                case 'delete':
+                    if(isset($this->id_country)) {
+                        $this->del(
+                            array(
+                                'type'=>'delCountry',
+                                'data'=>array(
+                                    'id' => $this->id_country
+                                )
+                            )
+                        );
                     }
                     break;
             }

@@ -58,6 +58,16 @@
 {capture name="alert_message"}
     {#request_success_delete#}
 {/capture}
+{case 'delete_min' break}
+{capture name="alert_type"}{strip}
+    danger
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    warning
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_error_min#}
+{/capture}
     {** Test Remote data **}
 {case 'remote_data' break}
 {capture name="alert_type"}{strip}
