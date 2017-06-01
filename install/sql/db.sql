@@ -108,6 +108,14 @@ CREATE TABLE IF NOT EXISTS `mc_module` (
   PRIMARY KEY (`id_module`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
+(NULL, 'backend_controller_dashboard', 'dashboard'),
+(NULL, 'backend_controller_employee', 'employee'),
+(NULL, 'backend_controller_access', 'access'),
+(NULL, 'backend_controller_language', 'language'),
+(NULL, 'backend_controller_country', 'country'),
+(NULL, 'backend_controller_domain', 'domain');
+
 CREATE TABLE IF NOT EXISTS `mc_setting` (
   `id_setting` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
