@@ -84,6 +84,10 @@
                     {$col['title'] = $k}
                 {/if}
 
+                {if $pre == 'url'}
+                    {$col['title'] = $k}
+                {/if}
+
                 {if $pre == 'status'}
                     {$col['enum'] = 'status_'}
                     {$col['type'] = 'enum'}

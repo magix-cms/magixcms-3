@@ -1,7 +1,7 @@
 <?php
 class backend_controller_country extends backend_db_country
 {
-    public $edit, $action, $tabs;
+    public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $arrayTools;
     public $id_country,$iso_country,$name_country, $order;
 

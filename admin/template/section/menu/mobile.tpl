@@ -49,6 +49,39 @@
                         </a>
                     </li>
                     {/if}
+                    {if {employee_access type="view" class_name="backend_controller_domain"} eq 1}
+                        <li>
+                            <a href="{geturl}/{baseadmin}/index.php?controller=domain">
+                                <span class="fa fa-link"></span> {#domain#}
+                            </a>
+                        </li>
+                    {/if}
+                </ul>
+            </nav>
+        </li>
+        <li>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-localisation">
+                <span class="caret"></span>
+            </button>
+            <a href="#">
+                <span class="fa fa-location-arrow"></span> Localisation
+            </a>
+            <nav id="menu-localisation" class="collapse navbar-collapse">
+                <ul>
+                    {if {employee_access type="view" class_name="backend_controller_language"} eq 1}
+                        <li>
+                            <a href="{geturl}/{baseadmin}/index.php?controller=language">
+                                <span class="fa fa-flag"></span> {#language#}
+                            </a>
+                        </li>
+                    {/if}
+                    {if {employee_access type="view" class_name="backend_controller_country"} eq 1}
+                        <li>
+                            <a href="{geturl}/{baseadmin}/index.php?controller=country">
+                                <span class="fa fa-globe"></span> {#country#}
+                            </a>
+                        </li>
+                    {/if}
                 </ul>
             </nav>
         </li>

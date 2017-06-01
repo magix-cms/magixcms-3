@@ -64,9 +64,9 @@ CREATE TABLE IF NOT EXISTS `mc_config` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 INSERT INTO `mc_config` (`idconfig`, `attr_name`, `status`) VALUES
-(1, 'pages', 1),
-(2, 'news', 1),
-(3, 'catalog', 1);
+(NULL, 'pages', 1),
+(NULL, 'news', 1),
+(NULL, 'catalog', 1);
 
 CREATE TABLE IF NOT EXISTS `mc_country` (
   `idcountry` int(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -118,23 +118,32 @@ CREATE TABLE IF NOT EXISTS `mc_setting` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`) VALUES
-(1, 'theme', 'default', 'string', 'site theme'),
-(2, 'webmaster', '', 'string', 'google webmasterTools'),
-(3, 'analytics', '', 'string', 'google analytics'),
-(4, 'editor', 'openFilemanager', 'string', 'tinymce'),
-(5, 'magix_version', '3.0.0', 'string', 'Version Magix CMS'),
-(6, 'content_css', NULL, 'string', NULL),
-(7, 'concat', '0', 'string', NULL),
-(8, 'cache', 'none', 'string', NULL),
-(9, 'googleplus', NULL, 'string', 'Google plus'),
-(10, 'robots', 'noindex,nofollow', 'string', 'metas robots'),
-(11, 'css_inliner', '1', 'string', 'CSS inliner');
+(NULL, 'theme', 'default', 'string', 'site theme'),
+(NULL, 'webmaster', '', 'string', 'google webmasterTools'),
+(NULL, 'analytics', '', 'string', 'google analytics'),
+(NULL, 'editor', 'openFilemanager', 'string', 'tinymce'),
+(NULL, 'magix_version', '3.0.0', 'string', 'Version Magix CMS'),
+(NULL, 'content_css', NULL, 'string', NULL),
+(NULL, 'concat', '0', 'string', NULL),
+(NULL, 'cache', 'none', 'string', NULL),
+(NULL, 'googleplus', NULL, 'string', 'Google plus'),
+(NULL, 'robots', 'noindex,nofollow', 'string', 'metas robots'),
+(NULL, 'css_inliner', '1', 'string', 'CSS inliner'),
+(NULL, 'mode', 'dev', 'string', 'Environment types'),
+(NULL, 'ssl', '0', 'string', 'SSL protocol');
 
 CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `version` varchar(10) NOT NULL,
   PRIMARY KEY (`id_plugins`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_domain` (
+  `id_domain` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `url_domain` varchar(175) NOT NULL,
+  `default_domain` smallint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_domain`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `mc_home_page` (
