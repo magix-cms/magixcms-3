@@ -122,23 +122,21 @@ CREATE TABLE IF NOT EXISTS `mc_setting` (
   `value` text,
   `type` varchar(8) NOT NULL DEFAULT 'string',
   `label` text,
+  `category` varchar(20) NOT NULL,
   PRIMARY KEY (`id_setting`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`) VALUES
-(NULL, 'theme', 'default', 'string', 'site theme'),
-(NULL, 'webmaster', '', 'string', 'google webmasterTools'),
-(NULL, 'analytics', '', 'string', 'google analytics'),
-(NULL, 'editor', 'openFilemanager', 'string', 'tinymce'),
-(NULL, 'magix_version', '3.0.0', 'string', 'Version Magix CMS'),
-(NULL, 'content_css', NULL, 'string', NULL),
-(NULL, 'concat', '0', 'string', NULL),
-(NULL, 'cache', 'none', 'string', NULL),
-(NULL, 'googleplus', NULL, 'string', 'Google plus'),
-(NULL, 'robots', 'noindex,nofollow', 'string', 'metas robots'),
-(NULL, 'css_inliner', '1', 'string', 'CSS inliner'),
-(NULL, 'mode', 'dev', 'string', 'Environment types'),
-(NULL, 'ssl', '0', 'string', 'SSL protocol');
+INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `category`) VALUES
+(NULL, 'theme', 'default', 'string', 'site theme', 'theme'),
+(NULL, 'analytics', NULL, 'string', 'google analytics', 'google'),
+(NULL, 'magix_version', '3.0.0', 'string', 'Version Magix CMS', 'release'),
+(NULL, 'content_css', NULL, 'string', 'css from skin for tinyMCE', 'general'),
+(NULL, 'concat', '0', 'int', 'concat URL', 'general'),
+(NULL, 'cache', 'none', 'string', 'Cache template', 'general'),
+(NULL, 'robots', 'noindex,nofollow', 'string', 'metas robots', 'general'),
+(NULL, 'css_inliner', '1', 'string', 'CSS inliner', 'general'),
+(NULL, 'mode', 'dev', 'string', 'Environment types', 'general'),
+(NULL, 'ssl', '0', 'int', 'SSL protocol', 'general');
 
 CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,

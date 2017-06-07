@@ -49,6 +49,33 @@ class backend_controller_dashboard{
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
         }
     }
+    /**
+     * @param $id
+     * @return array
+     */
+    public function setReleaseData()
+    {
+        $basePath = component_core_system::basePath().DIRECTORY_SEPARATOR;
+        $XMLFiles = $basePath . 'release.xml';
+        if (file_exists($XMLFiles)) {
+            try {
+                if ($stream = fopen($XMLFiles, 'r')) {
+                    $streamData = stream_get_contents($stream, -1, 0);
+                    $streamData = urldecode($streamData);
+                    $xml = simplexml_load_string($streamData, null, LIBXML_NOCDATA);
+                    $newData = array();
+                    foreach ($xml->children() as $item => $value) {
+                        $newData[$item] = $value->__toString();
+                    }
+                    fclose($stream);
+                    return $newData;
+                }
+            } catch (Exception $e) {
+                $logger = new debug_logger(MP_LOG_DIR);
+                $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
+            }
+        }
+    }
 
     public function run(){
         /**
@@ -73,6 +100,7 @@ class backend_controller_dashboard{
 
             $this->template->display('error/index.tpl');
         }else{
+            $this->template->assign('getReleaseData',$this->setReleaseData());
             $this->employee->getItemsEmployee();
             $this->template->display('dashboard/index.tpl');
             // Create a Router

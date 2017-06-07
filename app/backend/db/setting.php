@@ -43,16 +43,48 @@
  *
  */
 class backend_db_setting{
+    /**
+     * @param $config
+     * @param bool $data
+     * @return mixed
+     * @throws Exception
+     */
+    public function fetchData($config,$data = false){
+        $sql = '';
+        $params = false;
+
+        if(is_array($config)) {
+            if($config['context'] === 'all' || $config['context'] === 'return') {
+                if ($config['type'] === 'settings') {
+                    $sql = 'SELECT * FROM mc_setting';
+                }
+                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+
+            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+
+                if ($config['type'] === 'role') {
+
+                    //Return role list
+                    $sql = 'SELECT * FROM mc_setting
+                    WHERE id_setting = :id';
+                    $params = $data;
+
+                }
+
+                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+            }
+        }
+    }
 	/**
 	 * singleton dbnews
 	 * @access public
 	 * @var void
 	 */
-	static public $publicdbsetting;
+	/*static public $publicdbsetting;
 	/**
 	 * instance backend_db_home with singleton
 	 */
-	public static function publicDbSetting(){
+	/*public static function publicDbSetting(){
         if (!isset(self::$publicdbsetting)){
          	self::$publicdbsetting = new backend_db_setting();
         }
@@ -64,7 +96,7 @@ class backend_db_setting{
 	 * @param $setting_id (string) identifiant du setting
 	 * @return mixed
 	 */
-    public function s_uniq_setting_value($setting_id){
+    /*public function s_uniq_setting_value($setting_id){
     	$sql = 'SELECT setting_value FROM ap_setting WHERE setting_id = :setting_id';
 		return component_routing_db::layer()->fetch($sql,array(':setting_id'	=>	$setting_id));
     }
@@ -73,7 +105,7 @@ class backend_db_setting{
 	 * Return all settings
 	 * @return mixed
 	 */
-    public function s_all_settings(){
+    /*public function s_all_settings(){
     	$sql = 'SELECT setting_id,setting_value FROM ap_setting';
 		return component_routing_db::layer()->fetchAll($sql);
     }
@@ -81,9 +113,9 @@ class backend_db_setting{
     /**
      * @return array
      */
-    public function fetchCSSIColor(){
+    /*public function fetchCSSIColor(){
         $sql = 'SELECT color.*
     	FROM ap_css_inliner_color as color';
         return component_routing_db::layer()->fetchAll($sql);
-    }
+    }*/
 }

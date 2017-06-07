@@ -9,18 +9,27 @@
     <div class="row">
         <section id="quick-access" class="col-xs-12 col-md-6 col-lg-3">
             <header>
-                <h2 class="h5">Accès rapide</h2>
+                <h2 class="h5"><span class="fa fa-certificate"></span> Analyse de l'installation</h2>
             </header>
             <div>
-                <ul class="nav">
-                    {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
-                        <li>
-                            <a href="{geturl}/{baseadmin}/index.php?controller=employee">
-                                {#employees#|ucfirst}
-                            </a>
-                        </li>
-                    {/if}
-                </ul>
+                {if is_array($getReleaseData) && !empty($getReleaseData)}
+                <div class="row folder-box">
+                    <div class="col-xs-6">
+                        <p>Version</p>
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="text-right"><strong>{$getReleaseData.version}</strong></p>
+                    </div>
+                </div>
+                    <div class="row folder-box">
+                        <div class="col-xs-6">
+                            <p>Phase</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p class="text-right">{$getReleaseData.phase}</p>
+                        </div>
+                    </div>
+                {/if}
             </div>
         </section>
         <section id="tasks" class="col-xs-12 col-md-6 col-lg-3 pull-right">
