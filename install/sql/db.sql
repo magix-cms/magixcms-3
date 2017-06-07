@@ -69,11 +69,11 @@ INSERT INTO `mc_config` (`idconfig`, `attr_name`, `status`) VALUES
 (NULL, 'catalog', 1);
 
 CREATE TABLE IF NOT EXISTS `mc_country` (
-  `idcountry` int(5) unsigned NOT NULL AUTO_INCREMENT,
-  `iso` varchar(5) NOT NULL,
-  `country` varchar(125) NOT NULL,
-  `order_c` int(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`idcountry`)
+  `id_country` int(5) unsigned NOT NULL AUTO_INCREMENT,
+  `iso_country` varchar(5) NOT NULL,
+  `name_country` varchar(125) NOT NULL,
+  `order_country` int(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_country`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `mc_css_inliner_color` (
@@ -91,14 +91,14 @@ INSERT INTO `mc_css_inliner_color` (`id_cssi`, `property_cssi`, `color_cssi`) VA
 
 CREATE TABLE IF NOT EXISTS `mc_lang` (
   `id_lang` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
-  `iso` varchar(10) NOT NULL,
-  `name` varchar(40) DEFAULT NULL,
-  `by_default` smallint(1) unsigned NOT NULL DEFAULT '0',
-  `active` smallint(1) unsigned NOT NULL DEFAULT '0',
+  `iso_lang` varchar(10) NOT NULL,
+  `name_lang` varchar(40) DEFAULT NULL,
+  `default_lang` smallint(1) unsigned NOT NULL DEFAULT '0',
+  `active_lang` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_lang`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-INSERT INTO `mc_lang` (`id_lang`, `iso`, `name`, `by_default`, `active`) VALUES
+INSERT INTO `mc_lang` (`id_lang`, `iso_lang`, `name_lang`, `default_lang`, `active_lang`) VALUES
 (1, 'fr', 'francais', 1, 1);
 
 CREATE TABLE IF NOT EXISTS `mc_module` (

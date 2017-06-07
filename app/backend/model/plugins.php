@@ -40,6 +40,11 @@ class backend_model_plugins{
     public function getItems(){
         return $this->setItems();
     }
+
+    /**
+     * @param $id
+     * @return array
+     */
     public function readConfigXML($id){
         $pluginsDir = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$id;
         $XMLFiles = $pluginsDir.DIRECTORY_SEPARATOR.'config.xml';
