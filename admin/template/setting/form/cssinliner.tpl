@@ -1,4 +1,4 @@
-<form id="edit_setting_cssinliner" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form add_form collapse in">
+<form id="edit_setting_cssinliner" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
         <div class="row">
             <div class="col-xs-12 col-md-6">
@@ -22,7 +22,7 @@
                                 Background
                             </label>
                             <div class="input-group colorpicker-component csspicker">
-                                <input type="text" value="#f2f2f2" class="form-control" name="color[]" />
+                                <input type="text" value="#f2f2f2" class="form-control" name="color[header_bg]" />
                                 <span class="input-group-addon"><i></i></span>
                             </div>
                         </div>
@@ -31,7 +31,7 @@
                                 Color
                             </label>
                             <div class="input-group colorpicker-component csspicker">
-                                <input type="text" value="#ffffff" class="form-control" name="color[]" />
+                                <input type="text" value="#ffffff" class="form-control" name="color[header_c]" />
                                 <span class="input-group-addon"><i></i></span>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                                 Background
                             </label>
                             <div class="input-group colorpicker-component csspicker">
-                                <input type="text" value="#333333" class="form-control" name="color[]" />
+                                <input type="text" value="#333333" class="form-control" name="color[footer_bg]" />
                                 <span class="input-group-addon"><i></i></span>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                 Color
                             </label>
                             <div class="input-group colorpicker-component csspicker">
-                                <input type="text" value="#ffffff" class="form-control" name="color[]" />
+                                <input type="text" value="#ffffff" class="form-control" name="color[footer_c]" />
                                 <span class="input-group-addon"><i></i></span>
                             </div>
                         </div>
@@ -65,6 +65,7 @@
     </div>
     <div class="row">
         <div id="submit" class="col-xs-12 col-md-6">
+            <input type="hidden" id="type" name="type" value="css_inliner">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>
     </div>

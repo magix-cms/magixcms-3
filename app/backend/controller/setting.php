@@ -2,6 +2,7 @@
 class backend_controller_setting extends backend_db_setting{
     public $edit, $action, $tabs;
     protected $message, $template, $header, $data;
+    public $setting, $type, $color;
     public function __construct()
     {
         $this->template = new backend_model_template();
@@ -21,6 +22,19 @@ class backend_controller_setting extends backend_db_setting{
         }
         if (http_request::isGet('tabs')) {
             $this->tabs = $formClean->simpleClean($_GET['tabs']);
+        }
+        // --- POST
+        if (http_request::isPost('setting')) {
+            $this->setting = $formClean->arrayClean($_POST['setting']);
+        }else{
+            $this->setting = array();
+        }
+        if (http_request::isPost('color')) {
+            $this->color = $formClean->arrayClean($_POST['color']);
+        }
+
+        if (http_request::isPost('type')) {
+            $this->type = $formClean->simpleClean($_POST['type']);
         }
     }
     /**
@@ -45,13 +59,98 @@ class backend_controller_setting extends backend_db_setting{
         }
         $this->template->assign('settings',$newArray);
     }
+    /**
+     * Mise a jour des données
+     * @param $data
+     */
+    private function upd($data)
+    {
+        switch ($data['type']) {
+            case 'general':
 
+                if(!isset($this->setting['concat'])){
+                    $concat = '0';
+                }else{
+                    $concat = '1';
+                }
+
+                if(!isset($this->setting['ssl'])){
+                    $ssl = '0';
+                }else{
+                    $ssl = '1';
+                }
+
+                parent::update(
+                    array(
+                        'type'=>$data['type']
+                    ),array(
+                        'content_css'   => $this->setting['content_css'],
+                        'concat'        => $concat,
+                        'ssl'           => $ssl,
+                        'cache'         => $this->setting['cache'],
+                        'mode'          => $this->setting['mode']
+                    )
+                );
+                break;
+            case 'css_inliner':
+                if(isset($this->setting['css_inliner'])){
+                    parent::update(
+                        array(
+                            'type'=>$data['type']
+                        ),array(
+                            'css_inliner'   => '1',
+                            'header_bg'     => $this->color['header_bg'],
+                            'header_c'      => $this->color['header_c'],
+                            'footer_bg'     => $this->color['footer_bg'],
+                            'footer_c'      => $this->color['footer_c']
+                        )
+                    );
+                }else{
+                    parent::update(
+                        array(
+                            'type'=>$data['type']
+                        ),array(
+                            'css_inliner'   => '0'
+                        )
+                    );
+                }
+                break;
+            case 'google':
+                parent::update(
+                    array(
+                        'type'=>$data['type']
+                    ),array(
+                        'analytics'   => $this->setting['analytics'],
+                        'robots'      => $this->setting['robots']
+                    )
+                );
+                break;
+        }
+        $this->header->set_json_headers();
+        $this->message->json_post_response(true,'update',$data['type']);
+    }
     /**
      *
      */
     public function run(){
-        $this->setItemsData();
-        $this->template->display('setting/index.tpl');
+        if(isset($this->action)) {
+            switch ($this->action) {
+                case 'edit':
+                    if (isset($this->setting)) {
+                        if($this->type === 'general'){
+                            $this->upd(array('type'=>'general'));
+                        }elseif($this->type === 'css_inliner'){
+                            $this->upd(array('type'=>'css_inliner'));
+                        }elseif($this->type === 'google'){
+                            $this->upd(array('type'=>'google'));
+                        }
+                    }
+                    break;
+            }
+        }else{
+            $this->setItemsData();
+            $this->template->display('setting/index.tpl');
+        }
     }
 }
 ?>

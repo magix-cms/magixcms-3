@@ -2,7 +2,7 @@
 "noindex,nofollow"=>"No index",
 "index,follow,all"=>"Index"
 ]}
-<form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form add_form collapse in">
+<form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-lg-6">
@@ -27,6 +27,7 @@
     </div>
     <div class="row">
         <div id="submit" class="col-xs-12 col-md-6">
+            <input type="hidden" id="type" name="type" value="google">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>
     </div>

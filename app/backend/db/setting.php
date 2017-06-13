@@ -77,6 +77,87 @@ class backend_db_setting{
             }
         }
     }
+
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function update($config,$data = false)
+    {
+        if (is_array($config)) {
+            if ($config['type'] === 'general') {
+                $queries = array(
+                    array(
+                        'request'=>"UPDATE mc_setting SET value = :content_css WHERE name = 'content_css'",
+                        'params'=>array(':content_css' => $data['content_css'])
+                    ),
+                    array(
+                        'request'=>"UPDATE mc_setting SET value = :concat WHERE name = 'concat'",
+                        'params'=>array(':concat' => $data['concat'])
+                    ),
+                    array(
+                        'request'=>"UPDATE mc_setting SET value = :ssl WHERE name = 'ssl'",
+                        'params'=>array(':ssl' => $data['ssl'])
+                    ),
+                    array(
+                        'request'=>"UPDATE mc_setting SET value = :cache WHERE name = 'cache'",
+                        'params'=>array(':cache' => $data['cache'])
+                    ),
+                    array(
+                        'request'=>"UPDATE mc_setting SET value = :mode WHERE name = 'mode'",
+                        'params'=>array(':mode' => $data['mode'])
+                    )
+                );
+                component_routing_db::layer()->transaction($queries);
+            }elseif ($config['type'] === 'css_inliner') {
+                if($data['css_inliner'] != '0'){
+                    $queries = array(
+                        array(
+                            'request'=>"UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'",
+                            'params'=>array(':css_inliner' => $data['css_inliner'])
+                        ),
+                        array(
+                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :header_bg WHERE property_cssi = 'header_bg'",
+                            'params'=>array(':header_bg' => $data['header_bg'])
+                        ),
+                        array(
+                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :header_c WHERE property_cssi = 'header_c'",
+                            'params'=>array(':header_c' => $data['header_c'])
+                        ),
+                        array(
+                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :footer_bg WHERE property_cssi = 'footer_bg'",
+                            'params'=>array(':footer_bg' => $data['footer_bg'])
+                        ),
+                        array(
+                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :footer_c WHERE property_cssi = 'footer_c'",
+                            'params'=>array(':footer_c' => $data['footer_c'])
+                        )
+                    );
+                    component_routing_db::layer()->transaction($queries);
+                }else{
+                    $sql = "UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'";
+                    component_routing_db::layer()->update($sql,
+                        array(
+                            ':css_inliner'	    => $data['css_inliner']
+                        )
+                    );
+                }
+            }elseif ($config['type'] === 'google') {
+                $queries = array(
+                    array(
+                        'request'=>"UPDATE mc_setting SET value = :analytics WHERE name = 'analytics'",
+                        'params'=>array(':analytics' => $data['analytics'])
+                    ),
+                    array(
+                        'request'=>"UPDATE mc_setting SET value = :robots WHERE name = 'robots'",
+                        'params'=>array(':robots' => $data['robots'])
+                    )
+                );
+                component_routing_db::layer()->transaction($queries);
+            }
+        }
+    }
+
 	/**
 	 * singleton dbnews
 	 * @access public

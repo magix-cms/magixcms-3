@@ -4,10 +4,10 @@
 "apc"=>"APC"
 ]}
 {assign var="collectionformMode" value=[
-"dev"=>"Dev",
+"dev"=>"Developpement",
 "prod"=>"Production"
 ]}
-<form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form add_form collapse in">
+<form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-lg-6">
@@ -30,7 +30,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="form-group">
-                    <label for="concat">{#ssl#|ucfirst}&nbsp;?</label>
+                    <label for="ssl">{#ssl#|ucfirst}&nbsp;?</label>
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" id="ssl" name="setting[ssl]" data-toggle="toggle" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if isset($settings.ssl) && $settings.ssl eq '1'} checked{/if}/>
@@ -54,8 +54,8 @@
         <div class="row">
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label for="cache">{#mode#|ucfirst}</label>
-                    <select name="setting[mode]" id="cache" class="form-control required" required>
+                    <label for="mode">{#mode#|ucfirst}</label>
+                    <select name="setting[mode]" id="mode" class="form-control required" required>
                         {foreach $collectionformMode as $key => $val}
                             <option value="{$key}" {if $settings.mode == $key} selected{/if}>{$val|ucfirst}</option>
                         {/foreach}
@@ -66,6 +66,7 @@
     </div>
     <div class="row">
         <div id="submit" class="col-xs-12 col-md-6">
+            <input type="hidden" id="type" name="type" value="general">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>
     </div>
