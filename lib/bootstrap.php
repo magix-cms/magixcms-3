@@ -50,13 +50,13 @@ if (file_exists($magepattern)) {
 /**
  * Include phpThumb
  */
-/*$phpthumb = __DIR__.'/phpthumb/ThumbLib.inc.php';
+$phpthumb = dirname(__FILE__).'/phpthumb/ThumbLib.inc.php';
 if (file_exists($phpthumb)) {
-	require ($phpthumb);
+    require ($phpthumb);
 }else{
-	print 'Error thumbnail Config';
-	exit;
-}*/
+    print 'Error thumbnail Config';
+    exit;
+}
 /**
  * Include smarty3
  */
@@ -67,17 +67,7 @@ if (file_exists($smarty)) {
 	print 'Error Smarty Config';
 	exit;
 }
-/**
- * Include CSS Inliner
- */
-$cssinliner = dirname(__FILE__).'/cssinliner/_init.php';
-if (file_exists($cssinliner)) {
-	require ($cssinliner);
-}else{
-	print 'Error CSSInliner Config';
-	exit;
-}
-/**
+/***
  * Constante Firephp
  */
 /*if(defined('MP_FIREPHP')){

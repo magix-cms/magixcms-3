@@ -20,6 +20,13 @@
             <span class="fa fa-wrench"></span> Outils <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
+            {if {employee_access type="view" class_name="backend_controller_setting"} eq 1}
+                <li>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=setting">
+                        <span class="fa fa-cog"></span> {#setting#}
+                    </a>
+                </li>
+            {/if}
             {if {employee_access type="view" class_name="backend_controller_webservice"} eq 1}
             <li>
                 <a href="{geturl}/{baseadmin}/index.php?controller=webservice">

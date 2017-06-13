@@ -57,6 +57,8 @@ class backend_db_setting{
             if($config['context'] === 'all' || $config['context'] === 'return') {
                 if ($config['type'] === 'settings') {
                     $sql = 'SELECT * FROM mc_setting';
+                }elseif ($config['type'] === 'cssinliner') {
+                    $sql = 'SELECT * FROM mc_cssinliner';
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 

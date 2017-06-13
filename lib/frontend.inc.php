@@ -44,14 +44,6 @@ if (file_exists($config_in)) {
 	exit;
 }
 
-$phpthumb = dirname(__FILE__).'/phpthumb/ThumbLib.inc.php';
-if (file_exists($phpthumb)) {
-    require ($phpthumb);
-}else{
-    print 'Error thumbnail Config';
-    exit;
-}
-
 /**
  * Chargement du Bootsrap
  */

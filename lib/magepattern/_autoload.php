@@ -90,6 +90,10 @@ final class magepattern_bootstrap{
      */
     private static $path_dompdf = '/package/dompdf/autoload.inc.php';
     /**
+     * @var string
+     */
+    private static $path_css_inliner = '/package/cssinliner/init.php';
+    /**
      * @access private
      * @return array
      */
@@ -99,7 +103,8 @@ final class magepattern_bootstrap{
             'firephp'    => __DIR__.self::$path_firephp,
             'chromephp'  => __DIR__.self::$path_chrome_logger,
             'swift'      => __DIR__.self::$path_swiftmailer,
-            'dompdf'     => __DIR__.self::$path_dompdf
+            'dompdf'     => __DIR__.self::$path_dompdf,
+            'cssinliner' => __DIR__.self::$path_css_inliner
         );
     }
     /**
