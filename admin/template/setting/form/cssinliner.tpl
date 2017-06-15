@@ -1,7 +1,7 @@
 <form id="edit_setting_cssinliner" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
         <div class="row">
-            <div class="col-xs-12 col-md-6">
+            <div class="col-xs-12 col-md-4">
                 <header>
                     <div class="form-group">
                         <label for="cssinliner_enabled">{#cssinliner#|ucfirst}&nbsp;?</label>
@@ -64,7 +64,7 @@
         </div>
     </div>
     <div class="row">
-        <div id="submit" class="col-xs-12 col-md-6">
+        <div id="submit" class="col-xs-12 col-md-4">
             <input type="hidden" id="type" name="type" value="css_inliner">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>

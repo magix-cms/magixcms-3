@@ -10,7 +10,7 @@
 <form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
         <div class="row">
-            <div class="col-xs-12 col-sm-6 col-lg-6">
+            <div class="col-xs-12 col-md-4">
                 <div class="form-group">
                     <label for="content_css">{#content_css#|ucfirst}</label>
                     <input type="text" id="content_css" name="setting[content_css]" class="form-control" value="{$settings.content_css}" />
@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-12 col-md-3">
                 <div class="form-group">
                     <label for="concat">{#concat#|ucfirst}&nbsp;?</label>
                     <div class="checkbox">
@@ -28,7 +28,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-12 col-md-3">
                 <div class="form-group">
                     <label for="ssl">{#ssl#|ucfirst}&nbsp;?</label>
                     <div class="checkbox">
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-md-4">
                 <div class="form-group">
                     <label for="cache">{#cache#|ucfirst}</label>
                     <select name="setting[cache]" id="cache" class="form-control required" required>
@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-md-4">
                 <div class="form-group">
                     <label for="mode">{#mode#|ucfirst}</label>
                     <select name="setting[mode]" id="mode" class="form-control required" required>
@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="row">
-        <div id="submit" class="col-xs-12 col-md-6">
+        <div id="submit" class="col-xs-12 col-md-4">
             <input type="hidden" id="type" name="type" value="general">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>

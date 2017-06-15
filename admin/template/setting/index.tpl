@@ -15,7 +15,7 @@
 {block name='article:content'}
 {if {employee_access type="edit" class_name=$cClass} eq 1}
 <div class="panels row">
-    <section class="panel col-xs-12 col-md-8">
+    <section class="panel col-xs-12 col-md-12">
         {if $debug}
             {$debug}
         {/if}
@@ -40,7 +40,7 @@
                     {include file="setting/form/cssinliner.tpl" controller="setting"}
                 </div>
                 <div role="tabpanel" class="tab-pane" id="theme">
-
+                    {include file="setting/form/skin.tpl" controller="setting"}
                 </div>
                 <div role="tabpanel" class="tab-pane" id="google">
                     {include file="setting/form/google.tpl" controller="setting"}
@@ -58,6 +58,7 @@
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         libjs/vendor/bootstrap-colorpicker.min.js,
+        {baseadmin}/template/js/fancybox.init.min.js,
         {baseadmin}/template/js/setting.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
@@ -68,8 +69,10 @@
             {
                 console.log("setting is not defined");
             }else{
-                setting.run();
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+                var btnData = ['Choisir','Sélectionné'];
+                setting.run(controller,btnData);
             }
         });
-    </script>*}
+    </script>
 {/block}

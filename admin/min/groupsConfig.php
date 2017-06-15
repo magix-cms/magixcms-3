@@ -19,6 +19,7 @@ return array(
         '//libjs/vendor/bootstrap2-toggle.min.js',
         '//libjs/vendor/jquery.form.3.51.min.js',
         '//libjs/vendor/jquery.validate.1.15.0.min.js',
+        '//'.PATHADMIN.'/template/js/vendor/jquery.fancybox.min.js',
         '//libjs/vendor/redirect.min.js'
     ),
 	'jimagine' => array(
@@ -35,7 +36,8 @@ return array(
     'publiccss' => array(
         '//'.PATHADMIN.'/template/css/bootstrap/critical.min.css',
         '//'.PATHADMIN.'/template/css/bootstrap/bootstrap.min.css',
-        '//'.PATHADMIN.'/template/css/bootstrap2-toggle.min.css'
+        '//'.PATHADMIN.'/template/css/bootstrap2-toggle.min.css',
+        '//'.PATHADMIN.'/template/css/fancybox/jquery.fancybox.min.css'
     ),
 	'pdfcss' => array(
 		'//'.PATHADMIN.'/template/css/pdf/print.min.css',

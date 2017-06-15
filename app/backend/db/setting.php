@@ -64,12 +64,10 @@ class backend_db_setting{
 
             }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
 
-                if ($config['type'] === 'role') {
-
-                    //Return role list
-                    $sql = 'SELECT * FROM mc_setting
-                    WHERE id_setting = :id';
-                    $params = $data;
+                if ($config['type'] === 'skin') {
+                    //Return current skin
+                    $sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
+                    //$params = $data;
 
                 }
 
@@ -86,29 +84,27 @@ class backend_db_setting{
     {
         if (is_array($config)) {
             if ($config['type'] === 'general') {
-                $queries = array(
+
+                $query = "UPDATE `mc_setting`
+					SET `value` = CASE `name`
+						WHEN 'content_css' THEN :content_css
+						WHEN 'concat' THEN :concat
+						WHEN 'ssl' THEN :ssl
+						WHEN 'cache' THEN :cache
+						WHEN 'mode' THEN :mode
+					END
+					WHERE `name` IN ('content_css','concat','ssl','cache','mode')";
+
+                component_routing_db::layer()->update($query,
                     array(
-                        'request'=>"UPDATE mc_setting SET value = :content_css WHERE name = 'content_css'",
-                        'params'=>array(':content_css' => $data['content_css'])
-                    ),
-                    array(
-                        'request'=>"UPDATE mc_setting SET value = :concat WHERE name = 'concat'",
-                        'params'=>array(':concat' => $data['concat'])
-                    ),
-                    array(
-                        'request'=>"UPDATE mc_setting SET value = :ssl WHERE name = 'ssl'",
-                        'params'=>array(':ssl' => $data['ssl'])
-                    ),
-                    array(
-                        'request'=>"UPDATE mc_setting SET value = :cache WHERE name = 'cache'",
-                        'params'=>array(':cache' => $data['cache'])
-                    ),
-                    array(
-                        'request'=>"UPDATE mc_setting SET value = :mode WHERE name = 'mode'",
-                        'params'=>array(':mode' => $data['mode'])
+                        ':content_css'	=> $data['content_css'],
+                        ':concat'	    => $data['concat'],
+                        ':ssl'	        => $data['ssl'],
+                        ':cache'	    => $data['cache'],
+                        ':mode'	        => $data['mode']
                     )
                 );
-                component_routing_db::layer()->transaction($queries);
+
             }elseif ($config['type'] === 'css_inliner') {
                 if($data['css_inliner'] != '0'){
                     $queries = array(
@@ -142,18 +138,28 @@ class backend_db_setting{
                         )
                     );
                 }
-            }elseif ($config['type'] === 'google') {
-                $queries = array(
+            }elseif ($config['type'] === 'theme') {
+                $sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
+                component_routing_db::layer()->update($sql,
                     array(
-                        'request'=>"UPDATE mc_setting SET value = :analytics WHERE name = 'analytics'",
-                        'params'=>array(':analytics' => $data['analytics'])
-                    ),
-                    array(
-                        'request'=>"UPDATE mc_setting SET value = :robots WHERE name = 'robots'",
-                        'params'=>array(':robots' => $data['robots'])
+                        ':theme'	    => $data['theme']
                     )
                 );
-                component_routing_db::layer()->transaction($queries);
+            }elseif ($config['type'] === 'google') {
+
+                $query = "UPDATE `mc_setting`
+					SET `value` = CASE `name`
+						WHEN 'analytics' THEN :analytics
+						WHEN 'robots' THEN :robots
+					END
+					WHERE `name` IN ('analytics','robots')";
+
+                component_routing_db::layer()->update($query,
+                    array(
+                        ':analytics'	=> $data['analytics'],
+                        ':robots'	    => $data['robots']
+                    )
+                );
             }
         }
     }

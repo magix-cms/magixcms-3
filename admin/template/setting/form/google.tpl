@@ -5,7 +5,7 @@
 <form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
         <div class="row">
-            <div class="col-xs-12 col-sm-6 col-lg-6">
+            <div class="col-xs-12 col-md-4">
                 <div class="form-group">
                     <label for="analytics">{#analytics#|ucfirst}</label>
                     <input type="text" id="analytics" name="setting[analytics]" class="form-control" placeholder="{#ph_analytics#}" value="{$settings.analytics}" />
@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-md-4">
                 <div class="form-group">
                     <label for="robots">{#robots#|ucfirst}</label>
                     <select name="setting[robots]" id="robots" class="form-control required" required>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="row">
-        <div id="submit" class="col-xs-12 col-md-6">
+        <div id="submit" class="col-xs-12 col-md-4">
             <input type="hidden" id="type" name="type" value="google">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>

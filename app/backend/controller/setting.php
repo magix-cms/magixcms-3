@@ -59,6 +59,32 @@ class backend_controller_setting extends backend_db_setting{
         }
         $this->template->assign('settings',$newArray);
     }
+    private function setItemsSkin(){
+        $currentSkin = parent::fetchData(array('context'=>'unique','type'=>'skin'));
+        $finder = new file_finder();
+        $basePath = component_core_system::basePath().'skin';
+        $skin = $finder->scanRecursiveDir($basePath);
+        $newSkin = array();
+        foreach($skin as $key => $value){
+            if($value === $currentSkin['value']){
+                $current = 'true';
+            }else{
+                $current = 'false';
+            }
+            if(file_exists($basePath.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.'screenshot_s.jpg')){
+                $screenshot['small'] = DIRECTORY_SEPARATOR.'skin'.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.'screenshot_s.jpg';
+                $screenshot['large'] = DIRECTORY_SEPARATOR.'skin'.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.'screenshot_l.jpg';
+            }else{
+                $screenshot['small'] = false;
+                $screenshot['large'] = false;
+            }
+            $newSkin[$key]['name'] = $value;
+            $newSkin[$key]['current'] = $current;
+            $newSkin[$key]['screenshot']['small'] = $screenshot['small'];
+            $newSkin[$key]['screenshot']['large'] = $screenshot['large'];
+        }
+        $this->template->assign('skin',$newSkin);
+    }
     /**
      * Mise a jour des données
      * @param $data
@@ -125,6 +151,15 @@ class backend_controller_setting extends backend_db_setting{
                     )
                 );
                 break;
+            case 'theme':
+                parent::update(
+                    array(
+                        'type'=>$data['type']
+                    ),array(
+                        'theme'   => $this->setting['theme']
+                    )
+                );
+                break;
         }
         $this->header->set_json_headers();
         $this->message->json_post_response(true,'update',$data['type']);
@@ -141,6 +176,8 @@ class backend_controller_setting extends backend_db_setting{
                             $this->upd(array('type'=>'general'));
                         }elseif($this->type === 'css_inliner'){
                             $this->upd(array('type'=>'css_inliner'));
+                        }elseif($this->type === 'theme'){
+                            $this->upd(array('type'=>'theme'));
                         }elseif($this->type === 'google'){
                             $this->upd(array('type'=>'google'));
                         }
@@ -149,6 +186,7 @@ class backend_controller_setting extends backend_db_setting{
             }
         }else{
             $this->setItemsData();
+            $this->setItemsSkin();
             $this->template->display('setting/index.tpl');
         }
     }
