@@ -20,11 +20,11 @@
         plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen colorpicker textpattern wordcount directionality',
-            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome mc_pages mc_news'+catalog_tinymce_plugin+manager_tinymce_plugin
+            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager'
         ],
         toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | fontsizeselect | forecolor backcolor',
-        toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | '+manager_tinymce_button+' image media | link unlink anchor | code | preview',
-        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | mc_pages mc_news mc_catalog fontawesome codesample',
+        toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media | link unlink anchor | code | preview',
+        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample',
         imagetools_toolbar: "imageoptions",
         menubar: false,
         toolbar_items_size: 'small',
@@ -32,7 +32,7 @@
         external_filemanager_path: '/'+baseadmin+'/template/js/filemanager/',
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
-            "filemanager" : '/'+baseadmin+'/template/js/filemanager/plugin.min.js'
+            "filemanager" : '/'+baseadmin+'/template/js/vendor/filemanager/plugin.min.js'
         },
         setup: function(ed) {
             ed.addButton('loremipsum', {
@@ -46,6 +46,7 @@
                 }
             });
         },
+        min_height: 250,
         image_dimensions: false,
         image_class_list: [
             {title: 'None', value: ''},
@@ -174,7 +175,7 @@
                 ]}
             ]}
         ],
-        templates : '/'+baseadmin+'/ajax.php?action=list&tab=snippet',
+        //templates : '/'+baseadmin+'/ajax.php?action=list&tab=snippet',
         template_popup_width: 800,
         language : tinyLanguage,
         schema: "html5",

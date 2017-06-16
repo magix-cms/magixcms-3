@@ -2,6 +2,11 @@
     {$mobile = false}
 {/if}
 <ul class="nav">
+    <li class="{if $smarty.get.controller == 'home'}active{/if}">
+        <a href="{geturl}/{baseadmin}/index.php?controller=home">
+            <span class="fa fa-home"></span> {#root_home#}
+        </a>
+    </li>
     {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
     <li class="has-submenu{if $smarty.get.controller == 'employee'} active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=employee">

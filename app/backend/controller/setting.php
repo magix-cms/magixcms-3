@@ -59,6 +59,10 @@ class backend_controller_setting extends backend_db_setting{
         }
         $this->template->assign('settings',$newArray);
     }
+
+    /**
+     * Return skin array Data
+     */
     private function setItemsSkin(){
         $currentSkin = parent::fetchData(array('context'=>'unique','type'=>'skin'));
         $finder = new file_finder();

@@ -34,6 +34,9 @@
                 {/function}
                 {widget_plugins}
                 {*{cleanTextArea field=$s_content}*}
+                {function cleanTextarea}
+                    {$field|escape:'html':'UTF-8':TRUE}
+                {/function}
                 <div id="content" class="col-xs-12 col-sm-9 col-md-10 pull-right">
                     <header>
                         <button id="toggle-menu" type="button" class="open-menu navbar-toggle" data-target="#mobile-menu1">
@@ -75,6 +78,8 @@
         };
         var editor_version = "{$smarty.const.VERSION_EDITOR}";
         var baseadmin = "{baseadmin}";
+        var iso = "{iso}";
+
         $(function(){
             if (typeof globalForm == "undefined")
             {

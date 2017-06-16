@@ -23,7 +23,7 @@ class backend_db_language{
                                 switch ($key) {
                                     case 'id_lang':
                                     case 'default_lang':
-                                    case 'active_admin':
+                                    case 'active_lang':
                                         $cond .= 'lang.'.$key.' = '.$q.' ';
                                         break;
                                     case 'name_lang':

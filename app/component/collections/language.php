@@ -40,24 +40,33 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_collections_language{
-    /**
-     * @return mixed
-     */
-    public function setDefault(){
-        $sql = 'SELECT id_lang,iso_lang FROM mc_lang as lang
-		WHERE lang.default_lang = 1';
-        return component_routing_db::layer()->fetch($sql);
-    }
-    /**
-     * @access public
-     * @static
-     * Retourne la liste des langues disponible
-     */
-    public function setAvailableLang(){
-        $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang
-	           FROM mc_lang AS l
-	           WHERE l.active_lang = 1
-	           ORDER BY l.id_lang';
-        return component_routing_db::layer()->fetchAll($sql);
+    public function fetchData($config,$data = false)
+    {
+        $sql = '';
+        $params = false;
+        if (is_array($config)) {
+            if ($config['context'] === 'all' || $config['context'] === 'return') {
+                if ($config['type'] === 'active') {
+                    $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang
+                           FROM mc_lang AS l
+                           WHERE l.active_lang = 1
+                           ORDER BY l.id_lang';
+                    //$params = $data;
+                }elseif ($config['type'] === 'langs') {
+                    $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang
+                           FROM mc_lang AS l
+                           WHERE l.active_lang = 1
+                           ORDER BY l.default_lang DESC,l.id_lang ASC';
+                }
+                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+                if ($config['type'] === 'default') {
+                    $sql = 'SELECT id_lang,iso_lang FROM mc_lang as lang
+		                    WHERE lang.default_lang = 1';
+                    //$params = $data;
+                }
+                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+            }
+        }
     }
 }

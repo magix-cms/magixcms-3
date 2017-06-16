@@ -101,7 +101,7 @@ class frontend_model_template{
                 if(http_request::isSession('strLangue')){
                     $lang = form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
                 }else{
-                    $data = self::$collectionsLang->setDefault();
+                    $data = self::$collectionsLang->fetchData(array('context'=>'unique','type'=>'default'));
                     if($data != null){
                         $lang = $data['iso'];
                     }

@@ -66,7 +66,7 @@ class backend_model_template{
 	 */
     public function __construct(){
         self::$collectionsSetting = new component_collections_setting();
-        self::$collectionsLang = new component_collections_language();
+        //self::$collectionsLang = new component_collections_language();
     }
 	/**
 	 * 

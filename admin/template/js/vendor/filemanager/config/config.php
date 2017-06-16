@@ -30,8 +30,7 @@ class fileManagerAuth{
     }
     public function mcAuth(){
         $members = new backend_controller_login();
-        $members->securePage();
-        $members->closeSession();
+        $members->checkout();
     }
 }
 $auth = new fileManagerAuth();

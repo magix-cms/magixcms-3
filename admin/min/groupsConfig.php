@@ -16,17 +16,16 @@ return array(
         '//libjs/vendor/jquery-3.0.0.min.js',
         '//'.PATHADMIN.'/template/js/vendor/bootstrap.min.js',
         '//libjs/vendor/Chart.bundle.min.js',
-        '//libjs/vendor/bootstrap2-toggle.min.js',
+        '//libjs/vendor/bootstrap-toggle.min.js',
         '//libjs/vendor/jquery.form.3.51.min.js',
         '//libjs/vendor/jquery.validate.1.15.0.min.js',
         '//'.PATHADMIN.'/template/js/vendor/jquery.fancybox.min.js',
+        '//'.PATHADMIN.'/template/js/vendor/bootstrap-tagsinput.js',
         '//libjs/vendor/redirect.min.js'
     ),
 	'jimagine' => array(
-        '//libjs/vendor/jimagine/config.js',
-        '//libjs/vendor/jimagine/jmConstant.js',
 	    '//libjs/vendor/jimagine/plugins/jquery.jmRequest.js',
-        '//libjs/vendor/jimagine/plugins/jquery.jmShowIt.js'
+        '//libjs/vendor/jimagine/plugins/jquery.jmInsertCaret.js'
     ),
     'globalize'=> array(
         '//libjs/vendor/cldr.js',
@@ -36,8 +35,13 @@ return array(
     'publiccss' => array(
         '//'.PATHADMIN.'/template/css/bootstrap/critical.min.css',
         '//'.PATHADMIN.'/template/css/bootstrap/bootstrap.min.css',
-        '//'.PATHADMIN.'/template/css/bootstrap2-toggle.min.css',
-        '//'.PATHADMIN.'/template/css/fancybox/jquery.fancybox.min.css'
+        '//'.PATHADMIN.'/template/css/bootstrap-toggle.min.css',
+        '//'.PATHADMIN.'/template/css/fancybox/jquery.fancybox.min.css',
+        '//'.PATHADMIN.'/template/css/bootstrap-tagsinput.css',
+        '//'.PATHADMIN.'/template/css/bootstrap-tagsinput-typeahead.css',
+    ),
+    'tinymce' => array(
+        '//'.PATHADMIN.'/template/js/vendor/tiny_mce.'.VERSION_EDITOR.'/jquery.tinymce.min.js'
     ),
 	'pdfcss' => array(
 		'//'.PATHADMIN.'/template/css/pdf/print.min.css',
