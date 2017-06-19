@@ -3,6 +3,7 @@ class backend_controller_home extends backend_db_home{
 
     public $edit, $action, $tabs;
     protected $message, $template, $header, $data, $collectionLanguage;
+    public $content;
 
     public function __construct()
     {
@@ -25,6 +26,15 @@ class backend_controller_home extends backend_db_home{
         if (http_request::isGet('tabs')) {
             $this->tabs = $formClean->simpleClean($_GET['tabs']);
         }
+        if (http_request::isPost('content')) {
+            $array = $_POST['content'];
+            foreach($array as $key => $arr) {
+                foreach($arr as $k => $v) {
+                    $array[$key][$k] = ($k == 'content_page') ? $formClean->cleanQuote($v) : $formClean->simpleClean($v);
+                }
+            }
+            $this->content = $array;
+        }
     }
 
     /**
@@ -38,6 +48,9 @@ class backend_controller_home extends backend_db_home{
         return $this->data->getItems($type, $id, $context);
     }
 
+    /**
+     *
+     */
     private function getLanguage(){
         $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
         foreach ($data as $key) {
@@ -47,9 +60,17 @@ class backend_controller_home extends backend_db_home{
         $newsData =  array_combine($id_lang, $iso_lang);
         $this->template->assign('langs',$newsData);
     }
+
+    /**
+     * @return mixed|null
+     */
     private function setItemData(){
         return parent::fetchData(array('context'=>'last','type'=>'root'));
     }
+
+    /**
+     * @return array
+     */
     private function setItemsData(){
         $data = parent::fetchData(array('context'=>'all','type'=>'pages'));
         $arr = array();
@@ -70,13 +91,67 @@ class backend_controller_home extends backend_db_home{
         }
         return $arr;
     }
+    /**
+     * Mise a jour des données
+     */
+    private function save()
+    {
+        $fetchRootData = parent::fetchData(array('context'=>'last','type'=>'root'));
+        if($fetchRootData != null){
+            $id_page = $fetchRootData['id_page'];
+        }else{
+            parent::insert(array('type'=>'newHome'));
+            $newData = parent::fetchData(array('context'=>'last','type'=>'root'));
+            $id_page = $newData['id_page'];
+        }
+
+        if($id_page) {
+            foreach ($this->content as $lang => $content) {
+                $content['published'] = (!isset($content['published']) ? 0 : 1);
+                if (parent::fetchData(array('context' => 'unique', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $lang)) != null) {
+                    parent::update(array('type' => 'content'), array(
+                            'title_page'        => $content['title_page'],
+                            'content_page'      => $content['content_page'],
+                            'seo_title_page'    => $content['seo_title_page'],
+                            'seo_desc_page'     => $content['seo_desc_page'],
+                            'published'         => $content['published'],
+                            'id_page'           => $id_page,
+                            'id_lang'           => $lang
+                        )
+                    );
+                } else {
+                    parent::insert(array('type' => 'newContent'), array(
+                            'title_page'        => $content['title_page'],
+                            'content_page'      => $content['content_page'],
+                            'seo_title_page'    => $content['seo_title_page'],
+                            'seo_desc_page'     => $content['seo_desc_page'],
+                            'published'         => $content['published'],
+                            'id_page'           => $id_page,
+                            'id_lang'           => $lang
+                        )
+                    );
+                }
+            }
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true, 'update', $id_page);
+        }
+    }
+
     public function run(){
-        $this->getLanguage();
-        $last = $this->setItemData();
-        $pages = $this->setItemsData();
-        $this->template->assign('home',$last);
-        $this->template->assign('page', $pages[$last['id_page']]);
-        $this->template->display('home/edit.tpl');
+        if(isset($this->action)) {
+            switch ($this->action) {
+                case 'edit':
+                    $this->save();
+                    break;
+            }
+        }else{
+            $this->getLanguage();
+            $last = $this->setItemData();
+            $pages = $this->setItemsData();
+            $this->template->assign('home',$last);
+            $this->template->assign('page', $pages[$last['id_page']]);
+            $this->template->display('home/edit.tpl');
+        }
     }
 
 }

@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <form id="edit_home" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action={if $home != null}edit&edit={$home.id_page}{else}add{/if}" method="post" class="validate_form {if $home != null}edit_form{else}add_form{/if} col-xs-12 col-md-10">
+                    <form id="edit_home" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-10">
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
                             <div class="tab-content">
@@ -103,12 +103,7 @@
                             </div>
                             </div>
                         </div>
-                        {if $home != null}
-                        <input type="hidden" id="id_page" name="id" value="{$home.id_page}">
                         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
-                        {else}
-                            <button class="btn btn-main-theme pull-right" type="submit" name="action" value="add">{#save#|ucfirst}</button>
-                        {/if}
                     </form>
                 </div>
             </div>

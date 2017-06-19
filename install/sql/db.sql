@@ -162,10 +162,10 @@ CREATE TABLE IF NOT EXISTS `mc_home_page_content` (
   `id_content` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
   `id_page` smallint(3) unsigned NOT NULL,
   `id_lang` smallint(3) unsigned NOT NULL,
-  `title` varchar(150) NOT NULL,
-  `content` text,
-  `seo_title` varchar(180) DEFAULT NULL,
-  `seo_desc` varchar(180) DEFAULT NULL,
+  `title_page` varchar(150) NOT NULL,
+  `content_page` text,
+  `seo_title_page` varchar(180) DEFAULT NULL,
+  `seo_desc_page` varchar(180) DEFAULT NULL,
   `published` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
