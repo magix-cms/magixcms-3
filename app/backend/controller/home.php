@@ -2,7 +2,7 @@
 class backend_controller_home extends backend_db_home{
 
     public $edit, $action, $tabs;
-    protected $message, $template, $header, $data, $collectionLanguage;
+    protected $message, $template, $header, $data, $modelLanguage;
     public $content;
 
     public function __construct()
@@ -12,7 +12,7 @@ class backend_controller_home extends backend_db_home{
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
         $formClean = new form_inputEscape();
-        $this->collectionLanguage = new component_collections_language();
+        $this->modelLanguage = new backend_model_language($this->template);
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -46,19 +46,6 @@ class backend_controller_home extends backend_db_home{
      */
     private function getItems($type, $id = null, $context = null) {
         return $this->data->getItems($type, $id, $context);
-    }
-
-    /**
-     *
-     */
-    private function getLanguage(){
-        $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
-        foreach ($data as $key) {
-            $id_lang[] = $key['id_lang'];
-            $iso_lang[] = $key['iso_lang'];
-        }
-        $newsData =  array_combine($id_lang, $iso_lang);
-        $this->template->assign('langs',$newsData);
     }
 
     /**
@@ -145,7 +132,7 @@ class backend_controller_home extends backend_db_home{
                     break;
             }
         }else{
-            $this->getLanguage();
+            $this->modelLanguage->getLanguage();
             $last = $this->setItemData();
             $pages = $this->setItemsData();
             $this->template->assign('home',$last);

@@ -169,3 +169,26 @@ CREATE TABLE IF NOT EXISTS `mc_home_page_content` (
   `published` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_cms_page` (
+  `id_pages` int(7) unsigned NOT NULL AUTO_INCREMENT,
+  `id_parent` int(7) unsigned NOT NULL DEFAULT '0',
+  `menu_pages` smallint(1) unsigned DEFAULT '0',
+  `order_pages` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_pages`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
+  `id_content` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_pages` int(7) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
+  `name_pages` varchar(150) DEFAULT NULL,
+  `url_pages` varchar(150) DEFAULT NULL,
+  `content_pages` text,
+  `seo_title_pages` varchar(180) DEFAULT NULL,
+  `seo_desc_pages` varchar(180) DEFAULT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `published_pages` smallint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_content`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

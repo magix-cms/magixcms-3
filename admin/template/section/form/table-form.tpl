@@ -11,6 +11,7 @@
     {$sortable = false}
 {/if}
 {if isset($data) && is_array($data)}
+    {*<pre>{$data[0]|print_r}</pre>*}
     {strip}
         {$table['rows'] = $data}
         {foreach $data[0] as $k => $v}
@@ -80,6 +81,10 @@
                     {$col['title'] = $k}
                 {/if}
 
+                {if $pre == 'parent'}
+                    {$col['title'] = $k}
+                {/if}
+
                 {if $pre == 'iso'}
                     {$col['title'] = $k}
                 {/if}
@@ -98,6 +103,20 @@
                 {/if}
 
                 {if $pre == 'active'}
+                    {$col['class'] = 'fixed-td-md text-center'}
+                    {$col['enum'] = 'bin_'}
+                    {$col['type'] = 'bin'}
+                    {$col['input'] = ['type' => 'select', 'values' => [['v' => 1, 'name' => 'Oui'],['v' => 0, 'name' => 'Non']]]}
+                {/if}
+
+                {if $pre == 'menu'}
+                    {$col['class'] = 'fixed-td-md text-center'}
+                    {$col['enum'] = 'bin_'}
+                    {$col['type'] = 'bin'}
+                    {$col['input'] = ['type' => 'select', 'values' => [['v' => 1, 'name' => 'Oui'],['v' => 0, 'name' => 'Non']]]}
+                {/if}
+
+                {if $pre == 'published'}
                     {$col['class'] = 'fixed-td-md text-center'}
                     {$col['enum'] = 'bin_'}
                     {$col['type'] = 'bin'}
