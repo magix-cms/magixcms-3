@@ -1,24 +1,4 @@
-<div class="row">
-    <div class="col-xs-12 col-md-4">
-        <label for="id_lang">{#language#|ucfirst} *</label>
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                {foreach $langs as $id => $iso}
-                    {if $iso@first}{$default = $id}{break}{/if}
-                {/foreach}
-                <span class="lang">{$langs[$default]}</span>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                {foreach $langs as $id => $iso}
-                    <li role="presentation"{if $iso@first} class="active"{/if}>
-                        <a href="#lang-{$id}" aria-controls="lang-{$id}" role="tab" data-toggle="tab">{$iso}</a>
-                    </li>
-                {/foreach}
-            </ul>
-        </div>
-    </div>
-</div>
+{include file="language/brick/dropdown-lang.tpl"}
 <div class="row">
     <form id="edit_pages" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}" method="post" class="validate_form edit_form col-xs-12 col-md-6">
         <div class="row">

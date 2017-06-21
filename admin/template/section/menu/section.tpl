@@ -7,6 +7,23 @@
             <span class="fa fa-home"></span> {#root_home#}
         </a>
     </li>
+    {if {employee_access type="view" class_name="backend_controller_pages"} eq 1}
+        <li class="has-submenu{if $smarty.get.controller == 'pages'} active{/if}">
+            <a href="{geturl}/{baseadmin}/index.php?controller=pages">
+                <span class="fa fa-file-text-o"></span> {#root_pages#}
+            </a>
+            <ul class="nav list-unstyled">
+                <li{if $smarty.get.controller == 'pages'} class="active"{/if}>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=pages">Listes des pages</a>
+                </li>
+                {if {employee_access type="append" class_name="backend_controller_pages"} eq 1}
+                    <li{if $smarty.get.controller == 'employee' && $smarty.get.action == 'add'} class="active"{/if}>
+                        <a href="{geturl}/{baseadmin}/index.php?controller=pages&action=add">Ajouter une page</a>
+                    </li>
+                {/if}
+            </ul>
+        </li>
+    {/if}
     {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
     <li class="has-submenu{if $smarty.get.controller == 'employee'} active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=employee">

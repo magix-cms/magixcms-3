@@ -19,27 +19,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message"></div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-4">
-                    <label for="id_lang">{#language#|ucfirst} *</label>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            {foreach $langs as $id => $iso}
-                                {if $iso@first}{$default = $id}{break}{/if}
-                            {/foreach}
-                            <span class="lang">{$langs[$default]}</span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            {foreach $langs as $id => $iso}
-                                <li role="presentation"{if $iso@first} class="active"{/if}>
-                                    <a href="#lang-{$id}" aria-controls="lang-{$id}" role="tab" data-toggle="tab">{$iso}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    </div>
-                    </div>
-                </div>
+                {include file="language/brick/dropdown-lang.tpl"}
                 <div class="row">
                     <form id="edit_home" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-10">
                         <div class="row">
@@ -69,17 +49,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {*<p>
-                                            <a href="#metas-{$id}" class="btn btn-default view-metas">
-                                                <span class="fa fa-plus"></span> {#display_metas#|ucfirst}
-                                            </a>
-                                        </p>*}
+
                                         <div class="form-group">
                                             <button class="btn collapsed btn-collapse" role="button" data-toggle="collapse" data-parent="#accordion" href="#metas-{$id}" aria-expanded="true" aria-controls="metas-{$id}">
                                                 <span class="fa"></span> {#display_metas#|ucfirst}
                                             </button>
                                         </div>
-                                        {*<div class="collapse-metas row" id="metas-{$id}">*}
+                                        
                                         <div id="metas-{$id}" class="collapse" role="tabpanel" aria-labelledby="heading{$id}">
                                             <div class="row">
                                                 <div class="col-xs-12 col-sm-8">
@@ -112,18 +88,9 @@
     {/if}
 {/block}
 {block name="foot" append}
-    {capture name="scriptTinyMCE"}{strip}
-        /{baseadmin}/min/?g=tinymce
-    {/strip}{/capture}
-
-    {script src=$smarty.capture.scriptTinyMCE type="javascript"}
-    <script type="text/javascript">
-        {capture name="tinyMCEstyleSheet"}/{baseadmin}/template/css/tinymce-content.css,{/capture}
-        content_css = "{$smarty.capture.tinyMCEstyleSheet}";
-    </script>
+    {include file="section/footer/editor.tpl"}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
-        {baseadmin}/template/js/tinymce-config.min.js,
         {baseadmin}/template/js/home.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}

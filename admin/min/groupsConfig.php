@@ -41,7 +41,8 @@ return array(
         '//'.PATHADMIN.'/template/css/bootstrap-tagsinput-typeahead.css',
     ),
     'tinymce' => array(
-        '//'.PATHADMIN.'/template/js/vendor/tiny_mce.'.VERSION_EDITOR.'/jquery.tinymce.min.js'
+        '//'.PATHADMIN.'/template/js/vendor/tiny_mce.'.VERSION_EDITOR.'/jquery.tinymce.min.js',
+        '//'.PATHADMIN.'/template/js/tinymce-config.min.js'
     ),
 	'pdfcss' => array(
 		'//'.PATHADMIN.'/template/css/pdf/print.min.css',
