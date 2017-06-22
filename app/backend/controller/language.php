@@ -2,7 +2,7 @@
 class backend_controller_language extends backend_db_language{
     public $edit, $action, $tabs;
     protected $message, $template, $header, $data, $arrayTools;
-    public $search,$default_lang,$id_lang,$active_lang,$iso_lang,$name_lang;
+    public $search,$default_lang,$id_lang,$active_lang,$iso_lang,$name_lang, $language;
     public function __construct()
     {
         $this->template = new backend_model_template();

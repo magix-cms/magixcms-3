@@ -41,8 +41,7 @@ class backend_db_pages
                                 $nbc++;
                             }
                         }
-                    }
-                    $sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.* , ca.name_pages AS parent_pages
+                        $sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.* , ca.name_pages AS parent_pages
                     FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
                         JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -51,6 +50,54 @@ class backend_db_pages
                         WHERE c.id_lang = :default_lang $cond
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";
+                    }else{
+                        $sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
+                    FROM mc_cms_page AS p
+                        JOIN mc_cms_page_content AS c USING ( id_pages )
+                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+                        WHERE c.id_lang = :default_lang AND p.id_parent = 0
+                        GROUP BY p.id_pages 
+                    ORDER BY p.order_pages";
+                    }
+
+
+                    $params = $data;
+
+                }elseif ($config['type'] === 'pagesChild') {
+                    $cond = '';
+                    if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
+                        $nbc = 0;
+                        foreach ($config['search'] as $key => $q) {
+                            if($q != '') {
+                                $cond .= 'AND ';
+                                switch ($key) {
+                                    case 'id_pages':
+                                        $cond .= 'c.'.$key.' = '.$q.' ';
+                                        break;
+                                    case 'name_pages':
+                                        $cond .= "c.".$key." LIKE '%".$q."%' ";
+                                        break;
+                                    case 'menu_pages':
+                                        $cond .= 'p.'.$key.' = '.$q.' ';
+                                        break;
+                                    case 'date_register':
+                                        $cond .= "p.".$key." LIKE '%".$q."%' ";
+                                        break;
+                                }
+                                $nbc++;
+                            }
+                        }
+                    }
+                    $sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
+                    FROM mc_cms_page AS p
+                        JOIN mc_cms_page_content AS c USING ( id_pages )
+                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+                        LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
+                        LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+                        WHERE p.id_parent = :edit $cond
+                        GROUP BY p.id_pages 
+                    ORDER BY p.order_pages";
+
 
                     $params = $data;
 
@@ -104,6 +151,22 @@ class backend_db_pages
                         ':seo_title_pages'  => $data['seo_title_pages'],
                         ':seo_desc_pages'   => $data['seo_desc_pages'],
                         ':published_pages'  => $data['published_pages']
+                    )
+                );
+            }elseif ($config['type'] === 'pageActiveMenu') {
+                $sql = 'UPDATE mc_cms_page SET menu_pages = :menu_pages WHERE id_pages IN ('.$data['id_pages'].')';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':menu_pages' => $data['menu_pages']
+                    )
+                );
+            }elseif ($config['type'] === 'order') {
+                $sql = 'UPDATE mc_cms_page SET order_pages = :order_pages
+                WHERE id_pages = :id_pages';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_pages'	    => $data['id_pages'],
+                        ':order_pages'	=> $data['order_pages']
                     )
                 );
             }

@@ -174,6 +174,17 @@ var globalForm = (function ($, undefined) {
                 initModalActions();
             }
         }
+        // --- Rules form classic edit form but with replace from extend data
+        else if($(f).hasClass('edit_form_extend')) {
+            options.success = function (d) {
+                $.jmRequest.initbox(d.notify,{ display:true });
+                $.each(d.extend[0], function(i,item) {
+                    if($('#lang-'+i).length != 0){
+                        $('#lang-'+i+' #public_url'+i).val(item);
+                    }
+                });
+            }
+        }
         // --- Rules for add form in a modal
         else if($(f).hasClass('add_modal_form')) {
             options.success = function (d) {

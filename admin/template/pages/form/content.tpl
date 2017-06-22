@@ -1,6 +1,6 @@
 {include file="language/brick/dropdown-lang.tpl"}
 <div class="row">
-    <form id="edit_pages" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}" method="post" class="validate_form edit_form col-xs-12 col-md-6">
+    <form id="edit_pages" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}" method="post" class="validate_form edit_form_extend col-xs-12 col-md-6">
         <div class="row">
             <div class="col-xs-12 col-md-12">
                 <div class="tab-content">
@@ -9,7 +9,7 @@
                             <div class="row">
                                 <div class="col-xs-12 col-sm-8">
                                     <div class="form-group">
-                                        <label for="content[{$id}][name_pages]">{#title#|ucfirst} *:</label>
+                                        <label for="content[{$id}][name_pages]">{#title#|ucfirst} :</label>
                                         <input type="text" class="form-control" id="content[{$id}][name_pages]" name="content[{$id}][name_pages]" value="{$page.content[{$id}].name_pages}" size="50" />
                                     </div>
                                 </div>
@@ -27,11 +27,19 @@
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="content[{$id}][url_pages]" name="content[{$id}][url_pages]" readonly="readonly" size="30" value="{$page.content[{$id}].url_pages}" />
                                             <span class="input-group-addon">
-                                                            <a class="unlocked" href="#">
-                                                                <span class="fa fa-lock"></span>
-                                                            </a>
-                                                        </span>
+                                                <a class="unlocked" href="#">
+                                                    <span class="fa fa-lock"></span>
+                                                </a>
+                                            </span>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-8">
+                                    <div class="form-group">
+                                        <label for="public-url[{$id}]">URL</label>
+                                        <input type="text" class="form-control public-url" data-lang="{$id}" id="public_url[{$id}]" readonly="readonly" size="50" value="{$page.content[{$id}].public_url}" />
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +62,7 @@
                                     <div class="col-xs-12 col-sm-8">
                                         <div class="form-group">
                                             <label for="content[{$id}][seo_name_pages]">{#title#|ucfirst} :</label>
-                                            <textarea class="form-control" id="content[{$id}][seo_name_pages]" name="content[{$id}][seo_name_pages]" cols="70" rows="3">{$page.content[{$id}].seo_name_pagess}</textarea>
+                                            <textarea class="form-control" id="content[{$id}][seo_name_pages]" name="content[{$id}][seo_name_pages]" cols="70" rows="3">{$page.content[{$id}].seo_name_pages}</textarea>
                                         </div>
                                     </div>
                                 </div>

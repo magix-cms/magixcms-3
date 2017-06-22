@@ -211,7 +211,6 @@ class backend_controller_country extends backend_db_country
                                 'type' => 'order'
                             )
                         );
-                        print 'test';
                     }
                     break;
                 case 'delete':

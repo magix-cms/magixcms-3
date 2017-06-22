@@ -91,9 +91,17 @@ class component_core_message{
 
 			if(key_exists('extend',$result)) {
 				if(is_array($result['extend'])) {
+                    $extend .= ',"extend":[{';
+                    $i = 0;
 					foreach ($result['extend'] as $k => $v) {
-						$extend .= ',"'.$k.'":'.json_encode($v);
+					    if($i === 0){
+                            $extend .= '"'.$k.'":'.json_encode($v);
+                        }else{
+                            $extend .= ',"'.$k.'":'.json_encode($v);
+                        }
+					    $i++;
 					}
+                    $extend .= '}]';
 				}
 			}
 		} else {

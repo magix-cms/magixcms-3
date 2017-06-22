@@ -12,7 +12,7 @@
         </p>
     </div>
     {/if}
-    <h1 class="h2">{#pages#|ucfirst}</h1>
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des pages">{#pages#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="view" class_name=$cClass} eq 1}
@@ -28,7 +28,8 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-pages">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form.tpl" data=$pages activation=true sortable=false controller="pages"}
+                {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
+                {include file="section/form/table-form.tpl" data=$pages activation=true sortable=$sortable controller="pages"}
             </div>
         </section>
     </div>
@@ -43,7 +44,8 @@
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         libjs/vendor/jquery-ui-1.12.min.js,
-        {baseadmin}/template/js/table-form.min.js
+        {baseadmin}/template/js/table-form.min.js,
+        {baseadmin}/template/js/pages.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
 
@@ -54,6 +56,13 @@
                 console.log("tableForm is not defined");
             }else{
                 tableForm.run();
+            }
+            if (typeof pages == "undefined")
+            {
+                console.log("pages is not defined");
+            }else{
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+                pages.run(controller);
             }
         });
     </script>

@@ -3,8 +3,8 @@ class backend_controller_pages extends backend_db_pages
 {
 
     public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
-    public $id_pages,$content;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order;
+    public $id_pages,$content,$pages;
 
     public function __construct()
     {
@@ -47,6 +47,16 @@ class backend_controller_pages extends backend_db_pages
             }
             $this->content = $array;
         }
+
+        // --- Recursive Actions
+        if (http_request::isGet('pages')) {
+            $this->pages = $formClean->arrayClean($_GET['pages']);
+        }
+
+        # ORDER PAGE
+        if(http_request::isPost('pages')){
+            $this->order = $formClean->arrayClean($_POST['pages']);
+        }
     }
 
     /**
@@ -66,21 +76,41 @@ class backend_controller_pages extends backend_db_pages
     private function setItemsData(){
         $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
 
-        $data = parent::fetchData(
-            array('context'=>'all','type'=>'pages','search'=>$this->search),
-            array(':default_lang'=>$defaultLanguage['id_lang'])
-        );
-
         $arr = array();
-
-        foreach ($data as $key => $value) {
-            $arr[$key]['id_pages']       = $value['id_pages'];
-            $arr[$key]['name_pages']     = $value['name_pages'];
-            $arr[$key]['parent_pages']   = $value['parent_pages'];
-            $arr[$key]['menu_pages']     = $value['menu_pages'];
-            $arr[$key]['published_pages']= $value['published_pages'];
-            $arr[$key]['date_register']  = $value['date_register'];
+        if(isset($this->edit)){
+            $data = parent::fetchData(
+                array('context'=>'all','type'=>'pagesChild','search'=>$this->search),
+                array(':edit'=>$this->edit)
+            );
+            foreach ($data as $key => $value) {
+                $arr[$key]['id_pages'] = $value['id_pages'];
+                $arr[$key]['name_pages'] = $value['name_pages'];
+                $arr[$key]['menu_pages'] = $value['menu_pages'];
+                $arr[$key]['date_register'] = $value['date_register'];
+            }
+        }else{
+            $data = parent::fetchData(
+                array('context'=>'all','type'=>'pages','search'=>$this->search),
+                array(':default_lang'=>$defaultLanguage['id_lang'])
+            );
+            if($this->search) {
+                foreach ($data as $key => $value) {
+                    $arr[$key]['id_pages'] = $value['id_pages'];
+                    $arr[$key]['name_pages'] = $value['name_pages'];
+                    $arr[$key]['parent_pages'] = $value['parent_pages'];
+                    $arr[$key]['menu_pages'] = $value['menu_pages'];
+                    $arr[$key]['date_register'] = $value['date_register'];
+                }
+            }else{
+                foreach ($data as $key => $value) {
+                    $arr[$key]['id_pages'] = $value['id_pages'];
+                    $arr[$key]['name_pages'] = $value['name_pages'];
+                    $arr[$key]['menu_pages'] = $value['menu_pages'];
+                    $arr[$key]['date_register'] = $value['date_register'];
+                }
+            }
         }
+
         return $arr;
     }
 
@@ -92,6 +122,9 @@ class backend_controller_pages extends backend_db_pages
         //return $this->getItems('page',$this->edit, 'return');
         $arr = array();
         foreach ($data as $page) {
+
+            $publicUrl = !empty($page['url_pages']) ? '/'.$page['iso_lang'].'/'.$page['id_pages'].'-'.$page['url_pages'].'/' : '';
+
             if (!array_key_exists($page['id_pages'], $arr)) {
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
@@ -107,7 +140,8 @@ class backend_controller_pages extends backend_db_pages
                 'content_pages'     => $page['content_pages'],
                 'seo_title_pages'   => $page['seo_title_pages'],
                 'seo_desc_pages'    => $page['seo_desc_pages'],
-                'published_pages'   => $page['published_pages']
+                'published_pages'   => $page['published_pages'],
+                'public_url'        => $publicUrl
             );
         }
         return $arr;
@@ -135,6 +169,27 @@ class backend_controller_pages extends backend_db_pages
                     )
                 );
                 break;
+            case 'pageActiveMenu':
+                parent::update(
+                    array(
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                break;
+            case 'order':
+                $p = $this->order;
+                for ($i = 0; $i < count($p); $i++) {
+                    parent::update(
+                        array(
+                            'type'=>$data['type']
+                        ),array(
+                            'id_pages'       => $p[$i],
+                            'order_pages'    => $i
+                        )
+                    );
+                }
+                break;
         }
     }
     private function save(){
@@ -142,7 +197,7 @@ class backend_controller_pages extends backend_db_pages
             foreach ($this->content as $lang => $content) {
                 $content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
                 if (empty($content['url_pages'])) {
-                    $content['url_pages'] = http_url::clean($content['url_pages'],
+                    $content['url_pages'] = http_url::clean($content['name_pages'],
                         array(
                             'dot' => false,
                             'ampersand' => 'strict',
@@ -161,10 +216,16 @@ class backend_controller_pages extends backend_db_pages
                     'seo_desc_pages'   => $content['seo_desc_pages'],
                     'published_pages'  => $content['published_pages']
                 ));
-                //print_r($content);
+                $setEditData = parent::fetchData(
+                    array('context'=>'all','type'=>'page'),
+                    array('edit'=>$this->id_pages)
+                );
+                $setEditData = $this->setItemData($setEditData);
+                $extendData[$lang] = $setEditData[$this->id_pages]['content'][$lang]['public_url'];
             }
+
             $this->header->set_json_headers();
-            $this->message->json_post_response(true, 'update', $this->id_pages);
+            $this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
         }
     }
     /**
@@ -186,7 +247,37 @@ class backend_controller_pages extends backend_db_pages
                         );
                         $setEditData = $this->setItemData($setEditData);
                         $this->template->assign('page',$setEditData[$this->edit]);
+                        $pages = $this->setItemsData();
+
+                        $this->template->assign('pages', $pages);
                         $this->template->display('pages/edit.tpl');
+                    }
+                    break;
+                case 'active-selected':
+                case 'unactive-selected':
+                if(isset($this->pages) && is_array($this->pages) && !empty($this->pages)) {
+                    $this->upd(
+                        array(
+                            'type'=>'pageActiveMenu',
+                            'data'=>array(
+                                'menu_pages' => ($this->action == 'active-selected'?1:0),
+                                'id_pages' => implode($this->pages, ',')
+                            )
+                        )
+                    );
+                }
+                $this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
+                $pages = $this->setItemsData();
+                $this->template->assign('pages', $pages);
+                $this->template->display('pages/index.tpl');
+                    break;
+                case 'order':
+                    if (isset($this->order)) {
+                        $this->upd(
+                            array(
+                                'type' => 'order'
+                            )
+                        );
                     }
                     break;
             }

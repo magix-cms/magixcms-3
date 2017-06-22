@@ -17,6 +17,7 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
                     <li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">{#image#}</a></li>
+                    <li role="presentation"><a href="#child" aria-controls="child" role="tab" data-toggle="tab">{#child_page#}</a></li>
                 </ul>
             </header>
             <div class="panel-body panel-body-form">
@@ -28,6 +29,10 @@
                         {include file="pages/form/content.tpl" controller="pages"}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="image"></div>
+                    <div role="tabpanel" class="tab-pane tab-table" id="child">
+                        {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
+                        {include file="section/form/table-form.tpl" data=$pages activation=true sortable=$sortable controller="pages"}
+                    </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}
             </div>
@@ -39,19 +44,19 @@
     {include file="section/footer/editor.tpl"}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
+        libjs/vendor/jquery-ui-1.12.min.js,
         {baseadmin}/template/js/pages.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
-
     <script type="text/javascript">
         $(function(){
             if (typeof pages == "undefined")
             {
                 console.log("pages is not defined");
             }else{
-                pages.run();
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+                pages.run(controller);
             }
         });
     </script>
-
 {/block}
