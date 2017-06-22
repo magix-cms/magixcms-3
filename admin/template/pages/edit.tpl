@@ -26,12 +26,17 @@
                 </div>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="general">
-                        {include file="pages/form/content.tpl" controller="pages"}
+                        {include file="pages/form/edit.tpl" controller="pages"}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="image"></div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">
+                        <p class="text-right">
+                            {#nbr_pages#|ucfirst}: {$pages|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&parent_id={$smarty.get.edit}" title="{#add_pages#}" class="btn btn-link">
+                                <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
+                            </a>
+                        </p>
                         {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                        {include file="section/form/table-form.tpl" data=$pages activation=true sortable=$sortable controller="pages"}
+                        {include file="section/form/table-form.tpl" data=$pages activation=true search=false sortable=$sortable controller="pages"}
                     </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}

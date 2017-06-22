@@ -3,8 +3,6 @@ var pages = (function ($, undefined) {
         run: function(controller){
             $( ".ui-sortable" ).sortable({
                 items: "> tr",
-                //placeholder: "alert alert-warning",
-                //forcePlaceholderSize: true,
                 cursor: "move",
                 axis: "y",
                 update: function(){
@@ -25,6 +23,32 @@ var pages = (function ($, undefined) {
                 }
             });
             $( ".ui-sortable" ).disableSelection();
+        },
+        runAdd: function(){
+            if($('#parent_id').val() != ''){
+                var id = $('#parent_id').val();
+                var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
+                //console.log(cus);
+                if(!cus.length) {
+                    $('#parent').bootstrapSelect('clear');
+                } else {
+                    var cu = $(cus[0]);
+                    $('#parent').bootstrapSelect('select',cu);
+                }
+            }
+            $('#parent_id').on('focusout',function(){
+                var id = $(this).val();
+                if(id != '') {
+                    var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
+                    //console.log(cus);
+                    if(!cus.length) {
+                        $('#parent').bootstrapSelect('clear');
+                    } else {
+                        var cu = $(cus[0]);
+                        $('#parent').bootstrapSelect('select',cu);
+                    }
+                }
+            });
         }
     }
 })(jQuery);

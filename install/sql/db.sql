@@ -172,12 +172,16 @@ CREATE TABLE IF NOT EXISTS `mc_home_page_content` (
 
 CREATE TABLE IF NOT EXISTS `mc_cms_page` (
   `id_pages` int(7) unsigned NOT NULL AUTO_INCREMENT,
-  `id_parent` int(7) unsigned NOT NULL DEFAULT '0',
+  `id_parent` int(7) unsigned DEFAULT NULL,
   `menu_pages` smallint(1) unsigned DEFAULT '0',
   `order_pages` smallint(5) unsigned NOT NULL DEFAULT '0',
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_pages`)
+  PRIMARY KEY (`id_pages`),
+  KEY `id_parent` (`id_parent`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_cms_page`
+  ADD CONSTRAINT `mc_cms_page_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
   `id_content` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -190,5 +194,9 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
   `seo_desc_pages` varchar(180) DEFAULT NULL,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published_pages` smallint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_content`)
+  PRIMARY KEY (`id_content`),
+  KEY `id_pages` (`id_pages`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_cms_page_content`
+  ADD CONSTRAINT `mc_cms_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;

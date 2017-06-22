@@ -4,7 +4,7 @@ class backend_controller_pages extends backend_db_pages
 
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order;
-    public $id_pages,$content,$pages;
+    public $id_pages,$parent_id,$content,$pages;
 
     public function __construct()
     {
@@ -36,6 +36,9 @@ class backend_controller_pages extends backend_db_pages
         // --- ADD or EDIT
         if (http_request::isPost('id')) {
             $this->id_pages = $formClean->simpleClean($_POST['id']);
+        }
+        if (http_request::isPost('parent_id')) {
+            $this->parent_id = $formClean->simpleClean($_POST['parent_id']);
         }
 
         if (http_request::isPost('content')) {
@@ -192,6 +195,7 @@ class backend_controller_pages extends backend_db_pages
                 break;
         }
     }
+
     private function save(){
         if (isset($this->content) && isset($this->id_pages)) {
             foreach ($this->content as $lang => $content) {
@@ -205,17 +209,19 @@ class backend_controller_pages extends backend_db_pages
                         )
                     );
                 }
+
                 $this->upd(array(
-                    'type'             => 'content',
-                    'id_lang'	       => $lang,
-                    'id_pages'	       => $this->id_pages,
-                    'name_pages'       => $content['name_pages'],
-                    'url_pages'        => $content['url_pages'],
-                    'content_pages'    => $content['content_pages'],
-                    'seo_title_pages'  => $content['seo_title_pages'],
-                    'seo_desc_pages'   => $content['seo_desc_pages'],
-                    'published_pages'  => $content['published_pages']
+                    'type'              => 'content',
+                    'id_lang'           => $lang,
+                    'id_pages'          => $this->id_pages,
+                    'name_pages'        => $content['name_pages'],
+                    'url_pages'         => $content['url_pages'],
+                    'content_pages'     => $content['content_pages'],
+                    'seo_title_pages'   => $content['seo_title_pages'],
+                    'seo_desc_pages'    => $content['seo_desc_pages'],
+                    'published_pages'   => $content['published_pages']
                 ));
+
                 $setEditData = parent::fetchData(
                     array('context'=>'all','type'=>'page'),
                     array('edit'=>$this->id_pages)
@@ -226,6 +232,78 @@ class backend_controller_pages extends backend_db_pages
 
             $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
+
+        }else if (isset($this->content) && !isset($this->id_pages)) {
+            if(empty($this->parent_id)){
+                $parentId = NULL;
+            }else{
+                $parentId = $this->parent_id;
+            }
+
+            parent::insert(
+                array(
+                    'type'=>'newPages'
+                ),array(
+                    'id_parent'     =>  $parentId
+                )
+            );
+
+
+            $setNewData = parent::fetchData(
+                array('context' => 'unique', 'type' => 'root')
+            );
+
+            if ($setNewData['id_pages']) {
+                foreach ($this->content as $lang => $content) {
+
+                    $content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
+                    $url_pages = http_url::clean($content['name_pages'],
+                        array(
+                            'dot' => false,
+                            'ampersand' => 'strict',
+                            'cspec' => '', 'rspec' => ''
+                        )
+                    );
+
+                    parent::insert(
+                        array(
+                            'type' => 'newContent',
+                        ),
+                        array(
+                            'id_lang'           => $lang,
+                            'id_pages'          => $setNewData['id_pages'],
+                            'name_pages'        => $content['name_pages'],
+                            'url_pages'         => $url_pages,
+                            'content_pages'     => $content['content_pages'],
+                            'seo_title_pages'   => $content['seo_title_pages'],
+                            'seo_desc_pages'    => $content['seo_desc_pages'],
+                            'published_pages'   => $content['published_pages']
+                        )
+                    );
+                }
+
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'add_redirect');
+            }
+
+        }
+    }
+    /**
+     * Insertion de données
+     * @param $data
+     */
+    private function del($data){
+        switch($data['type']){
+            case 'delPages':
+                parent::delete(
+                    array(
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'delete',$data['data']);
+                break;
         }
     }
     /**
@@ -235,6 +313,19 @@ class backend_controller_pages extends backend_db_pages
         if(isset($this->action)) {
             switch ($this->action) {
                 case 'add':
+                    if(isset($this->content)){
+                        $this->save();
+                    }else{
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+                        $data = parent::fetchData(
+                            array('context'=>'all','type'=>'pagesSelect'),
+                            array(':default_lang'=>$defaultLanguage['id_lang'])
+                        );
+                        $this->template->assign('pagesSelect',$data);
+                        $this->modelLanguage->getLanguage();
+                        $this->template->display('pages/add.tpl');
+                    }
+
                     break;
                 case 'edit':
                     if (isset($this->id_pages)) {
@@ -276,6 +367,18 @@ class backend_controller_pages extends backend_db_pages
                         $this->upd(
                             array(
                                 'type' => 'order'
+                            )
+                        );
+                    }
+                    break;
+                case 'delete':
+                    if(isset($this->id_pages)) {
+                        $this->del(
+                            array(
+                                'type'=>'delPages',
+                                'data'=>array(
+                                    'id' => $this->id_pages
+                                )
                             )
                         );
                     }
