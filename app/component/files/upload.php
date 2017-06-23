@@ -375,7 +375,7 @@ class component_files_upload{
                     if(is_uploaded_file($_FILES[$img]["tmp_name"])){
                         $source = $tmpImg;
                         $target = component_core_system::basePath().$path.http_url::clean($_FILES[$img]["name"]);
-                        if ($this->imgSizeMax($source,2500,2500) === false) {
+                        if ($this->imgSizeMax($source,3000,3000) === false) {
                             $msg .= 'the maximum size is 2500';
                         }elseif ($this->imgSizeMin($source,5,5) === false) {
                             $msg .= 'the minimum size is 5';
@@ -402,7 +402,7 @@ class component_files_upload{
             }elseif (UPLOAD_ERR_CANT_WRITE == true){
                 $msg .= 'Disk write error';
             }elseif (UPLOAD_ERR_FORM_SIZE == true){
-                $msg .= 'the maximum size is 2500 x 2500';
+                $msg .= 'the maximum size is 3000 x 3000';
             }
         }elseif (UPLOAD_ERR_NO_FILE == true){
             $msg .= 'No file';

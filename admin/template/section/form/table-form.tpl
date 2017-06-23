@@ -102,6 +102,17 @@
                     ]}
                 {/if}
 
+                {if $pre == 'module'}
+                    {$col['enum'] = 'module_'}
+                    {$col['type'] = 'enum'}
+                    {$col['input'] = ['type' => 'select','values' => [
+                    ['v' => 'pages', 'name' => {#module_0#}],
+                    ['v' => 'news', 'name' => {#module_1#}],
+                    ['v' => 'catalog', 'name' => {#module_2#}],
+                    ['v' => 'plugins', 'name' => {#module_3#}]]
+                    ]}
+                {/if}
+
                 {if $pre == 'active'}
                     {$col['class'] = 'fixed-td-md text-center'}
                     {$col['enum'] = 'bin_'}
@@ -135,7 +146,7 @@
                     {$col['type'] = 'bin'}
                 {/if}
 
-                {if $pre == 'firstname' || $pre == 'lastname' || $pre == 'phone'}
+                {if $pre == 'firstname' || $pre == 'lastname' || $pre == 'phone' || $pre == 'width' || $pre == 'height' || $pre == 'attribute' || $pre == 'resize'}
                     {$col['class'] = 'th-25'}
                 {/if}
 

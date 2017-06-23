@@ -139,7 +139,7 @@ class backend_db_pages
                     $sql = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
                     $params = $data;
 
-                } 
+                }
 
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }

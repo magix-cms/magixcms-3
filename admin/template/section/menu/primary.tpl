@@ -27,6 +27,13 @@
                     </a>
                 </li>
             {/if}
+            {if {employee_access type="view" class_name="backend_controller_files"} eq 1}
+                <li>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=files">
+                        <span class="fa fa-file"></span> {#files_and_images#}
+                    </a>
+                </li>
+            {/if}
             {if {employee_access type="view" class_name="backend_controller_webservice"} eq 1}
             <li>
                 <a href="{geturl}/{baseadmin}/index.php?controller=webservice">

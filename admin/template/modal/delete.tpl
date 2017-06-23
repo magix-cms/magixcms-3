@@ -1,6 +1,9 @@
 {if !isset($info_text)}
     {$info_text = true}
 {/if}
+{if !isset($delete_message)}
+    {$delete_message = {#modal_delete_message#}}
+{/if}
 {if !isset($title)}
     {$title = {#modal_delete_title#}}
 {/if}
@@ -14,7 +17,7 @@
             </div>
             <div class="modal-body">
                 <div class="alert alert-warning" role="alert">
-                    <p><span class="fa fa-warning"></span> <strong>{#warning#}&thinsp;!</strong> {#modal_delete_message#}</p>
+                    <p><span class="fa fa-warning"></span> <strong>{#warning#}&thinsp;!</strong> {$delete_message}</p>
                 </div>
                 {if $info_text}
                     <div class="help-block">{#modal_delete_info#}</div>

@@ -33,7 +33,7 @@
             </div>
         </section>
     </div>
-    {include file="modal/delete.tpl" data_type='pages' title={#delete_pages#|ucfirst} info_text=true}
+    {include file="modal/delete.tpl" data_type='pages' title={#modal_delete_title#|ucfirst} info_text=true delete_message={#delete_pages_message#}}
     {include file="modal/error.tpl"}
     {else}
     {include file="section/brick/viewperms.tpl"}
