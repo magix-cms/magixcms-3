@@ -173,6 +173,7 @@ CREATE TABLE IF NOT EXISTS `mc_home_page_content` (
 CREATE TABLE IF NOT EXISTS `mc_cms_page` (
   `id_pages` int(7) unsigned NOT NULL AUTO_INCREMENT,
   `id_parent` int(7) unsigned DEFAULT NULL,
+  `img_pages` varchar(125) DEFAULT NULL,
   `menu_pages` smallint(1) unsigned DEFAULT '0',
   `order_pages` smallint(5) unsigned NOT NULL DEFAULT '0',
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -200,3 +201,14 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
 
 ALTER TABLE `mc_cms_page_content`
   ADD CONSTRAINT `mc_cms_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_config_img` (
+  `id_config_img` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `module_img` enum('catalog','news','pages','plugins') NOT NULL,
+  `attribute_img` varchar(40) NOT NULL,
+  `width_img` decimal(4,0) NOT NULL,
+  `height_img` decimal(4,0) NOT NULL,
+  `type_img` enum('small','medium','large') NOT NULL,
+  `resize_img` enum('basic','adaptive') NOT NULL,
+  PRIMARY KEY (`id_config_img`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
