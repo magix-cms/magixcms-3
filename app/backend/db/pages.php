@@ -173,6 +173,15 @@ class backend_db_pages
                         ':published_pages'  => $data['published_pages']
                     )
                 );
+            }elseif ($config['type'] === 'img') {
+                $sql = 'UPDATE mc_cms_page SET img_pages = :img_pages
+                WHERE id_pages = :id_pages';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_pages'	       => $data['id_pages'],
+                        ':img_pages'       => $data['img_pages']
+                    )
+                );
             }elseif ($config['type'] === 'pageActiveMenu') {
                 $sql = 'UPDATE mc_cms_page SET menu_pages = :menu_pages WHERE id_pages IN ('.$data['id_pages'].')';
                 component_routing_db::layer()->update($sql,

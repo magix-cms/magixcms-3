@@ -3,8 +3,8 @@ class backend_controller_pages extends backend_db_pages
 {
 
     public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order;
-    public $id_pages,$parent_id,$content,$pages;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload;
+    public $id_pages,$parent_id,$content,$pages,$img;
 
     public function __construct()
     {
@@ -15,6 +15,7 @@ class backend_controller_pages extends backend_db_pages
         $formClean = new form_inputEscape();
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
+        $this->upload = new component_files_upload();
         // --- GET
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
@@ -50,7 +51,10 @@ class backend_controller_pages extends backend_db_pages
             }
             $this->content = $array;
         }
-
+        // --- Image Upload
+        if(isset($_FILES['img']["name"])){
+            $this->img = http_url::clean($_FILES['img']["name"]);
+        }
         // --- Recursive Actions
         if (http_request::isGet('pages')) {
             $this->pages = $formClean->arrayClean($_GET['pages']);
@@ -132,6 +136,7 @@ class backend_controller_pages extends backend_db_pages
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
                 $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
+                $arr[$page['id_pages']]['img_pages'] = $page['img_pages'];
                 $arr[$page['id_pages']]['menu_pages'] = $page['menu_pages'];
                 $arr[$page['id_pages']]['date_register'] = $page['date_register'];
             }
@@ -169,6 +174,16 @@ class backend_controller_pages extends backend_db_pages
                         'seo_title_pages'  => $data['seo_title_pages'],
                         'seo_desc_pages'   => $data['seo_desc_pages'],
                         'published_pages'  => $data['published_pages']
+                    )
+                );
+                break;
+            case 'img':
+                parent::update(
+                    array(
+                        'type'=>$data['type']
+                    ),array(
+                        'id_pages'	       => $data['id_pages'],
+                        'img_pages'        => $data['img_pages']
                     )
                 );
                 break;
@@ -248,7 +263,6 @@ class backend_controller_pages extends backend_db_pages
                 )
             );
 
-
             $setNewData = parent::fetchData(
                 array('context' => 'unique', 'type' => 'root')
             );
@@ -285,7 +299,32 @@ class backend_controller_pages extends backend_db_pages
                 $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
             }
+        }else  if(isset($this->img)){
+            $data = parent::fetchData(array('context'=>'unique','type'=>'page'),array('id_pages'=>$this->id_pages));
+            $resultUpload = $this->upload->setImageUpload(
+                'img',
+                array(
+                    'name'              => filter_rsa::randMicroUI(),
+                    //'edit'              => $data['img_pages'],
+                    'prefix'            => array('s_'),
+                    'module_img'        => 'pages',
+                    'attribute_img'     => 'page',
+                    'original_remove'   => false
+                ),
+                array(
+                    'upload_root_dir'      => 'upload/pages', //string
+                    'upload_dir'           => $this->id_pages //string ou array
+                ),
+                false
+            );
 
+            $this->upd(array(
+                'type'              => 'img',
+                'id_pages'          => $this->id_pages,
+                'img_pages'        => $resultUpload['file']
+            ));
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true, 'update');
         }
     }
     /**

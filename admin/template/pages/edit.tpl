@@ -28,7 +28,12 @@
                     <div role="tabpanel" class="tab-pane active" id="general">
                         {include file="pages/form/edit.tpl" controller="pages"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="image"></div>
+                    <div role="tabpanel" class="tab-pane" id="image">
+                        {include file="pages/form/img.tpl" controller="pages"}
+                        <div class="row">
+                            <img class="img-responsive" src="/upload/pages/{$page.id_pages}/s_{$page.img_pages}" />
+                        </div>
+                    </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">
                         <p class="text-right">
                             {#nbr_pages#|ucfirst}: {$pages|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&parent_id={$smarty.get.edit}" title="{#add_pages#}" class="btn btn-link">
