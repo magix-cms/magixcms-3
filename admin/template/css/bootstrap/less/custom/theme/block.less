@@ -9,7 +9,7 @@
 		}
 		> div {
 			background-color: #fff;
-			min-height: 100px;
+			//min-height: 100px;
 		}
 	}
 }
@@ -26,7 +26,36 @@
 		}
 	}
 }
+.block-img{
+	padding: 10px 0;
+	figure.thumbnail {
+		position: relative;
+		overflow: hidden;
+		height: auto;
+		margin: 0 0 20px;
+		.text-center;
+		.no-border;
+		.no-padding;
 
+		> img {
+			position: relative;
+			display: block;
+			max-width: 100%;
+			opacity: 0.8;
+		}
+		> figcaption {
+			.square(100%);
+			> .desc{
+				> h3 {
+					-webkit-transform: translateZ(0); // Chrome transition fix
+					.no-margin;
+					border-bottom: none;
+					padding: 10px 0;
+				}
+			}
+		}
+	}
+}
 .folder-box {
 	padding: 10px 15px;
 	border-bottom: 1px solid #eee;
@@ -67,7 +96,7 @@
 	}
 }
 
-#photo {
+#photo, #image {
 	button[type="submit"] {
 		margin-top: -138px;
 	}

@@ -3,7 +3,7 @@ class backend_controller_pages extends backend_db_pages
 {
 
     public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent;
     public $id_pages,$parent_id,$content,$pages,$img;
 
     public function __construct()
@@ -16,6 +16,7 @@ class backend_controller_pages extends backend_db_pages
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
         $this->upload = new component_files_upload();
+        $this->imagesComponent = new component_files_images();
         // --- GET
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
@@ -127,16 +128,31 @@ class backend_controller_pages extends backend_db_pages
      */
     private function setItemData($data){
         //return $this->getItems('page',$this->edit, 'return');
+        $imgPath = $this->upload->imgBasePath('upload/pages');
         $arr = array();
+        $conf = array();
+        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
+        $imgPrefix = $this->imagesComponent->prefix();
+
         foreach ($data as $page) {
 
             $publicUrl = !empty($page['url_pages']) ? '/'.$page['iso_lang'].'/'.$page['id_pages'].'-'.$page['url_pages'].'/' : '';
-
             if (!array_key_exists($page['id_pages'], $arr)) {
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
                 $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
-                $arr[$page['id_pages']]['img_pages'] = $page['img_pages'];
+                if($page['img_pages'] != null) {
+                    $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages']);
+                    $arr[$page['id_pages']]['imgSrc']['original']['img'] = $page['img_pages'];
+                    $arr[$page['id_pages']]['imgSrc']['original']['width'] = $originalSize[0];
+                    $arr[$page['id_pages']]['imgSrc']['original']['height'] = $originalSize[1];
+                    foreach ($fetchConfig as $key => $value) {
+                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_pages']);
+                        $arr[$page['id_pages']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_pages'];
+                        $arr[$page['id_pages']]['imgSrc'][$value['type_img']]['width'] = $size[0];
+                        $arr[$page['id_pages']]['imgSrc'][$value['type_img']]['height'] = $size[1];
+                    }
+                }
                 $arr[$page['id_pages']]['menu_pages'] = $page['menu_pages'];
                 $arr[$page['id_pages']]['date_register'] = $page['date_register'];
             }
@@ -154,6 +170,7 @@ class backend_controller_pages extends backend_db_pages
         }
         return $arr;
     }
+
     /**
      * Mise a jour des données
      * @param $data
@@ -305,8 +322,8 @@ class backend_controller_pages extends backend_db_pages
                 'img',
                 array(
                     'name'              => filter_rsa::randMicroUI(),
-                    //'edit'              => $data['img_pages'],
-                    'prefix'            => array('s_'),
+                    'edit'              => $data['img_pages'],
+                    'prefix'            => array('s_','m_','l_'),
                     'module_img'        => 'pages',
                     'attribute_img'     => 'page',
                     'original_remove'   => false
@@ -324,7 +341,16 @@ class backend_controller_pages extends backend_db_pages
                 'img_pages'        => $resultUpload['file']
             ));
             $this->header->set_json_headers();
-            $this->message->json_post_response(true, 'update');
+
+            $setEditData = parent::fetchData(
+                array('context'=>'all','type'=>'page'),
+                array('edit'=>$this->id_pages)
+            );
+            $setEditData = $this->setItemData($setEditData);
+            $this->template->assign('page',$setEditData[$this->id_pages]);
+            $display = $this->template->fetch('pages/brick/img.tpl');
+
+            $this->message->json_post_response(true, 'update',$display);
         }
     }
     /**
@@ -380,6 +406,7 @@ class backend_controller_pages extends backend_db_pages
                         $pages = $this->setItemsData();
 
                         $this->template->assign('pages', $pages);
+
                         $this->template->display('pages/edit.tpl');
                     }
                     break;

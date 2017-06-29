@@ -30,9 +30,14 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="image">
                         {include file="pages/form/img.tpl" controller="pages"}
+                        {*<pre>{$page|print_r}</pre>*}
+                        {if $page.imgSrc != null}
                         <div class="row">
-                            <img class="img-responsive" src="/upload/pages/{$page.id_pages}/s_{$page.img_pages}" />
+                            <div class="block-img">
+                            {include file="pages/brick/img.tpl"}
+                            </div>
                         </div>
+                        {/if}
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">
                         <p class="text-right">

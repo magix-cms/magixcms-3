@@ -178,11 +178,22 @@ var globalForm = (function ($, undefined) {
         else if($(f).hasClass('edit_form_extend')) {
             options.success = function (d) {
                 $.jmRequest.initbox(d.notify,{ display:true });
+                initAlert(d.notify,4000);
                 $.each(d.extend[0], function(i,item) {
                     if($('#lang-'+i).length != 0){
                         $('#lang-'+i+' #public_url'+i).val(item);
                     }
                 });
+            }
+        }
+        else if($(f).hasClass('edit_form_img')) {
+            options.success = function (d) {
+                $.jmRequest.initbox(d.notify,{ display:false });
+                //initAlert(d.notify,4000);
+                if(d.statut && d.result) {
+                    $('.block-img').empty();
+                    $('.block-img').html(d.result);
+                }
             }
         }
         // --- Rules for add form in a modal
