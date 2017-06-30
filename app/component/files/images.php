@@ -19,6 +19,27 @@ class component_files_images{
     }
 
     /**
+     * @return array
+     */
+    public function type(){
+        return array('small','medium','large');
+    }
+
+    /**
+     * @return array
+     */
+    public function module(){
+        return array('catalog','news','pages','plugins');
+    }
+
+    /**
+     * @return array
+     */
+    public function resize(){
+        return array('basic','adaptive');
+    }
+
+    /**
      * @param $data
      * @return mixed|null
      */
