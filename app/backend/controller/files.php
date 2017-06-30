@@ -66,7 +66,7 @@ class backend_controller_files extends backend_db_files{
      * Save Data
      */
     private function save(){
-        
+
         if(isset($this->id_config_img)){
             parent::update(
                 array('type'=>'resize'),
