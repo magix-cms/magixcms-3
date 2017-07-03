@@ -1,0 +1,47 @@
+{extends file="layout.tpl"}
+{block name='head:title'}{#about#|ucfirst}{/block}
+{block name='body:id'}about{/block}
+
+{block name='article:header'}
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="{#root_about#|ucfirst}">{#about#|ucfirst}</a></h1>
+{/block}
+{block name='article:content'}
+{if {employee_access type="edit" class_name=$cClass} eq 1}
+<div class="panels row">
+    <section class="panel col-xs-12 col-md-12">
+        {if $debug}
+            {$debug}
+        {/if}
+        <header class="panel-header panel-nav">
+            <h2 class="panel-heading h5">{#root_about#|ucfirst}</h2>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#info_company" aria-controls="info_company" role="tab" data-toggle="tab">{#info_company#}</a></li>
+                <li role="presentation"><a href="#info_contact" aria-controls="info_contact" role="tab" data-toggle="tab">{#info_contact#}</a></li>
+                <li role="presentation"><a href="#info_socials" aria-controls="info_socials" role="tab" data-toggle="tab">{#info_socials#}</a></li>
+                <li role="presentation"><a href="#info_opening" aria-controls="info_opening" role="tab" data-toggle="tab">{#info_opening#}</a></li>
+                <li role="presentation"><a href="#info_text" aria-controls="info_text" role="tab" data-toggle="tab">{#text#}</a></li>
+                <li role="presentation"><a href="#info_page" aria-controls="info_page" role="tab" data-toggle="tab">{#info_page#}</a></li>
+            </ul>
+        </header>
+        <div class="panel-body panel-body-form">
+            <div class="mc-message-container clearfix">
+                <div class="mc-message"></div>
+            </div>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane tab-table active" id="company">
+                    {include file="about/form/company.tpl"}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="info_contact"></div>
+                <div role="tabpanel" class="tab-pane" id="info_socials"></div>
+                <div role="tabpanel" class="tab-pane" id="info_opening"></div>
+                <div role="tabpanel" class="tab-pane" id="info_text"></div>
+                <div role="tabpanel" class="tab-pane" id="info_page"></div>
+            </div>
+        </div>
+        {*<pre>{$settings|print_r}</pre>*}
+    </section>
+</div>
+{else}
+    {include file="section/brick/viewperms.tpl"}
+{/if}
+{/block}

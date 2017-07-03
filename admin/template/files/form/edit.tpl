@@ -25,13 +25,13 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="width_img">{#width#|ucfirst}</label>
-                        <input type="text" class="form-control required" name="width_img" id="width_img" placeholder="{#ph_width#|ucfirst}" required value="{$size.width_img}">
+                        <input type="number" class="form-control required" name="width_img" id="width_img" placeholder="{#ph_width#|ucfirst}" required value="{$size.width_img}">
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label for="height_img">{#height#|ucfirst}</label>
-                        <input type="text" class="form-control required" name="height_img" id="height_img" placeholder="{#ph_height#|ucfirst}" required value="{$size.height_img}">
+                        <input type="number" class="form-control required" name="height_img" id="height_img" placeholder="{#ph_height#|ucfirst}" required value="{$size.height_img}">
                     </div>
                 </div>
             </div>
