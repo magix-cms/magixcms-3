@@ -27,21 +27,44 @@
             <div class="mc-message-container clearfix">
                 <div class="mc-message"></div>
             </div>
+            {*<pre>{$companyData|print_r}</pre>*}
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane tab-table active" id="company">
+                <div role="tabpanel" class="tab-pane tab-table active" id="info_company">
                     {include file="about/form/company.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="info_contact"></div>
+                <div role="tabpanel" class="tab-pane" id="info_contact">
+                    {include file="about/form/contact.tpl"}
+                </div>
                 <div role="tabpanel" class="tab-pane" id="info_socials"></div>
                 <div role="tabpanel" class="tab-pane" id="info_opening"></div>
-                <div role="tabpanel" class="tab-pane" id="info_text"></div>
+                <div role="tabpanel" class="tab-pane" id="info_text">
+                    {include file="about/form/text.tpl"}
+                </div>
                 <div role="tabpanel" class="tab-pane" id="info_page"></div>
             </div>
         </div>
-        {*<pre>{$settings|print_r}</pre>*}
     </section>
 </div>
 {else}
     {include file="section/brick/viewperms.tpl"}
 {/if}
+{/block}
+{block name="foot" append}
+    {include file="section/footer/editor.tpl"}
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        {baseadmin}/template/js/about.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
+
+    <script type="text/javascript">
+        $(function(){
+            if (typeof about == "undefined")
+            {
+                console.log("about is not defined");
+            }else{
+                about.run();
+            }
+        });
+    </script>
 {/block}

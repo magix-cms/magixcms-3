@@ -25,7 +25,7 @@
         </li>
     {/if}
     <li class="{if $smarty.get.controller == 'about'}active{/if}">
-        <a href="#">
+        <a href="{geturl}/{baseadmin}/index.php?controller=about">
             <span class="fa fa-briefcase"></span> {#root_about#}
         </a>
     </li>

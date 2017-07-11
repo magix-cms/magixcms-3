@@ -1,1 +1,2 @@
-Fichier error
+{$getTitleHeader}
+{$getTxtHeader}
