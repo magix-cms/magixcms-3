@@ -1,5 +1,5 @@
 <?php
-class backend_model_data {
+class backend_model_data extends backend_db_scheme{
 	protected $template, $db, $caller;
 	public $search;
 
@@ -62,5 +62,108 @@ class backend_model_data {
 		}
 	}
 
+	/**
+	 * @param array $sch
+	 * @return array
+	 */
+	public function parseScheme($sch, $cols)
+	{
+		$arr = array();
+		$scheme = array();
+		foreach ($sch as $col) {
+			$arr[$col['column']] = $col['type'];
+		}
+		$sch = $arr;
+
+		foreach ($cols as $col) {
+			$type = $sch[$col];
+			$pre = strstr($col, '_', true);
+
+			$column = array(
+				'type' => 'text',
+				'class' => '',
+				'title' => $pre,
+				'input' => array(
+					'type' => 'text'
+				)/*,
+				'info' => $col*/
+			);
+
+			if (strpos($type, 'int') !== false) {
+				$sl = strpos($type,'(') + 1;
+				$el = strpos($type,')');
+				$limit = substr($type, $sl, ($el - $sl));
+
+				if($limit > 1) {
+					$column['type'] =  'text';
+					$column['class'] =  'fixed-td-md text-center';
+
+					if(preg_match('/^id/i', $type)) {
+						$scheme[$col]['title'] = 'id';
+					}
+				}
+				else {
+					$column['type'] = 'bin';
+					$column['enum'] = 'bin_';
+					$column['class'] = 'fixed-td-md text-center';
+					$column['input'] = array(
+						'type' => 'select',
+						'var' => true,
+						'values' => array(
+							array('v' => 0),
+							array('v' => 1)
+						)
+					);
+				}
+
+			}
+			else if(preg_match('/^varchar/i', $type)) {
+				$sl = strpos($type,'(') + 1;
+				$el = strpos($type,')');
+				$limit = substr($type, $sl, ($el - $sl));
+
+				if($limit <= 100) {
+					$column['class'] =  'th-25';
+				}
+				else {
+					$column['class'] =  'th-35';
+				}
+			}
+			else if(preg_match('/^text/i', $type)) {
+				$column['type'] =  'content';
+				$column['input'] = null;
+			}
+			else if(preg_match('/^datetime/i', $type)
+			|| preg_match('/^timestamp/i', $type)) {
+				$column['class'] =  'th-25';
+				$column['type'] =  'date';
+
+				if(preg_match('/^date/i', $pre)) {
+					$column['input'] =  array('type' => 'text', 'class' => 'date-input');
+				}
+				else if(preg_match('/^time/i', $pre)){
+					$column['input'] =  array('type' => 'text', 'class' => 'time-input');
+				}
+			}
+
+			$scheme[$col] = $column;
+		}
+
+		return $scheme;
+	}
+
+	/**
+	 * Get Columns types
+	 * @param array $tables
+	 * @param array $columns
+	 */
+	public function getScheme($tables, $columns)
+	{
+		$tables = "'".implode("','", $tables)."'";
+		$cols = "'".implode("','", $columns)."'";
+		$params = array(':dbname' => MP_DBNAME, 'table' => $tables, 'columns' => $cols);
+		$scheme = parent::fetchData(array('context'=>'all','type'=>'scheme'),$params);
+		$this->template->assign('scheme',$this->parseScheme($scheme, $columns));
+	}
 }
 ?>

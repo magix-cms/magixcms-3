@@ -5,6 +5,7 @@ class backend_db_pages
     {
         $sql = '';
         $params = false;
+		$dateFormat = new component_format_date();
 
         if (is_array($config)) {
             if ($config['context'] === 'all' || $config['context'] === 'return') {
@@ -35,6 +36,7 @@ class backend_db_pages
                                         $cond .= 'p.'.$key.' = '.$q.' ';
                                         break;
                                     case 'date_register':
+										$q = $dateFormat->date_to_db_format($q);
                                         $cond .= "p.".$key." LIKE '%".$q."%' ";
                                         break;
                                 }
@@ -51,13 +53,20 @@ class backend_db_pages
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";
                     }else{
-                        $sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
+                        /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
                     FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
                         JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
                         WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
                         GROUP BY p.id_pages 
-                    ORDER BY p.order_pages";
+                    ORDER BY p.order_pages";*/
+						$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
+								FROM mc_cms_page AS p
+									JOIN mc_cms_page_content AS c USING ( id_pages )
+									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+									WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
+									GROUP BY p.id_pages 
+								ORDER BY p.order_pages";
                     }
 
 
@@ -81,6 +90,7 @@ class backend_db_pages
                                         $cond .= 'p.'.$key.' = '.$q.' ';
                                         break;
                                     case 'date_register':
+										$q = $dateFormat->date_to_db_format($q);
                                         $cond .= "p.".$key." LIKE '%".$q."%' ";
                                         break;
                                 }
@@ -88,13 +98,23 @@ class backend_db_pages
                             }
                         }
                     }
-                    $sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
+                    /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
+                    FROM mc_cms_page AS p
+                        JOIN mc_cms_page_content AS c USING ( id_pages )
+                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+                        LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
+                        LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages )
+                        WHERE p.id_parent = :edit $cond
+                        GROUP BY p.id_pages
+                    ORDER BY p.order_pages";*/
+
+					$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
                     FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
                         JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
                         LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
                         LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-                        WHERE p.id_parent = :edit $cond
+                        WHERE p.id_parent = :id $cond
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";
 
@@ -139,7 +159,7 @@ class backend_db_pages
                     $sql = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
                     $params = $data;
 
-                }elseif ($config['type'] === 'page') {
+                } elseif ($config['type'] === 'page') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_cms_page WHERE `id_pages` = :id_pages';
                     $params = $data;

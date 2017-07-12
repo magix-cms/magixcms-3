@@ -152,6 +152,17 @@ CREATE TABLE IF NOT EXISTS `mc_domain` (
   PRIMARY KEY (`id_domain`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `mc_config_img` (
+  `id_config_img` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `module_img` enum('catalog','news','pages','plugins') NOT NULL,
+  `attribute_img` varchar(40) NOT NULL,
+  `width_img` decimal(4,0) NOT NULL,
+  `height_img` decimal(4,0) NOT NULL,
+  `type_img` enum('small','medium','large') NOT NULL,
+  `resize_img` enum('basic','adaptive') NOT NULL,
+  PRIMARY KEY (`id_config_img`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 CREATE TABLE IF NOT EXISTS `mc_home_page` (
   `id_page` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -202,13 +213,34 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
 ALTER TABLE `mc_cms_page_content`
   ADD CONSTRAINT `mc_cms_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-CREATE TABLE IF NOT EXISTS `mc_config_img` (
-  `id_config_img` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `module_img` enum('catalog','news','pages','plugins') NOT NULL,
-  `attribute_img` varchar(40) NOT NULL,
-  `width_img` decimal(4,0) NOT NULL,
-  `height_img` decimal(4,0) NOT NULL,
-  `type_img` enum('small','medium','large') NOT NULL,
-  `resize_img` enum('basic','adaptive') NOT NULL,
-  PRIMARY KEY (`id_config_img`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `mc_about_page` (
+  `id_pages` int(7) unsigned NOT NULL AUTO_INCREMENT,
+  `id_parent` int(7) unsigned DEFAULT NULL,
+  `img_pages` varchar(125) DEFAULT NULL,
+  `menu_pages` smallint(1) unsigned DEFAULT '0',
+  `order_pages` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_pages`),
+  KEY `id_parent` (`id_parent`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_about_page_content` (
+  `id_content` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_pages` int(7) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
+  `name_pages` varchar(150) DEFAULT NULL,
+  `url_pages` varchar(150) DEFAULT NULL,
+  `content_pages` text,
+  `seo_title_pages` varchar(180) DEFAULT NULL,
+  `seo_desc_pages` varchar(180) DEFAULT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `published_pages` smallint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_content`),
+  KEY `id_pages` (`id_pages`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_about_page`
+  ADD CONSTRAINT `mc_about_page_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_about_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `mc_about_page_content`
+  ADD CONSTRAINT `mc_about_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_about_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;

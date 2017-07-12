@@ -11,9 +11,14 @@ class backend_db_about
                 if ($config['type'] === 'info') {
                     $sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
                 }elseif($config['type'] === 'content'){
+
                     $sql = 'SELECT a.*
                     FROM mc_about_data AS a
                     JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
+
+                }elseif($config['type'] === 'op'){
+
+                    $sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
                 }
                 //$params = $data;
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
@@ -71,6 +76,8 @@ class backend_db_about
     {
         if (is_array($config)) {
             if ($config['type'] === 'company') {
+
+                // Update company Data
                 $query = "UPDATE `mc_about`
 					SET `value_info` = CASE `name_info`
 						WHEN 'name' THEN :nme
@@ -89,6 +96,7 @@ class backend_db_about
                     )
                 );
             }elseif ($config['type'] === 'contact') {
+                // Update contact Data
                 $query = "UPDATE `mc_about`
 					SET `value_info` = CASE `name_info`
 						WHEN 'mail' THEN :mail
@@ -120,7 +128,33 @@ class backend_db_about
                         ':city' 			=> $data['contact']['adress']['city'],
                     )
                 );
+
+            }elseif ($config['type'] === 'socials') {
+                // Update socials Data
+
+                $query = "UPDATE `mc_about`
+					SET `value_info` = CASE `name_info`
+						WHEN 'facebook' THEN :facebook
+						WHEN 'twitter' THEN :twitter
+						WHEN 'google' THEN :google
+						WHEN 'linkedin' THEN :linkedin
+						WHEN 'viadeo' THEN :viadeo
+					END
+					WHERE `name_info` IN ('facebook','twitter','google','linkedin','viadeo')";
+
+                component_routing_db::layer()->update($query,
+                    array(
+                        ':facebook' => $data['socials']['facebook'],
+                        ':twitter'	=> $data['socials']['twitter'],
+                        ':google' 	=> $data['socials']['google'],
+                        ':linkedin' => $data['socials']['linkedin'],
+                        ':viadeo' 	=> $data['socials']['viadeo']
+                    )
+                );
+
             }elseif ($config['type'] === 'content') {
+
+                // Update text (root) Data
                 $sql = "UPDATE `mc_about_data`
 					SET `value_info` = CASE `name_info`
 						WHEN 'desc' THEN :dsc
@@ -137,6 +171,61 @@ class backend_db_about
                         ':id_lang' 	=> $data['id_lang']
                     )
                 );
+            }elseif ($config['type'] === 'enable_op') {
+
+                $query = "UPDATE mc_about SET value_info = :enable WHERE name_info = 'openinghours'";
+
+                component_routing_db::layer()->update($query,
+                    array(
+                        ':enable' => $data['enable_op']
+                    )
+                );
+
+            }elseif ($config['type'] === 'openinghours') {
+
+                foreach ($data['specifications'] as $day => $opt) {
+                    $query = "UPDATE `mc_about_op`
+					SET `open_day` = :open_day,
+					`noon_time` = CASE `open_day`
+									WHEN '1' THEN :noon_time
+									ELSE `noon_time`
+									END,
+					`open_time` = CASE `open_day`
+									WHEN '1' THEN :open_time
+									ELSE `open_time`
+									END,
+					`close_time` = CASE `open_day`
+									WHEN '1' THEN :close_time
+									ELSE `close_time`
+									END,
+					`noon_start` = CASE `open_day`
+									WHEN '1' THEN
+									 	CASE `noon_time`
+									 	WHEN '1' THEN :noon_start
+										ELSE `noon_start`
+										END
+									ELSE `noon_start`
+									END,
+					`noon_end` = CASE `open_day`
+									WHEN '1' THEN
+									 	CASE `noon_time`
+									 	WHEN '1' THEN :noon_end
+										ELSE `noon_end`
+										END
+									ELSE `noon_end`
+									END
+					WHERE `day_abbr` = :cday";
+
+                    component_routing_db::layer()->update($query,array(
+                        ':cday'			=> $day,
+                        ':open_day' 	=> $opt['open_day'],
+                        ':noon_time' 	=> $opt['noon_time'],
+                        ':open_time' 	=> $opt['open_time'],
+                        ':close_time' 	=> $opt['close_time'],
+                        ':noon_start' 	=> $opt['noon_start'],
+                        ':noon_end' 	=> $opt['noon_end'],
+                    ));
+                }
             }
         }
     }

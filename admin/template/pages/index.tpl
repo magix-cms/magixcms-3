@@ -28,8 +28,9 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-pages">{if isset($message)}{$message}{/if}</div>
                 </div>
+                {*{if isset($scheme)}{$scheme|var_dump}{/if}*}
                 {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                {include file="section/form/table-form.tpl" data=$pages activation=true sortable=$sortable controller="pages"}
+                {include file="section/form/table-form-2.tpl" data=$pages activation=true sortable=$sortable controller="pages"}
             </div>
         </section>
     </div>

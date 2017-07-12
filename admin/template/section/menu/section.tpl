@@ -66,7 +66,9 @@
         <ul class="nav list-unstyled">
             {foreach $getItemsPlugins as $item}
             <li class="{if $smarty.get.controller == {$item.name}}active{/if}">
-                <a href="{geturl}/{baseadmin}/index.php?controller={$item.name}">{$item.name}</a>
+                <a href="{geturl}/{baseadmin}/index.php?controller={$item.name}">
+                    <span class="fa {if $smarty.get.controller == {$item.name}}fa-angle-right{else}fa-angle-down{/if}"></span> {$item.name}
+                </a>
             </li>
             {/foreach}
         </ul>

@@ -48,6 +48,13 @@ class component_format_date {
 	public function date_to_db_format($d,$separator = '/')
 	{
 		list($day, $month, $year) = explode($separator, $d);
-		return "$year-$month-$day";
+		$date = "$day";
+		if(!empty($month)) {
+			$date = "$month-$day";
+		}
+		if(!empty($month)) {
+			$date = "$year-$month-$day";
+		}
+		return $date;
 	}
 }

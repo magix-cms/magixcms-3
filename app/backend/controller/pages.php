@@ -90,18 +90,18 @@ class backend_controller_pages extends backend_db_pages
                 array('context'=>'all','type'=>'pagesChild','search'=>$this->search),
                 array(':edit'=>$this->edit)
             );
-            foreach ($data as $key => $value) {
+            /*foreach ($data as $key => $value) {
                 $arr[$key]['id_pages'] = $value['id_pages'];
                 $arr[$key]['name_pages'] = $value['name_pages'];
                 $arr[$key]['menu_pages'] = $value['menu_pages'];
                 $arr[$key]['date_register'] = $value['date_register'];
-            }
+            }*/
         }else{
             $data = parent::fetchData(
                 array('context'=>'all','type'=>'pages','search'=>$this->search),
                 array(':default_lang'=>$defaultLanguage['id_lang'])
             );
-            if($this->search) {
+            /*if($this->search) {
                 foreach ($data as $key => $value) {
                     $arr[$key]['id_pages'] = $value['id_pages'];
                     $arr[$key]['name_pages'] = $value['name_pages'];
@@ -116,10 +116,10 @@ class backend_controller_pages extends backend_db_pages
                     $arr[$key]['menu_pages'] = $value['menu_pages'];
                     $arr[$key]['date_register'] = $value['date_register'];
                 }
-            }
+            }*/
         }
 
-        return $arr;
+        return $data;
     }
 
     /**
@@ -403,30 +403,33 @@ class backend_controller_pages extends backend_db_pages
                         );
                         $setEditData = $this->setItemData($setEditData);
                         $this->template->assign('page',$setEditData[$this->edit]);
-                        $pages = $this->setItemsData();
+                        //$pages = $this->setItemsData();
 
-                        $this->template->assign('pages', $pages);
+                        //$this->template->assign('pages', $pages);
+						$this->getItems('pagesChild',$this->edit,'all');
 
                         $this->template->display('pages/edit.tpl');
                     }
                     break;
                 case 'active-selected':
                 case 'unactive-selected':
-                if(isset($this->pages) && is_array($this->pages) && !empty($this->pages)) {
-                    $this->upd(
-                        array(
-                            'type'=>'pageActiveMenu',
-                            'data'=>array(
-                                'menu_pages' => ($this->action == 'active-selected'?1:0),
-                                'id_pages' => implode($this->pages, ',')
-                            )
-                        )
-                    );
-                }
-                $this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
-                $pages = $this->setItemsData();
-                $this->template->assign('pages', $pages);
-                $this->template->display('pages/index.tpl');
+					if(isset($this->pages) && is_array($this->pages) && !empty($this->pages)) {
+						$this->upd(
+							array(
+								'type'=>'pageActiveMenu',
+								'data'=>array(
+									'menu_pages' => ($this->action == 'active-selected'?1:0),
+									'id_pages' => implode($this->pages, ',')
+								)
+							)
+						);
+					}
+					$this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
+					//$pages = $this->setItemsData();
+					//$this->template->assign('pages', $pages);
+					$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+					$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+					$this->template->display('pages/index.tpl');
                     break;
                 case 'order':
                     if (isset($this->order)) {
@@ -452,8 +455,11 @@ class backend_controller_pages extends backend_db_pages
             }
         }else{
             $this->modelLanguage->getLanguage();
-            $pages = $this->setItemsData();
-            $this->template->assign('pages', $pages);
+            //$pages = $this->setItemsData();
+			//$this->template->assign('pages', $pages);
+			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+			$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+			$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'));
             $this->template->display('pages/index.tpl');
         }
     }

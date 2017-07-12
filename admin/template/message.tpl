@@ -58,6 +58,16 @@
 {capture name="alert_message"}
     {#request_success_delete#}
 {/capture}
+{case 'delete_multi' break}
+{capture name="alert_type"}{strip}
+    success
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    check
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_success_delete_m#}
+{/capture}
 {case 'delete_min' break}
 {capture name="alert_type"}{strip}
     danger

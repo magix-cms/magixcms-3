@@ -35,8 +35,12 @@
                 <div role="tabpanel" class="tab-pane" id="info_contact">
                     {include file="about/form/contact.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="info_socials"></div>
-                <div role="tabpanel" class="tab-pane" id="info_opening"></div>
+                <div role="tabpanel" class="tab-pane" id="info_socials">
+                    {include file="about/form/socials.tpl"}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="info_opening">
+                    {include file="about/form/openinghours.tpl"}
+                </div>
                 <div role="tabpanel" class="tab-pane" id="info_text">
                     {include file="about/form/text.tpl"}
                 </div>

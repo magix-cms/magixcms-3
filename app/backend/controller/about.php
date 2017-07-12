@@ -4,7 +4,7 @@ class backend_controller_about extends backend_db_about{
     public $edit, $action, $tabs, $search;
 
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
-    public $content, $dataType;
+    public $content, $dataType, $enable_op,$send = array('openinghours' => '');
 
     /**
      * @var array, type of website allowed
@@ -213,6 +213,22 @@ class backend_controller_about extends backend_db_about{
             }
             $this->content = $array;
         }
+        /* Socials links edition */
+
+        if(http_request::isPost('company_socials')){
+            $this->company['socials'] = $formClean->arrayClean($_POST['company_socials']);
+        }
+        /* Opening Hours links edition */
+
+        if(http_request::isPost('enable_op')){
+            $this->enable_op = '1';
+        }else{
+            $this->enable_op = '0';
+        }
+
+        if(http_request::isPost('openinghours')){
+            $this->send['openinghours'] = $formClean->arrayClean($_POST['openinghours']);
+        }
     }
 
     /**
@@ -243,6 +259,7 @@ class backend_controller_about extends backend_db_about{
             $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', $this->company);
         }elseif($this->dataType === 'text'){
+
             foreach ($this->content as $lang => $content) {
                 if (parent::fetchData(array('context' => 'unique', 'type' => 'content'), array('id_lang' => $lang)) != null) {
                     parent::update(array('type' => 'content'), array(
@@ -262,12 +279,73 @@ class backend_controller_about extends backend_db_about{
                     );
                 }
             }
+
             $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', $this->content);
+
         }elseif($this->dataType === 'contact'){
-            parent::update(array('type'=>'contact'),$this->company);
+
+            $this->company['contact']['adress']['adress'] = $this->company['contact']['adress']['street'].', '.$this->company['contact']['adress']['postcode'].' '.$this->company['contact']['adress']['city'];
+            parent::update(
+                array(
+                    'type'=>'contact'
+                ),
+                $this->company
+            );
             $this->header->set_json_headers();
-            $this->message->json_post_response(true, 'update', $this->company);
+            $this->message->json_post_response(true, 'update', $this->company['contact']['adress']);
+
+        }elseif($this->dataType === 'socials'){
+            parent::update(
+                array(
+                    'type'=>'socials'
+                ),
+                $this->company
+            );
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true, 'update', $this->company['socials']);
+
+        }elseif($this->dataType === 'enable_op'){
+            /* Enable OP */
+            parent::update(
+                array(
+                    'type'=>'enable_op'
+                ),
+                array(
+                    'enable_op' => $this->enable_op
+                )
+            );
+        }elseif($this->dataType === 'openinghours'){
+            /* Update openinghours */
+            foreach ($this->company['specifications'] as $day => $opt) {
+                if(isset($this->send['openinghours'][$day])) {
+                    $this->company['specifications'][$day]['open_day'] = '1';
+
+                    if(isset($this->send['openinghours'][$day]['noon_time'])) {
+                        $this->company['specifications'][$day]['noon_time'] = '1';
+
+                        $this->company['specifications'][$day]['noon_start'] 	= ($this->send['openinghours'][$day]['noon_start']['hh'] ? ($this->send['openinghours'][$day]['noon_start']['hh'].':'.$this->send['openinghours'][$day]['noon_start']['mm']) : null);
+                        $this->company['specifications'][$day]['noon_end'] 	= ($this->send['openinghours'][$day]['noon_end']['hh'] ? ($this->send['openinghours'][$day]['noon_end']['hh'].':'.$this->send['openinghours'][$day]['noon_end']['mm']) : null);
+                    } else {
+                        $this->company['specifications'][$day]['noon_time'] = '0';
+                    }
+
+                    $this->company['specifications'][$day]['open_time'] 	= ($this->send['openinghours'][$day]['open']['hh'] ? ($this->send['openinghours'][$day]['open']['hh'].':'.$this->send['openinghours'][$day]['open']['mm']) : null);
+                    $this->company['specifications'][$day]['close_time'] 	= ($this->send['openinghours'][$day]['close']['hh'] ? ($this->send['openinghours'][$day]['close']['hh'].':'.$this->send['openinghours'][$day]['close']['mm']) : null);
+                } else {
+                    $this->company['specifications'][$day]['open_day'] = '0';
+                }
+            }
+
+            parent::update(
+                array(
+                    'type'=>'openinghours'
+                ),
+                $this->company
+            );
+
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true, 'update', $this->company['specifications']);
         }
     }
     private function setData($about)
@@ -299,10 +377,10 @@ class backend_controller_about extends backend_db_about{
                     }
                 }
             }
-            /*elseif($info == 'openinghours') {
+            elseif($info == 'openinghours') {
                 $this->company[$info] = $about['openinghours'];
 
-                $op = parent::getOp();
+                $op = parent::fetchData(array('context'=>'all','type'=>'op'));
                 foreach ($op as $d) {
                     $schedule[$d['day_abbr']] = $d;
                     array_shift($schedule[$d['day_abbr']]);
@@ -312,7 +390,7 @@ class backend_controller_about extends backend_db_about{
                     $schedule[$d['day_abbr']]['noon_start'] = explode(':',$d['noon_start']);
                     $schedule[$d['day_abbr']]['noon_end'] = explode(':',$d['noon_end']);
                 }
-            }*/
+            }
             else {
                 $this->company[$info] = $about[$info];
             }

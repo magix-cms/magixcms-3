@@ -57,8 +57,16 @@ class file_finder{
             $it = new DirectoryIterator($directory);
             for($it->rewind(); $it->valid(); $it->next()) {
                 if(!$it->isDir() && !$it->isDot() && $it->isFile()){
-                    if($it->getFilename() == $exclude) continue;
-                    $file[] = $it->getFilename();
+                    /*if($it->getFilename() == $exclude) continue;
+                    $file[] = $it->getFilename();*/
+                    if(is_array($exclude)){
+                        if(!in_array($it->getFilename(), $exclude)){
+                            $file[] = $it->getFilename();
+                        }
+                    }else{
+                        if($it->getFilename() == $exclude) continue;
+                        $file[] = $it->getFilename();
+                    }
                 }
             }
             return $file;
@@ -102,6 +110,11 @@ class file_finder{
         }
         return $dir;
     }
+
+    /**
+     * @param $directory
+     * @return mixed
+     */
     public function dirFilterIterator($directory){
         $directories = new AppendIterator () ;
         $directories->append (new RecursiveIteratorIterator (new RecursiveDirectoryIterator ($directory)));
