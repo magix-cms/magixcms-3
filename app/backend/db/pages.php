@@ -43,7 +43,7 @@ class backend_db_pages
                                 $nbc++;
                             }
                         }
-                        $sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.* , ca.name_pages AS parent_pages
+                        /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.* , ca.name_pages AS parent_pages
                     FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
                         JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -51,7 +51,16 @@ class backend_db_pages
                         LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
                         WHERE c.id_lang = :default_lang $cond
                         GROUP BY p.id_pages 
-                    ORDER BY p.order_pages";
+                    ORDER BY p.order_pages";*/
+						$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
+								FROM mc_cms_page AS p
+									JOIN mc_cms_page_content AS c USING ( id_pages )
+									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+									LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
+									LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+									WHERE c.id_lang = :default_lang $cond
+									GROUP BY p.id_pages 
+								ORDER BY p.order_pages";
                     }else{
                         /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
                     FROM mc_cms_page AS p
@@ -144,6 +153,9 @@ class backend_db_pages
 
                     $params = $data;
 
+                }elseif ($config['type'] === 'img') {
+                    $sql = 'SELECT p.id_pages, p.img_pages
+                        FROM mc_cms_page AS p WHERE p.img_pages IS NOT NULL';
                 }
                 //print $sql;
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;

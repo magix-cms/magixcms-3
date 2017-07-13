@@ -6,8 +6,8 @@ class component_core_feedback{
 	/**
 	 * component_core_feedback constructor.
 	 */
-	public function __construct(){
-		$this->template = new frontend_model_template();
+	public function __construct($template){
+        $this->template = $template;
 		$this->header = new http_header();
 		$this->init();
 	}

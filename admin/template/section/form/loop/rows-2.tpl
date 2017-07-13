@@ -1,9 +1,9 @@
 {if isset($data) && !empty($data) && isset($section) && $section != ''}
-    <tr id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}_{$data[$section]}">
+    <tr id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}_{$data[$idcolumn]}">
         <td class="text-center">
             <div class="checkbox">
-                <label for="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$data[$section]}">
-                    <input type="checkbox" id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$data[$section]}" name="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}[]" value="{$data[$section]}"{if $data[$section]|in_array:$readonly} readonly disabled{/if}/>
+                <label for="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$data[$idcolumn]}">
+                    <input type="checkbox" id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$data[$idcolumn]}" name="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}[]" value="{$data[$idcolumn]}"{if $data[$idcolumn]|in_array:$readonly} readonly disabled{/if}/>
                 </label>
             </div>
         </td>
@@ -27,11 +27,11 @@
         {/foreach}
         <td class="actions text-center">
             {if {employee_access type="edit" class_name=$cClass} eq 1}
-            <a href="/{baseadmin}/index.php?controller={$controller}&action=edit&edit={$data[$section]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="btn btn-link action_on_record"><span class="fa fa-pencil-square-o"></span></a>
+            <a href="/{baseadmin}/index.php?controller={$controller}&action=edit&edit={$data[$idcolumn]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="btn btn-link action_on_record"><span class="fa fa-pencil-square-o"></span></a>
             {/if}
             {if {employee_access type="del" class_name=$cClass} eq 1}
-            {if !$data[$section]|in_array:$readonly}
-                <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$data[$section]}" data-controller="{$controller}" {if $subcontroller} data-sub="{$subcontroller}"{/if} data-target="#delete_modal"><span class="fa fa-trash"></span></a>
+            {if !$data[$idcolumn]|in_array:$readonly}
+                <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$data[$idcolumn]}" data-controller="{$controller}" {if $subcontroller} data-sub="{$subcontroller}"{/if} data-target="#delete_modal"><span class="fa fa-trash"></span></a>
             {/if}
             {/if}
         </td>

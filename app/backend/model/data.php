@@ -64,9 +64,11 @@ class backend_model_data extends backend_db_scheme{
 
 	/**
 	 * @param array $sch
+	 * @param array $cols
+	 * @param null|array $ass
 	 * @return array
 	 */
-	public function parseScheme($sch, $cols)
+	public function parseScheme($sch, $cols, $ass)
 	{
 		$arr = array();
 		$scheme = array();
@@ -149,6 +151,37 @@ class backend_model_data extends backend_db_scheme{
 			$scheme[$col] = $column;
 		}
 
+		if(is_array($ass)) {
+			$newScheme =  array();
+
+			foreach ($ass as $name => $info) {
+				$pre = strstr($name, '_', true);
+
+				if(is_array($info)) {
+					if(isset($info['col'])) {
+						$key = $info['col'];
+					} else {
+						$key = $name;
+					}
+
+					$newScheme[$name] = $scheme[$key];
+
+					if(isset($info['title'])) {
+						if($info['title'] == 'pre') {
+							$newScheme[$name]['title'] = $pre;
+						} else {
+							$newScheme[$name]['title'] = $name;
+						}
+					}
+				}
+				else {
+					$newScheme[$info] = $scheme[$info];
+				}
+			}
+
+			$scheme = $newScheme;
+		}
+
 		return $scheme;
 	}
 
@@ -156,14 +189,15 @@ class backend_model_data extends backend_db_scheme{
 	 * Get Columns types
 	 * @param array $tables
 	 * @param array $columns
+	 * @param null|array $assign
 	 */
-	public function getScheme($tables, $columns)
+	public function getScheme($tables, $columns, $assign = null)
 	{
 		$tables = "'".implode("','", $tables)."'";
 		$cols = "'".implode("','", $columns)."'";
 		$params = array(':dbname' => MP_DBNAME, 'table' => $tables, 'columns' => $cols);
 		$scheme = parent::fetchData(array('context'=>'all','type'=>'scheme'),$params);
-		$this->template->assign('scheme',$this->parseScheme($scheme, $columns));
+		$this->template->assign('scheme',$this->parseScheme($scheme, $columns, $assign));
 	}
 }
 ?>

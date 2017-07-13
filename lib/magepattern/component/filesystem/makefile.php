@@ -340,7 +340,27 @@ class filesystem_makefile{
         $val = str_replace("'","\'",$val);
         $str = preg_replace('/(\''.$name.'\')(.*?)$/ms',$quote,$str);
     }
+    /**
+     * Check cache
+     * If younger than 5 min, returns it
+     * If older, delete it and return null
+     *
+     * @param $file
+     * @return mixed|null
+     */
+    private function getCache($file)
+    {
+        if(file_exists($file)) {
+            if(filemtime($file) > (time() - 60 * 2)) {
+                return unserialize(file_get_contents($file));
+            }
+            else {
+                unlink($file);
+            }
+        }
 
+        return null;
+    }
     /**
      * @param mixed $files
      *

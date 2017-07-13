@@ -16,7 +16,7 @@ class backend_controller_pages extends backend_db_pages
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
         $this->upload = new component_files_upload();
-        $this->imagesComponent = new component_files_images();
+        $this->imagesComponent = new component_files_images($this->template);
         // --- GET
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
@@ -404,8 +404,15 @@ class backend_controller_pages extends backend_db_pages
                         $setEditData = $this->setItemData($setEditData);
                         $this->template->assign('page',$setEditData[$this->edit]);
                         //$pages = $this->setItemsData();
-
                         //$this->template->assign('pages', $pages);
+
+						$assign = array(
+							'id_pages',
+							'name_pages' => ['title' => 'name'],
+							'menu_pages',
+							'date_register'
+						);
+						$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
 						$this->getItems('pagesChild',$this->edit,'all');
 
                         $this->template->display('pages/edit.tpl');
@@ -428,6 +435,13 @@ class backend_controller_pages extends backend_db_pages
 					//$pages = $this->setItemsData();
 					//$this->template->assign('pages', $pages);
 					$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+					$assign = array(
+						'id_pages',
+						'name_pages' => ['title' => 'name'],
+						'menu_pages',
+						'date_register'
+					);
+					$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
 					$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
 					$this->template->display('pages/index.tpl');
                     break;
@@ -459,7 +473,23 @@ class backend_controller_pages extends backend_db_pages
 			//$this->template->assign('pages', $pages);
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
 			$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
-			$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'));
+			if(isset($this->search)) {
+				$assign = array(
+					'id_pages',
+					'name_pages' => ['title' => 'name'],
+					'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
+					'menu_pages',
+					'date_register'
+				);
+			} else {
+				$assign = array(
+					'id_pages',
+					'name_pages' => ['title' => 'name'],
+					'menu_pages',
+					'date_register'
+				);
+			}
+			$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
             $this->template->display('pages/index.tpl');
         }
     }

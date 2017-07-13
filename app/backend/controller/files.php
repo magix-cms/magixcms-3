@@ -2,7 +2,8 @@
 class backend_controller_files extends backend_db_files{
     public $edit, $action, $tabs;
     public $id_config_img, $module_img,$attribute_img,$width_img,$height_img,$type_img,$resize_img;
-    protected $message, $template, $header, $data, $fileUpload,$imagesComponent;
+    protected $message, $template, $header, $data,$imagesComponent, $DBpages, $configCollection;
+    public $attr_name;
 
     public function __construct()
     {
@@ -11,8 +12,9 @@ class backend_controller_files extends backend_db_files{
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
         $formClean = new form_inputEscape();
-        $this->fileUpload = new component_files_upload();
-        $this->imagesComponent = new component_files_images();
+        $this->configCollection = new component_collections_config();
+        $this->imagesComponent = new component_files_images($this->template);
+        $this->DBpages = new backend_db_pages();
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -31,7 +33,7 @@ class backend_controller_files extends backend_db_files{
         if (http_request::isPost('id')) {
             $this->id_config_img = $formClean->simpleClean($_POST['id']);
         }
-
+        // Config IMG
         if (http_request::isPost('module_img')) {
             $this->module_img = $formClean->simpleClean($_POST['module_img']);
         }
@@ -49,6 +51,10 @@ class backend_controller_files extends backend_db_files{
         }
         if (http_request::isPost('resize_img')) {
             $this->resize_img = $formClean->simpleClean($_POST['resize_img']);
+        }
+        // Thumbnail Manager
+        if (http_request::isPost('attr_name')) {
+            $this->attr_name = $formClean->simpleClean($_POST['attr_name']);
         }
     }
     /**
@@ -141,6 +147,22 @@ class backend_controller_files extends backend_db_files{
                 case 'edit':
                     if(isset($this->id_config_img)){
                         $this->save();
+                    }elseif(isset($this->attr_name)){
+                        switch($this->attr_name){
+                            case 'pages':
+                                $fetchImg = $this->DBpages->fetchData(array('context'=>'all','type'=>'img'));
+                                $this->imagesComponent->getThumbnailItems(array(
+                                    'type'              => $this->attr_name,
+                                    'upload_root_dir'   => 'upload/pages',
+                                    'module_img'        => $this->attr_name,
+                                    'attribute_img'     => 'page',
+                                    'id'                =>'id_pages',
+                                    'img'               =>'img_pages'
+                                ),
+                                    $fetchImg
+                                );
+                                break;
+                        }
                     }else{
                         $this->getItems('size',$this->edit);
                         $module = $this->imagesComponent->module();
@@ -168,6 +190,8 @@ class backend_controller_files extends backend_db_files{
             }
         }else{
             $this->getItems('sizes');
+            $config = $this->configCollection->fetchData(array('context'=>'all','type'=>'config'));
+            $this->template->assign('setConfig',$config);
             $this->template->display('files/index.tpl');
         }
     }

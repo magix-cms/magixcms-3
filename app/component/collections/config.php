@@ -78,6 +78,8 @@ class component_collections_config{
                     WHERE module_img = :module_img AND attribute_img = :attribute_img
                     ORDER BY width_img DESC';
                     $params = $data;
+                }if ($config['type'] === 'config') {
+                    $sql = 'SELECT * FROM mc_config';
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
