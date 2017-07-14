@@ -162,6 +162,18 @@ class backend_controller_files extends backend_db_files{
                                     $fetchImg
                                 );
                                 break;
+                            case 'news':
+                                $this->imagesComponent->getThumbnailItems(array(
+                                    'type'              => $this->attr_name,
+                                    'upload_root_dir'   => 'upload/news',
+                                    'module_img'        => $this->attr_name,
+                                    'attribute_img'     => 'news',
+                                    'id'                =>'id_news',
+                                    'img'               =>'img_news'
+                                ),
+                                    null
+                                );
+                                break;
                         }
                     }else{
                         $this->getItems('size',$this->edit);

@@ -1,13 +1,12 @@
 var files = (function ($, undefined) {
-    function initGen() {
+    function initGen(){
         var currentSelect = $('#attr_name option:selected').val();
         var progressBar = new ProgressBar('#progress-thumbnail',{loader: {type:'text', icon:'etc'}});
-
-        $.ajax({
-            type: 'POST',
+        $.jmRequest({
+            handler: "ajax",
             url: $('#new_thumbnail').attr('action'),
+            method: 'POST',
             data: {attr_name: currentSelect},
-            cache: false,
             beforeSend: function () {
                 progressBar.init({progress: 5, state: 'Demande au serveur'});
             },
@@ -51,7 +50,7 @@ var files = (function ($, undefined) {
                             progressBar.updateState('danger');
                             progressBar.update({state: d.message+' <span class="fa fa-ban"></span>',loader: false});
                             break;
-                        case 'no_bill_found':
+                        case 'error_data':
                             progressBar.updateState('warning');
                             progressBar.update({state: '<span class="fa fa-warning"></span> '+d.message,loader: false});
                             break;

@@ -4,7 +4,7 @@ var dashboard = (function($, window, document, undefined){
         $.jmRequest({
             handler: "ajax",
             url: '/admin/template/js/json/'+content+'.json',
-            method: 'get',
+            method: 'GET',
             dataType: 'json',
             beforeSend:function(){
                 var loader = $(document.createElement("div")).addClass("loader")

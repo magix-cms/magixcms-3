@@ -77,20 +77,21 @@ class component_files_images{
      * @param $data
      */
     public function getThumbnailItems($config,$data){
+        usleep(200000);
         $this->progress = new component_core_feedback($this->template);
         $this->progress->sendFeedback(array('message' => 'Contrôle des données','progress' => 10));
-        $fetchConfig = $this->configCollection->fetchData(
-            array(
-                'context'   =>  'all',
-                'type'      =>  'imgSize'
-            ),
-            array(
-                'module_img'    =>  $config['module_img'],
-                'attribute_img' =>  $config['attribute_img']
-            )
-        );
-        $prefix = $this->prefix();
         if($data != null) {
+            $fetchConfig = $this->configCollection->fetchData(
+                array(
+                    'context'   =>  'all',
+                    'type'      =>  'imgSize'
+                ),
+                array(
+                    'module_img'    =>  $config['module_img'],
+                    'attribute_img' =>  $config['attribute_img']
+                )
+            );
+            $prefix = $this->prefix();
             $fetchImg = $this->setImgData($config, $data);
             //print_r($fetchImg);
             $total = count($fetchImg);
@@ -125,6 +126,9 @@ class component_files_images{
             }
             usleep(200000);
             $this->progress->sendFeedback(array('message' => 'Génération des images effectuée avec succès','progress' => 100,'status' => 'success'));
+        }else{
+            usleep(200000);
+            $this->progress->sendFeedback(array('message' => 'Données manquantes','progress' => 100,'status' => 'error','error_code' => 'error_data'));
         }
     }
 }

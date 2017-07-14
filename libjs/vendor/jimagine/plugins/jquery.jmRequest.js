@@ -80,7 +80,7 @@
             },
             async: true,
             cache: false,
-            dataFilter: function (response) {},
+            dataFilter: false,//function (response) {},
             beforeSend: function(){},
             xhr: false,
             error: function (xhr, ajaxOptions, thrownError) {
@@ -91,7 +91,7 @@
             success: function(e, textStatus, XMLHttpRequest){
                 $.jmRequest.initbox(e);
             },
-            complete: function () {}
+            complete: false//function () {}
         };
         var opt = $.extend(true,{},settings,options);
         //console.log(opt.uri);
@@ -105,37 +105,32 @@
         var initHandler = {
             jmAjax: function(){
                 // --- Default options of the ajax request
-                if(opt.xhr != false){
-                    var xhrParams = $.ajax({
-                        method: opt.method,
-                        type: opt.method,
-                        url: opt.url,
-                        dataType: opt.dataType,
-                        statusCode: opt.statusCode,
-                        async: opt.async,
-                        cache: opt.cache,
-                        data: opt.data,
-                        //dataFilter: opt.dataFilter,
-                        xhr: opt.xhr,
-                        beforeSend: opt.beforeSend,
-                        success: opt.success
-                    })
-                }else{
-                    var xhrParams = $.ajax({
-                        method: opt.method,
-                        type: opt.method,
-                        url: opt.url,
-                        dataType: opt.dataType,
-                        statusCode: opt.statusCode,
-                        async: opt.async,
-                        cache: opt.cache,
-                        data: opt.data,
-                        //dataFilter: opt.dataFilter,
-                        beforeSend: opt.beforeSend,
-                        success: opt.success
-                    })
+                var ajaxParams = {
+                    method: opt.method,
+                    type: opt.method,
+                    url: opt.url,
+                    dataType: opt.dataType,
+                    statusCode: opt.statusCode,
+                    async: opt.async,
+                    cache: opt.cache,
+                    data: opt.data,
+                    beforeSend: opt.beforeSend,
+                    success: opt.success
+                };
+                if(opt.dataFilter){
+                    ajaxParams.dataFilter = opt.dataFilter;
                 }
-                xhrParams.done(function ( data ) {
+                if(opt.xhr){
+                    ajaxParams.xhr = opt.xhr;
+                }
+                if(opt.error){
+                    ajaxParams.error = opt.error;
+                }
+                if(opt.complete){
+                    ajaxParams.complete = opt.complete;
+                }
+
+                $.ajax(ajaxParams).done(function ( data ) {
                     if(opt.debug == true){
                         if( console && console.log ) {
                             console.log(data);
@@ -147,11 +142,11 @@
                     console.error('URL: '+opt.url+' %s',error);
                     console.error('xhr %s ',xhr);
                     console.log(opt);
+                    console.dir(ajaxParams);
                     console.groupEnd();
                 });
             },
             jmSubmit: function(){
-
                 if(jQuery().ajaxSubmit) {
                     if(opt.debug == true){
                         $(opt.form).ajaxSubmit.debug = true;

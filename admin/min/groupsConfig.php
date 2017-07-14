@@ -17,7 +17,7 @@ return array(
         '//'.PATHADMIN.'/template/js/vendor/bootstrap.min.js',
         '//libjs/vendor/Chart.bundle.min.js',
         '//libjs/vendor/bootstrap-toggle.min.js',
-        '//libjs/vendor/jquery.form.3.51.min.js',
+        '//libjs/vendor/jquery.form.4.2.1.min.js',
         '//libjs/vendor/jquery.validate.1.15.0.min.js',
         '//'.PATHADMIN.'/template/js/vendor/jquery.fancybox.min.js',
         '//'.PATHADMIN.'/template/js/vendor/bootstrap-tagsinput.js',
