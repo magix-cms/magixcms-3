@@ -39,7 +39,7 @@ class plugins_clearcache_admin{
                 $setDir = $basePath.'var'.DIRECTORY_SEPARATOR.$data['dir'].DIRECTORY_SEPARATOR;
                 break;
             case 'admin':
-                $setDir = $basePath.PATHADMIN.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.$data['dir'].DIRECTORY_SEPARATOR;
+                $setDir = $basePath.PATHADMIN.DIRECTORY_SEPARATOR.'caching'.DIRECTORY_SEPARATOR.$data['dir'].DIRECTORY_SEPARATOR;
                 break;
         }
         return $setDir;
