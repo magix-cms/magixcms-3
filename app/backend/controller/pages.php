@@ -136,7 +136,7 @@ class backend_controller_pages extends backend_db_pages
 
         foreach ($data as $page) {
 
-            $publicUrl = !empty($page['url_pages']) ? '/'.$page['iso_lang'].'/'.$page['id_pages'].'-'.$page['url_pages'].'/' : '';
+            $publicUrl = !empty($page['url_pages']) ? '/'.$page['iso_lang'].'/pages/'.$page['id_pages'].'-'.$page['url_pages'].'/' : '';
             if (!array_key_exists($page['id_pages'], $arr)) {
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];

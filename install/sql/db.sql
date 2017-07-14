@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS `mc_config` (
 INSERT INTO `mc_config` (`idconfig`, `attr_name`, `status`) VALUES
 (NULL, 'pages', 1),
 (NULL, 'news', 1),
-(NULL, 'catalog', 1);
+(NULL, 'catalog', 1),
+(NULL, 'about', 1);
 
 CREATE TABLE IF NOT EXISTS `mc_country` (
   `id_country` int(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -114,7 +115,12 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_access', 'access'),
 (NULL, 'backend_controller_language', 'language'),
 (NULL, 'backend_controller_country', 'country'),
-(NULL, 'backend_controller_domain', 'domain');
+(NULL, 'backend_controller_domain', 'domain'),
+(NULL, 'backend_controller_setting', 'setting'),
+(NULL, 'backend_controller_home', 'home'),
+(NULL, 'backend_controller_pages', 'pages'),
+(NULL, 'backend_controller_files', 'files'),
+(NULL, 'backend_controller_about', 'about');
 
 CREATE TABLE IF NOT EXISTS `mc_setting` (
   `id_setting` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -212,6 +218,57 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
 
 ALTER TABLE `mc_cms_page_content`
   ADD CONSTRAINT `mc_cms_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_about` (
+  `id_info` smallint(2) unsigned NOT NULL AUTO_INCREMENT,
+  `name_info` varchar(30) NOT NULL,
+  `value_info` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_info`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+INSERT INTO `mc_about` (`id_info`, `name_info`, `value_info`) VALUES
+(NULL, 'name', NULL),
+(NULL, 'type', 'org'),
+(NULL, 'eshop', '0'),
+(NULL, 'tva', NULL),
+(NULL, 'adress', NULL),
+(NULL, 'street', NULL),
+(NULL, 'postcode', NULL),
+(NULL, 'city', NULL),
+(NULL, 'mail', NULL),
+(NULL, 'click_to_mail', '0'),
+(NULL, 'crypt_mail', '1'),
+(NULL, 'phone', NULL),
+(NULL, 'mobile', NULL),
+(NULL, 'click_to_call', '1'),
+(NULL, 'fax', NULL),
+(NULL, 'facebook', NULL),
+(NULL, 'twitter', NULL),
+(NULL, 'google', NULL),
+(NULL, 'linkedin', NULL),
+(NULL, 'viadeo', NULL),
+(NULL, 'openinghours', '0');
+
+CREATE TABLE IF NOT EXISTS `mc_about_op` (
+  `id_day` smallint(2) unsigned NOT NULL AUTO_INCREMENT,
+  `day_abbr` varchar(2) NOT NULL,
+  `open_day` smallint(1) unsigned DEFAULT '0',
+  `noon_time` smallint(1) unsigned DEFAULT '0',
+  `open_time` varchar(5) DEFAULT NULL,
+  `close_time` varchar(5) DEFAULT NULL,
+  `noon_start` varchar(5) DEFAULT NULL,
+  `noon_end` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`id_day`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+INSERT INTO `mc_about_op` (`id_day`, `day_abbr`, `open_day`, `noon_time`, `open_time`, `close_time`, `noon_start`, `noon_end`) VALUES
+(1, 'Mo', 1, 1, NULL, NULL, NULL, NULL),
+(2, 'Tu', 0, 0, NULL, NULL, NULL, NULL),
+(3, 'We', 0, 0, NULL, NULL, NULL, NULL),
+(4, 'Th', 0, 0, NULL, NULL, NULL, NULL),
+(5, 'Fr', 0, 0, NULL, NULL, NULL, NULL),
+(6, 'Sa', 0, 0, NULL, NULL, NULL, NULL),
+(7, 'Su', 0, 0, NULL, NULL, NULL, NULL);
 
 CREATE TABLE IF NOT EXISTS `mc_about_page` (
   `id_pages` int(7) unsigned NOT NULL AUTO_INCREMENT,
