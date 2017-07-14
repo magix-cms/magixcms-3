@@ -172,9 +172,18 @@ var globalForm = (function ($, undefined) {
                 $.jmRequest.initbox(d.notify,{ display:true });
                 redirect(controller);
                 initModalActions();
-            }
+            };
         }
-        // --- Rules form classic edit form but with replace from extend data
+        // --- Rules form search form
+        else if($(f).hasClass('search_form')) {
+            options.method = 'get';
+            options.success = function (d) {
+                if(d.statut && d.result) {
+                    $(f).find('tbody').empty().append(d.result);
+                }
+            };
+        }
+         // --- Rules form classic edit form but with replace from extend data
         else if($(f).hasClass('edit_form_extend')) {
             options.success = function (d) {
                 $.jmRequest.initbox(d.notify,{ display:true });
@@ -184,7 +193,7 @@ var globalForm = (function ($, undefined) {
                         $('#lang-'+i+' #public_url'+i).val(item);
                     }
                 });
-            }
+            };
         }
         else if($(f).hasClass('edit_form_img')) {
             options.success = function (d) {
@@ -194,7 +203,7 @@ var globalForm = (function ($, undefined) {
                     $('.block-img').empty();
                     $('.block-img').html(d.result);
                 }
-            }
+            };
         }
         // --- Rules for add form in a modal
         else if($(f).hasClass('add_modal_form')) {
@@ -211,7 +220,7 @@ var globalForm = (function ($, undefined) {
                     $(table).find('tbody').prepend(d.result);
                     initModalActions();
                 }
-            }
+            };
         }
         // --- Rules for add form that add the new record into the associated table
         else if($(f).hasClass('add_to_list')) {
@@ -228,7 +237,7 @@ var globalForm = (function ($, undefined) {
                 }
                 initValidation(controller,'.edit_in_list');
                 initModalActions();
-            }
+            };
         }
         // --- Rules for edit form that edit a record into a table list
         else if($(f).hasClass('edit_in_list')) {
@@ -243,7 +252,7 @@ var globalForm = (function ($, undefined) {
                         $('[type="submit"]', f).show();
                     }, 3000);
                 }
-            }
+            };
         }
         // --- Rules for delete form, will remove the deleted rows form the record list based on their id
         else if($(f).hasClass('delete_form')) {
@@ -271,7 +280,7 @@ var globalForm = (function ($, undefined) {
                     $('.nbr-'+controller).text(nbr);
                     initModalActions();
                 }
-            }
+            };
         }
 
         // --- Initialise the ajax request

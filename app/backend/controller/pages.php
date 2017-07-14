@@ -413,9 +413,23 @@ class backend_controller_pages extends backend_db_pages
 							'date_register'
 						);
 						$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
-						$this->getItems('pagesChild',$this->edit,'all');
+						$pageChild = $this->getItems('pagesChild',$this->edit,'all');
 
-                        $this->template->display('pages/edit.tpl');
+						if(isset($this->search)) {
+							$this->template->assign('ajax_form',true);
+							$this->template->assign('data',$pageChild);
+							$this->template->assign('section','pages');
+							$this->template->assign('idcolumn','id_pages');
+							$this->template->assign('controller','pages');
+							$this->template->assign('readonly',array());
+							$this->template->assign('cClass','backend_controller_pages');
+							$display = $this->template->fetch('section/form/loop/rows-2.tpl');
+							$this->header->set_json_headers();
+							$this->message->json_post_response(true,'',$display);
+						}
+						else {
+							$this->template->display('pages/edit.tpl');
+						}
                     }
                     break;
                 case 'active-selected':
@@ -473,21 +487,26 @@ class backend_controller_pages extends backend_db_pages
 			//$this->template->assign('pages', $pages);
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
 			$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+			$assign = array(
+				'id_pages',
+				'name_pages' => ['title' => 'name'],
+				'menu_pages',
+				'date_register'
+			);
+
 			if(isset($this->search)) {
-				$assign = array(
-					'id_pages',
-					'name_pages' => ['title' => 'name'],
-					'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
-					'menu_pages',
-					'date_register'
-				);
-			} else {
-				$assign = array(
-					'id_pages',
-					'name_pages' => ['title' => 'name'],
-					'menu_pages',
-					'date_register'
-				);
+				$search = $this->search;
+				$search = array_filter($search);
+
+				if(is_array($search) && !empty($search)) {
+					$assign = array(
+						'id_pages',
+						'name_pages' => ['title' => 'name'],
+						'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
+						'menu_pages',
+						'date_register'
+					);
+				}
 			}
 			$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
             $this->template->display('pages/index.tpl');

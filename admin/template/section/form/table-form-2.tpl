@@ -10,9 +10,9 @@
 {if !isset($sortable)}
     {$sortable = false}
 {/if}
-{if isset($data) && is_array($data)}{$table['rows'] = $data}
+{if isset($data) && is_array($data)}
     <div class="table-responsive{if empty($data) || !count($data)} hide{/if}" id="table-{if $subcontroller}{$subcontroller}{else}{$controller}{/if}">
-        <form action="#" method="get"{if $ajax_form} class="validate_form"{/if}>
+        <form action="{$smarty.server.REQUEST_URI}" method="get"{if $ajax_form} class="validate_form search_form"{/if}>
             <input type="hidden" name="controller" value="{$smarty.get.controller}" />
             <table class="table table-striped table-hover">
                 <thead>
@@ -64,9 +64,7 @@
                 {/if}
                 </thead>
                 <tbody{if $sortable} class="ui-sortable"{/if}>
-                {foreach $table.rows as $row}
-                    {include file="section/form/loop/rows-2.tpl" data=$row section='pages' idcolumn=$idcolumn controller=$controller subcontroller=$subcontroller readonly=$readonly}
-                {/foreach}
+                {include file="section/form/loop/rows-2.tpl" data=$data section='pages' idcolumn=$idcolumn controller=$controller subcontroller=$subcontroller readonly=$readonly}
                 </tbody>
             </table>
             <div class="hidden-xs">

@@ -59,6 +59,7 @@ class backend_model_data extends backend_db_scheme{
 			default:
 				$varName = $type;
 				$this->template->assign($varName,$data);
+				return $data;
 		}
 	}
 

@@ -46,7 +46,7 @@
                             </a>
                         </p>
                         {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                        {include file="section/form/table-form-2.tpl" ajax_form=true data=$pagesChild activation=true sortable=$sortable controller="pages"}
+                        {include file="section/form/table-form-2.tpl" ajax_form=true idcolumn='id_pages' data=$pagesChild activation=true sortable=$sortable controller="pages"}
                     </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}

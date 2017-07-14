@@ -10,39 +10,60 @@ class backend_db_pages
         if (is_array($config)) {
             if ($config['context'] === 'all' || $config['context'] === 'return') {
                 if ($config['type'] === 'pages') {
-                    $cond = '';
-                    if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
-                        $nbc = 0;
-                        foreach ($config['search'] as $key => $q) {
-                            if($q != '') {
-                                /*if($nbc > 0) {
-                                    $cond .= 'AND ';
-                                } else {
-                                    $cond = 'WHERE ';
-                                }*/
-                                $cond .= 'AND ';
-                                switch ($key) {
-                                    case 'id_pages':
-                                    case 'published_pages':
-                                        $cond .= 'c.'.$key.' = '.$q.' ';
-                                        break;
-                                    case 'name_pages':
-                                        $cond .= "c.".$key." LIKE '%".$q."%' ";
-                                        break;
-                                    case 'parent_pages':
-                                        $cond .= "ca.name_pages"." LIKE '%".$q."%' ";
-                                        break;
-                                    case 'menu_pages':
-                                        $cond .= 'p.'.$key.' = '.$q.' ';
-                                        break;
-                                    case 'date_register':
-										$q = $dateFormat->date_to_db_format($q);
-                                        $cond .= "p.".$key." LIKE '%".$q."%' ";
-                                        break;
-                                }
-                                $nbc++;
-                            }
-                        }
+					$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
+								FROM mc_cms_page AS p
+									JOIN mc_cms_page_content AS c USING ( id_pages )
+									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+									WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
+									GROUP BY p.id_pages 
+								ORDER BY p.order_pages";
+
+                    if(isset($config['search'])) {
+						$cond = '';
+						$config['search'] = array_filter($config['search']);
+                    	if(is_array($config['search']) && !empty($config['search'])) {
+							$nbc = 0;
+							foreach ($config['search'] as $key => $q) {
+								if($q != '') {
+									/*if($nbc > 0) {
+										$cond .= 'AND ';
+									} else {
+										$cond = 'WHERE ';
+									}*/
+									$cond .= 'AND ';
+									switch ($key) {
+										case 'id_pages':
+										case 'published_pages':
+											$cond .= 'c.'.$key.' = '.$q.' ';
+											break;
+										case 'name_pages':
+											$cond .= "c.".$key." LIKE '%".$q."%' ";
+											break;
+										case 'parent_pages':
+											$cond .= "ca.name_pages"." LIKE '%".$q."%' ";
+											break;
+										case 'menu_pages':
+											$cond .= 'p.'.$key.' = '.$q.' ';
+											break;
+										case 'date_register':
+											$q = $dateFormat->date_to_db_format($q);
+											$cond .= "p.".$key." LIKE '%".$q."%' ";
+											break;
+									}
+									$nbc++;
+								}
+							}
+
+							$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
+								FROM mc_cms_page AS p
+									JOIN mc_cms_page_content AS c USING ( id_pages )
+									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+									LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
+									LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+									WHERE c.id_lang = :default_lang $cond
+									GROUP BY p.id_pages 
+								ORDER BY p.order_pages";
+						}
                         /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.* , ca.name_pages AS parent_pages
                     FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
@@ -52,16 +73,8 @@ class backend_db_pages
                         WHERE c.id_lang = :default_lang $cond
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";*/
-						$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
-								FROM mc_cms_page AS p
-									JOIN mc_cms_page_content AS c USING ( id_pages )
-									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-									LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
-									LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-									WHERE c.id_lang = :default_lang $cond
-									GROUP BY p.id_pages 
-								ORDER BY p.order_pages";
-                    }else{
+
+                    }
                         /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
                     FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
@@ -69,14 +82,6 @@ class backend_db_pages
                         WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";*/
-						$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
-								FROM mc_cms_page AS p
-									JOIN mc_cms_page_content AS c USING ( id_pages )
-									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-									WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
-									GROUP BY p.id_pages 
-								ORDER BY p.order_pages";
-                    }
 
 
                     $params = $data;
