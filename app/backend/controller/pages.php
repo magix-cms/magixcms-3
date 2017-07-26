@@ -483,13 +483,14 @@ class backend_controller_pages extends backend_db_pages
             }
         }else{
             $this->modelLanguage->getLanguage();
-            //$pages = $this->setItemsData();
-			//$this->template->assign('pages', $pages);
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
 			$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
 			$assign = array(
 				'id_pages',
 				'name_pages' => ['title' => 'name'],
+				'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+				'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+				'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
 				'menu_pages',
 				'date_register'
 			);
@@ -503,12 +504,15 @@ class backend_controller_pages extends backend_db_pages
 						'id_pages',
 						'name_pages' => ['title' => 'name'],
 						'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
+						'content_pages' => ['type' => 'bin', 'input' => null],
+						'seo_title_pages' => ['title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null],
+						'seo_desc_pages' => ['title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null],
 						'menu_pages',
 						'date_register'
 					);
 				}
 			}
-			$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
+			$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
             $this->template->display('pages/index.tpl');
         }
     }

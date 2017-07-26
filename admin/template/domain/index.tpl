@@ -28,7 +28,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-{$smarty.get.controller}">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form.tpl" data=$domain controller="domain"}
+                {include file="section/form/table-form-2.tpl" idcolumn='id_domain' data=$domain controller="domain"}
             </div>
         </section>
     </div>

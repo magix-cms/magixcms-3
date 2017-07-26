@@ -10,6 +10,9 @@
         </td>
         {foreach $scheme as $name => $col}
             <td class="{$col.class}">
+                {*{$col.enum|var_dump}
+                {$row[$name]|var_dump}
+                {$col.enum|cat:$row[$name]|var_dump}*}
                 {if $col.type == 'enum'}
                     {$text = $col.enum|cat:$row[$name]}
                     {#$text#}

@@ -30,14 +30,13 @@
                             <span class="fa fa-plus"></span> {#add_imagesize#|ucfirst}
                         </a>
                     </p>
-                    {include file="section/form/table-form.tpl" data=$sizes activation=false sortable=false controller="files"}
+                    {include file="section/form/table-form-2.tpl" idcolumn='id_config_img' data=$sizes activation=false sortable=false controller="files"}
                 </div>
                 <div role="tabpanel" class="tab-pane" id="thumbnail_manager">
                     {include file="files/form/thumbnail.tpl"}
                 </div>
             </div>
         </div>
-        {*<pre>{$settings|print_r}</pre>*}
     </section>
 </div>
     {include file="modal/delete.tpl" data_type='files' title={#delete_imagesize#|ucfirst} info_text=true}

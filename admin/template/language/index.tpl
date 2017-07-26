@@ -28,7 +28,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-language">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form.tpl" data=$langs activation=true controller="language"}
+                {include file="section/form/table-form-2.tpl" idcolumn='id_lang' data=$langs activation=true controller="language"}
             </div>
         </section>
     </div>

@@ -122,20 +122,38 @@ class date_dateformat extends DateTime{
      * @return string
      * @example
      * $datecreate = new date_dateformat();
-     * echo $datecreate->dateToEuropeanFormat('2000-01-01');
+     * echo $datecreate->dateToEuropeanFormat('01-01-2000');
      */
 	public function dateToEuropeanFormat($time=null){
-		return $this->dateDefine('Y/m/d',$time);
+		return $this->dateDefine('d/m/Y',$time);
 	}
 
     /**
-     * Transforme une date au format européen en format SQL
+     * @access public
+     * Retourne la date au format classique avec slash (2000/01/01)
+     * @param null $time
+     * @internal param \timestamp $date
+     * @return string
+     * @example
+     * $datecreate = new date_dateformat();
+     * echo $datecreate->dateToDefaultFormat('2000-01-01');
+     */
+    public function dateToDefaultFormat($time=null){
+        return $this->dateDefine('Y/m/d',$time);
+    }
+
+    /**
+     * Transforme une date format SQL
      * @param $d
      * @param string $separator
      * @return string
      */
     public function dateToDbFormat($d,$separator = '/'){
-        list($day, $month, $year) = explode($separator, $d);
+        if(preg_match( "^\d{4}/\d{1,2}/\d{1,2}$" , $d )){
+            list($year, $month, $day) = explode($separator, $d);
+        }elseif(preg_match( "^\d{1,2}/\d{1,2}/\d{4}$" , $d )){
+            list($day, $month, $year) = explode($separator, $d);
+        }
         return "$year-$month-$day";
     }
     /**

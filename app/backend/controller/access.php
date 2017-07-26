@@ -269,6 +269,7 @@ class backend_controller_access extends backend_db_access{
             }
         }else{
             $this->getItems('roles');
+			$this->data->getScheme(array('mc_admin_role_user'),array('id_role','role_name'));
             $this->template->display('access/index.tpl');
         }
     }

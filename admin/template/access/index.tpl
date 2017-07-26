@@ -28,7 +28,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-access">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form.tpl" data=$roles controller="access" readonly=[1]}
+                {include file="section/form/table-form-2.tpl" idcolumn='id_role' data=$roles controller="access" readonly=[1]}
             </div>
         </section>
     </div>

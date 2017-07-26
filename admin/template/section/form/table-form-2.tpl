@@ -11,6 +11,10 @@
     {$sortable = false}
 {/if}
 {if isset($data) && is_array($data)}
+    {if $debug}{foreach $scheme as $sch}
+        {$sch.input|var_dump}
+    {/foreach}{/if}
+    {if $debug}{$data|var_dump}{/if}
     <div class="table-responsive{if empty($data) || !count($data)} hide{/if}" id="table-{if $subcontroller}{$subcontroller}{else}{$controller}{/if}">
         <form action="{$smarty.server.REQUEST_URI}" method="get"{if $ajax_form} class="validate_form search_form"{/if}>
             <input type="hidden" name="controller" value="{$smarty.get.controller}" />
@@ -19,7 +23,7 @@
                 <tr>
                     <th class="fixed-td-sm">&nbsp;</th>
                     {foreach $scheme as $name => $col}
-                        <th class="{$col.class}">{#$col['title']#|ucfirst}</th>
+                        <th{if $col.class && !empty($col.class)} class="{$col.class}"{/if}>{if $debug}{$col['title']} | {/if}{#$col['title']#|ucfirst}</th>
                     {/foreach}
                     <th class="fixed-td-lg text-center">{#actions#|ucfirst}</th>
                 </tr>
@@ -40,7 +44,7 @@
                             <select name="search[{$name}]" id="search[{$name}]" class="form-control" >
                                 <option value="" selected>--</option>
                                 {foreach $col.input.values as $val}
-                                    <option value="{$val.v}"{if isset($smarty.get.search[$name]) && $smarty.get.search[$name] =='{$val.v}'} selected{/if}>{if $col.input.var}{$value = $col.enum|cat:$val.v}{#$value#}{else}{$val.name}{/if}</option>
+                                <option value="{$val.v}"{if isset($smarty.get.search[$name]) && $smarty.get.search[$name] =='{$val.v}'} selected{/if}>{if $col.input.var || !isset($val.name) || empty($val.name)}{$value = $col.enum|cat:$val.v}{#$value#}{else}{$val.name}{/if}</option>
                                 {/foreach}
                             </select>
                             {elseif $col.input.type == 'text'}

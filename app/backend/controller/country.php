@@ -76,18 +76,6 @@ class backend_controller_country extends backend_db_country
     }
 
     /**
-     * @param null $id_country
-     */
-    private function getItemsCountry($id_country = null){
-        if($id_country) {
-            $data = parent::fetchData(array('context'=>'unique','type'=>'country'),array('id' => $id_country));
-            $this->template->assign('country',$data);
-        }else{
-            $this->getItems('countries');
-        }
-    }
-
-    /**
      * Insertion de données
      * @param $data
      */
@@ -200,7 +188,8 @@ class backend_controller_country extends backend_db_country
                         $this->message->json_post_response(true,'update',$this->id_country);
                     }else{
                         $this->getCollection();
-                        $this->getItemsCountry($this->edit);
+                        //$this->getItemsCountry($this->edit);
+						$this->getItems('country',$this->edit);
                         $this->template->display('country/edit.tpl');
                     }
                     break;
@@ -227,7 +216,13 @@ class backend_controller_country extends backend_db_country
                     break;
             }
         }else{
-            $this->getItemsCountry();
+			$this->getItems('countries');
+			$assign = array(
+				'id_country',
+				'iso_country' => ['title' => 'iso_country'],
+				'name_country'
+			);
+			$this->data->getScheme(array('mc_country'),array('id_country','iso_country','name_country'),$assign);
             $this->template->display('country/index.tpl');
         }
     }

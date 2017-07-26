@@ -120,7 +120,8 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_home', 'home'),
 (NULL, 'backend_controller_pages', 'pages'),
 (NULL, 'backend_controller_files', 'files'),
-(NULL, 'backend_controller_about', 'about');
+(NULL, 'backend_controller_about', 'about'),
+(NULL, 'backend_controller_news', 'news');
 
 CREATE TABLE IF NOT EXISTS `mc_setting` (
   `id_setting` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -301,3 +302,43 @@ ALTER TABLE `mc_about_page`
 
 ALTER TABLE `mc_about_page_content`
   ADD CONSTRAINT `mc_about_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_about_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_news` (
+  `id_news` int(7) unsigned NOT NULL AUTO_INCREMENT,
+  `img_news` varchar(125) DEFAULT NULL,
+  `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_news`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_news_content` (
+  `id_content` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_news` int(7) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL,
+  `name_news` varchar(150) DEFAULT NULL,
+  `url_news` varchar(150) DEFAULT NULL,
+  `content_news` text,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_publish` timestamp NULL DEFAULT NULL,
+  `published_news` smallint(1) unsigned DEFAULT '0',
+  PRIMARY KEY (`id_content`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_news_tag` (
+  `id_tag` int(5) unsigned NOT NULL AUTO_INCREMENT,
+  `id_lang` smallint(3) unsigned NOT NULL,
+  `name_tag` varchar(50) NOT NULL,
+  PRIMARY KEY (`id_tag`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_news_tag_rel` (
+  `id_rel` int(7) unsigned NOT NULL AUTO_INCREMENT,
+  `id_news` int(7) unsigned NOT NULL,
+  `id_tag` int(5) unsigned NOT NULL,
+  PRIMARY KEY (`id_rel`),
+  KEY `id_tag` (`id_tag`),
+  KEY `id_news` (`id_news`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_news_tag_rel`
+  ADD CONSTRAINT `mc_news_tag_rel_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `mc_news` (`id_news`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `mc_news_tag_rel_ibfk_1` FOREIGN KEY (`id_tag`) REFERENCES `mc_news_tag` (`id_tag`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -29,7 +29,7 @@
             </div>
             {*<pre>{$companyData|print_r}</pre>*}
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane tab-table active" id="info_company">
+                <div role="tabpanel" class="tab-pane active" id="info_company">
                     {include file="about/form/company.tpl"}
                 </div>
                 <div role="tabpanel" class="tab-pane" id="info_contact">

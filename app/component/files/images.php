@@ -77,9 +77,10 @@ class component_files_images{
      * @param $data
      */
     public function getThumbnailItems($config,$data){
+        $this->template->configLoad();
         usleep(200000);
         $this->progress = new component_core_feedback($this->template);
-        $this->progress->sendFeedback(array('message' => 'Contrôle des données','progress' => 10));
+        $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'),'progress' => 10));
         if($data != null) {
             $fetchConfig = $this->configCollection->fetchData(
                 array(
@@ -100,7 +101,7 @@ class component_files_images{
             foreach ($fetchImg as $item) {
                 $percent = $percent+$preparePercent;
                 usleep(200000);
-                $this->progress->sendFeedback(array('message' => 'Génération des images','progress' => $percent));
+                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'),'progress' => $percent));
 
                 // Loop config
                 foreach ($fetchConfig as $key => $value) {
@@ -125,10 +126,10 @@ class component_files_images{
                 }
             }
             usleep(200000);
-            $this->progress->sendFeedback(array('message' => 'Génération des images effectuée avec succès','progress' => 100,'status' => 'success'));
+            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'),'progress' => 100,'status' => 'success'));
         }else{
             usleep(200000);
-            $this->progress->sendFeedback(array('message' => 'Données manquantes','progress' => 100,'status' => 'error','error_code' => 'error_data'));
+            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'),'progress' => 100,'status' => 'error','error_code' => 'error_data'));
         }
     }
 }

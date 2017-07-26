@@ -78,17 +78,6 @@ class backend_controller_language extends backend_db_language{
     }
 
     /**
-     * @param null $id_lang
-     */
-    private function getItemsLanguage($id_lang = null){
-        if($id_lang) {
-            $data = parent::fetchData(array('context'=>'unique','type'=>'lang'),array('id' => $id_lang));
-            $this->template->assign('lang',$data);
-        }else{
-            $this->getItems('langs');
-        }
-    }
-    /**
      * Insertion de données
      * @param $data
      */
@@ -199,7 +188,8 @@ class backend_controller_language extends backend_db_language{
                         $this->message->json_post_response(true,'update',$this->id_lang);
                     }else{
                         $this->getCollection();
-                        $this->getItemsLanguage($this->edit);
+                        //$this->getItemsLanguage($this->edit);
+						$this->getItems('lang',$this->edit);
                         $this->template->display('language/edit.tpl');
                     }
                     break;
@@ -228,13 +218,30 @@ class backend_controller_language extends backend_db_language{
                             )
                         );
                     }
-                    $this->getItemsLanguage();
+                    //$this->getItemsLanguage();
+					$this->getItems('langs');
+					$assign = array(
+						'id_lang',
+						'iso_lang' => ['title' => 'iso_lang'],
+						'name_lang',
+						'default_lang' => ['title' => 'default_lang'],
+						'active_lang'
+					);
+					$this->data->getScheme(array('mc_lang'),array('id_lang','iso_lang','name_lang','default_lang','active_lang'),$assign);
                     $this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
                     $this->template->display('language/index.tpl');
                     break;
             }
         }else{
-            $this->getItemsLanguage();
+			$this->getItems('langs');
+			$assign = array(
+				'id_lang',
+				'iso_lang' => ['title' => 'iso_lang'],
+				'name_lang',
+				'default_lang' => ['title' => 'default_lang'],
+				'active_lang'
+			);
+			$this->data->getScheme(array('mc_lang'),array('id_lang','iso_lang','name_lang','default_lang','active_lang'),$assign);
             $this->template->display('language/index.tpl');
         }
     }

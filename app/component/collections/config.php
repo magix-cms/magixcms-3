@@ -76,7 +76,7 @@ class component_collections_config{
                 if ($config['type'] === 'imgSize') {
                     $sql = 'SELECT * FROM mc_config_img 
                     WHERE module_img = :module_img AND attribute_img = :attribute_img
-                    ORDER BY width_img DESC';
+                    ORDER BY width_img ASC';
                     $params = $data;
                 }if ($config['type'] === 'config') {
                     $sql = 'SELECT * FROM mc_config';

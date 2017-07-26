@@ -144,7 +144,7 @@ class backend_db_employee
 						}
 					}
 				}
-                $sql="SELECT em.*,pr.*
+                $sql="SELECT em.id_admin,em.title_admin,em.firstname_admin,em.lastname_admin,em.email_admin,pr.role_name,em.active_admin
                 FROM mc_admin_employee AS em
                 JOIN mc_admin_access_rel AS acrel ON( em.id_admin = acrel.id_admin )
                 JOIN mc_admin_role_user AS pr ON( acrel.id_role = pr.id_role )

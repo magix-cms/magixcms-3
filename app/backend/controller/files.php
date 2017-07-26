@@ -15,6 +15,7 @@ class backend_controller_files extends backend_db_files{
         $this->configCollection = new component_collections_config();
         $this->imagesComponent = new component_files_images($this->template);
         $this->DBpages = new backend_db_pages();
+        $this->DBnews = new backend_db_news();
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -163,6 +164,7 @@ class backend_controller_files extends backend_db_files{
                                 );
                                 break;
                             case 'news':
+                                $fetchImg = $this->DBnews->fetchData(array('context'=>'all','type'=>'img'));
                                 $this->imagesComponent->getThumbnailItems(array(
                                     'type'              => $this->attr_name,
                                     'upload_root_dir'   => 'upload/news',
@@ -171,7 +173,7 @@ class backend_controller_files extends backend_db_files{
                                     'id'                =>'id_news',
                                     'img'               =>'img_news'
                                 ),
-                                    null
+                                    $fetchImg
                                 );
                                 break;
                         }
@@ -202,6 +204,9 @@ class backend_controller_files extends backend_db_files{
             }
         }else{
             $this->getItems('sizes');
+
+			$this->data->getScheme(array('mc_config_img'),array('id_config_img','module_img','attribute_img','width_img','height_img','type_img','resize_img'));
+
             $config = $this->configCollection->fetchData(array('context'=>'all','type'=>'config'));
             $this->template->assign('setConfig',$config);
             $this->template->display('files/index.tpl');

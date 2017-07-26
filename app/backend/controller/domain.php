@@ -56,17 +56,7 @@ class backend_controller_domain extends backend_db_domain
         return $this->data->getItems($type, $id, $context);
     }
 
-    /**
-     * @param null $id_domain
-     */
-    private function getItemsDomain($id_domain = null){
-        if($id_domain) {
-            $data = parent::fetchData(array('context'=>'unique','type'=>'domain'),array('id' => $id_domain));
-            $this->template->assign('domain',$data);
-        }else{
-            $this->getItems('domain');
-        }
-    }
+
     /**
      * Insertion de données
      * @param $data
@@ -156,7 +146,8 @@ class backend_controller_domain extends backend_db_domain
                         $this->header->set_json_headers();
                         $this->message->json_post_response(true,'update',$this->id_domain);
                     }else{
-                        $this->getItemsDomain($this->edit);
+                        //$this->getItemsDomain($this->edit);
+						$this->getItems('domain',$this->edit);
                         $this->template->display('domain/edit.tpl');
                     }
                     break;
@@ -174,7 +165,13 @@ class backend_controller_domain extends backend_db_domain
                     break;
             }
         }else{
-            $this->getItemsDomain();
+			$this->getItems('domain');
+			$assign = array(
+				'id_domain',
+				'url_domain' => ['title' => 'url_domain', 'class' => ''],
+				'default_domain' => ['title' => 'default_domain']
+			);
+			$this->data->getScheme(array('mc_domain'),array('id_domain','url_domain','default_domain'),$assign);
             $this->template->display('domain/index.tpl');
         }
     }

@@ -139,11 +139,14 @@ class backend_model_template{
 	}
 
 	/**
+     * Example :
+     * $this->template->configLoad();
+     * $this->template->getConfigVars('my_var');
 	 * 
 	 * Initialise la fonction configLoad de smarty
 	 * @param string $section
 	 */
-	public static function configLoad($section = ''){
+	public function configLoad($section = ''){
 		backend_model_smarty::getInstance()->configLoad(self::pathConfigLoad(self::$ConfigFile), $section);
 	}
 
@@ -313,7 +316,9 @@ class backend_model_template{
 	}
 
     /**
-     * Charge les variables du fichier de configuration dans le site
+     * Charge les variables du fichier de configuration dans le script
+     * $this->template->configLoad();
+     * $this->template->getConfigVars('my_var');
      * @param string $varname
      * @param bool $search_parents
      * @return string
@@ -334,6 +339,16 @@ class backend_model_template{
         return backend_model_smarty::getInstance()->getTemplateVars($varname, $_ptr, $search_parents);
     }
 
+    /**
+     * Get config directory
+     *
+     * @param mixed index of directory to get, null to get all
+     * @return array|string configuration directory
+     */
+    public function getConfigDir($index=null){
+        return backend_model_smarty::getInstance()->getConfigDir($index);
+    }
+
 	/**
 	 * Ajoute un ou plusieurs dossier de configuration et charge les fichiers associés ainsi que les variables
 	 * @access public
@@ -352,21 +367,26 @@ class backend_model_template{
 			foreach ($load_files as $row=>$val){
 				if(is_string($row)){
 					if(array_key_exists($row, $load_files)){
-						backend_model_smarty::getInstance()->configLoad(self::pathConfigLoad($row), $val);
+                        $this->configLoad($this->pathConfigLoad($row), $val);
 					}
 				}else{
-					backend_model_smarty::getInstance()->configLoad(self::pathConfigLoad($load_files[$row]));
+                    $this->configLoad($this->pathConfigLoad($load_files[$row]));
 				}
 			}
 		}else{
 			throw new Exception('Error: load_files is not array');
 		}
 		if($debug!=false){
-			$config_dir = backend_model_smarty::getInstance()->getConfigDir();
-			$firebug = new magixcjquery_debug_magixfire();
-			$firebug->magixFireDump('Config Dir', $config_dir);
-			$firebug->magixFireDump('Load Files in configdir', $load_files);
-			$firebug->magixFireDump('Config vars', backend_model_smarty::getInstance()->getConfigVars());
+			$config_dir = $this->getConfigDir();
+			print '<pre>';
+			var_dump($config_dir);
+            print '</pre>';
+            print '<pre>';
+            print_r($load_files);
+            print '</pre>';
+            print '<pre>';
+            print $this->getConfigVars();
+            print '</pre>';
 		}
 	}
 }

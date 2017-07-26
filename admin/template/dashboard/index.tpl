@@ -70,8 +70,8 @@
                         </a>
                     </h2>
                 </header>
-                {if is_array($getItemsEmployee) && !empty($getItemsEmployee)}
-                    {foreach $getItemsEmployee as $item}
+                {if is_array($employees) && !empty($employees)}
+                    {foreach $employees as $item}
                         {$title_admin = "title_"|cat:$item.title_admin}
                         <div>
                             <div class="row folder-box">
