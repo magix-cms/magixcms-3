@@ -10,17 +10,23 @@ class backend_db_about
             if($config['context'] === 'all' || $config['context'] === 'return') {
                 if ($config['type'] === 'info') {
                     $sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
-                }elseif($config['type'] === 'content'){
-
+                }
+                elseif($config['type'] === 'content') {
                     $sql = 'SELECT a.*
-                    FROM mc_about_data AS a
-                    JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
+                    		FROM mc_about_data AS a
+                    		JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
 
-                }elseif($config['type'] === 'op'){
-
+                }
+                elseif($config['type'] === 'op') {
                     $sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
                 }
-                //$params = $data;
+                elseif($config['type'] == 'languages') {
+                	$sql = "SELECT `name_lang` FROM `mc_lang`";
+				}
+                elseif($config['type'] == 'iso') {
+                	$sql = "SELECT `iso_lang` FROM `mc_lang`";
+				}
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 
             }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
@@ -29,7 +35,8 @@ class backend_db_about
                     //Return current skin
                     $sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
                     //$params = $data;
-                }elseif ($config['type'] === 'content') {
+                }
+                elseif ($config['type'] === 'content') {
                     $sql = 'SELECT * FROM `mc_about_data` WHERE `id_lang` = :id_lang';
                     $params = $data;
                 }
@@ -95,7 +102,8 @@ class backend_db_about
                         ':tva' 		=> $data['tva']
                     )
                 );
-            }elseif ($config['type'] === 'contact') {
+            }
+            elseif ($config['type'] === 'contact') {
                 // Update contact Data
                 $query = "UPDATE `mc_about`
 					SET `value_info` = CASE `name_info`
@@ -129,7 +137,19 @@ class backend_db_about
                     )
                 );
 
-            }elseif ($config['type'] === 'socials') {
+            }
+            elseif ($config['type'] === 'languages') {
+                // Update contact Data
+                $sql = "UPDATE `mc_about` SET `value_info` = :languages WHERE `name_info` = 'languages'";
+
+                component_routing_db::layer()->update($sql,
+					array(
+						':languages' => $data['languages']
+					)
+                );
+
+            }
+            elseif ($config['type'] === 'socials') {
                 // Update socials Data
 
                 $query = "UPDATE `mc_about`
@@ -152,7 +172,8 @@ class backend_db_about
                     )
                 );
 
-            }elseif ($config['type'] === 'content') {
+            }
+            elseif ($config['type'] === 'content') {
 
                 // Update text (root) Data
                 $sql = "UPDATE `mc_about_data`
@@ -171,7 +192,8 @@ class backend_db_about
                         ':id_lang' 	=> $data['id_lang']
                     )
                 );
-            }elseif ($config['type'] === 'enable_op') {
+            }
+            elseif ($config['type'] === 'enable_op') {
 
                 $query = "UPDATE mc_about SET value_info = :enable WHERE name_info = 'openinghours'";
 
@@ -181,7 +203,8 @@ class backend_db_about
                     )
                 );
 
-            }elseif ($config['type'] === 'openinghours') {
+            }
+            elseif ($config['type'] === 'openinghours') {
 
                 foreach ($data['specifications'] as $day => $opt) {
                     $query = "UPDATE `mc_about_op`

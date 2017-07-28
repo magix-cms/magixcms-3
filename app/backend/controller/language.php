@@ -65,7 +65,7 @@ class backend_controller_language extends backend_db_language{
     /**
      * @return array
      */
-    private function setCollection(){
+    public function setCollection(){
         return $this->arrayTools->defaultLanguage();
     }
 

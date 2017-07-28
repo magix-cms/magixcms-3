@@ -3,7 +3,7 @@ class backend_controller_about extends backend_db_about{
 
     public $edit, $action, $tabs, $search;
 
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $country, $language, $languages;
     public $content, $dataType, $refesh_lang, $enable_op, $send = array('openinghours' => '');
 
     /**
@@ -139,6 +139,9 @@ class backend_controller_about extends backend_db_about{
         $formClean = new form_inputEscape();
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
+        $this->language = new backend_controller_language();
+        $this->languages = $this->language->setCollection();
+        //var_dump($this->languages);
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -225,8 +228,8 @@ class backend_controller_about extends backend_db_about{
         if(http_request::isPost('company_socials')){
             $this->company['socials'] = $formClean->arrayClean($_POST['company_socials']);
         }
-        /* Opening Hours links edition */
 
+        /* Opening Hours links edition */
         if(http_request::isPost('enable_op')){
             $this->enable_op = '1';
         }else{
@@ -367,7 +370,9 @@ class backend_controller_about extends backend_db_about{
                         $this->company['contact'][$contact_info]['street'] = $about['street'];
                         $this->company['contact'][$contact_info]['postcode'] = $about['postcode'];
                         $this->company['contact'][$contact_info]['city'] = $about['city'];
-                    }else {
+                    } elseif ($contact_info == 'languages') {
+						$this->company['contact'][$contact_info] = $this->getActiveLang();
+					} else {
                         $this->company['contact'][$contact_info] = $about[$contact_info];
                     }
                 }
@@ -417,6 +422,53 @@ class backend_controller_about extends backend_db_about{
         return $newArr;
     }
 
+	/**
+	 *
+	 */
+	private function updateLanguages()
+	{
+		//$langs = parent::getIso();
+		$langs = $this->getItems('iso',null,'return');
+
+		$iso = array();
+		foreach ($langs as $lang) {
+			$iso[] = ucfirst($this->languages[$lang['iso_lang']]);
+		}
+
+		if(count($iso) > 1) {
+			$languages = implode(',',$iso);
+		} else {
+			$languages = $iso[0];
+		}
+
+		parent::update(
+			array(
+				'type'=>'languages'
+			),
+			array('languages' => $languages)
+		);
+		$this->header->set_json_headers();
+		$this->message->json_post_response(true, 'refresh_lang');
+	}
+
+	/**
+	 * @return array|string
+	 */
+	private function getActiveLang()
+	{
+		//$langs = parent::getLanguages();
+		$langs = $this->getItems('languages',null,'return');
+
+		$list = array();
+		foreach ($langs as $lang) {
+			$list[] = ucfirst($lang['name_lang']);
+		}
+
+		$langs = implode(', ',$list);
+
+		return $langs;
+	}
+
     /**
      *
      */
@@ -424,10 +476,15 @@ class backend_controller_about extends backend_db_about{
         if(isset($this->action)) {
             switch ($this->action) {
                 case 'edit':
-                    $this->save();
+                	if(isset($this->refesh_lang) && $this->refesh_lang) {
+						$this->updateLanguages();
+					} else {
+						$this->save();
+					}
                     break;
             }
-        }else{
+        }
+        else {
             $this->modelLanguage->getLanguage();
             $this->getTypes();
             $setInfoData = parent::fetchData(array('context'=>'all','type'=>'info'));
