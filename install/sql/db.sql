@@ -243,6 +243,7 @@ INSERT INTO `mc_about` (`id_info`, `name_info`, `value_info`) VALUES
 (NULL, 'mobile', NULL),
 (NULL, 'click_to_call', '1'),
 (NULL, 'fax', NULL),
+(NULL, 'languages', 'French'),
 (NULL, 'facebook', NULL),
 (NULL, 'twitter', NULL),
 (NULL, 'google', NULL),

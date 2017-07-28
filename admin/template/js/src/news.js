@@ -1,28 +1,6 @@
 var news = (function ($, undefined) {
     return {
         run: function(controller,iso){
-            /*$( ".ui-sortable" ).sortable({
-                items: "> tr",
-                cursor: "move",
-                axis: "y",
-                update: function(){
-                    var serial = $( ".ui-sortable" ).sortable('serialize');
-                    $.jmRequest({
-                        handler: "ajax",
-                        url: controller+'&action=order',
-                        method: 'POST',
-                        data : serial,
-                        success:function(e){
-                            $.jmRequest.initbox(e,{
-                                    display: false
-                                }
-                            );
-                        }
-                    });
-                    //return false;
-                }
-            });
-            $( ".ui-sortable" ).disableSelection();*/
             $('.date-input-picker').datetimepicker({
                 format: 'YYYY/MM/DD',
                 locale: iso,
@@ -37,6 +15,9 @@ var news = (function ($, undefined) {
                     close: 'fa fa-close'
                 }
             });
+
+        },
+        runEdit: function(controller){
             //Select input contain keyword (tags) separated by comma
             $('.tags-input + input[type="hidden"]').each(function(){
                 var tagsString = $(this).val().split(',');
@@ -55,7 +36,7 @@ var news = (function ($, undefined) {
                 datanames.initialize();
                 //select input for tagsinput
                 var idTags = $(this).prev().attr('id');
-
+                var idLang = $(this).prev().data('lang');
                 $('input#'+idTags).tagsinput({
                     typeaheadjs: [{
                         minLength: 1,
@@ -69,8 +50,27 @@ var news = (function ($, undefined) {
                     }],
                     freeInput: true
                 });
+                $('input#'+idTags).on('beforeItemRemove', function(event) {
+                    var tag = event.item;
+                    // Do some processing here
+                    if (!event.options || !event.options.preventPost) {
+                        $.jmRequest({
+                            handler: "ajax",
+                            url: controller+'&action=delete',
+                            method: 'POST',
+                            data: { 'name_tag': tag,'id': $('#id_news').val(), 'id_lang':idLang },
+                            resetForm:false,
+                            beforeSend:function(){},
+                            success:function(data) {
+                                $.jmRequest.initbox(data.notify, {
+                                    display: false
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
             });
-
         }
     }
 })(jQuery);

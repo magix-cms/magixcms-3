@@ -1,0 +1,65 @@
+/*
+ * Common rules for all pages
+ */
+html {
+    position: relative;
+    min-height: 100%;
+    background: #eff1f2;
+}
+
+body {
+    background-color: transparent;
+
+	@media (min-width: @screen-sm-min) {
+		main {
+			padding-top: @header-height;
+			height: ~"calc(100% - @{header-height})";
+
+			> .row:first-child {
+				height: 100%;
+			}
+		}
+	}
+}
+
+#content, #dashboard{
+	padding-bottom: 30px;
+}
+
+@media (min-width: @screen-sm-min) {
+	#content {
+		width: ~"calc(100% - @{siderbarWidth-sm})";
+	}
+
+	@media (min-width: @screen-lg-min) {
+		#content {
+			width: ~"calc(100% - @{siderbarWidth})";
+		}
+	}
+}
+
+.normalize-content;
+
+// --- Lead paragraphe
+.lead {
+    .title-font;
+}
+
+// --- All headings
+.headings({
+	.title-font;
+	font-weight: 400;
+});
+
+// Set selection style
+.text-select(@main-color);
+
+.no-gutter {
+	.row {
+		margin: 0;
+		> div {
+			padding: 0;
+			margin: 0;
+		}
+	}
+}

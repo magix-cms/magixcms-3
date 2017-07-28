@@ -2,7 +2,7 @@
 class backend_controller_news extends backend_db_news{
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent;
-    public $id_news,$content,$news,$img;
+    public $id_news,$content,$news,$img,$id_lang,$name_tag;
 
     public function __construct()
     {
@@ -60,6 +60,14 @@ class backend_controller_news extends backend_db_news{
         # ORDER PAGE
         if(http_request::isPost('news')){
             $this->order = $formClean->arrayClean($_POST['news']);
+        }
+
+        # REMOVE TAG
+        if (http_request::isPost('id_lang')) {
+            $this->id_lang = $formClean->simpleClean($_POST['id_lang']);
+        }
+        if (http_request::isPost('name_tag')) {
+            $this->name_tag = $formClean->simpleClean($_POST['name_tag']);
         }
     }
     /**
@@ -168,19 +176,6 @@ class backend_controller_news extends backend_db_news{
                     )
                 );
                 break;
-            case 'order':
-                $p = $this->order;
-                for ($i = 0; $i < count($p); $i++) {
-                    parent::update(
-                        array(
-                            'type'=>$data['type']
-                        ),array(
-                            'id_news'       => $p[$i],
-                            'order_news'    => $i
-                        )
-                    );
-                }
-                break;
         }
     }
     private function save()
@@ -209,6 +204,42 @@ class backend_controller_news extends backend_db_news{
                     'date_publish' => $datePublish,
                     'published_news' => $content['published_news']
                 ));
+                // Add Tags
+                if(!empty($content['tag_news'])) {
+                    $tagNews = explode(',', $content['tag_news']);
+                    if ($tagNews != null) {
+                        foreach ($tagNews as $key => $value) {
+                            $setTags = parent::fetchData(
+                                array('context' => 'unique', 'type' => 'tag'),
+                                array(':id_news' => $this->id_news, ':id_lang' => $lang, ':name_tag' => $value)
+                            );
+                            if ($setTags['id_tag'] != null) {
+                                if ($setTags['rel_tag'] == null) {
+                                    parent::insert(
+                                        array(
+                                            'type' => 'newTagRel'
+                                        ),
+                                        array(
+                                            'id_news'=> $this->id_news,
+                                            'id_tag' => $setTags['id_tag']
+                                        )
+                                    );
+                                }
+                            } else {
+                                parent::insert(
+                                    array(
+                                        'type' => 'newTagComb'
+                                    ),
+                                    array(
+                                        'id_news' => $this->id_news,
+                                        'id_lang' => $lang,
+                                        'name_tag'=> $value
+                                    )
+                                );
+                            }
+                        }
+                    }
+                }
 
                 $setEditData = parent::fetchData(
                     array('context' => 'all', 'type' => 'page'),
@@ -220,6 +251,51 @@ class backend_controller_news extends backend_db_news{
 
             $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', array('result' => $this->id_news, 'extend' => $extendData));
+
+        }else if (isset($this->content) && !isset($this->id_news)) {
+
+            parent::insert(
+                array(
+                    'type'=>'newPages'
+                )
+            );
+
+            $setNewData = parent::fetchData(
+                array('context' => 'unique', 'type' => 'root')
+            );
+
+            if ($setNewData['id_news']) {
+                foreach ($this->content as $lang => $content) {
+
+                    $content['published_pages'] = (!isset($content['published_news']) ? 0 : 1);
+                    $url_news = http_url::clean($content['name_news'],
+                        array(
+                            'dot' => false,
+                            'ampersand' => 'strict',
+                            'cspec' => '', 'rspec' => ''
+                        )
+                    );
+                    $dateFormat = new date_dateformat();
+                    $datePublish = !empty($content['date_publish']) ? $dateFormat->SQLDateTime($content['date_publish']) : $dateFormat->SQLDateTime($dateFormat->dateToDefaultFormat());
+                    parent::insert(
+                        array(
+                            'type' => 'newContent',
+                        ),
+                        array(
+                            'id_lang' => $lang,
+                            'id_news' => $setNewData['id_news'],
+                            'name_news' => $content['name_news'],
+                            'url_news' => $url_news,
+                            'content_news' => $content['content_news'],
+                            'date_publish' => $datePublish,
+                            'published_news' => $content['published_news']
+                        )
+                    );
+                }
+
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'add_redirect');
+            }
 
         }elseif(isset($this->img)){
             $data = parent::fetchData(array('context'=>'unique','type'=>'page'),array('id_news'=>$this->id_news));
@@ -265,6 +341,14 @@ class backend_controller_news extends backend_db_news{
     {
         if (isset($this->action)) {
             switch ($this->action) {
+                case 'add':
+                    if(isset($this->content)){
+                        $this->save();
+                    }else {
+                        $this->modelLanguage->getLanguage();
+                        $this->template->display('news/add.tpl');
+                    }
+                    break;
                 case 'edit':
                     if (isset($this->id_news)) {
                         $this->save();
@@ -277,6 +361,17 @@ class backend_controller_news extends backend_db_news{
                         $setEditData = $this->setItemData($setEditData);
                         $this->template->assign('page',$setEditData[$this->edit]);
                         $this->template->display('news/edit.tpl');
+                    }
+                    break;
+                case 'delete':
+                    if(isset($this->name_tag)) {
+                        $setTags = parent::fetchData(
+                            array('context' => 'unique', 'type' => 'tag'),
+                            array(':id_news' => $this->id_news, ':id_lang' => $this->id_lang, ':name_tag' => $this->name_tag)
+                        );
+                        if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
+                            parent::delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
+                        }
                     }
                     break;
             }

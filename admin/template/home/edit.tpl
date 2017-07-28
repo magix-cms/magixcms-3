@@ -8,7 +8,7 @@
 {block name='article:content'}
     {if {employee_access type="append" class_name=$cClass} eq 1}
     <div class="panels row">
-        <section class="panel col-xs-12 col-md-8">
+        <section class="panel col-ph-12">
             {if $debug}
                 {$debug}
             {/if}
@@ -21,9 +21,9 @@
                 </div>
                 {include file="language/brick/dropdown-lang.tpl"}
                 <div class="row">
-                    <form id="edit_home" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-10">
+                    <form id="edit_home" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-8">
                         <div class="row">
-                            <div class="col-xs-12 col-md-12">
+                            <div class="col-ph-12">
                             <div class="tab-content">
                                 {foreach $langs as $id => $iso}
                                     <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">

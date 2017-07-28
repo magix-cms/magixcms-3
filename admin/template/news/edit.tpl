@@ -71,6 +71,7 @@
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 news.run(controller,iso);
+                news.runEdit(controller);
             }
         });
     </script>

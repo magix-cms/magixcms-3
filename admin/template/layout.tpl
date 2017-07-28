@@ -26,45 +26,43 @@
 <body id="{block name='body:id'}layout{/block}">
 {block name="header"}{include file="section/header.tpl"}{/block}
 {block name="main"}
-    <main id="{block name='main:id'}page{/block}" class="container-fluid">
-        <div class="row">
-            {block name='article'}
-                {function cleanTextArea}
-                    {$field|escape:'html':'UTF-8':TRUE}
-                {/function}
-                {widget_plugins}
-                {*{cleanTextArea field=$s_content}*}
-                {function cleanTextarea}
-                    {$field|escape:'html':'UTF-8':TRUE}
-                {/function}
-                <div id="content" class="col-xs-12 col-sm-9 col-md-10 pull-right">
-                    <header>
-                        <button id="toggle-menu" type="button" class="open-menu navbar-toggle" data-target="#mobile-menu1">
-                            <span class="sr-only">{#toggleNavigation#|ucfirst}</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <button id="toggle-menu2" type="button" class="open-menu navbar-toggle pull-right" data-target="#mobile-menu2">
-                            <span class="sr-only">{#toggleNavigation#|ucfirst}</span>
-                            <span class="fa fa-cog"></span>
-                        </button>
-                        {block name='article:header'}{/block}
-                    </header>
-                    {block name='article:content'}
-                    {/block}
-                </div>
-            {/block}
+    <main id="{block name='main:id'}page{/block}">
+        {block name='article'}
+            {function cleanTextArea}
+                {$field|escape:'html':'UTF-8':TRUE}
+            {/function}
+            {widget_plugins}
+            {*{cleanTextArea field=$s_content}*}
+            {function cleanTextarea}
+                {$field|escape:'html':'UTF-8':TRUE}
+            {/function}
+            <div id="content" class="container-fluid pull-right">
+                <header>
+                    <button id="toggle-menu" type="button" class="open-menu navbar-toggle" data-target="#mobile-menu1">
+                        <span class="sr-only">{#toggleNavigation#|ucfirst}</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <button id="toggle-menu2" type="button" class="open-menu navbar-toggle pull-right" data-target="#mobile-menu2">
+                        <span class="sr-only">{#toggleNavigation#|ucfirst}</span>
+                        <span class="fa fa-cog"></span>
+                    </button>
+                    {block name='article:header'}{/block}
+                </header>
+                {block name='article:content'}
+                {/block}
+            </div>
+        {/block}
 
-            {block name="aside"}
-                <nav id="aside" class="hidden-xs">
-                    {block name='aside:content'}
-                        {include file="section/menu/section.tpl"}
-                    {/block}
-                </nav>
-            {/block}
-            {block name="article:after"}{/block}
-        </div>
+        {block name="aside"}
+            <nav id="aside" class="hidden-xs">
+                {block name='aside:content'}
+                    {include file="section/menu/section.tpl"}
+                {/block}
+            </nav>
+        {/block}
+        {block name="article:after"}{/block}
     </main>
 {/block}
 {block name="footer"}{include file="section/footer.tpl"}{/block}

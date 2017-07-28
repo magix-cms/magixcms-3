@@ -4,7 +4,7 @@ class backend_controller_about extends backend_db_about{
     public $edit, $action, $tabs, $search;
 
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
-    public $content, $dataType, $enable_op,$send = array('openinghours' => '');
+    public $content, $dataType, $refesh_lang, $enable_op, $send = array('openinghours' => '');
 
     /**
      * @var array, type of website allowed
@@ -35,6 +35,7 @@ class backend_controller_about extends backend_db_about{
             'label' => 'Personne physique'
         )
     );
+
     /**
      * @var array, Company informations
      */
@@ -58,7 +59,8 @@ class backend_controller_about extends backend_db_about{
                 'street' 		=> NULL,
                 'postcode' 		=> NULL,
                 'city' 			=> NULL
-            )
+            ),
+			'languages' => 'Français'
         ),
         'socials' => array(
             'facebook' 	=> NULL,
@@ -213,8 +215,13 @@ class backend_controller_about extends backend_db_about{
             }
             $this->content = $array;
         }
-        /* Socials links edition */
 
+		/* Languages about refreshing */
+		if(http_request::isPost('refesh_lang')){
+			$this->refesh_lang = true;
+		}
+
+		/* Socials links edition */
         if(http_request::isPost('company_socials')){
             $this->company['socials'] = $formClean->arrayClean($_POST['company_socials']);
         }

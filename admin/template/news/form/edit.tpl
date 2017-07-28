@@ -64,7 +64,7 @@
                         <div class="col-xs-12 col-sm-12">
                         <div class="form-group">
                             <label for="content[{$id}][tag_news]">{#news_tag#|ucfirst}Tags :</label>
-                            <input type="text" class="tags-input" value="{$page.content[{$id}].tags_news}" {*data-role="tagsinput"*} name="content[{$id}][tag_news]" id="tag-news-{$id}"/>
+                            <input type="text" class="tags-input" value="{$page.content[{$id}].tags_news}" data-lang="{$id}" {*data-role="tagsinput"*} name="content[{$id}][tag_news]" id="tag-news-{$id}"/>
                             <input type="hidden" id="auto-tag-{$id}" disabled="disabled" value="{$page.content[{$id}].tags}" />
                         </div>
                         </div>

@@ -15,7 +15,7 @@
             <span class="fa fa-pie-chart"></span> Statistiques
         </a>
     </li>
-    <li class="dropdown">
+    {*<li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-wrench"></span> Outils <span class="caret"></span>
         </a>
@@ -49,8 +49,8 @@
                 </li>
             {/if}
         </ul>
-    </li>
-    <li class="dropdown">
+    </li>*}
+    {*<li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-location-arrow"></span> Localisation <span class="caret"></span>
         </a>
@@ -70,8 +70,8 @@
                 </li>
             {/if}
         </ul>
-    </li>
-    <li class="dropdown">
+    </li>*}
+    {*<li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-star"></span> Accès rapide <span class="caret"></span>
         </a>
@@ -80,7 +80,7 @@
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
         </ul>
-    </li>
+    </li>*}
 </ul>
 <ul class="nav navbar-nav navbar-right">
     <li>

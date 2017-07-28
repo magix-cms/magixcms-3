@@ -1,0 +1,66 @@
+// Framework grid generation
+//
+// Used only by Bootstrap to generate the correct number of grid classes given
+// any value of `@grid-columns`.
+
+.make-grid-columns() {
+	[class*="col-"] {
+		position: relative;
+		// Prevent columns from collapsing when empty
+		min-height: 1px;
+		// Inner gutter via padding
+		padding-left: ceil((@grid-gutter-width / 2));
+		padding-right: floor((@grid-gutter-width / 2));
+		left: auto;
+		right: auto;
+	}
+}
+
+.calc-grid-column(@index, @class, @type) when (@type = width) and (@index > 0) {
+	.col-@{class}-@{index} {
+		.make-column(@class, @index);
+	}
+}
+
+.calc-grid-column(@index, @class, @type) when (@type = push) and (@index > 0) {
+	.push-@{class}-@{index} {
+		.make-column-push(@class, @index);
+	}
+}
+/*.calc-grid-column(@index, @class, @type) when (@type = push) and (@index = 0) {
+	.push-@{class}-0 {
+		left: auto;
+	}
+}*/
+
+.calc-grid-column(@index, @class, @type) when (@type = pull) and (@index > 0) {
+	.pull-@{class}-@{index} {
+		.make-column-pull(@class, @index);
+	}
+}
+/*.calc-grid-column(@index, @class, @type) when (@type = pull) and (@index = 0) {
+	.pull-@{class}-0 {
+		right: auto;
+	}
+}*/
+
+.calc-grid-column(@index, @class, @type) when (@type = offset) and (@index > 0) {
+	.offset-@{class}-@{index} {
+		.make-column-offset(@class, @index);
+	}
+}
+
+// Basic looping in LESS
+.loop-grid-columns(@index, @class, @type) when (@index >= 0) {
+	.calc-grid-column(@index, @class, @type);
+	// next iteration
+	.loop-grid-columns((@index - 1), @class, @type);
+}
+
+// Create grid for specific class
+.make-grid(@class) {
+	.loop-grid-columns(@grid-columns, @class, width);
+	.loop-grid-columns(@grid-columns, @class, pull);
+	.loop-grid-columns(@grid-columns, @class, push);
+	.loop-grid-columns(@grid-columns, @class, offset);
+}
