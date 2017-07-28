@@ -67,7 +67,7 @@
             {
                 console.log("about is not defined");
             }else{
-                about.run({baseadmin});
+                about.run(baseadmin);
             }
         });
     </script>

@@ -33,8 +33,9 @@ return array(
         '//libjs/vendor/globalize/message.js'
     ),
     'publiccss' => array(
-        '//'.PATHADMIN.'/template/css/bootstrap/critical.min.css',
-        '//'.PATHADMIN.'/template/css/bootstrap/bootstrap.min.css',
+        //'//'.PATHADMIN.'/template/css/bootstrap/critical.min.css',
+        //'//'.PATHADMIN.'/template/css/bootstrap/bootstrap.min.css',
+        '//'.PATHADMIN.'/template/css/src/style.min.css',
         '//'.PATHADMIN.'/template/css/bootstrap-toggle.min.css',
         '//'.PATHADMIN.'/template/css/fancybox/jquery.fancybox.min.css',
         '//'.PATHADMIN.'/template/css/bootstrap-tagsinput.css',

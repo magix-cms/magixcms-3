@@ -36,6 +36,16 @@
 {capture name="alert_message"}
     {#request_success_update#}
 {/capture}
+{case 'refresh_lang' break}
+{capture name="alert_type"}{strip}
+    success
+{/strip}{/capture}
+{capture name="icon"}{strip}
+    check
+{/strip}{/capture}
+{capture name="alert_message"}
+    {#request_success_refresh#}
+{/capture}
     {** Upload **}
 {case 'upload' break}
 {capture name="alert_type"}{strip}

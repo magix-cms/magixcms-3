@@ -20,11 +20,12 @@
         plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen colorpicker textpattern wordcount directionality',
-            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager'
+            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager',
+            'help'
         ],
         toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | fontsizeselect | forecolor backcolor',
-        toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media | link unlink anchor | code | preview',
-        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample',
+        toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media | link unlink anchor',
+        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample | code preview | help',
         imagetools_toolbar: "imageoptions",
         menubar: false,
         toolbar_items_size: 'small',

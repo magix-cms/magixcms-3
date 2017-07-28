@@ -69,7 +69,7 @@
         <button class="btn btn-main-theme" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
     </div>
 </form>
-<form action="{$smarty.server.REQUEST_URI}" id="info_language_form" method="post">
+<form action="{$smarty.server.REQUEST_URI}&action=edit" id="info_language_form" method="post" class="validate_form">
     <fieldset>
         <legend>{#lang_legend#|ucfirst}</legend>
         <p>{$companyData.contact.languages}</p>

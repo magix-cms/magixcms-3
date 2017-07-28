@@ -321,8 +321,12 @@ CREATE TABLE IF NOT EXISTS `mc_news_content` (
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_publish` timestamp NULL DEFAULT NULL,
   `published_news` smallint(1) unsigned DEFAULT '0',
-  PRIMARY KEY (`id_content`)
+  PRIMARY KEY (`id_content`),
+  KEY `id_news` (`id_news`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_news_content`
+  ADD CONSTRAINT `mc_news_content_ibfk_1` FOREIGN KEY (`id_news`) REFERENCES `mc_news` (`id_news`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_news_tag` (
   `id_tag` int(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -343,3 +347,10 @@ CREATE TABLE IF NOT EXISTS `mc_news_tag_rel` (
 ALTER TABLE `mc_news_tag_rel`
   ADD CONSTRAINT `mc_news_tag_rel_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `mc_news` (`id_news`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `mc_news_tag_rel_ibfk_1` FOREIGN KEY (`id_tag`) REFERENCES `mc_news_tag` (`id_tag`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_webservice` (
+  `id_ws` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `key_ws` varchar(125) DEFAULT NULL,
+  `status_ws` smallint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_ws`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

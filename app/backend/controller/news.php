@@ -194,16 +194,39 @@ class backend_controller_news extends backend_db_news{
                 }
                 $dateFormat = new date_dateformat();
                 $datePublish = !empty($content['date_publish']) ? $dateFormat->SQLDateTime($content['date_publish']) : $dateFormat->SQLDateTime($dateFormat->dateToDefaultFormat());
-                $this->upd(array(
-                    'type' => 'content',
-                    'id_lang' => $lang,
-                    'id_news' => $this->id_news,
-                    'name_news' => $content['name_news'],
-                    'url_news' => $content['url_news'],
-                    'content_news' => $content['content_news'],
-                    'date_publish' => $datePublish,
-                    'published_news' => $content['published_news']
-                ));
+                $checkLangData = parent::fetchData(
+                    array('context'=>'unique','type'=>'content'),
+                    array('id_news'=>$this->id_news,'id_lang'=>$lang)
+                );
+                // Check language page content
+                if($checkLangData!= null){
+                    $this->upd(array(
+                        'type' => 'content',
+                        'id_lang' => $lang,
+                        'id_news' => $this->id_news,
+                        'name_news' => $content['name_news'],
+                        'url_news' => $content['url_news'],
+                        'content_news' => $content['content_news'],
+                        'date_publish' => $datePublish,
+                        'published_news' => $content['published_news']
+                    ));
+                }else{
+                    parent::insert(
+                        array(
+                            'type' => 'newContent',
+                        ),
+                        array(
+                            'id_lang' => $lang,
+                            'id_news' => $this->id_news,
+                            'name_news' => $content['name_news'],
+                            'url_news' => $content['url_news'],
+                            'content_news' => $content['content_news'],
+                            'date_publish' => $datePublish,
+                            'published_news' => $content['published_news']
+                        )
+                    );
+                }
+
                 // Add Tags
                 if(!empty($content['tag_news'])) {
                     $tagNews = explode(',', $content['tag_news']);
@@ -267,7 +290,7 @@ class backend_controller_news extends backend_db_news{
             if ($setNewData['id_news']) {
                 foreach ($this->content as $lang => $content) {
 
-                    $content['published_pages'] = (!isset($content['published_news']) ? 0 : 1);
+                    $content['published_news'] = (!isset($content['published_news']) ? 0 : 1);
                     $url_news = http_url::clean($content['name_news'],
                         array(
                             'dot' => false,
@@ -335,6 +358,24 @@ class backend_controller_news extends backend_db_news{
         }
     }
     /**
+     * Insertion de données
+     * @param $data
+     */
+    private function del($data){
+        switch($data['type']){
+            case 'delPages':
+                parent::delete(
+                    array(
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'delete',$data['data']);
+                break;
+        }
+    }
+    /**
      *
      */
     public function run()
@@ -372,6 +413,16 @@ class backend_controller_news extends backend_db_news{
                         if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
                             parent::delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
                         }
+                    }
+                    elseif(isset($this->id_news)) {
+                        $this->del(
+                            array(
+                                'type'=>'delPages',
+                                'data'=>array(
+                                    'id' => $this->id_news
+                                )
+                            )
+                        );
                     }
                     break;
             }

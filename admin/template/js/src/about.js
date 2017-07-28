@@ -1,6 +1,30 @@
 var about = (function ($, undefined) {
     return {
-        run: function(){
+        run: function(baseadmin){
+            /*$('#info_language_form').validate({
+                onsubmit: true,
+                event: 'submit',
+                submitHandler: function(form) {
+                    $.jmRequest({
+                        handler: "submit",
+                        url: '/'+baseadmin+'/index.php?controller=about&action=edit',
+                        method: 'post',
+                        form: $(form),
+                        resetForm: false,
+                        successParams:function(d){
+                            if(d.result) {
+                                window.setTimeout(function() { $(".alert-success").alert('close'); }, 4000);
+                                $.jmRequest.notifier = { cssClass : '.mc-message' };
+                                $.jmRequest.initbox(d.notify,{
+                                    display:true
+                                });
+                            }
+                        }
+                    });
+                    return false;
+                }
+            });*/
+
             $('[data-toggle="popover"]').popover();
             $('[data-toggle="popover"]').click(function(e){
                 e.preventDefault(); return false;

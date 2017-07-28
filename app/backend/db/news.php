@@ -89,6 +89,11 @@ class backend_db_news
                     //Return current row
                     $sql = 'SELECT * FROM mc_news WHERE `id_news` = :id_news';
                     $params = $data;
+                }elseif ($config['type'] === 'content') {
+
+                    $sql = 'SELECT * FROM `mc_news_content` WHERE `id_news` = :id_news AND `id_lang` = :id_lang';
+                    $params = $data;
+
                 }elseif ($config['type'] === 'tag') {
                     $sql = 'SELECT tag.*, (SELECT id_rel FROM mc_news_tag_rel WHERE id_news = :id_news AND id_tag = tag.id_tag) AS rel_tag
                         FROM mc_news_tag AS tag
@@ -154,7 +159,7 @@ class backend_db_news
             if ($config['type'] === 'newPages') {
 
                 $sql = 'INSERT INTO `mc_news`(date_register) VALUE (NOW())';
-                component_routing_db::layer()->insert($sql);
+                component_routing_db::layer()->insert($sql,array());
 
             }elseif ($config['type'] === 'newContent') {
 
@@ -211,7 +216,10 @@ class backend_db_news
     public function delete($config,$data = false)
     {
         if (is_array($config)) {
-            if($config['type'] === 'tagRel'){
+            if($config['type'] === 'delPages'){
+                $sql = 'DELETE FROM mc_news WHERE id_news IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
+            } elseif($config['type'] === 'tagRel'){
                 $sql = 'DELETE FROM mc_news_tag_rel WHERE id_rel = :id_rel';
                 component_routing_db::layer()->delete($sql,array(':id_rel'=>$data['id_rel']));
             }

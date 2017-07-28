@@ -31,7 +31,6 @@ Ressources
 -----
  * https://github.com/Xarksass/CenterColumns
  * https://github.com/gtraxx/tinymce-plugin-youtube
- * https://github.com/gtraxx/tinymce-plugin-codehighlight
  * https://github.com/gtraxx/jimagine
  * https://github.com/trippo/ResponsiveFilemanager
  * http://www.tinymce.com/

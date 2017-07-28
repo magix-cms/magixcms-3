@@ -241,18 +241,40 @@ class backend_controller_pages extends backend_db_pages
                         )
                     );
                 }
-
-                $this->upd(array(
-                    'type'              => 'content',
-                    'id_lang'           => $lang,
-                    'id_pages'          => $this->id_pages,
-                    'name_pages'        => $content['name_pages'],
-                    'url_pages'         => $content['url_pages'],
-                    'content_pages'     => $content['content_pages'],
-                    'seo_title_pages'   => $content['seo_title_pages'],
-                    'seo_desc_pages'    => $content['seo_desc_pages'],
-                    'published_pages'   => $content['published_pages']
-                ));
+                $checkLangData = parent::fetchData(
+                    array('context'=>'unique','type'=>'content'),
+                    array('id_pages'=>$this->id_pages,'id_lang'=>$lang)
+                );
+                // Check language page content
+                if($checkLangData!= null){
+                    $this->upd(array(
+                        'type'              => 'content',
+                        'id_lang'           => $lang,
+                        'id_pages'          => $this->id_pages,
+                        'name_pages'        => $content['name_pages'],
+                        'url_pages'         => $content['url_pages'],
+                        'content_pages'     => $content['content_pages'],
+                        'seo_title_pages'   => $content['seo_title_pages'],
+                        'seo_desc_pages'    => $content['seo_desc_pages'],
+                        'published_pages'   => $content['published_pages']
+                    ));
+                }else{
+                    parent::insert(
+                        array(
+                            'type' => 'newContent',
+                        ),
+                        array(
+                            'id_lang'           => $lang,
+                            'id_pages'          => $this->id_pages,
+                            'name_pages'        => $content['name_pages'],
+                            'url_pages'         => $content['url_pages'],
+                            'content_pages'     => $content['content_pages'],
+                            'seo_title_pages'   => $content['seo_title_pages'],
+                            'seo_desc_pages'    => $content['seo_desc_pages'],
+                            'published_pages'   => $content['published_pages']
+                        )
+                    );
+                }
 
                 $setEditData = parent::fetchData(
                     array('context'=>'all','type'=>'page'),
