@@ -1,13 +1,3 @@
-(function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-		define( ["jquery", "../jquery.validate"], factory );
-	} else if (typeof module === "object" && module.exports) {
-		module.exports = factory( require( "jquery" ) );
-	} else {
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: HE (Hebrew; עברית)
@@ -31,5 +21,3 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "נא למלא ערך קטן או שווה ל- {0}" ),
 	min: $.validator.format( "נא למלא ערך גדול או שווה ל- {0}" )
 } );
-
-}));

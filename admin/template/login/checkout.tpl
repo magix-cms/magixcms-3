@@ -29,12 +29,13 @@
 
     function store(kpl) {
         // Store
-        console.log(kpl);
+        //console.log(kpl);
+        console.log(window.location);
         localStorage.setItem("m", kpl.m);
         localStorage.setItem("k", kpl.k);
         localStorage.setItem("t", kpl.t);
 
-        if(window.location.pathname == '/'+baseadmin+'/index.php?controller=login') {
+        if((window.location.pathname + window.location.search) == '/'+baseadmin+'/index.php?controller=login') {
             window.location.href = '/'+baseadmin+'/index.php?controller=dashboard';
         } else {
             window.location.reload();

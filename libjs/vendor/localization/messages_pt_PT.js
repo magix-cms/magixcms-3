@@ -1,13 +1,3 @@
-(function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-		define( ["jquery", "../jquery.validate"], factory );
-	} else if (typeof module === "object" && module.exports) {
-		module.exports = factory( require( "jquery" ) );
-	} else {
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: PT (Portuguese; português)
@@ -35,5 +25,3 @@ $.extend( $.validator.messages, {
 	nieES: "Por favor, introduza um NIE v&aacute;lido.",
 	cifES: "Por favor, introduza um CIF v&aacute;lido."
 } );
-
-}));

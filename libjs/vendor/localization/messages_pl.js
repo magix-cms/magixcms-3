@@ -1,13 +1,3 @@
-(function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-		define( ["jquery", "../jquery.validate"], factory );
-	} else if (typeof module === "object" && module.exports) {
-		module.exports = factory( require( "jquery" ) );
-	} else {
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: PL (Polish; język polski, polszczyzna)
@@ -24,6 +14,7 @@ $.extend( $.validator.messages, {
 	creditcard: "Proszę o podanie prawidłowej karty kredytowej.",
 	equalTo: "Proszę o podanie tej samej wartości ponownie.",
 	extension: "Proszę o podanie wartości z prawidłowym rozszerzeniem.",
+	nipPL: "Proszę o podanie prawidłowego numeru NIP.",
 	maxlength: $.validator.format( "Proszę o podanie nie więcej niż {0} znaków." ),
 	minlength: $.validator.format( "Proszę o podanie przynajmniej {0} znaków." ),
 	rangelength: $.validator.format( "Proszę o podanie wartości o długości od {0} do {1} znaków." ),
@@ -32,5 +23,3 @@ $.extend( $.validator.messages, {
 	min: $.validator.format( "Proszę o podanie wartości większej bądź równej {0}." ),
 	pattern: $.validator.format( "Pole zawiera niedozwolone znaki." )
 } );
-
-}));

@@ -1,13 +1,3 @@
-(function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-		define( ["jquery", "../jquery.validate"], factory );
-	} else if (typeof module === "object" && module.exports) {
-		module.exports = factory( require( "jquery" ) );
-	} else {
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: HY_AM (Armenian; հայերեն լեզու)
@@ -31,5 +21,3 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "Ներմուծեք թիվ, որը փոքր կամ հավասար է {0}֊ին" ),
 	min: $.validator.format( "Ներմուծեք թիվ, որը մեծ կամ հավասար է {0}֊ին" )
 } );
-
-}));

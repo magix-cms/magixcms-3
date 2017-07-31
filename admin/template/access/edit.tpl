@@ -29,11 +29,7 @@
                         {include file="access/form/info.tpl"}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="perms">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                {include file="access/form/list-form.tpl" controller="access" sub="perms" customClass="table-striped" data=$access id=$role.id_role}
-                            </div>
-                        </div>
+                        {include file="access/form/list-form.tpl" controller="access" sub="perms" customClass="table-striped" data=$access id=$role.id_role}
                     </div>
                 </div>
             </div>
