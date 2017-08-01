@@ -1,9 +1,9 @@
 {extends file="layout.tpl"}
-{block name='head:title'}{#edit_pages#|ucfirst}{/block}
-{block name='body:id'}pages{/block}
+{block name='head:title'}{#edit_category#|ucfirst}{/block}
+{block name='body:id'}catalog-category{/block}
 
 {block name='article:header'}
-    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des pages">{#pages#|ucfirst}</a></h1>
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des catégories">{#catalog_category#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="edit" class_name=$cClass} eq 1}
@@ -13,7 +13,7 @@
                 {$debug}
             {/if}
             <header class="panel-header panel-nav">
-                <h2 class="panel-heading h5">{#edit_pages#|ucfirst}</h2>
+                <h2 class="panel-heading h5">{#edit_category#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
                     <li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">{#image#}</a></li>
@@ -26,27 +26,27 @@
                 </div>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="general">
-                        {include file="pages/form/edit.tpl" controller="pages"}
+                        {include file="catalog/category/form/edit.tpl" controller="category"}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="image">
-                        {include file="pages/form/img.tpl" controller="pages"}
+                        {include file="catalog/category/form/img.tpl" controller="category"}
                         {*<pre>{$page|print_r}</pre>*}
                         <div class="row">
                             <div class="block-img">
                             {if $page.imgSrc != null}
-                            {include file="pages/brick/img.tpl"}
+                            {include file="catalog/category/brick/img.tpl"}
                             {/if}
                             </div>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">
                         <p class="text-right">
-                            {#nbr_pages#|ucfirst}: {$pagesChild|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&parent_id={$smarty.get.edit}" title="{#add_pages#}" class="btn btn-link">
-                                <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
+                            {#nbr_category#|ucfirst}: {$pagesChild|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&parent_id={$smarty.get.edit}" title="{#add_category#}" class="btn btn-link">
+                                <span class="fa fa-plus"></span> {#add_category#|ucfirst}
                             </a>
                         </p>
                         {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                        {include file="section/form/table-form-2.tpl" ajax_form=true idcolumn='id_pages' data=$pagesChild activation=true sortable=$sortable controller="pages"}
+                        {include file="section/form/table-form-2.tpl" ajax_form=true idcolumn='id_cat' data=$pagesChild activation=true sortable=$sortable controller="category"}
                     </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}

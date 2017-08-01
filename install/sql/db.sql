@@ -348,6 +348,34 @@ ALTER TABLE `mc_news_tag_rel`
   ADD CONSTRAINT `mc_news_tag_rel_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `mc_news` (`id_news`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `mc_news_tag_rel_ibfk_1` FOREIGN KEY (`id_tag`) REFERENCES `mc_news_tag` (`id_tag`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+CREATE TABLE IF NOT EXISTS `mc_catalog_cat` (
+  `id_cat` int(7) unsigned NOT NULL AUTO_INCREMENT,
+  `id_parent` int(7) unsigned DEFAULT NULL,
+  `img_cat` varchar(150) DEFAULT NULL,
+  `order_cat` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_cat`),
+  KEY `id_parent` (`id_parent`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_catalog_cat_content` (
+  `id_content` int(7) unsigned NOT NULL AUTO_INCREMENT,
+  `id_cat` int(7) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
+  `name_cat` varchar(150) NOT NULL,
+  `url_cat` varchar(150) NOT NULL,
+  `content_cat` text NOT NULL,
+  `published_cat` smallint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_content`),
+  KEY `id_cat` (`id_cat`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_catalog_cat`
+  ADD CONSTRAINT `mc_catalog_cat_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_catalog_cat` (`id_cat`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `mc_catalog_cat_content`
+  ADD CONSTRAINT `mc_catalog_cat_content_ibfk_1` FOREIGN KEY (`id_cat`) REFERENCES `mc_catalog_cat` (`id_cat`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 CREATE TABLE IF NOT EXISTS `mc_webservice` (
   `id_ws` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `key_ws` varchar(125) DEFAULT NULL,

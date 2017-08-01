@@ -4,7 +4,7 @@
         <div class="col-md-4">
             <figure class="thumbnail">
                 <div class="center-img">
-                    <img class="img-responsive" src="/upload/{$smarty.get.controller}/{$data.id}/{$value.img}" />
+                    <img class="img-responsive" src="/upload/{if isset($uploadDir)}{$uploadDir}{else}{$smarty.get.controller}{/if}/{$data.id}/{$value.img}" />
                 </div>
                 <figcaption>
                     <div class="desc">

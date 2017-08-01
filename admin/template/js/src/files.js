@@ -1,12 +1,13 @@
 var files = (function ($, undefined) {
     function initGen(){
-        var currentSelect = $('#attr_name option:selected').val();
+        var currentSelect = $('#module_name option:selected').val();
+        var subSelect = $('#attr_name option:selected').val();
         var progressBar = new ProgressBar('#progress-thumbnail',{loader: {type:'text', icon:'etc'}});
         $.jmRequest({
             handler: "ajax",
             url: $('#new_thumbnail').attr('action'),
             method: 'POST',
-            data: {attr_name: currentSelect},
+            data: {module_name: currentSelect,attr_name: subSelect},
             beforeSend: function () {
                 progressBar.init({progress: 5, state: 'Demande au serveur'});
             },

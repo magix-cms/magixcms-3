@@ -2,8 +2,8 @@
 class backend_controller_files extends backend_db_files{
     public $edit, $action, $tabs;
     public $id_config_img, $module_img,$attribute_img,$width_img,$height_img,$type_img,$resize_img;
-    protected $message, $template, $header, $data,$imagesComponent, $DBpages, $configCollection;
-    public $attr_name;
+    protected $message, $template, $header, $data,$imagesComponent, $DBpages,$DBnews,$DBcategory, $configCollection;
+    public $attr_name,$module_name;
 
     public function __construct()
     {
@@ -16,6 +16,7 @@ class backend_controller_files extends backend_db_files{
         $this->imagesComponent = new component_files_images($this->template);
         $this->DBpages = new backend_db_pages();
         $this->DBnews = new backend_db_news();
+        $this->DBcategory = new backend_db_category();
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -56,6 +57,9 @@ class backend_controller_files extends backend_db_files{
         // Thumbnail Manager
         if (http_request::isPost('attr_name')) {
             $this->attr_name = $formClean->simpleClean($_POST['attr_name']);
+        }
+        if (http_request::isPost('module_name')) {
+            $this->module_name = $formClean->simpleClean($_POST['module_name']);
         }
     }
     /**
@@ -148,14 +152,14 @@ class backend_controller_files extends backend_db_files{
                 case 'edit':
                     if(isset($this->id_config_img)){
                         $this->save();
-                    }elseif(isset($this->attr_name)){
-                        switch($this->attr_name){
+                    }elseif(isset($this->module_name)){
+                        switch($this->module_name){
                             case 'pages':
                                 $fetchImg = $this->DBpages->fetchData(array('context'=>'all','type'=>'img'));
                                 $this->imagesComponent->getThumbnailItems(array(
-                                    'type'              => $this->attr_name,
+                                    'type'              => $this->module_name,
                                     'upload_root_dir'   => 'upload/pages',
-                                    'module_img'        => $this->attr_name,
+                                    'module_img'        => $this->module_name,
                                     'attribute_img'     => 'page',
                                     'id'                =>'id_pages',
                                     'img'               =>'img_pages'
@@ -166,15 +170,34 @@ class backend_controller_files extends backend_db_files{
                             case 'news':
                                 $fetchImg = $this->DBnews->fetchData(array('context'=>'all','type'=>'img'));
                                 $this->imagesComponent->getThumbnailItems(array(
-                                    'type'              => $this->attr_name,
+                                    'type'              => $this->module_name,
                                     'upload_root_dir'   => 'upload/news',
-                                    'module_img'        => $this->attr_name,
+                                    'module_img'        => $this->module_name,
                                     'attribute_img'     => 'news',
                                     'id'                =>'id_news',
                                     'img'               =>'img_news'
                                 ),
                                     $fetchImg
                                 );
+                                break;
+                            case 'catalog':
+                                if(isset($this->attr_name) && !empty($this->attr_name)){
+                                    switch($this->attr_name){
+                                        case 'category':
+                                            $fetchImg = $this->DBcategory->fetchData(array('context'=>'all','type'=>'img'));
+                                            $this->imagesComponent->getThumbnailItems(array(
+                                                'type'              => $this->module_name,
+                                                'upload_root_dir'   => 'upload/catalog/c',
+                                                'module_img'        => $this->module_name,
+                                                'attribute_img'     => 'category',
+                                                'id'                =>'id_cat',
+                                                'img'               =>'img_cat'
+                                            ),
+                                                $fetchImg
+                                            );
+                                            break;
+                                    }
+                                }
                                 break;
                         }
                     }else{

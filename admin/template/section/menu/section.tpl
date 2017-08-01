@@ -36,18 +36,30 @@
                     <a href="{geturl}/{baseadmin}/index.php?controller=news">Listes des Actualités</a>
                 </li>
                 {if {employee_access type="append" class_name="backend_controller_pages"} eq 1}
-                    <li{if $smarty.get.controller == 'employee' && $smarty.get.action == 'add'} class="active"{/if}>
+                    <li{if $smarty.get.action == 'add'} class="active"{/if}>
                         <a href="{geturl}/{baseadmin}/index.php?controller=news&action=add">Ajouter une actualité</a>
                     </li>
                 {/if}
             </ul>
         </li>
     {/if}
-    <li class="{if $smarty.get.controller == 'catalog'} active{/if}">
+
+    <li class="has-submenu{if $smarty.get.controller == 'catalog' || $smarty.get.controller == 'category'} active{/if}">
         <a href="#">
             <span class="fa fa-shopping-cart"></span> {#root_catalog#}
         </a>
+        <ul class="nav list-unstyled">
+            <li{if $smarty.get.controller == 'category'} class="active"{/if}>
+                <a href="{geturl}/{baseadmin}/index.php?controller=category">Listes des categories</a>
+            </li>
+            {if {employee_access type="append" class_name="backend_controller_category"} eq 1}
+                <li{if $smarty.get.action == 'add'} class="active"{/if}>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=category&action=add">Ajouter une categorie</a>
+                </li>
+            {/if}
+        </ul>
     </li>
+
     <li><hr></li>
     <li class="{if $smarty.get.controller == 'about'}active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=about">

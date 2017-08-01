@@ -11,13 +11,23 @@
     </div>
     <form id="new_thumbnail" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="form-gen col-ph-12 col-sm-6 col-md-4">
         <div class="form-group">
-            <label for="attr_name">{#config_module_available#}</label>
-            <select name="attr_name" id="attr_name" class="form-control required" required>
+            <label for="module_name">{#config_module_available#}</label>
+            <select name="module_name" id="module_name" class="form-control has-optional-fields required" required>
                 <option value="">{#ph_config#|ucfirst}</option>
                 {foreach $setConfig as $key => $val}
-                    <option value="{$val.attr_name}">{#$val.attr_name#|ucfirst}</option>
+                    <option value="{$val.attr_name}" class="optional-field" data-target="{if $val.attr_name eq 'catalog'}#subcat{/if}">{#$val.attr_name#|ucfirst}</option>
                 {/foreach}
             </select>
+        </div>
+        <div id="subcat" class="additional-fields collapse">
+            <div class="form-group">
+                <label for="attr_name">{#config_attribute_available#}</label>
+                <select name="attr_name" id="attr_name" class="form-control has-optional-fields">
+                    <option value="" class="default" selected>{#ph_attribute#|ucfirst}</option>
+                    <option value="category">category</option>
+                    <option value="product">product</option>
+                </select>
+            </div>
         </div>
         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
     </form>
