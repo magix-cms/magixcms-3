@@ -48,6 +48,7 @@
         <a href="#">
             <span class="fa fa-shopping-cart"></span> {#root_catalog#}
         </a>
+        {if {employee_access type="view" class_name="backend_controller_category"} eq 1}
         <ul class="nav list-unstyled">
             <li{if $smarty.get.controller == 'category'} class="active"{/if}>
                 <a href="{geturl}/{baseadmin}/index.php?controller=category">Listes des categories</a>
@@ -58,6 +59,7 @@
                 </li>
             {/if}
         </ul>
+        {/if}
     </li>
 
     <li><hr></li>
