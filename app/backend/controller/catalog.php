@@ -1,0 +1,113 @@
+<?php
+class backend_controller_catalog extends backend_db_catalog {
+
+    public $edit, $action, $tabs, $search;
+
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
+    public $content;
+
+    /**
+     * backend_controller_catalog constructor.
+     */
+    public function __construct()
+    {
+        $this->template = new backend_model_template();
+        $this->message = new component_core_message($this->template);
+        $this->header = new http_header();
+        $this->data = new backend_model_data($this);
+        $formClean = new form_inputEscape();
+        $this->modelLanguage = new backend_model_language($this->template);
+        $this->collectionLanguage = new component_collections_language();
+        // --- GET
+        if (http_request::isGet('edit')) {
+            $this->edit = $formClean->numeric($_GET['edit']);
+        }
+        if (http_request::isGet('action')) {
+            $this->action = $formClean->simpleClean($_GET['action']);
+        } elseif (http_request::isPost('action')) {
+            $this->action = $formClean->simpleClean($_POST['action']);
+        }
+        if (http_request::isGet('tabs')) {
+            $this->tabs = $formClean->simpleClean($_GET['tabs']);
+        }
+
+        if (http_request::isPost('content')) {
+            $array = $_POST['content'];
+            foreach($array as $key => $arr) {
+                foreach($arr as $k => $v) {
+                    $array[$key][$k] = ($k == 'catalog_content') ? $formClean->cleanQuote($v) : $formClean->simpleClean($v);
+                }
+            }
+            $this->content = $array;
+        }
+    }
+
+    /**
+     * Assign data to the defined variable or return the data
+     * @param string $context
+     * @param string $type
+     * @param string|int|null $id
+     * @return mixed
+     */
+    private function getItems($type, $id = null, $context = null) {
+        return $this->data->getItems($type, $id, $context);
+    }
+    /**
+     * @return array
+     */
+    private function setItemsData(){
+        $data = parent::fetchData(array('context'=>'all','type'=>'content'));
+        $newArr = array();
+        foreach ($data as $item) {
+            $newArr[$item['id_lang']][$item['name_info']] = $item['value_info'];
+        }
+        return $newArr;
+    }
+
+    /**
+     * save data
+     */
+    private function save(){
+        if (isset($this->content)) {
+            foreach ($this->content as $lang => $content) {
+                if (parent::fetchData(array('context' => 'unique', 'type' => 'content'), array('id_lang' => $lang)) != null) {
+                    parent::update(array('type' => 'content'), array(
+                            'name' => $content['catalog_name'],
+                            'content' => $content['catalog_content'],
+                            'id_lang' => $lang
+                        )
+                    );
+                } else {
+                    parent::insert(array('type' => 'newContent'), array(
+                            'name' => $content['catalog_name'],
+                            'content' => $content['catalog_content'],
+                            'id_lang' => $lang
+                        )
+                    );
+                }
+            }
+
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true, 'update', $this->content);
+        }
+    }
+
+    /**
+     *
+     */
+    public function run(){
+        if(isset($this->action)) {
+            switch ($this->action) {
+                case 'edit':
+                    $this->save();
+                    break;
+            }
+        }
+        else {
+            $this->modelLanguage->getLanguage();
+            $this->template->assign('contentData',$this->setItemsData());
+            $this->template->display('catalog/index.tpl');
+        }
+    }
+}
+?>

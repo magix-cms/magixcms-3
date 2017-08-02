@@ -43,9 +43,9 @@
             </ul>
         </li>
     {/if}
-
-    <li class="has-submenu{if $smarty.get.controller == 'catalog' || $smarty.get.controller == 'category'} active{/if}">
-        <a href="#">
+    {if {employee_access type="view" class_name="backend_controller_catalog"} eq 1}
+    <li class="has-submenu{if $smarty.get.controller == 'catalog' || $smarty.get.controller == 'category' || $smarty.get.controller == 'product'} active{/if}">
+        <a href="{geturl}/{baseadmin}/index.php?controller=catalog">
             <span class="fa fa-shopping-cart"></span> {#root_catalog#}
         </a>
         {if {employee_access type="view" class_name="backend_controller_category"} eq 1}
@@ -58,10 +58,18 @@
                     <a href="{geturl}/{baseadmin}/index.php?controller=category&action=add">Ajouter une categorie</a>
                 </li>
             {/if}
+            <li{if $smarty.get.controller == 'product'} class="active"{/if}>
+                <a href="{geturl}/{baseadmin}/index.php?controller=product">Listes des produits</a>
+            </li>
+            {if {employee_access type="append" class_name="backend_controller_product"} eq 1}
+                <li{if $smarty.get.action == 'add'} class="active"{/if}>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=product&action=add">Ajouter un produit</a>
+                </li>
+            {/if}
         </ul>
         {/if}
     </li>
-
+    {/if}
     <li><hr></li>
     <li class="{if $smarty.get.controller == 'about'}active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=about">

@@ -18,8 +18,13 @@ if(http_request::isSession('keyuniqid_admin')) {
 }*/
 /*$members = new backend_controller_login();
 $members->checkout();*/
+$file_finder = new file_finder();
+$controllerFinder = $file_finder->scanDir(component_core_system::basePath().DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'controller');
+$funcBasenameFinder = function($value) {
+    return basename($value,'.php');
+};
 $template = new backend_model_template();
-$controllerCollection = array('dashboard','login','employee','access','language','country','domain','setting','files','testupload','about','home','pages','news','category','webservice','plugins');
+$controllerCollection = array_map($funcBasenameFinder,$controllerFinder);//array('dashboard','login','employee','access','language','country','domain','setting','files','testupload','about','home','pages','news','category','catalog','product','webservice','plugins');
 $formClean = new form_inputEscape();
 if(http_request::isGet('controller')){
     $controller_name = $formClean->simpleClean($_GET['controller']);

@@ -120,9 +120,11 @@ class component_routing_dispatcher{
                 $class =  new $controller_class;
                 if ($class instanceof $controller_class) {
                     return $class;
-                } /*else {
-                    throw new Exception('not instantiate the class: ' . $controller_class);
-                }*/
+                } else {
+                    //throw new Exception('not instantiate the class: ' . $controller_class);
+                    $logger = new debug_logger(MP_LOG_DIR);
+                    $logger->log('php', 'error', 'Not instantiate the class: : '.$controller_class , debug_logger::LOG_MONTH);
+                }
             }
         }catch(Exception $e) {
             $logger = new debug_logger(MP_LOG_DIR);
