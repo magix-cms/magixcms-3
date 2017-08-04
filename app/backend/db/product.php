@@ -8,13 +8,13 @@ class backend_db_product{
         if (is_array($config)) {
             if ($config['context'] === 'all' || $config['context'] === 'return') {
                 if ($config['type'] === 'pages') {
-                    $sql = "SELECT p.id_p, c.name_p, c.content_p, p.date_register, p.img_p
+                    $sql = "SELECT p.id_product, c.name_p, c.content_p, p.date_register
 								FROM mc_catalog_product AS p
-									JOIN mc_catalog_product_content AS c USING ( id_p )
+									JOIN mc_catalog_product_content AS c USING ( id_product )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 									WHERE c.id_lang = :default_lang
-									GROUP BY p.id_p 
-								ORDER BY p.id_p";
+									GROUP BY p.id_product 
+								ORDER BY p.id_product";
                     if (isset($config['search'])) {
                         $cond = '';
                         $config['search'] = array_filter($config['search']);
@@ -24,7 +24,7 @@ class backend_db_product{
                                 if ($q != '') {
                                     $cond .= 'AND ';
                                     switch ($key) {
-                                        case 'id_p':
+                                        case 'id_product':
                                         case 'published_p':
                                             $cond .= 'c.' . $key . ' = ' . $q . ' ';
                                             break;
@@ -40,17 +40,126 @@ class backend_db_product{
                                 }
                             }
 
-                            $sql = "SELECT p.id_p, c.name_p,c.content_p, p.date_register, p.img_p
+                            $sql = "SELECT p.id_product, c.name_p,c.content_p, p.date_register
 								FROM mc_catalog_product AS p
-									JOIN mc_catalog_product_content AS c USING ( id_p )
+									JOIN mc_catalog_product_content AS c USING ( id_product )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 									WHERE c.id_lang = :default_lang $cond
-									GROUP BY p.id_p 
-								ORDER BY p.id_p";
+									GROUP BY p.id_product 
+								ORDER BY p.id_product";
                         }
                     }
                     $params = $data;
+                }elseif ($config['type'] === 'page') {
+                    $sql = 'SELECT p.*,c.*,lang.*
+                        FROM mc_catalog_product AS p
+                        JOIN mc_catalog_product_content AS c USING(id_product)
+                        JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                        WHERE p.id_product = :edit';
+
+                    $params = $data;
+
+                }elseif ($config['type'] === 'images') {
+                    $sql = 'SELECT img.*
+                        FROM mc_catalog_product_img AS img
+                        WHERE img.id_product = :edit';
+
+                    $params = $data;
+
                 }
+                return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+            }elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
+
+                if ($config['type'] === 'root') {
+                    //Return current row
+                    $sql = 'SELECT * FROM mc_catalog_product ORDER BY id_product DESC LIMIT 0,1';
+                    //$params = $data;
+                } elseif ($config['type'] === 'content') {
+
+                    $sql = 'SELECT * FROM `mc_catalog_product_content` WHERE `id_product` = :id_product AND `id_lang` = :id_lang';
+                    $params = $data;
+
+                } elseif ($config['type'] === 'page') {
+                    //Return current row
+                    $sql = 'SELECT * FROM mc_catalog_product WHERE `id_product` = :id_product';
+                    $params = $data;
+                }
+
+                return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+            }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function update($config,$data = false)
+    {
+        if (is_array($config)) {
+            if ($config['type'] === 'product') {
+                $sql = 'UPDATE mc_catalog_product SET price_p = :price_p, reference_p = :reference_p
+                WHERE id_product = :id_product';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_product'	=> $data['id_product'],
+                        ':price_p'      => $data['price_p'],
+                        ':reference_p'  => $data['reference_p']
+                    )
+                );
+            }elseif ($config['type'] === 'content') {
+                $sql = 'UPDATE mc_catalog_product_content SET name_p = :name_p, url_p = :url_p, content_p = :content_p, published_p = :published_p
+                WHERE id_product = :id_product AND id_lang = :id_lang';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_lang'	    => $data['id_lang'],
+                        ':id_product'	=> $data['id_product'],
+                        ':name_p'       => $data['name_p'],
+                        ':url_p'        => $data['url_p'],
+                        ':content_p'    => $data['content_p'],
+                        ':published_p'  => $data['published_p']
+                    )
+                );
+            }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function insert($config,$data = false)
+    {
+        if (is_array($config)) {
+            if ($config['type'] === 'newPages') {
+                $sql = 'INSERT INTO `mc_catalog_product`(price_p,reference_p,date_register) 
+                VALUES (:price_p,:reference_p,NOW())';
+                component_routing_db::layer()->insert($sql,array(
+                    ':price_p'	        => $data['price_p'],
+                    ':reference_p'	    => $data['reference_p']
+                ));
+
+
+            }elseif ($config['type'] === 'newContent') {
+
+                $sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_cat,content_cat,published_cat) 
+				  VALUES (:id_product,:id_lang,:name_p,:url_cat,:content_cat,:published_cat)';
+
+                component_routing_db::layer()->insert($sql,array(
+                    ':id_lang'	    => $data['id_lang'],
+                    ':id_product'	=> $data['id_product'],
+                    ':name_p'       => $data['name_p'],
+                    ':url_p'        => $data['url_p'],
+                    ':content_p'    => $data['content_p'],
+                    ':published_p'  => $data['published_p']
+                ));
+            }elseif ($config['type'] === 'img') {
+                $sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img) 
+                VALUES (:id_product,:name_img)';
+                component_routing_db::layer()->insert($sql,array(
+                    ':id_product'	    => $data['id_product'],
+                    ':name_img'	        => $data['name_img']
+                ));
+
+
             }
         }
     }

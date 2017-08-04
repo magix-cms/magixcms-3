@@ -1,16 +1,9 @@
 {extends file="layout.tpl"}
-{block name="stylesheets" append}
-    {capture name="cssDatePicker"}{strip}
-        /{baseadmin}/min/?f=
-        {baseadmin}/template/css/bootstrap-datetimepicker.min.css
-    {/strip}{/capture}
-    {headlink rel="stylesheet" href=$smarty.capture.cssDatePicker media="screen"}
-{/block}
-{block name='head:title'}{#edit_news#|ucfirst}{/block}
-{block name='body:id'}news{/block}
+{block name='head:title'}{#edit_product#|ucfirst}{/block}
+{block name='body:id'}catalog-product{/block}
 
 {block name='article:header'}
-    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des actualités">{#news#|ucfirst}</a></h1>
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des produits">{#catalog_product#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="edit" class_name=$cClass} eq 1}
@@ -20,10 +13,11 @@
                 {$debug}
             {/if}
             <header class="panel-header panel-nav">
-                <h2 class="panel-heading h5">{#edit_news#|ucfirst}</h2>
+                <h2 class="panel-heading h5">{#edit_product#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
-                    <li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">{#image#}</a></li>
+                    <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>
+                    {*<li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>*}
                 </ul>
             </header>
             <div class="panel-body panel-body-form">
@@ -31,15 +25,15 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
-                    {*<pre>{$page|print_r}</pre>*}
                     <div role="tabpanel" class="tab-pane active" id="general">
-                        {include file="news/form/edit.tpl" controller="news"}
+                        {include file="catalog/product/form/edit.tpl" controller="product"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="image">
-                        {include file="news/form/img.tpl" controller="news"}
+                    <div role="tabpanel" class="tab-pane" id="images">
+                        {*<pre>{$images|print_r}</pre>*}
+                        {include file="catalog/product/form/img.tpl" controller="product"}
                         <div class="block-img">
-                            {if $page.imgSrc != null}
-                                {include file="news/brick/img.tpl"}
+                            {if $images != null}
+                                {include file="catalog/product/brick/img.tpl"}
                             {/if}
                         </div>
                     </div>
@@ -54,22 +48,19 @@
     {include file="section/footer/editor.tpl"}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
-        {baseadmin}/template/js/vendor/typeahead.bundle.js,
-        libjs/vendor/moment.min.js,
-        libjs/vendor/datetimepicker/{iso}.js,
-        libjs/vendor/bootstrap-datetimepicker.min.js,
-        {baseadmin}/template/js/news.min.js
+        libjs/vendor/progressBar.min.js,
+        {baseadmin}/template/js/product.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
+
     <script type="text/javascript">
         $(function(){
-            if (typeof news == "undefined")
+            if (typeof product == "undefined")
             {
-                console.log("news is not defined");
+                console.log("product is not defined");
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                news.run(controller,iso);
-                news.runEdit(controller);
+                product.run(controller);
             }
         });
     </script>

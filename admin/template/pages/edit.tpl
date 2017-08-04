@@ -31,12 +31,10 @@
                     <div role="tabpanel" class="tab-pane" id="image">
                         {include file="pages/form/img.tpl" controller="pages"}
                         {*<pre>{$page|print_r}</pre>*}
-                        <div class="row">
-                            <div class="block-img">
+                        <div class="block-img">
                             {if $page.imgSrc != null}
-                            {include file="pages/brick/img.tpl"}
+                                {include file="pages/brick/img.tpl"}
                             {/if}
-                            </div>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">

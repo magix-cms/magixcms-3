@@ -31,12 +31,10 @@
                     <div role="tabpanel" class="tab-pane" id="image">
                         {include file="catalog/category/form/img.tpl" controller="category"}
                         {*<pre>{$page|print_r}</pre>*}
-                        <div class="row">
-                            <div class="block-img">
+                        <div class="block-img">
                             {if $page.imgSrc != null}
-                            {include file="catalog/category/brick/img.tpl"}
+                                {include file="catalog/category/brick/img.tpl"}
                             {/if}
-                            </div>
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">
@@ -60,17 +58,17 @@
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         libjs/vendor/jquery-ui-1.12.min.js,
-        {baseadmin}/template/js/pages.min.js
+        {baseadmin}/template/js/category.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
-            if (typeof pages == "undefined")
+            if (typeof category == "undefined")
             {
-                console.log("pages is not defined");
+                console.log("category is not defined");
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                pages.run(controller);
+                category.run(controller);
             }
         });
     </script>

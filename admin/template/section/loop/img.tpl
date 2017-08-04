@@ -1,4 +1,5 @@
 {if isset($data) && !empty($data)}
+    <div class="row">
     {foreach $data.imgSrc as $key => $value}
         {if $key != 'original'}
         <div class="col-md-4">
@@ -15,4 +16,5 @@
         </div>
         {/if}
     {/foreach}
+    </div>
 {/if}

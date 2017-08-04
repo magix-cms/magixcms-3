@@ -78,10 +78,12 @@
                     console.error("Internal Server Error");
                 }
             },
+            processData: true,
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             async: true,
             cache: false,
             dataFilter: false,//function (response) {},
-            beforeSend: function(){},
+            beforeSend: false,
             xhr: false,
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log(xhr);
@@ -111,12 +113,26 @@
                     url: opt.url,
                     dataType: opt.dataType,
                     statusCode: opt.statusCode,
+                    processData:opt.processData,
+                    contentType:opt.contentType,
                     async: opt.async,
                     cache: opt.cache,
                     data: opt.data,
                     beforeSend: opt.beforeSend,
                     success: opt.success
                 };
+                if(opt.dataType){
+                    ajaxParams.dataType = opt.dataType;
+                }
+                if(opt.async){
+                    ajaxParams.async = opt.async;
+                }
+                /*if(opt.processData){
+                    ajaxParams.processData = opt.processData;
+                }
+                if(opt.contentType){
+                    ajaxParams.contentType = opt.contentType;
+                }*/
                 if(opt.dataFilter){
                     ajaxParams.dataFilter = opt.dataFilter;
                 }
@@ -129,7 +145,11 @@
                 if(opt.complete){
                     ajaxParams.complete = opt.complete;
                 }
-
+                if(opt.debug == true) {
+                    if( console && console.log ) {
+                        console.log(ajaxParams);
+                    }
+                }
                 $.ajax(ajaxParams).done(function ( data ) {
                     if(opt.debug == true){
                         if( console && console.log ) {
