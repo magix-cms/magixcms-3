@@ -15,8 +15,8 @@
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_product#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
-                    <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>
+                    <li role="presentation"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
+                    <li role="presentation" class="active"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>
                     {*<li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>*}
                 </ul>
             </header>
@@ -25,13 +25,13 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="general">
+                    <div role="tabpanel" class="tab-pane" id="general">
                         {include file="catalog/product/form/edit.tpl" controller="product"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="images">
+                    <div role="tabpanel" class="tab-pane active" id="images">
                         {*<pre>{$images|print_r}</pre>*}
                         {include file="catalog/product/form/img.tpl" controller="product"}
-                        <div class="block-img">
+                        <div id="gallery-product" class="block-img">
                             {if $images != null}
                                 {include file="catalog/product/brick/img.tpl"}
                             {/if}
@@ -42,12 +42,14 @@
             </div>
         </section>
     </div>
+        {include file="modal/delete.tpl" data_type='product' title={#modal_delete_title#|ucfirst} info_text=true delete_message={#delete_img_message#}}
     {/if}
 {/block}
 {block name="foot" append}
     {include file="section/footer/editor.tpl"}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
+        libjs/vendor/jquery-ui-1.12.min.js,
         libjs/vendor/progressBar.min.js,
         {baseadmin}/template/js/product.min.js
     {/strip}{/capture}
@@ -62,6 +64,9 @@
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 product.run(controller);
             }
+
+            $( ".row.sortable" ).sortable();
+            $( ".row.sortable" ).disableSelection();
         });
     </script>
 {/block}

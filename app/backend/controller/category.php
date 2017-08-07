@@ -331,7 +331,7 @@ class backend_controller_category extends backend_db_category {
     }
 
     /**
-     * Insertion de données
+     * Remove product
      * @param $data
      */
     private function del($data){

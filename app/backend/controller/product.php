@@ -5,7 +5,7 @@ class backend_controller_product extends backend_db_product
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent;
 
-    public $id_product,$parent_id,$content,$productData,$img_multiple;
+    public $id_product, $id_img,$parent_id,$content,$productData, $imgData,$img_multiple, $editimg;
 
     /**
      * backend_controller_catalog constructor.
@@ -30,9 +30,15 @@ class backend_controller_product extends backend_db_product
         } elseif (http_request::isPost('action')) {
             $this->action = $formClean->simpleClean($_POST['action']);
         }
+        if (http_request::isGet('editimg')) {
+            $this->editimg = $formClean->numeric($_GET['editimg']);
+        }
         // --- ADD or EDIT
         if (http_request::isPost('id')) {
             $this->id_product = $formClean->simpleClean($_POST['id']);
+        }
+        if (http_request::isPost('id_img')) {
+            $this->id_img = $formClean->simpleClean($_POST['id_img']);
         }
         if(http_request::isPost('productData')){
             $this->productData = $formClean->arrayClean($_POST['productData']);
@@ -49,6 +55,10 @@ class backend_controller_product extends backend_db_product
         if(isset($_FILES['img_multiple']["name"])){
             $this->img_multiple = ($_FILES['img_multiple']["name"]);
         }
+        if(http_request::isPost('imgData')){
+            $this->imgData = $formClean->arrayClean($_POST['imgData']);
+        }
+
     }
     /**
      * Assign data to the defined variable or return the data
@@ -111,6 +121,7 @@ class backend_controller_product extends backend_db_product
         return $arr;
     }
 
+
     /**
      * Mise a jour des données
      * @param $data
@@ -134,12 +145,23 @@ class backend_controller_product extends backend_db_product
                     array(
                         'type'=>$data['type']
                     ),array(
-                        'id_lang'	     => $data['id_lang'],
-                        'id_product'	 => $data['id_product'],
+                        'id_lang'	   => $data['id_lang'],
+                        'id_product'   => $data['id_product'],
                         'name_p'       => $data['name_p'],
                         'url_p'        => $data['url_p'],
                         'content_p'    => $data['content_p'],
                         'published_p'  => $data['published_p']
+                    )
+                );
+                break;
+            case 'img':
+                parent::update(
+                    array(
+                        'type'          =>  $data['type']
+                    ),array(
+                        'id_img'	    => $data['id_img'],
+                        'alt_img'       => !empty($data['alt_img']) ? $data['alt_img'] : NULL,
+                        'reference_p'   => !empty($data['title_img']) ? $data['title_img'] : NULL
                     )
                 );
                 break;
@@ -209,6 +231,52 @@ class backend_controller_product extends backend_db_product
             $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', array('result' => $this->id_product, 'extend' => $extendData));
 
+        }else if (isset($this->content) && !isset($this->id_product)) {
+
+            parent::insert(
+                array(
+                    'type'=>'newPages'
+                ),
+                array(
+                    'price_p'       => $this->productData['price'],
+                    'reference_p'   => $this->productData['reference']
+                )
+            );
+            $setNewData = parent::fetchData(
+                array('context' => 'unique', 'type' => 'root')
+            );
+
+            foreach ($this->content as $lang => $content) {
+
+                $content['published_p'] = (!isset($content['published_p']) ? 0 : 1);
+                if (empty($content['url_p'])) {
+                    $content['url_p'] = http_url::clean($content['name_p'],
+                        array(
+                            'dot' => false,
+                            'ampersand' => 'strict',
+                            'cspec' => '', 'rspec' => ''
+                        )
+                    );
+                }
+
+                parent::insert(
+                    array(
+                        'type' => 'newContent',
+                    ),
+                    array(
+                        'id_lang'       => $lang,
+                        'id_product'    => $setNewData['id_product'],
+                        'name_p'        => $content['name_p'],
+                        'url_p'         => $content['url_p'],
+                        'content_p'     => $content['content_p'],
+                        'published_p'   => $content['published_p']
+                    )
+                );
+            }
+
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true,'add_redirect');
+
         }else if(isset($this->img_multiple)){
             $this->template->configLoad();
             usleep(200000);
@@ -270,6 +338,34 @@ class backend_controller_product extends backend_db_product
                 usleep(200000);
                 $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'),'progress' => 100,'status' => 'error','error_code' => 'error_data'));
             }
+        }else if(isset($this->id_img)){
+            $this->upd(array(
+                'type'          => 'img',
+                'id_img'        => $this->id_img,
+                'alt_img'       => $this->imgData['alt_img'],
+                'title_img'     => $this->imgData['title_img']
+            ));
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true,'add_redirect');
+        }
+    }
+
+    /**
+     * Remove product
+     * @param $data
+     */
+    private function del($data){
+        switch($data['type']){
+            case 'delPages':
+                parent::delete(
+                    array(
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'delete',$data['data']);
+                break;
         }
     }
     /**
@@ -278,10 +374,30 @@ class backend_controller_product extends backend_db_product
     public function run(){
         if(isset($this->action)) {
             switch ($this->action) {
+                case 'add':
+                    if(isset($this->content)){
+                        $this->save();
+                    }else{
+                        $this->modelLanguage->getLanguage();
+                        $this->template->display('catalog/product/add.tpl');
+                    }
+
+                    break;
                 case 'edit':
                     if (isset($this->id_product)) {
                         $this->save();
-                    } else {
+                    } elseif(isset($this->editimg)){
+                        if(isset($this->id_img)){
+                            $this->save();
+                        }else{
+                            $setEditImg = parent::fetchData(
+                                array('context' => 'unique', 'type' => 'img'),
+                                array(':editimg' => $this->editimg)
+                            );
+                            $this->template->assign('img', $setEditImg);
+                            $this->template->display('catalog/product/edit-img.tpl');
+                        }
+                    }else {
                         $this->modelLanguage->getLanguage();
                         $setEditData = parent::fetchData(
                             array('context' => 'all', 'type' => 'page'),
@@ -297,6 +413,18 @@ class backend_controller_product extends backend_db_product
 
                         $this->template->assign('images', $setImagesData);
                         $this->template->display('catalog/product/edit.tpl');
+                    }
+                    break;
+                case 'delete':
+                    if(isset($this->id_product)) {
+                        $this->del(
+                            array(
+                                'type'=>'delPages',
+                                'data'=>array(
+                                    'id' => $this->id_product
+                                )
+                            )
+                        );
                     }
                     break;
             }

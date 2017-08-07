@@ -85,6 +85,12 @@ class backend_db_product{
                     $params = $data;
                 }
 
+                elseif ($config['type'] === 'img') {
+                    //Return current row
+                    $sql = 'SELECT * FROM mc_catalog_product_img WHERE `id_img` = :editimg';
+                    $params = $data;
+                }
+
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }
         }
@@ -119,6 +125,18 @@ class backend_db_product{
                         ':published_p'  => $data['published_p']
                     )
                 );
+            }elseif ($config['type'] === 'img') {
+
+                $sql = 'UPDATE mc_catalog_product_img SET alt_img = :alt_img, title_img = :title_img
+                WHERE id_img = :id_img';
+
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_img'	    => $data['id_img'],
+                        ':alt_img'      => $data['alt_img'],
+                        ':title_img'    => $data['title_img']
+                    )
+                );
             }
         }
     }
@@ -140,8 +158,8 @@ class backend_db_product{
 
             }elseif ($config['type'] === 'newContent') {
 
-                $sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_cat,content_cat,published_cat) 
-				  VALUES (:id_product,:id_lang,:name_p,:url_cat,:content_cat,:published_cat)';
+                $sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_p,content_p,published_p) 
+				  VALUES (:id_product,:id_lang,:name_p,:url_p,:content_p,:published_p)';
 
                 component_routing_db::layer()->insert($sql,array(
                     ':id_lang'	    => $data['id_lang'],
@@ -160,6 +178,19 @@ class backend_db_product{
                 ));
 
 
+            }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function delete($config,$data = false)
+    {
+        if (is_array($config)) {
+            if($config['type'] === 'delPages'){
+                $sql = 'DELETE FROM mc_catalog_product WHERE id_product IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
             }
         }
     }

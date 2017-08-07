@@ -35,10 +35,11 @@
         localStorage.setItem("k", kpl.k);
         localStorage.setItem("t", kpl.t);
 
-        if((window.location.pathname + window.location.search) == '/'+baseadmin+'/index.php?controller=login') {
+        if((window.location.pathname + window.location.search) == '/'+baseadmin+'/index.php?controller=login' || (window.location.pathname + window.location.search) == '/'+baseadmin+'/') {
             window.location.href = '/'+baseadmin+'/index.php?controller=dashboard';
         } else {
-            window.location.reload();
+            //window.location.reload();
+            console.log(window.location);
         }
     }
 
