@@ -21,6 +21,7 @@ return array(
         '//libjs/vendor/jquery.validate.1.17.0.min.js',
         '//'.PATHADMIN.'/template/js/vendor/jquery.fancybox.min.js',
         '//'.PATHADMIN.'/template/js/vendor/bootstrap-tagsinput.js',
+        '//'.PATHADMIN.'/template/js/fancybox.init.min.js',
         '//libjs/vendor/redirect.min.js'
     ),
 	'jimagine' => array(

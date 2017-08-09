@@ -2,7 +2,7 @@
     <div class="row sortable">
     {foreach $data as $key => $value}
         <div class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
-            <input type="checkbox" name="img[{$value.id_img}]" id="img[{$value.id_img}]">
+            <input type="checkbox" name="img[{$value.id_img}]" id="image[]" value="{$value.id_img}">
             <label for="img[{$value.id_img}]">
                 <figure>
                     <div class="center-img">
@@ -26,7 +26,7 @@
             <div class="btn-group actions btn-group-justified" role="group">
                 <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$value.id_product}&editimg={$value.id_img}" type="button" class="btn btn-default"><span class="fa fa-pencil-square-o"></span></a>
                 <a type="button" class="btn btn-default img-zoom" href="/upload/{if isset($uploadDir)}{$uploadDir}{else}{$smarty.get.controller}{/if}/{$value.id_product}/l_{$value.name_img}"><span class="fa fa-search-plus"></span></a>
-                <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=delete&editimg={$value.id_img}" type="button" class="btn btn-default action_on_record modal_action"><span class="fa fa-trash"></span></a>
+                <a href="#" type="button" class="btn btn-default action_on_record modal_action" data-id="{$value.id_img}" data-controller="product" data-sub="image" data-target="#delete_modal"><span class="fa fa-trash"></span></a>
             </div>
         </div>
     {/foreach}

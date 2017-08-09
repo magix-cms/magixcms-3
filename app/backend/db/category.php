@@ -118,6 +118,26 @@ class backend_db_category
                 }elseif ($config['type'] === 'img') {
                     $sql = 'SELECT p.id_cat, p.img_cat
                         FROM mc_catalog_cat AS p WHERE p.img_cat IS NOT NULL';
+
+                }elseif ($config['type'] === 'catRoot') {
+
+                    $sql = 'SELECT c.id_parent,c.id_cat, cont.name_cat, cc.id_parent AS parent_id
+                    FROM mc_catalog_cat AS c
+                    LEFT JOIN mc_catalog_cat AS cc ON ( cc.id_parent = c.id_cat )
+                    LEFT JOIN mc_catalog_cat_content AS cont ON ( c.id_cat = cont.id_cat )
+                    LEFT JOIN mc_lang AS lang ON ( cont.id_lang = lang.id_lang )
+                    WHERE cont.id_lang = :default_lang AND c.id_parent IS NULL';
+                    $params = $data;
+
+                }elseif ($config['type'] === 'catalog') {
+
+                    $sql = 'SELECT catalog.id_catalog, catalog.id_product, p_cont.name_p, catalog.order_p, lang.id_lang,lang.iso_lang
+                    FROM mc_catalog AS catalog
+                    JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
+                    JOIN mc_catalog_product_content AS p_cont ON ( p_cont.id_product = p.id_product )
+                    JOIN mc_lang AS lang ON ( p_cont.id_lang = lang.id_lang ) 
+                    WHERE catalog.id_cat = :id_cat AND p_cont.id_lang = :default_lang';
+                    $params = $data;
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             }elseif ($config['context'] === 'unique' || $config['context'] === 'last') {

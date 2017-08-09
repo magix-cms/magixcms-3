@@ -17,7 +17,7 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
                     <li role="presentation" class="active"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>
-                    {*<li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>*}
+                    <li role="presentation"><a href="#cat" aria-controls="cat" role="tab" data-toggle="tab">categories</a></li>
                 </ul>
             </header>
             <div class="panel-body panel-body-form">
@@ -37,6 +37,19 @@
                             {/if}
                         </div>
                     </div>
+                    <div role="tabpanel" class="tab-pane" id="cat">
+                        <ul class="list-unstyled">
+                        {foreach $catRoot as $cat}
+                            <li>
+                            {$cat.name_cat}
+                            {if $cat.parent_id != NULL}
+                            <a class="tree-toggle" type="button" data-toggle="collapse" href="#csc-{$cat.id_cat}" aria-expanded="false" aria-controls="csc-{$cat.id_cat}"><span class="fa fa-plus-square"></span></a>
+                            <div id="csc-{$cat.id_cat}" class="cat-tree collapse"></div>
+                            {/if}
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}
             </div>
@@ -51,12 +64,19 @@
         /{baseadmin}/min/?f=
         libjs/vendor/jquery-ui-1.12.min.js,
         libjs/vendor/progressBar.min.js,
+        {baseadmin}/template/js/table-form.min.js,
         {baseadmin}/template/js/product.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
 
     <script type="text/javascript">
         $(function(){
+            if (typeof tableForm == "undefined")
+            {
+                console.log("tableForm is not defined");
+            }else{
+                tableForm.run();
+            }
             if (typeof product == "undefined")
             {
                 console.log("product is not defined");
@@ -64,9 +84,6 @@
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 product.run(controller);
             }
-
-            $( ".row.sortable" ).sortable();
-            $( ".row.sortable" ).disableSelection();
         });
     </script>
 {/block}

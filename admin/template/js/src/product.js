@@ -1,4 +1,15 @@
 var product = (function ($, undefined) {
+    function tree(){
+        $('a.tree-toggle').click(function(){
+            var target = $($(this).data('target'));
+            if($(this).hasClass('open') || $(target).hasClass('collapse in')){
+                $(this).removeClass('open').children('span').removeClass('fa-minus-square').addClass('fa-plus-square');
+            }else{
+                $(this).addClass('open').children('span').removeClass('fa-plus-square').addClass('fa-minus-square');
+            }
+        });
+    }
+
     function initGen(fd){
 
         var progressBar = new ProgressBar('#progress-thumbnail',{loader: {type:'text', icon:'etc'}});
@@ -80,6 +91,67 @@ var product = (function ($, undefined) {
                 initGen(fd);
                 return false;
             });
+
+            $( ".row.sortable" ).sortable();
+            $( ".row.sortable" ).disableSelection();
+
+            var dropZoneId = "drop-zone";
+            var buttonId = "clickHere";
+            var mouseOverClass = "mouse-over";
+            var btnSend = $("#" + dropZoneId).find('button[type="submit"]');
+
+            var dropZone = $("#" + dropZoneId);
+            var ooleft = dropZone.offset().left;
+            var ooright = dropZone.outerWidth() + ooleft;
+            var ootop = dropZone.offset().top;
+            var oobottom = dropZone.outerHeight() + ootop;
+            var inputFile = dropZone.find("input");
+            document.getElementById(dropZoneId).addEventListener("dragover", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.addClass(mouseOverClass);
+                var x = e.pageX;
+                var y = e.pageY;
+
+                if (!(x < ooleft || x > ooright || y < ootop || y > oobottom)) {
+                    inputFile.offset({ top: y - 15, left: x - 100 });
+                } else {
+                    inputFile.offset({ top: -400, left: -400 });
+                }
+
+            }, true);
+
+            if (buttonId != "") {
+                var clickZone = $("#" + buttonId);
+
+                var oleft = clickZone.offset().left;
+                var oright = clickZone.outerWidth() + oleft;
+                var otop = clickZone.offset().top;
+                var obottom = clickZone.outerHeight() + otop;
+
+                $("#" + buttonId).mousemove(function (e) {
+                    var x = e.pageX;
+                    var y = e.pageY;
+                    if (!(x < oleft || x > oright || y < otop || y > obottom)) {
+                        inputFile.offset({ top: y - 15, left: x - 160 });
+                    } else {
+                        inputFile.offset({ top: -400, left: -400 });
+                    }
+                });
+            }
+
+            $("#" + dropZoneId).find('input[type="file"]').change(function(){
+                var inputVal = $(this).val();
+                if(inputVal === '') {
+                    $(btnSend).prop('disabled',true);
+                } else {
+                    $(btnSend).prop('disabled',false);
+                }
+            });
+
+            document.getElementById(dropZoneId).addEventListener("drop", function (e) {
+                $("#" + dropZoneId).removeClass(mouseOverClass);
+            }, true);
         }
     }
 })(jQuery);

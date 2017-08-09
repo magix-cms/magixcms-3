@@ -3,7 +3,7 @@ class backend_controller_product extends backend_db_product
 {
 
     public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory;
 
     public $id_product, $id_img,$parent_id,$content,$productData, $imgData,$img_multiple, $editimg;
 
@@ -21,6 +21,7 @@ class backend_controller_product extends backend_db_product
         $this->collectionLanguage = new component_collections_language();
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
+        $this->dbCategory = new backend_db_category();
         // --- GET
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
@@ -167,7 +168,27 @@ class backend_controller_product extends backend_db_product
                 break;
         }
     }
+    private function setCategoryData($data){
 
+        $arr = array();
+        $conf = array();
+
+        foreach ($data as $items) {
+
+            if (!array_key_exists($items['id_cat'], $arr)) {
+                $arr[$items['id_cat']] = array();
+                $arr[$items['id_cat']]['id_cat'] = $items['id_cat'];
+                $arr[$items['id_cat']]['id_parent'] = $items['id_parent'];
+                $arr[$items['id_cat']]['name_cat'] = $items['name_cat'];
+                $arr[$items['id_cat']]['parent_id'] = $items['parent_id'];
+            }
+        }
+        return $arr;
+    }
+
+    /**
+     *
+     */
     private function save()
     {
         if (isset($this->content) && isset($this->id_product)) {
@@ -338,6 +359,7 @@ class backend_controller_product extends backend_db_product
                 usleep(200000);
                 $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'),'progress' => 100,'status' => 'error','error_code' => 'error_data'));
             }
+
         }else if(isset($this->id_img)){
             $this->upd(array(
                 'type'          => 'img',
@@ -398,6 +420,15 @@ class backend_controller_product extends backend_db_product
                             $this->template->display('catalog/product/edit-img.tpl');
                         }
                     }else {
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
+                        //Category
+                        $setCategoryData = $this->dbCategory->fetchData(
+                            array('context' => 'all', 'type' => 'catRoot'),
+                            array(':default_lang'=>$defaultLanguage['id_lang'])
+                        );
+                        $setCategoryData = $this->setCategoryData($setCategoryData);
+                        $this->template->assign('catRoot', $setCategoryData);
+                        //Product
                         $this->modelLanguage->getLanguage();
                         $setEditData = parent::fetchData(
                             array('context' => 'all', 'type' => 'page'),

@@ -15,9 +15,10 @@
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_category#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
-                    <li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">{#image#}</a></li>
-                    <li role="presentation"><a href="#child" aria-controls="child" role="tab" data-toggle="tab">{#child_page#}</a></li>
+                    <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#|ucfirst}</a></li>
+                    <li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">{#image#|ucfirst}</a></li>
+                    <li role="presentation"><a href="#child" aria-controls="child" role="tab" data-toggle="tab">{#child_page#|ucfirst}</a></li>
+                    <li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">{#products#|ucfirst}</a></li>
                 </ul>
             </header>
             <div class="panel-body panel-body-form">
@@ -46,11 +47,17 @@
                         {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
                         {include file="section/form/table-form-2.tpl" ajax_form=true idcolumn='id_cat' data=$pagesChild activation=true sortable=$sortable controller="category"}
                     </div>
+                    <div role="tabpanel" class="tab-pane tab-table" id="products">
+                        {include file="section/form/table-form-2.tpl" data=$catalog idcolumn='id_catalog' activation=false sortable=$sortable controller="category"}
+                        <pre>{$catalog|print_r}</pre>
+                    </div>
                 </div>
-                {*<pre>{$page|print_r}</pre>*}
+
             </div>
         </section>
     </div>
+        {include file="modal/delete.tpl" data_type='category' title={#modal_delete_title#|ucfirst} info_text=true delete_message={#delete_pages_message#}}
+        {include file="modal/error.tpl"}
     {/if}
 {/block}
 {block name="foot" append}
