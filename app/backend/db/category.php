@@ -136,7 +136,8 @@ class backend_db_category
                     JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
                     JOIN mc_catalog_product_content AS p_cont ON ( p_cont.id_product = p.id_product )
                     JOIN mc_lang AS lang ON ( p_cont.id_lang = lang.id_lang ) 
-                    WHERE catalog.id_cat = :id_cat AND p_cont.id_lang = :default_lang';
+                    WHERE catalog.id_cat = :id_cat AND p_cont.id_lang = :default_lang
+                    ORDER BY catalog.order_p';
                     $params = $data;
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
@@ -197,6 +198,15 @@ class backend_db_category
                     array(
                         ':id_cat'	    => $data['id_cat'],
                         ':order_cat'	=> $data['order_cat']
+                    )
+                );
+            }elseif ($config['type'] === 'order_p') {
+                $sql = 'UPDATE mc_catalog SET order_p = :order_p
+                WHERE id_catalog = :id_catalog';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_catalog'	=> $data['id_catalog'],
+                        ':order_p'	=> $data['order_p']
                     )
                 );
             }

@@ -1,28 +1,31 @@
 var category = (function ($, undefined) {
     return {
         run: function(controller){
-            $( ".ui-sortable" ).sortable({
-                items: "> tr",
-                cursor: "move",
-                axis: "y",
-                update: function(){
-                    var serial = $( ".ui-sortable" ).sortable('serialize');
-                    $.jmRequest({
-                        handler: "ajax",
-                        url: controller+'&action=order',
-                        method: 'POST',
-                        data : serial,
-                        success:function(e){
-                            $.jmRequest.initbox(e,{
-                                    display: false
-                                }
-                            );
-                        }
-                    });
-                    //return false;
-                }
+            $.each($( ".ui-sortable" ), function() {
+                $( this ).sortable({
+                    items: "> tr",
+                    cursor: "move",
+                    axis: "y",
+                    update: function(){
+                        var serial = $( this ).sortable('serialize');
+                        console.log(serial);
+                        $.jmRequest({
+                            handler: "ajax",
+                            url: controller+'&action=order',
+                            method: 'POST',
+                            data : serial,
+                            success:function(e){
+                                $.jmRequest.initbox(e,{
+                                        display: false
+                                    }
+                                );
+                            }
+                        });
+                        //return false;
+                    }
+                });
+                $( this ).disableSelection();
             });
-            $( ".ui-sortable" ).disableSelection();
         },
         runAdd: function(){
             if($('#parent_id').val() != ''){

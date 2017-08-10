@@ -224,13 +224,13 @@ class backend_model_data extends backend_db_scheme{
 	 * @param array $columns
 	 * @param null|array $assign
 	 */
-	public function getScheme($tables, $columns, $assign = null)
+	public function getScheme($tables, $columns, $assign = null, $tpl_var = 'scheme')
 	{
 		$tables = "'".implode("','", $tables)."'";
 		$cols = "'".implode("','", $columns)."'";
 		$params = array(':dbname' => MP_DBNAME, 'table' => $tables, 'columns' => $cols);
 		$scheme = parent::fetchData(array('context'=>'all','type'=>'scheme'),$params);
-		$this->template->assign('scheme',$this->parseScheme($scheme, $columns, $assign));
+		$this->template->assign($tpl_var,$this->parseScheme($scheme, $columns, $assign));
 	}
 }
 ?>

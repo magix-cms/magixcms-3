@@ -48,8 +48,8 @@
                         {include file="section/form/table-form-2.tpl" ajax_form=true idcolumn='id_cat' data=$pagesChild activation=true sortable=$sortable controller="category"}
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="products">
-                        {include file="section/form/table-form-2.tpl" data=$catalog idcolumn='id_catalog' activation=false sortable=$sortable controller="category"}
-                        <pre>{$catalog|print_r}</pre>
+                        {include file="section/form/table-form-2.tpl" data=$catalog idcolumn='id_catalog' activation=false sortable=$sortable controller="category" subcontroller="product" scheme=$schemeCatalog search=false editColumn='id_product' editController='product'}
+                        {*<pre>{$catalog|print_r}</pre>*}
                     </div>
                 </div>
 

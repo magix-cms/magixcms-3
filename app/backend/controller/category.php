@@ -63,6 +63,8 @@ class backend_controller_category extends backend_db_category {
         # ORDER PAGE
         if(http_request::isPost('category')){
             $this->order = $formClean->arrayClean($_POST['category']);
+        } elseif(http_request::isPost('product')){
+            $this->order = $formClean->arrayClean($_POST['product']);
         }
     }
     /**
@@ -176,14 +178,25 @@ class backend_controller_category extends backend_db_category {
             case 'order':
                 $p = $this->order;
                 for ($i = 0; $i < count($p); $i++) {
-                    parent::update(
-                        array(
-                            'type'=>$data['type']
-                        ),array(
-                            'id_cat'       => $p[$i],
-                            'order_cat'    => $i
-                        )
-                    );
+                    if(isset($_POST['category'])){
+                        parent::update(
+                            array(
+                                'type'=>'order'
+                            ),array(
+                                'id_cat'       => $p[$i],
+                                'order_cat'    => $i
+                            )
+                        );
+                    }elseif(isset($_POST['product'])){
+                        parent::update(
+                            array(
+                                'type'=>'order_p'
+                            ),array(
+                                'id_catalog'       => $p[$i],
+                                'order_p'      => $i
+                            )
+                        );
+                    }
                 }
                 break;
         }
@@ -392,14 +405,14 @@ class backend_controller_category extends backend_db_category {
                         $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat', 'date_register'), $assign);
                         $pageChild = $this->getItems('pagesChild', $this->edit, 'all');
                         // catalog (category => product)
-                        /*$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
                         $this->getItems('catalog', array(':default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
                         $assignCatalog = array(
                             'id_catalog',
                             'name_p' => ['title' => 'name']
                         );
-                        $this->data->getScheme(array('mc_catalog', 'mc_catalog_product_content'), array('id_catalog', 'name_p'), $assignCatalog);
-                        */
+                        $this->data->getScheme(array('mc_catalog', 'mc_catalog_product_content'), array('id_catalog', 'name_p'), $assignCatalog, 'schemeCatalog');
+
                         if (isset($this->search)) {
                             $this->template->assign('ajax_form', true);
                             $this->template->assign('data', $pageChild);

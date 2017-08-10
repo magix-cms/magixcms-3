@@ -1,6 +1,5 @@
 {autoload_i18n}
 {switch $message}
-{********* Success *********}
 {case 'add' break}
     {** Add **}
 {capture name="alert_type"}{strip}
