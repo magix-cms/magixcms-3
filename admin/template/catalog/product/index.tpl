@@ -30,7 +30,7 @@
                 </div>
                 {*{if isset($scheme)}{$scheme|var_dump}{/if}*}
                 {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                {include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_product' activation=true sortable=$sortable controller="product"}
+                {include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_product' activation=false sortable=$sortable controller="product"}
             </div>
         </section>
     </div>
@@ -46,7 +46,7 @@
         /{baseadmin}/min/?f=
         libjs/vendor/jquery-ui-1.12.min.js,
         {baseadmin}/template/js/table-form.min.js,
-        {baseadmin}/template/js/category.min.js
+        {baseadmin}/template/js/product.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
 
@@ -58,13 +58,12 @@
             }else{
                 tableForm.run();
             }
-            if (typeof category == "undefined")
+            if (typeof product == "undefined")
             {
-                console.log("category is not defined");
+                console.log("product is not defined");
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                category.run(controller);
+                product.run(controller);
             }
-        });
     </script>
 {/block}

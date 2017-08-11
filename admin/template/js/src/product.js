@@ -82,6 +82,54 @@ var product = (function ($, undefined) {
             }
         });
     }
+
+    function isEmpty( el ){
+        return !$.trim(el.html())
+    }
+
+    function openTree(link, div, reset) {
+        $(link).addClass('open').find('.fa').removeClass('fa-folder').addClass('fa-folder-open');
+        $(div).collapse('show');
+        if(reset) {
+            initTree();
+        }
+    }
+
+    function initTree() {
+        $('.tree-toggle').each(function(){
+            $(this).removeData();
+            $(this).off();
+            $(this).on('click',function(){
+                var self = this,
+                    edit = $(this).data('edit'),
+                    parentId = $(this).data('id'),
+                    targetDiv = $(this).attr('href');
+
+                if($(this).hasClass('open')) {
+                    $(this).removeClass('open').find('.fa').removeClass('fa-folder-open').addClass('fa-folder');
+                    $(targetDiv).collapse('hide');
+                }
+                else {
+                    if (isEmpty($(targetDiv))) {
+                        $.jmRequest({
+                            handler: "ajax",
+                            url: '/admin/index.php?controller=product&edit='+edit+'&action=getSubcat&parentid='+parentId,
+                            method: 'GET',
+                            success: function (d) {
+                                if(typeof d.result !== 'undefined') {
+                                    $(targetDiv).append(d.result);
+                                    openTree(self,targetDiv,true);
+                                }
+                            }
+                        });
+                    } else {
+                        openTree(self,targetDiv,false);
+                    }
+                }
+            });
+        });
+    }
+
     return {
         run: function(){
             $('.progress').hide();
@@ -91,6 +139,7 @@ var product = (function ($, undefined) {
                 initGen(fd);
                 return false;
             });
+            initTree();
 
             $( ".row.sortable" ).sortable();
             $( ".row.sortable" ).disableSelection();

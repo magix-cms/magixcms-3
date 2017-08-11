@@ -8,15 +8,15 @@
 {block name='article:content'}
     {if {employee_access type="edit" class_name=$cClass} eq 1}
     <div class="panels row">
-        <section class="panel col-xs-12 col-md-12">
+        <section class="panel col-ph-12">
             {if $debug}
                 {$debug}
             {/if}
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_product#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
-                    <li role="presentation" class="active"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>
+                    <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
+                    <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>
                     <li role="presentation"><a href="#cat" aria-controls="cat" role="tab" data-toggle="tab">categories</a></li>
                 </ul>
             </header>
@@ -25,10 +25,10 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane" id="general">
+                    <div role="tabpanel" class="tab-pane active" id="general">
                         {include file="catalog/product/form/edit.tpl" controller="product"}
                     </div>
-                    <div role="tabpanel" class="tab-pane active" id="images">
+                    <div role="tabpanel" class="tab-pane" id="images">
                         {*<pre>{$images|print_r}</pre>*}
                         {include file="catalog/product/form/img.tpl" controller="product"}
                         <div id="gallery-product" class="block-img">
@@ -38,17 +38,20 @@
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="cat">
-                        <ul class="list-unstyled">
-                        {foreach $catRoot as $cat}
-                            <li>
-                            {$cat.name_cat}
-                            {if $cat.parent_id != NULL}
-                            <a class="tree-toggle" type="button" data-toggle="collapse" href="#csc-{$cat.id_cat}" aria-expanded="false" aria-controls="csc-{$cat.id_cat}"><span class="fa fa-plus-square"></span></a>
-                            <div id="csc-{$cat.id_cat}" class="cat-tree collapse"></div>
-                            {/if}
-                            </li>
-                            {/foreach}
-                        </ul>
+                        <form action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tabs=cat" method="post">
+                            <div class="row">
+                                <div class="col-ph-12 col-sm-6 col-md-4">
+                                    <div class="catlisting">
+                                        {include file="catalog/product/loop/cat.tpl" cats=$catRoot}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-main-theme" type="submit">
+                                    <span class="fa fa-floppy-o"></span> {#save#|ucfirst}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}

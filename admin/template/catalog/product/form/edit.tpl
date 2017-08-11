@@ -34,14 +34,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {*<div class="row">
                             <div class="col-xs-12 col-sm-8">
                                 <div class="form-group">
                                     <label for="public-url[{$id}]">URL</label>
                                     <input type="text" class="form-control public-url" data-lang="{$id}" id="public_url[{$id}]" readonly="readonly" size="50" value="{$page.content[{$id}].public_url}" />
                                 </div>
                             </div>
-                        </div>
+                        </div>*}
                         <div class="row">
                             <div class="col-xs-12 col-sm-12">
                                 <div class="form-group">

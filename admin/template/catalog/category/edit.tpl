@@ -65,6 +65,7 @@
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         libjs/vendor/jquery-ui-1.12.min.js,
+        {baseadmin}/template/js/table-form.min.js,
         {baseadmin}/template/js/category.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}

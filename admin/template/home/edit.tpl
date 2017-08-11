@@ -45,7 +45,7 @@
                                             <div class="col-xs-12 col-sm-12">
                                                 <div class="form-group">
                                                     <label for="content[{$id}][content_page]">{#content#|ucfirst} :</label>
-                                                    <textarea name="content[{$id}][content_page]" id="content[{$id}][content_page]" class="form-control mceEditor">{cleanTextarea field=$page.content[{$id}].content_page}</textarea>
+                                                    <textarea name="content[{$id}][content_page]" id="content[{$id}][content_page]" class="form-control mceEditor">{$page.content[{$id}].content_page}{*{cleanTextarea field=$page.content[{$id}].content_page}*}</textarea>
                                                 </div>
                                             </div>
                                         </div>

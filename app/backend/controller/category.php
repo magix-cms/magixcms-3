@@ -359,6 +359,16 @@ class backend_controller_category extends backend_db_category {
                 $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
+            case 'delProduct':
+                parent::delete(
+                    array(
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'delete',$data['data']);
+                break;
         }
     }
     /**
@@ -440,14 +450,27 @@ class backend_controller_category extends backend_db_category {
                     break;
                 case 'delete':
                     if(isset($this->id_cat)) {
-                        $this->del(
-                            array(
-                                'type'=>'delPages',
-                                'data'=>array(
-                                    'id' => $this->id_cat
+                        if(isset($this->tabs)){
+                            if($this->tabs === 'product') {
+                                $this->del(
+                                    array(
+                                        'type' => 'delProduct',
+                                        'data' => array(
+                                            'id' => $this->id_cat
+                                        )
+                                    )
+                                );
+                            }
+                        }else{
+                            $this->del(
+                                array(
+                                    'type'=>'delPages',
+                                    'data'=>array(
+                                        'id' => $this->id_cat
+                                    )
                                 )
-                            )
-                        );
+                            );
+                        }
                     }
                     break;
             }

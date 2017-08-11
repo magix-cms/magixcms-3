@@ -259,6 +259,7 @@ var globalForm = (function ($, undefined) {
             options.resetForm = true;
             //controller = sub?sub:controller.substr(1,(controller.indexOf('.')-1));
             controller = sub?sub:controller;
+
             options.success = function (d) {
                 $('#delete_modal').modal('hide');
                 //$.jmRequest.notifier.cssClass = '.mc-message-'+controller;
@@ -326,8 +327,15 @@ var globalForm = (function ($, undefined) {
     function delete_data(modal, id, controller, sub) {
         $(modal+' input[type="hidden"]').val(id);
         $(modal).modal('show');
-        //var url = $('#delete_form').attr('action');
-        //$(modal).find('form').attr('action','&action=delete'+(sub?'&tabs='+sub:''));
+        var url = $('#delete_form').attr('action');
+        if(url.indexOf("tabs") === -1) {
+            url = url+(sub?'&tabs='+sub:'');
+        }
+        else {
+            url.replace('&tabs=([^&]*)','&tabs='+sub);
+        }
+
+        $(modal).find('form').attr('action',url);
 
         initValidation(controller,'#delete_form',sub);
     }

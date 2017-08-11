@@ -295,6 +295,9 @@ class backend_controller_login extends backend_db_employee{
 		} else {
 			$this->secure();
 			$this->close();
+			if(!http_request::isGet('controller')){
+				$this->session->redirect(true);
+			}
 		}
     }
 

@@ -129,6 +129,16 @@ class backend_db_category
                     WHERE cont.id_lang = :default_lang AND c.id_parent IS NULL';
                     $params = $data;
 
+                }elseif ($config['type'] === 'subcat') {
+
+                    $sql = 'SELECT c.id_parent,c.id_cat, cont.name_cat, cc.id_parent AS parent_id
+                    FROM mc_catalog_cat AS c
+                    LEFT JOIN mc_catalog_cat AS cc ON ( cc.id_parent = c.id_cat )
+                    LEFT JOIN mc_catalog_cat_content AS cont ON ( c.id_cat = cont.id_cat )
+                    LEFT JOIN mc_lang AS lang ON ( cont.id_lang = lang.id_lang )
+                    WHERE cont.id_lang = :default_lang AND c.id_parent = :id';
+                    $params = $data;
+
                 }elseif ($config['type'] === 'catalog') {
 
                     $sql = 'SELECT catalog.id_catalog, catalog.id_product, p_cont.name_p, catalog.order_p, lang.id_lang,lang.iso_lang
@@ -260,6 +270,9 @@ class backend_db_category
         if (is_array($config)) {
             if($config['type'] === 'delPages'){
                 $sql = 'DELETE FROM mc_catalog_cat WHERE id_cat IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
+            }elseif($config['type'] === 'delProduct'){
+                $sql = 'DELETE FROM mc_catalog WHERE id_catalog IN ('.$data['id'].')';
                 component_routing_db::layer()->delete($sql,array());
             }
         }

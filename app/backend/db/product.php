@@ -8,7 +8,7 @@ class backend_db_product{
         if (is_array($config)) {
             if ($config['context'] === 'all' || $config['context'] === 'return') {
                 if ($config['type'] === 'pages') {
-                    $sql = "SELECT p.id_product, c.name_p, c.content_p, p.date_register
+                    $sql = "SELECT p.id_product, c.name_p, p.reference_p, p.price_p, c.content_p, p.date_register
 								FROM mc_catalog_product AS p
 									JOIN mc_catalog_product_content AS c USING ( id_product )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -31,6 +31,9 @@ class backend_db_product{
                                         case 'name_p':
                                             $cond .= "c." . $key . " LIKE '%" . $q . "%' ";
                                             break;
+                                        case 'reference_p':
+                                            $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
+                                            break;
                                         case 'date_register':
                                             $q = $dateFormat->date_to_db_format($q);
                                             $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
@@ -40,7 +43,7 @@ class backend_db_product{
                                 }
                             }
 
-                            $sql = "SELECT p.id_product, c.name_p,c.content_p, p.date_register
+                            $sql = "SELECT p.id_product, c.name_p, p.reference_p, p.price_p ,c.content_p, p.date_register
 								FROM mc_catalog_product AS p
 									JOIN mc_catalog_product_content AS c USING ( id_product )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -148,6 +151,7 @@ class backend_db_product{
     {
         if (is_array($config)) {
             if ($config['type'] === 'newPages') {
+
                 $sql = 'INSERT INTO `mc_catalog_product`(price_p,reference_p,date_register) 
                 VALUES (:price_p,:reference_p,NOW())';
                 component_routing_db::layer()->insert($sql,array(
@@ -170,6 +174,7 @@ class backend_db_product{
                     ':published_p'  => $data['published_p']
                 ));
             }elseif ($config['type'] === 'img') {
+
                 $sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img) 
                 VALUES (:id_product,:name_img)';
                 component_routing_db::layer()->insert($sql,array(
@@ -188,10 +193,14 @@ class backend_db_product{
     public function delete($config,$data = false)
     {
         if (is_array($config)) {
-            if($config['type'] === 'delPages'){
+            if($config['type'] === 'delPages') {
                 $sql = 'DELETE FROM mc_catalog_product WHERE id_product IN ('.$data['id'].')';
                 component_routing_db::layer()->delete($sql,array());
             }
+            elseif($config['type'] === 'delImages') {
+				$sql = 'DELETE FROM mc_catalog_product_img WHERE id_img IN ('.$data['id'].')';
+				component_routing_db::layer()->delete($sql,array());
+			}
         }
     }
 }

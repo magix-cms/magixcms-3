@@ -8,14 +8,6 @@
 		width: 100%;
 	}
 
-	form > .actions {
-		position: absolute;
-		bottom: 0;
-		left: 15px;
-		padding: 15px 20px;
-		width: ~"calc(100% - 30px)";
-	}
-
 	.center-img {
 		position: relative;
 		overflow: hidden;
@@ -140,6 +132,14 @@
 	}
 }
 
+form > .actions {
+	position: absolute;
+	bottom: 0;
+	left: 15px;
+	padding: 15px 20px;
+	width: ~"calc(100% - 30px)";
+}
+
 #drop-zone {
 	/*Sort of important*/
 	width: 100%;
@@ -192,4 +192,112 @@
 	&:hover {
 		background-color: #4499DD;
 	}*/
+}
+
+.catlisting {
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+		line-height: 2em;
+
+		.cat-tree {
+			margin: 0;
+			padding-left: 35px;
+			list-style-type: none;
+			line-height: 2em;
+
+			li {
+				position: relative;
+
+				&:before,
+				&:after {
+					position: absolute;
+					content: '';
+					display: block;
+				}
+
+				&:before {
+					left: -15px;
+					top: 5px;
+					width: 10px;
+					height: 1em;
+					border-left: 1px solid #ddd;
+					border-bottom: 1px solid #ddd;
+				}
+
+				&:after {
+					left: -15px;
+					bottom: -7px;
+					height: 100%;
+					border-left: 1px solid #ddd;
+				}
+
+				&:last-child:after {
+					display: none;
+				}
+			}
+		}
+
+		li {
+			font-size: 1.4rem;
+			padding: 5px 0;
+
+			label {
+				font-weight: normal;
+				margin-bottom: 0;
+				position: relative;
+
+				&:before {
+					left: 0;
+					.fa;
+					color: #444;
+				}
+			}
+
+			[type="radio"],
+			[type="checkbox"] {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 0;
+				height: 0;
+				z-index: -5;
+
+				&:checked + label {
+					&:before {
+						color: @main-color;
+					}
+				}
+			}
+
+			[type="radio"] {
+				+ label {
+					&:before {
+						content: "@{fa-var-circle-thin}";
+					}
+				}
+
+				&:checked + label {
+					&:before {
+						content: "@{fa-var-check}";
+					}
+				}
+			}
+
+			[type="checkbox"] {
+				+ label {
+					&:before {
+						content: "@{fa-var-square-o}";
+					}
+				}
+
+				&:checked + label {
+					&:before {
+						content: "@{fa-var-check-square-o}";
+					}
+				}
+			}
+		}
+	}
 }
