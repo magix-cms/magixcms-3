@@ -28,14 +28,10 @@
 {block name="main"}
     <main id="{block name='main:id'}page{/block}">
         {block name='article'}
-            {function cleanTextArea}
+            {function cleantextarea}
                 {$field|escape:'html':'UTF-8':TRUE}
             {/function}
             {widget_plugins}
-            {*{cleanTextArea field=$s_content}*}
-            {function cleanTextarea}
-                {$field|escape:'html':'UTF-8':TRUE}
-            {/function}
             <div id="content" class="container-fluid pull-right">
                 <header>
                     <button id="toggle-menu" type="button" class="open-menu navbar-toggle" data-target="#mobile-menu1">

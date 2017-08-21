@@ -35,7 +35,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="content[{$id}][catalog_content]">{#content#|ucfirst} :</label>
-                                            <textarea name="content[{$id}][catalog_content]" id="content[{$id}][catalog_content]" class="form-control mceEditor">{cleanTextarea field=$contentData.{$id}.content}</textarea>
+                                            <textarea name="content[{$id}][catalog_content]" id="content[{$id}][catalog_content]" class="form-control mceEditor">{call name=cleantextarea field=$contentData.{$id}.content}</textarea>
                                         </div>
                                     </fieldset>
                                 {/foreach}

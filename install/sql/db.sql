@@ -121,7 +121,11 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_pages', 'pages'),
 (NULL, 'backend_controller_files', 'files'),
 (NULL, 'backend_controller_about', 'about'),
-(NULL, 'backend_controller_news', 'news');
+(NULL, 'backend_controller_news', 'news'),
+(NULL, 'backend_controller_webservice', 'webservice'),
+(NULL, 'backend_controller_category', 'category'),
+(NULL, 'backend_controller_catalog', 'catalog'),
+(NULL, 'backend_controller_product', 'product');
 
 CREATE TABLE IF NOT EXISTS `mc_setting` (
   `id_setting` smallint(5) unsigned NOT NULL AUTO_INCREMENT,

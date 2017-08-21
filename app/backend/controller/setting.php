@@ -89,6 +89,24 @@ class backend_controller_setting extends backend_db_setting{
         }
         $this->template->assign('skin',$newSkin);
     }
+
+    /**
+     * @param string $data
+     */
+    private function robotsFiles($data = 'index'){
+        $basePath = component_core_system::basePath();
+        $fh = fopen($basePath.'robots.txt', 'w+');
+        if(is_writable($basePath.'robots.txt')){
+            if($data === 'index'){
+                fwrite($fh, "User-Agent: *" . PHP_EOL);
+                fwrite($fh, "Allow: /" . PHP_EOL);
+            }if($data === 'noindex'){
+                fwrite($fh, "User-Agent: *" . PHP_EOL);
+                fwrite($fh, "Disallow: /" . PHP_EOL);
+            }
+            fclose($fh);
+        }
+    }
     /**
      * Mise a jour des données
      * @param $data
@@ -154,6 +172,11 @@ class backend_controller_setting extends backend_db_setting{
                         'robots'      => $this->setting['robots']
                     )
                 );
+                if($this->setting['robots'] === 'index,follow,all'){
+                    $this->robotsFiles('index');
+                }else{
+                    $this->robotsFiles('noindex');
+                }
                 break;
             case 'theme':
                 parent::update(
