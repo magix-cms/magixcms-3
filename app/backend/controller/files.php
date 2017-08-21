@@ -2,7 +2,7 @@
 class backend_controller_files extends backend_db_files{
     public $edit, $action, $tabs;
     public $id_config_img, $module_img,$attribute_img,$width_img,$height_img,$type_img,$resize_img;
-    protected $message, $template, $header, $data,$imagesComponent, $DBpages,$DBnews,$DBcategory, $configCollection;
+    protected $message, $template, $header, $data,$imagesComponent, $DBpages,$DBnews,$DBcategory,$DBproduct, $configCollection;
     public $attr_name,$module_name;
 
     public function __construct()
@@ -17,6 +17,7 @@ class backend_controller_files extends backend_db_files{
         $this->DBpages = new backend_db_pages();
         $this->DBnews = new backend_db_news();
         $this->DBcategory = new backend_db_category();
+        $this->DBproduct = new backend_db_product();
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -196,6 +197,18 @@ class backend_controller_files extends backend_db_files{
                                                 $fetchImg
                                             );
                                             break;
+                                        case 'product':
+                                            $fetchImg = $this->DBproduct->fetchData(array('context' => 'all', 'type' => 'imagesAll'));
+                                            $this->imagesComponent->getThumbnailItems(array(
+                                                'type'              => $this->module_name,
+                                                'upload_root_dir'   => 'upload/catalog/p',
+                                                'module_img'        => $this->module_name,
+                                                'attribute_img'     => 'product',
+                                                'id'                =>'id_product',
+                                                'img'               =>'name_img'
+                                            ),
+                                                $fetchImg
+                                            );
                                     }
                                 }
                                 break;

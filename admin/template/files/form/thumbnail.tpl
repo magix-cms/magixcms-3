@@ -24,8 +24,8 @@
                 <label for="attr_name">{#config_attribute_available#}</label>
                 <select name="attr_name" id="attr_name" class="form-control has-optional-fields">
                     <option value="" class="default" selected>{#ph_attribute#|ucfirst}</option>
-                    <option value="category">category</option>
-                    <option value="product">product</option>
+                    <option value="category">{#categories#|ucfirst}</option>
+                    <option value="product">{#products#|ucfirst}</option>
                 </select>
             </div>
         </div>

@@ -528,7 +528,7 @@ class backend_controller_product extends backend_db_product
 						$this->template->assign('page', $setEditData[$this->edit]);
 
 						$setImagesData = parent::fetchData(
-							array('context' => 'all', 'type' => 'images'),
+							array('context' => 'all', 'type' => 'editImages'),
 							array('edit' => $this->edit)
 						);
 

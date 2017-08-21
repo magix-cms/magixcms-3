@@ -62,12 +62,17 @@ class backend_db_product{
 
                     $params = $data;
 
-                }elseif ($config['type'] === 'images') {
+                }elseif ($config['type'] === 'editImages') {
                     $sql = 'SELECT img.*
                         FROM mc_catalog_product_img AS img
                         WHERE img.id_product = :edit';
 
                     $params = $data;
+
+                }
+                elseif ($config['type'] === 'imagesAll') {
+                    $sql = 'SELECT img.*
+                        FROM mc_catalog_product_img AS img';
 
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
