@@ -51,13 +51,13 @@ class backend_controller_setting extends backend_db_setting{
     /**
      * Assign data to the defined value
      */
-    private function setItemsData(){
+    public function setItemsData(){
         $newArray = array();
         $settings = $this->getItems('settings',null,'return');
         foreach($settings as $key){
             $newArray[$key['name']] = $key['value'];
         }
-        $this->template->assign('settings',$newArray);
+        return $newArray;
     }
 
     /**
@@ -212,7 +212,7 @@ class backend_controller_setting extends backend_db_setting{
                     break;
             }
         }else{
-            $this->setItemsData();
+            $this->template->assign('settings',$this->setItemsData());
             $this->setItemsSkin();
             $this->template->display('setting/index.tpl');
         }

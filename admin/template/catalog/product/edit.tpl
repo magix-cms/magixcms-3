@@ -16,8 +16,8 @@
                 <h2 class="panel-heading h5">{#edit_product#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
-                    <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#}</a></li>
-                    <li role="presentation"><a href="#cat" aria-controls="cat" role="tab" data-toggle="tab">categories</a></li>
+                    <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#|ucfirst}</a></li>
+                    <li role="presentation"><a href="#cat" aria-controls="cat" role="tab" data-toggle="tab">Catégories</a></li>
                 </ul>
             </header>
             <div class="panel-body panel-body-form">
@@ -38,18 +38,21 @@
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="cat">
-                        <form action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tabs=cat" method="post">
+                        <form action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tabs=cat" method="post" class="validate_form">
                             <div class="row">
                                 <div class="col-ph-12 col-sm-6 col-md-4">
+                                    <div class="tree-header">
+                                        <a href="#" class="tree-actions" data-action="toggle-down"><span class="fa fa-angle-down"></span> Déployer</a>
+                                        <a href="#" class="tree-actions" data-action="toggle-up"><span class="fa fa-angle-up"></span> Réduire</a>
+                                        <span class="pull-right">Catégorie par défaut</span>
+                                    </div>
                                     <div class="catlisting">
-                                        {include file="catalog/product/loop/cat.tpl" cats=$catRoot}
+                                        {include file="catalog/product/loop/cat.tpl" cats=$catTree}
                                     </div>
                                 </div>
                             </div>
                             <div class="actions">
-                                <button class="btn btn-main-theme" type="submit">
-                                    <span class="fa fa-floppy-o"></span> {#save#|ucfirst}
-                                </button>
+                                <button class="btn btn-main-theme" type="submit">{#save#|ucfirst}</button>
                             </div>
                         </form>
                     </div>

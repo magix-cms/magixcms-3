@@ -105,7 +105,7 @@
             {if {employee_access type="view" class_name="backend_controller_domain"} eq 1}
                 <li{if $smarty.get.controller == 'domain'} class="active"{/if}>
                     <a href="{geturl}/{baseadmin}/index.php?controller=domain">
-                        <span class="fa fa-link"></span> {#domain#}
+                        <span class="fa fa-link"></span> {#domain_sitemap#}
                     </a>
                 </li>
             {/if}

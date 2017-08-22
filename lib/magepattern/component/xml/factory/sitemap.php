@@ -160,7 +160,7 @@ abstract class xml_factory_sitemap{
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'http://www.google.com/webmasters/tools/ping?sitemap=http%3A%2F%2F'.$url.'%2F'.$file);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_REFERER, magixcjquery_html_helpersHtml::getUrl());
+            curl_setopt($ch, CURLOPT_REFERER, http_url::getUrl());
             curl_setopt ($ch, CURLOPT_NOBODY, 1);
             $body = curl_exec($ch);
             curl_close($ch);

@@ -161,6 +161,16 @@ class backend_db_pages
                 }elseif ($config['type'] === 'img') {
                     $sql = 'SELECT p.id_pages, p.img_pages
                         FROM mc_cms_page AS p WHERE p.img_pages IS NOT NULL';
+
+                }elseif ($config['type'] === 'sitemap') {
+                    $sql = 'SELECT p.id_pages, c.name_pages, c.url_pages, lang.iso_lang, c.id_lang, c.last_update
+                        FROM mc_cms_page AS p
+                        JOIN mc_cms_page_content AS c USING ( id_pages )
+                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+                        WHERE c.published_pages = 1 AND c.id_lang = :id_lang
+                        ORDER BY p.id_pages ASC';
+                    $params = $data;
+
                 }
                 //print $sql;
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;

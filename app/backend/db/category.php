@@ -121,12 +121,21 @@ class backend_db_category
 
                 }elseif ($config['type'] === 'catRoot') {
 
-                    $sql = 'SELECT c.id_parent,c.id_cat, cont.name_cat, cc.id_parent AS parent_id
+                    $sql = 'SELECT DISTINCT c.id_cat, c.id_parent, cont.name_cat, cc.id_parent AS parent_id
                     FROM mc_catalog_cat AS c
                     LEFT JOIN mc_catalog_cat AS cc ON ( cc.id_parent = c.id_cat )
                     LEFT JOIN mc_catalog_cat_content AS cont ON ( c.id_cat = cont.id_cat )
                     LEFT JOIN mc_lang AS lang ON ( cont.id_lang = lang.id_lang )
                     WHERE cont.id_lang = :default_lang AND c.id_parent IS NULL';
+                    $params = $data;
+
+                }elseif ($config['type'] === 'cats') {
+
+                    $sql = 'SELECT DISTINCT c.id_cat, c.id_parent, cont.name_cat
+                    FROM mc_catalog_cat AS c
+                    LEFT JOIN mc_catalog_cat_content AS cont ON ( c.id_cat = cont.id_cat )
+                    LEFT JOIN mc_lang AS lang ON ( cont.id_lang = lang.id_lang )
+                    WHERE cont.id_lang = :default_lang';
                     $params = $data;
 
                 }elseif ($config['type'] === 'subcat') {

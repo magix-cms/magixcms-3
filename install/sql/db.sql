@@ -369,6 +369,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_cat_content` (
   `name_cat` varchar(150) DEFAULT NULL,
   `url_cat` varchar(150) DEFAULT NULL,
   `content_cat` text,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published_cat` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`),
   KEY `id_cat` (`id_cat`)
@@ -407,13 +408,44 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_content` (
   `name_p` varchar(125) DEFAULT NULL,
   `url_p` varchar(125) DEFAULT NULL,
   `content_p` text,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published_p` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`),
   KEY `id_product` (`id_product`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `mc_catalog_product_content`
   ADD CONSTRAINT `mc_catalog_product_content_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `mc_catalog_product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_catalog_product_img` (
+  `id_img` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) unsigned NOT NULL,
+  `name_img` varchar(150) NOT NULL,
+  `alt_img` varchar(35) DEFAULT NULL,
+  `title_img` varchar(35) DEFAULT NULL,
+  `default_img` smallint(1) NOT NULL DEFAULT '0',
+  `order_img` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_img`),
+  KEY `id_product` (`id_product`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_catalog_product_img`
+  ADD CONSTRAINT `mc_catalog_product_img_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `mc_catalog_product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_catalog` (
+  `id_catalog` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) unsigned NOT NULL,
+  `id_cat` int(7) unsigned NOT NULL,
+  `default_c` smallint(1) unsigned NOT NULL DEFAULT '0',
+  `order_p` int(7) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_catalog`),
+  KEY `id_product` (`id_product`,`id_cat`),
+  KEY `id_cat` (`id_cat`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_catalog`
+  ADD CONSTRAINT `mc_catalog_ibfk_2` FOREIGN KEY (`id_cat`) REFERENCES `mc_catalog_cat` (`id_cat`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `mc_catalog_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `mc_catalog_product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_webservice` (
   `id_ws` smallint(5) unsigned NOT NULL AUTO_INCREMENT,

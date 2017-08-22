@@ -3,7 +3,7 @@
 {block name='body:id'}domain{/block}
 
 {block name='article:header'}
-    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des domaines">{#domain#|ucfirst}</a></h1>
+    <h1 class="h2"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}" title="Afficher la liste des domaines">{#domain_sitemap#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
 {if {employee_access type="append" class_name=$cClass} eq 1}

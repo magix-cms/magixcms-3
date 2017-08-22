@@ -1,5 +1,5 @@
 {extends file="layout.tpl"}
-{block name='head:title'}{#domain#|ucfirst}{/block}
+{block name='head:title'}{#domain_sitemap#|ucfirst}{/block}
 {block name='body:id'}domain{/block}
 
 {block name='article:header'}
@@ -12,7 +12,7 @@
         </p>
     </div>
     {/if}
-    <h1 class="h2">{#domain#|ucfirst}</h1>
+    <h1 class="h2">{#domain_sitemap#|ucfirst}</h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="view" class_name=$cClass} eq 1}

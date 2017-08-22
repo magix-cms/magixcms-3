@@ -5,7 +5,7 @@ class backend_controller_product extends backend_db_product
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory;
 
-	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg;
+	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $parent, $default_cat;
 
 	/**
 	 * backend_controller_catalog constructor.
@@ -64,6 +64,12 @@ class backend_controller_product extends backend_db_product
 		}
 		if (http_request::isPost('imgData')) {
 			$this->imgData = $formClean->arrayClean($_POST['imgData']);
+		}
+		if (http_request::isPost('parent')) {
+			$this->parent = $formClean->arrayClean($_POST['parent']);
+		}
+		if (http_request::isPost('default_cat')) {
+			$this->default_cat = $formClean->numeric($_POST['default_cat']);
 		}
 
 	}
@@ -181,26 +187,32 @@ class backend_controller_product extends backend_db_product
 	}
 
 	/**
-	 * @param $data
 	 * @return array
 	 */
-	private function setCategoryData($data)
+	private function setCategoriesTree()
 	{
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
 
-		$arr = array();
-		$conf = array();
+		$childs = array();
 
-		foreach ($data as $items) {
+		$cats = $this->dbCategory->fetchData(
+			array('context' => 'all', 'type' => 'cats'),
+			array(':default_lang' => $defaultLanguage['id_lang'])
+		);
 
-			if (!array_key_exists($items['id_cat'], $arr)) {
-				$arr[$items['id_cat']] = array();
-				$arr[$items['id_cat']]['id_cat'] = $items['id_cat'];
-				$arr[$items['id_cat']]['id_parent'] = $items['id_parent'];
-				$arr[$items['id_cat']]['name_cat'] = $items['name_cat'];
-				$arr[$items['id_cat']]['parent_id'] = $items['parent_id'];
+		foreach($cats as &$item) {
+			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+			$childs[$k][] = &$item;
+		}
+		unset($item);
+
+		foreach($cats as &$item) {
+			if (isset($childs[$item['id_cat']])) {
+				$item['subcat'] = $childs[$item['id_cat']];
 			}
 		}
-		return $arr;
+
+		$this->template->assign('catTree', $childs['root']);
 	}
 
 	/**
@@ -509,16 +521,16 @@ class backend_controller_product extends backend_db_product
 							$this->template->display('catalog/product/edit-img.tpl');
 						}
 					}
+					elseif (isset($this->parent)) {
+						$this->header->set_json_headers();
+						$this->message->json_post_response(true,'save',$this->parent);
+					}
+					elseif (isset($this->default_cat)) {
+						$this->header->set_json_headers();
+						$this->message->json_post_response(true,'save',$this->default_cat);
+					}
 					else {
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
-						//Category
-						$setCategoryData = $this->dbCategory->fetchData(
-							array('context' => 'all', 'type' => 'catRoot'),
-							array(':default_lang' => $defaultLanguage['id_lang'])
-						);
-						$setCategoryData = $this->setCategoryData($setCategoryData);
-						$this->template->assign('catRoot', $setCategoryData);
-						//Product
+						// --- Product content
 						$this->modelLanguage->getLanguage();
 						$setEditData = parent::fetchData(
 							array('context' => 'all', 'type' => 'page'),
@@ -527,12 +539,12 @@ class backend_controller_product extends backend_db_product
 						$setEditData = $this->setItemData($setEditData);
 						$this->template->assign('page', $setEditData[$this->edit]);
 
-						$setImagesData = parent::fetchData(
-							array('context' => 'all', 'type' => 'editImages'),
-							array('edit' => $this->edit)
-						);
+						// --- Product images
+						$this->getItems('images',$this->edit,'all');
 
-						$this->template->assign('images', $setImagesData);
+						// --- Categories
+						$this->setCategoriesTree();
+
 						$this->template->display('catalog/product/edit.tpl');
 					}
 					break;
@@ -553,6 +565,15 @@ class backend_controller_product extends backend_db_product
 							}
 						}
 						else {
+                            $this->del(
+                                array(
+                                    'type' => 'delImages',
+                                    'data' => array(
+                                        'id' => $this->id_product
+                                    )
+                                )
+                            );
+
 							$this->del(
 								array(
 									'type' => 'delPages',
@@ -564,24 +585,6 @@ class backend_controller_product extends backend_db_product
 						}
 					}
 					break;
-				case 'getSubcat':
-					$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
-					$setCategoryData = $this->dbCategory->fetchData(
-						array('context' => 'all', 'type' => 'subcat'),
-						array(':id' => $this->parent_id,':default_lang' => $defaultLanguage['id_lang'])
-					);
-					$setCategoryData = $this->setCategoryData($setCategoryData);
-					$this->template->assign('cats', $setCategoryData);
-					$setEditData = parent::fetchData(
-						array('context' => 'all', 'type' => 'page'),
-						array('edit' => $this->edit)
-					);
-					$setEditData = $this->setItemData($setEditData);
-					$this->template->assign('page', $setEditData[$this->edit]);
-					$display = $this->template->fetch('catalog/product/loop/cat.tpl');
-					$this->header->set_json_headers();
-					$this->message->json_post_response(true,'',$display);
-					break;
 			}
 		}
 		else {
@@ -591,7 +594,7 @@ class backend_controller_product extends backend_db_product
 			$assign = array(
 				'id_product',
 				'name_p' => ['title' => 'name'],
-                'price_p' => ['input' => null],
+                'price_p' => ['type' => 'price','input' => null],
                 'reference_p' => ['title' => 'reference'],
 				'content_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
 				'date_register'
@@ -604,7 +607,7 @@ class backend_controller_product extends backend_db_product
 					$assign = array(
 						'id_product',
 						'name_p' => ['title' => 'name'],
-                        'price_p' => ['input' => null],
+                        'price_p' => ['type' => 'price','input' => null],
                         'reference_p' => ['title' => 'reference'],
 						'content_p' => ['type' => 'bin', 'input' => null],
 						'date_register'

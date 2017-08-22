@@ -78,7 +78,7 @@ class date_dateformat extends DateTime{
      * @return bool
      * @static
      */
-	public static function isValid( $y = null, $m = null, $d = null ){
+	public function isValid( $y = null, $m = null, $d = null ){
 		if ( $y === null || $m === null || $d === null ) return false ;
 		return checkdate( $m, $d, $y ) ;
 	}
@@ -87,7 +87,7 @@ class date_dateformat extends DateTime{
      * @param $str
      * @return void
      */
-    public static function isW3CValid($str) {
+    public function isW3CValid($str) {
         $stamp = strtotime( $str );
         if (!is_numeric($stamp))
         {

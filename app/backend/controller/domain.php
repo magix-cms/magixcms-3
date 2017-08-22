@@ -2,8 +2,8 @@
 class backend_controller_domain extends backend_db_domain
 {
     public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data;
-    public $id_domain,$url_domain,$default_domain;
+    protected $message, $template, $header, $data, $xml;
+    public $id_domain,$url_domain,$default_domain, $data_type;
 
     public function __construct()
     {
@@ -12,6 +12,7 @@ class backend_controller_domain extends backend_db_domain
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
         $formClean = new form_inputEscape();
+        $this->xml = new backend_model_sitemap($this->template);
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -37,7 +38,9 @@ class backend_controller_domain extends backend_db_domain
         if (http_request::isPost('default_domain')) {
             $this->default_domain = $formClean->numeric($_POST['default_domain']);
         }
-
+        if (http_request::isPost('data_type')) {
+            $this->data_type = $formClean->simpleClean($_POST['data_type']);
+        }
         // --- Search
         if (http_request::isGet('search')) {
             $this->search = $formClean->arrayClean($_GET['search']);
@@ -137,19 +140,33 @@ class backend_controller_domain extends backend_db_domain
                     }
                     break;
                 case 'edit':
-                    if (isset($this->url_domain)) {
-                        $this->upd(
-                            array(
-                                'type' => 'domain'
-                            )
-                        );
-                        $this->header->set_json_headers();
-                        $this->message->json_post_response(true,'update',$this->id_domain);
+                    if (isset($this->data_type)) {
+                        if (isset($this->url_domain) && $this->data_type === 'domain') {
+                            $this->upd(
+                                array(
+                                    'type' => 'domain'
+                                )
+                            );
+                            $this->header->set_json_headers();
+                            $this->message->json_post_response(true,'update',$this->id_domain);
+                        }else{
+                            $data = parent::fetchData(
+                                array(
+                                    'context'   =>'unique',
+                                    'type'      =>'domain'
+                                ),array(
+                                    'id'       => $this->edit
+                                )
+                            );
+                            $newData = array('domain'=>$data['url_domain']);
+                            $this->xml->setItems($newData);
+                        }
                     }else{
                         //$this->getItemsDomain($this->edit);
-						$this->getItems('domain',$this->edit);
+                        $this->getItems('domain',$this->edit);
                         $this->template->display('domain/edit.tpl');
                     }
+
                     break;
                 case 'delete':
                     if(isset($this->id_domain)) {

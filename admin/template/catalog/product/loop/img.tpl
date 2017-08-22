@@ -1,9 +1,9 @@
 {if isset($data) && !empty($data)}
     <div class="row sortable">
     {foreach $data as $key => $value}
-        <div class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
-            <input type="checkbox" name="img[{$value.id_img}]" id="image[]" value="{$value.id_img}">
-            <label for="img[{$value.id_img}]">
+        <div id="image_{$value.id_img}" class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+            <input type="checkbox" name="img[{$value.id_img}]" id="{$value.name_img}" value="{$value.id_img}">
+            <label for="{$value.name_img}">
                 <figure>
                     <div class="center-img">
                         <img class="img-responsive" src="/upload/{if isset($uploadDir)}{$uploadDir}{else}{$smarty.get.controller}{/if}/{$value.id_product}/s_{$value.name_img}" />

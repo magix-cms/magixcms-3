@@ -77,7 +77,15 @@ class backend_db_news
                         JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang)
                         WHERE tag.id_lang = :id_lang';
                     $params = $data;
+                }elseif ($config['type'] === 'sitemap') {
+                    $sql = "SELECT p.id_news,c.name_news,c.url_news,c.last_update,c.date_publish,c.published_news,lang.iso_lang
+                            FROM mc_news AS p
+                            JOIN mc_news_content AS c USING(id_news)
+                            JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                            WHERE c.published_news = 1 AND c.id_lang = :id_lang";
+                    $params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
 
             }elseif ($config['context'] === 'unique' || $config['context'] === 'last') {

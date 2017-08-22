@@ -62,10 +62,10 @@ class backend_db_product{
 
                     $params = $data;
 
-                }elseif ($config['type'] === 'editImages') {
+                }elseif ($config['type'] === 'images') {
                     $sql = 'SELECT img.*
                         FROM mc_catalog_product_img AS img
-                        WHERE img.id_product = :edit';
+                        WHERE img.id_product = :id';
 
                     $params = $data;
 
