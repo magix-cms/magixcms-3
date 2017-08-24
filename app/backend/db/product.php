@@ -53,7 +53,8 @@ class backend_db_product{
                         }
                     }
                     $params = $data;
-                }elseif ($config['type'] === 'page') {
+                }
+                elseif ($config['type'] === 'page') {
                     $sql = 'SELECT p.*,c.*,lang.*
                         FROM mc_catalog_product AS p
                         JOIN mc_catalog_product_content AS c USING(id_product)
@@ -62,7 +63,8 @@ class backend_db_product{
 
                     $params = $data;
 
-                }elseif ($config['type'] === 'images') {
+                }
+                elseif ($config['type'] === 'images') {
                     $sql = 'SELECT img.*
                         FROM mc_catalog_product_img AS img
                         WHERE img.id_product = :id';
@@ -75,27 +77,36 @@ class backend_db_product{
                         FROM mc_catalog_product_img AS img';
 
                 }
+                elseif ($config['type'] === 'catRel') {
+                    $sql = 'SELECT id_product, id_cat, default_c FROM mc_catalog WHERE id_product = :id';
+                    $params = $data;
+                }
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-            }elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
-
+            }
+            elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
                 if ($config['type'] === 'root') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_catalog_product ORDER BY id_product DESC LIMIT 0,1';
                     //$params = $data;
-                } elseif ($config['type'] === 'content') {
+                }
+                elseif ($config['type'] === 'content') {
 
                     $sql = 'SELECT * FROM `mc_catalog_product_content` WHERE `id_product` = :id_product AND `id_lang` = :id_lang';
                     $params = $data;
 
-                } elseif ($config['type'] === 'page') {
+                }
+                elseif ($config['type'] === 'page') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_catalog_product WHERE `id_product` = :id_product';
                     $params = $data;
                 }
-
                 elseif ($config['type'] === 'img') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_catalog_product_img WHERE `id_img` = :editimg';
+                    $params = $data;
+                }
+                elseif ($config['type'] === 'catRel') {
+                    $sql = 'SELECT * FROM mc_catalog WHERE id_product = :id AND id_cat = :id_cat';
                     $params = $data;
                 }
 
@@ -120,7 +131,8 @@ class backend_db_product{
                         ':reference_p'  => $data['reference_p']
                     )
                 );
-            }elseif ($config['type'] === 'content') {
+            }
+            elseif ($config['type'] === 'content') {
                 $sql = 'UPDATE mc_catalog_product_content SET name_p = :name_p, url_p = :url_p, content_p = :content_p, published_p = :published_p
                 WHERE id_product = :id_product AND id_lang = :id_lang';
                 component_routing_db::layer()->update($sql,
@@ -133,7 +145,8 @@ class backend_db_product{
                         ':published_p'  => $data['published_p']
                     )
                 );
-            }elseif ($config['type'] === 'img') {
+            }
+            elseif ($config['type'] === 'img') {
 
                 $sql = 'UPDATE mc_catalog_product_img SET alt_img = :alt_img, title_img = :title_img
                 WHERE id_img = :id_img';
@@ -146,6 +159,16 @@ class backend_db_product{
                     )
                 );
             }
+            elseif ($config['type'] === 'catRel') {
+                $sql = 'UPDATE mc_catalog
+                		SET default_c = CASE id_cat
+							WHEN :id_cat THEN 1
+							ELSE 0
+						END
+						WHERE id_product = :id';
+
+                component_routing_db::layer()->update($sql, $data);
+            }
         }
     }
     /**
@@ -156,17 +179,14 @@ class backend_db_product{
     {
         if (is_array($config)) {
             if ($config['type'] === 'newPages') {
-
                 $sql = 'INSERT INTO `mc_catalog_product`(price_p,reference_p,date_register) 
                 VALUES (:price_p,:reference_p,NOW())';
                 component_routing_db::layer()->insert($sql,array(
                     ':price_p'	        => $data['price_p'],
                     ':reference_p'	    => $data['reference_p']
                 ));
-
-
-            }elseif ($config['type'] === 'newContent') {
-
+            }
+            elseif ($config['type'] === 'newContent') {
                 $sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_p,content_p,published_p) 
 				  VALUES (:id_product,:id_lang,:name_p,:url_p,:content_p,:published_p)';
 
@@ -178,16 +198,20 @@ class backend_db_product{
                     ':content_p'    => $data['content_p'],
                     ':published_p'  => $data['published_p']
                 ));
-            }elseif ($config['type'] === 'img') {
-
+            }
+            elseif ($config['type'] === 'img') {
                 $sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img) 
                 VALUES (:id_product,:name_img)';
                 component_routing_db::layer()->insert($sql,array(
                     ':id_product'	    => $data['id_product'],
                     ':name_img'	        => $data['name_img']
                 ));
+            }
+            elseif ($config['type'] === 'catRel') {
+                $sql = 'INSERT INTO `mc_catalog` (id_product,id_cat,default_c,order_p)
+						SELECT :id,:id_cat,:default_c,COUNT(id_catalog) FROM mc_catalog WHERE id_cat IN ('.$data[':id_cat'].')';
 
-
+                component_routing_db::layer()->insert($sql,$data);
             }
         }
     }
@@ -204,6 +228,14 @@ class backend_db_product{
             }
             elseif($config['type'] === 'delImages') {
 				$sql = 'DELETE FROM mc_catalog_product_img WHERE id_img IN ('.$data['id'].')';
+				component_routing_db::layer()->delete($sql,array());
+			}
+            elseif($config['type'] === 'catRel') {
+				$sql = 'DELETE FROM mc_catalog WHERE id_product = :id';
+				component_routing_db::layer()->delete($sql,$data);
+			}
+            elseif($config['type'] === 'oldCatRel') {
+				$sql = 'DELETE FROM mc_catalog WHERE id_product = '.$data[':id'].' AND id_cat NOT IN ('.$data[':id_cat'].')';
 				component_routing_db::layer()->delete($sql,array());
 			}
         }

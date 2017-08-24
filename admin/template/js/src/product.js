@@ -194,6 +194,30 @@ var product = (function ($, undefined) {
             initTree();
             initDropZone();
 
+            $('.catlisting input[type="checkbox"]').change(function(){
+                var radio = $(this).next().next().find('input[type="radio"]');
+                var enabledRadios = null;
+
+                if($(this).prop('checked')) {
+                    radio.prop('disabled',false);
+
+                    enabledRadios = $('.catlisting input[type="radio"]:enabled');
+
+                    if(enabledRadios.length === 1) {
+                        radio.prop('checked',true);
+                    }
+                } else {
+                    enabledRadios = $('.catlisting input[type="radio"]:enabled');
+
+                    if(enabledRadios.length > 1) {
+                        var rad = enabledRadios.index(radio) ? 0 : 1;
+                        $(enabledRadios[rad]).prop('checked',true);
+                    }
+
+                    $(this).next().next().find('input[type="radio"]').prop('checked',false).prop('disabled',true);
+                }
+            });
+
             $( ".row.sortable" ).sortable();
             $( ".row.sortable" ).disableSelection();
         }

@@ -53,7 +53,7 @@ class component_collections_language{
                            ORDER BY l.id_lang';
                     //$params = $data;
                 }elseif ($config['type'] === 'langs') {
-                    $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang
+                    $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang, l.default_lang
                            FROM mc_lang AS l
                            WHERE l.active_lang = 1
                            ORDER BY l.default_lang DESC,l.id_lang ASC';

@@ -5,7 +5,7 @@ class backend_controller_product extends backend_db_product
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory;
 
-	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $parent, $default_cat;
+	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat;
 
 	/**
 	 * backend_controller_catalog constructor.
@@ -64,6 +64,9 @@ class backend_controller_product extends backend_db_product
 		}
 		if (http_request::isPost('imgData')) {
 			$this->imgData = $formClean->arrayClean($_POST['imgData']);
+		}
+		if (http_request::isPost('product_cat')) {
+			$this->product_cat = $formClean->simpleClean($_POST['product_cat']);
 		}
 		if (http_request::isPost('parent')) {
 			$this->parent = $formClean->arrayClean($_POST['parent']);
@@ -183,6 +186,14 @@ class backend_controller_product extends backend_db_product
 					)
 				);
 				break;
+			case 'catRel':
+				parent::update(
+					array(
+						'type' => 'catRel'
+					),
+					$data['data']
+				);
+				break;
 		}
 	}
 
@@ -213,6 +224,38 @@ class backend_controller_product extends backend_db_product
 		}
 
 		$this->template->assign('catTree', $childs['root']);
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getCatRels()
+	{
+		$rels = $this->getItems('catRel', $this->edit, 'return');
+		$catRels = array();
+
+		foreach($rels as $rel) {
+			$catRels[$rel['id_cat']] = $rel;
+		}
+
+		$this->template->assign('catRel',$catRels);
+	}
+
+	/**
+	 * Insertion de données
+	 * @param $data
+	 */
+	private function add($data){
+		switch($data['type']){
+			case 'newCatRel':
+				parent::insert(
+					array(
+						'type' => 'catRel'
+					),
+					$data['data']
+				);
+				break;
+		}
 	}
 
 	/**
@@ -484,7 +527,16 @@ class backend_controller_product extends backend_db_product
                     $this->header->set_json_headers();
                     $this->message->json_post_response(true, 'delete', $data['data']);
                 }
-			break;
+				break;
+			case 'oldCatRel':
+			case 'catRel':
+				parent::delete(
+					array(
+						'type' => $data['type']
+					),
+					$data['data']
+				);
+				break;
 		}
 	}
 
@@ -521,13 +573,45 @@ class backend_controller_product extends backend_db_product
 							$this->template->display('catalog/product/edit-img.tpl');
 						}
 					}
-					elseif (isset($this->parent)) {
+					elseif (isset($this->product_cat)) {
+						if (isset($this->parent)) {
+							$ids = array();
+							foreach ($this->parent as $id => $val) {
+								$ids[] = $id;
+								$link = parent::fetchData( array('context' => 'unique', 'type' => 'catRel'), array(':id' => $this->edit, ':id_cat' => $id) );
+
+								if($link == null) {
+									$data = array(':id' => $this->edit, ':id_cat' => $id, ':default_c' => 0);
+
+									if($this->default_cat == $id) { $data[':default_c'] = 1; }
+
+									$this->add(array(
+										'type' => 'newCatRel',
+										'data' => $data
+									));
+								}
+								elseif($this->default_cat == $id && $link['default_c'] == 0) {
+									$this->upd(array(
+										'type' => 'catRel',
+										'data' => array(':id' => $this->edit, ':id_cat' => $id)
+									));
+								}
+							}
+
+							$this->del(array(
+								'type' => 'oldCatRel',
+								'data' => array(':id' => $this->edit, ':id_cat' => implode(',',$ids))
+							));
+						}
+						else {
+							$this->del(array(
+								'type' => 'catRel',
+								'data' => array(':id' => $this->edit)
+							));
+						}
+
 						$this->header->set_json_headers();
-						$this->message->json_post_response(true,'save',$this->parent);
-					}
-					elseif (isset($this->default_cat)) {
-						$this->header->set_json_headers();
-						$this->message->json_post_response(true,'save',$this->default_cat);
+						$this->message->json_post_response(true,'update');
 					}
 					else {
 						// --- Product content
@@ -544,6 +628,7 @@ class backend_controller_product extends backend_db_product
 
 						// --- Categories
 						$this->setCategoriesTree();
+						$this->getCatRels();
 
 						$this->template->display('catalog/product/edit.tpl');
 					}

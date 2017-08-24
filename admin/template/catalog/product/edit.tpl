@@ -52,6 +52,7 @@
                                 </div>
                             </div>
                             <div class="actions">
+                                <input type="hidden" name="product_cat" value="save"/>
                                 <button class="btn btn-main-theme" type="submit">{#save#|ucfirst}</button>
                             </div>
                         </form>

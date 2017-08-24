@@ -253,7 +253,8 @@ form > .actions {
 				&:before {
 					left: 0;
 					.fa;
-					color: #444;
+					color: #555;
+					padding: 3px;
 				}
 			}
 
@@ -266,14 +267,16 @@ form > .actions {
 				height: 0;
 				z-index: -5;
 
-				&:checked + label {
-					&:before {
-						color: @main-color;
+				&:checked {
+					 + label {
+						&:before {
+							color: @main-color;
+						}
 					}
 				}
 			}
 
-			[type="radio"] {
+			[type="radio"]:not(:disabled) {
 				+ label {
 					&:before {
 						content: "@{fa-var-circle-thin}";
@@ -283,6 +286,7 @@ form > .actions {
 				&:checked + label {
 					&:before {
 						content: "@{fa-var-check}";
+						padding: 2px;
 					}
 				}
 			}
@@ -300,6 +304,26 @@ form > .actions {
 					}
 				}
 			}
+		}
+	}
+}
+
+.tree-header {
+	padding-bottom: 8px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 6px;
+
+	a {
+		padding: 5px;
+		color: #666;
+
+		&:first-child {
+			margin-left: -5px;
+		}
+
+		&:hover, &:active, &:focus {
+			color: #333;
+			text-decoration: none;
 		}
 	}
 }
