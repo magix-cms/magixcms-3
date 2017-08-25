@@ -32,7 +32,7 @@
                     </div>
                     {foreach $setTabsPlugins as $key => $value}
                     <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
-                        fgdfgdgd
+                        {block name="plugin:content"}{/block}
                     </div>
                     {/foreach}
                 </div>

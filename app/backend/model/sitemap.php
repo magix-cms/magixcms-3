@@ -3,7 +3,7 @@ class backend_model_sitemap{
     /**
      * @var xml_sitemap
      */
-    protected $xml,$setting,$collectionLanguage,$DBPages,$DBNews,$DBCatalog,$DBPlugins,$template;
+    protected $xml,$setting,$collectionLanguage,$DBPages,$DBNews,$DBCatalog,$DBPlugins,$template,$modelPlugins;
 
     /**
      * backend_model_sitemap constructor.
@@ -18,6 +18,7 @@ class backend_model_sitemap{
         $this->DBCatalog = new backend_db_catalog();
         $this->DBPlugins = new backend_db_plugins();
         $this->collectionLanguage = new component_collections_language();
+        $this->modelPlugins = new backend_model_plugins();
         $this->template = $template;
     }
 
@@ -41,19 +42,6 @@ class backend_model_sitemap{
         }
     }
 
-    private function getCallClass($className){
-        try{
-            $class =  new $className;
-            if($class instanceof $className){
-                return $class;
-            }else{
-                throw new Exception('not instantiate the class: '.$className);
-            }
-        } catch (Exception $e) {
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
-        }
-    }
 
     /**
      * Call a callback method for create sitemap with plugins
@@ -87,7 +75,7 @@ class backend_model_sitemap{
                         //Call a callback with an array
                         call_user_func_array(
                             array(
-                                $this->getCallClass($class),'setSitemap'
+                                $this->modelPlugins->getCallClass($class),'setSitemap'
                             ),
                             array(
                                 array_merge($config,array('name'=>$item['name']))

@@ -183,7 +183,7 @@ var globalForm = (function ($, undefined) {
                 }
             };
         }
-         // --- Rules form classic edit form but with replace from extend data
+        // --- Rules form classic edit form but with replace from extend data
         else if($(f).hasClass('edit_form_extend')) {
             options.success = function (d) {
                 $.jmRequest.initbox(d.notify,{ display:true });
@@ -270,13 +270,15 @@ var globalForm = (function ($, undefined) {
                 if(d.statut && d.result) {
                     var ids = d.result.id.split(',');
                     var nbr = 0;
+                    var table = $('#table-'+controller);
+
                     for(var i = 0;i < ids.length; i++) {
                         $('#'+controller+'_' + ids[i]).next('.collapse').remove();
                         $('#'+controller+'_' + ids[i]).remove();
-                        nbr = $('#table-'+controller).find('tbody').find('tr').length;
+                        nbr = table.find('tbody').find('tr').length;
                     }
                     if(!nbr) {
-                        $('#table-'+controller).addClass('hide').next('.no-entry').removeClass('hide');
+                        table.addClass('hide').next('.no-entry').removeClass('hide');
                     }
                     $('.nbr-'+controller).text(nbr);
                     initModalActions();

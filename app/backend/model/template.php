@@ -121,8 +121,8 @@ class backend_model_template{
 	 * return void
 	 * Le chemin du dossier des plugins
 	 */
-	private function DirPlugins(){
-		return component_core_system::basePath();
+	public function pluginsBasePath(){
+		return component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR;
 	}
 	/**
 	 * Chargement du fichier de configuration suivant la langue en cours de session.

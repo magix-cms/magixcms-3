@@ -7,6 +7,7 @@ class backend_model_plugins{
      */
     public function __construct()
     {
+        $this->template = new backend_model_template();
         $formClean = new form_inputEscape();
         if(http_request::isGet('controller')){
             $this->controller_name = $formClean->simpleClean($_GET['controller']);
@@ -18,7 +19,11 @@ class backend_model_plugins{
         //$this->data = new backend_model_data($this);
     }
 
-    private function getCallClass($className){
+    /**
+     * @param $className
+     * @return mixed
+     */
+    public function getCallClass($className){
         try{
             $class =  new $className;
             if($class instanceof $className){
@@ -56,6 +61,7 @@ class backend_model_plugins{
                     //Ajoute l'onglet si le plugin est inscrit pour le core
                     if($item[$config['controller']] != '0'){
                         $newsItems[] = $item;
+                        $this->template->assign('setTabsPlugins',$newsItems);
                     }
 
                     break;
@@ -139,6 +145,27 @@ class backend_model_plugins{
             if(file_exists($setTemplatePath)){
                 $template->addTemplateDir($setTemplatePath);
             }
+        }
+    }
+
+    /**
+     * @param null $template
+     * @param null $plugin
+     * @param null $cache_id
+     * @param null $compile_id
+     * @param null $parent
+     */
+    public function display($template = null, $plugin = null, $cache_id = null, $compile_id = null, $parent = null){
+        if($plugin != null){
+            $this->template->addTemplateDir($this->template->pluginsBasePath().$plugin.'/skin/admin/');
+        }else{
+            $this->template->addTemplateDir($this->template->pluginsBasePath().$this->plugin.'/skin/admin/');
+        }
+
+        if(!$this->template->isCached($template, $cache_id, $compile_id, $parent)){
+            $this->template->display($template, $cache_id, $compile_id, $parent);
+        }else{
+            $this->template->display($template, $cache_id, $compile_id, $parent);
         }
     }
 }

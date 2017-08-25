@@ -1,4 +1,5 @@
 var product = (function ($, undefined) {
+    'use strict'
     function initGen(fd){
         var progressBar = new ProgressBar('#progress-thumbnail',{loader: {type:'text', icon:'etc'}});
         $.jmRequest({
@@ -44,6 +45,8 @@ var product = (function ($, undefined) {
                 if(d.status == 'success') {
                     progressBar.updateState('success');
                     progressBar.update({state: d.message+' <span class="fa fa-check"></span>',loader: false});
+                    $('.block-img').empty();
+                    $('.block-img').html(d.result);
                 }
                 else {
                     switch (d.error_code) {
@@ -56,11 +59,6 @@ var product = (function ($, undefined) {
                             progressBar.update({state: '<span class="fa fa-warning"></span> '+d.message,loader: false});
                             break;
                     }
-                }
-                $.jmRequest.initbox(d.notify,{ display:false });
-                if(d.statut && d.result) {
-                    $('.block-img').empty();
-                    $('.block-img').html(d.result);
                 }
             },
             complete: function () {
@@ -182,10 +180,10 @@ var product = (function ($, undefined) {
         }, true);
     }
 
-    function initDefaultImg() {
+    function initDefaultImg(edit) {
         $('.make_default').on('click', function(){
-            var dflt = $('.default.in'),
-                edit = $(this).data('edit'),
+            var self = this,
+                dflt = $('.default.in'),
                 id = $(this).data('id');
 
             $('.default').removeClass('in');
@@ -199,19 +197,33 @@ var product = (function ($, undefined) {
                 method: 'post',
                 success: function (d) {
                     if(!d.statut) {
-                        $(this).parent().removeClass('hide').prev().removeClass('in');
+                        $(self).parent().removeClass('hide').prev().removeClass('in');
                         dflt.addClass('in').next().addClass('hide');
                     }
 
-                    $(this).parent().prev().find('.fa').attr('class','fa fa-check text-success');
+                    $(self).parent().prev().find('.fa').attr('class','fa fa-check text-success');
                 }
             });
             return false;
         });
+
+        $('#gallery-product .sortable > div').on('change',function(){
+            var dflt = $('.default.in');
+            if(!dflt.length) {
+                $.jmRequest({
+                    handler: "ajax",
+                    url: '/admin/index.php?controller=product&edit='+edit+'&action=getImgDefault',
+                    method: 'get',
+                    success: function (d) {
+                        $('#image_'+d).find('.default').addClass('in').next().addClass('hide');
+                    }
+                });
+            }
+        });
     }
 
     return {
-        run: function(){
+        run: function(controller,edit){
             $('.progress').hide();
             $('.form-gen').on('submit', function(e) {
                 e.preventDefault();
@@ -221,7 +233,7 @@ var product = (function ($, undefined) {
             });
             initTree();
             initDropZone();
-            initDefaultImg();
+            initDefaultImg(edit);
 
             $('.catlisting input[type="checkbox"]').change(function(){
                 var radio = $(this).next().next().find('input[type="radio"]');

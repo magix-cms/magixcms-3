@@ -89,7 +89,8 @@
                 console.log("product is not defined");
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                product.run(controller);
+                var edit = "{$smarty.get.edit}";
+                product.run(controller,edit);
             }
         });
     </script>

@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class plugins_test_admin
+ * Fichier pour l'administration d'un plugin
+ */
 class plugins_test_admin{
     /**
      * @var backend_model_template

@@ -2,7 +2,7 @@
 class backend_controller_home extends backend_db_home{
 
     public $edit, $action, $tabs;
-    protected $controller, $message, $template, $header, $data, $modelLanguage, $modelPlugins;
+    protected $controller, $message, $template, $header, $data, $modelLanguage, $modelPlugins, $plugin;
     public $content;
 
     public function __construct()
@@ -38,6 +38,10 @@ class backend_controller_home extends backend_db_home{
                 }
             }
             $this->content = $array;
+        }
+
+        if(http_request::isGet('plugin')){
+            $this->plugin = $formClean->simpleClean($_GET['plugin']);
         }
     }
 
@@ -129,35 +133,37 @@ class backend_controller_home extends backend_db_home{
     }
 
     public function run(){
-        $setTabsPlugins = $this->modelPlugins->getItems(
+        // Initialise l'API menu des plugins core
+        $this->modelPlugins->getItems(
             array(
                 'type'      =>  'tabs',
                 'controller'=>  $this->controller
             )
         );
 
-        $this->template->assign('setTabsPlugins',$setTabsPlugins);
-        if(isset($_GET['plugin'])){
+        if(isset($this->plugin)){
+            // Execute un plugin core
             $this->modelPlugins->getItems(
                 array(
                     'type'      =>  'core',
                     'controller'=>  $this->controller
                 )
             );
-        }
-        elseif(isset($this->action)) {
-            switch ($this->action) {
-                case 'edit':
-                    $this->save();
-                    break;
-            }
         }else{
-            $this->modelLanguage->getLanguage();
-            $last = $this->setItemData();
-            $pages = $this->setItemsData();
-            $this->template->assign('home',$last);
-            $this->template->assign('page', $pages[$last['id_page']]);
-            $this->template->display('home/edit.tpl');
+            if(isset($this->action)) {
+                switch ($this->action) {
+                    case 'edit':
+                        $this->save();
+                        break;
+                }
+            }else{
+                $this->modelLanguage->getLanguage();
+                $last = $this->setItemData();
+                $pages = $this->setItemsData();
+                $this->template->assign('home',$last);
+                $this->template->assign('page', $pages[$last['id_page']]);
+                $this->template->display('home/edit.tpl');
+            }
         }
     }
 

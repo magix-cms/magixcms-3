@@ -1,4 +1,4 @@
-<form id="table-image" action="">
+<form action="">
     {include file="catalog/product/loop/img.tpl" controller="product" uploadDir="catalog/p" data=$images}
     <div class="actions">
         <div class="pull-right">
