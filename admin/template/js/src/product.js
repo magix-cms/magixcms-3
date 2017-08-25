@@ -182,6 +182,34 @@ var product = (function ($, undefined) {
         }, true);
     }
 
+    function initDefaultImg() {
+        $('.make_default').on('click', function(){
+            var dflt = $('.default.in'),
+                edit = $(this).data('edit'),
+                id = $(this).data('id');
+
+            $('.default').removeClass('in');
+            $('.make-default').removeClass('hide');
+            $(this).parent().addClass('hide').prev().addClass('in').find('.fa').attr('class','fa fa-spinner fa-pulse');
+
+            $.jmRequest({
+                handler: "ajax",
+                url: '/admin/index.php?controller=product&edit='+edit+'&action=setImgDefault',
+                data: {id_img: id},
+                method: 'post',
+                success: function (d) {
+                    if(!d.statut) {
+                        $(this).parent().removeClass('hide').prev().removeClass('in');
+                        dflt.addClass('in').next().addClass('hide');
+                    }
+
+                    $(this).parent().prev().find('.fa').attr('class','fa fa-check text-success');
+                }
+            });
+            return false;
+        });
+    }
+
     return {
         run: function(){
             $('.progress').hide();
@@ -193,6 +221,7 @@ var product = (function ($, undefined) {
             });
             initTree();
             initDropZone();
+            initDefaultImg();
 
             $('.catlisting input[type="checkbox"]').change(function(){
                 var radio = $(this).next().next().find('input[type="radio"]');

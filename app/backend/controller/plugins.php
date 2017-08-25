@@ -129,7 +129,7 @@ class backend_controller_plugins extends backend_db_plugins{
      *
      */
     public function run(){
-        $data = $this->modelPlugins->getItems();
+        $data = $this->modelPlugins->getItems(array('type'=>'self'));
         $this->template->assign('getListPlugins',$data);
         $this->template->assign('getListPluginsNotRegister',$this->setNotRegisterItems());
         $this->template->display('plugins/index.tpl');

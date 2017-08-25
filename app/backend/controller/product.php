@@ -74,7 +74,6 @@ class backend_controller_product extends backend_db_product
 		if (http_request::isPost('default_cat')) {
 			$this->default_cat = $formClean->numeric($_POST['default_cat']);
 		}
-
 	}
 
 	/**
@@ -193,6 +192,17 @@ class backend_controller_product extends backend_db_product
 					),
 					$data['data']
 				);
+				break;
+			case 'imageDefault':
+				parent::update(
+					array(
+						'type' => 'imageDefault'
+					),
+					$data['data']
+				);
+
+				$this->header->set_json_headers();
+				$this->message->json_post_response(true,'update');
 				break;
 		}
 	}
@@ -576,6 +586,7 @@ class backend_controller_product extends backend_db_product
 					elseif (isset($this->product_cat)) {
 						if (isset($this->parent)) {
 							$ids = array();
+
 							foreach ($this->parent as $id => $val) {
 								$ids[] = $id;
 								$link = parent::fetchData( array('context' => 'unique', 'type' => 'catRel'), array(':id' => $this->edit, ':id_cat' => $id) );
@@ -583,14 +594,13 @@ class backend_controller_product extends backend_db_product
 								if($link == null) {
 									$data = array(':id' => $this->edit, ':id_cat' => $id, ':default_c' => 0);
 
-									if($this->default_cat == $id) { $data[':default_c'] = 1; }
-
 									$this->add(array(
 										'type' => 'newCatRel',
 										'data' => $data
 									));
 								}
-								elseif($this->default_cat == $id && $link['default_c'] == 0) {
+
+								if($this->default_cat == $id) {
 									$this->upd(array(
 										'type' => 'catRel',
 										'data' => array(':id' => $this->edit, ':id_cat' => $id)
@@ -631,6 +641,14 @@ class backend_controller_product extends backend_db_product
 						$this->getCatRels();
 
 						$this->template->display('catalog/product/edit.tpl');
+					}
+					break;
+				case 'setImgDefault':
+					if(isset($this->id_img)) {
+						$this->upd(array(
+							'type' => 'imageDefault',
+							'data' => array(':id' => $this->edit, ':id_img' => $this->id_img)
+						));
 					}
 					break;
 				case 'delete':

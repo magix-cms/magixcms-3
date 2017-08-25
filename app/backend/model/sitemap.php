@@ -57,6 +57,22 @@ class backend_model_sitemap{
 
     /**
      * Call a callback method for create sitemap with plugins
+     * Example :
+     *
+    public function setSitemap($config){
+    $dateFormat = new date_dateformat();
+    $url = '/' . $config['iso_lang']. '/'.$config['name'].'/';
+    $this->xml->writeNode(
+        array(
+            'type'      =>  'child',
+            'loc'       =>  $this->sitemap->url(array('domain' => $config['domain'], 'url' => $url)),
+            'image'     =>  false,
+            'lastmod'   =>  $dateFormat->dateDefine(),
+            'changefreq'=>  'always',
+            'priority'  =>  '0.7'
+        )
+    );
+    }
      * @param $config
      */
     private function setPluginsItems($config){

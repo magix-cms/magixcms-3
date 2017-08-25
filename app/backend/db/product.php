@@ -169,6 +169,16 @@ class backend_db_product{
 
                 component_routing_db::layer()->update($sql, $data);
             }
+            elseif ($config['type'] === 'imageDefault') {
+                $sql = 'UPDATE mc_catalog_product_img
+                		SET default_img = CASE id_img
+							WHEN :id_img THEN 1
+							ELSE 0
+						END
+						WHERE id_product = :id';
+
+                component_routing_db::layer()->update($sql, $data);
+            }
         }
     }
     /**

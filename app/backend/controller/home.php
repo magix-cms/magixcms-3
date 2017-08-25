@@ -2,7 +2,7 @@
 class backend_controller_home extends backend_db_home{
 
     public $edit, $action, $tabs;
-    protected $message, $template, $header, $data, $modelLanguage;
+    protected $controller, $message, $template, $header, $data, $modelLanguage, $modelPlugins;
     public $content;
 
     public function __construct()
@@ -13,8 +13,12 @@ class backend_controller_home extends backend_db_home{
         $this->data = new backend_model_data($this);
         $formClean = new form_inputEscape();
         $this->modelLanguage = new backend_model_language($this->template);
+        $this->modelPlugins = new backend_model_plugins();
 
         // --- GET
+        if(http_request::isGet('controller')) {
+            $this->controller = $formClean->simpleClean($_GET['controller']);
+        }
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
         }
@@ -125,7 +129,23 @@ class backend_controller_home extends backend_db_home{
     }
 
     public function run(){
-        if(isset($this->action)) {
+        $setTabsPlugins = $this->modelPlugins->getItems(
+            array(
+                'type'      =>  'tabs',
+                'controller'=>  $this->controller
+            )
+        );
+
+        $this->template->assign('setTabsPlugins',$setTabsPlugins);
+        if(isset($_GET['plugin'])){
+            $this->modelPlugins->getItems(
+                array(
+                    'type'      =>  'core',
+                    'controller'=>  $this->controller
+                )
+            );
+        }
+        elseif(isset($this->action)) {
             switch ($this->action) {
                 case 'edit':
                     $this->save();

@@ -10,19 +10,16 @@
                     </div>
                 </figure>
             </label>
-            {if $value.default_img}
-                <div class="default">
-                    <span class="fa fa-check text-success"></span>
+            <div class="default fade{if $value.default_img} in{/if}">
+                <span class="fa fa-check text-success"></span>
+                Image par défaut
+            </div>
+            <div class="make-default{if $value.default_img} hide{/if}">
+                <a href="#" class="make_default" data-id="{$value.id_img}" data-edit="{$value.id_product}">
+                    <span class="fa fa-circle-thin"></span>
                     Image par défaut
-                </div>
-            {else}
-                <div class="make-default">
-                    <a href="#" class="make_default">
-                        <span class="fa fa-circle-thin"></span>
-                        Image par défaut
-                    </a>
-                </div>
-            {/if}
+                </a>
+            </div>
             <div class="btn-group actions btn-group-justified" role="group">
                 <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$value.id_product}&editimg={$value.id_img}" type="button" class="btn btn-default"><span class="fa fa-pencil-square-o"></span></a>
                 <a type="button" class="btn btn-default img-zoom" href="/upload/{if isset($uploadDir)}{$uploadDir}{else}{$smarty.get.controller}{/if}/{$value.id_product}/l_{$value.name_img}"><span class="fa fa-search-plus"></span></a>
