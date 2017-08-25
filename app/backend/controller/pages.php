@@ -2,8 +2,8 @@
 class backend_controller_pages extends backend_db_pages
 {
 
-    public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent;
+    public $edit, $action, $tabs, $search, $plugin;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins;
     public $id_pages,$parent_id,$content,$pages,$img;
 
     public function __construct()
@@ -17,7 +17,11 @@ class backend_controller_pages extends backend_db_pages
         $this->collectionLanguage = new component_collections_language();
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
+        $this->modelPlugins = new backend_model_plugins();
         // --- GET
+        if(http_request::isGet('controller')) {
+            $this->controller = $formClean->simpleClean($_GET['controller']);
+        }
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
         }
@@ -64,6 +68,10 @@ class backend_controller_pages extends backend_db_pages
         # ORDER PAGE
         if(http_request::isPost('pages')){
             $this->order = $formClean->arrayClean($_POST['pages']);
+        }
+
+        if(http_request::isGet('plugin')){
+            $this->plugin = $formClean->simpleClean($_GET['plugin']);
         }
     }
 
@@ -397,145 +405,189 @@ class backend_controller_pages extends backend_db_pages
      *
      */
     public function run(){
-        if(isset($this->action)) {
-            switch ($this->action) {
-                case 'add':
-                    if(isset($this->content)){
-                        $this->save();
-                    }else{
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
-                        $data = parent::fetchData(
-                            array('context'=>'all','type'=>'pagesSelect'),
-                            array(':default_lang'=>$defaultLanguage['id_lang'])
+        if(isset($this->plugin)){
+            if(isset($this->action)) {
+                switch ($this->action) {
+                    case 'edit':
+                        // Initialise l'API menu des plugins core
+                        $this->modelPlugins->getItems(
+                            array(
+                                'type'      =>  'tabs',
+                                'controller'=>  $this->controller
+                            )
                         );
-                        $this->template->assign('pagesSelect',$data);
-                        $this->modelLanguage->getLanguage();
-                        $this->template->display('pages/add.tpl');
-                    }
-
-                    break;
-                case 'edit':
-                    if (isset($this->id_pages)) {
-                        $this->save();
-                    }else{
                         $this->modelLanguage->getLanguage();
                         $setEditData = parent::fetchData(
-                            array('context'=>'all','type'=>'page'),
-                            array('edit'=>$this->edit)
+                            array('context' => 'all', 'type' => 'page'),
+                            array('edit' => $this->edit)
                         );
                         $setEditData = $this->setItemData($setEditData);
-                        $this->template->assign('page',$setEditData[$this->edit]);
-                        //$pages = $this->setItemsData();
-                        //$this->template->assign('pages', $pages);
-
-						$assign = array(
-							'id_pages',
-							'name_pages' => ['title' => 'name'],
-							'menu_pages',
-							'date_register'
-						);
-						$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
-						$pageChild = $this->getItems('pagesChild',$this->edit,'all');
-
-						if(isset($this->search)) {
-							$this->template->assign('ajax_form',true);
-							$this->template->assign('data',$pageChild);
-							$this->template->assign('section','pages');
-							$this->template->assign('idcolumn','id_pages');
-							$this->template->assign('controller','pages');
-							$this->template->assign('readonly',array());
-							$this->template->assign('cClass','backend_controller_pages');
-							$display = $this->template->fetch('section/form/loop/rows-2.tpl');
-							$this->header->set_json_headers();
-							$this->message->json_post_response(true,'',$display);
-						}
-						else {
-							$this->template->display('pages/edit.tpl');
-						}
-                    }
-                    break;
-                case 'active-selected':
-                case 'unactive-selected':
-					if(isset($this->pages) && is_array($this->pages) && !empty($this->pages)) {
-						$this->upd(
-							array(
-								'type'=>'pageActiveMenu',
-								'data'=>array(
-									'menu_pages' => ($this->action == 'active-selected'?1:0),
-									'id_pages' => implode($this->pages, ',')
-								)
-							)
-						);
-					}
-					$this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
-					//$pages = $this->setItemsData();
-					//$this->template->assign('pages', $pages);
-					$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
-					$assign = array(
-						'id_pages',
-						'name_pages' => ['title' => 'name'],
-						'menu_pages',
-						'date_register'
-					);
-					$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
-					$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
-					$this->template->display('pages/index.tpl');
-                    break;
-                case 'order':
-                    if (isset($this->order)) {
-                        $this->upd(
+                        $this->template->assign('page', $setEditData[$this->edit]);
+                        $assign = array(
+                            'id_pages',
+                            'name_pages' => ['title' => 'name'],
+                            'menu_pages',
+                            'date_register'
+                        );
+                        $this->data->getScheme(array('mc_cms_page', 'mc_cms_page_content'), array('id_pages', 'name_pages', 'menu_pages', 'date_register'), $assign);
+                        // Execute un plugin core
+                        $this->modelPlugins->getItems(
                             array(
-                                'type' => 'order'
+                                'type' => 'core',
+                                'controller' => $this->controller
                             )
                         );
-                    }
-                    break;
-                case 'delete':
-                    if(isset($this->id_pages)) {
-                        $this->del(
-                            array(
-                                'type'=>'delPages',
-                                'data'=>array(
-                                    'id' => $this->id_pages
-                                )
-                            )
-                        );
-                    }
-                    break;
+                        break;
+                }
             }
         }else{
-            $this->modelLanguage->getLanguage();
-			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
-			$this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
-			$assign = array(
-				'id_pages',
-				'name_pages' => ['title' => 'name'],
-				'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'menu_pages',
-				'date_register'
-			);
+            if(isset($this->action)) {
+                switch ($this->action) {
+                    case 'add':
+                        if(isset($this->content)){
+                            $this->save();
+                        }else{
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+                            $data = parent::fetchData(
+                                array('context'=>'all','type'=>'pagesSelect'),
+                                array(':default_lang'=>$defaultLanguage['id_lang'])
+                            );
+                            $this->template->assign('pagesSelect',$data);
+                            $this->modelLanguage->getLanguage();
+                            $this->template->display('pages/add.tpl');
+                        }
 
-			if(isset($this->search)) {
-				$search = $this->search;
-				$search = array_filter($search);
+                        break;
+                    case 'edit':
+                        if (isset($this->id_pages)) {
+                            $this->save();
+                        }else{
+                            // Initialise l'API menu des plugins core
+                            $this->modelPlugins->getItems(
+                                array(
+                                    'type'      =>  'tabs',
+                                    'controller'=>  $this->controller
+                                )
+                            );
+                            $this->modelLanguage->getLanguage();
+                            $setEditData = parent::fetchData(
+                                array('context'=>'all','type'=>'page'),
+                                array('edit'=>$this->edit)
+                            );
+                            $setEditData = $this->setItemData($setEditData);
+                            $this->template->assign('page',$setEditData[$this->edit]);
+                            //$pages = $this->setItemsData();
+                            //$this->template->assign('pages', $pages);
 
-				if(is_array($search) && !empty($search)) {
-					$assign = array(
-						'id_pages',
-						'name_pages' => ['title' => 'name'],
-						'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
-						'content_pages' => ['type' => 'bin', 'input' => null],
-						'seo_title_pages' => ['title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null],
-						'seo_desc_pages' => ['title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null],
-						'menu_pages',
-						'date_register'
-					);
-				}
-			}
-			$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
-            $this->template->display('pages/index.tpl');
+                            $assign = array(
+                                'id_pages',
+                                'name_pages' => ['title' => 'name'],
+                                'menu_pages',
+                                'date_register'
+                            );
+                            $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
+                            $pageChild = $this->getItems('pagesChild',$this->edit,'all');
+
+                            if(isset($this->search)) {
+                                $this->template->assign('ajax_form',true);
+                                $this->template->assign('data',$pageChild);
+                                $this->template->assign('section','pages');
+                                $this->template->assign('idcolumn','id_pages');
+                                $this->template->assign('controller','pages');
+                                $this->template->assign('readonly',array());
+                                $this->template->assign('cClass','backend_controller_pages');
+                                $display = $this->template->fetch('section/form/loop/rows-2.tpl');
+                                $this->header->set_json_headers();
+                                $this->message->json_post_response(true,'',$display);
+                            }
+                            else {
+                                $this->template->display('pages/edit.tpl');
+                            }
+                        }
+                        break;
+                    case 'active-selected':
+                    case 'unactive-selected':
+                        if(isset($this->pages) && is_array($this->pages) && !empty($this->pages)) {
+                            $this->upd(
+                                array(
+                                    'type'=>'pageActiveMenu',
+                                    'data'=>array(
+                                        'menu_pages' => ($this->action == 'active-selected'?1:0),
+                                        'id_pages' => implode($this->pages, ',')
+                                    )
+                                )
+                            );
+                        }
+                        $this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
+                        //$pages = $this->setItemsData();
+                        //$this->template->assign('pages', $pages);
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+                        $assign = array(
+                            'id_pages',
+                            'name_pages' => ['title' => 'name'],
+                            'menu_pages',
+                            'date_register'
+                        );
+                        $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
+                        $this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+                        $this->template->display('pages/index.tpl');
+                        break;
+                    case 'order':
+                        if (isset($this->order)) {
+                            $this->upd(
+                                array(
+                                    'type' => 'order'
+                                )
+                            );
+                        }
+                        break;
+                    case 'delete':
+                        if(isset($this->id_pages)) {
+                            $this->del(
+                                array(
+                                    'type'=>'delPages',
+                                    'data'=>array(
+                                        'id' => $this->id_pages
+                                    )
+                                )
+                            );
+                        }
+                        break;
+                }
+            }else{
+                $this->modelLanguage->getLanguage();
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+                $this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+                $assign = array(
+                    'id_pages',
+                    'name_pages' => ['title' => 'name'],
+                    'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                    'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                    'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                    'menu_pages',
+                    'date_register'
+                );
+
+                if(isset($this->search)) {
+                    $search = $this->search;
+                    $search = array_filter($search);
+
+                    if(is_array($search) && !empty($search)) {
+                        $assign = array(
+                            'id_pages',
+                            'name_pages' => ['title' => 'name'],
+                            'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
+                            'content_pages' => ['type' => 'bin', 'input' => null],
+                            'seo_title_pages' => ['title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null],
+                            'seo_desc_pages' => ['title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null],
+                            'menu_pages',
+                            'date_register'
+                        );
+                    }
+                }
+                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+                $this->template->display('pages/index.tpl');
+            }
         }
     }
 }

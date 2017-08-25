@@ -1,6 +1,5 @@
 var product = (function ($, undefined) {
-    'use strict'
-    function initGen(fd){
+    function initGen(fd,edit,globalForm,tableForm){
         var progressBar = new ProgressBar('#progress-thumbnail',{loader: {type:'text', icon:'etc'}});
         $.jmRequest({
             handler: "ajax",
@@ -17,15 +16,17 @@ var product = (function ($, undefined) {
                 xhr.oldResponse = '';
                 // Generation progress
                 xhr.addEventListener("progress", function(e){
-                    var new_response = xhr.responseText.substring(xhr.oldResponse.length);
-                    if(new_response != '') {
-                        var result = JSON.parse(new_response);
-                        var loader = null;
-                        if(result.rendering) {
-                            loader = {type: 'fa', icon: 'cog', anim: 'spin'}
+                    if(!(xhr.readyState === 4 && xhr.status === 200)) {
+                        var new_response = xhr.responseText.substring(xhr.oldResponse.length);
+                        if(new_response !== '') {
+                            var result = JSON.parse(new_response);
+                            var loader = null;
+                            if(result.rendering) {
+                                loader = {type: 'fa', icon: 'cog', anim: 'spin'};
+                            }
+                            progressBar.update({progress: result.progress, state: result.message, loader: loader});
+                            xhr.oldResponse = xhr.responseText;
                         }
-                        progressBar.update({progress: result.progress, state: result.message, loader: loader});
-                        xhr.oldResponse = xhr.responseText;
                     }
                 }, false);
                 return xhr;
@@ -45,8 +46,19 @@ var product = (function ($, undefined) {
                 if(d.status == 'success') {
                     progressBar.updateState('success');
                     progressBar.update({state: d.message+' <span class="fa fa-check"></span>',loader: false});
-                    $('.block-img').empty();
-                    $('.block-img').html(d.result);
+
+                    $.jmRequest({
+                        handler: "ajax",
+                        url: '/admin/index.php?controller=product&edit='+edit+'&action=getImages',
+                        method: 'get',
+                        success: function (d) {
+                            $('.block-img').empty();
+                            $('.block-img').html(d.result);
+                            globalForm.initModals();
+                            tableForm.run();
+                            initDefaultImg(edit);
+                        }
+                    });
                 }
                 else {
                     switch (d.error_code) {
@@ -181,7 +193,7 @@ var product = (function ($, undefined) {
     }
 
     function initDefaultImg(edit) {
-        $('.make_default').on('click', function(){
+        $('.make_default').off().on('click', function(){
             var self = this,
                 dflt = $('.default.in'),
                 id = $(this).data('id');
@@ -207,7 +219,7 @@ var product = (function ($, undefined) {
             return false;
         });
 
-        $('#gallery-product .sortable > div').on('change',function(){
+        $('#gallery-product .sortable').off().on('change',function(){
             var dflt = $('.default.in');
             if(!dflt.length) {
                 $.jmRequest({
@@ -223,12 +235,12 @@ var product = (function ($, undefined) {
     }
 
     return {
-        run: function(controller,edit){
+        run: function(globalForm,tableForm,edit){
             $('.progress').hide();
             $('.form-gen').on('submit', function(e) {
                 e.preventDefault();
                 var fd = new FormData(this);
-                initGen(fd);
+                initGen(fd,edit,globalForm,tableForm);
                 return false;
             });
             initTree();
@@ -259,7 +271,25 @@ var product = (function ($, undefined) {
                 }
             });
 
-            $( ".row.sortable" ).sortable();
+            $( ".row.sortable" ).sortable({
+                items: "> div",
+                cursor: "move",
+                update: function(){
+                    var serial = $( ".sortable" ).sortable('serialize');
+                    $.jmRequest({
+                        handler: "ajax",
+                        url: '/admin/index.php?controller=product&edit='+edit+'&action=orderImages',
+                        method: 'POST',
+                        data : serial,
+                        success:function(e){
+                            $.jmRequest.initbox(e,{
+                                    display: false
+                                }
+                            );
+                        }
+                    });
+                }
+            });
             $( ".row.sortable" ).disableSelection();
         }
     }

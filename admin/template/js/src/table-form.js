@@ -3,7 +3,7 @@ var tableForm = (function ($, undefined) {
      * Initializes the multi-select checkboxes
      */
     function initCheckboxSelect() {
-        $('.check-all').on('change',function(){
+        $('.check-all').off().on('change',function(){
             var table = $(this).data('table'),
                 chb = $('#'+table+' input[type="checkbox"]:enabled');
             if($(this).prop('checked')) {
@@ -13,7 +13,7 @@ var tableForm = (function ($, undefined) {
             }
         });
 
-        $('.update-checkbox').on('click',function(e){
+        $('.update-checkbox').off().on('click',function(e){
             e.preventDefault();
             var table = $(this).data('table'),
                 chb = $('#'+table+' input[type="checkbox"]:enabled');

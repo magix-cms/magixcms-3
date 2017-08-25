@@ -90,7 +90,7 @@
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 var edit = "{$smarty.get.edit}";
-                product.run(controller,edit);
+                product.run(globalForm,tableForm,edit);
             }
         });
     </script>

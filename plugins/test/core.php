@@ -32,6 +32,9 @@ class plugins_test_core{
                 case 'home':
                     $this->modelPlugins->display('form/edit.tpl');
                     break;
+                case 'pages':
+                    $this->modelPlugins->display('form/edit.tpl');
+                    break;
 
             }
         }

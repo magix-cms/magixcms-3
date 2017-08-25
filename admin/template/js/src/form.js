@@ -271,13 +271,18 @@ var globalForm = (function ($, undefined) {
                     var ids = d.result.id.split(',');
                     var nbr = 0;
                     var table = $('#table-'+controller);
+                    var container;
 
                     for(var i = 0;i < ids.length; i++) {
+                        container = $('#'+controller+'_' + ids[i]).parent();
                         $('#'+controller+'_' + ids[i]).next('.collapse').remove();
                         $('#'+controller+'_' + ids[i]).remove();
-                        nbr = table.find('tbody').find('tr').length;
+                        if(table.is("table")) {
+                            nbr = table.find('tbody').find('tr').length;
+                        }
                     }
-                    if(!nbr) {
+                    container.trigger('change');
+                    if(table.is("table") && !nbr) {
                         table.addClass('hide').next('.no-entry').removeClass('hide');
                     }
                     $('.nbr-'+controller).text(nbr);

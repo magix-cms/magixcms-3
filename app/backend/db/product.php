@@ -65,7 +65,7 @@ class backend_db_product{
                 elseif ($config['type'] === 'images') {
                     $sql = 'SELECT img.*
                         FROM mc_catalog_product_img AS img
-                        WHERE img.id_product = :id';
+                        WHERE img.id_product = :id ORDER BY order_img ASC';
                     $params = $data;
                 }
                 elseif ($config['type'] === 'imagesAll') {
@@ -136,8 +136,8 @@ class backend_db_product{
 				));
 			}
 			elseif ($config['type'] === 'newImg') {
-				$sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img) 
-                VALUES (:id_product,:name_img)';
+				$sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img,order_img,default_img) 
+						SELECT :id_product,:name_img,COUNT(id_img),IF(COUNT(id_img) = 0,1,0) FROM mc_catalog_product_img WHERE id_product IN ('.$data['id_product'].')';
 				component_routing_db::layer()->insert($sql,array(
 					':id_product'	    => $data['id_product'],
 					':name_img'	        => $data['name_img']
@@ -185,10 +185,8 @@ class backend_db_product{
                 );
             }
             elseif ($config['type'] === 'img') {
-
                 $sql = 'UPDATE mc_catalog_product_img SET alt_img = :alt_img, title_img = :title_img
                 WHERE id_img = :id_img';
-
                 component_routing_db::layer()->update($sql,
                     array(
                         ':id_img'	    => $data['id_img'],
@@ -220,16 +218,22 @@ class backend_db_product{
             elseif ($config['type'] === 'firstImageDefault') {
                 $sql = 'UPDATE mc_catalog_product_img
                 		SET default_img = 1
-                		WHERE id_img IN (
-							SELECT id_img 
-							FROM mc_catalog_product_img 
-							WHERE id_product = :id 
-							ORDER BY id_img DESC 
-							LIMIT 1
-                		)';
+                		WHERE id_product = :id 
+						ORDER BY order_img ASC 
+						LIMIT 1';
 
                 component_routing_db::layer()->update($sql, $data);
             }
+			elseif ($config['type'] === 'order') {
+				$sql = 'UPDATE mc_catalog_product_img SET order_img = :order_img
+                		WHERE id_img = :id_img';
+				component_routing_db::layer()->update($sql,
+					array(
+						':id_img'	    => $data['id_img'],
+						':order_img'	=> $data['order_img']
+					)
+				);
+			}
         }
     }
 

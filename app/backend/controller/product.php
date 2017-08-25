@@ -73,6 +73,11 @@ class backend_controller_product extends backend_db_product
 		if (http_request::isPost('default_cat')) {
 			$this->default_cat = $formClean->numeric($_POST['default_cat']);
 		}
+
+		# ORDER PAGE
+		if(http_request::isPost('image')){
+			$this->order = $formClean->arrayClean($_POST['image']);
+		}
 	}
 
 	/**
@@ -220,6 +225,7 @@ class backend_controller_product extends backend_db_product
 			case 'product':
 			case 'content':
 			case 'img':
+			case 'firstImageDefault':
 			case 'catRel':
 				parent::update(
 					array(
@@ -238,6 +244,20 @@ class backend_controller_product extends backend_db_product
 
 				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update');
+				break;
+			case 'order':
+				$p = $this->order;
+				for ($i = 0; $i < count($p); $i++) {
+					parent::update(
+						array(
+							'type' => $data['type']
+						),
+						array(
+							'id_img'       => $p[$i],
+							'order_img'    => $i
+						)
+					);
+				}
 				break;
 		}
 	}
@@ -323,7 +343,7 @@ class backend_controller_product extends backend_db_product
                         $data['data']
                     );
 
-                    $imgs = $this->getItems('images',$this->id_product,'return');
+                    $imgs = $this->getItems('images',$id_product,'return');
                     if($imgs != null && $defaultErased) {
 						$this->upd(array(
 							'type' => 'firstImageDefault',
@@ -500,9 +520,6 @@ class backend_controller_product extends backend_db_product
 								usleep(200000);
 								$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'), 'progress' => 90));
 
-								$this->getItems('images',$this->edit, 'all');
-								$display = $this->template->fetch('catalog/product/brick/img.tpl');
-
 								usleep(200000);
 								$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success', 'result' => $display));
 							}
@@ -600,8 +617,26 @@ class backend_controller_product extends backend_db_product
 					break;
 				case 'getImgDefault':
 					if(isset($this->edit)) {
-						$imgDefault = $this->getItems('imageDefault',$this->edit,'last');
+						$imgDefault = $this->getItems('imgDefault',$this->edit,'last');
 						print $imgDefault['id_img'];
+					}
+					break;
+				case 'getImages':
+					if(isset($this->edit)) {
+						$this->getItems('images',$this->edit, 'all');
+						$display = $this->template->fetch('catalog/product/brick/img.tpl');
+
+						$this->header->set_json_headers();
+						$this->message->json_post_response(true,'',$display);
+					}
+					break;
+				case 'orderImages':
+					if (isset($this->order)) {
+						$this->upd(
+							array(
+								'type' => 'order'
+							)
+						);
 					}
 					break;
 				case 'delete':
@@ -619,7 +654,7 @@ class backend_controller_product extends backend_db_product
 									);
 
 									$this->header->set_json_headers();
-									$this->message->json_post_response(true, 'delete', $this->id_product);
+									$this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
 									break;
 							}
 						}

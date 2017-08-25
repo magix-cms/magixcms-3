@@ -8,7 +8,7 @@ var category = (function ($, undefined) {
                     axis: "y",
                     update: function(){
                         var serial = $( this ).sortable('serialize');
-                        console.log(serial);
+                        //console.log(serial);
                         $.jmRequest({
                             handler: "ajax",
                             url: controller+'&action=order',
