@@ -158,6 +158,7 @@ CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `news` smallint(5) unsigned NOT NULL DEFAULT '0',
   `category` smallint(5) unsigned NOT NULL DEFAULT '0',
   `product` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `seo` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_plugins`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -458,3 +459,24 @@ CREATE TABLE IF NOT EXISTS `mc_webservice` (
   `status_ws` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_ws`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_seo` (
+  `id_seo` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `level_seo` smallint(3) unsigned NOT NULL,
+  `attribute_seo` varchar(50) NOT NULL,
+  `type_seo` enum('title','description') NOT NULL,
+  PRIMARY KEY (`id_seo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_seo_content` (
+  `id_content` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `id_seo` smallint(5) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL,
+  `content_seo` text NOT NULL,
+  PRIMARY KEY (`id_content`),
+  KEY `id_seo` (`id_seo`),
+  KEY `id_lang` (`id_lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_seo_content`
+  ADD CONSTRAINT `mc_seo_content_ibfk_1` FOREIGN KEY (`id_seo`) REFERENCES `mc_seo` (`id_seo`) ON DELETE CASCADE ON UPDATE CASCADE;

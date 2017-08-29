@@ -225,6 +225,7 @@ class db_layer{
             if ($this->isPrepared) {
                 throw new Exception('This statement has been prepared already');
             }
+
             return $this->connection()->prepare($sql);
             $this->isPrepared = true;
 

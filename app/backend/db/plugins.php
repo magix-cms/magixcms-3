@@ -32,6 +32,11 @@ class backend_db_plugins{
         return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
     }
 
+    /**
+     * @param $config
+     * @param bool $data
+     * @return mixed|null
+     */
     public function fetchData($config,$data = false)
     {
         $sql = '';
@@ -42,6 +47,8 @@ class backend_db_plugins{
                 if ($config['type'] === 'list') {
                     $sql = 'SELECT * FROM mc_plugins';
                     //$params = $data;
+                }elseif($config['type'] === 'seo'){
+                    $sql = 'SELECT name FROM mc_plugins WHERE seo = 1';
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
@@ -53,20 +60,40 @@ class backend_db_plugins{
             }
         }
     }
+
+    /**
+     * @param $config
+     * @param bool $data
+     */
     public function insert($config,$data = false){
         if (is_array($config)) {
             if ($config['type'] === 'register') {
-                $sql = 'INSERT INTO mc_plugins (name,version)
-                VALUE (:name,:version)';
-                component_routing_db::layer()->insert($sql,
+                $className = 'plugins_'.$data['name'].'_admin';
+                $queries = array(
                     array(
-                        ':name' => $data['name'],
-                        ':version'  => $data['version']
+                        'request'=>"INSERT INTO mc_plugins (name,version) VALUE (:name,:version)",
+                        'params'=>array(
+                            ':name'     => $data['name'],
+                            ':version'  => $data['version']
+                        )
+                    ),
+                    array(
+                        'request'=>"INSERT INTO mc_module (class_name,name) VALUE (:class_name,:name)",
+                        'params'=>array(
+                            ':class_name'   => $className,
+                            ':name'         => $data['name']
+                        )
                     )
                 );
+                component_routing_db::layer()->transaction($queries);
             }
         }
     }
+
+    /**
+     * @param $config
+     * @param bool $data
+     */
     public function update($config,$data = false){
         if (is_array($config)) {
             if ($config['type'] === 'version') {

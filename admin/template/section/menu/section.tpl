@@ -71,10 +71,42 @@
     </li>
     {/if}
     <li><hr></li>
-    <li class="{if $smarty.get.controller == 'about'}active{/if}">
+    <li class="has-submenu{if $smarty.get.controller == 'about'} active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=about">
             <span class="fa fa-briefcase"></span> {#root_about#}
         </a>
+        <ul class="nav list-unstyled">
+            <li>
+                <a href="{geturl}/{baseadmin}/index.php?controller=about&tab=company">
+                    <span class="fa fa-info"></span> {#info_company#}
+                </a>
+            </li>
+            <li>
+                <a href="{geturl}/{baseadmin}/index.php?controller=about&tab=contact">
+                    <span class="fa fa-phone"></span> {#info_contact#}
+                </a>
+            </li>
+            <li>
+                <a href="{geturl}/{baseadmin}/index.php?controller=about&tab=socials">
+                    <span class="fa fa-facebook"></span> {#info_socials#}
+                </a>
+            </li>
+            <li>
+                <a href="{geturl}/{baseadmin}/index.php?controller=about&tab=opening">
+                    <span class="fa fa-clock-o"></span> {#info_opening#}
+                </a>
+            </li>
+            <li>
+                <a href="{geturl}/{baseadmin}/index.php?controller=about&tab=text">
+                    <span class="fa fa-question"></span> {#text#}
+                </a>
+            </li>
+            <li>
+                <a href="{geturl}/{baseadmin}/index.php?controller=about&tab=page">
+                    <span class="fa fa-file"></span> {#info_page#}
+                </a>
+            </li>
+        </ul>
     </li>
     <li class="has-submenu{if $smarty.get.controller == 'setting' || $smarty.get.controller == 'files' || $smarty.get.controller == 'webservice' || $smarty.get.controller == 'domain'} active{/if}">
         <a href="#">
@@ -155,6 +187,7 @@
         </li>
     {/if}
     <li><hr></li>
+    {if {employee_access type="view" class_name="backend_controller_plugins"} eq 1}
     <li class="{if $smarty.get.controller == 'plugins'}active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=plugins">
             <span class="fa fa-cogs"></span> Extensions
@@ -162,13 +195,16 @@
         {if is_array($getItemsPlugins) && !empty($getItemsPlugins)}
         <ul class="nav list-unstyled">
             {foreach $getItemsPlugins as $item}
+            {if {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
             <li class="{if $smarty.get.controller == {$item.name}}active{/if}">
                 <a href="{geturl}/{baseadmin}/index.php?controller={$item.name}">
                     <span class="fa {if $smarty.get.controller == {$item.name}}fa-angle-right{else}fa-angle-down{/if}"></span> {$item.name}
                 </a>
             </li>
+            {/if}
             {/foreach}
         </ul>
         {/if}
     </li>
+    {/if}
 </ul>

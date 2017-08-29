@@ -2,6 +2,54 @@
 <div class="row">
     <form id="edit_pages" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&amp;tabs=pages" method="post" class="validate_form edit_form_extend col-ph-12 col-md-6">
         <div class="tab-content">
+            <div class="row">
+                <div class="col-xs-12 col-md-2">
+                    <div class="form-group">
+                        <label for="parent_id">{#id#|ucfirst} {#pages#}&nbsp;</label>
+                        <input type="text" name="parent_id" id="parent_id" class="form-control mygroup" placeholder="{#ph_id#}" value="{$page.id_parent}" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group">
+                        <label for="parent">{#parent_page#|ucfirst}&nbsp;</label>
+                        <div id="parent" class="btn-group btn-block selectpicker" data-clear="true" data-live="true">
+                            <a href="#" class="clear"><span class="fa fa-times"></span><span class="sr-only">Annuler la sélection</span></a>
+                            <button data-id="parent" type="button" class="btn btn-block btn-default dropdown-toggle">
+                                <span class="placeholder">{#ph_pages#|ucfirst}</span>
+                                <span class="caret"></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <div class="live-filtering" data-clear="true" data-autocomplete="true" data-keys="true">
+                                    <label class="sr-only" for="input-pages">Rechercher dans la liste</label>
+                                    <div class="search-box">
+                                        <div class="input-group">
+                                    <span class="input-group-addon" id="search-pages">
+                                        <span class="fa fa-search"></span>
+                                        <a href="#" class="fa fa-times hide filter-clear"><span class="sr-only">Effacer filtre</span></a>
+                                    </span>
+                                            <input type="text" placeholder="Rechercher dans la liste" id="input-pages" class="form-control live-search" aria-describedby="search-pages" tabindex="1" />
+                                        </div>
+                                    </div>
+                                    <div id="filter-pages" class="list-to-filter">
+                                        <ul class="list-unstyled">
+                                            {foreach $pagesSelect as $items}
+                                                {if $items.id_pages != $page.id_pages}
+                                                <li class="filter-item items{if isset($page.id_parent) && $items.id_pages == $page.id_parent} selected{/if}" data-filter="{$items.name_pages}" data-value="{$items.id_pages}" data-id="{$items.id_pages}">
+                                                    {$items.name_pages}&nbsp;<small>({$items.id_pages})</small>
+                                                </li>
+                                                {/if}
+                                            {/foreach}
+                                        </ul>
+                                        <div class="no-search-results">
+                                            <div class="alert alert-warning" role="alert"><i class="fa fa-warning margin-right-sm"></i>Aucune entrée pour <strong>'<span></span>'</strong> n'a été trouvée.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {foreach $langs as $id => $iso}
                 <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                     <div class="row">
@@ -59,16 +107,16 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-8">
                                 <div class="form-group">
-                                    <label for="content[{$id}][seo_title_pages]">{#title#|ucfirst} :</label>
-                                    <textarea class="form-control" id="content[{$id}][seo_title_pages]" name="content[{$id}][seo_title_pages]" cols="70" rows="3">{$page.content[{$id}].seo_title_pages}</textarea>
+                                    <label for="content[{$id}][seo_name_pages]">{#title#|ucfirst} :</label>
+                                    <textarea class="form-control" id="content[{$id}][seo_name_pages]" name="content[{$id}][seo_name_pages]" cols="70" rows="3">{$page.content[{$id}].seo_name_pages}</textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-8">
                                 <div class="form-group">
-                                    <label for="content[{$id}][seo_desc_pages]">Description :</label>
-                                    <textarea class="form-control" id="content[{$id}][seo_desc_pages]" name="content[{$id}][seo_desc_pages]" cols="70" rows="3">{$page.content[{$id}].seo_desc_pages}</textarea>
+                                    <label for="content[{$id}][seo_desc_page]">Description :</label>
+                                    <textarea class="form-control" id="content[{$id}][seo_desc_page]" name="content[{$id}][seo_desc_page]" cols="70" rows="3">{$page.content[{$id}].seo_desc_pages}</textarea>
                                 </div>
                             </div>
                         </div>

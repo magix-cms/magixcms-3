@@ -78,6 +78,9 @@
 
     DropdownSelect.prototype.init = function() {
         var $select = this;
+        if ( this.structure.$selected.length ) {
+            $select.select($(this.structure.$selected));
+        }
 
         this.structure.$display.on('click', function(e) {
             e.preventDefault();

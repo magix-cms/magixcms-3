@@ -74,7 +74,8 @@
         <legend>{#lang_legend#|ucfirst}</legend>
         <p>{$companyData.contact.languages}</p>
         <div class="form-group">
-            <button type="submit" name="refesh_lang" value="refresh" class="btn btn-main-theme">{#refresh#|ucfirst}</button>
+            <input type="hidden" id="data_type" name="data_type" value="refesh_lang">
+            <button type="submit" class="btn btn-main-theme">{#refresh#|ucfirst}</button>
         </div>
     </fieldset>
 </form>

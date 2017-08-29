@@ -236,6 +236,9 @@ class backend_controller_pages extends backend_db_pages
         }
     }
 
+	/**
+	 *
+	 */
     private function save(){
         if (isset($this->content) && isset($this->id_pages)) {
             foreach ($this->content as $lang => $content) {
@@ -383,6 +386,7 @@ class backend_controller_pages extends backend_db_pages
             $this->message->json_post_response(true, 'update',$display);
         }
     }
+
     /**
      * Insertion de données
      * @param $data
@@ -401,6 +405,7 @@ class backend_controller_pages extends backend_db_pages
                 break;
         }
     }
+
     /**
      *
      */

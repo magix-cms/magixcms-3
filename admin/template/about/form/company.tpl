@@ -1,5 +1,5 @@
 <div class="row">
-    <form id="edit_company" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-4">
+    <form id="edit_company" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-4">
         <div class="form-group">
             <label for="company_name">{#company_name#|ucfirst}</label>
             <input type="text" class="form-control" id="company_name" name="company_name" {if $companyData.name}value="{$companyData.name}" {/if}placeholder="{#company_name_ph#|ucfirst}">

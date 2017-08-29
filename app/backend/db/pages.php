@@ -86,7 +86,8 @@ class backend_db_pages
 
                     $params = $data;
 
-                }elseif ($config['type'] === 'pagesChild') {
+                }
+                elseif ($config['type'] === 'pagesChild') {
                     $cond = '';
                     if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
                         $nbc = 0;
@@ -135,7 +136,8 @@ class backend_db_pages
 
                     $params = $data;
 
-                }elseif ($config['type'] === 'pagesSelect') {
+                }
+                elseif ($config['type'] === 'pagesSelect') {
                     //List pages for select
 
                     $sql = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
@@ -149,7 +151,8 @@ class backend_db_pages
                     ORDER BY p.id_pages DESC";
                     $params = $data;
 
-                }elseif ($config['type'] === 'page') {
+                }
+                elseif ($config['type'] === 'page') {
                     $sql = 'SELECT p.*,c.*,lang.*
                         FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING(id_pages)
@@ -158,11 +161,13 @@ class backend_db_pages
 
                     $params = $data;
 
-                }elseif ($config['type'] === 'img') {
+                }
+                elseif ($config['type'] === 'img') {
                     $sql = 'SELECT p.id_pages, p.img_pages
                         FROM mc_cms_page AS p WHERE p.img_pages IS NOT NULL';
 
-                }elseif ($config['type'] === 'sitemap') {
+                }
+                elseif ($config['type'] === 'sitemap') {
                     $sql = 'SELECT p.id_pages, c.name_pages, c.url_pages, lang.iso_lang, c.id_lang, c.last_update
                         FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
@@ -181,12 +186,14 @@ class backend_db_pages
                     //Return current row
                     $sql = 'SELECT * FROM mc_cms_page ORDER BY id_pages DESC LIMIT 0,1';
                     //$params = $data;
-                } elseif ($config['type'] === 'content') {
+                }
+                elseif ($config['type'] === 'content') {
 
                     $sql = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
                     $params = $data;
 
-                } elseif ($config['type'] === 'page') {
+                }
+                elseif ($config['type'] === 'page') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_cms_page WHERE `id_pages` = :id_pages';
                     $params = $data;

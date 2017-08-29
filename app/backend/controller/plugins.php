@@ -2,6 +2,9 @@
 class backend_controller_plugins extends backend_db_plugins{
     protected $modelPlugins,$template,$message,$header,$data,$finder;
 
+    /**
+     * backend_controller_plugins constructor.
+     */
     public function __construct()
     {
         $this->modelPlugins = new backend_model_plugins();

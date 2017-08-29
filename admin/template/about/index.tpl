@@ -14,13 +14,14 @@
         {/if}
         <header class="panel-header panel-nav">
             <h2 class="panel-heading h5">{#root_about#|ucfirst}</h2>
+            {$tab = $smarty.get.tab}
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#info_company" aria-controls="info_company" role="tab" data-toggle="tab">{#info_company#}</a></li>
-                <li role="presentation"><a href="#info_contact" aria-controls="info_contact" role="tab" data-toggle="tab">{#info_contact#}</a></li>
-                <li role="presentation"><a href="#info_socials" aria-controls="info_socials" role="tab" data-toggle="tab">{#info_socials#}</a></li>
-                <li role="presentation"><a href="#info_opening" aria-controls="info_opening" role="tab" data-toggle="tab">{#info_opening#}</a></li>
-                <li role="presentation"><a href="#info_text" aria-controls="info_text" role="tab" data-toggle="tab">{#text#}</a></li>
-                <li role="presentation"><a href="#info_page" aria-controls="info_page" role="tab" data-toggle="tab">{#info_page#}</a></li>
+                <li role="presentation"{if $tab == 'company' || !$tab} class="active"{/if}><a href="#info_company" aria-controls="info_company" role="tab" data-toggle="tab">{#info_company#}</a></li>
+                <li role="presentation"{if $tab == 'contact'} class="active"{/if}><a href="#info_contact" aria-controls="info_contact" role="tab" data-toggle="tab">{#info_contact#}</a></li>
+                <li role="presentation"{if $tab == 'socials'} class="active"{/if}><a href="#info_socials" aria-controls="info_socials" role="tab" data-toggle="tab">{#info_socials#}</a></li>
+                <li role="presentation"{if $tab == 'opening'} class="active"{/if}><a href="#info_opening" aria-controls="info_opening" role="tab" data-toggle="tab">{#info_opening#}</a></li>
+                <li role="presentation"{if $tab == 'text'} class="active"{/if}><a href="#info_text" aria-controls="info_text" role="tab" data-toggle="tab">{#text#}</a></li>
+                <li role="presentation"{if $tab == 'page'} class="active"{/if}><a href="#info_page" aria-controls="info_page" role="tab" data-toggle="tab">{#info_page#}</a></li>
             </ul>
         </header>
         <div class="panel-body panel-body-form">
@@ -29,26 +30,37 @@
             </div>
             {*<pre>{$companyData|print_r}</pre>*}
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="info_company">
+                <div role="tabpanel" class="tab-pane{if $tab == 'company' || !$tab} active{/if}" id="info_company">
                     {include file="about/form/company.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="info_contact">
+                <div role="tabpanel" class="tab-pane{if $tab == 'contact'} active{/if}" id="info_contact">
                     {include file="about/form/contact.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="info_socials">
+                <div role="tabpanel" class="tab-pane{if $tab == 'socials'} active{/if}" id="info_socials">
                     {include file="about/form/socials.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="info_opening">
+                <div role="tabpanel" class="tab-pane{if $tab == 'opening'} active{/if}" id="info_opening">
                     {include file="about/form/openinghours.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="info_text">
+                <div role="tabpanel" class="tab-pane{if $tab == 'text'} active{/if}" id="info_text">
                     {include file="about/form/text.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="info_page"></div>
+                <div role="tabpanel" class="tab-pane{if $tab == 'page'} active{/if}" id="info_page">
+                    <p class="text-right">
+                        {#nbr_pages#|ucfirst}: {$pages|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=addpage" title="{#add_pages#}" class="btn btn-link">
+                            <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
+                        </a>
+                    </p>
+                    {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
+                    {*{include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="pages"}*}
+                    {include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=false sortable=$sortable controller="about" subcontroller="pages"}
+                </div>
             </div>
         </div>
     </section>
 </div>
+{include file="modal/delete.tpl" data_type='pages' title={#modal_delete_title#|ucfirst} info_text=true delete_message={#delete_pages_message#}}
+{include file="modal/error.tpl"}
 {else}
     {include file="section/brick/viewperms.tpl"}
 {/if}

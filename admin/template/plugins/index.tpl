@@ -10,6 +10,7 @@
         <h2 class="col-xs-12">liste des extensions installées</h2>
     {if is_array($getListPlugins) && !empty($getListPlugins)}
         {foreach $getListPlugins as $item}
+            {if {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
             <section class="col-xs-12 col-md-6 col-lg-3">
                 <header>
                     <h2 class="h5">{$item.name}</h2>
@@ -25,6 +26,7 @@
                     </div>
                 </div>
             </section>
+            {/if}
         {/foreach}
     {/if}
     </div>
