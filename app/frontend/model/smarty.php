@@ -55,6 +55,7 @@ class frontend_model_smarty extends Smarty{
     * Variable statique permettant de porter l'instance unique
     */
     static protected $instance;
+    protected $template;
 	/**
 	 * function construct class
 	 *
@@ -79,6 +80,7 @@ class frontend_model_smarty extends Smarty{
 	 * Les paramètres pour la configuration de smarty 3
 	 */
 	protected function setParams(){
+        $template = new frontend_model_template();
 		/**
 		 * Path -> configs
 		 */
@@ -89,7 +91,7 @@ class frontend_model_smarty extends Smarty{
 		 * Path -> templates
 		 */
         $this->setTemplateDir(array(
-            self::setPath()."skin/".frontend_model_template::frontendTheme()->themeSelected().'/'
+            self::setPath()."skin/".$template->themeSelected().'/'
         ));
 		/**
 		 * path plugins
@@ -103,7 +105,7 @@ class frontend_model_smarty extends Smarty{
 		/**
 		 * Ajout du dossier additionnels des plugins smarty dans le template courant
 		 */
-		frontend_model_template::frontendTheme()->addWidgetDir(
+        $template->addWidgetDir(
             $this,
             self::setPath(),
             false
@@ -131,7 +133,7 @@ class frontend_model_smarty extends Smarty{
 		/**
 		 * caching (true/false)
 		 */
-        frontend_model_template::frontendTheme()->setCache($this);
+        $template->setCache($this);
         //$this->setCaching(false);
         //$this->setCachingType('apc');
 

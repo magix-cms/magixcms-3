@@ -64,14 +64,15 @@
  */
 function smarty_function_google_tools($params, $template){
 	$type = $params['tools'];
+	$collectionsSetting = new component_collections_setting();
 	if (!isset($type)) {
 	 	trigger_error("type: missing 'type' parameter");
 		return;
 	}
 	switch ($type){
 		case 'analytics':
-		$analyticsdata = frontend_model_setting::select_uniq_setting('analytics');
-		$analytics = $analyticsdata['setting_value'];
+		$analyticsdata = $collectionsSetting->fetch('analytics');
+		$analytics = $analyticsdata['value'];
 		if($analytics != null){
 $tools = <<<EOT
 <script type="text/javascript">
@@ -95,13 +96,9 @@ EOT;
 			$tools = '';
 		}
 			break;
-		case 'webmaster':
-			$webmasterdata = frontend_model_setting::select_uniq_setting('webmaster');
-			$tools = $webmasterdata['setting_value'];
-			break;
         case 'robots':
-            $robotsdata = frontend_model_setting::select_uniq_setting('robots');
-            $tools = $robotsdata['setting_value'];
+            $robotsdata = $collectionsSetting->fetch('robots');
+            $tools = $robotsdata['value'];
 	}
 	return $tools;
 }

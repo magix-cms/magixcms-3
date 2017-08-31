@@ -4,7 +4,7 @@
  #
  # This file is part of MAGIX CMS.
  # MAGIX CMS, The content management system optimized for users
- # Copyright (C) 2008 - 2013 magix-cms.com <support@magix-cms.com>
+ # Copyright (C) 2008 - 2015 magix-cms.com <support@magix-cms.com>
  #
  # OFFICIAL TEAM :
  #
@@ -33,35 +33,35 @@
  # needs please refer to http://www.magix-cms.com for more information.
  */
 /**
- * MAGIX CMS
- * @category   extends 
- * @package    Smarty
- * @subpackage function
- * @copyright  MAGIX CMS Copyright (c) 2010 - 2012 Gerits Aurelien, 
- * http://www.magix-cms.com, http://www.magix-cjquery.com
- * @license    Dual licensed under the MIT or GPL Version 3 licenses.
- * @version    plugin version
- * @author Gérits Aurélien <aurelien@magix-cms.com> <aurelien@magix-dev.be>
- *
- */
-/**
- * Smarty {autoload_i18n} function plugin
+ * Smarty {widget_lang_data} function plugin
  *
  * Type:     function
- * Name:     
- * Date:     
- * Update    
- * Purpose:  
- * Examples: 
- * Output:   
- * @link 
- * @author   Gerits Aurelien
+ * Name:     widget_lang_data
+ * Date:     24/03/2015
+ * Update:   31/08/2017
+ * Output:
+ * @author   Gerits Aurélien (http://www.magix-cms.com)
+ * @link
  * @version  1.0
- * @param array
- * @param Smarty
+ * @param $params
+ * @param $template
  * @return string
  */
-function smarty_function_autoload_i18n($params, $template){
-    $coreTemplate = new frontend_model_template();
-	return $coreTemplate->configLoad();
+function smarty_function_widget_lang_data($params, $template)
+{
+    $collectionsLang = new component_collections_language();
+
+    // *** Catch location var
+    $iso_current = http_request::isGet('strLangue');
+
+    // *** Load SQL DATA
+	if (!$iso_current) {
+		$default = $collectionsLang->fetchData(array('context'=>'unique','type'=>'default'));
+		$template->assign('defaultLang',$default);
+	}
+
+    $data = $collectionsLang->fetchData(array('context'=>'all','type'=>'active'));
+    $assign = isset($params['assign']) ? $params['assign'] : 'data';
+    $template->assign($assign,$data);
 }
+?>

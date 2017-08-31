@@ -43,7 +43,7 @@ class frontend_controller_home extends frontend_db_home{
     /**
      * @var
      */
-    protected $template,$header;
+    protected $template,$header,$data;
     /**
      * @var bool
      */
@@ -55,33 +55,35 @@ class frontend_controller_home extends frontend_db_home{
     public function __construct(){
         $this->template = new frontend_model_template();
         $this->header = new component_httpUtils_header($this->template);
+        $this->data = new frontend_model_data($this);
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
         }
         $this->getlang = $this->template->currentLanguage();
     }
     /**
+     * Assign data to the defined variable or return the data
+     * @param string $context
+     * @param string $type
+     * @param string|int|null $id
+     * @return mixed
+     */
+    private function getItems($type, $id = null, $context = null) {
+        return $this->data->getItems($type, $id, $context);
+    }
+    /**
      * set Data from database
      * @access private
      */
-    private function setItems()
+    private function getBuildItems()
     {
-        $collection = parent::fetch(array('iso'=>$this->getlang));
+        $collection = $this->getItems('page',array(':iso'=>$this->getlang),'last');
         return array(
             'name'      =>  $collection['title_page'],
             'content'   =>  $collection['content_page'],
             'seoTitle'  =>  $collection['seo_title_page'],
             'seoDescr'  =>  $collection['seo_desc_page']
         );
-
-    }
-
-    /**
-     * getData with smarty assign
-     */
-    private function getItems(){
-        $data = $this->setItems();
-        $this->template->assign('home',$data);
     }
 
     /**
@@ -110,7 +112,7 @@ class frontend_controller_home extends frontend_db_home{
 
             $this->template->display('error/index.tpl');
         }else{
-            $this->getItems();
+            $this->template->assign('home',$this->getBuildItems());
             $this->template->display('home/index.tpl');
         }
     }
