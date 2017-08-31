@@ -462,7 +462,7 @@ CREATE TABLE IF NOT EXISTS `mc_webservice` (
 
 CREATE TABLE IF NOT EXISTS `mc_seo` (
   `id_seo` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `level_seo` smallint(3) unsigned NOT NULL,
+  `level_seo` varchar(30) NOT NULL,
   `attribute_seo` varchar(50) NOT NULL,
   `type_seo` enum('title','description') NOT NULL,
   PRIMARY KEY (`id_seo`)

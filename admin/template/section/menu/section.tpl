@@ -108,7 +108,7 @@
             </li>
         </ul>
     </li>
-    <li class="has-submenu{if $smarty.get.controller == 'setting' || $smarty.get.controller == 'files' || $smarty.get.controller == 'webservice' || $smarty.get.controller == 'domain'} active{/if}">
+    <li class="has-submenu{if $smarty.get.controller == 'setting' || $smarty.get.controller == 'files' || $smarty.get.controller == 'webservice' || $smarty.get.controller == 'domain' || $smarty.get.controller == 'seo'} active{/if}">
         <a href="#">
             <span class="fa fa-cog"></span> Configuration
         </a>
@@ -138,6 +138,13 @@
                 <li{if $smarty.get.controller == 'domain'} class="active"{/if}>
                     <a href="{geturl}/{baseadmin}/index.php?controller=domain">
                         <span class="fa fa-link"></span> {#domain_sitemap#}
+                    </a>
+                </li>
+            {/if}
+            {if {employee_access type="view" class_name="backend_controller_seo"} eq 1}
+                <li{if $smarty.get.controller == 'seo'} class="active"{/if}>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=seo">
+                        <span class="fa fa-file-text-o"></span> {#seo#}
                     </a>
                 </li>
             {/if}

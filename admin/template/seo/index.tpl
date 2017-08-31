@@ -28,7 +28,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-seo">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form-2.tpl" idcolumn='id_seo' data=$seo activation=false sortable=false controller="seo"}
+                {include file="section/form/table-form-2.tpl" idcolumn='id_seo' search=false data=$seo activation=false sortable=false controller="seo"}
             </div>
         </section>
     </div>
