@@ -4,11 +4,11 @@
  * @package Minify
  */
 
-/** 
+/**
  * You may wish to use the Minify URI Builder app to suggest
  * changes. http://yourdomain/min/builder/
  *
- * See http://code.google.com/p/minify/wiki/CustomSource for other ideas
+ * See https://github.com/mrclay/minify/blob/master/docs/CustomServer.wiki.md for other ideas
  **/
 
 return array(
@@ -24,8 +24,8 @@ return array(
         '//'.PATHADMIN.'/template/js/fancybox.init.min.js',
         '//libjs/vendor/redirect.min.js'
     ),
-	'jimagine' => array(
-	    '//libjs/vendor/jimagine/plugins/jquery.jmRequest.js',
+    'jimagine' => array(
+        '//libjs/vendor/jimagine/plugins/jquery.jmRequest.js',
         '//libjs/vendor/jimagine/plugins/jquery.jmInsertCaret.js'
     ),
     'globalize'=> array(
@@ -46,9 +46,9 @@ return array(
         '//'.PATHADMIN.'/template/js/vendor/tiny_mce.'.VERSION_EDITOR.'/jquery.tinymce.min.js',
         '//'.PATHADMIN.'/template/js/tinymce-config.min.js'
     ),
-	'pdfcss' => array(
-		'//'.PATHADMIN.'/template/css/pdf/print.min.css',
-	),
+    'pdfcss' => array(
+        '//'.PATHADMIN.'/template/css/pdf/print.min.css',
+    ),
     'maxAge' => 31536000,
     'setExpires' => time() + 86400 * 365
 );

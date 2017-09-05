@@ -87,12 +87,22 @@ class frontend_model_smarty extends Smarty{
         $this->setConfigDir(array(
             self::setPath()."locali18n/"
         ));
+        /**
+         * additionnal Path -> configs
+         */
+
+        if(file_exists(self::setPath()."skin/".$template->themeSelected().'/i18n/')) {
+            $this->addConfigDir([
+                self::setPath() . "skin/" . $template->themeSelected() . '/i18n/'
+            ]);
+        }
 		/**
 		 * Path -> templates
 		 */
         $this->setTemplateDir(array(
             self::setPath()."skin/".$template->themeSelected().'/'
         ));
+
 		/**
 		 * path plugins
 		 * @var void

@@ -47,44 +47,22 @@ class frontend_model_core{
      * @param array $setRouter
      * @return array
      */
-    public static function setCurrentId (array $setRouter)
+    public function setCurrentId ()
     {
         $ModelTemplate  =   new frontend_model_template();
         //$HelperClean    =   new form_inputFilter();
-        $inputEscape    =   new form_inputEscape();
+        $formClean = new form_inputEscape();
         $current = array();
-
-        $current['news']['record']['id'] = null;
-        if ($setRouter['news']['idnews'])
-            $current['news']['record']['id']    =   $inputEscape->alphaNumeric($setRouter['news']['idnews']);
-
-        $current['news']['pagination']['id'] = 1;
-        if ($setRouter['news']['page'])
-            $current['news']['pagination']['id']    =   $inputEscape->numeric($setRouter['news']['page']);
-
-        $current['news']['tag']['id'] = null;
-        if ($setRouter['news']['tag'])
-            $current['news']['tag']['id']    =   $inputEscape->tagClean($setRouter['news']['tag']);
-
-        $current['cms']['record']['id'] = null;
-        if ($setRouter['cms']['getidpage'])
-            $current['cms']['record']['id']    =   $inputEscape->numeric($setRouter['cms']['getidpage']);
-
-        $current['cms']['parent']['id'] = null;
-        if ($setRouter['cms']['getidpage_p'])
-            $current['cms']['parent']['id']    =   $inputEscape->numeric($setRouter['cms']['getidpage_p']);
-
-        $current['catalog']['category']['id'] = null;
-        if ($setRouter['catalog']['idclc'])
-            $current['catalog']['category']['id']    =   $inputEscape->numeric($setRouter['catalog']['idclc']);
-
-        $current['catalog']['subcategory']['id'] = null;
-        if ($setRouter['catalog']['idcls'])
-            $current['catalog']['subcategory']['id']    =   $inputEscape->numeric($setRouter['catalog']['idcls']);
-
-        $current['catalog']['product']['id'] = null;
-        if ($setRouter['catalog']['idproduct'])
-            $current['catalog']['product']['id']    =   $inputEscape->numeric($setRouter['catalog']['idproduct']);
+        $current['controller']['id'] = null;
+        if (http_request::isGet('controller')){
+            $current['controller'] = $formClean->numeric($_GET['controller']);
+        }
+        if (http_request::isGet('id')){
+            $current['controller']['id'] = $formClean->numeric($_GET['id']);
+        }
+        if (http_request::isGet('id_parent')){
+            $current['controller']['id_parent'] = $formClean->numeric($_GET['id_parent']);
+        }
 
         $current['lang']['iso']  = $ModelTemplate->currentLanguage();
 

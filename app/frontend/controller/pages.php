@@ -39,53 +39,64 @@
  * Time: 00:19
  * License: Dual licensed under the MIT or GPL Version
  */
-class frontend_controller_pages extends frontend_model_db_cms{
+class frontend_controller_pages extends frontend_db_pages {
     /**
      * @var
      */
-    protected $router,$template,$inputEscape;
+    protected $template,$header,$data,$modelPages,$modelCore;
+    public $getlang,$id;
 
     /**
-     * @param $router
+     * frontend_controller_pages constructor.
      */
-    public function __construct($router){
-        $this->router = $router;
+    public function __construct(){
+        $formClean = new form_inputEscape();
         $this->template = new frontend_model_template();
-        $inputEscape   =   new form_inputEscape();
-        /*$inputEscape->numeric();
-
-        if ($FilterRequest->isGet('getidpage_p')) {
-            $this->idParent = $FilterVar->isPostAlphaNumeric($_GET['getidpage_p']);
-
+        $this->header = new component_httpUtils_header($this->template);
+        $this->data = new frontend_model_data($this);
+        $this->getlang = $this->template->currentLanguage();
+        $this->modelPages = new frontend_model_pages($this->template);
+        if (http_request::isGet('id')) {
+            $this->id = $formClean->numeric($_GET['id']);
         }
-		if ($FilterRequest->isGet('getidpage')) {
-            $this->idPage = $FilterVar->isPostNumeric($_GET['getidpage']);
-
-        }*/
+    }
+    /**
+     * Assign data to the defined variable or return the data
+     * @param string $context
+     * @param string $type
+     * @param string|int|null $id
+     * @return mixed
+     */
+    private function getItems($type, $id = null, $context = null) {
+        return $this->data->getItems($type, $id, $context);
+    }
+    /**
+     * set Data from database
+     * @access private
+     */
+    private function getBuildItems()
+    {
+        $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'last');
+        return $this->modelPages->setItemData($collection,null);
     }
 
+    /**
+     * @return array
+     */
+    private function getBuildLangItems(){
+        $collection = $this->getItems('langs',array(':id'=>$this->id),'return');
+        return $this->modelPages->setHrefLangData($collection);
+    }
     /**
      * Assign page's data to smarty
      * @access private
      */
-    private function getData($idPage, $idParent = false)
+    private function getData()
     {
-        $ModelCms    =   new frontend_model_cms();
-
-        $data = parent::s_page_data($idPage);
-
-        $dataClean  =   $ModelCms->setItemData($data,0);
-        $dataClean['seoTitle']  =   $data['seo_title_page'];
-        $dataClean['seoDescr']  =   $data['seo_desc_page'];
-
-        $this->template->assign('page',   $dataClean, true);
-
-        // ** Assign parent page data
-        if (isset($idParent)) {
-            $parent = parent::s_page_data($idParent);
-            $parentClean  =   $ModelCms->setItemData($parent,0);
-            $this->template->assign('parent',$parentClean);
-        }
+        $data = $this->getBuildItems();
+        $hreflang = $this->getBuildLangItems();
+        $this->template->assign('pages',$data,true);
+        $this->template->assign('hreflang',$hreflang,true);
     }
 
     /**
@@ -93,22 +104,7 @@ class frontend_controller_pages extends frontend_model_db_cms{
      * run app
      */
     public function run(){
-        // Create a Router
-        /*$this->router->get('/', function() {
-            print 'pages';
-        });*/
-        $this->router->get('/(:num)-(:any)', function($idParent,$parentName) {
-            //print 'pages name '.$parentName.'('.$idParent.')';
-            $this->template->assign('getID',array('idParent'=>$idParent));
-            $this->getData($idParent);
-            $this->template->display('cms/index.tpl');
-        });
-        $this->router->get('/(:num)-(:any)/(:num)-(:any)', function($idParent,$parentName,$idChild,$childName) {
-            /*print 'pages parent '.$parentName.'('.$idParent.')<br>';
-            print 'pages child '.$childName.'('.$idChild.')';*/
-            $this->template->assign('getID',array('idParent'=>$idParent));
-            $this->getData($idChild,$idParent);
-            $this->template->display('cms/index.tpl');
-        });
+        $this->getData();
+        $this->template->display('pages/index.tpl');
     }
 }

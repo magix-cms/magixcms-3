@@ -132,9 +132,9 @@ class frontend_model_template{
 	 */
 	public function configLoad($section = ''){
 	    try {
-            frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad(self::$ConfigFile), $section);
+            frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad(self::$ConfigFile), $section);
             if (file_exists(component_core_system::basePath() . '/skin/' . $this->themeSelected() . '/i18n/')) {
-                frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad('theme_'));
+                frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad('theme_'));
             }
         }catch(Exception $e) {
             $logger = new debug_logger(MP_LOG_DIR);
