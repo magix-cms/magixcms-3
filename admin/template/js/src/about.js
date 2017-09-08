@@ -1,13 +1,13 @@
 var about = (function ($, undefined) {
     return {
-        run: function(baseadmin){
+        run: function(controller){
             /*$('#info_language_form').validate({
                 onsubmit: true,
                 event: 'submit',
                 submitHandler: function(form) {
                     $.jmRequest({
                         handler: "submit",
-                        url: '/'+baseadmin+'/index.php?controller=about&action=edit',
+                        url: controller+'&action=edit',
                         method: 'post',
                         form: $(form),
                         resetForm: false,
@@ -24,6 +24,28 @@ var about = (function ($, undefined) {
                     return false;
                 }
             });*/
+            $( ".ui-sortable" ).sortable({
+                items: "> tr",
+                cursor: "move",
+                axis: "y",
+                update: function(){
+                    var serial = $( ".ui-sortable" ).sortable('serialize');
+                    $.jmRequest({
+                        handler: "ajax",
+                        url: controller+'&action=order',
+                        method: 'POST',
+                        data : serial,
+                        success:function(e){
+                            $.jmRequest.initbox(e,{
+                                    display: false
+                                }
+                            );
+                        }
+                    });
+                    //return false;
+                }
+            });
+            $( ".ui-sortable" ).disableSelection();
 
             $('[data-toggle="popover"]').popover();
             $('[data-toggle="popover"]').click(function(e){

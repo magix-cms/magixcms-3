@@ -60,21 +60,19 @@
                             </div>
                             <div class="col-xs-12 col-sm-4">
                                 <div class="form-group">
-                                    <label for="content[{$id}][published_cat]">Statut</label>
+                                    <label for="content[{$id}][published_cat]">{#status#|ucfirst}</label>
                                     <input id="content[{$id}][published_cat]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_cat]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger"{if $page.content[{$id}].published_cat} checked{/if}>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12">
-                                <div class="form-group">
-                                    <label for="content[{$id}][content_cat]">{#content#|ucfirst} :</label>
-                                    <textarea name="content[{$id}][content_cat]" id="content[{$id}][content_cat]" class="form-control mceEditor">{call name=cleantextarea field=$page.content[{$id}].content_cat}</textarea>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="content[{$id}][resume_cat]">{#resume#|ucfirst} :</label>
+                            <textarea name="content[{$id}][resume_cat]" id="content[{$id}][resume_cat]" class="form-control">{$page.content[{$id}].resume_cat}</textarea>
                         </div>
-
+                        <div class="form-group">
+                            <label for="content[{$id}][content_cat]">{#content#|ucfirst} :</label>
+                            <textarea name="content[{$id}][content_cat]" id="content[{$id}][content_cat]" class="form-control mceEditor">{call name=cleantextarea field=$page.content[{$id}].content_cat}</textarea>
+                        </div>
                     </fieldset>
                 {/foreach}
             </div>

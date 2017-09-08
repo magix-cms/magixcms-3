@@ -7,7 +7,7 @@ class backend_db_domain
         $params = false;
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'domain') {
                     //Listing employee
                     $cond = '';
@@ -36,14 +36,18 @@ class backend_db_domain
                     FROM mc_domain AS d $cond";
                     //$params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-            } elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
+            }
+            elseif ($config['context'] === 'one') {
                 if ($config['type'] === 'domain') {
                     $sql = 'SELECT * FROM mc_domain WHERE id_domain = :id';
                     $params = $data;
-                } elseif ($config['type'] === 'count') {
+                }
+                elseif ($config['type'] === 'count') {
                     $sql = 'SELECT count(id_domain) AS nb FROM mc_domain';
                 }
+
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }
         }

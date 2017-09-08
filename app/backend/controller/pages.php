@@ -75,67 +75,24 @@ class backend_controller_pages extends backend_db_pages
         }
     }
 
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
-
-    /**
-     * @return array
-     */
-    private function setItemsData(){
-        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
-
-        $arr = array();
-        if(isset($this->edit)){
-            $data = parent::fetchData(
-                array('context'=>'all','type'=>'pagesChild','search'=>$this->search),
-                array(':edit'=>$this->edit)
-            );
-            /*foreach ($data as $key => $value) {
-                $arr[$key]['id_pages'] = $value['id_pages'];
-                $arr[$key]['name_pages'] = $value['name_pages'];
-                $arr[$key]['menu_pages'] = $value['menu_pages'];
-                $arr[$key]['date_register'] = $value['date_register'];
-            }*/
-        }else{
-            $data = parent::fetchData(
-                array('context'=>'all','type'=>'pages','search'=>$this->search),
-                array(':default_lang'=>$defaultLanguage['id_lang'])
-            );
-            /*if($this->search) {
-                foreach ($data as $key => $value) {
-                    $arr[$key]['id_pages'] = $value['id_pages'];
-                    $arr[$key]['name_pages'] = $value['name_pages'];
-                    $arr[$key]['parent_pages'] = $value['parent_pages'];
-                    $arr[$key]['menu_pages'] = $value['menu_pages'];
-                    $arr[$key]['date_register'] = $value['date_register'];
-                }
-            }else{
-                foreach ($data as $key => $value) {
-                    $arr[$key]['id_pages'] = $value['id_pages'];
-                    $arr[$key]['name_pages'] = $value['name_pages'];
-                    $arr[$key]['menu_pages'] = $value['menu_pages'];
-                    $arr[$key]['date_register'] = $value['date_register'];
-                }
-            }*/
-        }
-
-        return $data;
-    }
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * @param $data
      * @return array
      */
     private function setItemData($data){
-        //return $this->getItems('page',$this->edit, 'return');
+        //return $this->getItems('page',$this->edit, 'all',false);
         $imgPath = $this->upload->imgBasePath('upload/pages');
         $arr = array();
         $conf = array();
@@ -179,6 +136,92 @@ class backend_controller_pages extends backend_db_pages
         return $arr;
     }
 
+	/**
+	 * @param $idpage
+	 * @return array
+	 */
+	private function saveContent($idpage)
+	{
+		$extendData = array();
+
+		foreach ($this->content as $lang => $content) {
+			$content['id_lang'] = $lang;
+			$content['id_pages'] = $idpage;
+			$content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
+			if (empty($content['url_pages'])) {
+				$content['url_pages'] = http_url::clean($content['name_pages'],
+					array(
+						'dot' => false,
+						'ampersand' => 'strict',
+						'cspec' => '', 'rspec' => ''
+					)
+				);
+			}
+
+			$contentPage = $this->getItems('content',array('id_pages'=>$idpage, 'id_lang'=>$lang),'one',false);
+
+			if($contentPage != null) {
+				$this->upd(
+					array(
+						'context' => 'page',
+						'type' => 'page',
+						'data' => array(
+							'id_pages' => $idpage,
+							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+						)
+					)
+				);
+				$this->upd(
+					array(
+						'context' => 'page',
+						'type' => 'content',
+						'data' => $content
+					)
+				);
+			}
+			else {
+				$this->add(
+					array(
+						'context' => 'page',
+						'type' => 'content',
+						'data' => $content
+					)
+				);
+			}
+
+			if(isset($this->id_pages)) {
+				$setEditData = parent::fetchData(
+					array('context'=>'all','type'=>'page'),
+					array('edit'=>$this->id_pages)
+				);
+				$setEditData = $this->setItemData($setEditData);
+				$extendData[$lang] = $setEditData[$this->id_pages]['content'][$lang]['public_url'];
+			}
+		}
+
+		if(!empty($extendData)) return $extendData;
+	}
+
+	/**
+	 * Update data
+	 * @param $data
+	 */
+	private function add($data)
+	{
+		switch ($data['type']) {
+			case 'page':
+			case 'content':
+				parent::insert(
+					array(
+						'context' => $data['context'],
+						'type' => $data['type']
+					),
+					$data['data']
+				);
+				break;
+		}
+	}
+
     /**
      * Mise a jour des données
      * @param $data
@@ -186,40 +229,6 @@ class backend_controller_pages extends backend_db_pages
     private function upd($data)
     {
         switch ($data['type']) {
-            case 'content':
-                parent::update(
-                    array(
-                        'type'=>$data['type']
-                    ),array(
-                        'id_lang'	       => $data['id_lang'],
-                        'id_pages'	       => $data['id_pages'],
-                        'name_pages'       => $data['name_pages'],
-                        'url_pages'        => $data['url_pages'],
-                        'content_pages'    => $data['content_pages'],
-                        'seo_title_pages'  => $data['seo_title_pages'],
-                        'seo_desc_pages'   => $data['seo_desc_pages'],
-                        'published_pages'  => $data['published_pages']
-                    )
-                );
-                break;
-            case 'img':
-                parent::update(
-                    array(
-                        'type'=>$data['type']
-                    ),array(
-                        'id_pages'	       => $data['id_pages'],
-                        'img_pages'        => $data['img_pages']
-                    )
-                );
-                break;
-            case 'pageActiveMenu':
-                parent::update(
-                    array(
-                        'type'      =>    $data['type']
-                    ),
-                    $data['data']
-                );
-                break;
             case 'order':
                 $p = $this->order;
                 for ($i = 0; $i < count($p); $i++) {
@@ -233,157 +242,18 @@ class backend_controller_pages extends backend_db_pages
                     );
                 }
                 break;
-        }
-    }
-
-	/**
-	 *
-	 */
-    private function save(){
-        if (isset($this->content) && isset($this->id_pages)) {
-            foreach ($this->content as $lang => $content) {
-                $content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
-                if (empty($content['url_pages'])) {
-                    $content['url_pages'] = http_url::clean($content['name_pages'],
-                        array(
-                            'dot' => false,
-                            'ampersand' => 'strict',
-                            'cspec' => '', 'rspec' => ''
-                        )
-                    );
-                }
-                $checkLangData = parent::fetchData(
-                    array('context'=>'unique','type'=>'content'),
-                    array('id_pages'=>$this->id_pages,'id_lang'=>$lang)
-                );
-                // Check language page content
-                if($checkLangData!= null){
-                    $this->upd(array(
-                        'type'              => 'content',
-                        'id_lang'           => $lang,
-                        'id_pages'          => $this->id_pages,
-                        'name_pages'        => $content['name_pages'],
-                        'url_pages'         => $content['url_pages'],
-                        'content_pages'     => $content['content_pages'],
-                        'seo_title_pages'   => $content['seo_title_pages'],
-                        'seo_desc_pages'    => $content['seo_desc_pages'],
-                        'published_pages'   => $content['published_pages']
-                    ));
-                }else{
-                    parent::insert(
-                        array(
-                            'type' => 'newContent',
-                        ),
-                        array(
-                            'id_lang'           => $lang,
-                            'id_pages'          => $this->id_pages,
-                            'name_pages'        => $content['name_pages'],
-                            'url_pages'         => $content['url_pages'],
-                            'content_pages'     => $content['content_pages'],
-                            'seo_title_pages'   => $content['seo_title_pages'],
-                            'seo_desc_pages'    => $content['seo_desc_pages'],
-                            'published_pages'   => $content['published_pages']
-                        )
-                    );
-                }
-
-                $setEditData = parent::fetchData(
-                    array('context'=>'all','type'=>'page'),
-                    array('edit'=>$this->id_pages)
-                );
-                $setEditData = $this->setItemData($setEditData);
-                $extendData[$lang] = $setEditData[$this->id_pages]['content'][$lang]['public_url'];
-            }
-
-            $this->header->set_json_headers();
-            $this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
-
-        }else if (isset($this->content) && !isset($this->id_pages)) {
-            if(empty($this->parent_id)){
-                $parentId = NULL;
-            }else{
-                $parentId = $this->parent_id;
-            }
-
-            parent::insert(
-                array(
-                    'type'=>'newPages'
-                ),array(
-                    'id_parent'     =>  $parentId
-                )
-            );
-
-            $setNewData = parent::fetchData(
-                array('context' => 'unique', 'type' => 'root')
-            );
-
-            if ($setNewData['id_pages']) {
-                foreach ($this->content as $lang => $content) {
-
-                    $content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
-                    $url_pages = http_url::clean($content['name_pages'],
-                        array(
-                            'dot' => false,
-                            'ampersand' => 'strict',
-                            'cspec' => '', 'rspec' => ''
-                        )
-                    );
-
-                    parent::insert(
-                        array(
-                            'type' => 'newContent',
-                        ),
-                        array(
-                            'id_lang'           => $lang,
-                            'id_pages'          => $setNewData['id_pages'],
-                            'name_pages'        => $content['name_pages'],
-                            'url_pages'         => $url_pages,
-                            'content_pages'     => $content['content_pages'],
-                            'seo_title_pages'   => $content['seo_title_pages'],
-                            'seo_desc_pages'    => $content['seo_desc_pages'],
-                            'published_pages'   => $content['published_pages']
-                        )
-                    );
-                }
-
-                $this->header->set_json_headers();
-                $this->message->json_post_response(true,'add_redirect');
-            }
-        }else  if(isset($this->img)){
-            $data = parent::fetchData(array('context'=>'unique','type'=>'page'),array('id_pages'=>$this->id_pages));
-            $resultUpload = $this->upload->setImageUpload(
-                'img',
-                array(
-                    'name'              => filter_rsa::randMicroUI(),
-                    'edit'              => $data['img_pages'],
-                    'prefix'            => array('s_','m_','l_'),
-                    'module_img'        => 'pages',
-                    'attribute_img'     => 'page',
-                    'original_remove'   => false
-                ),
-                array(
-                    'upload_root_dir'      => 'upload/pages', //string
-                    'upload_dir'           => $this->id_pages //string ou array
-                ),
-                false
-            );
-
-            $this->upd(array(
-                'type'              => 'img',
-                'id_pages'          => $this->id_pages,
-                'img_pages'        => $resultUpload['file']
-            ));
-            $this->header->set_json_headers();
-
-            $setEditData = parent::fetchData(
-                array('context'=>'all','type'=>'page'),
-                array('edit'=>$this->id_pages)
-            );
-            $setEditData = $this->setItemData($setEditData);
-            $this->template->assign('page',$setEditData[$this->id_pages]);
-            $display = $this->template->fetch('pages/brick/img.tpl');
-
-            $this->message->json_post_response(true, 'update',$display);
+			case 'page':
+			case 'content':
+			case 'img':
+			case 'pageActiveMenu':
+				parent::update(
+					array(
+						'context' => $data['context'],
+						'type' => $data['type']
+					),
+					$data['data']
+				);
+				break;
         }
     }
 
@@ -410,7 +280,7 @@ class backend_controller_pages extends backend_db_pages
      *
      */
     public function run(){
-        if(isset($this->plugin)){
+        if(isset($this->plugin)) {
             if(isset($this->action)) {
                 switch ($this->action) {
                     case 'edit':
@@ -445,28 +315,79 @@ class backend_controller_pages extends backend_db_pages
                         break;
                 }
             }
-        }else{
+        }
+        else {
             if(isset($this->action)) {
                 switch ($this->action) {
                     case 'add':
-                        if(isset($this->content)){
-                            $this->save();
-                        }else{
-                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
-                            $data = parent::fetchData(
-                                array('context'=>'all','type'=>'pagesSelect'),
-                                array(':default_lang'=>$defaultLanguage['id_lang'])
-                            );
-                            $this->template->assign('pagesSelect',$data);
-                            $this->modelLanguage->getLanguage();
+                        if(isset($this->content)) {
+							$this->add(
+								array(
+									'context' => 'page',
+									'type' => 'page',
+									'data' => array(
+										'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+									)
+								)
+							);
+
+							$page = $this->getItems('root',null,'one',false);
+
+							if ($page['id_pages']) {
+								$this->saveContent($page['id_pages']);
+								$this->header->set_json_headers();
+								$this->message->json_post_response(true,'add_redirect');
+							}
+                        }
+                        else {
+							$this->modelLanguage->getLanguage();
+							$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+							$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
                             $this->template->display('pages/add.tpl');
                         }
-
                         break;
                     case 'edit':
                         if (isset($this->id_pages)) {
-                            $this->save();
-                        }else{
+							$extendData = $this->saveContent($this->id_pages);
+							$this->header->set_json_headers();
+							$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
+                        }
+                        elseif(isset($this->img)){
+							$data = $this->getItems('page',array('id_pages'=>$this->id_pages),'one');
+							$resultUpload = $this->upload->setImageUpload(
+								'img',
+								array(
+									'name'              => filter_rsa::randMicroUI(),
+									'edit'              => $data['img_pages'],
+									'prefix'            => array('s_','m_','l_'),
+									'module_img'        => 'pages',
+									'attribute_img'     => 'page',
+									'original_remove'   => false
+								),
+								array(
+									'upload_root_dir'      => 'upload/pages', //string
+									'upload_dir'           => $this->id_pages //string ou array
+								),
+								false
+							);
+
+							$this->upd(array(
+								'type' => 'img',
+								'data' => array(
+									'id_pages' => $this->id_pages,
+									'img_pages' => $resultUpload['file']
+								)
+							));
+
+							$setEditData = $this->getItems('page',array('edit'=>$this->id_pages),'all',false);
+							$setEditData = $this->setItemData($setEditData);
+							$this->template->assign('page',$setEditData[$this->id_pages]);
+							$display = $this->template->fetch('pages/brick/img.tpl');
+
+							$this->header->set_json_headers();
+							$this->message->json_post_response(true, 'update',$display);
+						}
+                        else {
                             // Initialise l'API menu des plugins core
                             $this->modelPlugins->getItems(
                                 array(
@@ -475,14 +396,10 @@ class backend_controller_pages extends backend_db_pages
                                 )
                             );
                             $this->modelLanguage->getLanguage();
-                            $setEditData = parent::fetchData(
-                                array('context'=>'all','type'=>'page'),
-                                array('edit'=>$this->edit)
-                            );
+
+                            $setEditData = parent::fetchData(array('context'=>'all','type'=>'page'), array('edit'=>$this->edit));
                             $setEditData = $this->setItemData($setEditData);
                             $this->template->assign('page',$setEditData[$this->edit]);
-                            //$pages = $this->setItemsData();
-                            //$this->template->assign('pages', $pages);
 
                             $assign = array(
                                 'id_pages',
@@ -506,6 +423,8 @@ class backend_controller_pages extends backend_db_pages
                                 $this->message->json_post_response(true,'',$display);
                             }
                             else {
+								$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+								$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
                                 $this->template->display('pages/edit.tpl');
                             }
                         }
@@ -524,9 +443,7 @@ class backend_controller_pages extends backend_db_pages
                             );
                         }
                         $this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
-                        //$pages = $this->setItemsData();
-                        //$this->template->assign('pages', $pages);
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
                         $assign = array(
                             'id_pages',
                             'name_pages' => ['title' => 'name'],
@@ -559,9 +476,10 @@ class backend_controller_pages extends backend_db_pages
                         }
                         break;
                 }
-            }else{
+            }
+            else {
                 $this->modelLanguage->getLanguage();
-                $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
                 $this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
                 $assign = array(
                     'id_pages',

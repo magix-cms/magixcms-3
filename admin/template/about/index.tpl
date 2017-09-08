@@ -69,6 +69,7 @@
     {include file="section/footer/editor.tpl"}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
+        libjs/vendor/jquery-ui-1.12.min.js,
         {baseadmin}/template/js/about.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
@@ -79,7 +80,8 @@
             {
                 console.log("about is not defined");
             }else{
-                about.run(baseadmin);
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+                about.run(controller);
             }
         });
     </script>

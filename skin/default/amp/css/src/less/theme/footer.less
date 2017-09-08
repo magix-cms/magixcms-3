@@ -1,0 +1,136 @@
+/*
+ * Rules for footer
+ */
+#footer {
+	background: @footer-bg;
+	color: @footer-color;
+	margin-bottom: 34px;
+	//box-shadow: 0 0 10px rgba(0,0,0,.05);
+
+	// Global footer rules
+	h4 {
+		font-size: 18px;
+		margin: 0 0 20px;
+		border-bottom: 1px solid @light-gray;
+		padding-bottom: 10px;
+		a {
+			.title-font;
+		}
+	}
+
+	a {
+		color: @footer-color;
+	}
+
+	.block {
+		margin-bottom: 20px;
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&-blocks {
+		border-top: 1px solid @light-gray;
+		border-bottom: 1px solid @light-gray;
+		padding: 40px 0;
+	}
+
+	// --- Block links
+	.link-list {
+		li {
+			a {
+				display: inline-block;
+				padding: 2px 0 3px;
+			}
+		}
+	}
+}
+
+#block {
+	// --- Block contact
+	&-contact {
+		ul {
+			.normalize-link(@main-color);
+		}
+
+		li {
+			margin: 5px 0 15px;
+
+			&.phone-number {
+				font-size: 20px;
+			}
+		}
+
+		span {
+			color: @footer-color;
+
+			&.fa {
+				width: 30px;
+				font-size: 20px;
+			}
+		}
+	}
+}
+
+#colophon {
+	background-color: @colophon-bg;
+
+	.footer-colophon {
+		padding: 15px;
+		font-size: 85%;
+
+		> div {
+			text-align: center;
+		}
+
+		p {
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.footer-creator {
+		.normalize-link(@main-color, same, underline);
+	}
+}
+
+#footbar {
+	position: fixed;
+	bottom: 0;
+	display: block;
+	width: 100%;
+	z-index: 2;
+	padding: 0;
+
+	.wrapper {
+		background: @main-color;
+		color: @smooth-white;
+		height: 34px;
+	}
+
+	.dropup {
+		position: static;
+	}
+
+	.share-nav {
+		position: absolute;
+		width: 100%;
+		z-index: -1;
+		bottom: -16px;
+		background: @sharebar-bg;
+		display: block;
+		padding: 8px 15px;
+		height: 50px;
+		.auto-transition(.5s);
+		box-shadow: 0 0 1px rgba(0,0,0,.2) inset;
+
+		li {
+			float: left;
+			margin-right: 15px;
+		}
+	}
+
+	.dropup.open + .share-nav {
+		bottom: 34px;
+	}
+}

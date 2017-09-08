@@ -44,8 +44,8 @@ class frontend_model_core{
      * Retourne un tableaux contenant les identifiant actif (int OR string)
      * @access public
      * @static
-     * @param array $setRouter
      * @return array
+     * @internal param array $setRouter
      */
     public function setCurrentId ()
     {
@@ -55,7 +55,7 @@ class frontend_model_core{
         $current = array();
         $current['controller']['id'] = null;
         if (http_request::isGet('controller')){
-            $current['controller'] = $formClean->numeric($_GET['controller']);
+            $current['controller']['name'] = $formClean->simpleClean($_GET['controller']);
         }
         if (http_request::isGet('id')){
             $current['controller']['id'] = $formClean->numeric($_GET['id']);

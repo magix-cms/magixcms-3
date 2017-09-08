@@ -30,13 +30,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12">
-                        <div class="form-group">
-                            <label for="content[{$id}][content_news]">{#content#|ucfirst} :</label>
-                            <textarea name="content[{$id}][content_news]" id="content[{$id}][content_news]" class="form-control mceEditor"></textarea>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="content[{$id}][resume_news]">{#resume#|ucfirst} :</label>
+                    <textarea name="content[{$id}][resume_news]" id="content[{$id}][resume_news]" class="form-control">{$page.content[{$id}].resume_news}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="content[{$id}][content_news]">{#content#|ucfirst} :</label>
+                    <textarea name="content[{$id}][content_news]" id="content[{$id}][content_news]" class="form-control mceEditor"></textarea>
                 </div>
             </fieldset>
         {/foreach}

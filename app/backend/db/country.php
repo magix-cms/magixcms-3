@@ -6,7 +6,7 @@ class backend_db_country{
         $params = false;
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'countries') {
                     //Listing employee
                     $cond = '';
@@ -33,17 +33,21 @@ class backend_db_country{
                         }
                     }
                     $sql = "SELECT country.id_country,country.iso_country,country.name_country 
-                    FROM mc_country AS country $cond"." ORDER BY order_country ASC";
+                    		FROM mc_country AS country $cond"." ORDER BY order_country ASC";
                     //$params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            }
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'country') {
                     $sql = 'SELECT * FROM mc_country WHERE id_country = :id';
                     $params = $data;
-                }elseif ($config['type'] === 'count') {
+                }
+                elseif ($config['type'] === 'count') {
                     $sql = 'SELECT count(id_country) AS nb FROM mc_country';
                 }
+
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
         }

@@ -7,48 +7,43 @@ class backend_db_access{
      * @throws Exception
      */
     public function fetchData($config,$data = false){
-        $sql = '';
-        $params = false;
-
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+			$sql = '';
+			$params = false;
 
+            if($config['context'] === 'all') {
                 if ($config['type'] === 'roles') {
                     //Return role list
                     $sql = 'SELECT * FROM mc_admin_role_user
-                    ORDER BY id_role DESC';
-
-                }elseif($config['type'] === 'access'){
-
-                    $sql='SELECT ace.*,module.class_name,module.name
-                    FROM mc_admin_access AS ace
-                    JOIN mc_module as module ON(ace.id_module = module.id_module)
-                    WHERE ace.id_role = :id';
+                    		ORDER BY id_role DESC';
+                }
+                elseif($config['type'] === 'access'){
+                    $sql = 'SELECT ace.*,module.class_name,module.name
+							FROM mc_admin_access AS ace
+							JOIN mc_module as module ON(ace.id_module = module.id_module)
+							WHERE ace.id_role = :id';
                     $params = $data;
-
-                }elseif ($config['type'] === 'module') {
-
+                }
+                elseif ($config['type'] === 'module') {
                     //Return role list
                     $sql = 'SELECT * FROM mc_module';
                 }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
-
+            }
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'role') {
-
                     //Return role list
                     $sql = 'SELECT * FROM mc_admin_role_user
-                    WHERE id_role = :id';
+                    		WHERE id_role = :id';
                     $params = $data;
-
-                }elseif ($config['type'] === 'lastRole') {
+                }
+                elseif ($config['type'] === 'lastRole') {
                     //Return role list
                     $sql = 'SELECT * FROM mc_admin_role_user
-                    ORDER BY id_role DESC LIMIT 0,1';
-
-                }elseif ($config['type'] === 'lastAccess') {
+                    		ORDER BY id_role DESC LIMIT 0,1';
+                }
+                elseif ($config['type'] === 'lastAccess') {
 
                     $sql = "SELECT ace.*,module.class_name,module.name
 							FROM mc_admin_access as ace
@@ -56,8 +51,8 @@ class backend_db_access{
 							WHERE ace.id_role = :id
 							ORDER BY ace.id_access DESC LIMIT 0,1";
                     $params = $data;
-
                 }
+
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
         }

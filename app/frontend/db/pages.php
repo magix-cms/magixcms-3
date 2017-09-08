@@ -6,7 +6,7 @@ class frontend_db_pages
         $params = false;
 
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+            if($config['context'] === 'all') {
                 if ($config['type'] === 'langs') {
                     $sql = 'SELECT
                     h.*,c.*,lang.iso_lang
@@ -43,9 +43,9 @@ class frontend_db_pages
 
                     $params = $data;
                 }
-                return $sql ? component_routing_db::layer()->fetchAll($sql,$params,array('debugParams'=>false)) : null;
+                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            }elseif($config['context'] === 'one') {
 
                 if ($config['type'] === 'page') {
                     //Return current skin

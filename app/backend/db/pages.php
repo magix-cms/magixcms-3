@@ -8,7 +8,7 @@ class backend_db_pages
 		$dateFormat = new component_format_date();
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'pages') {
 					$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
 								FROM mc_cms_page AS p
@@ -25,11 +25,6 @@ class backend_db_pages
 							$nbc = 0;
 							foreach ($config['search'] as $key => $q) {
 								if($q != '') {
-									/*if($nbc > 0) {
-										$cond .= 'AND ';
-									} else {
-										$cond = 'WHERE ';
-									}*/
 									$cond .= 'AND ';
 									switch ($key) {
 										case 'id_pages':
@@ -64,28 +59,9 @@ class backend_db_pages
 									GROUP BY p.id_pages 
 								ORDER BY p.order_pages";
 						}
-                        /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.* , ca.name_pages AS parent_pages
-                    FROM mc_cms_page AS p
-                        JOIN mc_cms_page_content AS c USING ( id_pages )
-                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-                        LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
-                        LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-                        WHERE c.id_lang = :default_lang $cond
-                        GROUP BY p.id_pages 
-                    ORDER BY p.order_pages";*/
-
                     }
-                        /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
-                    FROM mc_cms_page AS p
-                        JOIN mc_cms_page_content AS c USING ( id_pages )
-                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-                        WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
-                        GROUP BY p.id_pages 
-                    ORDER BY p.order_pages";*/
-
 
                     $params = $data;
-
                 }
                 elseif ($config['type'] === 'pagesChild') {
                     $cond = '';
@@ -113,15 +89,6 @@ class backend_db_pages
                             }
                         }
                     }
-                    /*$sql = "SELECT p.id_parent, p.menu_pages, p.order_pages, p.date_register, c.*
-                    FROM mc_cms_page AS p
-                        JOIN mc_cms_page_content AS c USING ( id_pages )
-                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-                        LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
-                        LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages )
-                        WHERE p.id_parent = :edit $cond
-                        GROUP BY p.id_pages
-                    ORDER BY p.order_pages";*/
 
 					$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
                     FROM mc_cms_page AS p
@@ -133,13 +100,10 @@ class backend_db_pages
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";
 
-
                     $params = $data;
-
                 }
                 elseif ($config['type'] === 'pagesSelect') {
                     //List pages for select
-
                     $sql = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
                     FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
@@ -150,7 +114,6 @@ class backend_db_pages
                         GROUP BY p.id_pages 
                     ORDER BY p.id_pages DESC";
                     $params = $data;
-
                 }
                 elseif ($config['type'] === 'page') {
                     $sql = 'SELECT p.*,c.*,lang.*
@@ -160,12 +123,10 @@ class backend_db_pages
                         WHERE p.id_pages = :edit';
 
                     $params = $data;
-
                 }
                 elseif ($config['type'] === 'img') {
                     $sql = 'SELECT p.id_pages, p.img_pages
                         FROM mc_cms_page AS p WHERE p.img_pages IS NOT NULL';
-
                 }
                 elseif ($config['type'] === 'sitemap') {
                     $sql = 'SELECT p.id_pages, c.name_pages, c.url_pages, lang.iso_lang, c.id_lang, c.last_update
@@ -175,23 +136,19 @@ class backend_db_pages
                         WHERE c.published_pages = 1 AND c.id_lang = :id_lang
                         ORDER BY p.id_pages ASC';
                     $params = $data;
-
                 }
-                //print $sql;
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
 
-            } elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
-
+            } elseif ($config['context'] === 'one') {
                 if ($config['type'] === 'root') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_cms_page ORDER BY id_pages DESC LIMIT 0,1';
                     //$params = $data;
                 }
                 elseif ($config['type'] === 'content') {
-
                     $sql = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
                     $params = $data;
-
                 }
                 elseif ($config['type'] === 'page') {
                     //Return current row
@@ -208,95 +165,74 @@ class backend_db_pages
      * @param $config
      * @param bool $data
      */
-    public function update($config,$data = false)
-    {
-        if (is_array($config)) {
-            if ($config['type'] === 'content') {
-                $sql = 'UPDATE mc_cms_page_content SET name_pages = :name_pages, url_pages = :url_pages, content_pages=:content_pages, seo_title_pages=:seo_title_pages, seo_desc_pages=:seo_desc_pages, 
-                published_pages=:published_pages
-                WHERE id_pages = :id_pages AND id_lang = :id_lang';
-                component_routing_db::layer()->update($sql,
-                    array(
-                        ':id_lang'	        => $data['id_lang'],
-                        ':id_pages'	        => $data['id_pages'],
-                        ':name_pages'       => $data['name_pages'],
-                        ':url_pages'        => $data['url_pages'],
-                        ':content_pages'    => $data['content_pages'],
-                        ':seo_title_pages'  => $data['seo_title_pages'],
-                        ':seo_desc_pages'   => $data['seo_desc_pages'],
-                        ':published_pages'  => $data['published_pages']
-                    )
-                );
-            }elseif ($config['type'] === 'img') {
-                $sql = 'UPDATE mc_cms_page SET img_pages = :img_pages
-                WHERE id_pages = :id_pages';
-                component_routing_db::layer()->update($sql,
-                    array(
-                        ':id_pages'	       => $data['id_pages'],
-                        ':img_pages'       => $data['img_pages']
-                    )
-                );
-            }elseif ($config['type'] === 'pageActiveMenu') {
-                $sql = 'UPDATE mc_cms_page SET menu_pages = :menu_pages WHERE id_pages IN ('.$data['id_pages'].')';
-                component_routing_db::layer()->update($sql,
-                    array(
-                        ':menu_pages' => $data['menu_pages']
-                    )
-                );
-            }elseif ($config['type'] === 'order') {
-                $sql = 'UPDATE mc_cms_page SET order_pages = :order_pages
-                WHERE id_pages = :id_pages';
-                component_routing_db::layer()->update($sql,
-                    array(
-                        ':id_pages'	    => $data['id_pages'],
-                        ':order_pages'	=> $data['order_pages']
-                    )
-                );
-            }
-        }
-    }
-
-    /**
-     * @param $config
-     * @param bool $data
-     */
     public function insert($config,$data = false)
     {
         if (is_array($config)) {
-            if ($config['type'] === 'newPages') {
-                if($data['id_parent'] != NULL){
-                    $sql = 'INSERT INTO `mc_cms_page`(id_parent,order_pages,date_register) 
-                SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_cms_page WHERE id_parent IN ('.$data['id_parent'].')';
-                    component_routing_db::layer()->insert($sql,array(
-                        ':id_parent'	        => $data['id_parent']
-                    ));
-                }else{
-                    $sql = 'INSERT INTO `mc_cms_page`(id_parent,order_pages,date_register) 
-                SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_cms_page WHERE id_parent IS NULL';
-                    component_routing_db::layer()->insert($sql,array(
-                        ':id_parent'	        => $data['id_parent']
-                    ));
-                }
+			$sql = '';
+			$params = $data;
 
-
-            }elseif ($config['type'] === 'newContent') {
-
-                $sql = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,url_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
-				  VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
-
-                component_routing_db::layer()->insert($sql,array(
-                    ':id_lang'	        => $data['id_lang'],
-                    ':id_pages'	        => $data['id_pages'],
-                    ':name_pages'       => $data['name_pages'],
-                    ':url_pages'        => $data['url_pages'],
-                    ':content_pages'    => $data['content_pages'],
-                    ':seo_title_pages'  => $data['seo_title_pages'],
-                    ':seo_desc_pages'   => $data['seo_desc_pages'],
-                    ':published_pages'  => $data['published_pages']
-                ));
+            if ($config['type'] === 'page') {
+            	$cond = $data['id_parent'] != NULL ? 'IN ('.$data['id_parent'].')' : 'IS NULL';
+				$sql = "INSERT INTO `mc_cms_page`(id_parent,order_pages,date_register) 
+						SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_cms_page WHERE id_parent ".$cond;
             }
+            elseif ($config['type'] === 'content') {
+                $sql = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
+				  		VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
+            }
+
+			if($sql && $params) component_routing_db::layer()->insert($sql,$params);
         }
     }
+
+	/**
+	 * @param $config
+	 * @param bool $data
+	 */
+	public function update($config,$data = false)
+	{
+		if (is_array($config)) {
+			$sql = '';
+			$params = $data;
+
+			if ($config['type'] === 'page') {
+				$sql = 'UPDATE mc_cms_page 
+							SET 
+								id_parent = :id_parent
+							WHERE id_pages = :id_pages';
+			}
+			elseif ($config['type'] === 'content') {
+				$sql = 'UPDATE mc_cms_page_content 
+						SET 
+							name_pages = :name_pages,
+							url_pages = :url_pages,
+							resume_pages = :resume_pages,
+							content_pages=:content_pages,
+							seo_title_pages=:seo_title_pages,
+							seo_desc_pages=:seo_desc_pages, 
+							published_pages=:published_pages
+                		WHERE id_pages = :id_pages 
+                		AND id_lang = :id_lang';
+			}
+			elseif ($config['type'] === 'img') {
+				$sql = 'UPDATE mc_cms_page 
+						SET img_pages = :img_pages
+                		WHERE id_pages = :id_pages';
+			}
+			elseif ($config['type'] === 'pageActiveMenu') {
+				$sql = 'UPDATE mc_cms_page 
+						SET menu_pages = :menu_pages 
+						WHERE id_pages IN ('.$data['id_pages'].')';
+			}
+			elseif ($config['type'] === 'order') {
+				$sql = 'UPDATE mc_cms_page 
+						SET order_pages = :order_pages
+                		WHERE id_pages = :id_pages';
+			}
+
+			if($sql && $params) component_routing_db::layer()->update($sql,$params);
+		}
+	}
 
     /**
      * @param $config
@@ -306,9 +242,11 @@ class backend_db_pages
     {
         if (is_array($config)) {
             if($config['type'] === 'delPages'){
-                $sql = 'DELETE FROM mc_cms_page WHERE id_pages IN ('.$data['id'].')';
-                component_routing_db::layer()->delete($sql,array());
+                $sql = 'DELETE FROM mc_cms_page 
+						WHERE id_pages IN ('.$data['id'].')';
             }
+
+			if($sql) component_routing_db::layer()->delete($sql,array());
         }
     }
 }

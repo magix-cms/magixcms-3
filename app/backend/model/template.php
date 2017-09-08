@@ -367,10 +367,12 @@ class backend_model_template{
 			foreach ($load_files as $row=>$val){
 				if(is_string($row)){
 					if(array_key_exists($row, $load_files)){
-                        $this->configLoad($this->pathConfigLoad($row), $val);
+                        //$this->configLoad($this->pathConfigLoad($row), $val);
+                        backend_model_smarty::getInstance()->configLoad($row.self::currentLanguage().'.conf',$val);
 					}
 				}else{
-                    $this->configLoad($this->pathConfigLoad($load_files[$row]));
+                    //$this->configLoad($this->pathConfigLoad($load_files[$row]));
+                    backend_model_smarty::getInstance()->configLoad($load_files[$row].self::currentLanguage().'.conf');
 				}
 			}
 		}else{

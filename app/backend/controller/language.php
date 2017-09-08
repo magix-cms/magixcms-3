@@ -51,16 +51,18 @@ class backend_controller_language extends backend_db_language{
             $this->language = $formClean->arrayClean($_GET['language']);
         }
     }
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * @return array
@@ -139,7 +141,7 @@ class backend_controller_language extends backend_db_language{
     private function del($data){
         switch($data['type']){
             case 'delLang':
-                $fetchData = parent::fetchData(array('context'=>'unique','type'=>'count'));
+                $fetchData = parent::fetchData(array('context'=>'one','type'=>'count'));
                 $countID = count(explode(',',$data['data']['id']));
                 if(($fetchData['nb'] > 1) && ($fetchData['nb'] > $countID)){
                     $this->header->set_json_headers();

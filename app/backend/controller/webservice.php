@@ -34,23 +34,24 @@ class backend_controller_webservice extends backend_db_webservice{
         }
     }
 
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * Mise a jour des données
      */
     private function save()
     {
-        $data = $this->getItems('ws',null,'last');
+        $data = $this->getItems('ws',null,'one',false);
         if(!isset($this->status_ws)){
             $status_ws = '0';
         }else{
@@ -79,7 +80,7 @@ class backend_controller_webservice extends backend_db_webservice{
                     break;
             }
         }else{
-            $this->getItems('ws',null,'unique');
+            $this->getItems('ws',null,'one');
             $this->template->display('webservice/index.tpl');
         }
     }

@@ -61,6 +61,7 @@
  * @return string
  */
 function smarty_function_template($params, $template){
-		return frontend_model_template::frontendTheme()->themeSelected();
+    $coreTemplate = new frontend_model_template();
+    return $coreTemplate->themeSelected();
 }
 ?>

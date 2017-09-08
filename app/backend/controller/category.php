@@ -67,22 +67,24 @@ class backend_controller_category extends backend_db_category {
             $this->order = $formClean->arrayClean($_POST['product']);
         }
     }
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * @return array
      */
     private function setItemsData(){
-        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 
         $arr = array();
         if(isset($this->edit)){
@@ -215,7 +217,7 @@ class backend_controller_category extends backend_db_category {
                     );
                 }
                 $checkLangData = parent::fetchData(
-                    array('context'=>'unique','type'=>'content'),
+                    array('context'=>'one','type'=>'content'),
                     array('id_cat'=>$this->id_cat,'id_lang'=>$lang)
                 );
                 // Check language page content
@@ -272,7 +274,7 @@ class backend_controller_category extends backend_db_category {
             );
 
             $setNewData = parent::fetchData(
-                array('context' => 'unique', 'type' => 'root')
+                array('context' => 'one', 'type' => 'root')
             );
 
             if ($setNewData['id_cat']) {
@@ -306,7 +308,7 @@ class backend_controller_category extends backend_db_category {
                 $this->message->json_post_response(true,'add_redirect');
             }
         }else  if(isset($this->img)){
-            $data = parent::fetchData(array('context'=>'unique','type'=>'page'),array('id_cat'=>$this->id_cat));
+            $data = parent::fetchData(array('context'=>'one','type'=>'page'),array('id_cat'=>$this->id_cat));
             $resultUpload = $this->upload->setImageUpload(
                 'img',
                 array(
@@ -381,7 +383,7 @@ class backend_controller_category extends backend_db_category {
                     if(isset($this->content)){
                         $this->save();
                     }else{
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
                         $data = parent::fetchData(
                             array('context'=>'all','type'=>'pagesSelect'),
                             array(':default_lang'=>$defaultLanguage['id_lang'])
@@ -415,7 +417,7 @@ class backend_controller_category extends backend_db_category {
                         $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat', 'date_register'), $assign);
                         $pageChild = $this->getItems('pagesChild', $this->edit, 'all');
                         // catalog (category => product)
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                         $this->getItems('catalog', array(':default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
                         $assignCatalog = array(
                             'id_catalog',
@@ -477,7 +479,7 @@ class backend_controller_category extends backend_db_category {
         }else {
 
             $this->modelLanguage->getLanguage();
-            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
+            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
             $this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
             $assign = array(
                 'id_cat',

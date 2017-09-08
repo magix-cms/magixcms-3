@@ -1,0 +1,36 @@
+/*
+ * Rules for About page
+ */
+#about {
+	.row > span {
+		padding-bottom: 15px;
+	}
+
+		h1 {
+			text-align: center;
+			border-bottom: 1px solid #eee;
+			padding-bottom: 5px;
+			margin-bottom: 20px;
+		}
+
+
+	.child-nav {
+		.normalize-link(@text-color,@hover-color: @main-color,@decoration: none);
+
+		ul > li {
+			text-align: center;
+
+			a {
+				display: block;
+				padding: 6px 10px;
+			}
+
+			&.active {
+				a {
+					color: @main-color;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+}

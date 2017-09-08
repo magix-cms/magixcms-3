@@ -16,3 +16,4 @@
 /admin/caching/templates_c/*
 /admin/caching/tpl_caches/*
 /admin/template/js/vendor/filemanager/js/jPlayer/node_modules/*
+plugins/gmap/

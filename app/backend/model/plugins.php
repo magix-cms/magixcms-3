@@ -149,6 +149,27 @@ class backend_model_plugins{
     }
 
     /**
+     * @param $routes
+     * @param $template
+     */
+    public function addConfigDir($routes, $template){
+        if(isset($this->controller_name)){
+            $setConfigPath = component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/';
+            if(file_exists($setConfigPath)){
+                $template->addConfigFile(
+                    array(
+                        component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/'
+                    ),
+                    array(
+                        'admin_local_',
+                    )
+                    ,false
+                );
+            }
+        }
+    }
+
+    /**
      * @param null $template
      * @param null $plugin
      * @param null $cache_id

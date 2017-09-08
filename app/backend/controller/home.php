@@ -45,22 +45,23 @@ class backend_controller_home extends backend_db_home{
         }
     }
 
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * @return mixed|null
      */
     private function setItemData(){
-        return parent::fetchData(array('context'=>'last','type'=>'root'));
+        return parent::fetchData(array('context'=>'one','type'=>'root'));
     }
 
     /**
@@ -91,19 +92,19 @@ class backend_controller_home extends backend_db_home{
      */
     private function save()
     {
-        $fetchRootData = parent::fetchData(array('context'=>'last','type'=>'root'));
+        $fetchRootData = parent::fetchData(array('context'=>'one','type'=>'root'));
         if($fetchRootData != null){
             $id_page = $fetchRootData['id_page'];
         }else{
             parent::insert(array('type'=>'newHome'));
-            $newData = parent::fetchData(array('context'=>'last','type'=>'root'));
+            $newData = parent::fetchData(array('context'=>'one','type'=>'root'));
             $id_page = $newData['id_page'];
         }
 
         if($id_page) {
             foreach ($this->content as $lang => $content) {
                 $content['published'] = (!isset($content['published']) ? 0 : 1);
-                if (parent::fetchData(array('context' => 'unique', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $lang)) != null) {
+                if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $lang)) != null) {
                     parent::update(array('type' => 'content'), array(
                             'title_page'        => $content['title_page'],
                             'content_page'      => $content['content_page'],

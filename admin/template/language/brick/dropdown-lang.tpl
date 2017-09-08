@@ -19,10 +19,11 @@
         </div>
     </div>
 </div>*}
+{if !isset($label)}{$label = true}{/if}
 <div class="form-group">
-    <label for="id_lang">{#language#|ucfirst} *</label>
+    <label{if !$label} class="sr-only"{/if} for="id_lang">{#language#|ucfirst} *</label>
     <div class="dropdown dropdown-lang">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button class="btn btn-default dropdown-toggle{if $custom_class} {$custom_class}{/if}" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             {foreach $langs as $id => $iso}
                 {if $iso@first}{$default = $id}{break}{/if}
             {/foreach}
@@ -32,7 +33,7 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
             {foreach $langs as $id => $iso}
                 <li role="presentation"{if $iso@first} class="active"{/if}>
-                    <a href="#lang-{$id}" aria-controls="lang-{$id}" role="tab" data-toggle="tab">{$iso}</a>
+                    <a data-target="#lang-{$id}" aria-controls="lang-{$id}" role="tab" data-toggle="tab">{$iso}</a>
                 </li>
             {/foreach}
         </ul>

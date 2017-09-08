@@ -5,12 +5,11 @@ class backend_db_webservice{
         $params = false;
 
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+            if($config['context'] === 'all') {
                 //$params = $data;
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
-
+            }
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'ws') {
                     //Return current skin
                     $sql = 'SELECT ws.* FROM mc_webservice AS ws LIMIT 1';

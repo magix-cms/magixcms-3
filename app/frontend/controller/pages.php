@@ -62,13 +62,14 @@ class frontend_controller_pages extends frontend_db_pages {
     }
     /**
      * Assign data to the defined variable or return the data
-     * @param string $context
      * @param string $type
      * @param string|int|null $id
+     * @param string $context
+     * @param boolean $assign
      * @return mixed
      */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
+    private function getItems($type, $id = null, $context = null, $assign = true) {
+        return $this->data->getItems($type, $id, $context, $assign);
     }
     /**
      * set Data from database
@@ -76,7 +77,7 @@ class frontend_controller_pages extends frontend_db_pages {
      */
     private function getBuildItems()
     {
-        $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'last');
+        $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
         return $this->modelPages->setItemData($collection,null);
     }
 
@@ -84,7 +85,7 @@ class frontend_controller_pages extends frontend_db_pages {
      * @return array
      */
     private function getBuildLangItems(){
-        $collection = $this->getItems('langs',array(':id'=>$this->id),'return');
+        $collection = $this->getItems('langs',array(':id'=>$this->id),'all',false);
         return $this->modelPages->setHrefLangData($collection);
     }
     /**

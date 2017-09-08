@@ -6,9 +6,9 @@ class backend_db_product{
         $params = false;
         $dateFormat = new component_format_date();
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'pages') {
-                    $sql = "SELECT p.id_product, c.name_p, p.reference_p, p.price_p, c.content_p, p.date_register
+                    $sql = "SELECT p.id_product, c.name_p, p.reference_p, p.price_p, c.resume_p, c.content_p, p.date_register
 								FROM mc_catalog_product AS p
 									JOIN mc_catalog_product_content AS c USING ( id_product )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -76,9 +76,10 @@ class backend_db_product{
                     $sql = 'SELECT id_product, id_cat, default_c FROM mc_catalog WHERE id_product = :id';
                     $params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             }
-            elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
+            elseif ($config['context'] === 'one') {
                 if ($config['type'] === 'root') {
                     $sql = 'SELECT id_product FROM mc_catalog_product ORDER BY id_product DESC LIMIT 0,1';
                 }
@@ -102,6 +103,7 @@ class backend_db_product{
                     $sql = 'SELECT * FROM mc_catalog WHERE id_product = :id AND id_cat = :id_cat';
                     $params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }
         }
@@ -123,14 +125,15 @@ class backend_db_product{
 				));
 			}
 			elseif ($config['type'] === 'newContent') {
-				$sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_p,content_p,published_p) 
-				  VALUES (:id_product,:id_lang,:name_p,:url_p,:content_p,:published_p)';
+				$sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_p,resume_p,content_p,published_p) 
+				  VALUES (:id_product,:id_lang,:name_p,:url_p,:resume_p,:content_p,:published_p)';
 
 				component_routing_db::layer()->insert($sql,array(
 					':id_lang'	    => $data['id_lang'],
 					':id_product'	=> $data['id_product'],
 					':name_p'       => $data['name_p'],
 					':url_p'        => $data['url_p'],
+					':resume_p'     => $data['resume_p'],
 					':content_p'    => $data['content_p'],
 					':published_p'  => $data['published_p']
 				));
@@ -171,14 +174,22 @@ class backend_db_product{
                 );
             }
             elseif ($config['type'] === 'content') {
-                $sql = 'UPDATE mc_catalog_product_content SET name_p = :name_p, url_p = :url_p, content_p = :content_p, published_p = :published_p
-                WHERE id_product = :id_product AND id_lang = :id_lang';
+                $sql = 'UPDATE mc_catalog_product_content 
+						SET 
+							name_p = :name_p,
+							url_p = :url_p,
+							resume_p = :resume_p,
+							content_p = :content_p,
+							published_p = :published_p
+							WHERE id_product = :id_product 
+                		AND id_lang = :id_lang';
                 component_routing_db::layer()->update($sql,
                     array(
                         ':id_lang'	    => $data['id_lang'],
                         ':id_product'	=> $data['id_product'],
                         ':name_p'       => $data['name_p'],
                         ':url_p'        => $data['url_p'],
+                        ':resume_p'     => $data['resume_p'],
                         ':content_p'    => $data['content_p'],
                         ':published_p'  => $data['published_p']
                     )

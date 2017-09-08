@@ -7,7 +7,7 @@ class backend_db_files
         $params = false;
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'sizes') {
                     //Listing employee
                     $cond = '';
@@ -35,16 +35,20 @@ class backend_db_files
                     }
                     $sql = "SELECT conf.* FROM mc_config_img AS conf $cond";
                     //$params = $data;
-                } elseif ($config['type'] === 'size') {
+                }
+                elseif ($config['type'] === 'size') {
                     $sql = 'SELECT * FROM mc_config_img WHERE module_img = :module_img AND attribute_img = :attribute_img';
                     $params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-            } elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
+            }
+            elseif ($config['context'] === 'one') {
                 if ($config['type'] === 'size') {
                     $sql = 'SELECT * FROM mc_config_img WHERE id_config_img = :id';
                     $params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }
         }

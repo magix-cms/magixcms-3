@@ -13,22 +13,22 @@ class backend_db_about
 		$dateFormat = new component_format_date();
 
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+            if($config['context'] === 'all') {
                 if ($config['type'] === 'info') {
                     $sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
                 }
-                elseif($config['type'] === 'content') {
+                elseif ($config['type'] === 'content') {
                     $sql = 'SELECT a.*
                     		FROM mc_about_data AS a
                     		JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
                 }
-                elseif($config['type'] === 'op') {
+                elseif ($config['type'] === 'op') {
                     $sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
                 }
-                elseif($config['type'] == 'languages') {
+                elseif ($config['type'] === 'languages') {
                 	$sql = "SELECT `name_lang` FROM `mc_lang`";
 				}
-                elseif($config['type'] == 'iso') {
+                elseif ($config['type'] === 'iso') {
                 	$sql = "SELECT `iso_lang` FROM `mc_lang`";
 				}
 				elseif ($config['type'] === 'page') {
@@ -149,7 +149,7 @@ class backend_db_about
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }
-            elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'info') {
                     $sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
                 }
@@ -176,10 +176,10 @@ class backend_db_about
      */
     public function insert($config,$data = false)
     {
-    	$sql = '';
-    	$params = false;
-
         if (is_array($config)) {
+			$sql = '';
+			$params = $data;
+
         	if($config['context'] === 'about') {
 				if ($config['type'] === 'content') {
 					$queries = array(
@@ -204,14 +204,14 @@ class backend_db_about
 				if ($config['type'] === 'page') {
 					$cond = $data['id_parent'] != NULL ? 'IN ('.$data['id_parent'].')' : 'IS NULL';
 					$sql = "INSERT INTO `mc_about_page`(id_parent,order_pages,date_register) 
-							SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_cms_page WHERE id_parent ".$cond;
+							SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_about_page WHERE id_parent ".$cond;
 				}
 				elseif ($config['type'] === 'content') {
-					$sql = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,url_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
-				  			VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
+					$sql = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
+				  			VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
 				}
 
-				component_routing_db::layer()->insert($sql,$data);
+				if($sql && $params) component_routing_db::layer()->insert($sql,$params);
 			}
         }
     }
@@ -222,10 +222,10 @@ class backend_db_about
 	 */
     public function update($config,$data = false)
 	{
-    	$sql = '';
-    	$params = false;
+    	if (is_array($config)) {
+			$sql = '';
+			$params = false;
 
-        if (is_array($config)) {
 			if($config['context'] === 'about') {
 				if ($config['type'] === 'company') {
 					// Update company Data
@@ -398,12 +398,19 @@ class backend_db_about
 							SET 
 								name_pages = :name_pages,
 								url_pages = :url_pages,
+								resume_pages = :resume_pages,
 								content_pages = :content_pages,
 								seo_title_pages = :seo_title_pages,
 								seo_desc_pages = :seo_desc_pages, 
 								published_pages = :published_pages
 							WHERE id_pages = :id_pages 
 							AND id_lang = :id_lang';
+					$params = $data;
+				}
+				elseif ($config['type'] === 'order') {
+					$sql = 'UPDATE mc_about_page 
+							SET order_pages = :order_pages
+							WHERE id_pages = :id_pages';
 					$params = $data;
 				}
 			}

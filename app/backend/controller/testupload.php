@@ -33,7 +33,7 @@ class backend_controller_testupload
      */
     public function uploadImgFiles($debug = false){
         $this->id = 16;
-        $data = $this->pages->fetchData(array('context'=>'unique','type'=>'page'),array('id_pages'=>$this->id));
+        $data = $this->pages->fetchData(array('context'=>'one','type'=>'page'),array('id_pages'=>$this->id));
         //print_r($data);
         $resultUpload = $this->upload->setImageUpload(
             'img',

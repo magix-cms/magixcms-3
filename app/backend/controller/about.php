@@ -3,7 +3,7 @@ class backend_controller_about extends backend_db_about{
 
     public $edit, $action, $tabs, $search;
 
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $country, $language, $languages, $id_pages ,$parent_id;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $country, $language, $languages, $id_pages ,$parent_id, $order;
     public $content, $dataType, $enable_op, $send = array('openinghours' => '');
 
     /**
@@ -236,6 +236,11 @@ class backend_controller_about extends backend_db_about{
             $this->company['socials'] = $formClean->arrayClean($_POST['company_socials']);
         }
 
+		# ORDER PAGE
+		if(http_request::isPost('pages')){
+			$this->order = $formClean->arrayClean($_POST['pages']);
+		}
+
         /* Opening Hours links edition */
         if(http_request::isPost('enable_op')){
             $this->enable_op = '1';
@@ -250,13 +255,14 @@ class backend_controller_about extends backend_db_about{
 
     /**
      * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
      * @param string $context
-     * @param string $type
-     * @param string|int|null $id
+	 * @param boolean $assign
      * @return mixed
      */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
+    private function getItems($type, $id = null, $context = null, $assign = true) {
+        return $this->data->getItems($type, $id, $context, $assign);
     }
 
     /**
@@ -310,6 +316,21 @@ class backend_controller_about extends backend_db_about{
 					$data['data']
 				);
 				break;
+			case 'order':
+				$p = $this->order;
+				for ($i = 0; $i < count($p); $i++) {
+					parent::update(
+						array(
+							'context' => 'page',
+							'type' => $data['type']
+						),
+						array(
+							'id_pages'    => $p[$i],
+							'order_pages' => $i
+						)
+					);
+				}
+				break;
 		}
     }
 
@@ -318,12 +339,8 @@ class backend_controller_about extends backend_db_about{
 	 * @return array
 	 */
 	private function setItemData($data){
-		//return $this->getItems('page',$this->edit, 'return');
-		//$imgPath = $this->upload->imgBasePath('upload/pages');
 		$arr = array();
 		$conf = array();
-		//$fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
-		//$imgPrefix = $this->imagesComponent->prefix();
 
 		foreach ($data as $page) {
 
@@ -332,18 +349,6 @@ class backend_controller_about extends backend_db_about{
 				$arr[$page['id_pages']] = array();
 				$arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
 				$arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
-				/*if($page['img_pages'] != null) {
-					$originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages']);
-					$arr[$page['id_pages']]['imgSrc']['original']['img'] = $page['img_pages'];
-					$arr[$page['id_pages']]['imgSrc']['original']['width'] = $originalSize[0];
-					$arr[$page['id_pages']]['imgSrc']['original']['height'] = $originalSize[1];
-					foreach ($fetchConfig as $key => $value) {
-						$size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_pages']);
-						$arr[$page['id_pages']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_pages'];
-						$arr[$page['id_pages']]['imgSrc'][$value['type_img']]['width'] = $size[0];
-						$arr[$page['id_pages']]['imgSrc'][$value['type_img']]['height'] = $size[1];
-					}
-				}*/
 				$arr[$page['id_pages']]['menu_pages'] = $page['menu_pages'];
 				$arr[$page['id_pages']]['date_register'] = $page['date_register'];
 			}
@@ -384,7 +389,7 @@ class backend_controller_about extends backend_db_about{
 				);
 			}
 
-			$contentPage = parent::fetchData(array('context'=>'unique', 'type'=>'contentPage'), array('id_pages'=>$idpage, 'id_lang'=>$lang));
+			$contentPage = $this->getItems('contentPage',array('id_pages'=>$idpage, 'id_lang'=>$lang),'one',false);
 
 			if($contentPage != null) {
 				$this->upd(
@@ -535,7 +540,7 @@ class backend_controller_about extends backend_db_about{
 	 */
 	private function getActiveLang($mode = 'languages')
 	{
-		$langs = $this->getItems($mode,null,'return');
+		$langs = $this->getItems($mode,null,'all',false);
 
 		$list = array();
 		foreach ($langs as $lang) {
@@ -565,7 +570,7 @@ class backend_controller_about extends backend_db_about{
 							)
 						);
 
-						$page = parent::fetchData(array('context' => 'unique', 'type' => 'root'));
+						$page = $this->getItems('root',null,'one',false);
 
 						if ($page['id_pages']) {
 							$this->saveContent($page['id_pages']);
@@ -575,7 +580,7 @@ class backend_controller_about extends backend_db_about{
 					}
 					else {
 						$this->modelLanguage->getLanguage();
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 						$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
 						$this->template->display('about/pages/add.tpl');
 					}
@@ -621,7 +626,7 @@ class backend_controller_about extends backend_db_about{
 								$this->message->json_post_response(true,'',$display);
 							}
 							else {
-								$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+								$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 								$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
 								$this->template->display('about/pages/edit.tpl');
 							}
@@ -642,7 +647,7 @@ class backend_controller_about extends backend_db_about{
 										)
 									);
 
-									if (parent::fetchData(array('context' => 'unique', 'type' => 'content'), array('id_lang' => $lang)) != null) {
+									if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang)) != null) {
 										$this->upd($config);
 									}
 									else {
@@ -682,11 +687,20 @@ class backend_controller_about extends backend_db_about{
 						$this->message->json_post_response(true, $msg);
 					}
                     break;
+				case 'order':
+					if (isset($this->order)) {
+						$this->upd(
+							array(
+								'type' => 'order'
+							)
+						);
+					}
+					break;
             }
         }
         else {
 			$this->modelLanguage->getLanguage();
-			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 
 			$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all');
 			$assign = array(

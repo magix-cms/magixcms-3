@@ -55,10 +55,23 @@
     {include file="section/footer/editor.tpl"}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
+        libjs/vendor/jquery-ui-1.12.min.js,
         libjs/vendor/tabcomplete.min.js,
         libjs/vendor/livefilter.min.js,
         libjs/vendor/src/bootstrap-select.js,
-        libjs/vendor/filterlist.min.js
+        {baseadmin}/template/js/about.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
+
+    <script type="text/javascript">
+        $(function(){
+            if (typeof about == "undefined")
+            {
+                console.log("about is not defined");
+            }else{
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+                about.run(controller);
+            }
+        });
+    </script>
 {/block}

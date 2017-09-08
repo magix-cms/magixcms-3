@@ -155,10 +155,8 @@ class backend_db_employee
                 FROM mc_admin_employee AS em
                 JOIN mc_admin_access_rel AS acrel ON( em.id_admin = acrel.id_admin )
                 JOIN mc_admin_role_user AS pr ON( acrel.id_role = pr.id_role )
-                WHERE em.id_admin = :id_admin";
-                return component_routing_db::layer()->fetch($sql,array(
-                	':id_admin' => $data['id_admin']
-				));
+                WHERE em.id_admin = :id";
+                return component_routing_db::layer()->fetch($sql,$data);
             } elseif($config['type'] === 'lastEmployee') {
                 //Last employee
                 $sql = 'SELECT em.*

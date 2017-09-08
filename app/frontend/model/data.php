@@ -29,33 +29,29 @@ class frontend_model_data{
 			else {
 				$params = array(':id' => $id);
 			}
-			$context = $context ? $context : 'unique';
+			$context = $context ? $context : 'one';
 		} else {
 			$params = null;
 			$context = $context ? $context : 'all';
 		}
-		return $this->db->fetchData(array('context'=>$context,'type'=>$type),$params);
+		return $this->db->fetchData(array('context'=>$context,'type'=>$type,'search'=>$this->search),$params);
 	}
 
 	/**
 	 * Assign data to the defined variable or return the data
-	 * @param string $context
 	 * @param string $type
 	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
 	 * @return mixed
 	 */
-	public function getItems($type, $id = null, $context = null) {
+	public function getItems($type, $id = null, $context = null, $assign = true) {
 		$data = $this->setItems($context, $type, $id);
-		switch ($context) {
-			case 'return':
-			case 'last':
-				return $data;
-				break;
-			default:
-				$varName = $type;
-				$this->template->assign($varName,$data);
-				return $data;
+		if($assign) {
+			$varName = gettype($assign) == 'string' ? $assign : $type;
+			$this->template->assign($varName,$data);
 		}
+		return $data;
 	}
 }
 ?>

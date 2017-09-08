@@ -114,4 +114,19 @@ class component_httpUtils_header{
     public function getTxtHeader($http_error){
         return $this->setTxtHeader($http_error);
     }
+
+    /**
+     *
+     */
+    public function mobileDetect(){
+        $detect = new Mobile_Detect;
+        $viewport = 'desktop';
+        if( $detect->isTablet() ){
+            $viewport = 'tablet';
+        }
+        elseif( $detect->isMobile() ){
+            $viewport = 'mobile';
+        }
+        $this->template->assign('viewport', $viewport);
+    }
 }

@@ -100,6 +100,20 @@ class backend_controller_employee extends backend_db_employee
 			$this->employee = $formClean->arrayClean($_GET['employee']);
 		}
     }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
+
     /**
      * Construction du tableau pour la sélection des rôles
      * @param null $idadmin
@@ -152,11 +166,11 @@ class backend_controller_employee extends backend_db_employee
     	if($id_admin) {
 			//$data = parent::fetchData(array('type'=>'employee'),array('id_admin' => $id_admin));
 			//$this->template->assign('employee',$data);//
-			$this->data->getItems('employee',$id_admin);
+			$this->getItems('employee',$id_admin);
 		} else {
 			//$data = $this->setItemsEmployee();
 			//$this->template->assign('getItemsEmployee',$data);
-			$this->data->getItems('employees');
+			$this->getItems('employees');
 		}
     }
 
@@ -354,7 +368,7 @@ class backend_controller_employee extends backend_db_employee
 							$country = new component_collections_country();
 							$this->template->assign('countries',$country->getCountries());
 							//$this->getItemsEmployee($this->edit);
-							$this->data->getItems('employee',$this->edit);
+							$this->getItems('employee',$this->edit);
 							$this->template->assign('roles', $this->role());
 							$this->template->display('employee/edit.tpl');
 						}
@@ -385,7 +399,7 @@ class backend_controller_employee extends backend_db_employee
 							);
 						}
 						//$this->getItemsEmployee();
-						$this->data->getItems('employees');
+						$this->getItems('employees');
 						$this->data->getScheme(array('mc_admin_employee','mc_admin_role_user'),array('id_admin','title_admin','firstname_admin','lastname_admin','email_admin','role_name','active_admin'));
 						$this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
 						$this->template->display('employee/index.tpl');
@@ -400,7 +414,7 @@ class backend_controller_employee extends backend_db_employee
                     );
                 }
 				//$this->getItemsEmployee();
-				$this->data->getItems('employees');
+				$this->getItems('employees');
 				$this->data->getScheme(array('mc_admin_employee','mc_admin_role_user'),array('id_admin','title_admin','firstname_admin','lastname_admin','email_admin','role_name','active_admin'));
                 $this->template->display('employee/index.tpl');
             }

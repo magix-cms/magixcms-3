@@ -54,7 +54,7 @@ class backend_db_scheme{
         $params = false;
 
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+            if($config['context'] === 'all') {
 				if ($config['type'] === 'scheme') {
 					//Return current row
 					$sql = "SELECT COLUMN_NAME as `column`, COLUMN_TYPE as `type`
@@ -67,7 +67,7 @@ class backend_db_scheme{
 				//print $sql;
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 
-            } elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            } elseif($config['context'] === 'one') {
 
                 if ($config['type'] === 'skin') {}
 

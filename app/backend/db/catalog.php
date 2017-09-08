@@ -10,22 +10,20 @@ class backend_db_catalog{
         $params = false;
 
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+            if($config['context'] === 'all') {
                 if($config['type'] === 'content') {
                     $sql = 'SELECT a.*
                     		FROM mc_catalog_data AS a
                     		JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
-
-                }elseif($config['type'] === 'category') {
-
+                }
+                elseif($config['type'] === 'category') {
                     $sql = 'SELECT cat.url_cat, cat.id_cat, cat.id_lang,lang.iso_lang, cat.last_update
                     FROM mc_catalog_cat_content AS cat
                     JOIN mc_lang AS lang ON ( cat.id_lang = lang.id_lang )
                     WHERE cat.published_cat =1 AND cat.id_lang = :id_lang';
                     $params = $data;
-
-                }elseif($config['type'] === 'product') {
-
+                }
+                elseif($config['type'] === 'product') {
                     $sql = 'SELECT c.* , cat.url_cat, p.url_p, p.id_lang,lang.iso_lang, p.last_update
                     FROM mc_catalog AS c
                     JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
@@ -36,9 +34,8 @@ class backend_db_catalog{
                 }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
-
+            }
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'content') {
                     $sql = 'SELECT * FROM `mc_catalog_data` WHERE `id_lang` = :id_lang';
                     $params = $data;

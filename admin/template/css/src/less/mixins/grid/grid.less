@@ -11,6 +11,7 @@
 
 .col-width(@columns; @flex: @enb-flex) when (@flex = 1) {
 	flex: 0 0 percentage((@columns / @grid-columns));
+	max-width: percentage((@columns / @grid-columns));
 }
 .col-width(@columns; @flex: @enb-flex) when (@flex = 0) {
 	float: left;

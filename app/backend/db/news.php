@@ -8,7 +8,7 @@ class backend_db_news
         $dateFormat = new component_format_date();
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'page') {
                     $sql = 'SELECT p.* , c.* , lang.* , rel.tags_news
                     FROM mc_news AS p
@@ -77,7 +77,8 @@ class backend_db_news
                         JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang)
                         WHERE tag.id_lang = :id_lang';
                     $params = $data;
-                }elseif ($config['type'] === 'sitemap') {
+                }
+                elseif ($config['type'] === 'sitemap') {
                     $sql = "SELECT p.id_news,c.name_news,c.url_news,c.last_update,c.date_publish,c.published_news,lang.iso_lang
                             FROM mc_news AS p
                             JOIN mc_news_content AS c USING(id_news)
@@ -87,22 +88,25 @@ class backend_db_news
                 }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-
-            }elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
+            }
+            elseif ($config['context'] === 'one') {
                 if ($config['type'] === 'root') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_news ORDER BY id_news DESC LIMIT 0,1';
                     //$params = $data;
-                }elseif ($config['type'] === 'page') {
+                }
+                elseif ($config['type'] === 'page') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_news WHERE `id_news` = :id_news';
                     $params = $data;
-                }elseif ($config['type'] === 'content') {
+                }
+                elseif ($config['type'] === 'content') {
 
                     $sql = 'SELECT * FROM `mc_news_content` WHERE `id_news` = :id_news AND `id_lang` = :id_lang';
                     $params = $data;
 
-                }elseif ($config['type'] === 'tag') {
+                }
+                elseif ($config['type'] === 'tag') {
                     $sql = 'SELECT tag.*, (SELECT id_rel FROM mc_news_tag_rel WHERE id_news = :id_news AND id_tag = tag.id_tag) AS rel_tag
                         FROM mc_news_tag AS tag
                         WHERE tag.id_lang = :id_lang AND tag.name_tag LIKE :name_tag';
@@ -122,7 +126,7 @@ class backend_db_news
     {
         if (is_array($config)) {
             if ($config['type'] === 'content') {
-                $sql = 'UPDATE mc_news_content SET name_news = :name_news, url_news = :url_news, content_news=:content_news, date_publish=:date_publish, 
+                $sql = 'UPDATE mc_news_content SET name_news = :name_news, url_news = :url_news, resume_news = :resume_news, content_news=:content_news, date_publish=:date_publish, 
                 published_news=:published_news
                 WHERE id_news = :id_news AND id_lang = :id_lang';
                 component_routing_db::layer()->update($sql,
@@ -131,6 +135,7 @@ class backend_db_news
                         ':id_news'	       => $data['id_news'],
                         ':name_news'       => $data['name_news'],
                         ':url_news'        => $data['url_news'],
+                        ':resume_news'     => $data['resume_news'],
                         ':content_news'    => $data['content_news'],
                         ':date_publish'    => $data['date_publish'],
                         ':published_news'  => $data['published_news']
@@ -171,14 +176,15 @@ class backend_db_news
 
             }elseif ($config['type'] === 'newContent') {
 
-                $sql = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,content_news,date_publish,published_news) 
-				  VALUES (:id_news,:id_lang,:name_news,:url_news,:content_news,:date_publish,:published_news)';
+                $sql = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,date_publish,published_news) 
+				  VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:date_publish,:published_news)';
 
                 component_routing_db::layer()->insert($sql,array(
                     ':id_lang'	       => $data['id_lang'],
                     ':id_news'	       => $data['id_news'],
                     ':name_news'       => $data['name_news'],
                     ':url_news'        => $data['url_news'],
+                    ':resume_news'     => $data['resume_news'],
                     ':content_news'    => $data['content_news'],
                     ':date_publish'    => $data['date_publish'],
                     ':published_news'  => $data['published_news']

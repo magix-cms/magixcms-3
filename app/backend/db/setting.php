@@ -54,21 +54,21 @@ class backend_db_setting{
         $params = false;
 
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+            if($config['context'] === 'all') {
                 if ($config['type'] === 'settings') {
                     $sql = 'SELECT * FROM mc_setting';
-                }elseif ($config['type'] === 'cssinliner') {
+                }
+                elseif ($config['type'] === 'cssinliner') {
                     $sql = 'SELECT * FROM mc_cssinliner';
                 }
-                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
-
+				return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+            }
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'skin') {
                     //Return current skin
                     $sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
                     //$params = $data;
-
                 }
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;

@@ -37,23 +37,25 @@ class backend_controller_setting extends backend_db_setting{
             $this->type = $formClean->simpleClean($_POST['type']);
         }
     }
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * Assign data to the defined value
      */
     public function setItemsData(){
         $newArray = array();
-        $settings = $this->getItems('settings',null,'return');
+        $settings = $this->getItems('settings',null,'all',false);
         foreach($settings as $key){
             $newArray[$key['name']] = $key['value'];
         }
@@ -64,7 +66,7 @@ class backend_controller_setting extends backend_db_setting{
      * Return skin array Data
      */
     private function setItemsSkin(){
-        $currentSkin = parent::fetchData(array('context'=>'unique','type'=>'skin'));
+        $currentSkin = parent::fetchData(array('context'=>'one','type'=>'skin'));
         $finder = new file_finder();
         $basePath = component_core_system::basePath().'skin';
         $skin = $finder->scanRecursiveDir($basePath);

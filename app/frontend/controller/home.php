@@ -63,13 +63,14 @@ class frontend_controller_home extends frontend_db_home{
     }
     /**
      * Assign data to the defined variable or return the data
-     * @param string $context
      * @param string $type
      * @param string|int|null $id
+     * @param string $context
+     * @param boolean $assign
      * @return mixed
      */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
+    private function getItems($type, $id = null, $context = null, $assign = true) {
+        return $this->data->getItems($type, $id, $context, $assign);
     }
     /**
      * set Data from database
@@ -77,7 +78,7 @@ class frontend_controller_home extends frontend_db_home{
      */
     private function getBuildItems()
     {
-        $collection = $this->getItems('page',array(':iso'=>$this->getlang),'last');
+        $collection = $this->getItems('page',array(':iso'=>$this->getlang),'one',false);
         return array(
             'name'      =>  $collection['title_page'],
             'content'   =>  $collection['content_page'],

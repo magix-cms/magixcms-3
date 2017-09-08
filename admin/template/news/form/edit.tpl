@@ -13,7 +13,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-4">
                             <div class="form-group">
-                                <label for="content[{$id}][published_news]">Statut</label>
+                                <label for="content[{$id}][published_news]">{#status#|ucfirst}</label>
                                 <input id="content[{$id}][published_news]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_news]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger"{if (!isset($page) && $iso@first) || $page.content[{$id}].published_news} checked{/if}>
                             </div>
                         </div>
@@ -52,13 +52,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12">
-                            <div class="form-group">
-                                <label for="content[{$id}][content_news]">{#content#|ucfirst} :</label>
-                                <textarea name="content[{$id}][content_news]" id="content[{$id}][content_news]" class="form-control mceEditor">{call name=cleantextarea field=$page.content[{$id}].content_news}</textarea>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="content[{$id}][resume_news]">{#resume#|ucfirst} :</label>
+                        <textarea name="content[{$id}][resume_news]" id="content[{$id}][resume_news]" class="form-control">{$page.content[{$id}].resume_news}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="content[{$id}][content_news]">{#content#|ucfirst} :</label>
+                        <textarea name="content[{$id}][content_news]" id="content[{$id}][content_news]" class="form-control mceEditor">{call name=cleantextarea field=$page.content[{$id}].content_news}</textarea>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">

@@ -46,14 +46,13 @@ class component_core_system{
     }
     /**
      * @access public
-     * @static
      * getUrlConcat Retourne la concaténation de la minification de fichiers
      * @param $options
      * @return string
      * @throws Exception
      * @author Gérits Aurelien and JB Demonte (http://jb.demonte.fr/)
      */
-    public static function getUrlConcat($options){
+    public function getUrlConcat($options){
         if(is_array($options)){
             if(array_key_exists('caches', $options)){
                 $min_cachePath = $options['caches'];
@@ -129,4 +128,5 @@ class component_core_system{
             throw new Exception("Error ".$min_cachePath." is not writable");
         }
     }
+
 }

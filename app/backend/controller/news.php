@@ -70,16 +70,19 @@ class backend_controller_news extends backend_db_news{
             $this->name_tag = $formClean->simpleClean($_POST['name_tag']);
         }
     }
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
     /**
      * @param $data
      * @return array
@@ -195,7 +198,7 @@ class backend_controller_news extends backend_db_news{
                 $dateFormat = new date_dateformat();
                 $datePublish = !empty($content['date_publish']) ? $dateFormat->SQLDateTime($content['date_publish']) : $dateFormat->SQLDateTime($dateFormat->dateToDefaultFormat());
                 $checkLangData = parent::fetchData(
-                    array('context'=>'unique','type'=>'content'),
+                    array('context'=>'one','type'=>'content'),
                     array('id_news'=>$this->id_news,'id_lang'=>$lang)
                 );
                 // Check language page content
@@ -233,7 +236,7 @@ class backend_controller_news extends backend_db_news{
                     if ($tagNews != null) {
                         foreach ($tagNews as $key => $value) {
                             $setTags = parent::fetchData(
-                                array('context' => 'unique', 'type' => 'tag'),
+                                array('context' => 'one', 'type' => 'tag'),
                                 array(':id_news' => $this->id_news, ':id_lang' => $lang, ':name_tag' => $value)
                             );
                             if ($setTags['id_tag'] != null) {
@@ -284,7 +287,7 @@ class backend_controller_news extends backend_db_news{
             );
 
             $setNewData = parent::fetchData(
-                array('context' => 'unique', 'type' => 'root')
+                array('context' => 'one', 'type' => 'root')
             );
 
             if ($setNewData['id_news']) {
@@ -321,7 +324,7 @@ class backend_controller_news extends backend_db_news{
             }
 
         }elseif(isset($this->img)){
-            $data = parent::fetchData(array('context'=>'unique','type'=>'page'),array('id_news'=>$this->id_news));
+            $data = parent::fetchData(array('context'=>'one','type'=>'page'),array('id_news'=>$this->id_news));
             $resultUpload = $this->upload->setImageUpload(
                 'img',
                 array(
@@ -407,7 +410,7 @@ class backend_controller_news extends backend_db_news{
                 case 'delete':
                     if(isset($this->name_tag)) {
                         $setTags = parent::fetchData(
-                            array('context' => 'unique', 'type' => 'tag'),
+                            array('context' => 'one', 'type' => 'tag'),
                             array(':id_news' => $this->id_news, ':id_lang' => $this->id_lang, ':name_tag' => $this->name_tag)
                         );
                         if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
@@ -429,7 +432,7 @@ class backend_controller_news extends backend_db_news{
         }
         else {
 			$this->modelLanguage->getLanguage();
-			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 			$this->getItems('news',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
 			$assign = array(
 				'id_news',

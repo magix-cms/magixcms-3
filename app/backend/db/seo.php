@@ -7,43 +7,48 @@ class backend_db_seo
         $params = false;
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'seo') {
                     $sql = "SELECT s.*, c.content_seo 
-                    FROM mc_seo AS s
-                    JOIN mc_seo_content AS c USING ( id_seo )
-                    JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-                    WHERE c.id_lang = :default_lang
-                    GROUP BY s.id_seo";
-                    $params = $data;
-                }elseif ($config['type'] === 'editSeo') {
-                    $sql = "SELECT s.*, c.content_seo, c.id_lang 
-                    FROM mc_seo AS s
-                    JOIN mc_seo_content AS c USING ( id_seo )
-                    JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-                    WHERE s.id_seo = :edit";
+							FROM mc_seo AS s
+							JOIN mc_seo_content AS c USING ( id_seo )
+							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+							WHERE c.id_lang = :default_lang
+							GROUP BY s.id_seo";
                     $params = $data;
                 }
+                elseif ($config['type'] === 'editSeo') {
+                    $sql = "SELECT s.*, c.content_seo, c.id_lang 
+							FROM mc_seo AS s
+							JOIN mc_seo_content AS c USING ( id_seo )
+							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+							WHERE s.id_seo = :edit";
+                    $params = $data;
+                }
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-            }elseif ($config['context'] === 'unique' || $config['context'] === 'last') {
+            }
+            elseif ($config['context'] === 'one') {
                 if ($config['type'] === 'root') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_seo ORDER BY id_seo DESC LIMIT 0,1';
                     //$params = $data;
-                }elseif ($config['type'] === 'seo') {
+                }
+                elseif ($config['type'] === 'seo') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_seo WHERE `id_seo` = :id_seo';
                     $params = $data;
-                }elseif ($config['type'] === 'content') {
-
+                }
+                elseif ($config['type'] === 'content') {
                     $sql = 'SELECT * FROM `mc_seo_content` WHERE `id_seo` = :id_seo AND `id_lang` = :id_lang';
                     $params = $data;
-
                 }
+
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }
         }
     }
+
     /**
      * @param $config
      * @param bool $data

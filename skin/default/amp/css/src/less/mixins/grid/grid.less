@@ -1,0 +1,61 @@
+// Grid system
+//
+// Generate semantic grid columns with these mixins.
+.grid-display(@flex: @enb-flex) when (@flex = 1) {
+	display: flex;
+	flex-wrap: wrap;
+}
+.grid-display(@flex: @enb-flex) when (@flex = 0) {
+	&:extend(.clearfix all);
+}
+
+.col-width(@columns; @flex: @enb-flex) when (@flex = 1) {
+	flex: 0 0 percentage((@columns / @grid-columns));
+	max-width: percentage((@columns / @grid-columns));
+}
+.col-width(@columns; @flex: @enb-flex) when (@flex = 0) {
+	float: left;
+	width: percentage((@columns / @grid-columns));
+}
+
+.container(@gutter) {
+	margin-right: auto;
+	margin-left: auto;
+	padding-left: floor((@gutter / 2));
+	padding-right: ceil((@gutter / 2));
+}
+
+// Centered container element
+.container-fixed(@gutter: @grid-gutter-width, @flex: @enb-flex) when (@flex = 1) {
+	.container(@gutter);
+}
+.container-fixed(@gutter: @grid-gutter-width, @flex: @enb-flex) when (@flex = 0) {
+	.container(@gutter);
+	.grid-display();
+}
+
+// Creates a wrapper for a series of columns
+.make-row(@gutter: @grid-gutter-width) {
+	margin-left: ceil((@gutter / -2));
+	margin-right: floor((@gutter / -2));
+	.grid-display();
+}
+.make-rows() {
+	.row-reverse {
+		flex-direction: row-reverse;
+	}
+}
+
+// Generate the phone columns
+.make-column(@columns, @type) when (@type = col){
+	.col-width(@columns);
+}
+.make-column(@columns, @type) when (@type = push){
+	left: percentage((@columns / @grid-columns));
+}
+.make-column(@columns, @type) when (@type = pull){
+	right: percentage((@columns / @grid-columns));
+}
+.make-column(@columns, @type) when (@type = offset){
+	margin-left: percentage((@columns / @grid-columns));
+}

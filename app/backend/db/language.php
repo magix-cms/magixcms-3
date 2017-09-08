@@ -7,7 +7,7 @@ class backend_db_language{
         $params = false;
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'langs') {
                     //Listing employee
                     $cond = '';
@@ -36,16 +36,19 @@ class backend_db_language{
                         }
                     }
                     $sql = "SELECT lang.* FROM mc_lang AS lang $cond";
-                    //$params = $data;
                 }
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            }
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'lang') {
                     $sql = 'SELECT * FROM mc_lang WHERE id_lang = :id';
                     $params = $data;
-                }elseif ($config['type'] === 'count') {
+                }
+                elseif ($config['type'] === 'count') {
                     $sql = 'SELECT count(id_lang) AS nb FROM mc_lang';
                 }
+
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
         }

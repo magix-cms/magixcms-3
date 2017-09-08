@@ -43,7 +43,7 @@ class backend_db_plugins{
         $params = false;
 
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'list') {
                     $sql = 'SELECT * FROM mc_plugins';
                     //$params = $data;
@@ -51,7 +51,7 @@ class backend_db_plugins{
                     $sql = 'SELECT name FROM mc_plugins WHERE seo = 1';
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            }elseif($config['context'] === 'one') {
                 if ($config['type'] === 'register') {
                     $sql = 'SELECT * FROM mc_plugins WHERE name = :id';
                     $params = $data;

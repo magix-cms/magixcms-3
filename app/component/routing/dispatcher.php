@@ -115,6 +115,8 @@ class component_routing_dispatcher{
                 break;
         }
 
+        $this->template->assign('cClass',$controller_class);
+
         try{
             if(class_exists($controller_class)) {
                 $class =  new $controller_class;
@@ -139,6 +141,7 @@ class component_routing_dispatcher{
         $dispatcher = $this->getController();
         if($dispatcher){
             if(method_exists($dispatcher,'run')){
+                $this->header->mobileDetect();
                 $dispatcher->run();
             }
         }

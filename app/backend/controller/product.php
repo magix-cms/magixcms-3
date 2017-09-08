@@ -82,14 +82,14 @@ class backend_controller_product extends backend_db_product
 
 	/**
 	 * Assign data to the defined variable or return the data
-	 * @param string $context
 	 * @param string $type
 	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
 	 * @return mixed
 	 */
-	private function getItems($type, $id = null, $context = null)
-	{
-		return $this->data->getItems($type, $id, $context);
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
 	}
 
 	/**
@@ -97,7 +97,7 @@ class backend_controller_product extends backend_db_product
 	 */
 	private function setItemsData()
 	{
-		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 
 		$arr = array();
 		$data = parent::fetchData(
@@ -149,7 +149,7 @@ class backend_controller_product extends backend_db_product
 	 */
 	private function setCategoriesTree()
 	{
-		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 
 		$childs = array();
 
@@ -178,7 +178,7 @@ class backend_controller_product extends backend_db_product
 	 */
 	private function getCatRels()
 	{
-		$rels = $this->getItems('catRel', $this->edit, 'return');
+		$rels = $this->getItems('catRel', $this->edit,'all', false);
 		$catRels = array();
 
 		foreach($rels as $rel) {
@@ -269,7 +269,7 @@ class backend_controller_product extends backend_db_product
 	{
         $makeFiles = new filesystem_makefile();
         /*$setEditImg = parent::fetchData(
-            array('context' => 'unique', 'type' => 'img'),
+            array('context' => 'one', 'type' => 'img'),
             array(':editimg' => $this->editimg)
         );*/
         /*if (file_exists($filesPath . $data['edit'])) {
@@ -304,7 +304,7 @@ class backend_controller_product extends backend_db_product
                 $id_product = false;
 
 			    foreach($imgArray as $key => $value){
-                    $img = $this->getItems('img',$value,'last');
+                    $img = $this->getItems('img',$value,'one');
 					$id_product = $img['id_product'];
 					if($img['default_img']) $defaultErased = true;
 
@@ -343,7 +343,7 @@ class backend_controller_product extends backend_db_product
                         $data['data']
                     );
 
-                    $imgs = $this->getItems('images',$id_product,'return');
+                    $imgs = $this->getItems('images',$id_product,'all',false);
                     if($imgs != null && $defaultErased) {
 						$this->upd(array(
 							'type' => 'firstImageDefault',
@@ -383,7 +383,7 @@ class backend_controller_product extends backend_db_product
 							)
 						));
 
-						$product = parent::fetchData(array('context' => 'unique', 'type' => 'root'));
+						$product = parent::fetchData(array('context' => 'one', 'type' => 'root'));
 
 						foreach ($this->content as $lang => $content) {
 							$content['id_product'] = $product['id_product'];
@@ -444,7 +444,7 @@ class backend_controller_product extends backend_db_product
 								}
 
 								$checkLangData = parent::fetchData(
-									array('context' => 'unique', 'type' => 'content'),
+									array('context' => 'one', 'type' => 'content'),
 									array('id_product' => $this->id_product, 'id_lang' => $lang)
 								);
 
@@ -553,7 +553,7 @@ class backend_controller_product extends backend_db_product
 
 							foreach ($this->parent as $id => $val) {
 								$ids[] = $id;
-								$link = parent::fetchData( array('context' => 'unique', 'type' => 'catRel'), array(':id' => $this->edit, ':id_cat' => $id) );
+								$link = parent::fetchData( array('context' => 'one', 'type' => 'catRel'), array(':id' => $this->edit, ':id_cat' => $id) );
 
 								if($link == null) {
 									$data = array(':id' => $this->edit, ':id_cat' => $id, ':default_c' => 0);
@@ -617,7 +617,7 @@ class backend_controller_product extends backend_db_product
 					break;
 				case 'getImgDefault':
 					if(isset($this->edit)) {
-						$imgDefault = $this->getItems('imgDefault',$this->edit,'last');
+						$imgDefault = $this->getItems('imgDefault',$this->edit,'one',false);
 						print $imgDefault['id_img'];
 					}
 					break;
@@ -682,13 +682,14 @@ class backend_controller_product extends backend_db_product
 		}
 		else {
 			$this->modelLanguage->getLanguage();
-			$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'unique', 'type' => 'default'));
+			$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 			$this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
 			$assign = array(
 				'id_product',
 				'name_p' => ['title' => 'name'],
                 'price_p' => ['type' => 'price','input' => null],
                 'reference_p' => ['title' => 'reference'],
+				'resume_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
 				'content_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
 				'date_register'
 			);
@@ -707,7 +708,7 @@ class backend_controller_product extends backend_db_product
 					);
 				}
 			}
-			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content'), array('id_product', 'name_p', 'price_p', 'reference_p', 'content_p', 'date_register'), $assign);
+			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content'), array('id_product', 'name_p', 'price_p', 'reference_p', 'resume_p', 'content_p', 'date_register'), $assign);
 			$this->template->display('catalog/product/index.tpl');
 		}
 	}

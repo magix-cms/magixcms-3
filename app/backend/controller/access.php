@@ -62,16 +62,17 @@ class backend_controller_access extends backend_db_access{
 
     }
 
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * Insertion de données
@@ -91,7 +92,7 @@ class backend_controller_access extends backend_db_access{
                     )
                 );
                 $this->template->configLoad();
-                $this->template->assign('data',$this->getItems('lastRole',null,'last'));
+                $this->getItems('lastRole',null,'one','data');
                 $display = $this->template->fetch('access/loop/rows.tpl');
                 $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add',$display);
@@ -119,7 +120,7 @@ class backend_controller_access extends backend_db_access{
                     )
                 );
                 $this->template->configLoad();
-                $this->template->assign('row',$this->getItems('lastAccess', $this->id, 'last'));
+                $this->getItems('lastAccess', $this->id, 'one', 'row');
                 $display = $this->template->fetch('access/loop/perms.tpl');
                 $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add',$display);
@@ -239,7 +240,7 @@ class backend_controller_access extends backend_db_access{
                                 )
                             );
                         }else{
-                            $this->getItems('lastAccess', $this->edit, 'last');
+                            $this->getItems('lastAccess', $this->edit, 'one');
                             $this->getItems('module');
                             $this->getItems('role',$this->edit);
                             $this->getItems('access',$this->edit,'all');

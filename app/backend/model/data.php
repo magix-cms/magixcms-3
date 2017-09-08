@@ -35,7 +35,7 @@ class backend_model_data extends backend_db_scheme{
 			else {
 				$params = array(':id' => $id);
 			}
-			$context = $context ? $context : 'unique';
+			$context = $context ? $context : 'one';
 		} else {
 			$params = null;
 			$context = $context ? $context : 'all';
@@ -45,23 +45,19 @@ class backend_model_data extends backend_db_scheme{
 
 	/**
 	 * Assign data to the defined variable or return the data
-	 * @param string $context
 	 * @param string $type
 	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
 	 * @return mixed
 	 */
-	public function getItems($type, $id = null, $context = null) {
+	public function getItems($type, $id = null, $context = null, $assign = true) {
 		$data = $this->setItems($context, $type, $id);
-		switch ($context) {
-			case 'return':
-			case 'last':
-				return $data;
-				break;
-			default:
-				$varName = $type;
-				$this->template->assign($varName,$data);
-				return $data;
+		if($assign) {
+			$varName = gettype($assign) == 'string' ? $assign : $type;
+			$this->template->assign($varName,$data);
 		}
+		return $data;
 	}
 
 	/**

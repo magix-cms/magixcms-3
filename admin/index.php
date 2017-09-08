@@ -49,6 +49,7 @@ if(http_request::isGet('controller')){
         $members->checkout();
         if (http_request::isSession('keyuniqid_admin')) {
             $pluginsSetConfig = new backend_model_plugins();
+            $pluginsSetConfig->addConfigDir($routes, $template);
             $pluginsSetConfig->templateDir($routes, $template, $plugins);
             $dispatcher = new component_routing_dispatcher($routes, $template, $plugins);
             $dispatcher->dispatch();

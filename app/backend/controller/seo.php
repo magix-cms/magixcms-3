@@ -50,16 +50,19 @@ class backend_controller_seo extends backend_db_seo {
             $this->type_seo = $formClean->simpleClean($_POST['type_seo']);
         }
     }
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
     /**
      * @return array
      */
@@ -142,7 +145,7 @@ class backend_controller_seo extends backend_db_seo {
             ));
             foreach ($this->content as $lang => $content) {
                 $checkLangData = parent::fetchData(
-                    array('context'=>'unique','type'=>'content'),
+                    array('context'=>'one','type'=>'content'),
                     array('id_seo'=>$this->id_seo,'id_lang'=>$lang)
                 );
                 // Check language page content
@@ -182,7 +185,7 @@ class backend_controller_seo extends backend_db_seo {
             );
 
             $setSeoData = parent::fetchData(
-                array('context' => 'unique', 'type' => 'root')
+                array('context' => 'one', 'type' => 'root')
             );
             if($setSeoData['id_seo']){
                 foreach ($this->content as $lang => $content) {
@@ -268,7 +271,7 @@ class backend_controller_seo extends backend_db_seo {
             }
         }else{
             $this->modelLanguage->getLanguage();
-            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'unique','type'=>'default'));
+            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
             $this->getItems('seo',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
 
             $assign = array(

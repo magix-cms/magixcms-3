@@ -34,13 +34,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12">
-                                <div class="form-group">
-                                    <label for="content[{$id}][content_p]">{#content#|ucfirst} :</label>
-                                    <textarea name="content[{$id}][content_p]" id="content[{$id}][content_p]" class="form-control mceEditor"></textarea>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="content[{$id}][resume_p]">{#resume#|ucfirst} :</label>
+                            <textarea name="content[{$id}][resume_p]" id="content[{$id}][resume_p]" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content[{$id}][content_p]">{#content#|ucfirst} :</label>
+                            <textarea name="content[{$id}][content_p]" id="content[{$id}][content_p]" class="form-control mceEditor"></textarea>
                         </div>
                     </fieldset>
                 {/foreach}

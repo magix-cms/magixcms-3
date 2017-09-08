@@ -14,16 +14,18 @@ class backend_controller_plugins extends backend_db_plugins{
         $this->data = new backend_model_data($this);
         $this->finder = new file_finder();
     }
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * List of unregistered plugins
@@ -32,7 +34,7 @@ class backend_controller_plugins extends backend_db_plugins{
     private function setNotRegisterItems(){
         $newsItems = array();
         $pluginsDir = $this->finder->scanRecursiveDir(component_core_system::basePath().'/plugins');
-        $pluginsRegister = $this->getItems('list',null,'return');
+        $pluginsRegister = $this->getItems('list',null,'all',false);
         foreach($pluginsRegister as $item){
             $registerItems[]=$item['name'];
         }
@@ -71,7 +73,7 @@ class backend_controller_plugins extends backend_db_plugins{
      * @param $id
      */
     public function register($id){
-        $data = parent::fetchData(array('context'=>'unique','type'=>'register'),array(':id'=>$id));
+        $data = parent::fetchData(array('context'=>'one','type'=>'register'),array(':id'=>$id));
         if($data['id_plugins'] != null){
             $this->message->getNotify('setup_info',array('method'=>'fetch','assignFetch'=>'message'));
             $this->template->display('plugins/setup.tpl');
@@ -97,7 +99,7 @@ class backend_controller_plugins extends backend_db_plugins{
      */
     public function upgrade($id){
         if(isset($id)){
-            $data = parent::fetchData(array('context'=>'unique','type'=>'register'),array(':id'=>$id));
+            $data = parent::fetchData(array('context'=>'one','type'=>'register'),array(':id'=>$id));
             $routingDB = new component_routing_db();
             $currentVersion = $data['version'];
             $SQLDir = component_core_system::basePath().'/plugins/'.$id.'/sql/version/';

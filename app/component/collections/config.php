@@ -72,7 +72,7 @@ class component_collections_config{
         $sql = '';
         $params = false;
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'imgSize') {
                     $sql = 'SELECT * FROM mc_config_img 
                     WHERE module_img = :module_img AND attribute_img = :attribute_img
@@ -82,7 +82,7 @@ class component_collections_config{
                     $sql = 'SELECT * FROM mc_config';
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            }elseif($config['context'] === 'one') {
                 if ($config['type'] === 'imgSize') {
 
                 }

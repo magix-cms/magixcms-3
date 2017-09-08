@@ -50,17 +50,19 @@ class frontend_model_template{
 	 * @var string
 	 */
 	private static $ConfigFile = 'local_';
+	protected $amp;
     /**
      * @var component_collections_setting
      */
     public $collectionsSetting,$collectionsLang;
 	/**
-	 * 
+	 *
 	 * Constructor
 	 */
     public function __construct(){
         $this->collectionsSetting = new component_collections_setting();
         $this->collectionsLang = new component_collections_language();
+        $this->amp = http_request::isGet('amp') ? true : false;
     }
 	/**
 	 * 
@@ -94,7 +96,7 @@ class frontend_model_template{
             if(http_request::isSession('strLangue')){
                 $lang = form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
             }else{
-                $data = $this->collectionsLang->fetchData(array('context'=>'unique','type'=>'default'));
+                $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
                 if($data != null){
                     $lang = $data['iso'];
                 }
@@ -163,6 +165,11 @@ class frontend_model_template{
 			}
 		}else{
 			$theme = 'default';
+		}
+		if($this->amp) {
+			if(file_exists(component_core_system::basePath().'/skin/'.$theme.'/amp/')){
+				$theme = $theme.'/amp/';
+			}
 		}
 		return $theme;
 	}

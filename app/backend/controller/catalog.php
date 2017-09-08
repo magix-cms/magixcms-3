@@ -42,16 +42,18 @@ class backend_controller_catalog extends backend_db_catalog {
         }
     }
 
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $context
-     * @param string $type
-     * @param string|int|null $id
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null) {
-        return $this->data->getItems($type, $id, $context);
-    }
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
     /**
      * @return array
      */
@@ -70,7 +72,7 @@ class backend_controller_catalog extends backend_db_catalog {
     private function save(){
         if (isset($this->content)) {
             foreach ($this->content as $lang => $content) {
-                if (parent::fetchData(array('context' => 'unique', 'type' => 'content'), array('id_lang' => $lang)) != null) {
+                if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang)) != null) {
                     parent::update(array('type' => 'content'), array(
                             'name' => $content['catalog_name'],
                             'content' => $content['catalog_content'],

@@ -6,11 +6,11 @@ class frontend_db_home
         $params = false;
 
         if(is_array($config)) {
-            if($config['context'] === 'all' || $config['context'] === 'return') {
+            if($config['context'] === 'all') {
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            }elseif($config['context'] === 'one') {
 
                 if ($config['type'] === 'page') {
                     //Return current skin

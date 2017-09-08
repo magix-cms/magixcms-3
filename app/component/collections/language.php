@@ -45,7 +45,7 @@ class component_collections_language{
         $sql = '';
         $params = false;
         if (is_array($config)) {
-            if ($config['context'] === 'all' || $config['context'] === 'return') {
+            if ($config['context'] === 'all') {
                 if ($config['type'] === 'active') {
                     $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang
                            FROM mc_lang AS l
@@ -59,7 +59,7 @@ class component_collections_language{
                            ORDER BY l.default_lang DESC,l.id_lang ASC';
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }elseif($config['context'] === 'unique' || $config['context'] === 'last') {
+            }elseif($config['context'] === 'one') {
                 if ($config['type'] === 'default') {
                     $sql = 'SELECT id_lang,iso_lang FROM mc_lang as lang
 		                    WHERE lang.default_lang = 1';

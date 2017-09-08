@@ -1,0 +1,38 @@
+// Framework grid generation
+//
+// Used only by Bootstrap to generate the correct number of grid classes given
+// any value of `@grid-columns`.
+
+.make-grid-columns() {
+	[class*="col-"] {
+		position: relative;
+		// Prevent columns from collapsing when empty
+		min-height: 1px;
+		// Inner gutter via padding
+		padding-left: ceil((@grid-gutter-width / 2));
+		padding-right: floor((@grid-gutter-width / 2));
+		left: auto;
+		right: auto;
+	}
+}
+
+.calc-grid-column(@index, @type) when (@index > 0) {
+	.@{type}-@{index} {
+		.make-column(@index, @type);
+	}
+}
+
+// Basic looping in LESS
+.loop-grid-columns(@index, @type) when (@index >= 0) {
+	.calc-grid-column(@index, @type);
+	// next iteration
+	.loop-grid-columns((@index - 1), @type);
+}
+
+// Create grid for specific class
+.make-grid() {
+	.loop-grid-columns(@grid-columns, col);
+	.loop-grid-columns(@grid-columns, pull);
+	.loop-grid-columns(@grid-columns, push);
+	.loop-grid-columns(@grid-columns, offset);
+}
