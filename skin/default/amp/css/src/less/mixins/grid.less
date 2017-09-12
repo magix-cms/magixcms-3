@@ -7,17 +7,7 @@
 //
 // Set the container width, and override it for fixed navbars in media queries.
 
-.container {
-	.container-fixed();
-}
-
-
-// Fluid container
-//
-// Utilizes the mixin meant for fixed width containers, but without any defined
-// width for fluid, full width layouts.
-
-.container-fluid {
+.container, .container-fluid {
 	.container-fixed();
 }
 
@@ -51,5 +41,5 @@
 // Columns, offsets, pushes, and pulls for extra small devices like
 // smartphones.
 
-.make-grid();
-.make-rows();
+.make-grid(ph);
+.make-rows(ph);

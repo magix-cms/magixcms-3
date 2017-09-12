@@ -291,6 +291,32 @@ var product = (function ($, undefined) {
                 }
             });
             $( ".row.sortable" ).disableSelection();
+        },
+        runAdd: function(){
+            if($('#product_id').val() != ''){
+                var id = $('#product_id').val();
+                var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
+                //console.log(cus);
+                if(!cus.length) {
+                    $('#product').bootstrapSelect('clear');
+                } else {
+                    var cu = $(cus[0]);
+                    $('#product').bootstrapSelect('select',cu);
+                }
+            }
+            $('#product_id').on('focusout',function(){
+                var id = $(this).val();
+                if(id != '') {
+                    var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
+                    //console.log(cus);
+                    if(!cus.length) {
+                        $('#product').bootstrapSelect('clear');
+                    } else {
+                        var cu = $(cus[0]);
+                        $('#product').bootstrapSelect('select',cu);
+                    }
+                }
+            });
         }
     }
 })(jQuery);

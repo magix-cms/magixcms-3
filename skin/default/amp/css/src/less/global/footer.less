@@ -1,25 +1,17 @@
-/*
- * Rules for footer
- */
+//
+// Rules for footer
+//
 #footer {
-	background: @footer-bg;
-	color: @footer-color;
-	margin-bottom: 34px;
-	//box-shadow: 0 0 10px rgba(0,0,0,.05);
+	margin-bottom: @footbarH;
 
 	// Global footer rules
 	h4 {
-		font-size: 18px;
 		margin: 0 0 20px;
 		border-bottom: 1px solid @light-gray;
 		padding-bottom: 10px;
 		a {
 			.title-font;
 		}
-	}
-
-	a {
-		color: @footer-color;
 	}
 
 	.block {
@@ -30,8 +22,6 @@
 	}
 
 	&-blocks {
-		border-top: 1px solid @light-gray;
-		border-bottom: 1px solid @light-gray;
 		padding: 40px 0;
 	}
 
@@ -49,10 +39,6 @@
 #block {
 	// --- Block contact
 	&-contact {
-		ul {
-			.normalize-link(@main-color);
-		}
-
 		li {
 			margin: 5px 0 15px;
 
@@ -61,36 +47,25 @@
 			}
 		}
 
-		span {
-			color: @footer-color;
-
-			&.fa {
-				width: 30px;
-				font-size: 20px;
-			}
+		&.fa,
+		&.material-icons{
+			width: 30px;
+			font-size: 20px;
 		}
 	}
 }
 
 #colophon {
-	background-color: @colophon-bg;
-
+	//background-color: @colophon-bg;
 	.footer-colophon {
+		border-top: 1px solid @light-gray;
 		padding: 15px;
 		font-size: 85%;
-
-		> div {
-			text-align: center;
-		}
 
 		p {
 			margin: 0;
 			padding: 0;
 		}
-	}
-
-	.footer-creator {
-		.normalize-link(@main-color, same, underline);
 	}
 }
 
@@ -99,30 +74,18 @@
 	bottom: 0;
 	display: block;
 	width: 100%;
+	max-width: 37.5rem;
 	z-index: 2;
 	padding: 0;
-
-	.wrapper {
-		background: @main-color;
-		color: @smooth-white;
-		height: 34px;
-	}
-
-	.dropup {
-		position: static;
-	}
+	background-color: @main-color;
 
 	.share-nav {
-		position: absolute;
-		width: 100%;
-		z-index: -1;
-		bottom: -16px;
 		background: @sharebar-bg;
-		display: block;
 		padding: 8px 15px;
-		height: 50px;
-		.auto-transition(.5s);
+		height: @sharebrH;
+		box-sizing: border-box;
 		box-shadow: 0 0 1px rgba(0,0,0,.2) inset;
+		margin: 0;
 
 		li {
 			float: left;
@@ -130,7 +93,29 @@
 		}
 	}
 
-	.dropup.open + .share-nav {
-		bottom: 34px;
+	amp-accordion>section {
+		header {
+			background-color: transparent;
+			border: none;
+			padding: 3px 0;
+
+			> div {
+				display: flex;
+				justify-content: space-between;
+			}
+		}
+
+		&[expanded] {
+			margin-bottom: -@sharebrH;
+
+			header {
+				padding-top: @sharebrH;
+			}
+		}
+	}
+
+	amp-accordion>section[expanded]>:last-child {
+		bottom: @footbarH + @sharebrH;
+		height: @sharebrH;
 	}
 }

@@ -16,20 +16,25 @@
 		font-family: @font;
 		font-weight: @weight;
 		color: @color;
+		text-decoration: none;
 	}
 
 	.set-hover(@color, @hover-color, @decoration) when (@hover-color = same) {
-		a:hover {
+		a:hover, a:focus {
 			text-decoration: @decoration;
 			color: @color;
 		}
 	};
 	.set-hover(@color, @hover-color, @decoration) {
-		a:hover {
+		a:hover, a:focus {
 			text-decoration: @decoration;
 			color: @hover-color;
 		}
 	};
+
+	a:focus {
+		.tab-focus();
+	}
 	.set-hover(@color, @hover-color, @decoration);
 }
 
@@ -93,10 +98,10 @@
 		// Normalize images in content
 		img {
 			&.pull-right {
-				margin: 0 0 1rem 1rem !important;
+				margin: 0 0 1rem 1rem;
 			}
 			&.pull-left {
-				margin: 0 1rem 1rem 0 !important;
+				margin: 0 1rem 1rem 0;
 			}
 		}
 

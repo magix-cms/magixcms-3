@@ -1,4 +1,4 @@
-<div class="footer-colophon container" itemprop="isPartOf" itemscope itemtype="http://schema.org/WebSite">
+<div class="footer-colophon text-center" itemprop="isPartOf" itemscope itemtype="http://schema.org/WebSite">
     <div itemprop="copyrightHolder" itemscope itemtype="http://schema.org/{$companyData.type}"{if $smarty.get.magixmod == 'contact' && $companyData.openinghours} itemref="schedule"{/if}>
         <meta itemprop="name" content="{$companyData.name}"/>
         <meta itemprop="url" content="{geturl}"/>
@@ -72,24 +72,22 @@
             </div>
         {/if}
     </div>
-    <div class="row">
-        <div class="col-ph-12 col-sm-5 col-md-4">
-            <p class="footer-copyright"><span class="copyright-info"><span class="fa fa-copyright"></span> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span></span>
-                | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>
+    <div>
+        <p class="footer-copyright"><span class="copyright-info"><span class="fa fa-copyright"></span> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span></span>
+            | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>
+    </div>
+    {if $companyData.tva}
+        <div>
+            <p class="company-tva text-center">{#footer_tva#} {$companyData.tva}</p>
         </div>
-        {if $companyData.tva}
-            <div class="col-ph-12 col-sm-3 col-md-4">
-                <p class="company-tva text-center">{#footer_tva#} {$companyData.tva}</p>
-            </div>
-        {/if}{*
-    <div class="footer-creator powered col-xs-12 col-sm-4 col-md-5 col-lg-4 pull-right">
+    {/if}
+    {*<div class="footer-creator powered col-xs-12 col-sm-4 col-md-5 col-lg-4 pull-right">
         {#footer_creator_info#|ucfirst}
         <a href="http://www.web-solution-way.com">
             Web Solution Way
         </a>
     </div>*}
-        <div class="footer-creator powered col-ph-12 col-sm-4{if !$companyData.tva} push-sm-3 push-md-4{/if}">
-            {include file="section/footer/powered.tpl"}
-        </div>
+    <div class="footer-creator powered">
+        {include file="section/footer/powered.tpl"}
     </div>
 </div>

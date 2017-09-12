@@ -1,4 +1,4 @@
-<header class="header" role="banner">
+<header id="top" class="header" role="banner">
     <nav class="header-inner">
         <div role="button" on="tap:sidebar1.toggle" tabindex="0" class="hamburger"><i class="material-icons">menu</i></div>
         <div class="site-name">
@@ -6,6 +6,12 @@
                 <amp-img src="/skin/{template}img/logo/webp/logo-magix_cms@229.webp" alt="Logo de Magix CMS" height="50" width="229"></amp-img>
             </a>
         </div>
+        {widget_lang_data assign="dataLangNav"}{* Language Nav *}
+        {if $dataLangNav != null && count($dataLangNav) > 1}
+            <div class="select-lang">
+                {include file="section/loop/lang.tpl" data=$dataLangNav type="nav" display='menu'}
+            </div>
+        {/if}
     </nav>
 </header>
 <amp-sidebar id="sidebar1" layout="nodisplay" side="left" class="menu">

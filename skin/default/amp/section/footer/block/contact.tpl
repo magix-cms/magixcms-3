@@ -3,7 +3,7 @@
     <ul class="list-unstyled">
         {if !empty($companyData.contact.adress)}
         <li>
-            <span class="fa fa-map-marker"></span>
+            <i class="material-icons">place</i>
             <span>{$companyData.contact.adress.street}</span>,
             <span>{$companyData.contact.adress.postcode}</span>
             <span>{$companyData.contact.adress.city}</span>
@@ -11,12 +11,12 @@
         {/if}
         {if $companyData.contact.phone}
             <li class="phone-number">
-                <span class="fa fa-phone"></span> {$companyData.contact.phone}
+                <i class="material-icons">local_phone</i> {$companyData.contact.phone}
             </li>
         {/if}
         {if $companyData.contact.mobile}
             <li class="phone-number">
-                <span class="fa fa-mobile"></span> {$companyData.contact.mobile}
+                <i class="material-icons">smartphone</i> {$companyData.contact.mobile}
             </li>
         {/if}
         {if $companyData.contact.fax}
@@ -26,7 +26,7 @@
         {/if}
         {if $companyData.contact.mail}
             <li class="mailto">
-                <span class="fa fa-envelope"></span> {mailto address={$companyData.contact.mail} encode="hex"}
+                <i class="material-icons">local_post_office</i> {mailto address={$companyData.contact.mail} encode="hex"}
             </li>
         {/if}
     </ul>

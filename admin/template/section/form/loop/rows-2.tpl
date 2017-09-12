@@ -37,8 +37,10 @@
         {/foreach}
         <td class="actions text-center">
             {if {employee_access type="edit" class_name=$cClass} eq 1}
+            {if $edit}
             <a href="/{baseadmin}/index.php?controller={$editController}&action=edit&edit={$row[$editColumn]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="over-row"></a>
             <a href="/{baseadmin}/index.php?controller={$editController}&action=edit&edit={$row[$editColumn]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="btn btn-link action_on_record"><span class="fa fa-pencil-square-o"></span></a>
+            {/if}
             {/if}
             {if {employee_access type="del" class_name=$cClass} eq 1}
             {if !$row[$idcolumn]|in_array:$readonly}

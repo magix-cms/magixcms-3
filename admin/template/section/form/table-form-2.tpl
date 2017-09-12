@@ -10,6 +10,9 @@
 {if !isset($sortable)}
     {$sortable = false}
 {/if}
+{if !isset($edit)}
+    {$edit = true}
+{/if}
 {if isset($data) && is_array($data)}
     {if $debug}{foreach $scheme as $sch}
         {$sch.input|var_dump}

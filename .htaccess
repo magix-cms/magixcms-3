@@ -6,6 +6,14 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     #RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
+<IfModule mod_rewrite.c>
+<IfModule mod_ssl.c>
+    #RewriteCond %{HTTP_HOST} !^www\.
+    #RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
+</IfModule>
+    RewriteCond %{HTTP_HOST} !^www\.
+    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+</IfModule>
 # ----------------------------------------------------------------------
 # Custom 404 page
 # ----------------------------------------------------------------------

@@ -1,37 +1,44 @@
-/*
- * Custom rules for text
- */
-/*---------------------------*\
------ Font weight classes -----
-\*---------------------------*/
-.semiBold {
-    font-weight: 600;
+//
+// Custom rules for text
+//
+.material-icons {
+	vertical-align: bottom;
 }
 
-.extraBold {
-    font-weight: 800;
+//
+// Font weight classes
+//
+.quote {
+	font-family: @quote-font;
 }
 
-/*-------------*\
------ Liens -----
-\*-------------*/
-.bold-link {
-	color: inherit !important;
-	font-weight: bold !important;
+.title-font {
+	font-family: @headings-font-family;
 }
 
+//
+// Liens
+//
 .all-hover {
 	.hover-link();
 }
 
-/*----------------------*\
------ Citation style -----
-\*----------------------*/
+//
+// Citation style
+//
 blockquote {
-    border-left: none;
-    padding-left: 40px;
+    padding: (@line-height-computed / 2) @line-height-computed (@line-height-computed / 2) 40px;
+	margin: 0 0 @line-height-computed;
     position: relative;
 	font-size: @font-size-base;
+
+	p,
+	ul,
+	ol {
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
 
 	&:before {
 		.quote;
@@ -51,8 +58,8 @@ blockquote {
 
 	footer {
 		.quote;
+		display: block;
 		text-align: right;
-		font-size: 100%;
 		font-weight: lighter;
 		color: #959595;
 		&:before {
@@ -65,9 +72,9 @@ blockquote {
 }
 
 
-/*--------------*\
------ Listes -----
-\*--------------*/
+//
+// Listes
+//
 .link-bar {
 	text-align: center;
 	.list-unstyled;
@@ -88,9 +95,9 @@ blockquote {
 	}
 }
 
-/*-----------------------*\
------ Text font sizes -----
-\*-----------------------*/
+//
+// Text font sizes
+//
 // --- justify content
 .text-justify {
 	.text-justify;
@@ -215,24 +222,24 @@ mark,
 // Contextual backgrounds
 // For now we'll leave these alongside the text classes until v4 when we can
 // safely shift things around (per SemVer rules).
-/*.bg-primary {
-	// Given the contrast here, this is the only class to have its color inverted
-	// automatically.
-	color: #fff;
-	.bg-variant(@brand-primary);
-}
-.bg-success {
-	.bg-variant(@state-success-bg);
-}
-.bg-info {
-	.bg-variant(@state-info-bg);
-}
-.bg-warning {
-	.bg-variant(@state-warning-bg);
-}
-.bg-danger {
-	.bg-variant(@state-danger-bg);
-}*/
+//.bg-primary {
+//	// Given the contrast here, this is the only class to have its color inverted
+//	// automatically.
+//	color: #fff;
+//	.bg-variant(@brand-primary);
+//}
+//.bg-success {
+//	.bg-variant(@state-success-bg);
+//}
+//.bg-info {
+//	.bg-variant(@state-info-bg);
+//}
+//.bg-warning {
+//	.bg-variant(@state-warning-bg);
+//}
+//.bg-danger {
+//	.bg-variant(@state-danger-bg);
+//}
 
 
 // Page header
@@ -320,59 +327,6 @@ abbr[data-original-title] {
 .initialism {
 	font-size: 90%;
 	.text-uppercase();
-}
-
-// Blockquotes
-blockquote {
-	padding: (@line-height-computed / 2) @line-height-computed;
-	margin: 0 0 @line-height-computed;
-	font-size: @blockquote-font-size;
-	border-left: 5px solid @blockquote-border-color;
-
-	p,
-	ul,
-	ol {
-		&:last-child {
-			margin-bottom: 0;
-		}
-	}
-
-	// Note: Deprecated small and .small as of v3.1.0
-	// Context: https://github.com/twbs/bootstrap/issues/11660
-	footer,
-	small,
-	.small {
-		display: block;
-		font-size: 80%; // back to default font-size
-		line-height: @line-height-base;
-		color: @blockquote-small-color;
-
-		&:before {
-			content: '\2014 \00A0'; // em dash, nbsp
-		}
-	}
-}
-
-// Opposite alignment of blockquote
-//
-// Heads up: `blockquote.pull-right` has been deprecated as of v3.1.0.
-.blockquote-reverse,
-blockquote.pull-right {
-	padding-right: 15px;
-	padding-left: 0;
-	border-right: 5px solid @blockquote-border-color;
-	border-left: 0;
-	text-align: right;
-
-	// Account for citation
-	footer,
-	small,
-	.small {
-		&:before { content: ''; }
-		&:after {
-			content: '\00A0 \2014'; // nbsp, em dash
-		}
-	}
 }
 
 // Addresses

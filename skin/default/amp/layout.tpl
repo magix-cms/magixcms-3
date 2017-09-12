@@ -1,4 +1,4 @@
-{autoload_i18n}<!doctype html>
+{autoload_i18n}{widget_about_data}<!doctype html>
 <html amp lang="{getlang}">
 <head {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
@@ -13,12 +13,14 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     {include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,600,400italic','Raleway'=>'300,500']}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style amp-boilerplate>{literal}body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}{/literal}</style></noscript>
     <style amp-custom>
-        {include file="css/style.min.css"}
+        {block name="stylesheet"}{/block}
     </style>
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
+    <script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"></script>
 </head>
 <body id="{block name='body:id'}layout{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
 {*{include file="section/brick/cookie-consent.tpl"}*}
@@ -38,5 +40,6 @@
     </main>
 {/block}
 {block name="main:after"}{/block}
+{include file="section/footer.tpl" adjust="clip" blocks=['contact']}
 </body>
 </html>

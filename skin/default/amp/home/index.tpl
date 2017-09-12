@@ -1,11 +1,11 @@
 {extends file="layout.tpl"}
+{block name="stylesheet"}{fetch file="skin/{template}css/home.min.css"}{/block}
 {block name='body:id'}home{/block}
 {block name='article:content'}
-    page amp
-    {#test#}
-    <h1 itemprop="name">{$home.name}</h1>
-    <div itemprop="text">
-        {$home.content}
+    <div class="container">
+        <h1 itemprop="name">{$home.name}</h1>
     </div>
-    {*<amp-img src="welcome.jpg" alt="Welcome" height="400" width="800"></amp-img>*}
+    <div itemprop="text">
+        {amp_img content=$home.content}
+    </div>
 {/block}

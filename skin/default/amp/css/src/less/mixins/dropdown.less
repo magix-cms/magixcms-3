@@ -1,0 +1,42 @@
+.dropdown {
+	amp-accordion>section {
+		header {
+			background-color: transparent;
+			border: none;
+			padding: 0;
+		}
+
+		&:not([expanded]) {
+			.show-less {
+				display: none;
+			}
+		}
+
+		&[expanded] {
+			.show-more {
+				display: none;
+			}
+		}
+
+		> div:last-child {
+			background-color: #fff;
+			box-shadow: 0 0 3px rgba(0,0,0,.4);
+
+			ul {
+				margin-bottom: 0;
+			}
+
+			li a {
+				display: block;
+				padding: 5px 8px;
+				color: @text-color;
+
+				&:focus, &:hover {
+					background-color: @main-color;
+					color: #fff;
+					text-decoration: none;
+				}
+			}
+		}
+	}
+}

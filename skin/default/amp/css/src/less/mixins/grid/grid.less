@@ -23,6 +23,8 @@
 	margin-left: auto;
 	padding-left: floor((@gutter / 2));
 	padding-right: ceil((@gutter / 2));
+	width: 100%;
+	box-sizing: border-box;
 }
 
 // Centered container element
@@ -38,10 +40,11 @@
 .make-row(@gutter: @grid-gutter-width) {
 	margin-left: ceil((@gutter / -2));
 	margin-right: floor((@gutter / -2));
+	box-sizing: border-box;
 	.grid-display();
 }
-.make-rows() {
-	.row-reverse {
+.make-rows(@class) {
+	.row-@{class}-reverse {
 		flex-direction: row-reverse;
 	}
 }

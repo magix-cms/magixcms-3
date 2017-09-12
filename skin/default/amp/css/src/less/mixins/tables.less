@@ -4,6 +4,8 @@
 
 
 table {
+  border-collapse: collapse;
+  border-spacing: 0;
   background-color: @table-bg;
 }
 caption {
@@ -12,7 +14,8 @@ caption {
   color: @text-muted;
   text-align: left;
 }
-th {
+td, th {
+  padding: 0;
   text-align: left;
 }
 
@@ -24,10 +27,7 @@ th {
   max-width: 100%;
   margin-bottom: @line-height-computed;
   // Cells
-  > thead,
-  > tbody,
-  > tfoot {
-    > tr {
+    tr {
       > th,
       > td {
         padding: @table-cell-padding;
@@ -36,7 +36,7 @@ th {
         border-top: 1px solid @table-border-color;
       }
     }
-  }
+
   // Bottom align for column headings
   > thead > tr > th {
     vertical-align: bottom;
@@ -68,16 +68,13 @@ th {
 // Condensed table w/ half padding
 
 .table-condensed {
-  > thead,
-  > tbody,
-  > tfoot {
-    > tr {
+
+    tr {
       > th,
       > td {
         padding: @table-condensed-cell-padding;
       }
     }
-  }
 }
 
 
@@ -87,16 +84,13 @@ th {
 
 .table-bordered {
   border: 1px solid @table-border-color;
-  > thead,
-  > tbody,
-  > tfoot {
-    > tr {
+
+    tr {
       > th,
       > td {
         border: 1px solid @table-border-color;
       }
     }
-  }
   > thead > tr {
     > th,
     > td {
@@ -183,16 +177,14 @@ table {
       margin-bottom: 0;
 
       // Ensure the content doesn't wrap
-      > thead,
-      > tbody,
-      > tfoot {
+
         > tr {
           > th,
           > td {
             white-space: nowrap;
           }
         }
-      }
+
     }
 
     // Special overrides for the bordered tables
@@ -200,9 +192,7 @@ table {
       border: 0;
 
       // Nuke the appropriate borders so that the parent can handle them
-      > thead,
-      > tbody,
-      > tfoot {
+
         > tr {
           > th:first-child,
           > td:first-child {
@@ -213,7 +203,7 @@ table {
             border-right: 0;
           }
         }
-      }
+
 
       // Only nuke the last row's bottom-border in `tbody` and `tfoot` since
       // chances are there will be only one `tr` in a `thead` and that would

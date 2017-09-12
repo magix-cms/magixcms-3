@@ -2,14 +2,7 @@
     {if $adjust == 'clip'}
     <div class="container">
         {/if}
-        <div class="sharebox">
-            {*<span class="label">{#share#|ucfirst}&nbsp;:</span>*}
-            <span class="fa fa-share-alt"></span>
-            <ul class="list-unstyled list-inline share-nav">
-                {include file="section/loop/share.tpl" data=$shareData}
-            </ul>
-        </div>
-        <div class="followbox pull-right">
+        <div class="followbox">
             <span class="label">{#follow_us#|ucfirst}&nbsp;:</span>
             <ul class="list-unstyled list-inline">
                 {if $companyData.socials.facebook != null}

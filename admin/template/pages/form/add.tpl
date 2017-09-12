@@ -82,16 +82,16 @@
                             <div class="row">
                                 <div class="col-xs-12 col-sm-8">
                                     <div class="form-group">
-                                        <label for="content[{$id}][seo_name_pages]">{#title#|ucfirst} :</label>
-                                        <textarea class="form-control" id="content[{$id}][seo_name_pages]" name="content[{$id}][seo_name_pages]" cols="70" rows="3">{$page.content[{$id}].seo_name_pages}</textarea>
+                                        <label for="content[{$id}][seo_title_pages]">{#title#|ucfirst} :</label>
+                                        <textarea class="form-control" id="content[{$id}][seo_title_pages]" name="content[{$id}][seo_title_pages]" cols="70" rows="3">{$page.content[{$id}].seo_title_pages}</textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 col-sm-8">
                                     <div class="form-group">
-                                        <label for="content[{$id}][seo_desc_page]">Description :</label>
-                                        <textarea class="form-control" id="content[{$id}][seo_desc_page]" name="content[{$id}][seo_desc_page]" cols="70" rows="3">{$page.content[{$id}].seo_desc_pages}</textarea>
+                                        <label for="content[{$id}][seo_desc_pages]">Description :</label>
+                                        <textarea class="form-control" id="content[{$id}][seo_desc_pages]" name="content[{$id}][seo_desc_pages]" cols="70" rows="3">{$page.content[{$id}].seo_desc_pages}</textarea>
                                     </div>
                                 </div>
                             </div>

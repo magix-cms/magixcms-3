@@ -4,7 +4,7 @@ class backend_controller_product extends backend_db_product
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory;
 
-	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat;
+	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2;
 
 	/**
 	 * backend_controller_catalog constructor.
@@ -39,6 +39,9 @@ class backend_controller_product extends backend_db_product
 		if (http_request::isGet('parentid')) {
 			$this->parent_id = $formClean->numeric($_GET['parentid']);
 		}
+        if (http_request::isGet('product_id')) {
+            $this->product_id = $formClean->numeric($_GET['product_id']);
+        }
 		// --- ADD or EDIT
 		if (http_request::isPost('id')) {
 			$this->id_product = $formClean->simpleClean($_POST['id']);
@@ -73,11 +76,15 @@ class backend_controller_product extends backend_db_product
 		if (http_request::isPost('default_cat')) {
 			$this->default_cat = $formClean->numeric($_POST['default_cat']);
 		}
-
+		#similar
+        if (http_request::isPost('id_product_2')) {
+            $this->id_product_2 = $formClean->numeric($_POST['id_product_2']);
+        }
 		# ORDER PAGE
 		if(http_request::isPost('image')){
 			$this->order = $formClean->arrayClean($_POST['image']);
 		}
+
 	}
 
 	/**
@@ -405,8 +412,14 @@ class backend_controller_product extends backend_db_product
 
 						$this->header->set_json_headers();
 						$this->message->json_post_response(true, 'add_redirect');
-					}
-					else {
+					}elseif(isset($this->product_id)){
+
+                        $this->modelLanguage->getLanguage();
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                        $this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all','products');
+                        $this->template->display('catalog/product/add-similar.tpl');
+
+                    } else {
 						$this->modelLanguage->getLanguage();
 						$this->template->display('catalog/product/add.tpl');
 					}
@@ -603,7 +616,14 @@ class backend_controller_product extends backend_db_product
 						// --- Categories
 						$this->setCategoriesTree();
 						$this->getCatRels();
-
+						// ---- Similar
+                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                        $this->getItems('productRel',array(':default_lang' => $defaultLanguage['id_lang'],':id'=>$this->edit),'all');
+                        $assign = array(
+                            'id_rel',
+                            'name_p' => ['title' => 'name']
+                        );
+                        $this->data->getScheme(array('mc_catalog_product_rel', 'mc_catalog_product_content'), array('id_rel', 'name_p'), $assign);
 						$this->template->display('catalog/product/edit.tpl');
 					}
 					break;

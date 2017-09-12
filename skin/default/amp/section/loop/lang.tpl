@@ -23,23 +23,32 @@
             </ul>
         {elseif $display eq 'menu'}
             <div class="dropdown">
-                <a class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {if $smarty.get.strLangue}
-                        {$smarty.get.strLangue|upper}
-                    {else}
-                        {$defaultLang.iso|upper}
-                    {/if}
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="menu-language">
-                    {foreach $data as $item}
-                        <li>
-                            <a{if (isset($smarty.get.strLangue) && $item.iso eq $smarty.get.strLangue) || (!isset($smarty.get.strLangue) && $item.iso eq $defaultLang.iso)} class="active"{/if} href="/{$item.iso}/" hreflang="{$item.iso}" title="{#go_to_version#|ucfirst}: {$item.language}">
-                                {$item.iso|upper}
-                            </a>
-                        </li>
-                    {/foreach}
-                </ul>
+                <amp-accordion disable-session-states>
+                    <section>
+                        <header>
+                            <button class="btn btn-box btn-default" type="button">
+                                <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
+                                <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
+                                {if $smarty.get.strLangue}
+                                    {$smarty.get.strLangue|upper}
+                                {else}
+                                    {$defaultLang.iso|upper}
+                                {/if}
+                            </button>
+                        </header>
+                        <div>
+                            <ul class="list-unstyled">
+                                {foreach $data as $item}
+                                    <li>
+                                        <a{if (isset($smarty.get.strLangue) && $item.iso_lang eq $smarty.get.strLangue) || (!isset($smarty.get.strLangue) && $item.iso_lang eq $defaultLang.iso_lang)} class="active"{/if} href="/{$item.iso_lang}/amp/" hreflang="{$item.iso_lang}" title="{$item.name_lang}">
+                                            {$item.iso_lang|upper}
+                                        </a>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </section>
+                </amp-accordion>
             </div>
         {/if}
     {/if}

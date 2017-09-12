@@ -18,6 +18,7 @@
                     <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
                     <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#|ucfirst}</a></li>
                     <li role="presentation"><a href="#cat" aria-controls="cat" role="tab" data-toggle="tab">Catégories</a></li>
+                    <li role="presentation"><a href="#similar" aria-controls="similar" role="tab" data-toggle="tab">Similaires</a></li>
                 </ul>
             </header>
             <div class="panel-body panel-body-form">
@@ -56,6 +57,14 @@
                                 <button class="btn btn-main-theme" type="submit">{#save#|ucfirst}</button>
                             </div>
                         </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="similar">
+                        <p class="text-right">
+                            {#nbr_product_rel#|ucfirst}: {$productRel|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&product_id={$page.id_product}" title="{#add_product_rel#}" class="btn btn-link">
+                                <span class="fa fa-plus"></span> {#add_product_rel#|ucfirst}
+                            </a>
+                        </p>
+                        {include file="section/form/table-form-2.tpl" data=$productRel idcolumn='id_rel' activation=false sortable=$sortable controller="product" subcontroller="rel" edit=false search=false}
                     </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}

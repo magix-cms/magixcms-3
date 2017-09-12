@@ -1,0 +1,76 @@
+//
+// Social Share Buttons
+//
+.share-nav {
+	a {
+		display: block;
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+	.fa {
+		.square(20px);
+		font-size: 18px;
+		color: #fff;
+		text-align: center;
+		padding: 8px;
+
+		&:before {
+			vertical-align: middle;
+		}
+		&-google-plus:before {
+			font-size: 14px;
+			margin-top: 3px;
+			display: block;
+		}
+		&-viadeo:before {
+			position: relative;
+			top: -2px;
+		}
+	}
+
+	// --- set the background of the social share buttons
+	.share-buttons(flat,dark);
+}
+
+#sharebar {
+	background: @sharebar-bg;
+	padding: 18px 0;
+
+	.label {
+		color: @light-gray;
+		display: inline-block;
+		font-size: 21px;
+		padding: 0.2em 0 0.3em;
+		margin-right: 8px;
+		font-weight: 300;
+	}
+
+	ul {
+		display: inline-block;
+		li {
+			float: left;
+			& + li {
+				margin-left: 10px;
+			}
+		}
+	}
+
+	.followbox {
+		ul {
+			margin: 0 0 -6px;
+			li {
+				font-size: 20px;
+
+				a {
+					color: #555;
+
+					&:hover,&:active {
+						color: @main-color;
+					}
+				}
+			}
+		}
+	}
+}

@@ -480,3 +480,10 @@ CREATE TABLE IF NOT EXISTS `mc_seo_content` (
 
 ALTER TABLE `mc_seo_content`
   ADD CONSTRAINT `mc_seo_content_ibfk_1` FOREIGN KEY (`id_seo`) REFERENCES `mc_seo` (`id_seo`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_catalog_product_rel` (
+  `id_rel` int(11) NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) unsigned NOT NULL,
+  `id_product_2` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id_rel`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
