@@ -40,7 +40,7 @@ class backend_controller_theme extends backend_db_theme{
 			$this->type = $formClean->simpleClean($_POST['type']);
 		}
 		if (http_request::isPost('pages_id')) {
-			$this->id = $formClean->numeric($_POST['pages_id']);
+			$this->id = intval($formClean->numeric($_POST['pages_id']));
 		}
 
 		if(http_request::isPost('order')){
@@ -61,10 +61,11 @@ class backend_controller_theme extends backend_db_theme{
 	}
 
 	/**
-	 *
+	 * @param bool $links
+	 * @param bool $single
 	 */
-	private function setLinksData(){
-		$links = $this->getItems('links',null,'all',false);
+	private function setLinksData($links = false, $single = false){
+		$links = $links ? $links : $this->getItems('links',null,'all',false);
 		$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 		$arr = array();
 
@@ -78,14 +79,17 @@ class backend_controller_theme extends backend_db_theme{
 				'id_lang'    => $item['id_lang'],
 				'name_link'  => $item['name_link'],
 				'title_link' => $item['title_link'],
-				'url_link'   => $item['url_link']
+				'url_link'   => $item['url_link'],
+				'active_link'   => $item['active_link']
 			);
 			if($item['id_lang'] === $defaultLanguage['id_lang']) {
 				$arr[$item['id_link']]['name_link'] = $item['name_link'];
 			}
 		}
 
-		$this->template->assign('links',$arr);
+		$varName = $single ? 'link' : 'links';
+		$var = $single ? array_values($arr)[0] : $arr;
+		$this->template->assign($varName,$var);
 	}
 
 	/**
@@ -216,7 +220,8 @@ class backend_controller_theme extends backend_db_theme{
 						$this->add(array(
 							'type' => 'link',
 							'data' => array(
-								'type' => $this->type
+								'type' => $this->type,
+								'id_page' => $this->id ? $this->id : null
 							)
 						));
 
@@ -236,35 +241,29 @@ class backend_controller_theme extends backend_db_theme{
 									)
 								));
 							}
-
-							$this->getItems('link',$link['id_link']);
-							$display = $this->template->fetch('theme/loop/link.tpl');
-							$this->header->set_json_headers();
-							$this->message->json_post_response(true,'add',$display);
 						}
 						elseif (isset($this->id)) {
 							foreach ($langs as $lang) {
 								$page = $this->getItems($this->type,array('id' => $this->id,'id_lang' => $lang['id_lang']),'one',false);
-								var_dump(array('id' => $this->id,'id_lang' => $lang['id_lang']));
 
-								if($page != null) {
-									$this->add(array(
-										'type' => 'link_content',
-										'data' => array(
-											'id' => $link['id_link'],
-											'id_lang' => $lang['id_lang'],
-											'name_link' => $page['name'],
-											'url_link' => $this->public_url($this->type,$page,$lang)
-										)
-									));
-								}
+								$this->add(array(
+									'type' => 'link_content',
+									'data' => array(
+										'id' => $link['id_link'],
+										'id_lang' => $lang['id_lang'],
+										'name_link' => $page['name'] ? $page['name'] : null,
+										'url_link' => null
+									)
+								));
 							}
-
-							$this->getItems('link',$link['id_link']);
-							$display = $this->template->fetch('theme/loop/link.tpl');
-							$this->header->set_json_headers();
-							$this->message->json_post_response(true,'add',$display);
 						}
+
+						$this->modelLanguage->getLanguage();
+						$links = $this->getItems('link',$link['id_link'],'all',false);
+						$this->setLinksData($links,true);
+						$display = $this->template->fetch('theme/loop/link.tpl');
+						$this->header->set_json_headers();
+						$this->message->json_post_response(true,'add',$display);
 					}
                 	break;
                 case 'edit':

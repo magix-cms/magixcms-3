@@ -17,10 +17,11 @@ class backend_db_catalog{
                     		JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
                 }
                 elseif($config['type'] === 'category') {
-                    $sql = 'SELECT cat.url_cat, cat.id_cat, cat.id_lang,lang.iso_lang, cat.last_update
-                    FROM mc_catalog_cat_content AS cat
-                    JOIN mc_lang AS lang ON ( cat.id_lang = lang.id_lang )
-                    WHERE cat.published_cat =1 AND cat.id_lang = :id_lang';
+                    $sql = 'SELECT cat.*,c.url_cat, c.id_lang,lang.iso_lang, c.last_update
+                    FROM mc_catalog_cat AS cat
+                    JOIN mc_catalog_cat_content AS c ON ( c.id_cat = cat.id_cat )
+                    JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+                    WHERE c.published_cat =1 AND c.id_lang = :id_lang';
                     $params = $data;
                 }
                 elseif($config['type'] === 'product') {
@@ -30,6 +31,11 @@ class backend_db_catalog{
                     JOIN mc_catalog_product_content AS p ON ( c.id_product = p.id_product )
                     JOIN mc_lang AS lang ON ( p.id_lang = lang.id_lang )
                     WHERE c.default_c =1 AND cat.published_cat =1 AND p.published_p =1 AND p.id_lang = :id_lang';
+                    $params = $data;
+                }elseif ($config['type'] === 'images') {
+                    $sql = 'SELECT img.name_img
+                        FROM mc_catalog_product_img AS img
+                        WHERE img.id_product = :id';
                     $params = $data;
                 }
 

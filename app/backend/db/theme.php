@@ -56,13 +56,48 @@ class backend_db_theme{
         if(is_array($config)) {
             if($config['context'] === 'all') {
 				if ($config['type'] === 'links') {
-					$sql = 'SELECT *
+					$sql = "SELECT 
+								m.id_link as id_link, 
+								m.type_link as type_link, 
+								m.mode_link as mode_link, 
+								mc.id_lang, 
+								mc.name_link as name_link, 
+								mc.title_link as title_link,
+								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
+								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
 							FROM mc_menu as m
-							LEFT JOIN mc_menu_content as mc
-							ON m.id_link = mc.id_link
-							LEFT JOIN mc_lang as l
-							ON mc.id_lang = l.id_lang
-							ORDER BY m.order_link ASC';
+							LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
+							LEFT JOIN mc_lang as l ON mc.id_lang = l.id_lang
+							LEFT JOIN mc_cms_page as p ON m.id_page = p.id_pages AND m.type_link = 'pages'
+							LEFT JOIN mc_cms_page_content as pc ON p.id_pages = pc.id_pages AND pc.id_lang = l.id_lang
+							LEFT JOIN mc_about_page as ap ON m.id_page = ap.id_pages AND m.type_link = 'about_page'
+							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages AND apc.id_lang = l.id_lang
+							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
+							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
+							ORDER BY m.order_link ASC";
+				}
+				elseif ($config['type'] === 'link') {
+					//Return current skin
+					$sql = "SELECT 
+								m.id_link as id_link, 
+								m.type_link as type_link, 
+								m.mode_link as mode_link, 
+								mc.id_lang, 
+								mc.name_link as name_link, 
+								mc.title_link as title_link,
+								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
+								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
+							FROM mc_menu as m
+							LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
+							LEFT JOIN mc_lang as l ON mc.id_lang = l.id_lang
+							LEFT JOIN mc_cms_page as p ON m.id_page = p.id_pages AND m.type_link = 'pages'
+							LEFT JOIN mc_cms_page_content as pc ON p.id_pages = pc.id_pages AND pc.id_lang = l.id_lang
+							LEFT JOIN mc_about_page as ap ON m.id_page = ap.id_pages AND m.type_link = 'about_page'
+							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages AND apc.id_lang = l.id_lang
+							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
+							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
+							WHERE m.id_link = :id";
+					$params = $data;
 				}
 				elseif ($config['type'] === 'pages') {
 					$sql = 'SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
@@ -98,17 +133,6 @@ class backend_db_theme{
                     //Return current skin
                     $sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
                 }
-				elseif ($config['type'] === 'link') {
-					//Return current skin
-					$sql = 'SELECT *
-							FROM mc_menu as m
-							LEFT JOIN mc_menu_content as mc
-							ON m.id_link = mc.id_link
-							LEFT JOIN mc_lang as l
-							ON mc.id_lang = l.id_lang
-							WHERE m.id_link = :id';
-					$params = $data;
-				}
                 elseif ($config['type'] === 'newLink') {
 					//Return current skin
 					$sql = 'SELECT id_link FROM mc_menu ORDER BY id_link DESC LIMIT 0,1';
@@ -118,7 +142,7 @@ class backend_db_theme{
 							FROM mc_cms_page as p
 							LEFT JOIN mc_cms_page_content as pc
 							USING(id_pages)
-							WHERE id_lang = :idlang
+							WHERE id_lang = :id_lang
 							AND id_pages = :id
 							AND pc.published_pages = 1';
 					$params = $data;
@@ -128,7 +152,7 @@ class backend_db_theme{
 							FROM mc_about_page as p
 							LEFT JOIN mc_about_page_content as pc
 							USING(id_pages)
-							WHERE id_lang = :idlang
+							WHERE id_lang = :id_lang
 							AND id_pages = :id
 							AND pc.published_pages = 1';
 					$params = $data;
@@ -138,7 +162,7 @@ class backend_db_theme{
 							FROM mc_catalog_cat as p
 							LEFT JOIN mc_catalog_cat_content as pc
 							USING(id_cat)
-							WHERE id_lang = :idlang
+							WHERE id_lang = :id_lang
 							AND id_cat = :id
 							AND pc.published_cat = 1';
 					$params = $data;
@@ -160,8 +184,8 @@ class backend_db_theme{
 			$params = $data;
 
 			if ($config['type'] === 'link') {
-				$sql = "INSERT INTO `mc_menu`(type_link, order_link)  
-						SELECT :type,(MAX(order_link) + 1) FROM mc_menu";
+				$sql = "INSERT INTO `mc_menu`(type_link, id_page, order_link)  
+						SELECT :type, :id_page, (MAX(order_link) + 1) FROM mc_menu";
 			}
 			elseif ($config['type'] === 'link_content') {
 				$sql = 'INSERT INTO `mc_menu_content`(id_link,id_lang,name_link,url_link) 

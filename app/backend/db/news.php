@@ -79,7 +79,7 @@ class backend_db_news
                     $params = $data;
                 }
                 elseif ($config['type'] === 'sitemap') {
-                    $sql = "SELECT p.id_news,c.name_news,c.url_news,c.last_update,c.date_publish,c.published_news,lang.iso_lang
+                    $sql = "SELECT p.id_news,p.img_news,c.name_news,c.url_news,c.last_update,c.date_publish,c.published_news,lang.iso_lang
                             FROM mc_news AS p
                             JOIN mc_news_content AS c USING(id_news)
                             JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)

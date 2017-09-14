@@ -183,8 +183,14 @@ class xml_sitemap extends xml_factory_sitemap{
                     $this->xmlWriter()->startElement('url');// [2] Second Node
                     $this->xmlWriter()->writeElement('loc',form_inputFilter::isURL($setConfig['loc']));
                     if($setConfig['image'] != '' AND $setConfig['image'] != false AND is_array($setConfig['image'])){
-                        if(is_array($setConfig['image']['forimage'])){
-                            foreach($setConfig['image']['forimage'] as $img){
+                        if(is_array($setConfig['image'])){
+                            if(isset($setConfig['image']['loop'])){
+                                foreach($setConfig['image']['loop'] as $key){
+                                    $this->xmlWriter()->startElement('image:image');// [2] Second Node
+                                    $this->xmlWriter()->writeElement('image:loc',form_inputFilter::isURL($setConfig['image']['url'].$key));
+                                    $this->xmlWriter()->endElement();
+                                }
+                            }else{
                                 if($setConfig['image']['imageloc'] != NULL){
                                     $this->xmlWriter()->startElement('image:image');// [2] Second Node
                                     $this->xmlWriter()->writeElement('image:loc',form_inputFilter::isURL($setConfig['image']['url'].$setConfig['image']['imageloc']));
@@ -193,6 +199,7 @@ class xml_sitemap extends xml_factory_sitemap{
                             }
                         }
                     }
+                    $this->xmlWriter()->endElement();
                     break;
             }
         }

@@ -252,6 +252,15 @@ var globalForm = (function ($, undefined) {
                         nen.addClass('hide');
                     }
                     $(ul).append(d.result);
+                    console.log($(ul).find('[data-toggle="collapse"]'));
+                    $(ul).find('.collapse').collapse({toggle: false});
+                    $(ul).find('[data-toggle="collapse"]').off().on('click',function(e){
+                        e.preventDefault();
+                        var target_element= $(this).attr("href");
+                        console.log(target_element);
+                        $(target_element).collapse('toggle');
+                        return false;
+                    });
                 }
                 initValidation(controller,'.edit_in_list');
                 initModalActions();

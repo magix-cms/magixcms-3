@@ -129,7 +129,7 @@ class backend_db_pages
                         FROM mc_cms_page AS p WHERE p.img_pages IS NOT NULL';
                 }
                 elseif ($config['type'] === 'sitemap') {
-                    $sql = 'SELECT p.id_pages, c.name_pages, c.url_pages, lang.iso_lang, c.id_lang, c.last_update
+                    $sql = 'SELECT p.id_pages, p.img_pages, c.name_pages, c.url_pages, lang.iso_lang, c.id_lang, c.last_update
                         FROM mc_cms_page AS p
                         JOIN mc_cms_page_content AS c USING ( id_pages )
                         JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
