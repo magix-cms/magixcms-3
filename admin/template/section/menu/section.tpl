@@ -108,7 +108,7 @@
             </li>
         </ul>
     </li>
-    <li class="has-submenu{if $smarty.get.controller == 'setting' || $smarty.get.controller == 'files' || $smarty.get.controller == 'webservice' || $smarty.get.controller == 'domain' || $smarty.get.controller == 'seo'} active{/if}">
+    <li class="has-submenu{if $smarty.get.controller == 'setting' || $smarty.get.controller == 'theme' || $smarty.get.controller == 'files' || $smarty.get.controller == 'webservice' || $smarty.get.controller == 'domain' || $smarty.get.controller == 'seo'} active{/if}">
         <a href="#">
             <span class="fa fa-cog"></span> Configuration
         </a>
@@ -117,6 +117,13 @@
                 <li{if $smarty.get.controller == 'setting'} class="active"{/if}>
                     <a href="{geturl}/{baseadmin}/index.php?controller=setting">
                         <span class="fa fa-cog"></span> {#setting#}
+                    </a>
+                </li>
+            {/if}
+            {if {employee_access type="view" class_name="backend_controller_theme"} eq 1}
+                <li{if $smarty.get.controller == 'theme'} class="active"{/if}>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=theme">
+                        <span class="fa fa-desktop"></span> {#appearance#|ucfirst}
                     </a>
                 </li>
             {/if}

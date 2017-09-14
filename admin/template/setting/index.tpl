@@ -24,7 +24,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#general" aria-controls="info" role="tab" data-toggle="tab">Informations générale</a></li>
                 <li role="presentation"><a href="#cssinliner" aria-controls="cssinliner" role="tab" data-toggle="tab">css inliner</a></li>
-                <li role="presentation"><a href="#theme" aria-controls="theme" role="tab" data-toggle="tab">Thème</a></li>
+                {*<li role="presentation"><a href="#theme" aria-controls="theme" role="tab" data-toggle="tab">Thème</a></li>*}
                 <li role="presentation"><a href="#google" aria-controls="google" role="tab" data-toggle="tab">Google</a></li>
             </ul>
         </header>
@@ -39,9 +39,9 @@
                 <div role="tabpanel" class="tab-pane" id="cssinliner">
                     {include file="setting/form/cssinliner.tpl" controller="setting"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="theme">
+                {*<div role="tabpanel" class="tab-pane" id="theme">
                     {include file="setting/form/skin.tpl" controller="setting"}
-                </div>
+                </div>*}
                 <div role="tabpanel" class="tab-pane" id="google">
                     {include file="setting/form/google.tpl" controller="setting"}
                 </div>

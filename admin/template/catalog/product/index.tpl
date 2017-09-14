@@ -43,27 +43,17 @@
 
 {block name="foot" append}
     {capture name="scriptForm"}{strip}
-        /{baseadmin}/min/?f=
-        libjs/vendor/jquery-ui-1.12.min.js,
-        {baseadmin}/template/js/table-form.min.js,
-        {baseadmin}/template/js/product.min.js
+        /{baseadmin}/min/?f={baseadmin}/template/js/table-form.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
 
     <script type="text/javascript">
-        $(function(){
-            if (typeof tableForm == "undefined")
-            {
+        $(function() {
+            if (typeof tableForm == "undefined") {
                 console.log("tableForm is not defined");
-            }else{
+            } else {
                 tableForm.run();
             }
-            if (typeof product == "undefined")
-            {
-                console.log("product is not defined");
-            }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                product.run(controller);
-            }
+        });
     </script>
 {/block}

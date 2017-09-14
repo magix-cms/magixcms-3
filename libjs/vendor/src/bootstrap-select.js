@@ -82,24 +82,24 @@
             $select.select($(this.structure.$selected));
         }
 
-        this.structure.$display.on('click', function(e) {
+        this.structure.$display.off().on('click', function(e) {
             e.preventDefault();
             $select.toggle();
         });
 
-        this.structure.$items.on('click', function(){
+        this.structure.$items.off().on('click', function(){
             $select.select($(this));
         });
 
         if ( this.options.cancelbtn ) {
-            this.structure.$cancel.on('click', function (e) {
+            this.structure.$cancel.off().on('click', function (e) {
                 e.preventDefault();
                 $select.toggle('close');
             });
         }
 
         if ( this.options.clearbtn ) {
-            this.structure.$clear.on('click', function (e) {
+            this.structure.$clear.off().on('click', function (e) {
                 $select.clear(e);
             });
         }
@@ -216,6 +216,11 @@
         if (this.structure.$selected.data('value') != undefined) {
             this.updateDisplay('select');
         }
+    }
+
+    DropdownSelect.prototype.reset = function() {
+        this.structure = $.extend({}, this.parts());
+        this.init();
     }
 
     DropdownSelect.prototype.updateDisplay = function( mode, selected ) {

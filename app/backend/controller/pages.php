@@ -126,6 +126,7 @@ class backend_controller_pages extends backend_db_pages
                 'iso_lang'          => $page['iso_lang'],
                 'name_pages'        => $page['name_pages'],
                 'url_pages'         => $page['url_pages'],
+                'resume_pages'      => $page['resume_pages'],
                 'content_pages'     => $page['content_pages'],
                 'seo_title_pages'   => $page['seo_title_pages'],
                 'seo_desc_pages'    => $page['seo_desc_pages'],
@@ -484,6 +485,7 @@ class backend_controller_pages extends backend_db_pages
                 $assign = array(
                     'id_pages',
                     'name_pages' => ['title' => 'name'],
+                    'resume_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
                     'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
                     'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
                     'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
@@ -500,6 +502,7 @@ class backend_controller_pages extends backend_db_pages
                             'id_pages',
                             'name_pages' => ['title' => 'name'],
                             'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
+                            'resume_pages' => ['type' => 'bin', 'input' => null],
                             'content_pages' => ['type' => 'bin', 'input' => null],
                             'seo_title_pages' => ['title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null],
                             'seo_desc_pages' => ['title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null],
@@ -508,7 +511,7 @@ class backend_controller_pages extends backend_db_pages
                         );
                     }
                 }
-                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
                 $this->template->display('pages/index.tpl');
             }
         }

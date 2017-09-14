@@ -166,11 +166,6 @@ class frontend_model_template{
 		}else{
 			$theme = 'default';
 		}
-		if($this->amp) {
-			if(file_exists(component_core_system::basePath().'/skin/'.$theme.'/amp/')){
-				$theme = $theme.'/amp/';
-			}
-		}
 		return $theme;
 	}
 
@@ -235,6 +230,12 @@ class frontend_model_template{
      * @param object $parent
      */
     public function display($template = null, $cache_id = null, $compile_id = null, $parent = null){
+    	$theme = $this->themeSelected();
+		if($this->amp) {
+			if(file_exists(component_core_system::basePath().'/skin/'.$theme.'/amp/'.$template)){
+				$template = 'amp/'.$template;
+			}
+		}
         if(!self::isCached($template, $cache_id, $compile_id, $parent)){
             frontend_model_smarty::getInstance()->display($template, $cache_id, $compile_id, $parent);
         }else{

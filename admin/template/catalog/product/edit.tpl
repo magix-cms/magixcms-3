@@ -64,7 +64,7 @@
                                 <span class="fa fa-plus"></span> {#add_product_rel#|ucfirst}
                             </a>
                         </p>
-                        {include file="section/form/table-form-2.tpl" data=$productRel idcolumn='id_rel' activation=false sortable=$sortable controller="product" subcontroller="rel" edit=false search=false}
+                        {include file="section/form/table-form-2.tpl" data=$productRel idcolumn='id_rel' activation=false sortable=$sortable controller="product" subcontroller="similar" edit=false search=false}
                     </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}

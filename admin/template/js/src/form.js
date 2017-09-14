@@ -239,6 +239,24 @@ var globalForm = (function ($, undefined) {
                 initModalActions();
             };
         }
+        // --- Rules for add form that add the new record into the associated list
+        else if($(f).hasClass('add_to_ullist')) {
+            options.resetForm = true;
+            options.success = function (d) {
+                sub = $(f).data('sub') == '' ? false : $(f).data('sub');
+                initAlert(d.notify,4000,sub);
+                if(d.statut && d.result) {
+                    var ul = $(f).next().find('ul');
+                    var nen = $('#no-entry');
+                    if(!nen.hasClass('hide')) {
+                        nen.addClass('hide');
+                    }
+                    $(ul).append(d.result);
+                }
+                initValidation(controller,'.edit_in_list');
+                initModalActions();
+            };
+        }
         // --- Rules for edit form that edit a record into a table list
         else if($(f).hasClass('edit_in_list')) {
             options.success = function (data) {
@@ -414,10 +432,9 @@ var globalForm = (function ($, undefined) {
     function displayContent(content,contc,$boxes) {
         if (content != null && content.length > 0) {
             // *** Adding content to the dedicated container(s)
-
             if(contc.indexOf('|') === -1 && !Array.isArray(content)) {
                 var targ = $(contc),
-                    $def = targ.children('.default');
+                    $def = targ.find('.default');
                 targ.empty();
                 if($def != null && $def != undefined) {
                     var dflt = $def.clone();
@@ -430,15 +447,33 @@ var globalForm = (function ($, undefined) {
                 for(var c = 0; c < contc.length; c++) {
                     var targ = $(contc[c]),
                         $def = targ.children('.default');
-                    targ.empty();
-                    if($def != null && $def != undefined) {
-                        var dflt = $def.clone();
-                        targ.append(dflt);
+                    if(targ.hasClass('selectpicker')) {
+                        var list = targ.find('.list-to-filter ul');
+                        list.empty();
+                        if($def != null && $def != undefined) {
+                            var dflt = $def.clone();
+                            list.append(dflt);
+                        }
+                        if(Array.isArray(content))
+                            list.append(content[c]);
+                        else
+                            list.append(content);
+
+                        //targ.off();
+                        //targ.removeData('bs.dropdownselect');
+                        targ.bootstrapSelect('reset');
                     }
-                    if(Array.isArray(content))
-                        targ.append(content[c]);
-                    else
-                        targ.append(content);
+                    else {
+                        targ.empty();
+                        if($def != null && $def != undefined) {
+                            var dflt = $def.clone();
+                            targ.append(dflt);
+                        }
+                        if(Array.isArray(content))
+                            targ.append(content[c]);
+                        else
+                            targ.append(content);
+                    }
                 }
             }
 

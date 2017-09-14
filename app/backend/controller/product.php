@@ -42,6 +42,10 @@ class backend_controller_product extends backend_db_product
         if (http_request::isGet('product_id')) {
             $this->product_id = $formClean->numeric($_GET['product_id']);
         }
+        #similar
+        if (http_request::isPost('product_id')) {
+            $this->id_product_2 = $formClean->numeric($_POST['product_id']);
+        }
 		// --- ADD or EDIT
 		if (http_request::isPost('id')) {
 			$this->id_product = $formClean->simpleClean($_POST['id']);
@@ -65,7 +69,13 @@ class backend_controller_product extends backend_db_product
 			$this->img_multiple = ($_FILES['img_multiple']["name"]);
 		}
 		if (http_request::isPost('imgData')) {
-			$this->imgData = $formClean->arrayClean($_POST['imgData']);
+            $array = $_POST['imgData'];
+            foreach ($array as $key => $arr) {
+                foreach ($arr as $k => $v) {
+                    $array[$key][$k] = $formClean->simpleClean($v);
+                }
+            }
+            $this->imgData = $array;
 		}
 		if (http_request::isPost('product_cat')) {
 			$this->product_cat = $formClean->simpleClean($_POST['product_cat']);
@@ -76,10 +86,7 @@ class backend_controller_product extends backend_db_product
 		if (http_request::isPost('default_cat')) {
 			$this->default_cat = $formClean->numeric($_POST['default_cat']);
 		}
-		#similar
-        if (http_request::isPost('id_product_2')) {
-            $this->id_product_2 = $formClean->numeric($_POST['id_product_2']);
-        }
+
 		# ORDER PAGE
 		if(http_request::isPost('image')){
 			$this->order = $formClean->arrayClean($_POST['image']);
@@ -151,6 +158,32 @@ class backend_controller_product extends backend_db_product
 		return $arr;
 	}
 
+    /**
+     * @param $data
+     * @return array
+     */
+    private function setItemsImgData($data){
+        $arr = array();
+
+        foreach ($data as $page) {
+
+            if (!array_key_exists($page['id_img'], $arr)) {
+                $arr[$page['id_img']] = array();
+                $arr[$page['id_img']]['id_img'] = $page['id_img'];
+                $arr[$page['id_img']]['id_product'] = $page['id_product'];
+                $arr[$page['id_img']]['name_img'] = $page['name_img'];
+            }
+            if($page['id_lang'] != null) {
+                $arr[$page['id_img']]['content'][$page['id_lang']] = array(
+                    'id_lang' => $page['id_lang'],
+                    'iso_lang' => $page['iso_lang'],
+                    'alt_img' => $page['alt_img'],
+                    'title_img' => $page['title_img']
+                );
+            }
+        }
+        return $arr;
+    }
 	/**
 	 * @return array
 	 */
@@ -203,6 +236,7 @@ class backend_controller_product extends backend_db_product
 		switch($data['type']){
 			case 'newPages':
 			case 'newContent':
+            case 'newImgContent':
 			case 'newImg':
 				parent::insert(
 					array(
@@ -219,6 +253,14 @@ class backend_controller_product extends backend_db_product
 					$data['data']
 				);
 				break;
+            case 'newProductRel':
+                parent::insert(
+                    array(
+                        'type' => 'productRel'
+                    ),
+                    $data['data']
+                );
+                break;
 		}
 	}
 
@@ -231,7 +273,8 @@ class backend_controller_product extends backend_db_product
 		switch ($data['type']) {
 			case 'product':
 			case 'content':
-			case 'img':
+            case 'imgContent':
+			//case 'img':
 			case 'firstImageDefault':
 			case 'catRel':
 				parent::update(
@@ -370,6 +413,14 @@ class backend_controller_product extends backend_db_product
 					$data['data']
 				);
 				break;
+            case 'productRel':
+                parent::delete(
+                    array(
+                        'type' => $data['type']
+                    ),
+                    $data['data']
+                );
+                break;
 		}
 	}
 
@@ -413,11 +464,25 @@ class backend_controller_product extends backend_db_product
 						$this->header->set_json_headers();
 						$this->message->json_post_response(true, 'add_redirect');
 					}elseif(isset($this->product_id)){
+                        if(isset($this->id_product_2)){
 
-                        $this->modelLanguage->getLanguage();
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                        $this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all','products');
-                        $this->template->display('catalog/product/add-similar.tpl');
+                            $this->add(array(
+                                'type' => 'newProductRel',
+                                'data' => array(
+                                    'id_product'    => $this->id_product,
+                                    'id_product_2'  => $this->id_product_2,
+                                )
+                            ));
+
+                            $this->header->set_json_headers();
+                            $this->message->json_post_response(true, 'add_redirect');
+
+                        }else{
+                            $this->modelLanguage->getLanguage();
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                            $this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all','products');
+                            $this->template->display('catalog/product/add-similar.tpl');
+                        }
 
                     } else {
 						$this->modelLanguage->getLanguage();
@@ -544,19 +609,42 @@ class backend_controller_product extends backend_db_product
 					}
 					elseif (isset($this->editimg)) {
 						if (isset($this->id_img)) {
-							$this->upd(array(
-								'type' => 'img',
-								'data' => array(
-									'id_img' => $this->id_img,
-									'alt_img' => !empty($this->imgData['alt_img']) ? $this->imgData['alt_img'] : NULL,
-									'title_img' => !empty($this->imgData['title_img']) ? $this->imgData['title_img'] : NULL
-								)
-							));
+                            foreach ($this->imgData as $lang => $content) {
+
+                                $content['id_img'] = $this->id_img;
+                                $content['id_lang'] = $lang;
+
+                                $checkLangData = parent::fetchData(
+                                    array('context' => 'one', 'type' => 'imgContent'),
+                                    array('id_img' => $this->id_img, 'id_lang' => $lang)
+                                );
+
+                                // Check language page content
+                                if ($checkLangData != null) {
+                                    $this->upd(array(
+                                        'type' => 'imgContent',
+                                        'data' => $content
+                                    ));
+                                }
+                                else {
+                                    $this->add(array(
+                                        'type' => 'newImgContent',
+                                        'data' => $content
+                                    ));
+                                }
+                            }
 							$this->header->set_json_headers();
 							$this->message->json_post_response(true, 'add_redirect');
+
 						}
 						else {
-							$this->getItems('img',$this->editimg);
+                            $this->modelLanguage->getLanguage();
+                            $setEditData = parent::fetchData(
+                                array('context' => 'all', 'type' => 'imgData'),
+                                array('edit' => $this->editimg)
+                            );
+                            $setEditData = $this->setItemsImgData($setEditData);
+                            $this->template->assign('img', $setEditData[$this->editimg]);
 							$this->template->display('catalog/product/edit-img.tpl');
 						}
 					}
@@ -676,6 +764,18 @@ class backend_controller_product extends backend_db_product
 									$this->header->set_json_headers();
 									$this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
 									break;
+                                case 'similar':
+                                    $this->del(
+                                        array(
+                                            'type' => 'productRel',
+                                            'data' => array(
+                                                'id' => $this->id_product
+                                            )
+                                        )
+                                    );
+                                    $this->header->set_json_headers();
+                                    $this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
+                                    break;
 							}
 						}
 						else {

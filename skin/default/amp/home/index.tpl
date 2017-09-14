@@ -1,5 +1,5 @@
-{extends file="layout.tpl"}
-{block name="stylesheet"}{fetch file="skin/{template}css/home.min.css"}{/block}
+{extends file="amp/layout.tpl"}
+{block name="stylesheet"}{fetch file="skin/{template}/amp/css/home.min.css"}{/block}
 {block name='body:id'}home{/block}
 {block name='article:content'}
     <div class="container">

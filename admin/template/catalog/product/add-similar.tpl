@@ -25,8 +25,29 @@
         </div>
     {/if}
 {/block}
-{block name="foot" append}
-    {include file="section/footer/editor.tpl"}
+{block name="foot"}
+    {script src="/{baseadmin}/min/?g=publicjs,globalize,jimagine" type="javascript"}
+    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/global.min.js,libjs/vendor/jquery.formatter.min.js" type="javascript"}
+    {script src="/{baseadmin}/min/?f={baseadmin}/template/js/form.min.js" type="javascript"}
+    <script type="text/javascript">
+        $.jmRequest.notifier = {
+            cssClass : '.mc-message'
+        };
+        var editor_version = "{$smarty.const.VERSION_EDITOR}";
+        var baseadmin = "{baseadmin}";
+        var iso = "{iso}";
+
+        $(function(){
+            if (typeof globalForm == "undefined")
+            {
+                console.log("globalForm is not defined");
+            }else{
+                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&action=edit&edit={$smarty.get.product_id}";
+                globalForm.run(controller);
+            }
+        });
+    </script>
+
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         libjs/vendor/tabcomplete.min.js,

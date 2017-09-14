@@ -88,6 +88,6 @@
         </a>
     </div>*}
     <div class="footer-creator powered">
-        {include file="section/footer/powered.tpl"}
+        {include file="amp/section/footer/powered.tpl"}
     </div>
 </div>

@@ -56,7 +56,9 @@ var product = (function ($, undefined) {
                             $('.block-img').html(d.result);
                             globalForm.initModals();
                             tableForm.run();
+                            $('.block-img').find('.img-zoom').fancybox();
                             initDefaultImg(edit);
+                            initSortable(edit);
                         }
                     });
                 }
@@ -234,6 +236,29 @@ var product = (function ($, undefined) {
         });
     }
 
+    function initSortable(edit) {
+        $( ".row.sortable" ).sortable({
+            items: "> div",
+            cursor: "move",
+            update: function(){
+                var serial = $( ".sortable" ).sortable('serialize');
+                $.jmRequest({
+                    handler: "ajax",
+                    url: '/admin/index.php?controller=product&edit='+edit+'&action=orderImages',
+                    method: 'POST',
+                    data : serial,
+                    success:function(e){
+                        $.jmRequest.initbox(e,{
+                                display: false
+                            }
+                        );
+                    }
+                });
+            }
+        });
+        $( ".row.sortable" ).disableSelection();
+    }
+
     return {
         run: function(globalForm,tableForm,edit){
             $('.progress').hide();
@@ -271,26 +296,7 @@ var product = (function ($, undefined) {
                 }
             });
 
-            $( ".row.sortable" ).sortable({
-                items: "> div",
-                cursor: "move",
-                update: function(){
-                    var serial = $( ".sortable" ).sortable('serialize');
-                    $.jmRequest({
-                        handler: "ajax",
-                        url: '/admin/index.php?controller=product&edit='+edit+'&action=orderImages',
-                        method: 'POST',
-                        data : serial,
-                        success:function(e){
-                            $.jmRequest.initbox(e,{
-                                    display: false
-                                }
-                            );
-                        }
-                    });
-                }
-            });
-            $( ".row.sortable" ).disableSelection();
+            initSortable(edit);
         },
         runAdd: function(){
             if($('#product_id').val() != ''){

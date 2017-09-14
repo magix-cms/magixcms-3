@@ -125,7 +125,9 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_webservice', 'webservice'),
 (NULL, 'backend_controller_category', 'category'),
 (NULL, 'backend_controller_catalog', 'catalog'),
-(NULL, 'backend_controller_product', 'product');
+(NULL, 'backend_controller_product', 'product'),
+(NULL, 'backend_controller_seo', 'seo'),
+(NULL, 'backend_controller_theme', 'theme');
 
 CREATE TABLE IF NOT EXISTS `mc_setting` (
   `id_setting` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -218,6 +220,7 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
   `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
   `name_pages` varchar(150) DEFAULT NULL,
   `url_pages` varchar(150) DEFAULT NULL,
+  `resume_pages` text,
   `content_pages` text,
   `seo_title_pages` varchar(180) DEFAULT NULL,
   `seo_desc_pages` varchar(180) DEFAULT NULL,
@@ -299,6 +302,7 @@ CREATE TABLE IF NOT EXISTS `mc_about_page_content` (
   `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
   `name_pages` varchar(150) DEFAULT NULL,
   `url_pages` varchar(150) DEFAULT NULL,
+  `resume_pages` text,
   `content_pages` text,
   `seo_title_pages` varchar(180) DEFAULT NULL,
   `seo_desc_pages` varchar(180) DEFAULT NULL,
@@ -306,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `mc_about_page_content` (
   `published_pages` smallint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`),
   KEY `id_pages` (`id_pages`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `mc_about_page`
   ADD CONSTRAINT `mc_about_page_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_about_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -327,6 +331,7 @@ CREATE TABLE IF NOT EXISTS `mc_news_content` (
   `id_lang` smallint(3) unsigned NOT NULL,
   `name_news` varchar(150) DEFAULT NULL,
   `url_news` varchar(150) DEFAULT NULL,
+  `resume_news` text,
   `content_news` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_publish` timestamp NULL DEFAULT NULL,
@@ -374,6 +379,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_cat_content` (
   `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
   `name_cat` varchar(150) DEFAULT NULL,
   `url_cat` varchar(150) DEFAULT NULL,
+  `resume_cat` text,
   `content_cat` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published_cat` smallint(1) unsigned NOT NULL DEFAULT '0',
@@ -413,6 +419,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_content` (
   `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
   `name_p` varchar(125) DEFAULT NULL,
   `url_p` varchar(125) DEFAULT NULL,
+  `resume_p` text,
   `content_p` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published_p` smallint(1) unsigned NOT NULL DEFAULT '0',
@@ -437,6 +444,21 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_img` (
 
 ALTER TABLE `mc_catalog_product_img`
   ADD CONSTRAINT `mc_catalog_product_img_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `mc_catalog_product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_catalog_product_img_content` (
+  `id_content` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_img` int(11) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL,
+  `alt_img` varchar(35) DEFAULT NULL,
+  `title_img` varchar(35) DEFAULT NULL,
+  PRIMARY KEY (`id_content`),
+  KEY `id_img` (`id_img`,`id_lang`),
+  KEY `id_lang` (`id_lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_catalog_product_img_content`
+  ADD CONSTRAINT `mc_catalog_product_img_content_ibfk_2` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang` (`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `mc_catalog_product_img_content_ibfk_1` FOREIGN KEY (`id_img`) REFERENCES `mc_catalog_product_img` (`id_img`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_catalog` (
   `id_catalog` int(11) unsigned NOT NULL AUTO_INCREMENT,

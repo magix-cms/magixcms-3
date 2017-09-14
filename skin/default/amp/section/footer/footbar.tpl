@@ -30,7 +30,7 @@
             </header>
             <div>
                 <ul class="list-unstyled share-nav" aria-labelledby="menu-share">
-                    {include file="section/loop/share.tpl" data=$shareData}
+                    {include file="amp/section/loop/share.tpl" data=$shareData}
                 </ul>
             </div>
         </section>
