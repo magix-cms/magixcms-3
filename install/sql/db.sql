@@ -509,3 +509,24 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_rel` (
   `id_product_2` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_rel`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_menu` (
+  `id_link` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type_link` enum('home','pages','about','about_page','catalog','category','news','contact','plugin') NOT NULL,
+  `id_page` int(10) unsigned DEFAULT NULL,
+  `mode_link` enum('simple','dropdown','mega') NOT NULL DEFAULT 'simple',
+  `order_link` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_link`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_menu_content` (
+  `id_link_content` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_link` int(10) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL,
+  `name_link` varchar(50) DEFAULT NULL,
+  `title_link` varchar(180) DEFAULT NULL,
+  `url_link` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id_link_content`),
+  KEY `id_link` (`id_link`),
+  KEY `id_lang` (`id_lang`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
