@@ -14,32 +14,4 @@
         {/if}
     </nav>
 </header>
-<amp-sidebar id="sidebar1" layout="nodisplay" side="left">
-    <div class="sidebar">
-        <header>
-            <div role="button" aria-label="close sidebar" on="tap:sidebar1.toggle" tabindex="0" class="close-sidebar"><i class="material-icons">close</i></div>
-            Navigation
-        </header>
-        <ul class="menu list-unstyled">
-            <li><a href="#">Example 1</a></li>
-            <li><a href="#">Example 2</a></li>
-            <li>
-                <amp-accordion disable-session-states>
-                    <section>
-                        <h4><a href="#">Example 3</a></h4>
-                        <amp-accordion class="nested-accordion">
-                            <section>
-                                <h4>Nested Section 2.1</h4>
-                                <p>Bunch of content.</p>
-                            </section>
-                            <section>
-                                <h4>Nested Section 2.2</h4>
-                                <p>Bunch of more content.</p>
-                            </section>
-                        </amp-accordion>
-                    </section>
-                </amp-accordion>
-            </li>
-        </ul>
-    </div>
-</amp-sidebar>
+{include file="amp/section/menu/sidebar.tpl"}

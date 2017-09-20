@@ -100,30 +100,45 @@ class backend_db_theme{
 					$params = $data;
 				}
 				elseif ($config['type'] === 'pages') {
-					$sql = 'SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
-							FROM mc_cms_page as p
-							LEFT JOIN mc_cms_page_content as pc
-							USING(id_pages)
-							WHERE id_lang = :idlang
-							AND p.menu_pages = 1';
-					$params = $data;
+					$sql = 'SELECT * FROM (
+							SELECT p.id_pages AS id, p.id_parent AS parent, pc.name_pages AS name
+							FROM mc_cms_page AS p
+							LEFT JOIN mc_cms_page_content AS pc
+							USING ( id_pages ) 
+							LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
+							WHERE p.menu_pages =1
+							AND pc.published_pages =1
+							ORDER BY p.id_pages ASC , l.default_lang ASC
+							) as pt
+							GROUP BY pt.id';
+					// $params = $data;
 				}
 				elseif ($config['type'] === 'about_page') {
-					$sql = 'SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
+					$sql = 'SELECT * FROM (
+							SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
 							FROM mc_about_page as p
 							LEFT JOIN mc_about_page_content as pc
 							USING(id_pages)
-							WHERE id_lang = :idlang
-							AND p.menu_pages = 1';
-					$params = $data;
+							LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
+							WHERE p.menu_pages =1
+							AND pc.published_pages =1
+							ORDER BY p.id_pages ASC , l.default_lang ASC
+							) as pt
+							GROUP BY pt.id';
+					// $params = $data;
 				}
 				elseif ($config['type'] === 'category') {
-					$sql = 'SELECT p.id_cat as id, p.id_parent as parent, pc.name_cat as name
+					$sql = 'SELECT * FROM (
+							SELECT p.id_cat as id, p.id_parent as parent, pc.name_cat as name
 							FROM mc_catalog_cat as p
 							LEFT JOIN mc_catalog_cat_content as pc
 							USING(id_cat)
-							WHERE id_lang = :idlang';
-					$params = $data;
+							LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
+							WHERE pc.published_cat =1
+							ORDER BY p.id_cat ASC , l.default_lang ASC
+							) as pt
+							GROUP BY pt.id';
+					// $params = $data;
 				}
 
 				return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
@@ -209,6 +224,19 @@ class backend_db_theme{
             if ($config['type'] === 'theme') {
                 $sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
             }
+			elseif ($config['type'] === 'link') {
+				$sql = 'UPDATE mc_menu 
+						SET mode_link = :mode_link
+						WHERE id_link = :id';
+			}
+			elseif ($config['type'] === 'link_content') {
+				$sql = 'UPDATE mc_menu_content 
+						SET 
+							name_link = :name_link,
+							title_link = :title_link
+						WHERE id_link = :id
+						AND id_lang = :id_lang';
+			}
 			elseif ($config['type'] === 'order') {
 				$sql = 'UPDATE mc_menu 
 						SET order_link = :order_link
@@ -218,4 +246,22 @@ class backend_db_theme{
 			if($sql && $params) component_routing_db::layer()->update($sql,$params);
         }
     }
+
+	/**
+	 * @param $config
+	 * @param bool $data
+	 */
+	public function delete($config,$data = false)
+	{
+		if (is_array($config)) {
+			$sql = '';
+
+			if($config['type'] === 'link'){
+				$sql = 'DELETE FROM mc_menu 
+						WHERE id_link IN ('.$data['id'].')';
+			}
+
+			if($sql) component_routing_db::layer()->delete($sql,array());
+		}
+	}
 }

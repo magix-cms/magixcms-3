@@ -19,7 +19,7 @@
     }
 
     .style (@style, @hover, @colors) when (@hover = same) {
-        &, &:hover {
+        &, &:focus {
             .soc-bg (@style, @colors);
         }
     }
@@ -28,7 +28,7 @@
         &{
             .soc-bg (@style, @colors);
         }
-        &:hover {
+        &:focus {
             .soc-bg (@style, @dark);
         }
     }
@@ -37,7 +37,7 @@
         &{
             .soc-bg (@style, @colors);
         }
-        &:hover {
+        &:focus {
             .soc-bg (@style, @light);
         }
     }

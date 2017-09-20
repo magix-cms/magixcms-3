@@ -1,14 +1,20 @@
 {if $type eq 'head'}
-    {if is_array($data) && !empty($data)}
-        {if $smarty.server.SCRIPT_NAME === '/index.php'}
-            <link rel="alternate" href="{geturl}" hreflang="x-default" />
-            {foreach $data as $item}
-                <link rel="alternate" href="{geturl}/{$item.iso}/" hreflang="{$item.iso}" />
-            {/foreach}
+{if is_array($data) && !empty($data)}
+   {foreach $data as $k => $lang}
+        {if isset($hreflang) && is_array($hreflang) && isset($hreflang[$lang.id_lang])}
+            {$data[$k]['url'] = "{geturl}{$hreflang[$lang.id_lang]|replace:{'/'|cat:{$lang.iso_lang}|cat:'/'}:{'/'|cat:{$lang.iso_lang}|cat:'/amp/'}}"}
+        {else}
+            {$data[$k]['url'] = "{geturl}/{$lang.iso_lang}/amp/"}
         {/if}
+    {/foreach}
+    <link rel="canonical" href="{geturl}{$smarty.server.REQUEST_URI|replace:'amp/':''}">
+    {if is_null($smarty.get.controller)}
+    <link rel="alternate" href="{geturl}amp/" hreflang="x-default" />
     {/if}
-{elseif $type eq 'cannonical'}
-    <link rel="canonical" href="{geturl}{$smarty.server.REQUEST_URI|replace:'amp/':''}" />
+{foreach $data as $item}
+    <link rel="alternate" href="{$item.url}" hreflang="{$item.iso_lang}" />
+{/foreach}
+{/if}
 {elseif $type eq 'nav'}
     {if is_array($data) && !empty($data)}
         {if $display eq 'list'}

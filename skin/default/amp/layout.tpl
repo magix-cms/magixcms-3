@@ -8,7 +8,7 @@
     {strip}
         {* Language link hreflang *}
         {widget_lang_data assign="dataLangHead"}
-        {include file="amp/section/loop/lang.tpl" data=$dataLangHead type="cannonical"}
+        {include file="amp/section/loop/lang.tpl" data=$dataLangHead type="head"}
     {/strip}
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     {include file="amp/section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,600,400italic','Raleway'=>'300,500']}
@@ -21,6 +21,7 @@
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
     <script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"></script>
+    {block name="amp-script"}{/block}
 </head>
 <body id="{block name='body:id'}layout{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
 {*{include file="amp/section/brick/cookie-consent.tpl"}*}
@@ -35,7 +36,6 @@
                 {block name='article:content'}{/block}
             </article>
         {/block}
-        {block name="aside"}{/block}
         {block name="article:after"}{/block}
     </main>
 {/block}

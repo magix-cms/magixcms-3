@@ -16,17 +16,12 @@
 		color: @color;
 		#gradient .directional(@dark-bg-1, @dark-bg-2);
 	}
-	&:hover {
-		color: @color;
-		#gradient .directional(@dark-bg-1, @dark-bg-2);
-	}
 	&:active,
 	&.active,
 	.open > .dropdown-toggle& {
 		color: @color;
 		#gradient .directional(@dark-bg-1, @dark-bg-2);
 
-		&:hover,
 		&:focus,
 		&.focus {
 			color: @color;
@@ -42,7 +37,6 @@
 	&[disabled],
 	fieldset[disabled] & {
 		&,
-		&:hover,
 		&:focus,
 		&.focus,
 		&:active,
@@ -98,7 +92,7 @@
 					transition: 0.25s;
 				}
 
-				&:hover {
+				&:focus, &:active {
 					background-color: transparent;
 					border-color: extract(@color, 3);
 					color: @txt-color;

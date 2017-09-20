@@ -24,7 +24,7 @@
 		a {
 			color: @text-color;
 
-			&:hover {
+			&:focus, &:active {
 				text-decoration: underline;
 				color: @main-color;
 			}
@@ -59,7 +59,7 @@
 				color: @text-color;
 				background-color: transparent;
 
-				&:focus, &:active, &:hover {
+				&:focus, &:active {
 					background-color: transparent;
 					color: @main-color;
 				}

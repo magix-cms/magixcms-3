@@ -1,7 +1,7 @@
 <?php
 class backend_controller_category extends backend_db_category {
     public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent,$routingUrl;
 
     public $id_cat,$parent_id,$content,$category,$img;
 
@@ -16,6 +16,7 @@ class backend_controller_category extends backend_db_category {
         $this->collectionLanguage = new component_collections_language();
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
+        $this->routingUrl = new component_routing_url();
         // --- GET
 
         if (http_request::isGet('edit')) {
@@ -115,7 +116,14 @@ class backend_controller_category extends backend_db_category {
 
         foreach ($data as $page) {
 
-            $publicUrl = !empty($page['url_cat']) ? '/'.$page['iso_lang'].'/'.$page['id_cat'].'-'.$page['url_cat'].'/' : '';
+            $publicUrl = !empty($page['url_cat']) ? $this->routingUrl->getBuildUrl(array(
+                    'type'      =>  'category',
+                    'iso'       =>  $page['iso_lang'],
+                    'id'        =>  $page['id_cat'],
+                    'url'       =>  $page['url_cat']
+                )
+            ) : '';
+
             if (!array_key_exists($page['id_cat'], $arr)) {
                 $arr[$page['id_cat']] = array();
                 $arr[$page['id_cat']]['id_cat'] = $page['id_cat'];

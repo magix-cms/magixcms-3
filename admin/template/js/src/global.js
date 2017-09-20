@@ -78,7 +78,7 @@ $(function()
     });
 
     //Dropdown lang & bootstrapToggle
-    $('.dropdown-lang a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    /*$('.dropdown-lang a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $('.dropdown-menu li.active').removeClass('active');
         $(this).parent('li').addClass('active');
         $('.dropdown .lang').text($(this).text());
@@ -87,5 +87,5 @@ $(function()
         }).each(function(){
             $(this).bootstrapToggle();
         });
-    });
+    });*/
 });

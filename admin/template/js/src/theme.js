@@ -32,11 +32,11 @@ var theme = (function ($, undefined) {
     function initSortable() {
         $( ".sortable" ).sortable({
             items: "> li",
-            axis: "y",
+            handle: "header .fa-arrows",
             cursor: "move",
-            placeholder: "ui-state-highlight",
+            placeholder: "list-group-item list-group-item-default",
             update: function(){
-                var serial = $( ".sortable" ).sortable('serialize');
+                var serial = $( ".sortable" ).sortable('serialize', { key: "order[]" });
                 $.jmRequest({
                     handler: "ajax",
                     url: '/admin/index.php?controller=theme&action=order',
@@ -56,7 +56,7 @@ var theme = (function ($, undefined) {
     return {
         run: function (controller, btnData) {
             UpdateSkin(controller,btnData);
-            initSortable(); 
+            initSortable();
         }
     }
 })(jQuery);

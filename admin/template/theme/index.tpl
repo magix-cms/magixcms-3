@@ -35,6 +35,7 @@
         {*<pre>{$settings|print_r}</pre>*}
     </section>
 </div>
+{include file="modal/delete.tpl" data_type='theme' info_text=true}
 {else}
     {include file="section/brick/viewperms.tpl"}
 {/if}

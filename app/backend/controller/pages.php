@@ -3,7 +3,7 @@ class backend_controller_pages extends backend_db_pages
 {
 
     public $edit, $action, $tabs, $search, $plugin;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl;
     public $id_pages,$parent_id,$content,$pages,$img;
 
     public function __construct()
@@ -18,6 +18,7 @@ class backend_controller_pages extends backend_db_pages
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
         $this->modelPlugins = new backend_model_plugins();
+        $this->routingUrl = new component_routing_url();
         // --- GET
         if(http_request::isGet('controller')) {
             $this->controller = $formClean->simpleClean($_GET['controller']);
@@ -101,7 +102,14 @@ class backend_controller_pages extends backend_db_pages
 
         foreach ($data as $page) {
 
-            $publicUrl = !empty($page['url_pages']) ? '/'.$page['iso_lang'].'/pages/'.$page['id_pages'].'-'.$page['url_pages'].'/' : '';
+            $publicUrl = !empty($page['url_pages']) ? $this->routingUrl->getBuildUrl(array(
+                    'type'      =>  'pages',
+                    'iso'       =>  $page['iso_lang'],
+                    'id'        =>  $page['id_pages'],
+                    'url'       =>  $page['url_pages']
+                )
+            ) : '';
+
             if (!array_key_exists($page['id_pages'], $arr)) {
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
@@ -348,12 +356,7 @@ class backend_controller_pages extends backend_db_pages
                         }
                         break;
                     case 'edit':
-                        if (isset($this->id_pages)) {
-							$extendData = $this->saveContent($this->id_pages);
-							$this->header->set_json_headers();
-							$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
-                        }
-                        elseif(isset($this->img)){
+                        if(isset($this->img)){
 							$data = $this->getItems('page',array('id_pages'=>$this->id_pages),'one');
 							$resultUpload = $this->upload->setImageUpload(
 								'img',
@@ -387,6 +390,11 @@ class backend_controller_pages extends backend_db_pages
 
 							$this->header->set_json_headers();
 							$this->message->json_post_response(true, 'update',$display);
+						}
+						elseif (isset($this->id_pages)) {
+							$extendData = $this->saveContent($this->id_pages);
+							$this->header->set_json_headers();
+							$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
 						}
                         else {
                             // Initialise l'API menu des plugins core

@@ -1,8 +1,5 @@
-{strip}
-    {widget_share_data assign="shareData"}
-{/strip}
 <footer id="footer"{if $adjust == 'fluid'} class="section-block container-fluid"{/if}>
-    {include file="amp/section/footer/sharebar.tpl"}
+    {*{include file="amp/section/footer/sharebar.tpl"}*}
     {if is_array($blocks) && !empty($blocks)}
         <section id="footer-blocks">
             <div class="container">

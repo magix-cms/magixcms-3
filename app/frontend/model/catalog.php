@@ -41,179 +41,163 @@
  */
 class frontend_model_catalog extends frontend_db_catalog {
     /**
+     * @var component_routing_url
+     */
+    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate;
+
+    public function __construct($template)
+    {
+        $this->routingUrl = new component_routing_url();
+        $this->imagesComponent = new component_files_images($template);
+        $this->modelPlugins = new frontend_model_plugins();
+        $this->coreTemplate = new frontend_model_template();
+    }
+    /**
      * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
      * @param $row
      * @param $current
+     * @param $newRow
      * @return array|null
+     *
      * @todo revoir le nommage de 'current', lui préférant 'active'
      */
-    public function setItemData ($row,$current)
+    public function setItemData ($row,$current,$newRow = false)
     {
-        $ModelImagepath     =   new magixglobal_model_imagepath();
+        /*$ModelImagepath     =   new magixglobal_model_imagepath();
         $ModelTemplate      =   new frontend_model_template();
-        $ModelRewrite       =   new magixglobal_model_rewrite();
+        $ModelRewrite       =   new magixglobal_model_rewrite();*/
 
         $data = null;
         if ($row != null) {
-
+            if (isset($row['name'])) {
+                $data['name']       = $row['name'];
+                $data['content']    = $row['content'];
+            }
             // *** Product
-            if (isset($row['titlecatalog'])) {
-                $subcat['id']   = (isset($row['idcls'])) ? $row['idcls'] : null;
-                $subcat['name'] = (isset($row['pathslibelle'])) ? $row['pathslibelle'] : null;
+            elseif (isset($row['name_p'])) {
+                //$subcat['id']   = (isset($row['idcls'])) ? $row['idcls'] : null;
+                //$subcat['name'] = (isset($row['pathslibelle'])) ? $row['pathslibelle'] : null;
+                $data['title']      = $row['name_p'];
 
-                if (isset($row['imgcatalog'])) {
-                    $data['imgSrc']   = array(
-                        'small'  =>
-                        $ModelImagepath->filterPathImg(
-                            array(
-                                'filtermod' =>  'catalog',
-                                'img'       =>  'mini/'.$row['imgcatalog'],
-                                'levelmod'  =>  ''
-                            )
-                        ),
-                        'medium'    =>
-                        $ModelImagepath->filterPathImg(
-                            array(
-                                'filtermod' =>  'catalog',
-                                'img'       =>  'medium/'.$row['imgcatalog'],
-                                'levelmod'  =>  ''
-                            )
-                        ),
-                        'large' =>
-                        $ModelImagepath->filterPathImg(
-                            array(
-                                'filtermod' =>  'catalog',
-                                'img'       =>  'product/'.$row['imgcatalog'],
-                                'levelmod'  =>  ''
-                            )
+                $data['url']  =
+                    $this->routingUrl->getBuildUrl(array(
+                            'type'              =>  'product',
+                            'iso'               =>  $row['iso_lang'],
+                            'id'                =>  $row['id_product'],
+                            'url'               =>  $row['url_p'],
+                            'id_parent'         =>  $row['id_cat'],
+                            'url_parent'        =>  $row['url_cat']
                         )
                     );
-                }
-                $data['imgSrc']['default']   =
-                    $ModelImagepath->filterPathImg(
-                        array(
-                            'img'=>'skin/'.
-                                $ModelTemplate->frontendTheme()->themeSelected().
-                                '/img/catalog/product-default.png'
-                        )
-                    );
+                // Base url for product
+                $data['baseUrl']       = $row['url_p'];
 
-                $data['url']       =
-                    $ModelRewrite->filter_catalog_product_url(
-                        $row['iso'],
-                        $row['pathclibelle'],
-                        $row['idclc'],
-                        $subcat['name'],
-                        $subcat['id'],
-                        $row['urlcatalog'],
-                        $row['idproduct'],
-                        true
-                    );
-
-                $data['active']   = false;
-                if (is_array($current)) {
-                    $data['active']   =
-                        (isset($current['product']['id']) AND $current['product']['id'] == $row['idproduct'] )
-                            ? true
-                            : false;
-
-                } elseif ($current === true) {
-                    $data['active']   = true;
-
+                $data['active'] = false;
+                if ($row['id_product'] == $current['controller']['id']) {
+                    $data['active'] = true;
                 }
 
-                $data['id']        = $row['idproduct'];
-                $data['name']      = $row['titlecatalog'];
-                $data['price']     = $row['price'];
-                $data['content']     = $row['desccatalog'];
+                $data['id']        = $row['id_product'];
+                $data['id_parent'] = $row['id_cat'];
+                $data['url_parent'] = $this->routingUrl->getBuildUrl(array(
+                        'type'      =>  'category',
+                        'iso'       =>  $row['iso_lang'],
+                        'id'        =>  $row['id_cat'],
+                        'url'       =>  $row['url_cat']
+                    )
+                );
 
-            // *** Subcategory
-            } elseif (isset($row['slibelle'])) {
-                $data['active']   = false;
-                if (is_array($current) AND isset($current['subcategory']['id'])) {
-                    $data['active']   = ($current['subcategory']['id'] == $row['idcls']) ? true : false;
+                $data['id_lang']    = $row['id_lang'];
+                $data['iso']        = $row['iso_lang'];
+                $data['price']      = $row['price_p'];
+                $data['content']    = $row['content_p'];
+                $data['order']      = $row['order_p'];
+                if (isset($row['img'])) {
+                    if($row['img'] != NULL) {
+                        $imgPrefix = $this->imagesComponent->prefix();
+                        $fetchConfig = $this->imagesComponent->getConfigItems(array(
+                            'module_img' => 'catalog',
+                            'attribute_img' => 'product'
+                        ));
+
+                        foreach ($row['img'] as $item => $val) {
+                            $data['img'][$item]['alt'] = $val['alt_img'];
+                            $data['img'][$item]['title'] = $val['title_img'];
+                            foreach ($fetchConfig as $key => $value) {
+                                $data['img'][$item]['imgSrc'][$value['type_img']] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+                            }
+                            $data['img'][$item]['default'] = $val['default_img'];
+                        }
+                    }else{
+                        $data['img']['imgSrc']['default']   =
+                            '/skin/'.$this->coreTemplate->themeSelected().'/img/catalog/p/default.png';
+                    }
                 }
 
-                if (isset($row['img_s'])){
-                    $data['imgSrc'] =   array();
-                    $data['imgSrc']['small']   =
-                        $ModelImagepath->filterPathImg(
-                            array(
-                                'filtermod'=>'catalog',
-                                'img'=>$row['img_s'],
-                                'levelmod'=>'subcategory'
-                            )
-                        );
-                    $data['imgSrc']['medium']   =   $data['imgSrc']['small'];
-                    $data['imgSrc']['large']    =   $data['imgSrc']['small'];
+                // Plugin
+                if($newRow != false){
+                    if(is_array($newRow)){
+                        foreach($newRow as $key => $value){
+                            $data[$key] = $row[$value];
+                        }
+                    }
                 }
-                $data['imgSrc']['default']   =
-                    $ModelImagepath->filterPathImg(
-                        array(
-                            'img'=>'skin/'.
-                                $ModelTemplate->frontendTheme()->themeSelected().
-                                '/img/catalog/subcategory-default.png'
-                        )
-                    );
 
-                $data['url']       =
-                    $ModelRewrite->filter_catalog_subcategory_url(
-                        $row['iso'],
-                        $row['pathclibelle'],
-                        $row['idclc'],
-                        $row['pathslibelle'],
-                        $row['idcls'],
-                        true
-                    );
-
-                $data['id']          = $row['idcls'];
-                $data['name']        = $row['slibelle'];
-                $data['content']     = ($row['s_content'] != '') ? $row['s_content'] : null;
-
-             // *** Category
-            } elseif(isset($row['clibelle'])) {
-                $data['active']   =    false;
+            // *** Category
+            } elseif(isset($row['name_cat'])) {
+                /*$data['active']   =    false;
                 if (is_array($current) AND isset($current['category']['id'])) {
                     $data['active']   = ($current['category']['id'] == $row['idclc']) ? true : false;
+                }*/
+                $data['active'] = false;
+                if ($row['id_cat'] == $current['controller']['id'] OR $row['id_cat'] == $current['controller']['id_parent'] ) {
+                    $data['active'] = true;
+                }
+                if (isset($row['img_cat'])) {
+                    $imgPrefix = $this->imagesComponent->prefix();
+                    $fetchConfig = $this->imagesComponent->getConfigItems(array(
+                        'module_img'=>'catalog',
+                        'attribute_img'=>'category'
+                    ));
+                    foreach ($fetchConfig as $key => $value) {
+                        $data['imgSrc'][$value['type_img']] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat'];
+                    }
+                }else{
+                    $data['imgSrc']['default']  =
+                        '/skin/'.$this->coreTemplate->themeSelected().'/img/catalog/c/default.png';
                 }
 
-                if (isset($row['img_c'])){
-                    $data['imgSrc'] =   array();
-                    $data['imgSrc']['small']   = $ModelImagepath->filterPathImg(
-                        array(
-                            'filtermod'=>'catalog',
-                            'img'=>$row['img_c'],
-                            'levelmod'=>'category'
+                $data['url']  =
+                    $this->routingUrl->getBuildUrl(array(
+                            'type'      =>  'category',
+                            'iso'       =>  $row['iso_lang'],
+                            'id'        =>  $row['id_cat'],
+                            'url'       =>  $row['url_cat']
                         )
                     );
-                    // I know it's like cheat
-                    $data['imgSrc']['medium']   =   $data['imgSrc']['small'];
-                    $data['imgSrc']['large']    =   $data['imgSrc']['small'];
-                }
-                $data['imgSrc']['default']   =
-                    $ModelImagepath->filterPathImg(
-                        array(
-                            'img'=>'skin/'.
-                                $ModelTemplate->frontendTheme()->themeSelected().
-                                '/img/catalog/category-default.png'
-                        )
-                    );
+                // Base url for category
+                $data['baseUrl']       = $row['url_cat'];
 
-                $data['url']       =
-                    $ModelRewrite->filter_catalog_category_url(
-                        $row['iso'],
-                        $row['pathclibelle'],
-                        $row['idclc'],
-                        true
-                    );
-                $data['id']         =    $row['idclc'];
-                $data['name']       =    $row['clibelle'];
-                $data['content']    =    ($row['c_content'] != '') ? $row['c_content'] : null;
+                $data['id']         =    $row['id_cat'];
+                $data['id_parent']  =    !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
+                $data['id_lang']    =    $row['id_lang'];
+                $data['iso']        =    $row['iso_lang'];
+                $data['name']       =    $row['name_cat'];
+                $data['content']    =    ($row['content_cat'] != '') ? $row['content_cat'] : NULL;
+                $data['order']      =    $row['order_cat'];
+                // Plugin
+                if($newRow != false){
+                    if(is_array($newRow)){
+                        foreach($newRow as $key => $value){
+                            $data[$key] = $row[$value];
+                        }
+                    }
+                }
 
                 // *** Micro-gallery (product page)
-            } elseif(isset($row['idmicro'])) {
+            }/* elseif(isset($row['idmicro'])) {
                 $data['id']        = $row['idmicro'];
-                $data['img_src']['small']   =
+                $data['imgSrc']['small']   =
                     $ModelImagepath->filterPathImg(
                         array(
                             'filtermod'=>'catalog',
@@ -222,7 +206,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                             'levelmod'=>'galery'
                         )
                     );
-                $data['img_src']['medium']   =
+                $data['imgSrc']['medium']   =
                     $ModelImagepath->filterPathImg(
                         array(
                             'filtermod'=>'catalog',
@@ -231,18 +215,61 @@ class frontend_model_catalog extends frontend_db_catalog {
                             'levelmod'=>'galery'
                         )
                     );
-            }
+            }*/
             return $data;
         }
+    }
+    /**
+     * @param $row
+     * @return array
+     */
+    public function setHrefLangCategoryData($row)
+    {
+        $arr = array();
+
+        foreach ($row as $item) {
+            $arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
+                    'type'      =>  'category',
+                    'iso'       =>  $item['iso_lang'],
+                    'id'        =>  $item['id_cat'],
+                    'url'       =>  $item['url_cat']
+                )
+            );
+        }
+
+        return $arr;
+    }
+
+    /**
+     * @param $row
+     * @return array
+     */
+    public function setHrefLangProductData($row)
+    {
+        $arr = array();
+
+        foreach ($row as $item) {
+            $arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
+                    'type'              =>  'product',
+                    'iso'               =>  $item['iso_lang'],
+                    'id'                =>  $item['id_product'],
+                    'url'               =>  $item['url_p'],
+                    'id_parent'         =>  $item['id_cat'],
+                    'url_parent'        =>  $item['url_cat']
+                )
+            );
+        }
+
+        return $arr;
     }
     /**
      * Retourne les données sql sur base des paramètres passés en paramète
      * @param array $custom
      * @param array $current
+     * @param bool $class
      * @return array|null
-     *
      */
-    public static function getData($custom,$current)
+    public static function getData($custom,$current,$class = false)
     {
         if (!(is_array($custom))) {
             return null;
@@ -255,6 +282,7 @@ class frontend_model_catalog extends frontend_db_catalog {
         $conf           =   array(
             'id'        =>  null,
             'type'      =>  null,
+            'sort'      =>  null,
             'limit'     =>  null,
             'lang'      =>  $current['lang']['iso'],
             'context'   =>  array(1 => 'all')
@@ -316,7 +344,39 @@ class frontend_model_catalog extends frontend_db_catalog {
         if (isset($custom['limit'])) {
             $conf['limit']  =   $custom['limit'];
         }
+        // Sort
+        if (isset($custom['sort'])) {
+            if ( is_array($custom['sort'])) {
+                if (array_key_exists(key($custom['sort']), $custom['sort'])) {
+                    $conf['sort_type'] = key($custom['sort']);
+                    $conf['sort_order'] = $custom['sort'][key($custom['sort'])];
+                }
+            }
+        }else{
+            $conf['sort_type'] = 'id';
+            $conf['sort_order'] = 'DESC';
+        }
 
+        // deepness for element
+        if(isset($custom['deepness'])){
+            $deepness_allowed = array('all','none');
+            if (in_array($custom['deepness'],$deepness_allowed)) {
+                if($custom['deepness'] == 'all'){
+                    $conf['deepness'] = null;
+                }elseif($custom['deepness'] == 'none'){
+                    $conf['deepness'] = 0;
+                }
+            }else{
+                $conf['deepness'] = 0;
+            }
+        }else{
+            $conf['deepness'] = 0;
+        }
+
+        // Override with plugin
+        if (isset($custom['plugins'])) {
+            $conf['plugins']  =   $custom['plugins'];
+        }
         // custom values: display
         if (isset($custom['context'])) {
             if (is_array($custom['context'])) {
@@ -336,16 +396,17 @@ class frontend_model_catalog extends frontend_db_catalog {
             } else {
                 $allowed = array(
                     'category',
-                    'subcategory',
+                    //'subcategory',
                     'product',
                     'last-product',
                     'last-product-cat',
-                    'last-product-subcat',
-                    'all',
-                    'product-gallery'
+                    //'last-product-subcat',
+                    'all'/*,
+                    'product-gallery'*/
                 );
-                if (array_search($custom['context'],$allowed)) {
-                    $conf['context'][1]   =   $custom['context'];
+
+                if (in_array($custom['context'],$allowed)) {
+                    $conf['context'][1] = $custom['context'];
                 }
             }
         }
@@ -354,20 +415,56 @@ class frontend_model_catalog extends frontend_db_catalog {
         $data = null;
         if ($conf['context'][1] == 'category' OR $conf['context'][1] == 'all') {
             // Category
-            $data = parent::s_category(
-                $conf['lang'],
-                $conf['id'],
-                $conf['type'],
-                $conf['limit']
-            );
+            if($class && class_exists($class)){
+                $data = $class::fetchCategory(
+                    array(
+                        'fetch'         =>  'all',
+                        'iso'           =>  $conf['lang'],
+                        'selectmodeid'  =>  $conf['id'],
+                        'selectmode'    =>  $conf['type'],
+                        'sort_type'     =>  $conf['sort_type'],
+                        'sort_order'    =>  $conf['sort_order'],
+                        'limit'         =>  $conf['limit']
+                    )
+                );
+            }else{
+                $data = parent::fetchCategory(
+                    array(
+                        'fetch'         =>  'all',
+                        'iso'           =>  $conf['lang'],
+                        'selectmodeid'  =>  $conf['id'],
+                        'selectmode'    =>  $conf['type'],
+                        'sort_type'     =>  $conf['sort_type'],
+                        'sort_order'    =>  $conf['sort_order'],
+                        'limit'         =>  $conf['limit']
+                    )
+                );
+            }
             if (($conf['context'][2] == 'subcategory' OR $conf['context'][1] == 'all') AND $data != null) {
                 foreach ($data as $k1 => $v_1)
                 {
                     // Category > subcategory
-                    $data_2 =   parent::s_sub_category_in_cat(
-                        $v_1['idclc'],
-                        $conf['limit']
-                    );
+                    if($class && class_exists($class)){
+                        $data_2 = $class::fetchSubCategory(
+                            array(
+                                'fetch'         =>  'in_cat',
+                                'idclc'         =>  $v_1['idclc'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit']
+                            )
+                        );
+                    }else{
+                        $data_2 = parent::fetchSubCategory(
+                            array(
+                                'fetch'         =>  'in_cat',
+                                'idclc'         =>  $v_1['idclc'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit']
+                            )
+                        );
+                    }
                     if ($data_2 != null) {
                         $data[$k1]['subdata']   =   $data_2;
                         if (($conf['context'][3] == 'product' OR $conf['context'][1] == 'all') AND $data_2 != null) {
@@ -375,11 +472,30 @@ class frontend_model_catalog extends frontend_db_catalog {
                             foreach ($data_2 as $k2 => $v_2)
                             {
                                 // Category > subcategory > Product
-                                $data_3 =   parent::s_product(
-                                    $v_2['idclc'],
-                                    $v_2['idcls'],
-                                    $conf['limit']
-                                );
+                                if($class && class_exists($class)){
+                                    $data_3 =  parent::fetchProduct(
+                                        array(
+                                            'fetch'         =>  'all_in',
+                                            'idclc'         =>  $v_2['idclc'],
+                                            'idcls'         =>  $v_2['idcls'],
+                                            'sort_type'     =>  $conf['sort_type'],
+                                            'sort_order'    =>  $conf['sort_order'],
+                                            'limit'         =>  $conf['limit']
+                                        )
+                                    );
+
+                                }else{
+                                    $data_3 =  parent::fetchProduct(
+                                        array(
+                                            'fetch'         =>  'all_in',
+                                            'idclc'         =>  $v_2['idclc'],
+                                            'idcls'         =>  $v_2['idcls'],
+                                            'sort_type'     =>  $conf['sort_type'],
+                                            'sort_order'    =>  $conf['sort_order'],
+                                            'limit'         =>  $conf['limit']
+                                        )
+                                    );
+                                }
                                 if ($data_3 != null) {
                                     $data[$k1]['subdata'][$k2]['subdata']   =   $data_3;
                                 }
@@ -391,10 +507,15 @@ class frontend_model_catalog extends frontend_db_catalog {
                 foreach($data as $k1 => $v_1)
                 {
                     // Category > Product
-                    $data_2 = parent::s_product(
-                        $v_1['idclc'],
-                        null,
-                        $conf['limit']
+                    $data_2 =  parent::fetchProduct(
+                        array(
+                            'fetch'         =>  'all_in',
+                            'idclc'         =>  $v_1['idclc'],
+                            'idcls'         =>  $conf['deepness'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit']
+                        )
                     );
                     if ($data_2 != null) {
                         $data[$k1]['subdata']   =   $data_2;
@@ -404,39 +525,116 @@ class frontend_model_catalog extends frontend_db_catalog {
         } elseif($conf['context'][1] == 'subcategory') {
             if ($custom['select'] == 'current' AND isset($current['subcategory']['id'])) {
                 // Subcategory[current]
-                $data       =   parent::s_subcategory(
-                    $conf['lang'],
-                    $current['subcategory']['id'],
-                    $conf['type'],
-                    $conf['limit']
-                );
+                if($class && class_exists($class)){
+                    $data = $class::fetchSubCategory(
+                        array(
+                            'fetch'         =>  'all',
+                            'iso'           =>  $conf['lang'],
+                            'selectmodeid'  =>  $current['subcategory']['id'],
+                            'selectmode'    =>  $conf['type'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit']
+                        )
+                    );
+                }else{
+                    $data = parent::fetchSubCategory(
+                        array(
+                            'fetch'         =>  'all',
+                            'iso'           =>  $conf['lang'],
+                            'selectmodeid'  =>  $current['subcategory']['id'],
+                            'selectmode'    =>  $conf['type'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit']
+                        )
+                    );
+                }
+
 
             } elseif (isset($current['category']['id']) AND empty($custom['select'])) {
                 // Subcategory[in_cat]
-                $data   =   parent::s_sub_category_in_cat(
-                    $current['category']['id'],
-                    $conf['limit']
-                );
+                if($class && class_exists($class)){
+                    $data = $class::fetchSubCategory(
+                        array(
+                            'fetch'         =>  'in_cat',
+                            'idclc'         =>  $current['category']['id'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit']
+                        )
+                    );
+                }else{
+                    $data = parent::fetchSubCategory(
+                        array(
+                            'fetch'         =>  'in_cat',
+                            'idclc'         =>  $current['category']['id'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit']
+                        )
+                    );
+                }
 
             } else {
                 // Subcategory
-                $data   =   parent::s_subcategory(
-                    $conf['lang'],
-                    $conf['id'],
-                    $conf['type'],
-                    $conf['limit']
-                );
+                if($class && class_exists($class)){
+                    $data = $class::fetchSubCategory(
+                        array(
+                            'fetch'         =>  'all',
+                            'iso'           =>  $conf['lang'],
+                            'selectmodeid'  =>  $conf['id'],
+                            'selectmode'    =>  $conf['type'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit']
+                        )
+                    );
+                }else{
+                    $data = parent::fetchSubCategory(
+                        array(
+                            'fetch'         =>  'all',
+                            'iso'           =>  $conf['lang'],
+                            'selectmodeid'  =>  $conf['id'],
+                            'selectmode'    =>  $conf['type'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit']
+                        )
+                    );
+                }
+
             }
 
             if ($conf['context'][2] == 'product' AND $data != null) {
+
                 foreach ($data as $k1 => $v_1)
                 {
                     // Subcategory > product
-                    $data_2 =   parent::s_product(
-                        $v_1['idclc'],
-                        $v_1['idcls'],
-                        $conf['limit']
-                    );
+                    if($class && class_exists($class)){
+                        $data_2 =  $class::fetchProduct(
+                            array(
+                                'fetch'         =>  'all_in',
+                                'idclc'         =>  $v_1['idclc'],
+                                'idcls'         =>  $v_1['idcls'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit']
+                            )
+                        );
+
+                    }else{
+                        $data_2 =  parent::fetchProduct(
+                            array(
+                                'fetch'         =>  'all_in',
+                                'idclc'         =>  $v_1['idclc'],
+                                'idcls'         =>  $v_1['idcls'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit']
+                            )
+                        );
+                    }
                     if ($data_2 != null) {
                         $data[$k1]['subdata']   =   $data_2;
                     }
@@ -444,14 +642,33 @@ class frontend_model_catalog extends frontend_db_catalog {
             }
         } elseif ( $conf['context'][1] == 'product') {
 
-
             if (isset($current['product']['id']) AND empty($custom['select'])) {
                 // Product[in_product]
-                $data   =   parent::s_product_in_product(
-                    $current['product']['id'],
-                    $conf['id'],
-                    $conf['type']
-                );
+                if($class && class_exists($class)){
+                    $data   =   $class::fetchProduct(
+                        array(
+                            'fetch'         => 'related',
+                            'idproduct'     => $current['product']['id'],
+                            'selectmode'    => $conf['type'],
+                            'selectmodeid'  => $conf['id'],
+                            'sort_type'     => $conf['sort_type'],
+                            'sort_order'    => $conf['sort_order'],
+                            'limit'         => $conf['limit']
+                        )
+                    );
+                }else{
+                    $data = parent::fetchProduct(
+                        array(
+                            'fetch'         => 'related',
+                            'idproduct'     => $current['product']['id'],
+                            'selectmode'    => $conf['type'],
+                            'selectmodeid'  => $conf['id'],
+                            'sort_type'     => $conf['sort_type'],
+                            'sort_order'    => $conf['sort_order'],
+                            'limit'         => $conf['limit']
+                        )
+                    );
+                }
 
             } elseif ( (isset($current['category']['id']) OR isset($current['subcategory']['id'])) AND empty($custom['select'])) {
                 // Product[in_category OR in_subcategory]
@@ -462,30 +679,262 @@ class frontend_model_catalog extends frontend_db_catalog {
                     $catId  =   null;
                     $subcatId  =   (isset($current['subcategory']['id'])) ? $current['subcategory']['id'] : null;
                 }
-                $data   =   parent::s_product(
-                    $catId,
-                    $subcatId
-                );
-            } else {
-                // All products in lang
-                $data   =   parent::s_product(
-                    $conf['id'],
-                    0
-                );
+                if(isset($custom['select']) OR $custom['exclude']){
+                    if($class && class_exists($class)) {
+                        $data = $class::fetchProduct(
+                            array(
+                                'fetch'         =>  'all',
+                                'context'       =>  $conf['context'][1],
+                                'idclc'         =>  $catId,
+                                'idcls'         =>  $subcatId,
+                                'limit'         =>  $conf['limit'],
+                                'selectmode'    =>  $conf['type'],
+                                'selectmodeid'  =>  $conf['id'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order']
+                            )
+                        );
+                    }else{
+                        $data = parent::fetchProduct(
+                            array(
+                                'fetch'         =>  'all',
+                                'context'       =>  $conf['context'][1],
+                                'idclc'         =>  $catId,
+                                'idcls'         =>  $subcatId,
+                                'limit'         =>  $conf['limit'],
+                                'selectmode'    =>  $conf['type'],
+                                'selectmodeid'  =>  $conf['id'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order']
+                            )
+                        );
+                    }
+                }else{
+                    if($class && class_exists($class)){
+                        $data =  $class::fetchProduct(
+                            array(
+                                'fetch'         =>  'all_in',
+                                'idclc'         =>  $catId,
+                                'idcls'         =>  $subcatId,
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit']
+                            )
+                        );
+                    }else{
+                        $data =  parent::fetchProduct(
+                            array(
+                                'fetch'         =>  'all_in',
+                                'idclc'         =>  $catId,
+                                'idcls'         =>  $subcatId,
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit']
+                            )
+                        );
+                    }
+                }
 
+            } else {
+                if(isset($custom['select']) OR $custom['exclude']){
+                    if($class && class_exists($class)) {
+                        $data = $class::fetchProduct(
+                            array(
+                                'fetch'         =>  'all',
+                                'context'       =>  $conf['context'][1],
+                                'iso'           =>  $conf['lang'],
+                                'limit'         =>  $conf['limit'],
+                                'selectmode'    =>  $conf['type'],
+                                'selectmodeid'  =>  $conf['id'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order']
+                            )
+                        );
+                    }else{
+                        $data = parent::fetchProduct(
+                            array(
+                                'fetch'         =>  'all',
+                                'context'       =>  $conf['context'][1],
+                                'iso'           =>  $conf['lang'],
+                                'limit'         =>  $conf['limit'],
+                                'selectmode'    =>  $conf['type'],
+                                'selectmodeid'  =>  $conf['id'],
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order']
+                            )
+                        );
+                    }
+                }else{
+                    // All products in lang
+                    if($class && class_exists($class)) {
+                        $data =  $class::fetchProduct(
+                            array(
+                                'fetch'         =>  'all_in',
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit'],
+                            )
+                        );
+                    }else{
+                        $data =  parent::fetchProduct(
+                            array(
+                                'fetch'         =>  'all_in',
+                                'sort_type'     =>  $conf['sort_type'],
+                                'sort_order'    =>  $conf['sort_order'],
+                                'limit'         =>  $conf['limit'],
+                            )
+                        );
+                    }
+                }
             }
-        } elseif ($conf['context'][1] == 'last-product' OR $conf['context'][1] == 'last-product-cat') {
+        } elseif ($conf['context'][1] == 'last-product') {
             // Product[last]
             // @TODO: mise en place des paramètre 'exclude'
-            $data   =   parent::s_product($conf['id'],null,$conf['limit']);
+            if($class && class_exists($class)){
+                $data =  $class::fetchProduct(
+                    array(
+                        'fetch'         =>  'all_in',
+                        'sort_type'     =>  $conf['sort_type'],
+                        'sort_order'    =>  $conf['sort_order'],
+                        'limit'         =>  $conf['limit']
+                    )
+                );
+            }else{
+                $data =  parent::fetchProduct(
+                    array(
+                        'fetch'         =>  'all_in',
+                        //'idclc'         =>  $conf['id'],
+                        'sort_type'     =>  $conf['sort_type'],
+                        'sort_order'    =>  $conf['sort_order'],
+                        'limit'         =>  $conf['limit']
+                    )
+                );
+            }
+        }else if($conf['context'][1] == 'last-product-cat'){
+            if(isset($custom['select']) OR $custom['exclude']){
+                if($class && class_exists($class)) {
+                    $data = $class::fetchProduct(
+                        array(
+                            'fetch'         =>  'all',
+                            'context'       =>  $conf['context'][1],
+                            'iso'           =>  $conf['lang'],
+                            'limit'         =>  $conf['limit'],
+                            'selectmode'    =>  $conf['type'],
+                            'selectmodeid'  =>  $conf['id'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                        )
+                    );
+                }else{
+                    $data = parent::fetchProduct(
+                        array(
+                            'fetch'         =>  'all',
+                            'context'       =>  $conf['context'][1],
+                            'iso'           =>  $conf['lang'],
+                            'limit'         =>  $conf['limit'],
+                            'selectmode'    =>  $conf['type'],
+                            'selectmodeid'  =>  $conf['id'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                        )
+                    );
+                }
+            }else{
+                if($class && class_exists($class)) {
+                    $data =  $class::fetchProduct(
+                        array(
+                            'fetch'         =>  'all_in',
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit'],
+                        )
+                    );
+                }else{
+                    $data =  parent::fetchProduct(
+                        array(
+                            'fetch'         =>  'all_in',
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit'],
+                        )
+                    );
+                }
+            }
 
         } elseif ($conf['context'][1] == 'last-product-subcat') {
-            $data   =   parent::s_product(null,$conf['id'],$conf['limit']);
+            if(isset($custom['select']) OR $custom['exclude']){
+                if($class && class_exists($class)) {
+                    $data = $class::fetchProduct(
+                        array(
+                            'fetch'         =>  'all',
+                            'context'       =>  $conf['context'][1],
+                            'iso'           =>  $conf['lang'],
+                            'limit'         =>  $conf['limit'],
+                            'selectmode'    =>  $conf['type'],
+                            'selectmodeid'  =>  $conf['id'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                        )
+                    );
+                }else{
+                    $data = parent::fetchProduct(
+                        array(
+                            'fetch'         =>  'all',
+                            'context'       =>  $conf['context'][1],
+                            'iso'           =>  $conf['lang'],
+                            'limit'         =>  $conf['limit'],
+                            'selectmode'    =>  $conf['type'],
+                            'selectmodeid'  =>  $conf['id'],
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                        )
+                    );
+                }
+            }else{
+                if($class && class_exists($class)) {
+                    $data =  $class::fetchProduct(
+                        array(
+                            'fetch'         =>  'all_in',
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit'],
+                        )
+                    );
+                }else{
+                    $data =  parent::fetchProduct(
+                        array(
+                            'fetch'         =>  'all_in',
+                            'sort_type'     =>  $conf['sort_type'],
+                            'sort_order'    =>  $conf['sort_order'],
+                            'limit'         =>  $conf['limit'],
+                        )
+                    );
+                }
+            }
 
         } elseif($conf['context'][1] == 'product-gallery') {
             // Product Gallery
-            $data = parent::s_product_gallery($current['product']['id']);
-
+            if($class && class_exists($class)) {
+                $data = $class::fetchProduct(
+                    array(
+                        'fetch'         => 'galery',
+                        'idproduct'     => $current['product']['id'],
+                        'sort_type'     => $conf['sort_type'],
+                        'sort_order'    => $conf['sort_order'],
+                        'limit'         => $conf['limit']
+                    )
+                );
+            }else{
+                $data = parent::fetchProduct(
+                    array(
+                        'fetch'         => 'galery',
+                        'idproduct'     => $current['product']['id'],
+                        'sort_type'     => $conf['sort_type'],
+                        'sort_order'    => $conf['sort_order'],
+                        'limit'         => $conf['limit']
+                    )
+                );
+            }
         }
         return $data;
     }

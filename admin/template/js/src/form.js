@@ -246,21 +246,22 @@ var globalForm = (function ($, undefined) {
                 sub = $(f).data('sub') == '' ? false : $(f).data('sub');
                 initAlert(d.notify,4000,sub);
                 if(d.statut && d.result) {
-                    var ul = $(f).next().find('ul');
-                    var nen = $('#no-entry');
+                    var ul = $(f).next().children('ul');
+                    var nen = $('.no-entry');
                     if(!nen.hasClass('hide')) {
                         nen.addClass('hide');
                     }
                     $(ul).append(d.result);
-                    console.log($(ul).find('[data-toggle="collapse"]'));
-                    $(ul).find('.collapse').collapse({toggle: false});
-                    $(ul).find('[data-toggle="collapse"]').off().on('click',function(e){
-                        e.preventDefault();
-                        var target_element= $(this).attr("href");
-                        console.log(target_element);
-                        $(target_element).collapse('toggle');
-                        return false;
+                    $(ul).find('[data-toggle="collapse"]').each(function(){
+                        var targ = $(this).attr("href");
+                        $(targ).removeData('bs.collapse').collapse({toggle: false});
+                        $(this).off().on('click',function(e){
+                            e.preventDefault();
+                            $(targ).collapse('toggle');
+                            return false;
+                        });
                     });
+                    initDroplang();
                 }
                 initValidation(controller,'.edit_in_list');
                 initModalActions();
@@ -268,18 +269,18 @@ var globalForm = (function ($, undefined) {
         }
         // --- Rules for edit form that edit a record into a table list
         else if($(f).hasClass('edit_in_list')) {
-            options.success = function (data) {
-                $.jmRequest.initbox(data.notify, { display: false });
-                if(data.statut) {
-                    $('[type="submit"]', f).hide();
-                    $('.text-success', f).removeClass('hide');
+            options.success = function (d) {
+               $.jmRequest.initbox(d.notify, { display: false });
+               if(d.statut) {
+                   $('[type="submit"]', f).hide();
+                   $('.text-success', f).removeClass('hide');
 
-                    window.setTimeout(function () {
-                        $('.text-success', f).addClass('hide');
-                        $('[type="submit"]', f).show();
-                    }, 3000);
-                }
-            };
+                   window.setTimeout(function () {
+                       $('.text-success', f).addClass('hide');
+                       $('[type="submit"]', f).show();
+                   }, 3000);
+               }
+           };
         }
         // --- Rules for delete form, will remove the deleted rows form the record list based on their id
         else if($(f).hasClass('delete_form')) {
@@ -307,10 +308,16 @@ var globalForm = (function ($, undefined) {
                         if(table.is("table")) {
                             nbr = table.find('tbody').find('tr').length;
                         }
+                        else if(table.is("ul") && !nbr) {
+                            nbr = table.children('li').length;
+                        }
                     }
                     container.trigger('change');
                     if(table.is("table") && !nbr) {
                         table.addClass('hide').next('.no-entry').removeClass('hide');
+                    }
+                    else if(table.is("ul") && !nbr) {
+                        table.next('.no-entry').removeClass('hide');
                     }
                     $('.nbr-'+controller).text(nbr);
                     initModalActions();
@@ -598,6 +605,27 @@ var globalForm = (function ($, undefined) {
         });
     }
 
+    /**
+     *
+     */
+    function initDroplang() {
+        $('.dropdown-lang').each(function () {
+            var self = $(this);
+            var items = $(this).find('a[data-toggle="tab"]');
+
+            $(items).off().on('shown.bs.tab', function (e) {
+                $(self).find('.dropdown-menu li.active').removeClass('active');
+                $(this).parent('li').addClass('active');
+                $(self).find('.lang').text($(this).text());
+                $('[data-toggle="toggle"]').each(function(){
+                    $(this).bootstrapToggle('destroy');
+                }).each(function(){
+                    $(this).bootstrapToggle();
+                });
+            });
+        });
+    }
+
     return {
         /**
          * Public functions
@@ -611,6 +639,8 @@ var globalForm = (function ($, undefined) {
             initModalActions();
             // --- Launch optional fields handler initialisation
             initOptionalFields(controller);
+            // --- Launch dropdown menu for languages initialisation
+            initDroplang();
         },
         initModals: function () {
             // --- Launch modal initialisations

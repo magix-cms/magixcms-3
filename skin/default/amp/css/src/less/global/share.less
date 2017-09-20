@@ -4,7 +4,10 @@
 .share-nav {
 	a {
 		display: block;
-		&:hover {
+		/*&:hover {
+			text-decoration: none;
+		}*/
+		&:focus, &:active {
 			text-decoration: none;
 		}
 	}
@@ -66,7 +69,7 @@
 				a {
 					color: #555;
 
-					&:hover,&:active {
+					&:focus,&:active {
 						color: @main-color;
 					}
 				}

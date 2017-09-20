@@ -281,11 +281,12 @@ class frontend_model_about extends frontend_db_about {
 		$arr = array();
 
 		foreach ($row as $item) {
-			$arr[$item['id_lang']] = $this->routingUrl->getBuildPages(array(
-				'iso_lang'  =>  $item['iso_lang'],
-				'id_pages'  =>  $item['id_pages'],
-				'url_pages' =>  $item['url_pages']
-			));
+			$arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
+                'type'      =>  'about',
+                'iso'       =>  $row['iso_lang'],
+                'id'        =>  $row['id_pages'],
+                'url'       =>  $row['url_pages']
+            ));
 		}
 		return $arr;
 	}

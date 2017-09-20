@@ -29,7 +29,6 @@
 		}
 	}
 
-	&:hover,
 	&:focus,
 	&.focus {
 		color: @btn-default-color;
@@ -105,12 +104,10 @@
 		.box-shadow(none);
 	}
 	&,
-	&:hover,
 	&:focus,
 	&:active {
 		border-color: transparent;
 	}
-	&:hover,
 	&:focus {
 		color: @link-hover-color;
 		text-decoration: @link-hover-decoration;
@@ -118,7 +115,6 @@
 	}
 	&[disabled],
 	fieldset[disabled] & {
-		&:hover,
 		&:focus {
 			color: @btn-link-disabled-color;
 			text-decoration: none;
@@ -201,7 +197,7 @@ input[type="button"] {
 		transition: 0.25s;
 	}
 
-	&:hover {
+	&:focus, &:active {
 		background-color: transparent;
 		color: @text-color;
 

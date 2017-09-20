@@ -31,9 +31,9 @@ class backend_model_sitemap{
         $setting = $this->setting->setItemsData();
         if(is_array($data)){
             if($setting['ssl']==='0'){
-                $host = 'http://www.';
+                $host = 'http://';
             }else{
-                $host = 'https://www.';
+                $host = 'https://';
             }
 
             $domain = $data['domain'];

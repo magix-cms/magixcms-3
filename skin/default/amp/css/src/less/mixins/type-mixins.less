@@ -20,13 +20,13 @@
 	}
 
 	.set-hover(@color, @hover-color, @decoration) when (@hover-color = same) {
-		a:hover, a:focus {
+		a:focus {
 			text-decoration: @decoration;
 			color: @color;
 		}
 	};
 	.set-hover(@color, @hover-color, @decoration) {
-		a:hover, a:focus {
+		a:focus {
 			text-decoration: @decoration;
 			color: @hover-color;
 		}

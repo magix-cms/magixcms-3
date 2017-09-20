@@ -40,9 +40,27 @@ class component_routing_url{
      * @param $data
      * @return string
      */
-	public function getBuildPages($data){
+	public function getBuildUrl($data){
         if(is_array($data)) {
-            return '/'.$data['iso_lang'].'/pages/'.$data['id_pages'].'-'.$data['url_pages'].'/';
+            $iso = $data['iso'];
+            $type = $data['type'];
+            switch($type){
+                case 'pages':
+                    $url = '/'.$iso.'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
+                    break;
+                case 'about':
+                    $url = '/'.$iso.'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
+                    break;
+                case 'category':
+                    $url = '/'.$iso.'/catalog/'.$data['id'].'-'.$data['url'].'/';
+                    break;
+                case 'product':
+                    if(isset($data['id_parent']) && isset($data['url_parent'])) {
+                        $url = '/' . $iso . '/catalog/' . $data['id_parent'] . '-' . $data['url_parent'] . '/' . $data['id'] . '-' . $data['url'] . '/';
+                    }
+                    break;
+            }
+            return $url;
         }
     }
 }

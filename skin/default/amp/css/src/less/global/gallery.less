@@ -41,7 +41,7 @@
 			z-index: -1;
 			.transition(opacity 350ms);
 
-			&:hover {
+			&:focus, &:active {
 				cursor: zoom-in;
 			}
 
@@ -79,7 +79,7 @@
 			right: 0;
 		}
 
-		&:hover {
+		&:focus, &:active {
 			&.prev {
 				#gradient.horizontal(rgba(255, 255, 255, .3), rgba(255, 255, 255, 0), 0%, 100%);
 			}
@@ -122,8 +122,8 @@
 				width: 100%;
 				.auto-transition(.35s);
 
-				&:hover,
-				&:focus {
+				&:focus,
+				&:active {
 					opacity: 1;
 				}
 			}

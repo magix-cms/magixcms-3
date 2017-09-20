@@ -2,7 +2,7 @@
 class backend_controller_theme extends backend_db_theme{
     public $edit, $action, $tabs;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
-    public $theme, $content, $type, $id, $order;
+    public $theme, $content, $type, $id, $link, $order;
 
     public $roots = array('home','about','catalog','news','contact');
 	/**
@@ -21,7 +21,9 @@ class backend_controller_theme extends backend_db_theme{
         // --- GET
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
-        }
+        } elseif (http_request::isPost('edit')) {
+			$this->edit = $formClean->numeric($_POST['edit']);
+		}
         if (http_request::isGet('action')) {
             $this->action = $formClean->simpleClean($_GET['action']);
         } elseif (http_request::isPost('action')) {
@@ -41,6 +43,13 @@ class backend_controller_theme extends backend_db_theme{
 		}
 		if (http_request::isPost('pages_id')) {
 			$this->id = intval($formClean->numeric($_POST['pages_id']));
+		}
+		if (http_request::isPost('id')) {
+			$this->id = intval($formClean->simpleClean($_POST['id']));
+		}
+
+		if(http_request::isPost('link')){
+			$this->link = $formClean->arrayClean($_POST['link']);
 		}
 
 		if(http_request::isPost('order')){
@@ -74,6 +83,7 @@ class backend_controller_theme extends backend_db_theme{
 				$arr[$item['id_link']] = array();
 				$arr[$item['id_link']]['id_link'] = $item['id_link'];
 				$arr[$item['id_link']]['type_link'] = $item['type_link'];
+				$arr[$item['id_link']]['mode_link'] = $item['mode_link'];
 			}
 			$arr[$item['id_link']]['content'][$item['id_lang']] = array(
 				'id_lang'    => $item['id_lang'],
@@ -90,16 +100,6 @@ class backend_controller_theme extends backend_db_theme{
 		$varName = $single ? 'link' : 'links';
 		$var = $single ? array_values($arr)[0] : $arr;
 		$this->template->assign($varName,$var);
-	}
-
-	/**
-	 * @param string $type
-	 * @param array $page
-	 * @param array $lang
-	 * @return string
-	 */
-	private function public_url($type,$page,$lang){
-		return !empty($page['url']) ? '/'.$lang['iso_lang'].'/'.($type === 'about_page' ? 'about' : $type).'/'.$page['id'].'-'.$page['url'].'/' : '';
 	}
 
 	/**
@@ -121,7 +121,6 @@ class backend_controller_theme extends backend_db_theme{
 			}
 		}
 
-		$this->template->assign('level', 1);
 		$this->template->assign('links', $childs['root']);
 	}
 
@@ -181,12 +180,23 @@ class backend_controller_theme extends backend_db_theme{
     private function upd($data) {
         switch ($data['type']) {
             case 'theme':
+				parent::update(
+					array(
+						'type' => $data['type']
+					),array(
+						'theme' => $this->theme
+					)
+				);
+				$this->header->set_json_headers();
+				$this->message->json_post_response(true,'update',$data['type']);
+				break;
+            case 'link':
+            case 'link_content':
                 parent::update(
                     array(
-                        'type'=>$data['type']
-                    ),array(
-                        'theme'   => $this->theme
-                    )
+                        'type' => $data['type']
+                    ),
+					$data['data']
                 );
                 break;
 			case 'order':
@@ -203,11 +213,30 @@ class backend_controller_theme extends backend_db_theme{
 						)
 					);
 				}
+				$this->header->set_json_headers();
+				$this->message->json_post_response(true,'update',$data['type']);
 				break;
         }
-        $this->header->set_json_headers();
-        $this->message->json_post_response(true,'update',$data['type']);
     }
+
+	/**
+	 * Insertion de données
+	 * @param $data
+	 */
+	private function del($data){
+		switch($data['type']){
+			case 'link':
+				parent::delete(
+					array(
+						'type'      =>    $data['type']
+					),
+					$data['data']
+				);
+				$this->header->set_json_headers();
+				$this->message->json_post_response(true,'delete',$data['data']);
+				break;
+		}
+	}
 
     /**
      *
@@ -273,6 +302,41 @@ class backend_controller_theme extends backend_db_theme{
                         }
                     }
                     break;
+				case 'editlink':
+					if(isset($this->edit) && isset($this->link)) {
+						$this->link = $this->link[$this->edit];
+						$this->upd(array(
+							'type' => 'link',
+							'data' => array(
+								'mode_link' => $this->link['mode'],
+								'id' => $this->edit
+							)
+						));
+
+						foreach ($this->link['content'] as $k => $link) {
+							$link['id'] = $this->edit;
+							$link['id_lang'] = $k;
+							$link['title_link'] = empty($link['title_link']) ? NULL : $link['title_link'];
+							$this->upd(array(
+								'type' => 'link_content',
+								'data' => $link
+							));
+						}
+
+						$this->header->set_json_headers();
+						$this->message->json_post_response(true,'update',$this->edit);
+					}
+					break;
+				case 'delete':
+					if(isset($this->id)) {
+						$this->del(array(
+							'type' => 'link',
+							'data' => array(
+								'id' => strval($this->id)
+							)
+						));
+					}
+					break;
                 case 'order':
 					if (isset($this->order)) {
 						$this->upd(

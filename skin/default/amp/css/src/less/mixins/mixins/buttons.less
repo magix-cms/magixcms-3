@@ -14,11 +14,6 @@
     background-color: darken(@background, 10%);
         border-color: darken(@border, 25%);
   }
-  &:hover {
-    color: @color;
-    background-color: darken(@background, 10%);
-        border-color: darken(@border, 12%);
-  }
   &:active,
   &.active,
   .open > .dropdown-toggle& {
@@ -26,7 +21,6 @@
     background-color: darken(@background, 10%);
         border-color: darken(@border, 12%);
 
-    &:hover,
     &:focus,
     &.focus {
       color: @color;
@@ -42,7 +36,6 @@
   &.disabled,
   &[disabled],
   fieldset[disabled] & {
-    &:hover,
     &:focus,
     &.focus {
       background-color: @background;

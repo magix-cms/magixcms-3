@@ -42,10 +42,12 @@ function smarty_function_amp_img($params)
 		}
 
 		if(count($matches) === count($rpl)) {
-			echo preg_replace_callback('/<img.*\/>/i', function($match) use (&$rpl) {
+			$content = preg_replace_callback('/<img.*\/>/i', function($match) use (&$rpl) {
 				return array_shift($rpl);
 			}, $content);
 			//return $content;
 		}
 	}
+
+	echo $content;
 }

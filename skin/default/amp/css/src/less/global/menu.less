@@ -9,9 +9,12 @@ amp-sidebar {
 .sidebar {
 	margin: 0;
 	max-width: 37.5rem;
-	min-width: 50vw;
+	width: 50vw;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 
-	header {
+	> header {
 		display: flex;
 		justify-content: center;
 		padding: 15px;
@@ -29,4 +32,70 @@ amp-sidebar {
 	position: absolute;
 	left: 15px;
 	top: 15px;
+}
+
+.menu {
+	flex: 1 0 auto;
+
+	a {
+		display: block;
+		padding: 15px;
+		background-color: transparent;
+		color: @text-color;
+		border-bottom: 1px solid #dfdfdf;
+
+		&:focus, &:active {
+			color: @main-color;
+		}
+	}
+
+	amp-accordion {
+		> section {
+			header {
+				background-color: transparent;
+				border: none;
+				padding: 0;
+
+				.material-icons {
+					padding: 15px;
+					display: block;
+					position: absolute;
+					right: 0;
+					top: 0;
+				}
+			}
+
+			&:not([expanded]) {
+				> header > .show-less {
+					display: none;
+				}
+			}
+
+			&[expanded] {
+				> header > .show-more {
+					display: none;
+				}
+			}
+		}
+	}
+
+	.nested-accordion {
+		padding: 0 0 0 15px;
+		background: #eee;
+
+		> section,
+		> .section {
+			background: #fff;
+
+			> div {
+				padding: 0 0 0 15px;
+				background: #eee;
+				border-left: 1px solid rgba(0,0,0,.1);
+			}
+		}
+
+		ul {
+			background: #fff;
+		}
+	}
 }

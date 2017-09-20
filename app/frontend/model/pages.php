@@ -40,13 +40,14 @@
  */
 class frontend_model_pages extends frontend_db_pages{
 
-    protected $routingUrl,$imagesComponent,$modelPlugins;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate;
 
     public function __construct($template)
     {
         $this->routingUrl = new component_routing_url();
         $this->imagesComponent = new component_files_images($template);
         $this->modelPlugins = new frontend_model_plugins();
+        $this->coreTemplate = new frontend_model_template();
     }
 
     /**
@@ -66,11 +67,14 @@ class frontend_model_pages extends frontend_db_pages{
             $data['title']       = $row['name_pages'];
             $data['iso']        = $row['iso_lang'];
             $data['url']  =
-                $this->routingUrl->getBuildPages(array(
-                    'iso_lang'  =>  $row['iso_lang'],
-                    'id_pages'  =>  $row['id_pages'],
-                    'url_pages' =>  $row['url_pages']
-                ));
+                $this->routingUrl->getBuildUrl(array(
+                    'type'      =>  'pages',
+                    'iso'       =>  $row['iso_lang'],
+                    'id'        =>  $row['id_pages'],
+                    'url'       =>  $row['url_pages']
+                )
+            );
+
             $data['active'] = false;
 
             if ($row['id_pages'] == $current['controller']['id']) {
@@ -84,8 +88,11 @@ class frontend_model_pages extends frontend_db_pages{
                     'attribute_img'=>'page'
                 ));
                 foreach ($fetchConfig as $key => $value) {
-                    $data['imgSrc'][$value['type_img']]['img'] = '/upload/pages/'.$row['id_pages'].'/'.$imgPrefix[$value['type_img']] . $row['img_pages'];
+                    $data['imgSrc'][$value['type_img']] = '/upload/pages/'.$row['id_pages'].'/'.$imgPrefix[$value['type_img']] . $row['img_pages'];
                 }
+            }else{
+                $data['imgSrc']['default']  =
+                    '/skin/'.$this->coreTemplate->themeSelected().'/img/pages/default.png';
             }
             $data['content'] = $row['content_pages'];
             $data['menu'] = $row['menu_pages'];
@@ -105,6 +112,38 @@ class frontend_model_pages extends frontend_db_pages{
         }
     }
 
+	/**
+	 * @param $pages
+	 * @param string $branch
+	 * @return mixed
+	 */
+	private function setPagesTree($pages, $branch = 'root')
+	{
+		$childs = array();
+
+		foreach($pages as &$item) {
+			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+			if($k === 'root')
+				$childs[$k][] = &$item;
+			else
+				$childs[$k]['subdata'][] = &$item;
+
+			$childs[$item['id_pages']] = &$item;
+		}
+		unset($item);
+
+		foreach($pages as &$item) {
+			if (isset($childs[$item['id_pages']])) {
+				$item['subdata'] = $childs[$item['id_pages']]['subdata'];
+			}
+		}
+
+		if($branch === 'root')
+			return $childs[$branch];
+		else
+			return array($childs[$branch]);
+	}
+
     /**
      * @param $row
      * @return array
@@ -114,12 +153,14 @@ class frontend_model_pages extends frontend_db_pages{
         $arr = array();
 
         foreach ($row as $item) {
-            $arr[$item['id_lang']] = $this->routingUrl->getBuildPages(array(
-                'iso_lang'  =>  $item['iso_lang'],
-                'id_pages'  =>  $item['id_pages'],
-                'url_pages' =>  $item['url_pages']
+            $arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
+                'type'      =>  'pages',
+                'iso'       =>  $item['iso_lang'],
+                'id'        =>  $item['id_pages'],
+                'url'       =>  $item['url_pages']
             ));
         }
+
         return $arr;
     }
 
@@ -200,7 +241,57 @@ class frontend_model_pages extends frontend_db_pages{
 
         // *** Load SQL data
         $conditions = '';
-        if ($conf['context'][1] == 'parent' OR $conf['context'][1] == 'all') {
+        if ($conf['context'][1] == 'all') {
+			if ($override) {
+				$getCallClass = $this->modelPlugins->getCallClass($override);
+				if(method_exists($getCallClass,'override')){
+					$conf['data'] = 'all';
+					$conf['controller'] = $current;
+					$data = call_user_func_array(
+						array(
+							$getCallClass,
+							'override'
+						),
+						array(
+							$conf,
+							$custom
+						)
+					);
+				}
+			}
+			else {
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
+
+				if (isset($custom['exclude'])) {
+					$conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
+				}
+
+				if ($conf['type'] == 'menu') {
+					$conditions .= ' AND p.menu_pages = 1';
+				}
+				// ORDER
+				$conditions .= ' ORDER BY p.order_pages ASC';
+
+				if ($conf['limit'] != null) {
+					$conditions .= ' LIMIT ' . $conf['limit'];
+				}
+
+				if ($conditions != '') {
+					$data = parent::fetchData(
+						array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+						array(
+							':iso' => $conf['lang']
+						)
+					);
+
+					if($data != null) {
+						$branch = isset($custom['select']) ? $conf['id'] : 'root';
+						$data = $this->setPagesTree($data,$branch);
+					}
+				}
+			}
+		}
+        elseif ($conf['context'][1] == 'parent') {
             if ($override) {
                 $getCallClass = $this->modelPlugins->getCallClass($override);
                 if(method_exists($getCallClass,'override')){
@@ -248,7 +339,7 @@ class frontend_model_pages extends frontend_db_pages{
                     );
                 }
             }
-            if($data != null AND ($conf['context'][2] == 'child' OR $conf['context'][1] == 'all'))
+            if($data != null AND ($conf['context'][2] == 'child'))
             {
                 if ($override) {
                     $getCallClass = $this->modelPlugins->getCallClass($override);
@@ -281,10 +372,10 @@ class frontend_model_pages extends frontend_db_pages{
                         $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1
                     AND p.id_parent = :id';
 
-                        if (isset($custom['select'])) {
+                        /*if (isset($custom['select'])) {
 
                             $conditions .= ' AND p.id_pages IN (' . $conf['id'] . ') ';
-                        }
+                        }*/
                         if (isset($custom['exclude'])) {
 
                             $conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';

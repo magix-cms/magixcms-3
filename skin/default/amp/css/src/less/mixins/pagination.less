@@ -38,7 +38,6 @@
 
   > li > a,
   > li > span {
-    &:hover,
     &:focus {
       z-index: 2;
       color: @pagination-hover-color;
@@ -50,7 +49,6 @@
   > .active > a,
   > .active > span {
     &,
-    &:hover,
     &:focus {
       z-index: 3;
       color: @pagination-active-color;
@@ -62,10 +60,8 @@
 
   > .disabled {
     > span,
-    > span:hover,
     > span:focus,
     > a,
-    > a:hover,
     > a:focus {
       color: @pagination-disabled-color;
       background-color: @pagination-disabled-bg;

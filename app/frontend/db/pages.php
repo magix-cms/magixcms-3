@@ -15,8 +15,8 @@ class frontend_db_pages
                     JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
                     WHERE h.id_pages = :id AND c.published_pages = 1';
                     $params = $data;
-                }elseif ($config['type'] === 'pages') {
-
+                }
+                elseif ($config['type'] === 'pages') {
                     $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 
                     $sql = "SELECT
@@ -27,10 +27,9 @@ class frontend_db_pages
                     $conditions";
 
                     $params = $data;
-
                     //WHERE lang.iso_lang = :iso AND c.published_pages = 1
-                }elseif($config['type'] === 'child'){
-
+                }
+                elseif($config['type'] === 'child'){
                     $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 
                     $sql = "SELECT p.id_pages,p.id_parent,p.img_pages,p.menu_pages, p.date_register, c.*,lang.iso_lang
@@ -45,8 +44,8 @@ class frontend_db_pages
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 
-            }elseif($config['context'] === 'one') {
-
+            }
+            elseif($config['context'] === 'one') {
                 if ($config['type'] === 'page') {
                     //Return current skin
                     $sql = 'SELECT
