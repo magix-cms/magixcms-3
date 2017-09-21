@@ -34,34 +34,53 @@
         </section>
         <section id="tasks" class="col-xs-12 col-md-6 col-lg-3 pull-right">
             <header>
-                <h2 class="h5">En cours</h2>
+                <h2 class="h5">
+                    <a href="{geturl}/{baseadmin}/index.php?controller=news">
+                        <span class="fa fa-newspaper-o"></span> {#last_news#|ucfirst}
+                    </a>
+                </h2>
             </header>
-            <div>
-                <div class="row folder-box">
-                    <div class="col-xs-6">
-                        <p><a href="#">ma page</a></p>
+
+            {if is_array($lastNews) && !empty($lastNews)}
+                {foreach $lastNews as $item}
+                    <div>
+                        <div class="row folder-box">
+                            <div class="col-xs-6">
+                                <p><a href="{geturl}/{baseadmin}/index.php?controller=news&action=edit&edit={$item.id_news}">{$item.name_news}</a></p>
+                            </div>
+                            <div class="col-xs-6">
+                                <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xs-6">
-                        <p class="text-right">02/11/2016</p>
-                    </div>
-                </div>
-            </div>
+                {/foreach}
+            {/if}
         </section>
+        {if {employee_access type="view" class_name="backend_controller_pages"} eq 1}
         <section class="col-xs-12 col-md-6 col-lg-3 pull-left">
             <header>
-                <h2 class="h5">Dernières pages</h2>
+                <h2 class="h5"><a href="{geturl}/{baseadmin}/index.php?controller=pages">
+                        <span class="fa fa-file-text-o"></span> {#last_pages#|ucfirst}
+                    </a>
+                </h2>
             </header>
+
+            {if is_array($lastPages) && !empty($lastPages)}
+            {foreach $lastPages as $item}
             <div>
                 <div class="row folder-box">
                     <div class="col-xs-6">
-                        <p><a href="#">ma page</a></p>
+                        <p><a href="{geturl}/{baseadmin}/index.php?controller=pages&action=edit&edit={$item.id_pages}">{$item.name_pages}</a></p>
                     </div>
                     <div class="col-xs-6">
-                        <p class="text-right">02/11/2016</p>
+                        <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
                     </div>
                 </div>
             </div>
+            {/foreach}
+            {/if}
         </section>
+        {/if}
         {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
             <section class="col-xs-12 col-md-6 col-lg-3 pull-left">
                 <header>

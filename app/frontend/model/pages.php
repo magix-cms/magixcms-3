@@ -64,7 +64,7 @@ class frontend_model_pages extends frontend_db_pages{
         if ($row != null) {
             $data['id']         = $row['id_pages'];
             $data['id_parent']  = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
-            $data['title']       = $row['name_pages'];
+            $data['title']      = $row['name_pages'];
             $data['iso']        = $row['iso_lang'];
             $data['url']  =
                 $this->routingUrl->getBuildUrl(array(
@@ -84,8 +84,8 @@ class frontend_model_pages extends frontend_db_pages{
             if (isset($row['img_pages'])) {
                 $imgPrefix = $this->imagesComponent->prefix();
                 $fetchConfig = $this->imagesComponent->getConfigItems(array(
-                    'module_img'=>'pages',
-                    'attribute_img'=>'page'
+                    'module_img'    =>'pages',
+                    'attribute_img' =>'page'
                 ));
                 foreach ($fetchConfig as $key => $value) {
                     $data['imgSrc'][$value['type_img']] = '/upload/pages/'.$row['id_pages'].'/'.$imgPrefix[$value['type_img']] . $row['img_pages'];

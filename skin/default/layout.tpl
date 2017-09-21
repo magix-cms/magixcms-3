@@ -4,7 +4,7 @@
 <!--[if IE 7]><html lang="{getlang}" class="lt-ie9 lt-ie8"><![endif]-->
 <!--[if IE 8]><html lang="{getlang}" class="lt-ie9"><![endif]-->
 <!--[if gt IE 8]><!--><html lang="{getlang}"><!--<![endif]-->
-<head id="meta" {*block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block*}>{* Document meta *}
+<head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>{* Document meta *}
     <meta charset="utf-8">
     <title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>
     <meta name="description" content="{capture name="description"}{block name="description"}{/block}{/capture}{$smarty.capture.description}">
@@ -12,8 +12,8 @@
     <meta name="robots" content="{google_tools tools='robots'}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {*{block name="socials"}{include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}{/block}*}
-    {*{if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}*}
+    {block name="socials"}{include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}{/block}
+    {if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
     <link rel="icon" type="image/png" href="{geturl}/skin/{template}/img/favicon.png" />
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{geturl}/skin/{template}/img/favicon.ico" /><![endif]-->
     {capture name="stylesheet"}{strip}

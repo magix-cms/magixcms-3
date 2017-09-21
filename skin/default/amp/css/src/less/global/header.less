@@ -40,17 +40,23 @@
 //
 // Cookie Consent Alert
 //
-
-#cookies {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	z-index: 10;
-	background-color: rgba(0,0,0,.6);
+amp-user-notification {
+	min-height: 30px;
+	font-family: 'Roboto';
+	font-weight: 500;
+	line-height: 30px;
 	color: #f2f2f2;
 	padding: 15px;
+	background-color: rgba(0,0,0,.6);
 
-	.fa {
-		margin-right: 8px;
+	.material-icons {
+		vertical-align: text-top;
+		margin-right: 6px;
+	}
+
+	a.bold-link {
+		font-weight: bold;
+		color: #fff;
+		text-decoration: underline;
 	}
 }

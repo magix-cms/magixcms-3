@@ -8,14 +8,16 @@
     {capture name="twCard"}summary{/capture}
     {$data = null}
 
-    {switch $smarty.server.SCRIPT_NAME}
+    {switch $smarty.get.controller}
         {* Pages *}
-    {case '/cms.php' break}
-    {$data = $page}
+    {case 'pages' break}
+    {$data = $pages}
         {* /Pages *}
 
         {* Catalogue *}
-    {case '/catalog.php' break}
+    {case 'catalog'}
+    {case 'category'}
+    {case 'product' break}
     {if $smarty.get.idclc}
         {if $smarty.get.idcls OR $smarty.get.idproduct}
             {if $smarty.get.idproduct}
@@ -33,7 +35,7 @@
         {* /Catalogue *}
 
         {* Actualités *}
-    {case '/news.php' break}
+    {case 'news' break}
     {if $smarty.get.tag OR $smarty.get.uri_get_news}
         {if $smarty.get.uri_get_news}
             {$data = $news}

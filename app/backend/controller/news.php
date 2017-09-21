@@ -82,7 +82,14 @@ class backend_controller_news extends backend_db_news{
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
-
+    /**
+     * Return Last pages (Dashboard)
+     */
+    public function getItemsNews(){
+        $this->modelLanguage->getLanguage();
+        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+        $this->getItems('lastNews',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+    }
     /**
      * @param $data
      * @return array

@@ -212,6 +212,9 @@ class frontend_model_about extends frontend_db_about {
 
 		foreach ($this->company as $info => $value) {
 			switch ($info) {
+				case 'type':
+					$this->company['type'] = $this->type[$about['type']]['schema'];
+					break;
 				case 'contact':
 					foreach ($value as $contact_info => $val) {
 						if($contact_info == 'adress') {

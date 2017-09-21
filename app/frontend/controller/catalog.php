@@ -64,8 +64,13 @@ class frontend_controller_catalog extends frontend_db_catalog {
     {
         $collection = $this->getItems('product',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
         $imgCollection = $this->getItems('images',array(':id'=>$this->id,':iso'=>$this->getlang),'all',false);
+        $associatedCollection = $this->getItems('similar',array(':id'=>$this->id,':iso'=>$this->getlang),'all',false);
         if($imgCollection != null){
             $collection['img'] = $imgCollection;
+        }
+
+        if($associatedCollection != null){
+            $collection['associated'] = $associatedCollection;
         }
 
         return $this->modelCatalog->setItemData($collection,null);

@@ -89,6 +89,14 @@ class backend_controller_pages extends backend_db_pages
 	}
 
     /**
+     * Return Last pages (Dashboard)
+     */
+    public function getItemsPages(){
+        $this->modelLanguage->getLanguage();
+        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+        $this->getItems('lastPages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+    }
+    /**
      * @param $data
      * @return array
      */

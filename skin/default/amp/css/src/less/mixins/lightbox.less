@@ -1,0 +1,54 @@
+.lightbox {
+	background: rgba(0,0,0,0.8);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	amp-carousel {
+		width: 100%;
+		height: 100%;
+	}
+
+	figure {
+		display: flex;
+		align-items: center;
+	}
+
+	amp-img {
+		width: 100%;
+	}
+
+	figcaption {
+		position: absolute;
+		bottom: 0;
+		padding: 30px;
+		color: #fff;
+		z-index: 1;
+	}
+}
+
+.amp-mode-mouse .amp-carousel-button {
+	height: 46px;
+	width: 46px;
+	background-size: 24px 24px;
+	opacity: .5;
+
+	&:focus, &:active {
+		opacity: 1;
+	}
+}
+
+.close-btn {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	color: #ffffff;
+	z-index: 20;
+
+	i.material-icons {
+		font-size: 48px;
+	}
+}

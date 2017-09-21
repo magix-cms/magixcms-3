@@ -1,6 +1,10 @@
-<div id="cookies" class="fade in hide" role="alert">
-    <button type="button" class="btn btn-box btn-invert-white pull-right" onclick="C.createCookie(C.cookieName, C.cookieValue, C.cookieDuration)">{#close_cookie#|ucfirst}</button>
-    <p>
-        {#cookie_text#} <a href="{#cookie_page#}" class="targetblank bold-link">{#cookie_read_page#|ucfirst}</a>
-    </p>
-</div>
+<amp-user-notification
+        layout=nodisplay
+        id="amp-cookies"
+        data-persist-dismissal="false"
+        data-show-if-href="{geturl|replace:'http://':'//'}/cookie/?timestamp=TIMESTAMP"
+        data-dismiss-href="{geturl|replace:'http://':'//'}/cookie/">
+    {#cookie_text#} <a href="{#cookie_page#}" class="targetblank bold-link">{#cookie_read_page#|ucfirst}</a>
+    <a class="btn btn-box btn-invert-white" on="tap:amp-cookies.dismiss">{#close_cookie#|ucfirst}</a>
+</amp-user-notification>
+</amp-analytics>

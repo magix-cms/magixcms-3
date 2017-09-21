@@ -136,6 +136,17 @@ class backend_db_pages
                         WHERE c.published_pages = 1 AND c.id_lang = :id_lang
                         ORDER BY p.id_pages ASC';
                     $params = $data;
+                }elseif ($config['type'] === 'lastPages') {
+                    //### -- Dashboard Data
+                    $sql = "SELECT p.id_pages, c.name_pages, p.date_register
+								FROM mc_cms_page AS p
+									JOIN mc_cms_page_content AS c USING ( id_pages )
+									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+									WHERE c.id_lang = :default_lang
+									GROUP BY p.id_pages 
+								ORDER BY p.id_pages DESC
+								LIMIT 4";
+                    $params = $data;
                 }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
