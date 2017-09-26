@@ -34,7 +34,12 @@
  */
 class component_routing_url{
 
-    public function __construct(){}
+    protected $dateFormat,$setBuildUrl;
+
+    public function __construct(){
+        $this->dateFormat = new date_dateformat();
+        $this->setBuildUrl = new http_url();
+    }
 
     /**
      * @param $data
@@ -58,6 +63,12 @@ class component_routing_url{
                     if(isset($data['id_parent']) && isset($data['url_parent'])) {
                         $url = '/' . $iso . '/catalog/' . $data['id_parent'] . '-' . $data['url_parent'] . '/' . $data['id'] . '-' . $data['url'] . '/';
                     }
+                    break;
+                case 'news':
+                    $url = '/'.$iso.'/news/'.$this->dateFormat->dateToDefaultFormat($data['date']).'/'.$data['id'].'-'.$data['url'].'/';
+                    break;
+                case 'tag':
+                    $url = '/'.$iso.'/news/tag/'.$data['id'].'-'.$this->setBuildUrl->clean($data['url']).'/';
                     break;
             }
             return $url;

@@ -335,6 +335,7 @@ class frontend_model_catalog extends frontend_db_catalog {
             'lang'      =>  $current['lang']['iso'],
             'context'   =>  array(1 => 'category')
         );
+        !empty($current['controller']['name']) || $current['controller']['name'] !='' ? $current['controller']['name'] : $current['controller']['name'] = 'catalog';
         $current = $current['controller'];
 
         //$conf['id']         =   $current['id'];

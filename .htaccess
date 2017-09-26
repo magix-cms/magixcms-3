@@ -72,7 +72,7 @@
     #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 </IfModule>
 DirectoryIndex index.php
-RewriteBase /
+#RewriteBase /
 # ----------------------------------------------------------------------
 # Custom 404 page
 # ----------------------------------------------------------------------
@@ -94,5 +94,8 @@ RewriteRule ^(?:amp)/(.*) 										/$1?amp=1		[QSA,L]
 #RewriteRule ^(?:news)/{0,1}$   /index.php&controller=news				[QSA,L]
 RewriteCond %{REQUEST_URI} !^/(admin|install|webservice)
 RewriteRule ^([0-9a-zA-Z]+)/{0,1}$     	/index.php?controller=$1		[QSA,L]
+RewriteRule ^([0-9a-zA-Z]+)/(\d{4})/{0,1}$     	/index.php?controller=$1&year=$2		[QSA,L]
+RewriteRule ^([0-9a-zA-Z]+)/(\d{4})/(\d{2})/{0,1}$     	/index.php?controller=$1&year=$2&month=$3		[QSA,L]
+RewriteRule ^([0-9a-zA-Z]+)/(\d{4}/\d{2}/\d{2})/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&date=$2&id=$3&url=$4		[QSA,L]
 RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id=$2&url=$3		[QSA,L]
 RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id_parent=$2&url_parent=$3&id=$4&url=$5		[QSA,L]

@@ -171,6 +171,7 @@ class backend_controller_news extends backend_db_news{
                         'name_news'       => $data['name_news'],
                         'url_news'        => $data['url_news'],
                         'content_news'    => $data['content_news'],
+                        'resume_news'    => $data['resume_news'],
                         'date_publish'    => $data['date_publish'],
                         'published_news'  => $data['published_news']
                     )
@@ -217,6 +218,7 @@ class backend_controller_news extends backend_db_news{
                         'name_news' => $content['name_news'],
                         'url_news' => $content['url_news'],
                         'content_news' => $content['content_news'],
+                        'resume_news' => $content['resume_news'],
                         'date_publish' => $datePublish,
                         'published_news' => $content['published_news']
                     ));

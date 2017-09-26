@@ -189,6 +189,7 @@ class frontend_model_pages extends frontend_db_pages{
             'context' => array(1 => 'parent')
         );
 
+        !empty($current['controller']['name']) || $current['controller']['name'] !='' ? $current['controller']['name'] : $current['controller']['name'] = 'pages';
         $current = $current['controller'];
 
         // custom values: select or exclude

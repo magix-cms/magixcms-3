@@ -41,199 +41,266 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class frontend_model_news extends frontend_db_news {
+
+    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$dateFormat;
+
+    public function __construct($template)
+    {
+        $this->routingUrl = new component_routing_url();
+        $this->imagesComponent = new component_files_images($template);
+        $this->modelPlugins = new frontend_model_plugins();
+        $this->coreTemplate = new frontend_model_template();
+        $this->dateFormat = new date_dateformat();
+    }
+
     /**
      * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
      * @param $row
      * @param $current
-     * @return array|null
+     * @param bool $newRow
+     * @return null
      */
-    public function setItemData($row,$current)
+    public function setItemData($row,$current,$newRow = false)
     {
-        $ModelImagepath     =   new magixglobal_model_imagepath();
-        $ModelDateformat    =   new magixglobal_model_dateformat();
-        $ModelTemplate      =   new frontend_model_template();
-        $ModelRewrite       =   new magixglobal_model_rewrite();
 
-        $data   =   null;
-        if (isset($row['idnews'])) {
-            $data['tag']    =   null;
-            $tag['data']    =   parent::s_tagByNews($row['idnews']);
+        $data = null;
 
-            if (is_array($tag['data'])) {
-                foreach ($tag['data'] as $t){
-                    $t['uri'] =
-                        $ModelRewrite->filter_news_tag_url(
-                            $row['iso'],
-                            $t['name_tag'],
-                            true
+        if (isset($row['id_news'])) {
+            $data['id']        = $row['id_news'];
+            $data['title']     = $row['name_news'];
+            $data['url']  =
+                $this->routingUrl->getBuildUrl(array(
+                        'type'      =>  'news',
+                        'iso'       =>  $row['iso_lang'],
+                        'date'      =>  $row['date_publish'],
+                        'id'        =>  $row['id_news'],
+                        'url'       =>  $row['url_news']
+                    )
+                );
+
+
+            if (isset($row['img_news'])) {
+                $imgPrefix = $this->imagesComponent->prefix();
+                $fetchConfig = $this->imagesComponent->getConfigItems(array(
+                    'module_img'    =>'news',
+                    'attribute_img' =>'news'
+                ));
+                foreach ($fetchConfig as $key => $value) {
+                    $data['imgSrc'][$value['type_img']] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news'];
+                }
+            }else{
+                $data['imgSrc']['default']  =
+                    '/skin/'.$this->coreTemplate->themeSelected().'/img/news/default.png';
+            }
+
+            $data['active'] = false;
+
+            if ($row['id_news'] == $current['controller']['id']) {
+                $data['active'] = true;
+            }
+
+            $data['date']['register']    = $this->dateFormat->SQLDate($row['date_register']);
+            $data['date']['update']      = $this->dateFormat->SQLDate($row['last_update']);
+            $data['date']['publish']     = $this->dateFormat->SQLDate($row['date_publish']);
+
+            $data['date']['year']       = $this->dateFormat->dateDefine('Y',$row['date_publish']);
+            $data['date']['month']      = $this->dateFormat->dateDefine('m',$row['date_publish']);
+            $data['date']['day']        = $this->dateFormat->dateDefine('d',$row['date_publish']);
+
+            $data['resume']     = $row['resume_news'];
+            $data['content']    = $row['content_news'];
+
+            $data['tags']    =   null;
+            if(isset($row['tags'])) {
+                if (is_array($row['tags'])) {
+                    foreach ($row['tags'] as $key => $value) {
+                        $data['tags'][$key]['id'] = $value['id_tag'];
+                        $data['tags'][$key]['name'] = $value['name_tag'];
+                        $data['tags'][$key]['url'] = $this->routingUrl->getBuildUrl(array(
+                                'type' => 'tag',
+                                'iso' => $value['iso_lang'],
+                                'id' => $value['id_tag'],
+                                'url' => $value['name_tag']
+                            )
                         );
-                    $data['tag']    .=  '<a href="'.$t['uri'].'" title="'.$t['name_tag'].'">';
-                    $data['tag']    .=  $t['name_tag'];
-                    $data['tag']    .=  '</a> ';
-
+                    }
                 }
             }
 
-            if (isset($row['n_image'])){
-                $data['imgSrc']   =   array(
-                    'small' =>
-                        $ModelImagepath->filterPathImg(
-                            array (
-                                'filtermod'=>'news',
-                                'img'=> 's_'.$row['n_image']
-                            )
-                        ),
-                    'medium' =>
-                    $ModelImagepath->filterPathImg(
-                        array (
-                            'filtermod'=>'news',
-                            'img'=> $row['n_image']
-                        )
-                    )
-                );
+            // Plugin
+            if($newRow != false){
+                if(is_array($newRow)){
+                    foreach($newRow as $key => $value){
+                        $data[$key] = $row[$value];
+                    }
+                }
             }
-            $data['imgSrc']['default']   = $ModelImagepath->filterPathImg(
-                array(
-                    'img'=>
-                    'skin/'.
-                        $ModelTemplate->frontendTheme()->themeSelected().
-                        '/img/news/news-default.png')
-            );
-
-            $data['id']        = $row['idnews'];
-            $data['name']      = $row['n_title'];
-            $data['uri']       =
-                $ModelRewrite->filter_news_url(
-                    $row['iso'],
-                    $ModelDateformat->date_europeen_format(
-                        $row['date_register']
-                    ),
-                    $row['n_uri'],
-                    $row['keynews'],
-                    true
-                );
-            $data['current']    =   false;
-            if (isset($current['record']['id'])) {
-                $data['active']   = ($row['keynews'] == $current['record']['id']) ? true : false;
-            }
-            $data['date']['register']      = $ModelDateformat->SQLDate($row['date_register']);
-            $data['date']['publish']       = $ModelDateformat->SQLDate($row['date_publish']);
-            $data['content']     = $row['n_content'];
+            return $data;
         }
         return $data;
     }
-     /**
+
+    /**
+     * @param $row
+     * @return array
+     */
+    public function setHrefLangData($row)
+    {
+        $arr = array();
+
+        foreach ($row as $item) {
+            $arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
+                'type'      =>  'news',
+                'iso'       =>  $item['iso_lang'],
+                'date'      =>  $item['date_publish'],
+                'id'        =>  $item['id_news'],
+                'url'       =>  $item['url_news']
+            ));
+        }
+
+        return $arr;
+    }
+
+    /**
      * Retourne les données sql sur base des paramètres passés en paramète
      * @param array $custom
      * @param array $current
+     * @param bool $override
      * @return array|null
      */
-    public function getData($custom,$current)
+    public function getData($custom,$current,$override = false)
     {
-        if (!(is_array($custom)))
+        if (!(is_array($custom))) {
             return null;
+        }
 
-        if (!(array_key_exists('news',$current)))
+        if (!(array_key_exists('controller', $current))) {
             return null;
+        }
 
-        $ModelPager      =   new magixglobal_model_pager();
 
         // set default values for query
-        $data['conf']   =   array(
-            'id'       =>  $current['news']['tag']['id'],
-            'type'      =>  null,
-            'limit'     =>  10,
-            'offset'    =>  $ModelPager->setPaginationOffset(10,$current['news']['pagination']['id']),
-            'lang'      =>  $current['lang']['iso'],
-            'level'     =>  'all'
+        $conf = array(
+            'id' => null,
+            'type' => 'data',
+            'limit' => null,
+            //'offset'    =>  $ModelPager->setPaginationOffset(10,$current['news']['pagination']['id']),
+            'lang' => $current['lang']['iso'],
+            'context' => array(1 => 'all')
         );
-        $current = $current['news'];
+        !empty($current['controller']['name']) || $current['controller']['name'] !='' ? $current['controller']['name'] : $current['controller']['name'] = 'news';
+        $current = $current['controller'];
 
-        // set data selection conf
+        // custom values: select or exclude
         if (isset($custom['select'])) {
-            if( $custom['select'] == 'current') {
-                if ($current['tag']['id'] != null) {
-                    $data['conf']['id']     =   $current['tag']['id'];
-                    $data['conf']['type']   =   'collection';
-
-                }
+            if ($custom['select'] == 'current') {
+                $conf['id'] = $current['id'];
             } elseif (is_array($custom['select'])) {
-                if (array_key_exists($data['conf']['lang'],$custom['select'])) {
-                    $data['conf']['id']     =   $custom['select'][$data['conf']['lang']];
-                    $data['conf']['type']   =   'collection';
-
+                if (array_key_exists($conf['lang'], $custom['select'])) {
+                    $conf['id'] = $custom['select'][$conf['lang']];
                 }
             }
-        } elseif(isset($custom['exclude'])) {
+        } elseif (isset($custom['exclude'])) {
             if (is_array($custom['exclude'])) {
-                if (array_key_exists($current['lang']['iso'],$custom['exclude'])) {
-                    $data['conf']['id']     =   $custom['exclude'][$data['conf']['lang']];
-                    $data['conf']['type']   =   'exclude';
-
+                if (array_key_exists($conf['lang'], $custom['exclude'])) {
+                    $conf['id'] = $custom['exclude'][$conf['lang']];
+                    //$conf['type'] = 'exclude';
                 }
             }
         }
-        // set number of line to return (with pagination)
-        if (isset($custom['limit'])) {
-            $data['conf']['limit']          =   $custom['limit'];
-            $data['conf']['offset']          =   $ModelPager->setPaginationOffset(
-                $data['conf']['limit'],
-                $current['pagination']['id']
-            );
-        }
-        // set kind of data
-        if (isset($custom['level'])) {
-            switch ($custom['level']) {
-                case 'last-news':
-                    $data['conf']['level']  = 'last-news';
-                    break;
-                case 'tag':
-                    $data['conf']['level']  = 'tag';
-                    break;
-            }
-        }
-
-        // *** Run - load data
-        if ($data['conf']['level'] == 'last-news') {
-            if (isset($data['conf']['type'])) {
-                $data['src'] = parent::s_news_in_tag(
-                    $data['conf']['lang'],
-                    $data['conf']['id'],
-                    $data['conf']['type'],
-                    $data['conf']['limit']
-                );
-
+        // custom values: display
+        if (isset($custom['context'])) {
+            if (is_array($custom['context'])) {
+                foreach ($custom['context'] as $k => $v) {
+                    $conf['context'][1] = $k;
+                    $conf['context'][2] = $v;
+                }
             } else {
-                $data['src'] = parent::s_news(
-                    $data['conf']['lang'],
-                    $data['conf']['limit'],
-                    0,
-                    null
+                $allowed = array(
+                    '',
+                    'all'
                 );
+
+                if (in_array($custom['context'], $allowed)) {
+                    $conf['context'][1] = $custom['context'];
+                }
             }
-        } elseif ($data['conf']['level'] == 'tag') {
-                $data['src'] = parent::s_tag_all(
-                    $data['conf']['lang']
-                );
-        } elseif (isset($data['conf']['id'])) {
-            $data['src'] = parent::s_news_in_tag(
-                $data['conf']['lang'],
-                $data['conf']['id'],
-                $data['conf']['type'],
-                $data['conf']['limit']
-            );
-
-        }else {
-            $data['src'] = parent::s_news(
-                $data['conf']['lang'],
-                $data['conf']['limit'],
-                $data['conf']['offset']
-            );
-            $data['src']['total'] = array_shift(parent::s_news_lang_total($data['conf']['lang']));
-            $data['src']['limit'] = $data['conf']['limit'];
-
         }
-        return $data['src'];
+
+        if (isset($custom['limit'])) {
+            $conf['limit'] = $custom['limit'];
+        }
+
+        // Override with plugin
+        if (isset($custom['plugins'])) {
+            $conf['plugins'] = $custom['plugins'];
+        }
+
+        // *** Load SQL data
+        $conditions = '';
+        if ($conf['context'][1] == 'all') {
+            if ($override) {
+                $getCallClass = $this->modelPlugins->getCallClass($override);
+                if(method_exists($getCallClass,'override')){
+                    $conf['data'] = 'all';
+                    $conf['controller'] = $current;
+                    $data = call_user_func_array(
+                        array(
+                            $getCallClass,
+                            'override'
+                        ),
+                        array(
+                            $conf,
+                            $custom
+                        )
+                    );
+                }
+            }
+            else {
+
+                $conditions .= ' WHERE lang.iso_lang = :iso AND c.date_publish <=:date AND c.published_news = 1 ';
+                //
+
+                if (isset($custom['exclude'])) {
+                    $conditions .= ' AND p.id_news NOT IN (' . $conf['id'] . ') ';
+                }
+
+                // ORDER
+                //$conditions .= ' ORDER BY p.order_pages ASC';
+
+                if ($conf['limit'] != null) {
+                    $conditions .= ' LIMIT ' . $conf['limit'];
+                }
+
+                if ($conditions != '') {
+                    $data = parent::fetchData(
+                        array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+                        array(
+                            ':iso' => $conf['lang'],
+                            ':date' => $this->dateFormat->SQLDate()
+                        )
+                    );
+                    foreach($data as $key => $value){
+                        $collectionTags = parent::fetchData(
+                            array('context' => 'all', 'type' => 'tagsRel'),
+                            array(
+                                ':iso' => $value['iso_lang'],
+                                ':id'  => $value['id_news']
+                            )
+                        );
+                        if($collectionTags != null) {
+                            $data[$key]['tags'] = $collectionTags;
+                        }
+                    }
+
+                    /*if($data != null) {
+                        $branch = isset($custom['select']) ? $conf['id'] : 'root';
+                        $data = $this->setPagesTree($data,$branch);
+                    }*/
+                }
+            }
+        }
+        return $data;
     }
 }
 ?>

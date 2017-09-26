@@ -4,3 +4,13 @@
 <div itemprop="text">
     {$home.content}
 </div>
+{widget_news_data
+conf = [
+'context' => 'all'
+]
+assign="pages"
+}
+<h2>Les actualités</h2>
+<pre>
+    {$pages|print_r}
+</pre>
