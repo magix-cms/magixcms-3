@@ -5,7 +5,7 @@ class frontend_controller_news extends frontend_db_news
      * @var
      */
     protected $template, $header, $data, $modelNews, $modelCore, $dateFormat;
-    public $getlang, $id, $id_parent,$date,$year,$month;
+    public $getlang, $id, $id_parent,$date,$year,$month,$tag;
     /**
      * frontend_controller_pages constructor.
      */
@@ -28,6 +28,9 @@ class frontend_controller_news extends frontend_db_news
         }
         if (http_request::isGet('month')) {
             $this->month = $formClean->simpleClean($_GET['month']);
+        }
+        if (http_request::isGet('tag')) {
+            $this->tag = $formClean->simpleClean($_GET['tag']);
         }
         /*if (http_request::isGet('id_parent')) {
             $this->id_parent = $formClean->numeric($_GET['id_parent']);
@@ -101,6 +104,9 @@ class frontend_controller_news extends frontend_db_news
         }elseif(isset($this->year) OR isset($this->month) OR isset($this->date)){
             $this->getData('date');
             $this->template->display('news/date.tpl');
+        }elseif(isset($this->tag)){
+            //$this->getData('date');
+            $this->template->display('news/tag.tpl');
         }else{
             $this->template->display('news/index.tpl');
         }

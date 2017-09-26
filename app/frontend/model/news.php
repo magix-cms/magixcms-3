@@ -135,8 +135,20 @@ class frontend_model_news extends frontend_db_news {
                     }
                 }
             }
-            return $data;
+
+        }else if(isset($row['id_tag'])){
+
+            $data['id'] = $row['id_tag'];
+            $data['name'] = $row['name_tag'];
+            $data['url'] = $this->routingUrl->getBuildUrl(array(
+                    'type' => 'tag',
+                    'iso' => $row['iso_lang'],
+                    'id' => $row['id_tag'],
+                    'url' => $row['name_tag']
+                )
+            );
         }
+
         return $data;
     }
 
@@ -186,6 +198,7 @@ class frontend_model_news extends frontend_db_news {
             'limit' => null,
             //'offset'    =>  $ModelPager->setPaginationOffset(10,$current['news']['pagination']['id']),
             'lang' => $current['lang']['iso'],
+            'filter' => null,
             'context' => array(1 => 'all')
         );
         !empty($current['controller']['name']) || $current['controller']['name'] !='' ? $current['controller']['name'] : $current['controller']['name'] = 'news';
@@ -218,7 +231,9 @@ class frontend_model_news extends frontend_db_news {
             } else {
                 $allowed = array(
                     '',
-                    'all'
+                    'all',
+                    'tag',
+                    'tags'
                 );
 
                 if (in_array($custom['context'], $allowed)) {
@@ -229,6 +244,12 @@ class frontend_model_news extends frontend_db_news {
 
         if (isset($custom['limit'])) {
             $conf['limit'] = $custom['limit'];
+        }
+        if (isset($custom['filter'])) {
+            //$conf['filter'] = $custom['filter'];
+            foreach ($custom['filter'] as $k => $v) {
+                $conf['filter'][$k] = $v;
+            }
         }
 
         // Override with plugin
@@ -268,6 +289,18 @@ class frontend_model_news extends frontend_db_news {
                 // ORDER
                 //$conditions .= ' ORDER BY p.order_pages ASC';
 
+
+                if ($conf['filter'] != null) {
+                    if(isset($conf['filter']['year'])) {
+                        $conditions .= ' AND YEAR(c.date_publish) = ' . $conf['filter']['year'];
+                    }
+                    if(isset($conf['filter']['month']) && $conf['filter']['month'] != null) {
+                        $conditions .= ' AND MONTH(c.date_publish) = ' . $conf['filter']['month'];
+                    }
+                }
+
+                $conditions .= ' ORDER BY c.date_publish DESC';
+
                 if ($conf['limit'] != null) {
                     $conditions .= ' LIMIT ' . $conf['limit'];
                 }
@@ -299,7 +332,87 @@ class frontend_model_news extends frontend_db_news {
                     }*/
                 }
             }
+        }elseif ($conf['context'][1] == 'tag') {
+            if ($override) {
+                $getCallClass = $this->modelPlugins->getCallClass($override);
+                if(method_exists($getCallClass,'override')){
+                    $conf['data'] = 'tag';
+                    $conf['controller'] = $current;
+                    $data = call_user_func_array(
+                        array(
+                            $getCallClass,
+                            'override'
+                        ),
+                        array(
+                            $conf,
+                            $custom
+                        )
+                    );
+                }
+            }
+            else{
+                $conditions .= ' JOIN mc_news_tag_rel AS tagrel ON ( tagrel.id_news = p.id_news ) ';
+                $conditions .= ' WHERE lang.iso_lang = :iso AND c.date_publish <=:date AND c.published_news = 1 AND tagrel.id_tag = :id ';
+
+                if (isset($custom['select'])) {
+                    $conf['id'] = $custom['select'];
+                }
+                if ($conditions != '') {
+
+
+                    $data = parent::fetchData(
+                        array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+                        array(
+                            ':iso' => $conf['lang'],
+                            ':date' => $this->dateFormat->SQLDate(),
+                            ':id' => $conf['id'],
+                        )
+                    );
+                    foreach($data as $key => $value){
+                        $collectionTags = parent::fetchData(
+                            array('context' => 'all', 'type' => 'tagsRel'),
+                            array(
+                                ':iso' => $value['iso_lang'],
+                                ':id'  => $value['id_news']
+                            )
+                        );
+                        if($collectionTags != null) {
+                            $data[$key]['tags'] = $collectionTags;
+                        }
+                    }
+                }
+            }
+        }elseif ($conf['context'][1] == 'tags') {
+
+            if ($override) {
+                $getCallClass = $this->modelPlugins->getCallClass($override);
+                if (method_exists($getCallClass, 'override')) {
+                    $conf['data'] = 'tags';
+                    $conf['controller'] = $current;
+                    $data = call_user_func_array(
+                        array(
+                            $getCallClass,
+                            'override'
+                        ),
+                        array(
+                            $conf,
+                            $custom
+                        )
+                    );
+                }
+            } else {
+                $conditions .= ' WHERE lang.iso_lang = :iso ';
+                if ($conditions != '') {
+                    $data = parent::fetchData(
+                        array('context' => 'all', 'type' => 'tags', 'conditions' => $conditions),
+                        array(
+                            ':iso' => $conf['lang']
+                        )
+                    );
+                }
+            }
         }
+
         return $data;
     }
 }

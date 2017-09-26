@@ -36,6 +36,14 @@ class frontend_db_news
                             WHERE tagrel.id_news = :id AND lang.iso_lang = :iso';
                     $params = $data;
                 }
+                elseif ($config['type'] === 'tags') {
+                    $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                    $sql = "SELECT tag.id_tag,tag.name_tag,lang.iso_lang
+                            FROM mc_news_tag AS tag
+                            JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang) 
+                            $conditions";
+                    $params = $data;
+                }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 
