@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <parent></parent>
+    <language id="6">
+        <name>ma page</name>
+        <resume>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
+        </resume>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <seo>
+            <title>mon seo title</title>
+            <description>mon seo description</description>
+        </seo>
+    </language>
+    <language id="2">
+        <name>My new record</name>
+        <resume>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
+        </resume>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <seo>
+            <title></title>
+            <description></description>
+        </seo>
+    </language>
+</magixcms>
