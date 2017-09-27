@@ -93,6 +93,10 @@ class frontend_controller_news extends frontend_db_news
         }
     }
 
+    private function getBuildArchive(){
+
+    }
+
     /**
      * @access public
      * run app

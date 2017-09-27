@@ -72,7 +72,7 @@ class backend_db_news
                         FROM mc_news AS p WHERE p.img_news IS NOT NULL';
                 }
                 elseif ($config['type'] === 'tags') {
-                    $sql = 'SELECT tag.name_tag
+                    $sql = 'SELECT tag.id_tag,tag.name_tag
                         FROM mc_news_tag AS tag
                         JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang)
                         WHERE tag.id_lang = :id_lang';

@@ -3,7 +3,7 @@ class backend_model_sitemap{
     /**
      * @var xml_sitemap
      */
-    protected $xml,$setting,$collectionLanguage,$DBPages,$DBNews,$DBCatalog,$DBPlugins,$template,$modelPlugins;
+    protected $xml,$setting,$collectionLanguage,$DBPages,$DBNews,$DBCatalog,$DBPlugins,$template,$modelPlugins,$routingUrl;
 
     /**
      * backend_model_sitemap constructor.
@@ -20,6 +20,7 @@ class backend_model_sitemap{
         $this->collectionLanguage = new component_collections_language();
         $this->modelPlugins = new backend_model_plugins();
         $this->template = $template;
+        $this->routingUrl = new component_routing_url();
     }
 
     /**
@@ -262,8 +263,14 @@ class backend_model_sitemap{
                 // Load Data pages
                 $dataPages = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
                 foreach ($dataPages as $key => $value) {
-                    $url = '/' . $value['iso_lang'] . '/pages/' . $value['id_pages'] . '-' . $value['url_pages'] . '/';
-                    //$newData[$item['iso_lang']][$key] = $this->url(array('domain' => $config['domain'], 'url' => $url));
+
+                    $url = $this->routingUrl->getBuildUrl(array(
+                        'type'      =>  'pages',
+                        'iso'       =>  $value['iso_lang'],
+                        'id'        =>  $value['id_pages'],
+                        'url'       =>  $value['url_pages']
+                    ));
+
                     $this->xml->writeNode(
                         array(
                             'type' => 'child',
@@ -292,9 +299,36 @@ class backend_model_sitemap{
                 // Load Data news
                 $dataNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
                 foreach ($dataNews as $key => $value) {
-                    $datePublish = $dateFormat->dateToDefaultFormat($value['date_publish']);
-                    $url = '/' . $value['iso_lang'] . '/news/' . $datePublish . '/' . $value['id_news'] . '-' . $value['url_news'] . '/';
 
+                    $url = $this->routingUrl->getBuildUrl(array(
+                            'type'      =>  'news',
+                            'iso'       =>  $value['iso_lang'],
+                            'date'      =>  $value['date_publish'],
+                            'id'        =>  $value['id_news'],
+                            'url'       =>  $value['url_news']
+                        )
+                    );
+                    $this->xml->writeNode(
+                        array(
+                            'type' => 'child',
+                            'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                            'image' => false,
+                            'lastmod' => $value['last_update'],
+                            'changefreq' => 'always',
+                            'priority' => '0.7'
+                        )
+                    );
+                }
+                $dataTagsNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'tags'), array('id_lang' => $item['id_lang']));
+
+                foreach ($dataTagsNews as $key => $value) {
+                    $url = $this->routingUrl->getBuildUrl(array(
+                            'type' => 'tag',
+                            'iso' => $item['iso_lang'],
+                            'id' => $value['id_tag'],
+                            'url' => $value['name_tag']
+                        )
+                    );
                     $this->xml->writeNode(
                         array(
                             'type' => 'child',
@@ -323,7 +357,15 @@ class backend_model_sitemap{
                 // WriteNode category catalog
                 $dataCategory = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'category'), array('id_lang' => $item['id_lang']));
                 foreach ($dataCategory as $key => $value) {
-                    $url = '/' . $value['iso_lang'] . '/catalog/' . $value['id_cat'] . '-' . $value['url_cat'] . '/';
+
+                    $url = $this->routingUrl->getBuildUrl(array(
+                            'type'      =>  'category',
+                            'iso'       =>  $value['iso_lang'],
+                            'id'        =>  $value['id_cat'],
+                            'url'       =>  $value['url_cat']
+                        )
+                    );
+
                     //$newData[$item['iso_lang']][$key] = $this->url(array('domain' => $config['domain'], 'url' => $url));
                     $this->xml->writeNode(
                         array(
@@ -339,8 +381,18 @@ class backend_model_sitemap{
                 // WriteNode product catalog
                 $dataProduct = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'product'), array('id_lang' => $item['id_lang']));
                 foreach ($dataProduct as $key => $value) {
-                    $url = '/' . $value['iso_lang'] . '/catalog/' . $value['id_cat'] . '-' . $value['url_cat'] . '/' . $value['id_product'] . '-' . $value['url_p'] . '/';
-                    //$newData[$item['iso_lang']][$key] = $this->url(array('domain' => $config['domain'], 'url' => $url));
+
+                    $url = $this->routingUrl->getBuildUrl(array(
+                            'type'              =>  'product',
+                            'iso'               =>  $value['iso_lang'],
+                            'id'                =>  $value['id_product'],
+                            'url'               =>  $value['url_p'],
+                            'id_parent'         =>  $value['id_cat'],
+                            'url_parent'        =>  $value['url_cat']
+                        )
+                    );
+
+
                     $this->xml->writeNode(
                         array(
                             'type' => 'child',

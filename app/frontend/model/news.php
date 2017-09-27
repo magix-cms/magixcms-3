@@ -245,6 +245,7 @@ class frontend_model_news extends frontend_db_news {
         if (isset($custom['limit'])) {
             $conf['limit'] = $custom['limit'];
         }
+        // Filter
         if (isset($custom['filter'])) {
             //$conf['filter'] = $custom['filter'];
             foreach ($custom['filter'] as $k => $v) {
