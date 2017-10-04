@@ -71,6 +71,7 @@ class frontend_controller_pages extends frontend_db_pages {
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
     /**
      * set Data from database
      * @access private
@@ -78,6 +79,16 @@ class frontend_controller_pages extends frontend_db_pages {
     private function getBuildItems()
     {
         $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
+        return $this->modelPages->setItemData($collection,null);
+    }
+
+    /**
+     * set Data from database
+     * @access private
+     */
+    private function getBuildParent($page)
+    {
+        $collection = $this->getItems('page',array(':id'=>$page['id_parent'],':iso'=>$this->getlang),'one',false);
         return $this->modelPages->setItemData($collection,null);
     }
 
@@ -95,8 +106,10 @@ class frontend_controller_pages extends frontend_db_pages {
     private function getData()
     {
         $data = $this->getBuildItems();
+        $parent = $data['id_parent'] !== null ? $this->getBuildParent($data) : null;
         $hreflang = $this->getBuildLangItems();
         $this->template->assign('pages',$data,true);
+        $this->template->assign('parent',$parent,true);
         $this->template->assign('hreflang',$hreflang,true);
     }
 

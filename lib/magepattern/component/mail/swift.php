@@ -219,14 +219,15 @@ class mail_swift{
         }
     }
 
-	/**
-	 * CSS Inliner for responsive mail
-	 * @param $html
-	 * @param null $css
-	 * @param bool $debug
-	 * @return string
-	 */
-	public function plugin_css_inliner($html, $css = null, $debug = false) {
+    /**
+     * CSS Inliner for responsive mail
+     * @param $html
+     * @param null $css
+     * @param string $path
+     * @param bool $debug
+     * @return string
+     */
+	public function plugin_css_inliner($html, $css = null, $path = '', $debug = false) {
 		$inliner = new CSSInliner();
 
 		if($css != null) {
@@ -234,10 +235,10 @@ class mail_swift{
 				foreach ($css as $dir => $c) {
 					if (is_array($c)) {
 						foreach ($c as $d => $file) {
-							$inliner->addCSS('skin/' .frontend_model_template::frontendTheme()->themeSelected(). $d . '/' . $file);
+							$inliner->addCSS($path. $d . '/' . $file);
 						}
 					} else {
-						$inliner->addCSS('skin/' .frontend_model_template::frontendTheme()->themeSelected(). $dir . '/' . $c);
+						$inliner->addCSS($path. $dir . '/' . $c);
 					}
 				}
 			}

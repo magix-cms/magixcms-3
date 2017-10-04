@@ -319,7 +319,8 @@ class backend_controller_theme extends backend_db_theme{
 						foreach ($this->link['content'] as $k => $link) {
 							$link['id'] = $this->edit;
 							$link['id_lang'] = $k;
-							$link['title_link'] = empty($link['title_link']) ? NULL : $link['title_link'];
+							$link['name_link'] = $link['name_link'] === '' ? NULL : $link['name_link'];
+							$link['title_link'] = $link['title_link'] === '' ? NULL : $link['title_link'];
 							$this->upd(array(
 								'type' => 'link_content',
 								'data' => $link

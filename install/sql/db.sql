@@ -127,7 +127,8 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_catalog', 'catalog'),
 (NULL, 'backend_controller_product', 'product'),
 (NULL, 'backend_controller_seo', 'seo'),
-(NULL, 'backend_controller_theme', 'theme');
+(NULL, 'backend_controller_theme', 'theme'),
+(NULL, 'backend_controller_translate', 'translate');
 
 CREATE TABLE IF NOT EXISTS `mc_setting` (
   `id_setting` smallint(5) unsigned NOT NULL AUTO_INCREMENT,

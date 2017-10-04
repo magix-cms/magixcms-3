@@ -30,13 +30,13 @@
 {if isset($analytics)}{$analytics}{/if}
 {include file="amp/section/brick/cookie-consent.tpl"}
 {include file="amp/section/header.tpl"}
-{block name="breadcrumb"}{/block}
+{block name="breadcrumb"}{if isset($smarty.get.controller) && $smarty.get.controller != "home"}{include file="amp/section/nav/breadcrumb.tpl" icon="home"}{/if}{/block}
 {block name="main:before"}{/block}
 {block name="main"}
-    <main>
+    <main id="content">
         {block name="article:before"}{/block}
         {block name='article'}
-            <article itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
+            <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
                 {block name='article:content'}{/block}
             </article>
         {/block}

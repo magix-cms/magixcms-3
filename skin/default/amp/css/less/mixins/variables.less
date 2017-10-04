@@ -1,11 +1,8 @@
-/*------------------------*\
------ Common Variables -----
-\*------------------------*/
-
 // --- Directories Path
 @skinpath:          ~"/skin/@{template}/";
 @imgpath:           ~"@{skinpath}img/";
 @patternpath:    	~"@{imgpath}patterns/";
+@img-ratio: 1.33333333333;
 
 //
 // Variables
@@ -29,6 +26,41 @@
 //** Link hover decoration.
 @link-hover-decoration: underline;
 
+
+//== Media queries breakpoints
+//
+//## Define the breakpoints at which your layout will change, adapting to different screen sizes.
+
+// Phone screen
+//** Deprecated `@screen-xs` as of v3.0.1
+@screen-ph:                  300px;
+//** Deprecated `@screen-xs-min` as of v3.2.0
+@screen-ph-min:              @screen-ph;
+
+// Extra small screen
+//** Deprecated `@screen-xs` as of v3.0.1
+@screen-xs:                  480px;
+//** Deprecated `@screen-xs-min` as of v3.2.0
+@screen-xs-min:              @screen-xs;
+
+// Small screen / tablet
+//** Deprecated `@screen-sm` as of v3.0.1
+@screen-sm:                  768px;
+@screen-sm-min:              @screen-sm;
+
+// So media queries don't overlap when required, provide a maximum
+@screen-ph-max:              (@screen-xs-min - 1);
+@screen-xs-max:              (@screen-sm-min - 1);
+
+
+//== Grid system
+//
+//## Define your custom responsive grid.
+
+//** Number of columns in the grid.
+@grid-columns:              12;
+//** Padding between columns. Gets divided in half for the left and right.
+@grid-gutter-width:         30px;
 
 //== Components
 //
@@ -172,16 +204,6 @@
 
 //** Disabled cursor for form controls and buttons.
 @cursor-disabled:                not-allowed;
-
-
-//== Grid system
-//
-//## Define your custom responsive grid.
-
-//** Number of columns in the grid.
-@grid-columns:              12;
-//** Padding between columns. Gets divided in half for the left and right.
-@grid-gutter-width:         30px;
 
 
 //== Pagination

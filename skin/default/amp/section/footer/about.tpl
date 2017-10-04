@@ -73,21 +73,15 @@
         {/if}
     </div>
     <div>
-        <p class="footer-copyright"><span class="copyright-info"><span class="fa fa-copyright"></span> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span></span>
+        <p><i class="material-icons">copyright</i> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span>
             | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>
     </div>
     {if $companyData.tva}
         <div>
-            <p class="company-tva text-center">{#footer_tva#} {$companyData.tva}</p>
+            <p>{#footer_tva#} {$companyData.tva}</p>
         </div>
     {/if}
-    {*<div class="footer-creator powered col-xs-12 col-sm-4 col-md-5 col-lg-4 pull-right">
-        {#footer_creator_info#|ucfirst}
-        <a href="http://www.web-solution-way.com">
-            Web Solution Way
-        </a>
-    </div>*}
-    <div class="footer-creator powered">
+    <div>
         {include file="amp/section/footer/powered.tpl"}
     </div>
 </div>

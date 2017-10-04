@@ -34,6 +34,10 @@ class frontend_controller_catalog extends frontend_db_catalog {
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
+	/**
+	 * @return array|null
+	 */
     private function getBuildRootItems()
     {
 
@@ -46,6 +50,28 @@ class frontend_controller_catalog extends frontend_db_catalog {
 
         return $this->modelCatalog->setItemData($newData,null);
     }
+
+
+    /**
+     * set Data from database
+     * @access private
+     */
+    private function getBuildCategoryList()
+    {
+		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent IS NULL ';
+		$collection = parent::fetchData(
+			array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
+			array(':iso' => $this->getlang)
+		);
+        //$collection = $this->getItems('category',array('iso'=>$this->getlang,'conditions'=>$conditions),'all',false);
+        $newarr = array();
+		foreach ($collection as $item) {
+			$newarr[] = $this->modelCatalog->setItemData($item,null);
+        }
+        return $newarr;
+    }
+
+
     /**
      * set Data from database
      * @access private
@@ -104,7 +130,9 @@ class frontend_controller_catalog extends frontend_db_catalog {
         switch($type){
             case 'root':
                 $data = $this->getBuildRootItems();
+                $cats = $this->getBuildCategoryList();
                 $this->template->assign('root',$data,true);
+                $this->template->assign('categories',$cats,true);
                 break;
             case 'cat':
                 $hreflang = $this->getBuildLangItems($type);

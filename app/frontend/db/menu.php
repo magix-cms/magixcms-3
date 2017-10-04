@@ -22,7 +22,7 @@ class frontend_db_menu
 								m.id_page, 
 								mc.id_lang, 
 								l.iso_lang, 
-								mc.name_link as name_link, 
+								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat) as name_link,
 								mc.title_link as title_link,
 								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
 								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link

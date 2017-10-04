@@ -5,8 +5,9 @@
 @import (reference) "mixins/mixins";
 
 // Custom variables
-@import (reference) "mixins/colors";
 @import (reference) "mixins/variables";
+@import (reference) "mixins/colors";
+@import (reference) "mixins/theme";
 
 // Reset and dependencies
 @import "mixins/normalize";
@@ -14,23 +15,13 @@
 // Core CSS
 @import "mixins/grid";
 @import "mixins/tables";
-//@import "mixins/forms";
-
-// Components
-//@import "mixins/component-animations";
-//@import "mixins/input-groups";
-//@import "mixins/navs";
-//@import "mixins/navbar";
-//@import "mixins/pagination";
-//@import "mixins/pager";
-//@import "mixins/alerts";
-//@import "mixins/responsive-embed";
 
 // Utility classes
 @import "mixins/utilities";
 
 // Custom Mixins
 @import (reference) "mixins/vendor-prefixes";
+@import (reference) "mixins/shadows";
 @import (reference) "mixins/sizes";
 @import (reference) "mixins/fonts";
 @import (reference) "mixins/type-mixins";
@@ -45,11 +36,8 @@
 // Global Parts Rules
 @import "global/global";
 @import "global/header";
-//@import "global/breadcrumbs";
 @import "global/menu";
 @import "global/body";
 @import "global/footer";
 @import "global/share";
-
-// Home Rules
-@import "theme/home";
+@import "global/block";

@@ -1,13 +1,12 @@
-<footer id="footer"{if $adjust == 'fluid'} class="section-block container-fluid"{/if}>
-    {*{include file="amp/section/footer/sharebar.tpl"}*}
+<footer id="footer">
     {if is_array($blocks) && !empty($blocks)}
         <section id="footer-blocks">
-            <div class="container">
-                <div class="row">
+            <div class="container-fluid">
+                {*<div class="row">*}
                     {foreach $blocks as $block}
                         {include file="amp/section/footer/block/$block.tpl"}
                     {/foreach}
-                </div>
+                {*</div>*}
             </div>
         </section>
     {/if}

@@ -1,10 +1,10 @@
 {extends file="amp/layout.tpl"}
 {block name="stylesheet"}{fetch file="skin/{template}/amp/css/pages.min.css"}{/block}
 {block name='body:id'}pages{/block}
+{block name="title"}{$pages.seoTitle}{/block}
+{block name="description"}{$pages.seoDescr}{/block}
 {block name='article:content'}
-    <div class="container">
-        <h1 itemprop="name">{$pages.title}</h1>
-    </div>
+    <h1 itemprop="name">{$pages.title}</h1>
     {capture name="pageImg"}
     {if !empty($pages.imgSrc)}
     <figure>
@@ -25,7 +25,6 @@
     <div itemprop="text">
         {amp_content content={$pages.content|replace:'[[IMG]]':$smarty.capture.pageImg}}
     </div>
-</pre>
 {/block}
 {block name="amp-script" append}
     {amp_components content={$pages.content|replace:'[[IMG]]':$smarty.capture.pageImg}}

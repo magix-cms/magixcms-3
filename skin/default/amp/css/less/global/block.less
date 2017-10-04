@@ -1,0 +1,75 @@
+/*
+ * Different block style
+ */
+.section-block {
+	max-width: 100vw;
+	padding-top: 30px;
+	padding-bottom: 40px;
+
+	&:last-child {
+		padding-bottom: 0;
+	}
+}
+
+.vignette {
+	padding-bottom: 15px;
+
+	h2 {
+		margin: 5px 0 18px;
+	}
+
+	.figure {
+		position: relative;
+		.shadow(2);
+
+		&:hover, &:focus {
+			.caption {
+				opacity: 1;
+			}
+		}
+	}
+
+	.desc {
+		padding: 15px;
+		overflow: hidden;
+	}
+}
+
+/*
+.two-columns {
+	h2, h3 {
+		margin-bottom: 30px;
+
+		&.presentation {
+			margin: 0 auto 30px;
+			text-align: center;
+		}
+	}
+
+	h3 {
+		text-align: center;
+	}
+
+	.btn.btn-invert {
+		margin-top: 20px;
+	}
+}
+
+.banner {
+	height: 180px;
+	position: relative;
+	padding: 0;
+	overflow: hidden;
+
+	img {
+		height: 100%;
+		position: relative;
+		top: 0;
+		left: 50%;
+		-webkit-transform: translateX(-50%);
+		-ms-transform: translateX(-50%); // IE9 only
+		-o-transform: translateX(-50%);
+		transform: translateX(-50%);
+		width: auto;
+	}
+}*/

@@ -1,9 +1,6 @@
-/*
- * Rules for breadcrumb
- */
-#breadcrumb-container {
-	#gradient.vertical(rgba(0,0,0,0), rgba(0,0,0,.5), 0%, 100%);
-}
+//
+// Rules for breadcrumb
+//
 
 .breadcrumb {
 	font-size: 12px;
@@ -14,13 +11,20 @@
 		.no-martini;
 		list-style: none;
 		display: flex;
+
+		> li {
+			&+li:before {
+				color: @text-color;
+				content: "/";
+				padding: 4px 2px;
+			}
+		}
 	}
 
 	li {
 		display: flex;
 		font-weight: 500;
 		color: @bc-item-color;
-		text-shadow: 0 0 10px rgba(0,0,0,1);
 		.normalize-link(@bc-link-color,@bc-active-link-color,underline,400);
 
 		a, > span {
@@ -33,6 +37,13 @@
 		float: none;
 		margin: 0;
 		padding: 0;
+	}
+
+	.material-icons {
+		font-size: inherit;
+		vertical-align: middle;
+		position: relative;
+		top: -2px;
 	}
 }
 

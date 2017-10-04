@@ -19,23 +19,18 @@
 		text-decoration: none;
 	}
 
-	.set-hover(@color, @hover-color, @decoration) when (@hover-color = same) {
-		a:focus {
-			text-decoration: @decoration;
-			color: @color;
-		}
+	.set-hover(@color, @hover-color) when (@hover-color = same) {
+		color: @color;
 	};
-	.set-hover(@color, @hover-color, @decoration) {
-		a:focus {
-			text-decoration: @decoration;
-			color: @hover-color;
-		}
+	.set-hover(@color, @hover-color) {
+		color: @hover-color;
 	};
 
 	a:focus {
 		.tab-focus();
+		text-decoration: @decoration;
+		.set-hover(@color, @hover-color);
 	}
-	.set-hover(@color, @hover-color, @decoration);
 }
 
 // set a link to cover all his relative parent
@@ -84,7 +79,7 @@
 .main-title(@color: @text-color, @brd: 1px solid #eee) {
 	margin: 0 auto 25px;
 	padding: 0 0 15px;
-	color: @text-color;
+	color: @color;
 	border-bottom: @brd;
 }
 
@@ -119,6 +114,4 @@
 			color: @text-color;
 		});
 	}
-
-	.normalize-link(@color);
 }

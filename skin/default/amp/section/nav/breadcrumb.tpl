@@ -6,35 +6,35 @@
 
 {* Home *}
 {if $icon}
-    {$hname = "<span class=\"fa fa-{$icon}\"></span>"}
+    {$hname = "<i class=\"material-icons\">{$icon}</i>"}
 {else}
     {$hname = {#home#}}
 {/if}
-{if $smarty.server.SCRIPT_NAME != '/index.php'}
-    {$bread[] = ['name' => {$hname},'url' => "{geturl}/{getlang}/",'title' => {#show_home#}]}
+{if isset($smarty.get.controller) && $smarty.get.controller != 'home'}
+    {$bread[] = ['name' => {$hname},'url' => "{geturl}/{getlang}/amp/",'title' => {#show_home#}]}
 {else}
     {$bread[] = ['name' => {$hname}]}
 {/if}
 {* /Home *}
 
 {* Pages *}
-{if $smarty.server.SCRIPT_NAME == '/cms.php'}
+{if $smarty.get.controller == 'pages'}
     {* Parent *}
-    {if $smarty.get.getidpage_p}
-        {$bread[] = ['name' => {$parent.name},'url' => "{geturl}{$parent.url}",'title' => "{#show_page#}: {$parent.name}"]}
+    {if $pages.id_parent}
+        {$bread[] = ['name' => {$parent.title},'url' => "{geturl}{$parent.url}",'title' => "{#show_page#}: {$parent.title}"]}
     {/if}
     {* /Parent *}
 
-    {$bread[] = ['name' => {$page.name}]}
+    {$bread[] = ['name' => {$pages.title}]}
 {/if}
 {* /Pages *}
 
 {* Catalogue *}
-{if $smarty.server.SCRIPT_NAME == '/catalog.php'}
-    {if $smarty.get.idclc}
+{if $smarty.get.controller == 'catalog'}
+    {if $cat}
         {* Root *}
         {if $catalog}
-            {$bread[] = ['name' => {#catalog#},'url' => "{geturl}/{getlang}/{#nav_catalog_uri#}/",'title' => {#show_catalog#}]}
+            {$bread[] = ['name' => {#catalog#},'url' => "{geturl}/{getlang}/amp/catalog/",'title' => {#show_catalog#}]}
         {/if}
 
         {* Catégories *}
@@ -59,17 +59,17 @@
         {/if}
         {* /Catégories *}
     {else}
-        {$bread[] = ['name' => {#catalog#}]}
+        {$bread[] = ['name' => {$root.name}]}
     {/if}
     {* /Root *}
 {/if}
 {* /Catalogue *}
 
 {* Actualités *}
-{if $smarty.server.SCRIPT_NAME == '/news.php'}
+{if $smarty.get.controller == 'news'}
     {* Root *}
     {if $smarty.get.tag OR $smarty.get.uri_get_news}
-        {$bread[] = ['name' => {#news#},'url' => "{geturl}/{getlang}/{#nav_news_uri#}/",'title' => {#show_news#}]}
+        {$bread[] = ['name' => {#news#},'url' => "{geturl}/{getlang}/amp/{#nav_news_uri#}/",'title' => {#show_news#}]}
     {else}
         {$bread[] = ['name' => {#news#}]}
     {/if}
@@ -90,17 +90,17 @@
 {* /Actualités *}
 
 {* Plugins *}
-{if $smarty.server.SCRIPT_NAME == '/plugins.php'}
+{if $smarty.get.controller == 'plugins'}
     {if $smarty.get.magixmod == 'contact'}
         {$bread[] = ['name' => {#contact_form#}]}
     {/if}
     {if $smarty.get.magixmod == 'gmap'}
-        {$bread[] = ['name' => {#contact_form#},'url' => "{geturl}/{getlang}/{#nav_contact_uri#}/",'title' => {#contact_label#}]}
+        {$bread[] = ['name' => {#contact_form#},'url' => "{geturl}/{getlang}/amp/{#nav_contact_uri#}/",'title' => {#contact_label#}]}
         {$bread[] = ['name' => {#plan_acces#}]}
     {/if}
     {if $smarty.get.magixmod == 'about'}
         {if $smarty.get.pnum1}
-            {$bread[] = ['name' => {$parent.title},'url' => "{geturl}/{getlang}/about/",'title' => "{#show_page#}: {$parent.title}"]}
+            {$bread[] = ['name' => {$parent.title},'url' => "{geturl}/{getlang}/amp/about/",'title' => "{#show_page#}: {$parent.title}"]}
             {$bread[] = ['name' => {$page.title}]}
         {else}
             {$bread[] = ['name' => {$page.title}]}
@@ -119,11 +119,17 @@
         {foreach from=$bread item=breadcrumb key=i}
             {if $length > 3 && $i == 1 && $mobile}
             <li id="hellipsis">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#breadcrumb-collapse">
-                    <span class="sr-only">{#toggle_nav#|ucfirst}</span>
-                    <span class="fa fa-ellipsis-h"></span>
-                </button>
-                <ol id="breadcrumb-collapse" class="collapse navbar-collapse">
+                <div class="dropdown">
+                    <amp-accordion disable-session-states>
+                        <section>
+                            <header>
+                                <button class="btn btn-box btn-default" type="button">
+                                    <span class="sr-only">{#toggle_nav#|ucfirst}</span>
+                                    <span class="fa fa-ellipsis-h"></span>
+                                </button>
+                            </header>
+                            <div id="breadcrumb-collapse">
+                                <ol>
             {/if}
             <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                 {strip}{if isset($breadcrumb.url)}
@@ -140,6 +146,10 @@
             </li>
             {if $length > 3 && $i == $length-2 && $mobile}
                 </ol>
+                </div>
+                </section>
+                </amp-accordion>
+                </div>
             </li>
             {/if}
         {/foreach}

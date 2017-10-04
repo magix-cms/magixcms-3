@@ -47,13 +47,12 @@ class frontend_db_pages
             }
             elseif($config['context'] === 'one') {
                 if ($config['type'] === 'page') {
-                    //Return current skin
                     $sql = 'SELECT
-                    h.*,c.*,lang.iso_lang
-                    FROM mc_cms_page AS h
-                    JOIN mc_cms_page_content AS c ON(h.id_pages = c.id_pages) 
-                    JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
-                    WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1';
+							h.*,c.*,lang.iso_lang
+							FROM mc_cms_page AS h
+							JOIN mc_cms_page_content AS c ON(h.id_pages = c.id_pages) 
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
+							WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1';
                     $params = $data;
                 }
 
