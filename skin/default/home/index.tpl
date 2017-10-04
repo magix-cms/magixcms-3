@@ -14,3 +14,11 @@ assign="pages"
 <pre>
     {$pages|print_r}
 </pre>
+{*
+<pre>
+    {$setting|print_r}
+</pre>
+<pre>
+    {$cssInliner|print_r}
+</pre>
+*}

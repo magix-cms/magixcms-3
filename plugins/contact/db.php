@@ -39,6 +39,10 @@ class plugins_contact_db
                 } elseif ($config['type'] === 'content') {
                     $sql = 'SELECT * FROM `mc_contact_content` WHERE `id_contact` = :id_contact AND `id_lang` = :id_lang';
                     $params = $data;
+                }elseif ($config['type'] === 'config') {
+                    //Return current skin
+                    $sql = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
+                    //$params = $data;
                 }
 
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
@@ -62,6 +66,10 @@ class plugins_contact_db
             elseif ($config['type'] === 'content') {
                 $sql = 'INSERT INTO `mc_contact_content`(id_contact,id_lang,published_contact) 
 				  		VALUES (:id_contact,:id_lang,:published_contact)';
+            }
+            elseif ($config['type'] === 'config') {
+                $sql = 'INSERT INTO `mc_contact_config`(address_enabled,address_required) 
+				  		VALUES (:address_enabled,:address_required)';
             }
 
             if($sql && $params) component_routing_db::layer()->insert($sql,$params);
@@ -90,6 +98,13 @@ class plugins_contact_db
 							published_contact=:published_contact
                 		WHERE id_contact = :id_contact 
                 		AND id_lang = :id_lang';
+            }
+            elseif ($config['type'] === 'config') {
+                $sql = 'UPDATE mc_contact_config 
+						SET 
+							address_enabled=:address_enabled,
+							address_required=:address_required
+                		WHERE id_config = :id_config';
             }
 
             if($sql && $params) component_routing_db::layer()->update($sql,$params);

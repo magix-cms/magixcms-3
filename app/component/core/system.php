@@ -128,5 +128,28 @@ class component_core_system{
             throw new Exception("Error ".$min_cachePath." is not writable");
         }
     }
+    /**
+     * Parse le fichier de configuration
+     * @param $file
+     * @return mixed
+     * @throws Exception
+     */
+    public function parseIni($file){
+        $result = array();
+        if ($lines = file($file)) {
+            foreach ($lines as $line){
+                if (!preg_match('/[0-9a-z]/i', $line) or preg_match('/^#/', $line)){
+                    continue;
+                }
+                //if (preg_match('/(.*)=(.*)/', $line, $match)){
+                if (preg_match('/^([^=]+)=(.*)$/', $line, $match)){
 
+                    $result[trim($match[1])] = trim($match[2]);
+                }
+            }
+        } else {
+            throw new Exception("No valid file specified");
+        }
+        return $result;
+    }
 }

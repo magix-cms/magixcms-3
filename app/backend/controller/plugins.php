@@ -1,6 +1,7 @@
 <?php
 class backend_controller_plugins extends backend_db_plugins{
-    protected $modelPlugins,$template,$message,$header,$data,$finder;
+    protected $modelPlugins,$template,$message,$header,$data,$finder,$modelLanguage,$collectionLanguage,$system;
+    public $config;
 
     /**
      * backend_controller_plugins constructor.
@@ -13,6 +14,18 @@ class backend_controller_plugins extends backend_db_plugins{
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
         $this->finder = new file_finder();
+        $this->modelLanguage = new backend_model_language($this->template);
+        $this->collectionLanguage = new component_collections_language();
+        $this->system = new component_core_system();
+        if (http_request::isPost('config')) {
+            $array = $_POST['config'];
+            foreach($array as $key => $arr) {
+                foreach($arr as $k => $v) {
+                    $array[$key][$k] = html_entity_decode($v);
+                }
+            }
+            $this->config = $array;
+        }
     }
 
 	/**
@@ -127,6 +140,97 @@ class backend_controller_plugins extends backend_db_plugins{
                 $this->message->getNotify('upgrade_empty', array('method' => 'fetch', 'assignFetch' => 'message'));
             }
             $this->template->display('plugins/upgrade.tpl');
+        }
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    private function setConfigFile($id){
+
+        $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
+        $arr = array();
+        foreach ($data as $key) {
+
+            $baseConfigPath = component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.'/i18n/public_local_'.$key['iso_lang'].'.conf';
+            if(file_exists($baseConfigPath)) {
+                $parse = $this->system->parseIni($baseConfigPath);
+                $arr['content'][$key['id_lang']] = $parse;
+            }
+        }
+        return $arr;
+    }
+
+    /**
+     * save config files
+     */
+    private function saveConfig($id){
+
+        $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
+        foreach ($data as $lang) {
+
+            $baseConfigPath = component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.'/i18n/public_local_'.$lang['iso_lang'].'.conf';
+            if(isset($this->config[$lang['iso_lang']]) && $lang['default_lang'] == '1'){
+                $newData = $this->config[$lang['iso_lang']];
+            }
+
+            if(is_writable($baseConfigPath) && file_exists($baseConfigPath)){
+                // Open the file for writing.
+                $fh = fopen($baseConfigPath, 'w');
+                // Loop through the data.
+                if(isset($this->config[$lang['iso_lang']])) {
+                    foreach ($this->config[$lang['iso_lang']] as $key => $value) {
+                        // If a value exists that should replace the current one, use it.
+                        //if ( ! empty($replace_with[$key]) )
+                        //$value = $replace_with[$key];
+
+                        // Write to the file.
+                        fwrite($fh, "{$key} = {$value}" . PHP_EOL);
+                    }
+
+                }else{
+                    foreach ( $newData as $key => $value ){
+                        // If a value exists that should replace the current one, use it.
+                        //if ( ! empty($replace_with[$key]) )
+                        //$value = $replace_with[$key];
+
+                        // Write to the file.
+                        fwrite($fh, "{$key} = {$value}" . PHP_EOL);
+                    }
+                }
+                // Close the file handle.
+                fclose($fh);
+            }else{
+                $fh = fopen($baseConfigPath, 'w');
+                // Loop through the data.
+                foreach ( $newData as $key => $value ){
+                    // If a value exists that should replace the current one, use it.
+                    //if ( ! empty($replace_with[$key]) )
+                    //$value = $replace_with[$key];
+
+                    // Write to the file.
+                    fwrite($fh, "{$key} = {$value}" . PHP_EOL);
+                }
+                // Close the file handle.
+                fclose($fh);
+            }
+        }
+    }
+
+    /**
+     * @param $id
+     */
+    public function translate($id){
+        if(isset($this->config)){
+            $this->saveConfig($id);
+            $this->header->set_json_headers();
+            $this->message->json_post_response(true,'update',$id);
+        }else{
+            $this->modelLanguage->getLanguage();
+            $translate = $this->setConfigFile($id);
+            $this->template->assign('translate',$translate);
+            $this->template->display('plugins/translate.tpl');
         }
     }
 

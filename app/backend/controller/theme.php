@@ -35,6 +35,7 @@ class backend_controller_theme extends backend_db_theme{
         if (http_request::isGet('content')) {
             $this->content = $formClean->simpleClean($_GET['content']);
         }
+
         // --- POST
 		$this->theme = http_request::isPost('theme') ? $formClean->simpleClean($_POST['theme']) : array() ;
 
@@ -55,6 +56,7 @@ class backend_controller_theme extends backend_db_theme{
 		if(http_request::isPost('order')){
 			$this->order = $formClean->arrayClean($_POST['order']);
 		}
+
     }
 
 	/**
@@ -302,6 +304,7 @@ class backend_controller_theme extends backend_db_theme{
                         }
                     }
                     break;
+
 				case 'editlink':
 					if(isset($this->edit) && isset($this->link)) {
 						$this->link = $this->link[$this->edit];

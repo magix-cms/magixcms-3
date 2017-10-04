@@ -33,18 +33,6 @@
  # needs please refer to http://www.magix-cms.com for more information.
  */
 /**
- * MAGIX CMS
- * @category   extends 
- * @package    Smarty
- * @subpackage function
- * @copyright  MAGIX CMS Copyright (c) 2010 - 2012 Gerits Aurelien, 
- * http://www.magix-cms.com, http://www.magix-cjquery.com
- * @license    Dual licensed under the MIT or GPL Version 3 licenses.
- * @version    plugin version
- * @author Gérits Aurélien <aurelien@magix-cms.com> <aurelien@magix-dev.be>
- *
- */
-/**
  * Smarty {content_language} function plugin
  *
  * Type:     function
@@ -62,9 +50,11 @@
  * @return string
  */
 function smarty_function_content_language($params, $template){
-	if(frontend_db_lang::s_fetch_lang() != null){
-		foreach (frontend_db_lang::s_fetch_lang() as $row){
-			$widget[]=$row['iso'];
+    $componentLanguage = new component_collections_language();
+    $collectionsLanguage = $componentLanguage->fetchData(array('context'=>'all','type'=>'active'));
+	if($collectionsLanguage != null){
+		foreach ($collectionsLanguage as $row){
+			$widget[]=$row['iso_lang'];
 		}
 		return implode(',', $widget);
 	}

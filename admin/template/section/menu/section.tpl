@@ -157,7 +157,7 @@
             {/if}
         </ul>
     </li>
-    <li class="has-submenu{if $smarty.get.controller == 'language' || $smarty.get.controller == 'country'} active{/if}">
+    <li class="has-submenu{if $smarty.get.controller == 'language' || $smarty.get.controller == 'country' || $smarty.get.controller == 'translate'} active{/if}">
         <a href="#">
             <span class="fa fa-location-arrow"></span> Localisation
         </a>
@@ -173,6 +173,13 @@
                 <li{if $smarty.get.controller == 'country'} class="active"{/if}>
                     <a href="{geturl}/{baseadmin}/index.php?controller=country">
                         <span class="fa fa-globe"></span> {#country#}
+                    </a>
+                </li>
+            {/if}
+            {if {employee_access type="view" class_name="backend_controller_translate"} eq 1}
+                <li{if $smarty.get.controller == 'country'} class="active"{/if}>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=translate">
+                        <span class="fa fa-language"></span> {#translate#}
                     </a>
                 </li>
             {/if}

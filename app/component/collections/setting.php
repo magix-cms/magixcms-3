@@ -40,7 +40,11 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_collections_setting{
-
+    /**
+     * @param $name
+     * @return mixed
+     * @deprecated
+     */
     public function fetch($name){
         $sql = 'SELECT *
     	FROM mc_setting WHERE name = :name';
@@ -50,9 +54,52 @@ class component_collections_setting{
             )
         );
     }
+
+    /**
+     * @return mixed
+     * @deprecated
+     */
     public function fetchAll(){
         $sql = 'SELECT st.id_setting,st.value 
         FROM mc_setting AS st';
         return component_routing_db::layer()->fetchAll($sql);
+    }
+
+    /**
+     * @param $config
+     * @param bool $data
+     * @return mixed|null
+     */
+    public function fetchData($config,$data = false){
+        $sql = '';
+        $params = false;
+
+        if(is_array($config)) {
+            if($config['context'] === 'all') {
+                if ($config['type'] === 'setting') {
+                    $sql = 'SELECT st.name,st.value,st.category
+                    FROM mc_setting AS st';
+                    //$params = $data;
+                }
+                elseif ($config['type'] === 'cssInliner') {
+                    $sql = 'SELECT color.*
+    	            FROM mc_css_inliner as color';
+                    //$params = $data;
+                }
+
+                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+
+            }
+            elseif($config['context'] === 'one') {
+                if ($config['type'] === 'setting') {
+                    //Return current skin
+                    $sql = 'SELECT *
+    	            FROM mc_setting WHERE name = :name';
+                    $params = $data;
+                }
+
+                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+            }
+        }
     }
 }

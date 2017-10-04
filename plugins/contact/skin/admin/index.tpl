@@ -37,7 +37,28 @@
                             {include file="section/form/table-form-2.tpl" idcolumn='id_contact' data=$contact activation=false sortable=false controller="contact"}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="config">
-
+                            <div class="row">
+                                <form id="edit_config" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$config.id_config}" method="post" class="validate_form edit_form col-ph-12 col-md-4">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="form-group">
+                                                <label for="address_enabled">{#address_enabled#|ucfirst}</label>
+                                                <input id="address_enabled" data-toggle="toggle" type="checkbox" name="address_enabled" data-toggle="toggle" type="checkbox" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if $config.address_enabled} checked{/if}>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="form-group">
+                                                <label for="address_required">{#address_required#|ucfirst}</label>
+                                                <input id="address_required" data-toggle="toggle" type="checkbox" name="address_required" data-toggle="toggle" type="checkbox" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if $config.address_required} checked{/if}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="submit">
+                                        <input type="hidden" id="id_config" name="id_config" value="{$config.id_config}">
+                                        <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

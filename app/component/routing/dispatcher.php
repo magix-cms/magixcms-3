@@ -1,6 +1,6 @@
 <?php
 class component_routing_dispatcher{
-    protected $header,$template,$pluginsCollection;
+    protected $header,$template,$pluginsCollection,$settingCollection;
     /**
      * @var Dispatcher
      */
@@ -24,6 +24,7 @@ class component_routing_dispatcher{
         $this->header = new component_httpUtils_header($template);
         $this->template = $template;
         $this->pluginsCollection = new component_collections_plugins();
+        $this->settingCollection = new component_collections_setting();
     }
 
     /**
@@ -32,6 +33,39 @@ class component_routing_dispatcher{
     private function pluginsRegister(){
         $pluginsCheck =  $this->pluginsCollection->fetch(array('context'=>'check','name'=>$this->controller_name));
         return $pluginsCheck['name'];
+    }
+
+    /**
+     * global assign setting
+     */
+    private function getSetting(){
+        $data = $this->settingCollection->fetchData(array('context'=>'all','type'=>'setting'));
+        $arr = array();
+        if($data != null) {
+
+            foreach ($data as $item) {
+                $arr[$item['name']] = array();
+                $arr[$item['name']]['value'] = $item['value'];
+                $arr[$item['name']]['category'] = $item['category'];
+            }
+            $this->template->assign('setting', $arr);
+        }
+    }
+
+    /**
+     * global assign css inliner
+     */
+    private function getCssInliner(){
+        $data = $this->settingCollection->fetchData(array('context'=>'all','type'=>'cssInliner'));
+        $arr = array();
+        if($data != null) {
+
+            foreach ($data as $item) {
+                //$arr[$item['property_cssi']] = array();
+                $arr[$item['property_cssi']] = $item['color_cssi'];
+            }
+            $this->template->assign('cssInliner', $arr);
+        }
     }
     /**
      * @return mixed
@@ -83,6 +117,11 @@ class component_routing_dispatcher{
                                 if(class_exists('backend_controller_plugins')) {
                                     $pluginsController = new backend_controller_plugins();
                                     $pluginsController->upgrade($this->controller_name);
+                                }
+                            }elseif($this->action === 'translate'){
+                                if(class_exists('backend_controller_plugins')) {
+                                    $pluginsController = new backend_controller_plugins();
+                                    $pluginsController->translate($this->controller_name);
                                 }
                             }else{
                                 if($this->pluginsRegister() != null && file_exists($pluginsDir)){
@@ -142,6 +181,8 @@ class component_routing_dispatcher{
         if($dispatcher){
             if(method_exists($dispatcher,'run')){
                 $this->header->mobileDetect();
+                $this->getSetting();
+                $this->getCssInliner();
                 $dispatcher->run();
             }
         }

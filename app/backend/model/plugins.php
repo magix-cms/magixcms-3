@@ -1,6 +1,6 @@
 <?php
 class backend_model_plugins{
-    protected $template, $controller_name, $dbPlugins,$plugin;
+    protected $template, $controller_name, $dbPlugins,$plugin ,$collectionLanguage;
 
     /**
      * backend_model_plugins constructor.
@@ -17,6 +17,7 @@ class backend_model_plugins{
         }
         $this->dbPlugins = new backend_db_plugins();
         //$this->data = new backend_model_data($this);
+        $this->collectionLanguage = new component_collections_language();
     }
 
     /**
@@ -43,11 +44,18 @@ class backend_model_plugins{
      */
     private function setItems($config){
         $data =  $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
+        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
         foreach($data as $item){
             switch($config['type']){
                 case 'self':
                     if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'admin.php')) {
                         $class = 'plugins_' . $item['name'] . '_admin';
+                        $baseConfigPath = component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'/i18n/public_local_'.$defaultLanguage['iso_lang'].'.conf';
+                        if(file_exists($baseConfigPath)){
+                            $item['translate'] = 1;
+                        }else{
+                            $item['translate'] = 0;
+                        }
                         if (class_exists($class)) {
                             //Si la méthode run existe on ajoute le plugin dans le menu
                             if (method_exists($class, 'run')) {
