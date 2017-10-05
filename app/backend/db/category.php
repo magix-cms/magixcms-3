@@ -187,17 +187,7 @@ class backend_db_category
             if ($config['type'] === 'content') {
                 $sql = 'UPDATE mc_catalog_cat_content SET name_cat = :name_cat, url_cat = :url_cat, resume_cat = :resume_cat, content_cat=:content_cat, published_cat=:published_cat
                 WHERE id_cat = :id_cat AND id_lang = :id_lang';
-                component_routing_db::layer()->update($sql,
-                    array(
-                        ':id_lang'	        => $data['id_lang'],
-                        ':id_cat'	        => $data['id_cat'],
-                        ':name_cat'       => $data['name_cat'],
-                        ':url_cat'        => $data['url_cat'],
-                        ':resume_cat'        => $data['resume_cat'],
-                        ':content_cat'    => $data['content_cat'],
-                        ':published_cat'  => $data['published_cat']
-                    )
-                );
+                component_routing_db::layer()->update($sql,$data);
             }elseif ($config['type'] === 'img') {
                 $sql = 'UPDATE mc_catalog_cat SET img_cat = :img_cat
                 WHERE id_cat = :id_cat';

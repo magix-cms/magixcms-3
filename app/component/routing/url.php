@@ -39,6 +39,7 @@ class component_routing_url{
     public function __construct(){
         $this->dateFormat = new date_dateformat();
         $this->setBuildUrl = new http_url();
+		$this->amp = http_request::isGet('amp') ? true : false;
     }
 
     /**
@@ -51,24 +52,24 @@ class component_routing_url{
             $type = $data['type'];
             switch($type){
                 case 'pages':
-                    $url = '/'.$iso.'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
+                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
                     break;
                 case 'about':
-                    $url = '/'.$iso.'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
+                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
                     break;
                 case 'category':
-                    $url = '/'.$iso.'/catalog/'.$data['id'].'-'.$data['url'].'/';
+                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/catalog/'.$data['id'].'-'.$data['url'].'/';
                     break;
                 case 'product':
                     if(isset($data['id_parent']) && isset($data['url_parent'])) {
-                        $url = '/' . $iso . '/catalog/' . $data['id_parent'] . '-' . $data['url_parent'] . '/' . $data['id'] . '-' . $data['url'] . '/';
+                        $url = '/' . $iso .($this->amp ? '/amp' : ''). '/catalog/' . $data['id_parent'] . '-' . $data['url_parent'] . '/' . $data['id'] . '-' . $data['url'] . '/';
                     }
                     break;
                 case 'news':
-                    $url = '/'.$iso.'/news/'.$this->dateFormat->dateToDefaultFormat($data['date']).'/'.$data['id'].'-'.$data['url'].'/';
+                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/news/'.$this->dateFormat->dateToDefaultFormat($data['date']).'/'.$data['id'].'-'.$data['url'].'/';
                     break;
                 case 'tag':
-                    $url = '/'.$iso.'/news/tag/'.$data['id'].'-'.$this->setBuildUrl->clean($data['url']).'/';
+                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/news/tag/'.$data['id'].'-'.$this->setBuildUrl->clean($data['url']).'/';
                     break;
             }
             return $url;

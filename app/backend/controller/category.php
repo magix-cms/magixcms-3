@@ -165,14 +165,8 @@ class backend_controller_category extends backend_db_category {
                 parent::update(
                     array(
                         'type'=>$data['type']
-                    ),array(
-                        'id_lang'	       => $data['id_lang'],
-                        'id_cat'	       => $data['id_cat'],
-                        'name_cat'       => $data['name_cat'],
-                        'url_cat'        => $data['url_cat'],
-                        'content_cat'    => $data['content_cat'],
-                        'published_cat'  => $data['published_cat']
-                    )
+                    ),
+					$data['data']
                 );
                 break;
             case 'img':
@@ -214,6 +208,8 @@ class backend_controller_category extends backend_db_category {
     private function save(){
         if (isset($this->content) && isset($this->id_cat)) {
             foreach ($this->content as $lang => $content) {
+            	$content['id_lang'] = $lang;
+            	$content['id_cat'] = $this->id_cat;
                 $content['published_cat'] = (!isset($content['published_cat']) ? 0 : 1);
                 if (empty($content['url_cat'])) {
                     $content['url_cat'] = http_url::clean($content['name_cat'],
@@ -228,30 +224,19 @@ class backend_controller_category extends backend_db_category {
                     array('context'=>'one','type'=>'content'),
                     array('id_cat'=>$this->id_cat,'id_lang'=>$lang)
                 );
+
                 // Check language page content
                 if($checkLangData!= null){
                     $this->upd(array(
-                        'type'            => 'content',
-                        'id_lang'         => $lang,
-                        'id_cat'          => $this->id_cat,
-                        'name_cat'        => $content['name_cat'],
-                        'url_cat'         => $content['url_cat'],
-                        'content_cat'     => $content['content_cat'],
-                        'published_cat'   => $content['published_cat']
+                        'type' => 'content',
+                        'data' => $content
                     ));
                 }else{
                     parent::insert(
                         array(
                             'type' => 'newContent',
                         ),
-                        array(
-                            'id_lang'         => $lang,
-                            'id_cat'          => $this->id_cat,
-                            'name_cat'        => $content['name_cat'],
-                            'url_cat'         => $content['url_cat'],
-                            'content_cat'     => $content['content_cat'],
-                            'published_cat'   => $content['published_cat']
-                        )
+                        $content
                     );
                 }
 

@@ -63,7 +63,26 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
 			array(':iso' => $this->getlang)
 		);
-        //$collection = $this->getItems('category',array('iso'=>$this->getlang,'conditions'=>$conditions),'all',false);
+        $newarr = array();
+		foreach ($collection as $item) {
+			$newarr[] = $this->modelCatalog->setItemData($item,null);
+        }
+        return $newarr;
+    }
+
+
+	/**
+	 * set Data from database
+	 * @access private
+	 * @return array
+	 */
+    private function getBuildSubCategoryList()
+    {
+		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent = :id_parent ';
+		$collection = parent::fetchData(
+			array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
+			array('iso' => $this->getlang,'id_parent' => $this->id)
+		);
         $newarr = array();
 		foreach ($collection as $item) {
 			$newarr[] = $this->modelCatalog->setItemData($item,null);
@@ -137,8 +156,17 @@ class frontend_controller_catalog extends frontend_db_catalog {
             case 'cat':
                 $hreflang = $this->getBuildLangItems($type);
                 $this->template->assign('hreflang',$hreflang,true);
+				$data = $this->getBuildRootItems();
+				$this->template->assign('root',$data,true);
                 $data = $this->getBuildCategoryItems();
-                $this->template->assign('cat',$data,true);
+				$cats = $this->getBuildSubCategoryList();
+				$this->template->assign('cat',$data,true);
+				$this->template->assign('categories',$cats,true);
+				if($data['id_parent'] !== null) {
+					$this->id = $data['id_parent'];
+					$parent = $this->getBuildCategoryItems();
+					$this->template->assign('parent',$parent,true);
+				}
                 break;
             case 'product':
                 $hreflang = $this->getBuildLangItems($type);

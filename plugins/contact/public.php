@@ -19,7 +19,7 @@ class plugins_contact_public extends plugins_contact_db
         $this->header = new component_httpUtils_header($this->template);
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();
-        $this->mail = new mail_swift();
+        $this->mail = new mail_swift('mail');
 
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
@@ -45,9 +45,16 @@ class plugins_contact_public extends plugins_contact_db
 
     private function setBodyMail($debug) {
         if($debug) {
-
+            $data = array(
+                'lastname' => "My Name",
+                'firstname' => "My Firstname",
+                'email' => $this->testmail,
+                'phone' => "+32 08080808",
+                'title' => "Test Mail",
+                'content' => "My test mail"
+            );
         }else{
-            
+
         }
     }
     /**

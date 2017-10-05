@@ -253,6 +253,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['iso']        =    $row['iso_lang'];
                 $data['name']       =    $row['name_cat'];
                 $data['content']    =    ($row['content_cat'] != '') ? $row['content_cat'] : NULL;
+                $data['resume']     =    ($row['resume_cat'] != '') ? $row['resume_cat'] : NULL;
                 $data['order']      =    $row['order_cat'];
                 // Plugin
                 if($newRow != false){

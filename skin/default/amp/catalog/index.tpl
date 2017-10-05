@@ -9,7 +9,7 @@
                 {amp_content content=$root.content}
             </div>
             {if $categories}
-            <div class="category-list">
+            <div class="category-list section-block">
                 <div class="row row-center">
                     {include file="amp/catalog/loop/category.tpl" data=$categories classCol='vignette col-ph-12 col-xs-8 col-sm-6 col-md-4'}
                 </div>

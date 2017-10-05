@@ -34,30 +34,23 @@
     {if $cat}
         {* Root *}
         {if $catalog}
-            {$bread[] = ['name' => {#catalog#},'url' => "{geturl}/{getlang}/amp/catalog/",'title' => {#show_catalog#}]}
+            {$bread[] = ['name' => {$root.name},'url' => "{geturl}/{getlang}/amp/catalog/",'title' => {$root.name}]}
         {/if}
 
         {* Catégories *}
-        {if $smarty.get.idcls OR $smarty.get.idproduct}
-            {$bread[] = ['name' => {$cat.name},'url' => "{geturl}{$cat.url}",'title' => "{#show_category#}: {$cat.name}"]}
+        {if $parent}
+            {$bread[] = ['name' => {$parent.name},'url' => "{geturl}{$parent.url}",'title' => "{#show_category#}: {$parent.name}"]}
+        {/if}
 
-            {* Sous-catégories *}
-            {if $smarty.get.idcls AND $smarty.get.idproduct}
-                {$bread[] = ['name' => {$subcat.name},'url' => "{geturl}{$subcat.url}",'title' => "{#show_subcategory#}: {$subcat.name}"]}
-            {elseif $smarty.get.idcls}
-                {$bread[] = ['name' => {$subcat.name}]}
-            {/if}
-            {* /Sous-catégories *}
-
-            {* Produits *}
-            {if $smarty.get.idproduct}
-                {$bread[] = ['name' => {$product.name}]}
-            {/if}
-            {* /Produits *}
-        {else}
+        {* Catégories *}
+        {if $cat}
             {$bread[] = ['name' => {$cat.name}]}
         {/if}
-        {* /Catégories *}
+
+        {* product *}
+        {if $product}
+            {$bread[] = ['name' => {$product.name}]}
+        {/if}
     {else}
         {$bread[] = ['name' => {$root.name}]}
     {/if}
