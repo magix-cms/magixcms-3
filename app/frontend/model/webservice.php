@@ -160,5 +160,278 @@ class frontend_model_webservice{
             return 'Parse result is not object';
         }
     }
+
+    /* ##################################### Utility with Curl for External Web Service ##########################################*/
+    /**
+     * Prepare request Data with Curl (no files)
+     * @param $data
+     * @return mixed
+     *
+    $json = json_encode(array(
+    'category'=>array(
+    'id'  =>'16'
+    )));
+    print_r($json);
+    print $this->webservice->setPreparePostData(array(
+    'wsAuthKey' => $this->webservice->setWsAuthKey(),
+    'method' => 'xml',
+    'data' => $test,
+    'customRequest' => 'DELETE',
+    'debug' => false,
+    'url' => 'http://www.mywebsite.tld/webservice/catalog/categories/'
+    ));
+     */
+    public function setPrepareSendData($data){
+        $curl_params = array();
+        $encodedAuth = $data['wsAuthKey'];
+        $generatedData = urlencode($data['data']);
+        switch($data['method']){
+            case 'json';
+                $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: application/json','Accept: application/json');
+                break;
+            case 'xml';
+                $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: text/xml','Accept: text/xml');
+                break;
+        }
+
+        $options = array(
+            CURLOPT_HEADER          => 0,
+            CURLINFO_HEADER_OUT     => 1,                // For debugging
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_NOBODY          => false,
+            CURLOPT_URL             => $data['url'],
+            CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+            CURLOPT_USERPWD         => $encodedAuth,
+            CURLOPT_HTTPHEADER      => $headers,
+            //CURLOPT_POST          => true,
+            //CURLOPT_FORBID_REUSE  => 1,
+            //CURLOPT_FRESH_CONNECT =>1,
+            CURLOPT_TIMEOUT         => 300,
+            CURLOPT_CONNECTTIMEOUT  => 300,
+            CURLOPT_CUSTOMREQUEST   => $data['customRequest'],
+            CURLOPT_POSTFIELDS      => $generatedData,
+            CURLOPT_SSL_VERIFYPEER  => false
+            //CURLOPT_SAFE_UPLOAD     => false*/
+        );
+        $ch = curl_init();
+        curl_setopt_array($ch, $options);
+        $response = curl_exec($ch);
+        $curlInfo = curl_getinfo($ch);
+        curl_close($ch);
+        // Data
+        /*$header = trim(substr($response, 0, $curlInfo['header_size']));
+        $body = substr($response, $curlInfo['header_size']);
+
+        print_r(array('status' => $curlInfo['http_code'], 'header' => $header, 'data' => json_decode($body)));*/
+        if(array_key_exists('debug',$data) && $data['debug']){
+            var_dump($curlInfo);
+            var_dump($response);
+        }
+        if ($curlInfo['http_code'] == '200') {
+            if ($response) {
+                return $response;
+            }
+        }elseif($curlInfo['http_code'] == '0'){
+            print 'Error HTTP: code 0';
+            return;
+        }
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     *
+    print $this->webservice->setPrepareGet(array(
+    'wsAuthKey' => $this->webservice->setWsAuthKey(),
+    'method' => 'xml',
+    'debug' => false,
+    'url' => 'http://www.mywebsite.tld/webservice/catalog/categories/'
+    ));
+     */
+    public function setPrepareGet($data){
+        try {
+
+            $curl_params = array();
+            $encodedAuth = $data['wsAuthKey'];
+            switch($data['method']){
+                case 'json';
+                    $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: application/json','Accept: application/json');
+                    break;
+                case 'xml';
+                    $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: text/xml','Accept: text/xml');
+                    break;
+            }
+            $options = array(
+                CURLOPT_RETURNTRANSFER  => true,
+                CURLINFO_HEADER_OUT     => true,
+                CURLOPT_URL             => $data['url'],
+                CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                CURLOPT_USERPWD         => $encodedAuth,
+                CURLOPT_HTTPHEADER      => $headers,
+                CURLOPT_TIMEOUT         => 300,
+                CURLOPT_CONNECTTIMEOUT  => 300,
+                CURLOPT_CUSTOMREQUEST   => "GET",
+                CURLOPT_SSL_VERIFYPEER  => false
+            );
+
+            $ch = curl_init();
+            curl_setopt_array($ch, $options);
+
+            $response = curl_exec($ch);
+            $curlInfo = curl_getinfo($ch);
+            curl_close($ch);
+            if (array_key_exists('debug', $data) && $data['debug']) {
+                var_dump($curlInfo);
+                var_dump($response);
+            }
+            if ($curlInfo['http_code'] == '200') {
+                if ($response) {
+                    return $response;
+                }
+            }elseif($curlInfo['http_code'] == '0'){
+                print 'Error HTTP: code 0';
+                return;
+            }
+
+
+        }catch (Exception $e){
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
+        }
+    }
+
+    /**
+     * Prepare post Img with Curl (files only)
+     * @param $data
+     * @return mixed
+    print $this->webservice->setPreparePostImg(array(
+    'wsAuthKey' =>  $this->webservice->setWsAuthKey(),
+    'url'       => 'http://www.website.tld/webservice/catalog/categories/3',
+    'debug' => false,
+    ));
+     */
+    public function setPreparePostImg($data){
+        if (isset($_FILES)) {
+            $ch = curl_init();
+
+            $curl_params = array();
+            $encodedAuth = $data['wsAuthKey'];
+
+            $img = array(
+                'img' =>
+                    '@' . $_FILES['img']['tmp_name']
+                    . ';filename=' . $_FILES['img']['name']
+                    . ';type=' . $_FILES['img']['type']
+            );
+
+            $options = array(
+                CURLOPT_HEADER          => 0,
+                CURLOPT_RETURNTRANSFER  => true,
+                CURLINFO_HEADER_OUT     => true,
+                CURLOPT_URL             => $data['url'],
+                CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                CURLOPT_USERPWD         => $encodedAuth,
+                CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: multipart/form-data"*/),
+                CURLOPT_TIMEOUT         => 300,
+                CURLOPT_CONNECTTIMEOUT  => 300,
+                CURLOPT_CUSTOMREQUEST   => "POST",
+                CURLOPT_POST            => true,
+                CURLOPT_POSTFIELDS      => $img,
+                CURLOPT_SSL_VERIFYPEER  => false
+                //CURLOPT_SAFE_UPLOAD   => false
+            );
+            $ch = curl_init();
+            curl_setopt_array($ch, $options);
+            $response = curl_exec($ch);
+            $curlInfo = curl_getinfo($ch);
+            curl_close($ch);
+            if(array_key_exists('debug',$data) && $data['debug']){
+                var_dump($curlInfo);
+                var_dump($response);
+            }
+            if ($curlInfo['http_code'] == '200') {
+                if ($response) {
+                    return $response;
+                }
+            }elseif($curlInfo['http_code'] == '0'){
+                print 'Error HTTP: code 0';
+                return;
+            }
+        }
+    }
+    /**
+     * Send Copy file on remote url
+     * @param $data
+     * @return mixed
+     */
+    public function setSendCopyImg($data){
+        try {
+            if (isset($data['file'])) {
+                $encodedAuth = $data['wsAuthKey'];
+                $img = array(
+                    /*'img' =>
+                        '@' . $data['file']
+                        . ';filename=' . $data['filename'],*/
+                    //. ';type=image/jpeg'
+                    'data'  =>  $data['data']
+                );
+
+                if ((version_compare(PHP_VERSION, '5.5') >= 0)) {
+                    //$img['img'] = new CURLFile($data['file']. ';filename=' . $data['filename']);
+                    $img['img'] = new CURLFile($data['file']);
+                    $options = array(
+                        CURLOPT_HEADER          => 0,
+                        CURLOPT_RETURNTRANSFER  => true,
+                        CURLINFO_HEADER_OUT     => true,
+                        CURLOPT_URL             => $data['url'],
+                        CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                        CURLOPT_USERPWD         => $encodedAuth,
+                        CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
+                        //CURLOPT_CUSTOMREQUEST   => "POST",
+                        CURLOPT_POST            => true,
+                        CURLOPT_POSTFIELDS      => $img,
+                        //CURLOPT_VERBOSE         => true,
+                        CURLOPT_SAFE_UPLOAD     => false,
+                        CURLOPT_SSL_VERIFYPEER  => false
+                    );
+                    //curl_setopt($ch, CURLOPT_SAFE_UPLOAD, true);
+                } else {
+                    $img['img'] = '@' . $data['file']
+                        . ';filename=' . $data['filename'];
+                    $options = array(
+                        CURLOPT_HEADER          => 0,
+                        CURLOPT_RETURNTRANSFER  => true,
+                        CURLINFO_HEADER_OUT     => true,
+                        CURLOPT_URL             => $data['url'],
+                        CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                        CURLOPT_USERPWD         => $encodedAuth,
+                        CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
+                        //CURLOPT_CUSTOMREQUEST   => "POST",
+                        CURLOPT_POST            => true,
+                        CURLOPT_POSTFIELDS      => $img,
+                        CURLOPT_SSL_VERIFYPEER  => false
+                    );
+                }
+                $ch = curl_init();
+                curl_setopt_array($ch, $options);
+                $response = curl_exec($ch);
+                $curlInfo = curl_getinfo($ch);
+                curl_close($ch);
+                if(array_key_exists('debug',$data) && $data['debug']){
+                    var_dump($curlInfo);
+                    var_dump($response);
+                }
+
+                if ($curlInfo['http_code'] == '200') {
+                    if ($response) {
+                        return $response;
+                    }
+                }
+            }
+        }catch (Exception $e){
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
+        }
+    }
 }
 ?>
