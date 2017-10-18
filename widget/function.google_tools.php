@@ -96,6 +96,32 @@ EOT;
 			$tools = '';
 		}
 			break;
+        case 'amp-analytics':
+			$analyticsdata = $collectionsSetting->fetch('analytics');
+			$analytics = $analyticsdata['value'];
+			if($analytics != null){
+				print '<script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>';
+				$script = '
+				<amp-analytics type="googleanalytics">
+				<script type="application/json">
+				{
+				  "vars": {
+					"account": '.$analytics.'
+				  },
+				  "triggers": {
+					"trackPageview": {
+					  "on": "visible",
+					  "request": "pageview"
+					}
+				  }
+				}
+				</script>
+				</amp-analytics>';
+				$template->assign('analytics',$script);
+			}else{
+				$tools = '';
+			}
+        	break;
         case 'robots':
             $robotsdata = $collectionsSetting->fetch('robots');
             $tools = $robotsdata['value'];

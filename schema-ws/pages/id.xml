@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <page>
+        <id>31</id>
+        <images>
+            <image xlink:href="http://www.magixcms3.dev/upload/pages/1/l_76283949.jpg"/>
+            <image xlink:href="http://www.magixcms3.dev/upload/pages/1/m_76283949.jpg"/>
+            <image xlink:href="http://www.magixcms3.dev/upload/pages/1/s_76283949.jpg"/>
+        </images>
+        <languages>
+            <language>
+                <id_lang>2</id_lang>
+                <url>/en/pages/31-page-test-en/</url>
+                <name>page test EN</name>
+                <resume></resume>
+                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                <seo>
+                    <title>meta title test</title>
+                    <description>meta description test</description>
+                </seo>
+            </language>
+            <language>
+                <id_lang>6</id_lang>
+                <url>/fr/pages/31-img-zoom-et-img-galery/</url>
+                <name>img-zoom et img-galery</name>
+                <resume></resume>
+                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                <seo>
+                    <title>meta title test</title>
+                    <description>meta description test</description>
+                </seo>
+            </language>
+        </languages>
+    </page>
+</magixcms>

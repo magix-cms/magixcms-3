@@ -35,6 +35,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-weight: @font-weight;
 }
 
 // HTML5 display definitions
@@ -397,9 +398,13 @@ input[type="search"]::-webkit-search-decoration {
 //
 
 fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  // Chrome and Firefox set a `min-width: min-content;` on fieldsets,
+  // so we reset that to ensure it behaves more like a standard block element.
+  // See https://github.com/twbs/bootstrap/issues/12359.
+  min-width: 0;
 }
 
 //
@@ -408,8 +413,15 @@ fieldset {
 //
 
 legend {
-  border: 0; // 1
-  padding: 0; // 2
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: @line-height-computed;
+  font-size: (@font-size-base * 1.5);
+  line-height: inherit;
+  color: @legend-color;
+  border: 0;
+  border-bottom: 1px solid @legend-border-color;
 }
 
 //

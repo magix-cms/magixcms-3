@@ -61,7 +61,7 @@ class backend_db_theme{
 								m.type_link as type_link, 
 								m.mode_link as mode_link, 
 								mc.id_lang, 
-								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat) as name_link, 
+								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
 								mc.title_link as title_link,
 								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
 								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
@@ -74,6 +74,7 @@ class backend_db_theme{
 							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages AND apc.id_lang = l.id_lang
 							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
 							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
+							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 							ORDER BY m.order_link ASC";
 				}
 				elseif ($config['type'] === 'link') {
@@ -83,7 +84,7 @@ class backend_db_theme{
 								m.type_link as type_link, 
 								m.mode_link as mode_link, 
 								mc.id_lang, 
-								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat) as name_link, 
+								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
 								mc.title_link as title_link,
 								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
 								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
@@ -96,6 +97,7 @@ class backend_db_theme{
 							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages AND apc.id_lang = l.id_lang
 							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
 							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
+							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 							WHERE m.id_link = :id";
 					$params = $data;
 				}
@@ -140,6 +142,10 @@ class backend_db_theme{
 							GROUP BY pt.id';
 					// $params = $data;
 				}
+				elseif ($config['type'] === 'plugin') {
+					$sql = 'SELECT id_plugins as id, name FROM mc_plugins';
+					// $params = $data;
+				}
 
 				return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }
@@ -182,6 +188,18 @@ class backend_db_theme{
 							AND pc.published_cat = 1';
 					$params = $data;
 				}
+				elseif ($config['type'] === 'shareConfig') {
+					$sql = 'SELECT 
+								facebook,
+								twitter,
+								viadeo,
+								google,
+								linkedin,
+								pinterest,
+								twitter_id
+							FROM mc_share_config 
+							LIMIT 0,1';
+				}
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
@@ -223,6 +241,18 @@ class backend_db_theme{
 
             if ($config['type'] === 'theme') {
                 $sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
+            }
+            elseif ($config['type'] === 'share') {
+                $sql = "UPDATE mc_share_config 
+						SET 
+							facebook = :facebook,
+							twitter = :twitter,
+							viadeo = :viadeo,
+							google = :google,
+							linkedin = :linkedin,
+							pinterest = :pinterest,
+							twitter_id = :twitter_id
+						WHERE id_share = 1";
             }
 			elseif ($config['type'] === 'link') {
 				$sql = 'UPDATE mc_menu 

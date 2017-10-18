@@ -1,3 +1,26 @@
+.dropdown-select {
+	position: relative;
+	height: 38px;
+
+	.dropdown {
+		width: 100%;
+		position: absolute;
+		z-index: @z-allhover + 1;
+	}
+
+	.btn {
+		padding-right: 6px;
+		text-align: left;
+	}
+
+	.show-less,
+	.show-more {
+		float: right;
+	}
+
+	.normalize-link(@text-color);
+}
+
 .dropdown {
 	amp-accordion>section {
 		header {
@@ -7,18 +30,23 @@
 		}
 
 		&:not([expanded]) {
-			.show-less {
-				display: none;
+			> header {
+				.show-less {
+					display: none;
+				}
 			}
 		}
 
 		&[expanded] {
-			.show-more {
-				display: none;
+			> header {
+				.show-more {
+					display: none;
+				}
 			}
 		}
 
-		> div:last-child {
+		> div:last-child,
+		> amp-accordion {
 			background-color: #fff;
 			box-shadow: 0 0 3px rgba(0,0,0,.4);
 

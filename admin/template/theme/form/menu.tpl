@@ -12,8 +12,7 @@
                     <option value="catalog">Catalogue (Root)</option>
                     <option value="category" class="optional-field" data-target="#specific" data-get="category" data-appendto="#pages">Catégorie</option>
                     <option value="news">Actualités (Root)</option>
-                    {*<option value="contact">Contact</option>*}
-                    {*<option value="plugin" class="optional-field" data-target="#specific" data-get="plugin" data-appendto="#pages">plugin</option>*}
+                    <option value="plugin" class="optional-field" data-target="#specific" data-get="plugin" data-appendto="#pages">plugin</option>
                 </select>
                 <div id="specific" class="additional-fields collapse">
                     <div class="form-group">

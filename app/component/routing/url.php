@@ -68,6 +68,9 @@ class component_routing_url{
                 case 'news':
                     $url = '/'.$iso.($this->amp ? '/amp' : '').'/news/'.$this->dateFormat->dateToDefaultFormat($data['date']).'/'.$data['id'].'-'.$data['url'].'/';
                     break;
+                case 'date':
+                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/news/'.$data['year'].'/'.(isset($data['month']) ? ($data['month'] < 10 ? '0':'').$data['month'].'/' : '');
+                    break;
                 case 'tag':
                     $url = '/'.$iso.($this->amp ? '/amp' : '').'/news/tag/'.$data['id'].'-'.$this->setBuildUrl->clean($data['url']).'/';
                     break;

@@ -22,7 +22,7 @@ class frontend_db_menu
 								m.id_page, 
 								mc.id_lang, 
 								l.iso_lang, 
-								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat) as name_link,
+								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link,
 								mc.title_link as title_link,
 								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
 								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
@@ -35,6 +35,7 @@ class frontend_db_menu
 							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages AND apc.id_lang = l.id_lang
 							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
 							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
+							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 							WHERE l.iso_lang = :iso
 							ORDER BY m.order_link ASC";
 					$params = $data;

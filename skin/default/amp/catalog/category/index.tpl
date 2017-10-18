@@ -1,6 +1,6 @@
-{extends file="amp/layout.tpl"}
+{extends file="amp/catalog/index.tpl"}
 {block name="stylesheet"}{fetch file="skin/{template}/amp/css/catalog.min.css"}{/block}
-{block name='body:id'}home{/block}
+{block name='body:id'}category{/block}
 {block name='article'}
     <article class="catalog container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Series">
         {block name='article:content'}
@@ -9,33 +9,25 @@
                 {amp_content content=$cat.content}
             </div>
             {if $categories}
-                <div class="category-list section-block">
-                    <div class="row row-center">
-                        {include file="amp/catalog/loop/category.tpl" data=$categories classCol='vignette col-ph-12 col-xs-8 col-sm-6 col-md-4'}
+                <h3>Sous-catégories</h3>
+                <div class="category-list">
+                    <div class="section-block">
+                        <div class="row row-center">
+                            {include file="amp/catalog/loop/category.tpl" data=$categories classCol='vignette col-ph-12 col-xs-8 col-sm-6 col-md-4'}
+                        </div>
                     </div>
                 </div>
             {/if}
-            {*<h3>Données de la page</h3>
-            <pre>{$cat|print_r}</pre>
-            <h3>Données hreflang</h3>
-            <pre>{$hreflang|print_r}</pre>*}
-            {*<h3>Widgets </h3>
-            {widget_catalog_data
-            conf =[
-            'context' =>  'category'
-            ]
-            assign='categoryData'
-            }
-            <pre>{$categoryData|print_r}</pre>
-            *}
-            {*<h3>Widgets </h3>
-            {widget_catalog_data
-            conf =[
-            'context' =>  'product'
-            ]
-            assign='productData'
-            }*}
-            {*<pre>{$productData|print_r}</pre>*}
+            {if $products}
+                <h3>Produits</h3>
+                <div class="product-list">
+                    <div class="section-block">
+                        <div class="row row-center">
+                            {include file="amp/catalog/loop/product.tpl" data=$products classCol='vignette col-ph-12 col-xs-8 col-sm-6 col-md-4'}
+                        </div>
+                    </div>
+                </div>
+            {/if}
         {/block}
     </article>
 {/block}

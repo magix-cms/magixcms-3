@@ -4,7 +4,7 @@ class frontend_controller_news extends frontend_db_news
     /**
      * @var
      */
-    protected $template, $header, $data, $modelNews, $modelCore, $dateFormat;
+    protected $template, $header, $data, $modelNews, $modelCore, $dateFormat, $routingUrl;
     public $getlang, $id, $id_parent,$date,$year,$month,$tag;
     /**
      * frontend_controller_pages constructor.
@@ -17,6 +17,8 @@ class frontend_controller_news extends frontend_db_news
         $this->getlang = $this->template->currentLanguage();
         $this->modelNews = new frontend_model_news($this->template);
         $this->dateFormat = new date_dateformat();
+		$this->routingUrl = new component_routing_url();
+
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
         }
@@ -52,6 +54,85 @@ class frontend_controller_news extends frontend_db_news
      * set Data from database
      * @access private
      */
+    private function getBuildList()
+    {
+		$conditions = ' WHERE lang.iso_lang = :iso';
+		if(isset($this->tag)) {
+			$conditions = ' JOIN mc_news_tag_rel AS ntr ON(c.id_news = ntr.id_news) WHERE lang.iso_lang = :iso';
+		}
+
+		$params = array('iso' => $this->getlang);
+
+
+		if(isset($this->date)) {
+			$conditions .= ' AND c.date_publish = :date';
+			$params['date'] = $this->dateFormat->SQLDate($this->date);
+		}
+		elseif(isset($this->year)) {
+			$conditions .= ' AND YEAR(c.date_publish) = :yr';
+			$params['yr'] = $this->year;
+
+			if(isset($this->month)) {
+				$conditions .= ' AND MONTH(c.date_publish) = :mth';
+				$params['mth'] = $this->month;
+			}
+		}
+		else {
+			$conditions .= ' AND c.date_publish <= :date';
+			$params['date'] = $this->dateFormat->SQLDate();
+
+			if(isset($this->tag)) {
+				$conditions .= ' AND ntr.id_tag = :tag';
+				$params['tag'] = $this->tag;
+			}
+		}
+		$conditions .= ' AND c.published_news = 1';
+
+		$collection = parent::fetchData(
+			array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+			$params
+		);
+
+		$newarr = array();
+		foreach ($collection as $k => &$item) {
+			$tags = parent::fetchData(
+				array('context' => 'all', 'type' => 'tagsRel'),
+				array(
+					':iso' => $item['iso_lang'],
+					':id'  => $item['id_news']
+				)
+			);
+			if($tags != null) {
+				$item['tags'] = $tags;
+			}
+			$newarr[] = $this->modelNews->setItemData($item,null);
+		}
+		return $newarr;
+    }
+
+    /**
+     * set Data from database
+     * @access private
+     */
+    private function getBuildTagList()
+    {
+		$conditions = ' WHERE lang.iso_lang = :iso ';
+		$data = parent::fetchData(
+			array('context' => 'all', 'type' => 'tags', 'conditions' => $conditions),
+			array(':iso' => $this->getlang)
+		);
+
+		$newarr = array();
+		foreach ($data as $k => &$item) {
+			$newarr[] = $this->modelNews->setItemData($item,null);
+		}
+		return $newarr;
+    }
+
+    /**
+     * set Data from database
+     * @access private
+     */
     private function getBuildItems()
     {
         $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
@@ -70,10 +151,6 @@ class frontend_controller_news extends frontend_db_news
         return $this->modelNews->setHrefLangData($collection);
     }
 
-    private function getBuildDate(){
-
-    }
-
     /**
      * Assign page's data to smarty
      * @param $type
@@ -81,20 +158,59 @@ class frontend_controller_news extends frontend_db_news
     private function getData($type)
     {
         switch($type){
-            case 'date':
+            case 'tag':
+            	$this->getItems('tag',$this->tag,'one');
                 break;
             case 'id':
                 $data = $this->getBuildItems();
-
                 $hreflang = $this->getBuildLangItems();
                 $this->template->assign('news',$data,true);
                 $this->template->assign('hreflang',$hreflang,true);
                 break;
         }
     }
-
+	/**
+	 * @return array
+	 */
     private function getBuildArchive(){
-
+		$data = parent::fetchData(
+			array('context' => 'all', 'type' => 'archives'),
+			array('iso' => $this->getlang)
+		);
+		$arch = array();
+		foreach ($data as $arr) {
+			$months = explode(',',$arr['mths']);
+			$months = array_reverse($months);
+			foreach ($months as $k => $month) {
+				$nbr =parent::fetchData(
+					array('context' => 'one', 'type' => 'nb_archives'),
+					array('iso' => $this->getlang, 'yr' => $arr['yr'], 'mth' => $month)
+				);
+				$month = array(
+					'month' => $month,
+					'url' => $this->routingUrl->getBuildUrl(array(
+							'type'  =>  'date',
+							'iso'   =>  $this->getlang,
+							'year'  =>  $arr['yr'],
+							'month' =>  $month,
+						)
+					),
+					'nbr' => $nbr['nbr']
+				);
+				$months[$k] = $month;
+			}
+			$arch[] = array(
+				'year' => $arr['yr'],
+				'url' => $this->routingUrl->getBuildUrl(array(
+						'type'  =>  'date',
+						'iso'   =>  $this->getlang,
+						'year'  =>  $arr['yr']
+					)
+				),
+				'months' => $months
+			);
+		}
+		return $arch;
     }
 
     /**
@@ -102,17 +218,30 @@ class frontend_controller_news extends frontend_db_news
      * run app
      */
     public function run(){
-        if(isset($this->id) && isset($this->date)){
+		$this->template->assign('tags',$this->getBuildTagList());
+		$this->template->assign('archives',$this->getBuildArchive());
+
+        if(isset($this->id) && isset($this->date)) {
             $this->getData('id');
             $this->template->display('news/news.tpl');
-        }elseif(isset($this->year) OR isset($this->month) OR isset($this->date)){
-            $this->getData('date');
-            $this->template->display('news/date.tpl');
-        }elseif(isset($this->tag)){
-            //$this->getData('date');
-            $this->template->display('news/tag.tpl');
-        }else{
-            $this->template->display('news/index.tpl');
         }
+        else {
+			$this->template->assign('news',$this->getBuildList());
+
+			if(isset($this->year) OR isset($this->month) OR isset($this->date)) {
+				if(isset($this->month)) {
+					$monthName = strftime("%B", mktime(0, 0, 0, $this->month, 1, 2000));
+					$this->template->assign('monthName',$monthName);
+				}
+				$this->template->display('news/date.tpl');
+			}
+			elseif(isset($this->tag)) {
+				$this->getData('tag');
+				$this->template->display('news/tag.tpl');
+			}
+			else {
+				$this->template->display('news/index.tpl');
+			}
+		}
     }
 }

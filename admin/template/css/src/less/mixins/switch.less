@@ -1,0 +1,139 @@
+@switch-track-width: 34px;
+@switch-track-height: 14px;
+@switch-knob-diameter: 20px;
+@switch-focus-ring-diameter: 48px;
+@switch-knob-active-margin: @switch-track-width - @switch-knob-diameter;
+
+@switch-unchecked-track-color: #000;
+@switch-unchecked-knob-color: #fafafa;
+@switch-unchecked-focus-ring-color: #9e9e9e;
+@switch-unchecked-knob-color-dark: #bdbdbd;
+@switch-unchecked-track-color-dark: #fff;
+@switch-unchecked-focus-ring-color-dark: #f1f1f1;
+@switch-disabled-knob-color: #bdbdbd;
+@switch-disabled-knob-color-dark: #424242;
+
+// postcss-bem-linter: define switch
+.switch {
+	display: inline-block;
+	position: relative;
+
+	&-native-control {
+		display: inline-block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: @switch-track-width;
+		height: @switch-track-height;
+		opacity: 0;
+		cursor: pointer;
+		z-index: 2;
+	}
+
+	&-bg {
+		display: block;
+		position: relative;
+		width: @switch-track-width;
+		height: @switch-track-height;
+		border-radius: 7px;
+		outline: none;
+		background-color: transparent;
+		cursor: pointer;
+		user-select: none;
+
+		&::before {
+			display: block;
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			transition: opacity 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
+			border-radius: 7px;
+			background-color: @switch-unchecked-track-color;
+			opacity: .38;
+			content: "";
+		}
+
+		// postcss-bem-linter: ignore
+		.switch-knob {
+			.shadow(2);
+
+			display: block;
+			position: absolute;
+			top: -3px;
+			left: 0;
+			width: @switch-knob-diameter;
+			height: @switch-knob-diameter;
+			transform: translateX(0);
+			transition: transform 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
+			border-radius: @switch-knob-diameter / 2;
+			background-color: @switch-unchecked-knob-color;
+			z-index: 1;
+
+			// postcss-bem-linter: ignore
+			&::before {
+				position: absolute;
+				top: -14px;
+				left: -14px;
+				width: @switch-focus-ring-diameter;
+				height: @switch-focus-ring-diameter;
+				transform: scale(0);
+				transition: transform 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
+				border-radius: @switch-focus-ring-diameter / 2;
+				background-color: transparent;
+				opacity: .2;
+				content: "";
+			}
+		}
+	}
+}
+
+.switch-native-control:focus ~ .switch-bg {
+	.switch-knob {
+		&::before {
+			position: absolute;
+			width: @switch-focus-ring-diameter;
+			height: @switch-focus-ring-diameter;
+			transform: scale(1);
+			transition: transform 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
+			border-radius: @switch-focus-ring-diameter / 2;
+			background-color: @switch-unchecked-focus-ring-color;
+		}
+	}
+}
+
+.switch-native-control:checked ~ .switch-bg {
+	&::before {
+		background-color: @main-color;
+		opacity: .5;
+	}
+
+	.switch-knob {
+		background-color: @main-color;
+		transform: translateX(@switch-track-width - @switch-knob-diameter);
+		transition: transform 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
+
+		&::before {
+			background-color: @main-color;
+			opacity: .15;
+		}
+	}
+}
+
+// postcss-bem-linter: end
+
+.switch-native-control:disabled {
+	cursor: initial;
+}
+
+.switch-native-control:disabled ~ .switch-bg {
+	&::before {
+		background-color: @switch-unchecked-track-color;
+		opacity: .12;
+	}
+
+	.switch-knob {
+		background-color: @switch-disabled-knob-color;
+	}
+}

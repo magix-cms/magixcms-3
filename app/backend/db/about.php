@@ -301,15 +301,7 @@ class backend_db_about
 					END
 					WHERE `name_info` IN ('facebook','twitter','google','linkedin','viadeo')";
 
-					component_routing_db::layer()->update($sql,
-						array(
-							':facebook' => $data['socials']['facebook'],
-							':twitter'	=> $data['socials']['twitter'],
-							':google' 	=> $data['socials']['google'],
-							':linkedin' => $data['socials']['linkedin'],
-							':viadeo' 	=> $data['socials']['viadeo']
-						)
-					);
+					$params = $data['socials'];
 
 				}
 				elseif ($config['type'] === 'content') {

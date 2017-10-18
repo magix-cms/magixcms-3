@@ -1,6 +1,11 @@
 //
 // Rules for breadcrumb
 //
+#breadcrumb-container {
+	padding-top: @headerH;
+
+	+ main { padding-top: 0; }
+}
 
 .breadcrumb {
 	font-size: 12px;
@@ -11,6 +16,7 @@
 		.no-martini;
 		list-style: none;
 		display: flex;
+		flex-wrap: wrap;
 
 		> li {
 			&+li:before {

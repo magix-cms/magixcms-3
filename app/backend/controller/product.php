@@ -150,6 +150,7 @@ class backend_controller_product extends backend_db_product
 				'iso_lang' => $page['iso_lang'],
 				'name_p' => $page['name_p'],
 				'url_p' => $page['url_p'],
+				'resume_p' => $page['resume_p'],
 				'content_p' => $page['content_p'],
 				'published_p' => $page['published_p']/*,
 				'public_url' => $publicUrl*/
@@ -463,28 +464,27 @@ class backend_controller_product extends backend_db_product
 
 						$this->header->set_json_headers();
 						$this->message->json_post_response(true, 'add_redirect');
-					}elseif(isset($this->product_id)){
-                        if(isset($this->id_product_2)){
+					}
+					elseif(isset($this->id_product_2)) {
+						$this->add(array(
+							'type' => 'newProductRel',
+							'data' => array(
+								'id_product'    => $this->id_product,
+								'id_product_2'  => $this->id_product_2,
+							)
+						));
 
-                            $this->add(array(
-                                'type' => 'newProductRel',
-                                'data' => array(
-                                    'id_product'    => $this->id_product,
-                                    'id_product_2'  => $this->id_product_2,
-                                )
-                            ));
 
-                            $this->header->set_json_headers();
-                            $this->message->json_post_response(true, 'add_redirect');
-
-                        }else{
-                            $this->modelLanguage->getLanguage();
-                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                            $this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all','products');
-                            $this->template->display('catalog/product/add-similar.tpl');
-                        }
-
-                    } else {
+						$this->modelLanguage->getLanguage();
+						$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+						$this->getItems('lastProductRel',array('default_lang' => $defaultLanguage['id_lang'],'id'=>$this->id_product),'one','row');
+						$display = $this->template->fetch('catalog/product/loop/similar.tpl');
+						$this->header->set_json_headers();
+						$this->message->json_post_response(true,'add',$display);
+						//$this->header->set_json_headers();
+						//$this->message->json_post_response(true, 'add');
+					}
+                    else {
 						$this->modelLanguage->getLanguage();
 						$this->template->display('catalog/product/add.tpl');
 					}
@@ -707,11 +707,12 @@ class backend_controller_product extends backend_db_product
 						// ---- Similar
                         $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                         $this->getItems('productRel',array(':default_lang' => $defaultLanguage['id_lang'],':id'=>$this->edit),'all');
-                        $assign = array(
+                        /*$assign = array(
                             'id_rel',
                             'name_p' => ['title' => 'name']
                         );
-                        $this->data->getScheme(array('mc_catalog_product_rel', 'mc_catalog_product_content'), array('id_rel', 'name_p'), $assign);
+                        $this->data->getScheme(array('mc_catalog_product_rel', 'mc_catalog_product_content'), array('id_rel', 'name_p'), $assign);*/
+						$this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all','products');
 						$this->template->display('catalog/product/edit.tpl');
 					}
 					break;

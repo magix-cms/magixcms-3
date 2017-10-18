@@ -20,7 +20,7 @@ class frontend_db_pages
                     $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 
                     $sql = "SELECT
-                    p.*,c.*,lang.iso_lang
+                    p.*,c.*,lang.iso_lang, lang.default_lang
                     FROM mc_cms_page AS p
                     JOIN mc_cms_page_content AS c ON(p.id_pages = c.id_pages) 
                     JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
@@ -40,6 +40,15 @@ class frontend_db_pages
                         LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
                         $conditions";
 
+                    $params = $data;
+                }
+                elseif ($config['type'] === 'ws') {
+                    $sql = 'SELECT
+							h.*,c.*,lang.iso_lang,lang.default_lang
+							FROM mc_cms_page AS h
+							JOIN mc_cms_page_content AS c ON(h.id_pages = c.id_pages) 
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
+							WHERE h.id_pages = :id';
                     $params = $data;
                 }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;

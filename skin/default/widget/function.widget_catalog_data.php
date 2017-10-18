@@ -13,7 +13,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -70,11 +70,11 @@
  */
 function smarty_function_widget_catalog_data ($params, $template)
 {
-
     $modelSystem        =   new frontend_model_core();
     $ModelCatalog       =   new frontend_model_catalog($template);
 
     // Set and load data
+
     $current    =   $modelSystem->setCurrentId();
     $conf       =   (is_array($params['conf'])) ? $params['conf'] : array();
     $override   =   $params['conf']['plugins']['override'] ? $params['conf']['plugins']['override'] : '';

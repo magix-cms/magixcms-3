@@ -1,3 +1,4 @@
+/*
 #default {
 	opacity: 1;
 	z-index: 1;
@@ -23,7 +24,7 @@
 }
 
 .image-gallery {
-	/*** Big image ***/
+	!*** Big image ***!
 	.big-image {
 		margin: 0 0 20px;
 		display: block;
@@ -51,7 +52,7 @@
 		}
 	}
 
-	/*** Button ***/
+	!*** Button ***!
 	.button {
 		font-size: 30px;
 		display: table;
@@ -90,7 +91,7 @@
 		}
 	}
 
-	/*** thumbs ***/
+	!*** thumbs ***!
 	.thumbs {
 		overflow: hidden;
 		white-space: nowrap;
@@ -131,4 +132,28 @@
 	}
 
 	.three-thumbs {.thumbs-size(3)}
+}*/
+#gallery {
+	padding: 0 0 22px;
+}
+
+amp-carousel {
+	button {
+		position: relative;
+		background: transparent;
+		border: none;
+		padding: 0;
+	}
+}
+
+#carousel-with-preview {
+	margin-bottom: 8px;
+
+	.material-icons {
+		position: absolute;
+		right: 15px;
+		top: 15px;
+		color: @white;
+		z-index: 1;
+	}
 }

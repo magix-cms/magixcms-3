@@ -6,13 +6,15 @@
 	padding-top: 30px;
 	padding-bottom: 40px;
 
-	&:last-child {
+	/*&:last-child {
 		padding-bottom: 0;
-	}
+	}*/
 }
 
 .vignette {
-	padding-bottom: 15px;
+	&:not(:last-child) {
+		margin-bottom: 15px;
+	}
 
 	h2 {
 		margin: 5px 0 18px;
@@ -31,7 +33,12 @@
 
 	.desc {
 		padding: 15px;
+		background-color: #fff;
 		overflow: hidden;
+
+		p {
+			color: @light-grey;
+		}
 	}
 }
 

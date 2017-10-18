@@ -3,6 +3,7 @@
     <parent></parent>
     <language id="6">
         <name>ma page</name>
+        <url>ma-page</url>
         <resume>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
@@ -15,9 +16,11 @@
             <title>mon seo title</title>
             <description>mon seo description</description>
         </seo>
+        <published_pages>1</published_pages>
     </language>
     <language id="2">
         <name>My new record</name>
+        <url>my-new-record</url>
         <resume>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
@@ -30,5 +33,6 @@
             <title></title>
             <description></description>
         </seo>
+        <published_pages>0</published_pages>
     </language>
 </magixcms>

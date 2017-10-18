@@ -145,7 +145,7 @@ var product = (function ($, undefined) {
         var ooright = dropZone.outerWidth() + ooleft;
         var ootop = dropZone.offset().top;
         var oobottom = dropZone.outerHeight() + ootop;
-        var inputFile = dropZone.find("input");
+        var inputFile = dropZone.find('input[type="file"]');
         document.getElementById(dropZoneId).addEventListener("dragover", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -269,8 +269,13 @@ var product = (function ($, undefined) {
                 return false;
             });
             initTree();
-            initDropZone();
-            initDefaultImg(edit);
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if($(e.target).attr('href') === '#images') {
+                    initDropZone();
+                    initDefaultImg(edit);
+                }
+            });
 
             $('.catlisting input[type="checkbox"]').change(function(){
                 var radio = $(this).next().next().find('input[type="radio"]');

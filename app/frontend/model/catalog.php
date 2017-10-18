@@ -78,7 +78,7 @@ class frontend_model_catalog extends frontend_db_catalog {
             elseif (isset($row['name_p'])) {
                 //$subcat['id']   = (isset($row['idcls'])) ? $row['idcls'] : null;
                 //$subcat['name'] = (isset($row['pathslibelle'])) ? $row['pathslibelle'] : null;
-                $data['title']      = $row['name_p'];
+                $data['name']      = $row['name_p'];
 
                 $data['url']  =
                     $this->routingUrl->getBuildUrl(array(
@@ -111,7 +111,9 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['id_lang']    = $row['id_lang'];
                 $data['iso']        = $row['iso_lang'];
                 $data['price']      = $row['price_p'];
+                $data['reference']  = $row['reference_p'];
                 $data['content']    = $row['content_p'];
+				$data['resume']     = ($row['resume_p'] != '') ? $row['resume_p'] : NULL;
                 $data['order']      = $row['order_p'];
                 if (isset($row['img'])) {
                     if($row['img'] != NULL) {
@@ -154,7 +156,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 if(isset($row['associated'])){
 
                     foreach($row['associated'] as $key => $value){
-                        $data['associated'][$key]['title'] = $value['name_p'];
+                        $data['associated'][$key]['name'] = $value['name_p'];
                         $data['associated'][$key]['url']  =
                             $this->routingUrl->getBuildUrl(array(
                                     'type'              =>  'product',
@@ -186,6 +188,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['associated'][$key]['iso']        = $value['iso_lang'];
                         $data['associated'][$key]['price']      = $value['price_p'];
                         $data['associated'][$key]['content']    = $value['content_p'];
+                        $data['associated'][$key]['resume']     = ($value['resume_p'] != '') ? $value['resume_p'] : NULL;
                         $data['associated'][$key]['order']      = $value['order_p'];
                         if(isset($value['name_img'])){
                             $imgPrefix = $this->imagesComponent->prefix();
@@ -311,6 +314,39 @@ class frontend_model_catalog extends frontend_db_catalog {
 
         return $arr;
     }
+
+	/**
+	 * @param $pages
+	 * @param string $branch
+	 * @return mixed
+	 */
+	private function setPagesTree($pages, $branch = 'root')
+	{
+		$childs = array();
+
+		foreach($pages as &$item) {
+			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+			if($k === 'root')
+				$childs[$k][] = &$item;
+			else
+				$childs[$k]['subdata'][] = &$item;
+
+			$childs[$item['id_cat']] = &$item;
+		}
+		unset($item);
+
+		foreach($pages as &$item) {
+			if (isset($childs[$item['id_cat']])) {
+				$item['subdata'] = $childs[$item['id_cat']]['subdata'];
+			}
+		}
+
+		if($branch === 'root')
+			return $childs[$branch];
+		else
+			return array($childs[$branch]);
+	}
+
     /**
      * Retourne les données sql sur base des paramètres passés en paramète
      * @param array $custom
@@ -387,8 +423,6 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
             }
         }
-
-
 
         if (isset($custom['limit'])) {
             $conf['limit']  =   $custom['limit'];
@@ -477,21 +511,23 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
             }else{
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 ';
-                if(isset($current['id'])){
-                    $conditions .= ' AND p.id_parent = '.$current['id'];
-                }
 
-                if (isset($custom['exclude'])) {
-                    $conditions .= ' AND p.id_cat NOT IN (' . $conf['id'] . ') ';
-                }
+                if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
+					if(isset($current['id'])){
+						$conditions .= ' AND p.id_parent = '.$current['id'];
+					}
 
-                if (isset($custom['select'])) {
+					if (isset($custom['exclude'])) {
+						$conditions .= ' AND p.id_cat NOT IN (' . $conf['id'] . ') ';
+					}
 
-                    $conditions .= ' AND p.id_cat IN (' . $conf['id'] . ') ';
-                }
+					if (isset($custom['select'])) {
+						$conditions .= ' AND p.id_cat IN (' . $conf['id'] . ') ';
+					}
+				}
 
                 // ORDER
-                $conditions .= ' ORDER BY p.order_cat ASC';
+                $conditions .= ' ORDER BY p.id_parent, p.order_cat ASC';
 
                 if ($conf['limit'] != null) {
                     $conditions .= ' LIMIT ' . $conf['limit'];
@@ -505,13 +541,14 @@ class frontend_model_catalog extends frontend_db_catalog {
                         )
                     );
 
-                    /*if($data != null) {
-                        $branch = isset($custom['select']) ? $conf['id'] : 'root';
-                        $data = $this->setPagesTree($data,$branch);
-                    }*/
+					if($data != null) {
+						$branch = (isset($custom['select']) && $custom['select'] !== 'all') ? $conf['id'] : 'root';
+						$data = $this->setPagesTree($data,$branch);
+					}
                 }
             }
-        }elseif ($conf['context'][1] == 'product') {
+        }
+        elseif ($conf['context'][1] == 'product') {
 
             // Product
             if ($override) {
@@ -568,7 +605,8 @@ class frontend_model_catalog extends frontend_db_catalog {
                     }*/
                 }
             }
-        }elseif ($conf['context'][1] == 'lastProduct') {
+        }
+        elseif ($conf['context'][1] == 'lastProduct') {
             // Product
             if ($override) {
                 $getCallClass = $this->modelPlugins->getCallClass($override);

@@ -5,7 +5,7 @@
                         Catalog
 ---------------------------------------------------------- */
 .catalog {
-	h1:first-child {
+	/*h1:first-child {
 		text-align: center;
 		padding: 0;
 		border: none;
@@ -23,140 +23,55 @@
 
 	.desc figure {
 		.img-responsive;
-	}
-}
-
-.product-list {
-	h3, h4 {
-		font-family: @font-family-sans-serif;
-		margin-bottom: 15px;
-		.text-overflow;
-	}
-
-	> .row > div {
-		margin-bottom: 30px;
-
-		.btn {
-			margin-top: 15px;
-		}
-	}
-}
-
-
-/* --------------------------------------------------------
-                        Category
----------------------------------------------------------- */
-.category-list {
-	padding: 60px 0;
-	background: #eee url('@{patternpath}/subtle_white_feathers.jpg') repeat;
-
-	> .container > .row {
-		margin-bottom: 30px;
-		&:last-child {
-			margin-bottom: 0;
-		}
-	}
+	}*/
 
 	h3 {
-		font-size: 20px;
-	}
-}
-
-.cat-desc {
-	text-align: center;
-
-	p {
-		text-align: left;
+		margin: 0;
+		padding: 17px 0;
 	}
 }
 
 /* --------------------------------------------------------
-                       Subcategory
+                         Lists
 ---------------------------------------------------------- */
+
+.product-list {
+	overflow: hidden;
+	margin: 0 -15px;
+
+	.section-block{
+		margin: 0 -15px;
+		padding-right: 30px;
+		padding-left: 30px;
+		background-color: #eee;
+		.shadow(1,inset);
+	}
+}
 
 /* --------------------------------------------------------
                          Product
 ---------------------------------------------------------- */
-#catalog-product {
-	#article {
-		.content {
-			// Normalize the main title of the content
-			header {
-				margin: 0 auto 25px;
-				padding: 0 0 15px;
+#product {
+	article {
+		// Normalize the main title of the content
+		header {
+			margin: 0 auto 25px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+
+			h1 {
+				flex: 1 0 100%;
+				padding: 0 0 10px;
 				border-bottom: 1px solid #eee;
-				overflow: hidden;
-
-				> h1:first-child {
-					color: @text-color;
-					float: left;
-					margin: 0;
-				}
-			}
-
-			.description {
-				margin-bottom: 30px;
-			}
-
-			fieldset {
-				text-align: center;
-
-				legend {
-					font-size: @lead-font-size;
-					font-weight: 300;
-					margin-bottom: 35px;
-
-					span {
-						padding: 15px;
-						margin-bottom: -15px;
-						position: relative;
-						bottom: -15px;
-						background: #ffffff;
-					}
-				}
 			}
 		}
 	}
 
-	.price {
-		//float: right;
-		position: absolute;
-		bottom: 0;
-		right: 0;
-		padding: 8px 12px;
-		color: #ffffff;
-		background-color: rgba(0,0,0,.5);
-		font-weight: 500;
-		margin: 0;
-	}
-}
-
-#similar-products {
-	background: #444 url("@{patternpath}irongrip.png") repeat;
-	color: #fff;
-
-	h3 {
-		margin: 10px 0 0;
-	}
-
-	li > div {
-		position: relative;
-	}
-
-	.col-ph-12 {
-		margin-bottom: 30px;
-	}
-
-	.thumbs {
-		padding-bottom: 27px;
-
-		.thumbs-size(2, 30px);
-	}
-}
-
-.interested-form {
-	margin: 50px 0 25px;
-	span {
-		margin: 0 8px;
+	.interested-form {
+		margin: 50px 0 25px;
+		span {
+			margin: 0 8px;
+		}
 	}
 }

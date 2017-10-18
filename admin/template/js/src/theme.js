@@ -57,6 +57,15 @@ var theme = (function ($, undefined) {
         run: function (controller, btnData) {
             UpdateSkin(controller,btnData);
             initSortable();
+
+            $('[data-toggle="popover"]').popover();
+            $('[data-toggle="popover"]').click(function(e){
+                e.preventDefault(); return false;
+            });
+
+            $('#share-twitter').on('change',function(){
+                $('#twitter-id').prop('disabled',!$(this).prop('checked'));
+            });
         }
     }
 })(jQuery);

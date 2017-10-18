@@ -1,0 +1,76 @@
+/* --------------------------------------------------------
+                            Tag
+---------------------------------------------------------- */
+.tag-list {
+	a {
+		position: relative;
+		z-index: @z-allhover + 1;
+	}
+	.normalize-link(@weight: 600);
+}
+
+/* --------------------------------------------------------
+                            News
+---------------------------------------------------------- */
+#topicality {
+	article {
+		> header {
+			padding-bottom: 15px;
+
+			> h1:first-child {
+				margin: 8px auto 15px;
+				padding: 0 0 15px;
+				color: @text-color;
+				border-bottom: 1px solid #eee;
+				//position: relative;
+				overflow: hidden;
+
+				small {
+					color: @main-color;
+					/*position: absolute;
+					right: 0;
+					bottom: 20px;*/
+					float: right;
+					margin-top: 10px;
+				}
+			}
+		}
+	}
+
+	/*h1 {
+		position: relative;
+
+		small {
+			position: absolute;
+			right: 0;
+			bottom: 18px;
+			color: @light-grey;
+		}
+	}
+
+	figure {
+		position: relative;
+		height: 300px;
+		text-align: center;
+		overflow: hidden;
+
+		img {
+			.img-full-width();
+		}
+	}*/
+
+	.desc {
+		margin: 20px 0;
+	}
+
+	.tag-list {
+		padding: 7px 0;
+		border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;
+		margin-top: 15px;
+
+		span:first-child {
+			margin-right: 7px;
+		}
+	}
+}

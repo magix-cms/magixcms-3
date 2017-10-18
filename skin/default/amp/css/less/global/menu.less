@@ -4,15 +4,23 @@
 // Toggle menu button
 amp-sidebar {
 	background-color: #fff;
+	.shadow(16);
+
+	> div:last-child { display: none; }
 }
 
 .sidebar {
 	margin: 0;
 	max-width: 37.5rem;
-	width: 50vw;
+	width: 65vw;
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
+	z-index: @z-drawer;
+
+	@media (min-width: @screen-xs-min) {
+		width: 50vw;
+	}
 
 	> header {
 		display: flex;

@@ -1,6 +1,6 @@
 <li id="link_{$link.id_link}" class="panel list-group-item">
     <header role="tab">
-        <span class="fa fa-arrows"></span> {$link.name_link}
+        <span class="fa fa-arrows"></span> {$link.name_link|ucfirst}
         <div class="actions">
             <a href="#link{$link.id_link}" class="btn btn-link" role="button" data-toggle="collapse" data-parent="#table-link" aria-expanded="false" aria-controls="link{$link.id_link}">
                 <span class="fa fa-pencil-square-o"></span>

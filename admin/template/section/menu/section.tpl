@@ -209,7 +209,7 @@
     {/if}
     <li><hr></li>
     {if {employee_access type="view" class_name="backend_controller_plugins"} eq 1}
-    <li class="{if $smarty.get.controller == 'plugins'}active{/if}">
+    <li class="has-submenu {if $smarty.get.controller == 'plugins'}active{/if}">
         <a href="{geturl}/{baseadmin}/index.php?controller=plugins">
             <span class="fa fa-cogs"></span> Extensions
         </a>

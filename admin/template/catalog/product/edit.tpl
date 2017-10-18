@@ -59,12 +59,14 @@
                         </form>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="similar">
-                        <p class="text-right">
+                        {*<p class="text-right">
                             {#nbr_product_rel#|ucfirst}: {$productRel|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&product_id={$page.id_product}" title="{#add_product_rel#}" class="btn btn-link">
                                 <span class="fa fa-plus"></span> {#add_product_rel#|ucfirst}
                             </a>
                         </p>
                         {include file="section/form/table-form-2.tpl" data=$productRel idcolumn='id_rel' activation=false sortable=$sortable controller="product" subcontroller="similar" edit=false search=false}
+                        <hr>*}
+                        {include file="section/form/list-form.tpl" controller="product" sub="similar" dir_controller="catalog/product" data=$productRel id=$page.id_product class_form="col-ph-12 col-lg-5" class_table="col-ph-12 col-lg-7"}
                     </div>
                 </div>
                 {*<pre>{$page|print_r}</pre>*}
@@ -81,6 +83,10 @@
         libjs/vendor/jquery-ui-1.12.min.js,
         libjs/vendor/progressBar.min.js,
         {baseadmin}/template/js/table-form.min.js,
+        libjs/vendor/tabcomplete.min.js,
+        libjs/vendor/livefilter.min.js,
+        libjs/vendor/bootstrap-select.min.js,
+        libjs/vendor/filterlist.min.js,
         {baseadmin}/template/js/product.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
@@ -100,6 +106,7 @@
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 var edit = "{$smarty.get.edit}";
                 product.run(globalForm,tableForm,edit);
+                product.runAdd();
             }
         });
     </script>

@@ -98,6 +98,11 @@ function smarty_function_widget_share_data($params, $template)
 {
     // *** Load active script var
     // ** Catch Domain var
+	$shareModel = new frontend_model_share($template);
+	$shareConfig = $shareModel->getShareConfig();
+	$template->assign('shareConfig',$shareConfig);
+	$shareUrl = $shareModel->getShareUrl();
+
     $url['root'] = http_url::getUrl();
     $url['relativ'] = $_SERVER["REQUEST_URI"];
     //strrpos récupère la dernière occurence de / et de .
@@ -162,38 +167,19 @@ function smarty_function_widget_share_data($params, $template)
 
     // *** Set share data
     $name = str_replace(' ', '%20', $name); // W3C validation require no ' ' in url
-    $data_default = array(
-        'facebook' => array(
-            'name' => 'facebook',
-            'url' => 'http://www.facebook.com/share.php?u='.$url['share'],
-            'img' => 'facebook.png',
-            'font'=> 'facebook'
-        ),
-        'twitter' =>  array(
-            'name' => 'twitter',
-            'url' => 'https://twitter.com/intent/tweet?text='.$name.'&amp;url='.$url['share'],
-            'img' => 'twitter.png',
-            'font'=> 'twitter'
-        ),
-        'viadeo' => array(
-            'name' => 'viadeo',
-            'url' => 'http://www.viadeo.com/shareit/share/?url='.$url['share'].'&amp;title='.$name.'&amp;overview='.$name,
-            'img' => 'viadeo.png',
-            'font'=> ''
-        ),
-        'google' => array(
-            'name' => 'google',
-            'url' => 'https://plus.google.com/share?url='.$url['share'],
-            'img' => 'google.png',
-            'font'=> 'google-plus'
-        ),
-        'linkedin' => array(
-            'name' => 'linkedin',
-            'url' => 'http://www.linkedin.com/shareArticle?mini=true&url='.$url['share'],
-            'img' => 'linkedin.png',
-            'font'=> 'linkedin'
-        )
-    );
+
+	$data_default = array();
+    foreach ($shareUrl as $item) {
+		$type = $item['name_share'];
+		if($shareConfig[$type]) {
+			$data_default[$type] = array(
+				'name' => $type,
+				'url' => str_replace(array('%URL%','%NAME%'),array($url['share'],$name),$item['url_share']),
+				'font' => $item['icon_share']
+			);
+		}
+	}
+
     $exclude = isset($params['exclude']) ? $params['exclude'] : false;
     if($exclude){
         if(is_array($exclude)){

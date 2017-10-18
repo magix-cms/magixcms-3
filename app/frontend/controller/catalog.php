@@ -91,6 +91,26 @@ class frontend_controller_catalog extends frontend_db_catalog {
     }
 
 
+	/**
+	 * set Data from database
+	 * @access private
+	 * @return array
+	 */
+    private function getBuildProductList()
+    {
+		$conditions = ' WHERE lang.iso_lang = :iso AND pc.published_p = 1 AND c.id_cat = :id_cat AND img.default_img = 1';
+		$collection = parent::fetchData(
+			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
+			array('iso' => $this->getlang,'id_cat' => $this->id)
+		);
+        $newarr = array();
+		foreach ($collection as $item) {
+			$newarr[] = $this->modelCatalog->setItemData($item,null);
+        }
+        return $newarr;
+    }
+
+
     /**
      * set Data from database
      * @access private
@@ -146,36 +166,37 @@ class frontend_controller_catalog extends frontend_db_catalog {
      */
     private function getData($type)
     {
+		$data = $this->getBuildRootItems();
+		$this->template->assign('root',$data,true);
+		if($type != 'root') {
+			$hreflang = $this->getBuildLangItems($type);
+			$this->template->assign('hreflang',$hreflang,true);
+		}
+
         switch($type){
             case 'root':
-                $data = $this->getBuildRootItems();
                 $cats = $this->getBuildCategoryList();
-                $this->template->assign('root',$data,true);
                 $this->template->assign('categories',$cats,true);
                 break;
             case 'cat':
-                $hreflang = $this->getBuildLangItems($type);
-                $this->template->assign('hreflang',$hreflang,true);
-				$data = $this->getBuildRootItems();
-				$this->template->assign('root',$data,true);
                 $data = $this->getBuildCategoryItems();
 				$cats = $this->getBuildSubCategoryList();
+				$products = $this->getBuildProductList();
 				$this->template->assign('cat',$data,true);
 				$this->template->assign('categories',$cats,true);
-				if($data['id_parent'] !== null) {
-					$this->id = $data['id_parent'];
-					$parent = $this->getBuildCategoryItems();
-					$this->template->assign('parent',$parent,true);
-				}
+				$this->template->assign('products',$products,true);
                 break;
             case 'product':
-                $hreflang = $this->getBuildLangItems($type);
-                $this->template->assign('hreflang',$hreflang,true);
                 $data = $this->getBuildProductItems();
                 $this->template->assign('product',$data,true);
                 break;
         }
 
+		if($data['id_parent'] !== null) {
+			$this->id = $data['id_parent'];
+			$parent = $this->getBuildCategoryItems();
+			$this->template->assign('parent',$parent,true);
+		}
     }
 
     /**

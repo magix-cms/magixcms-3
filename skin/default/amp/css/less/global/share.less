@@ -38,19 +38,15 @@
 }
 
 #sharebar {
-	background: @sharebar-bg;
-	padding: 18px 0;
+	/*background: @sharebar-bg;
+	padding: 18px 0;*/
 
 	.label {
-		color: @light-gray;
-		display: inline-block;
+		color: @light-grey;
 		font-size: 21px;
-		padding: 0.2em 0 0.3em;
-		margin-right: 8px;
-		font-weight: 300;
 	}
 
-	ul {
+	/*ul {
 		display: inline-block;
 		li {
 			float: left;
@@ -58,10 +54,32 @@
 				margin-left: 10px;
 			}
 		}
-	}
+	}*/
 
 	.followbox {
+		display: flex;
+		flex-flow: column;
+		align-items: center;
+
 		ul {
+			margin: 0 0 18px;
+		}
+
+		li {
+			a {
+				display: flex;
+				width: 30px;
+				height: 30px;
+				justify-content: center;
+				align-items: center;
+				border-radius: 50%;
+				color: #fff;
+			}
+		}
+
+		.share-buttons();
+
+		/*ul {
 			margin: 0 0 -6px;
 			li {
 				font-size: 20px;
@@ -74,6 +92,6 @@
 					}
 				}
 			}
-		}
+		}*/
 	}
 }

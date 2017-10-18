@@ -12,7 +12,7 @@
 
 {foreach $links as $link}
     <li class="filter-item items" data-filter="{$link.name}" data-value="{$link.id}" data-id="{$link.id}">
-        {$link.name}
+        {$link.name|ucfirst}
         {if $link.child}
             <li class="optgroup">
                 {*<span class="optgroup-header">Sous-page(s)</span>*}

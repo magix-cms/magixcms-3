@@ -7,7 +7,7 @@
  */
 
 /**
- * Smarty {amp_img} function plugin
+ * Smarty {amp_components} function plugin
  * Type:     function<br>
  * Name:     amp_img<br>
  * Date:     May 21, 2002

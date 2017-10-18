@@ -531,3 +531,34 @@ CREATE TABLE IF NOT EXISTS `mc_menu_content` (
   KEY `id_link` (`id_link`),
   KEY `id_lang` (`id_lang`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `mc_share_config` (
+  `id_share` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `facebook` smallint(1) unsigned NOT NULL DEFAULT '1',
+  `twitter` smallint(1) unsigned NOT NULL DEFAULT '0',
+  `viadeo` smallint(1) unsigned NOT NULL DEFAULT '1',
+  `google` smallint(1) unsigned NOT NULL DEFAULT '1',
+  `linkedin` smallint(1) unsigned NOT NULL DEFAULT '1',
+  `pinterest` smallint(1) unsigned NOT NULL DEFAULT '1',
+  `twitter_id` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_share`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+INSERT INTO `mc_share_config` (`id_share`, `facebook`, `twitter`, `viadeo`, `google`, `linkedin`, `pinterest`, `twitter_id`) VALUES
+(1, 1, 1, 1, 1, 1, 1, NULL);
+
+CREATE TABLE IF NOT EXISTS `mc_share_url` (
+  `id_share_url` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name_share` varchar(50) NOT NULL,
+  `url_share` varchar(400) NOT NULL,
+  `icon_share` varchar(50) NOT NULL,
+  PRIMARY KEY (`id_share_url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+INSERT INTO `mc_share_url` (`id_share_url`, `name_share`, `url_share`, `icon_share`) VALUES
+(NULL, 'facebook', 'http://www.facebook.com/share.php?u=%URL%', 'facebook'),
+(NULL, 'twitter', 'https://twitter.com/intent/tweet?text=%NAME%&amp;url=%URL%', 'twitter'),
+(NULL, 'viadeo', 'http://www.viadeo.com/shareit/share/?url=%URL%&amp;title=%NAME%&amp;overview=%NAME%', 'viadeo'),
+(NULL, 'google', 'https://plus.google.com/share?url=%URL%', 'google-plus'),
+(NULL, 'linkedin', 'http://www.linkedin.com/shareArticle?mini=true&url=%URL%', 'linkedin'),
+(NULL, 'pinterest', 'http://pinterest.com/pin/create/link/?url=%URL%', 'pinterest-p');

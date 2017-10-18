@@ -7,7 +7,7 @@
 	// Global footer rules
 	h4 {
 		margin: 0 0 20px;
-		border-bottom: 1px solid @light-gray;
+		border-bottom: 1px solid @light-grey;
 		padding-bottom: 10px;
 		a {
 			.title-font;
@@ -17,7 +17,7 @@
 	.block {
 		padding: 20px 0;
 		margin-bottom: 20px;
-		border-top: 1px solid @light-gray;
+		border-top: 1px solid @light-grey;
 
 		&:last-child {
 			margin-bottom: 0;
@@ -61,7 +61,7 @@
 #colophon {
 	//background-color: @colophon-bg;
 	.footer-colophon {
-		border-top: 1px solid @light-gray;
+		border-top: 1px solid @light-grey;
 		padding: 15px;
 		font-size: 85%;
 
@@ -81,10 +81,12 @@
 	bottom: 0;
 	display: block;
 	width: 100%;
-	max-width: 37.5rem;
-	z-index: 2;
+	//max-width: 37.5rem;
+	left: 0;
+	z-index: @z-fixed;
 	padding: 0;
 	background-color: @main-color;
+	.shadow(4);
 
 	.share-nav {
 		background: @sharebar-bg;

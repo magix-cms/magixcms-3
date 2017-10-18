@@ -2,7 +2,7 @@
 class backend_controller_theme extends backend_db_theme{
     public $edit, $action, $tabs;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
-    public $theme, $content, $type, $id, $link, $order;
+    public $theme, $content, $type, $id, $link, $order, $share, $twitter_id;
 
     public $roots = array('home','about','catalog','news','contact');
 	/**
@@ -57,6 +57,12 @@ class backend_controller_theme extends backend_db_theme{
 			$this->order = $formClean->arrayClean($_POST['order']);
 		}
 
+		if(http_request::isPost('share')){
+			$this->share = $formClean->arrayClean($_POST['share']);
+		}
+		if (http_request::isPost('twitter_id')) {
+			$this->twitter_id = $formClean->simpleClean($_POST['twitter_id']);
+		}
     }
 
 	/**
@@ -157,6 +163,42 @@ class backend_controller_theme extends backend_db_theme{
     }
 
 	/**
+	 *
+	 */
+	private function setShare()
+	{
+
+		$config = array(
+			'facebook' => 0,
+			'twitter' => 0,
+			'viadeo' => 0,
+			'google' => 0,
+			'linkedin' => 0,
+			'pinterest' => 0
+		);
+
+		if(isset($this->share) && is_array($this->share)) {
+			foreach ($this->share as $k => $v) {
+				$config[$k] = 1;
+			}
+		}
+
+		$config['twitter_id'] = $this->twitter_id;
+		return $config;
+    }
+
+	/**
+	 * @return array
+	 */
+	private function setShareConfig()
+	{
+		$config = $this->getItems('shareConfig',null,'one',false);
+		$this->template->assign('twitter_id',$config['twitter_id']);
+		unset($config['twitter_id']);
+		$this->template->assign('shareConfig',$config);
+    }
+
+	/**
 	 * Update data
 	 * @param $data
 	 */
@@ -188,6 +230,16 @@ class backend_controller_theme extends backend_db_theme{
 					),array(
 						'theme' => $this->theme
 					)
+				);
+				$this->header->set_json_headers();
+				$this->message->json_post_response(true,'update',$data['type']);
+				break;
+            case 'share':
+				parent::update(
+					array(
+						'type' => $data['type']
+					),
+					$this->setShare()
 				);
 				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update',$data['type']);
@@ -298,13 +350,15 @@ class backend_controller_theme extends backend_db_theme{
 					}
                 	break;
                 case 'edit':
-                    if (isset($this->theme)) {
+					if (isset($this->share)) {
+						$this->upd(array('type'=>'share'));
+					}
+					elseif (isset($this->theme)) {
                         if($this->type === 'theme'){
                             $this->upd(array('type'=>'theme'));
                         }
                     }
                     break;
-
 				case 'editlink':
 					if(isset($this->edit) && isset($this->link)) {
 						$this->link = $this->link[$this->edit];
@@ -352,8 +406,19 @@ class backend_controller_theme extends backend_db_theme{
 					break;
 				case 'get':
 					if(isset($this->content)) {
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-						$this->setPagesTree($this->getItems($this->content,array('idlang'=>$defaultLanguage['id_lang']),'all',false));
+						if($this->content === 'plugin') {
+							$plugins = $this->getItems($this->content,null,'all',false);
+							foreach ($plugins as $k => $plugin) {
+								$pluginClass = 'plugins_'.$plugin['name'].'_public';
+								$frontrun =  class_exists($pluginClass) ? method_exists($pluginClass,'run') : false;
+								if(!$frontrun) unset($plugins[$k]);
+							}
+							$this->template->assign('links',$plugins);
+						}
+						else {
+							$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+							$this->setPagesTree($this->getItems($this->content,array('idlang'=>$defaultLanguage['id_lang']),'all',false));
+						}
 						$this->template->display('theme/loop/page.tpl');
 					}
 					break;
@@ -363,6 +428,7 @@ class backend_controller_theme extends backend_db_theme{
 			$this->modelLanguage->getLanguage();
             $this->setItemsSkin();
             $this->setLinksData();
+            $this->setShareConfig();
             $this->template->display('theme/index.tpl');
         }
     }

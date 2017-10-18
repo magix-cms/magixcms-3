@@ -291,6 +291,7 @@ class backend_controller_category extends backend_db_category {
                             'id_cat'          => $setNewData['id_cat'],
                             'name_cat'        => $content['name_cat'],
                             'url_cat'         => $url_cat,
+                            'resume_cat'      => $content['resume_cat'],
                             'content_cat'     => $content['content_cat'],
                             'published_cat'   => $content['published_cat']
                         )

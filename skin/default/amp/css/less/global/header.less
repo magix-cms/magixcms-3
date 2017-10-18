@@ -3,10 +3,14 @@
 //
 // --- Main header
 .header {
-	//position: relative;
-	//z-index: 999;
-	//width: 100%;
-	border-bottom: 1px solid #cccccc;
+	position: fixed;
+	z-index: @z-fixed;
+	width: 100%;
+	//max-width: 37.5rem;
+	left: 0;
+	background-color: @white;
+	//border-bottom: 1px solid #cccccc;
+	.shadow(4);
 }
 
 .header-inner {
@@ -18,7 +22,6 @@
 
 .site-name {
 	flex: 1;
-	margin-left: -36px;
 	text-align: center;
 }
 
@@ -34,6 +37,7 @@
 
 	button {
 		border: none;
+		padding-left: 6px;
 	}
 }
 

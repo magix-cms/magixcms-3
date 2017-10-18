@@ -75,7 +75,8 @@ class backend_db_product{
                 elseif ($config['type'] === 'catRel') {
                     $sql = 'SELECT id_product, id_cat, default_c FROM mc_catalog WHERE id_product = :id';
                     $params = $data;
-                }elseif ($config['type'] === 'productRel') {
+                }
+                elseif ($config['type'] === 'productRel') {
                     $sql = 'SELECT rel.*,c.name_p
                     FROM mc_catalog_product_rel AS rel
                     JOIN mc_catalog_product_content AS c ON(rel.id_product_2 = c.id_product)
@@ -125,6 +126,15 @@ class backend_db_product{
                     $sql = 'SELECT * FROM mc_catalog WHERE id_product = :id AND id_cat = :id_cat';
                     $params = $data;
                 }
+				elseif ($config['type'] === 'lastProductRel') {
+					$sql = 'SELECT rel.*,c.name_p
+                    		FROM mc_catalog_product_rel AS rel
+                    		JOIN mc_catalog_product_content AS c ON(rel.id_product_2 = c.id_product)
+                    		JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                    		WHERE rel.id_product = :id AND c.id_lang = :default_lang
+                    		ORDER BY rel.id_rel DESC LIMIT 0,1';
+					$params = $data;
+				}
 
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }
