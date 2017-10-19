@@ -37,8 +37,8 @@
     {strip}{* Language link hreflang *}{widget_lang_data assign="dataLangHead"}{include file="section/loop/lang.tpl" data=$dataLangHead type="head"}{google_tools tools='analytics'}
 {/strip}</head>
 <body id="{block name='body:id'}layout{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
-    {include file="section/brick/cookie-consent.tpl"}{* Pour menu="cat-dropdown" ou menu="mega-dropdown" il faut au minimum menuclass='mega-dropdown' *}
-    {include file="section/header.tpl"}
+    {*{include file="section/brick/cookie-consent.tpl"}*}{* Pour menu="cat-dropdown" ou menu="mega-dropdown" il faut au minimum menuclass='mega-dropdown' *}
+    {*{include file="section/header.tpl"}*}
     {block name="breadcrumb"}{/block}
     {block name="main:before"}{/block}
     {block name="main"}
@@ -57,9 +57,9 @@
     {if isset($mobileBrowser) && $mobileBrowser}
         {include file="section/footer-mobile.tpl" adjust="clip" blocks=['contact','sitemap','about']}
     {else}
-        {include file="section/footer.tpl" adjust="clip" blocks=['contact','sitemap','facebook','about']}
+        {*{include file="section/footer.tpl" adjust="clip" blocks=['contact','sitemap','facebook','about']}*}
     {/if}
-    {if !(isset($mobileBrowser) && $mobileBrowser)}{include file="section/nav/btt.tpl"}{/if}
+    {*{if !(isset($mobileBrowser) && $mobileBrowser)}{include file="section/nav/btt.tpl"}{/if}*}
     {strip}{capture name="vendors"}
         /min/?f=skin/{template}/js/vendor/jquery.min.js,
         {if isset($mobileBrowser) && $mobileBrowser}

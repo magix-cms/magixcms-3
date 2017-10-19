@@ -32,10 +32,6 @@
 	}
 }
 
-input[type="password"] {
-	font-family: "Open Sans",Helvetica,Arial,sans-serif,"FontAwesome";
-}
-
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"],
 .radio input[type="radio"],
@@ -77,14 +73,6 @@ textarea.form-control {
 //
 // Restyle and baseline non-control form elements.
 
-label {
-	display: inline-block;
-	max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
-	margin-bottom: 5px;
-	font-weight: bold;
-}
-
-
 // Normalize form controls
 //
 // While most of our form styles require extra classes, some basic normalization
@@ -104,10 +92,6 @@ input[type="checkbox"] {
 	line-height: normal;
 }
 
-input[type="file"] {
-	display: block;
-}
-
 // Make range inputs behave like textual form controls
 input[type="range"] {
 	display: block;
@@ -121,7 +105,6 @@ select[size] {
 }
 
 // Focus for file, radio, and checkbox
-input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
 	.tab-focus();
@@ -171,11 +154,11 @@ output {
 	background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
 	border: 1px solid @input-border;
 	border-radius: @input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
-	.box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
-	.transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
+	//.box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+	//.transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
 
 	// Customize the `:focus` state to imitate native WebKit styles.
-	.form-control-focus();
+	//.form-control-focus();
 
 	// Placeholder
 	.placeholder();
@@ -259,8 +242,6 @@ input[type="search"] {
 // horizontal forms, use the predefined grid classes.
 
 .form-group {
-	position: relative;
-	margin-bottom: @form-group-margin-bottom;
 }
 
 
@@ -544,5 +525,158 @@ input[type="checkbox"] {
 	// `position: relative;` on them. Also accounts for the grid gutter padding.
 	.has-feedback .form-control-feedback {
 		right: floor((@grid-gutter-width / 2));
+	}
+}
+
+
+.nice-placeholder() {
+	color: transparent;
+	transition-duration: .2s;
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
+	font-size: 80%;
+}
+
+@padb: 8px;
+
+.form-group.has-error {
+	label,
+	label.control-label {
+		color: @state-danger-text;
+
+		&:after {
+			left: 0;
+			visibility: visible;
+			width: 100%;
+			background-color: @state-danger-text;
+			bottom: 36px + @padb;
+		}
+	}
+
+	input:focus {
+		box-shadow: none;
+	}
+}
+
+.has-feedback label~.form-control-feedback {
+	top: 20px;
+}
+
+.form-group {
+	position: relative;
+	font-size: 16px;
+	margin: 0;
+	padding: 20px 0 @padb;
+}
+
+label {
+	bottom: 0;
+	color: @sd-color;
+	font-size: 12px;
+	font-weight: 400;
+	left: 0;
+	right: 0;
+	pointer-events: none;
+	position: absolute;
+	display: block;
+	top: 4px;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: left;
+	margin: 0;
+	transition-duration: .2s;
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
+	visibility: visible;
+
+	&:after {
+		background-color: @sd-color;
+		bottom: @padb;
+		content: '';
+		height: 2px;
+		left: 45%;
+		position: absolute;
+		transition-duration: .2s;
+		transition-timing-function: cubic-bezier(.4,0,.2,1);
+		-webkit-transition-property: left, visibility, width; /* Safari */
+		transition-property: left, visibility, width;
+		visibility: hidden;
+		width: 10px;
+	}
+
+	/*&:not(.is_empty) {
+		color: @sd-color;
+		font-size: 12px;
+		top: 4px;
+		visibility: visible;
+	}*/
+}
+
+// Test
+input:not([type="submit"]),
+input:not([type="reset"]),
+input:not([type="button"]),
+input:not([type="radio"]),
+input:not([type="checkbox"]),
+input:not([type="color"]),
+textarea,
+textarea.form-control {
+	border: none;
+	border-bottom: 1px solid rgba(0,0,0,.12);
+	box-shadow: none;
+	font-size: 16px;
+	font-family: "Helvetica","Arial",sans-serif;
+	margin: 0;
+	padding: 4px 0;
+	background: 0 0;
+	text-align: left;
+	color: inherit;
+
+	&:focus {
+		+ label {
+			color: @sd-color;
+			font-size: 12px;
+			top: 4px;
+			visibility: visible;
+
+			&:after {
+				left: 0;
+				visibility: visible;
+				width: 100%;
+			}
+		}
+	}
+}
+
+input,
+textarea {
+	&::-webkit-input-placeholder {
+		.nice-placeholder();
+	}
+	&::-moz-placeholder {
+		.nice-placeholder();
+	}
+	&:-ms-input-placeholder {
+		.nice-placeholder();
+	}
+	&:-moz-placeholder {
+		.nice-placeholder();
+	}
+
+	&:focus {
+		box-shadow: none;
+		outline: none;
+
+		&::-webkit-input-placeholder {
+			color: rgba(0,0,0,.26);
+		}
+		&::-moz-placeholder {
+			color: rgba(0,0,0,.26);
+		}
+		&:-ms-input-placeholder {
+			color: rgba(0,0,0,.26);
+		}
+		&:-moz-placeholder {
+			color: rgba(0,0,0,.26);
+		}
 	}
 }

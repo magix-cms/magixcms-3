@@ -188,6 +188,10 @@ class backend_db_theme{
 							AND pc.published_cat = 1';
 					$params = $data;
 				}
+				elseif ($config['type'] === 'plugin') {
+					$sql = 'SELECT id_plugins as id, name FROM mc_plugins WHERE id_plugins = :id';
+					$params = $data;
+				}
 				elseif ($config['type'] === 'shareConfig') {
 					$sql = 'SELECT 
 								facebook,

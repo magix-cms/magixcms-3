@@ -10,6 +10,10 @@ class frontend_model_collection{
         $this->routingUrl = new component_routing_url();
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     public function getBuildPages($data){
         $imgPath = $this->upload->imgBasePath('upload/pages');
         $arr = array();
@@ -53,6 +57,63 @@ class frontend_model_collection{
                 'public_url'        => $publicUrl
             );
         }
+        return $arr;
+    }
+
+    /**
+     * @param $data
+     * @param null $tagData
+     * @return array
+     */
+    public function getBuildNews($data,$tagData = null){
+        $imgPath = $this->upload->imgBasePath('upload/news');
+        $arr = array();
+        $conf = array();
+
+        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'news','attribute_img'=>'news'));
+        $imgPrefix = $this->imagesComponent->prefix();
+
+        foreach ($data as $page) {
+            $dateFormat = new date_dateformat();
+            $datePublish = !empty($page['date_publish']) ? $dateFormat->dateToDefaultFormat($page['date_publish']) : $dateFormat->dateToDefaultFormat();
+            $publicUrl = !empty($page['url_news']) ? '/'.$page['iso_lang'].'/news/'.$datePublish.'/'.$page['id_news'].'-'.$page['url_news'].'/' : '';
+
+            if (!array_key_exists($page['id_news'], $arr)) {
+                $arr[$page['id_news']] = array();
+                $arr[$page['id_news']]['id_news'] = $page['id_news'];
+                if($page['img_news'] != null) {
+                    foreach ($fetchConfig as $key => $value) {
+                        $arr[$page['id_news']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_news'];
+                    }
+                }
+                //$arr[$page['id_news']]['menu_news'] = $page['menu_news'];
+                $arr[$page['id_news']]['date_register'] = $page['date_register'];
+            }
+
+            if($tagData != null){
+                $newArrayTags = array();
+                foreach($tagData as $item){
+                    $newArrayTags[]=$item['name_tag'];
+                }
+                $tags = implode(',',$newArrayTags);
+            }else{
+                $tags = '';
+            }
+
+            $arr[$page['id_news']]['content'][$page['id_lang']] = array(
+                'id_lang'           => $page['id_lang'],
+                'iso_lang'          => $page['iso_lang'],
+                'name_news'         => $page['name_news'],
+                'url_news'          => $page['url_news'],
+                'content_news'      => $page['content_news'],
+                'date_publish'      => $datePublish,
+                'published_news'    => $page['published_news'],
+                'public_url'        => $publicUrl,
+                'tags_news'         => $page['tags_news'],
+                'tags'              => $tags
+            );
+        }
+
         return $arr;
     }
 }

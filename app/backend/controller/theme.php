@@ -4,7 +4,7 @@ class backend_controller_theme extends backend_db_theme{
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
     public $theme, $content, $type, $id, $link, $order, $share, $twitter_id;
 
-    public $roots = array('home','about','catalog','news','contact');
+    public $roots = array('home','about','catalog','news','plugin');
 	/**
 	 * backend_controller_theme constructor.
 	 */
@@ -313,14 +313,19 @@ class backend_controller_theme extends backend_db_theme{
 
                 		if(in_array($this->type,$this->roots)) {
 							$this->template->configLoad();
+							if($this->type === 'plugin') {
+								$plugin = $this->getItems($this->type,$this->id,'one',false);
+							}
 							foreach ($langs as $lang) {
+								$url = '/'.$lang['iso_lang'].'/'.(isset($plugin) ? $plugin['name'] : $this->type).'/';
+								$name = isset($plugin) ? $plugin['name'] : $this->template->getConfigVars($this->type);
 								$this->add(array(
 									'type' => 'link_content',
 									'data' => array(
 										'id' => $link['id_link'],
 										'id_lang' => $lang['id_lang'],
-										'name_link' => $this->template->getConfigVars($this->type),
-										'url_link' => '/'.$lang['iso_lang'].'/'.$this->type.'/'
+										'name_link' => $name,
+										'url_link' => $url
 									)
 								));
 							}

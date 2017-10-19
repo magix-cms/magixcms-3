@@ -49,7 +49,7 @@ class frontend_model_template{
 	 * Constante pour le chemin vers le dossier de configuration des langues statiques pour le contenu
 	 * @var string
 	 */
-	private static $ConfigFile = 'local_';
+	private $ConfigFile;
 	protected $amp;
     /**
      * @var component_collections_setting
@@ -63,6 +63,7 @@ class frontend_model_template{
         $this->collectionsSetting = new component_collections_setting();
         $this->collectionsLang = new component_collections_language();
         $this->amp = http_request::isGet('amp') ? true : false;
+        $this->ConfigFile = 'local_';
     }
 	/**
 	 * 
@@ -120,7 +121,7 @@ class frontend_model_template{
 	 */
 	private function pathConfigLoad($configfile){
 		try {
-			return $configfile.self::currentLanguage().'.conf';
+			return $configfile.$this->currentLanguage().'.conf';
 		}catch(Exception $e) {
             $logger = new debug_logger(MP_LOG_DIR);
             $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
@@ -134,7 +135,7 @@ class frontend_model_template{
 	 */
 	public function configLoad($section = ''){
 	    try {
-            frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad(self::$ConfigFile), $section);
+            frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad($this->ConfigFile), $section);
             if (file_exists(component_core_system::basePath() . '/skin/' . $this->themeSelected() . '/i18n/')) {
                 frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad('theme_'));
             }
@@ -317,6 +318,15 @@ class frontend_model_template{
         return frontend_model_smarty::getInstance()->getTemplateVars($varname, $_ptr, $search_parents);
     }
 
+    /**
+     * Get config directory
+     *
+     * @param mixed index of directory to get, null to get all
+     * @return array|string configuration directory
+     */
+    public function getConfigDir($index=null){
+        return frontend_model_smarty::getInstance()->getConfigDir($index);
+    }
 	/**
 	 * Ajoute un ou plusieurs dossier de configuration et charge les fichiers associés ainsi que les variables
 	 * @access public
@@ -331,7 +341,7 @@ class frontend_model_template{
 		}else{
 			throw new Exception('Error: addConfigDir is not array');
 		}
-		if(is_array($load_files)){
+		/*if(is_array($load_files)){
 			foreach ($load_files as $row=>$val){
 				if(is_string($row)){
 					if(array_key_exists($row, $load_files)){
@@ -341,15 +351,31 @@ class frontend_model_template{
 					frontend_model_smarty::getInstance()->configLoad(self::pathConfigLoad($load_files[$row]));
 				}
 			}
-		}else{
+		}*/
+		if(is_array($load_files)){
+            foreach ($load_files as $row=>$val){
+                if(is_string($row)){
+                    if(array_key_exists($row, $load_files)){
+                        frontend_model_smarty::getInstance()->configLoad($row.$this->currentLanguage().'.conf',$val);
+                    }
+                }else{
+                    frontend_model_smarty::getInstance()->configLoad($load_files[$row].$this->currentLanguage().'.conf');
+                }
+            }
+        }else{
 			throw new Exception('Error: load_files is not array');
 		}
 		if($debug!=false){
-			$config_dir = frontend_model_smarty::getInstance()->getConfigDir();
-			$firebug = new magixcjquery_debug_magixfire();
-			$firebug->magixFireDump('Config Dir', $config_dir);
-			$firebug->magixFireDump('Load Files in configdir', $load_files);
-			$firebug->magixFireDump('Config vars', frontend_model_smarty::getInstance()->getConfigVars());
+            $config_dir = $this->getConfigDir();
+            print '<pre>';
+            var_dump($config_dir);
+            print '</pre>';
+            print '<pre>';
+            print_r($load_files);
+            print '</pre>';
+            print '<pre>';
+            print $this->getConfigVars();
+            print '</pre>';
 		}
 	}
 }
