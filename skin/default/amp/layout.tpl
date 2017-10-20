@@ -4,7 +4,7 @@
 {widget_lang_data assign="dataLang"}
 {widget_share_data assign="shareData"}
 {/strip}<!doctype html>
-<html amp lang="{getlang}">
+<html amp lang="{getlang}" dir="ltr">
 <head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
     <title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>

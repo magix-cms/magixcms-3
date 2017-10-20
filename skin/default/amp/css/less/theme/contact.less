@@ -1,13 +1,12 @@
-/*
- * Rules for contact
- */
+//
+// Rules for contact
+//
 #contact {
-	h1 {
+	.contact-infos {
 		text-align: center;
-		margin-bottom: 0;
 	}
 
-	#sidebar {
+	#aside {
 		font-size: 14px;
 
 		h3 {
@@ -17,7 +16,6 @@
 		p {
 			margin: 25px 0;
 			&.adresse {
-				/*font-size: 12px;*/
 				span.fa {
 					float: left;
 					height: 40px;
@@ -31,12 +29,16 @@
 			}
 		}
 
-		span.fa {
-			font-size: 26px;
+		.fa:first-child {
+			font-size: 24px;
+		}
+
+		.fa,
+		.material-icons {
 			color: @main-color;
-			display: inline-block;
-			width: 26px;
-			margin-right: 10px;
+			vertical-align: middle;
+			display: block;
+			margin-bottom: 10px;
 		}
 
 		.email {
@@ -55,8 +57,17 @@
 #btn-contact {
 	margin-top: 15px;
 	text-align: center;
+
+	button {
+		display: inline-flex;
+		align-items: center;
+
+		.material-icons {
+			margin-right: 4px;
+		}
+	}
 }
 
-#map {
+/*#map {
 	margin-bottom: 20px;
-}
+}*/

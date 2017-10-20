@@ -284,6 +284,8 @@ class collections_ArrayTools{
         "bg"=>"Bulgarian",
         "bs"=>"Bosnian",
         "ca"=>"Catalan",
+        "fr-ca"=>"Canadian (French)",
+        "en-ca"=>"Canadian (English)",
         "cs"=>"Czech",
         "da"=>"Danish",
         "de"=>"German",

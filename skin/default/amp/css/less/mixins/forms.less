@@ -1,61 +1,11 @@
 //
 // Custom rules for forms
 //
-.validate_form {
-	.form-control {
-		border-radius: 0;
-		&:required,
-		.required {
-			&:after {
-				content:' *';
-			}
-		}
-
-		&:valid {
-			//border-color: @state-success-text;
-			//.box-shadow(inset 0 1px 1px rgba(0,0,0,.075)); // Redeclare so transitions work
-			&:focus {
-				border-color: lighten(@state-success-text, 10%);
-				@shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px lighten(@state-success-text, 20%);
-				.box-shadow(@shadow);
-			}
-		}
-		&:invalid {
-			//border-color: @state-danger-text;
-			//.box-shadow(inset 0 1px 1px rgba(0,0,0,.075)); // Redeclare so transitions work
-			&:focus {
-				border-color: lighten(@state-danger-text, 10%);
-				@shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px lighten(@state-danger-text, 20%);
-				.box-shadow(@shadow);
-			}
-		}
-	}
-}
-
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"],
 .radio input[type="radio"],
 .radio-inline input[type="radio"] {
 	margin-top: 2px;
-}
-
-.form-group.has-error {
-	label,
-	label.control-label {
-		color: @state-danger-text;
-	}
-	textarea,
-	input[type="text"],
-	input[type="password"],
-	input[type="search"] {
-		&, &.control-form {
-			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-
-			&:focus {
-				box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 6px #ce8483;
-			}
-		}
-	}
 }
 
 textarea.form-control {
@@ -161,7 +111,7 @@ output {
 	//.form-control-focus();
 
 	// Placeholder
-	.placeholder();
+	//.placeholder();
 
 	// Unstyle the caret on `<select>`s in IE10+.
 	&::-ms-expand {
@@ -413,70 +363,6 @@ input[type="checkbox"] {
 }
 
 
-// Form control feedback states
-//
-// Apply contextual and semantic states to individual form controls.
-
-.has-feedback {
-	// Enable absolute positioning
-	position: relative;
-
-	// Ensure icons don't overlap text
-	.form-control {
-		padding-right: (@input-height-base * 1.25);
-	}
-}
-// Feedback icon (requires .glyphicon classes)
-.form-control-feedback {
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: 2; // Ensure icon is above input groups
-	display: block;
-	width: @input-height-base;
-	height: @input-height-base;
-	line-height: @input-height-base;
-	text-align: center;
-	pointer-events: none;
-}
-.input-lg + .form-control-feedback,
-.input-group-lg + .form-control-feedback,
-.form-group-lg .form-control + .form-control-feedback {
-	width: @input-height-large;
-	height: @input-height-large;
-	line-height: @input-height-large;
-}
-.input-sm + .form-control-feedback,
-.input-group-sm + .form-control-feedback,
-.form-group-sm .form-control + .form-control-feedback {
-	width: @input-height-small;
-	height: @input-height-small;
-	line-height: @input-height-small;
-}
-
-// Feedback states
-.has-success {
-	.form-control-validation(@state-success-text; @state-success-text; @state-success-bg);
-}
-.has-warning {
-	.form-control-validation(@state-warning-text; @state-warning-text; @state-warning-bg);
-}
-.has-error {
-	.form-control-validation(@state-danger-text; @state-danger-text; @state-danger-bg);
-}
-
-// Reposition feedback icon if input has visible label above
-.has-feedback label {
-
-	& ~ .form-control-feedback {
-		top: (@line-height-computed + 5); // Height of the `label` and its margin
-	}
-	&.sr-only ~ .form-control-feedback {
-		top: 0;
-	}
-}
-
-
 // Help text
 //
 // Apply to any element you wish to create light text for placement immediately
@@ -531,6 +417,7 @@ input[type="checkbox"] {
 
 .nice-placeholder() {
 	color: transparent;
+	//color: rgba(0,0,0,.4);
 	transition-duration: .2s;
 	transition-timing-function: cubic-bezier(.4,0,.2,1);
 	font-size: 80%;
@@ -538,27 +425,46 @@ input[type="checkbox"] {
 
 @padb: 8px;
 
-.form-group.has-error {
-	label,
-	label.control-label {
-		color: @state-danger-text;
-
+.user-invalid {
+	+ label {
 		&:after {
 			left: 0;
 			visibility: visible;
 			width: 100%;
-			background-color: @state-danger-text;
-			bottom: 36px + @padb;
 		}
 	}
 
-	input:focus {
-		box-shadow: none;
+	&.valueMissing {
+		+ label {
+			color: @brand-warning;
+			&:after {
+				background-color: @brand-warning;
+			}
+		}
+	}
+	&.patternMismatch {
+		+ label {
+			color: @state-danger-text;
+			&:after {
+				background-color: @state-danger-text;
+			}
+		}
+	}
+
+	&[aria-invalid="true"] {
+		+ label:after {
+			bottom: 37px;
+		}
 	}
 }
 
-.has-feedback label~.form-control-feedback {
-	top: 20px;
+.feedback.visible {
+	display: block;
+	padding: 6px 0;
+	font-size: 80%;
+
+	&[visible-when-invalid="valueMissing"] { color: @brand-warning; }
+	&[visible-when-invalid="patternMismatch"] { color: @state-danger-text; }
 }
 
 .form-group {
@@ -570,15 +476,18 @@ input[type="checkbox"] {
 
 label {
 	bottom: 0;
-	color: @sd-color;
-	font-size: 12px;
+	//color: @sd-color;
+	color: rgba(0,0,0,.26);
+	//font-size: 12px;
+	font-size: 16px;
 	font-weight: 400;
 	left: 0;
 	right: 0;
 	pointer-events: none;
 	position: absolute;
 	display: block;
-	top: 4px;
+	//top: 4px;
+	top: 31px;
 	width: 100%;
 	overflow: hidden;
 	white-space: nowrap;
@@ -589,7 +498,7 @@ label {
 	visibility: visible;
 
 	&:after {
-		background-color: @sd-color;
+		background-color: @main-color;
 		bottom: @padb;
 		content: '';
 		height: 2px;
@@ -602,13 +511,6 @@ label {
 		visibility: hidden;
 		width: 10px;
 	}
-
-	/*&:not(.is_empty) {
-		color: @sd-color;
-		font-size: 12px;
-		top: 4px;
-		visibility: visible;
-	}*/
 }
 
 // Test
@@ -630,21 +532,6 @@ textarea.form-control {
 	background: 0 0;
 	text-align: left;
 	color: inherit;
-
-	&:focus {
-		+ label {
-			color: @sd-color;
-			font-size: 12px;
-			top: 4px;
-			visibility: visible;
-
-			&:after {
-				left: 0;
-				visibility: visible;
-				width: 100%;
-			}
-		}
-	}
 }
 
 input,
@@ -660,6 +547,30 @@ textarea {
 	}
 	&:-moz-placeholder {
 		.nice-placeholder();
+	}
+
+	&:focus, &.patternMismatch, &.user-valid {
+		+ label {
+			font-size: 12px;
+			top: 4px;
+			visibility: visible;
+		}
+	}
+
+	&:focus, &.patternMismatch {
+		+ label {
+			&:after {
+				left: 0;
+				visibility: visible;
+				width: 100%;
+			}
+		}
+	}
+
+	&:focus {
+		+ label {
+			color: @main-color;
+		}
 	}
 
 	&:focus {

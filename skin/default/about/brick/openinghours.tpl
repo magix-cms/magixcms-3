@@ -21,9 +21,9 @@
 <table class="table">
     <thead>
     <tr>
-        <th><span class="fa fa-clock-o"></span></th>
-        <th>{#between#}</th>
-        <th>{#and_between#}</th>
+        <th class="text-center" colspan="3"><i class="material-icons">access_time</i></th>
+        {*<th>{#between#}</th>
+        <th>{#and_between#}</th>*}
     </tr>
     </thead>
     <tbody>
@@ -33,22 +33,22 @@
             <tr itemprop="openingHoursSpecification" itemscope itemtype="http://schema.org/OpeningHoursSpecification">
                 <td itemprop="dayOfWeek" content="{$day}">{#$dayOfWeek#}</td>
                 {if $specific.noon_time}
-                <td>
-                    <span itemprop="opens" content="{$specific.open_time}">{$specific.open_time}</span> -
-                    <span itemprop="closes" content="{$specific.noon_start}">{$specific.noon_start}</span>
-                </td>
-                <td>
-                    <span itemprop="opens" content="{$specific.noon_end}">{$specific.noon_end}</span> -
-                    <span itemprop="closes" content="{$specific.close_time}">{$specific.close_time}</span>
-                </td>
+                    <td>
+                        <span itemprop="opens" content="{$specific.open_time}">{$specific.open_time}</span> -
+                        <span itemprop="closes" content="{$specific.noon_start}">{$specific.noon_start}</span>
+                    </td>
+                    <td>
+                        <span itemprop="opens" content="{$specific.noon_end}">{$specific.noon_end}</span> -
+                        <span itemprop="closes" content="{$specific.close_time}">{$specific.close_time}</span>
+                    </td>
                 {else}
-                <td>
-                    <span itemprop="opens" content="{$specific.open_time}">{$specific.open_time}</span> -
-                    <span itemprop="closes" content="{$specific.close_time}">{$specific.close_time}</span>
-                </td>
-                <td>
-                    -
-                </td>
+                    <td>
+                        <span itemprop="opens" content="{$specific.open_time}">{$specific.open_time}</span> -
+                        <span itemprop="closes" content="{$specific.close_time}">{$specific.close_time}</span>
+                    </td>
+                    <td>
+                        -
+                    </td>
                 {/if}
             </tr>
         {else}

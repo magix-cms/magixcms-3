@@ -1,4 +1,5 @@
-{strip}{if $msg}
+{strip}{if $msg && $input}
     <span visible-when-invalid="valueMissing"
-          validation-for="show-all-on-submit-name">{$msg}</span>
+          validation-for="{$input}"
+          class="feedback">{$msg}</span>
 {/if}{/strip}

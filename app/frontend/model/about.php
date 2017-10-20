@@ -247,12 +247,11 @@ class frontend_model_about extends frontend_db_about {
 					$op = parent::fetchData(array('context'=>'all','type'=>'op'));
 					foreach ($op as $d) {
 						$schedule[$d['day_abbr']] = $d;
-						array_shift($schedule[$d['day_abbr']]);
-
-						$schedule[$d['day_abbr']]['open_time'] = explode(':',$d['open_time']);
-						$schedule[$d['day_abbr']]['close_time'] = explode(':',$d['close_time']);
-						$schedule[$d['day_abbr']]['noon_start'] = explode(':',$d['noon_start']);
-						$schedule[$d['day_abbr']]['noon_end'] = explode(':',$d['noon_end']);
+						//array_shift($schedule[$d['day_abbr']]);
+						//$schedule[$d['day_abbr']]['open_time'] = explode(':',$d['open_time']);
+						//$schedule[$d['day_abbr']]['close_time'] = explode(':',$d['close_time']);
+						//$schedule[$d['day_abbr']]['noon_start'] = explode(':',$d['noon_start']);
+						//$schedule[$d['day_abbr']]['noon_end'] = explode(':',$d['noon_end']);
 					}
 					break;
 				default:

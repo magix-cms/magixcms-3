@@ -1,6 +1,11 @@
 <?php
 class plugins_contact_db
 {
+	/**
+	 * @param $config
+	 * @param bool $data
+	 * @return mixed|null
+	 */
     public function fetchData($config, $data = false)
     {
         $sql = '';
@@ -15,7 +20,15 @@ class plugins_contact_db
                             JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
                             WHERE c.id_lang = :default_lang
 							GROUP BY p.id_contact';
-
+                    $params = $data;
+                }
+                elseif ($config['type'] === 'contacts') {
+                    $sql = 'SELECT p.id_contact, p.mail_contact
+                            FROM mc_contact AS p
+                            JOIN mc_contact_content AS c USING(id_contact)
+                            JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                            WHERE lang.iso_lang = :lang
+							GROUP BY p.id_contact';
                     $params = $data;
                 }
                 elseif ($config['type'] === 'data') {
@@ -24,22 +37,22 @@ class plugins_contact_db
                             JOIN mc_contact_content AS c USING(id_contact)
                             JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
                             WHERE p.id_contact = :edit';
-
                     $params = $data;
                 }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-
-            } elseif ($config['context'] === 'one') {
-
+            }
+            elseif ($config['context'] === 'one') {
                 if ($config['type'] === 'root') {
                     //Return current skin
                     $sql = 'SELECT * FROM mc_contact ORDER BY id_contact DESC LIMIT 0,1';
                     //$params = $data;
-                } elseif ($config['type'] === 'content') {
+                }
+                elseif ($config['type'] === 'content') {
                     $sql = 'SELECT * FROM `mc_contact_content` WHERE `id_contact` = :id_contact AND `id_lang` = :id_lang';
                     $params = $data;
-                }elseif ($config['type'] === 'config') {
+                }
+                elseif ($config['type'] === 'config') {
                     //Return current skin
                     $sql = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
                     //$params = $data;
@@ -49,6 +62,7 @@ class plugins_contact_db
             }
         }
     }
+
     /**
      * @param $config
      * @param bool $data
@@ -108,6 +122,19 @@ class plugins_contact_db
             }
 
             if($sql && $params) component_routing_db::layer()->update($sql,$params);
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function delete($config,$data = false)
+    {
+        if (is_array($config)) {
+            if($config['type'] === 'delMail'){
+                $sql = 'DELETE FROM mc_contact WHERE id_contact IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
+            }
         }
     }
 }

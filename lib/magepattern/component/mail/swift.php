@@ -247,19 +247,26 @@ class mail_swift{
 		return $inliner->render($html,$debug);
 	}
 
-    /**
-     * Envoi du message avec la méthode batch send
-     * @param string $message
-     * @param bool $failures
-     * @param bool $log
-     * @internal param void $mailer
-     * @internal param void $failed
-     * @internal param string $logger
-     */
+	/**
+	 * Envoi du message avec la méthode batch send
+	 * @param string $message
+	 * @param bool $failures
+	 * @param bool $log
+	 * @internal param void $mailer
+	 * @internal param void $failed
+	 * @internal param string $logger
+	 * @return bool
+	 */
     public function batch_send_mail($message,$failures=false,$log=false){
     	if(!$this->_mailer->send($message)){
-            print ("Failures: ". $failures);
+    		if($failures)
+            	print ("Failures: ". $failures);
+    		else
+    			return false;
     	}
+    	else {
+    		return true;
+		}
     	if($log){
 	    	$echologger = new Swift_Plugins_Loggers_EchoLogger();
 			$this->_mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($echologger));

@@ -49,7 +49,7 @@ class component_core_language{
         if(!empty($setParams)){
             self::$setParams = $setParams;
             if (http_request::isGet($setParams)){
-                self::$getLanguage = form_inputFilter::isAlpha($_GET[$setParams]);
+                self::$getLanguage = $_GET[$setParams];//form_inputFilter::isAlpha($_GET[$setParams]);
             }
         }
 
@@ -62,13 +62,13 @@ class component_core_language{
     public static function setLanguage(){
         if(isset(self::$getLanguage)){
             if(!empty(self::$getLanguage)){
-                $lang = form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],3);
+                $lang = $_SESSION[self::$setParams];//form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],5);
             }else{
                 $lang = 'fr';
             }
         }else{
             if(http_request::isSession(self::$setParams)){
-                $lang = form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],3);
+                $lang = $_SESSION[self::$setParams];//form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],5);
             } else {
                 $lang = 'fr';
             }
@@ -85,18 +85,19 @@ class component_core_language{
         $language = strtolower(substr(chop($language[0]),0,2));
         foreach($langCollection as $key => $value){
             if(array_key_exists($key,$langCollection)){
-                switch($language){
-                    case $key:
-                        $language = $key;
-                        break;
-                    default:
-                        $language = 'fr';
-                        break;
-                }
+                    switch ($language) {
+                        case $key:
+                            $language = $key;
+                            break;
+                        default:
+                            $language = 'fr';
+                            break;
+                    }
             }else{
                 $language = 'fr';
             }
         }
+
 		if(empty($_SESSION[self::$setParams]) || !empty(self::$getLanguage)) {
             return $_SESSION[self::$setParams] = empty(self::$getLanguage) ? $language : self::$getLanguage;
 		}else{
@@ -119,7 +120,7 @@ class component_core_language{
     private function setTimeLocal(){
         if(self::setLanguage() == 'nl'){
             setlocale(LC_TIME, 'nl_NL.UTF8','nl');
-        }elseif(self::setLanguage() == 'fr'){
+        }elseif(self::setLanguage() == 'fr' || self::setLanguage() == 'fr-ca'){
             setlocale(LC_TIME, 'fr_FR.UTF8', 'fra');
         }elseif(self::setLanguage() == 'de'){
             setlocale(LC_TIME, 'de_DE.UTF8', 'de');

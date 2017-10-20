@@ -293,6 +293,22 @@ class http_header{
         }
     }
 
+	/**
+	 * @param $origin
+	 * @param $validOrigins
+	 * @param bool $redirect
+	 */
+    public function amp_headers($origin, $validOrigins, $redirect=false){
+        header('AMP-Same-Origin: true');
+        header('Access-Control-Allow-Origin: '.(in_array($origin,$validOrigins) ? $origin : implode(' ',$validOrigins)));
+        header('AMP-Access-Control-Allow-Source-Origin: '.$origin);
+        header('Access-Control-Expose-Headers: AMP-Access-Control-Allow-Source-Origin'.($redirect ? ', AMP-Redirect-To' : ''));
+		if($redirect) {
+			$headers = getallheaders();
+			header('AMP-Redirect-To: '.($redirect === true ? $headers['Referer'] : $redirect));
+		}
+    }
+
     /**
      * @param string $method
      * @param  $arguments

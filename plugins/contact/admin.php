@@ -214,6 +214,26 @@ class plugins_contact_admin extends plugins_contact_db{
 
     }
     /**
+     * Insertion de données
+     * @param $data
+     */
+    private function del($data){
+        switch($data['type']){
+            case 'delMail':
+                parent::delete(
+                    array(
+                        'context'   =>    'mail',
+                        'type'      =>    $data['type']
+                    ),
+                    $data['data']
+                );
+                $this->header->set_json_headers();
+                $this->message->json_post_response(true,'delete',$data['data']);
+                break;
+        }
+    }
+
+    /**
      *
      */
     public function run(){
@@ -261,6 +281,18 @@ class plugins_contact_admin extends plugins_contact_db{
                         $setEditData = $this->setItemContentData($setEditData);
                         $this->template->assign('contact',$setEditData[$this->edit]);
                         $this->template->display('edit.tpl');
+                    }
+                    break;
+                case 'delete':
+                    if(isset($this->id_contact)) {
+                        $this->del(
+                            array(
+                                'type'=>'delMail',
+                                'data'=>array(
+                                    'id' => $this->id_contact
+                                )
+                            )
+                        );
                     }
                     break;
             }
