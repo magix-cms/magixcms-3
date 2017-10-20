@@ -17,6 +17,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#general" aria-controls="info" role="tab" data-toggle="tab">{#domain#|ucfirst}</a></li>
                 <li role="presentation"><a href="#sitemap" aria-controls="sitemap" role="tab" data-toggle="tab">Sitemap</a></li>
+                <li role="presentation"><a href="#langs" aria-controls="langs" role="tab" data-toggle="tab">Langues</a></li>
             </ul>
         </header>
         <div class="panel-body panel-body-form">
@@ -30,10 +31,14 @@
                 <div role="tabpanel" class="tab-pane" id="sitemap">
                     {include file="domain/form/sitemap.tpl"}
                 </div>
+                <div role="tabpanel" class="tab-pane" id="langs">
+                    {include file="section/form/list-form.tpl" controller="domain" sub="langs" dir_controller="domain" data=$langs id=$domain.id_domain class_form="col-ph-12 col-lg-5" class_table="col-ph-12 col-lg-7"}
+                </div>
             </div>
         </div>
     </section>
 </div>
+    {include file="modal/delete.tpl" title={#modal_delete_title#|ucfirst} info_text=true delete_message={#delete_img_message#}}
 {/if}
 {/block}
 {block name="foot" append}

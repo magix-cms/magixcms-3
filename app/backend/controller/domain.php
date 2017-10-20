@@ -3,7 +3,7 @@ class backend_controller_domain extends backend_db_domain
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $xml;
-    public $id_domain,$url_domain,$default_domain, $data_type;
+    public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang;
 
     public function __construct()
     {
@@ -37,6 +37,12 @@ class backend_controller_domain extends backend_db_domain
         }
         if (http_request::isPost('default_domain')) {
             $this->default_domain = $formClean->numeric($_POST['default_domain']);
+        }
+        if (http_request::isPost('default_lang')) {
+            $this->default_lang = $formClean->numeric($_POST['default_lang']);
+        }
+        if (http_request::isPost('id_lang')) {
+            $this->id_lang = $formClean->numeric($_POST['id_lang']);
         }
         if (http_request::isPost('data_type')) {
             $this->data_type = $formClean->simpleClean($_POST['data_type']);
@@ -80,6 +86,14 @@ class backend_controller_domain extends backend_db_domain
                 $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
                 break;
+            case 'newLanguage':
+                parent::insert(
+                    array(
+                        'type' => 'newLanguage'
+                    ),
+                    $data['data']
+                );
+                break;
         }
     }
 
@@ -120,6 +134,14 @@ class backend_controller_domain extends backend_db_domain
                 $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
+            case 'delLanguage':
+                parent::delete(
+                    array(
+                        'type' => $data['type']
+                    ),
+                    $data['data']
+                );
+                break;
         }
     }
     /**
@@ -136,6 +158,20 @@ class backend_controller_domain extends backend_db_domain
                                 'type'=>'newDomain'
                             )
                         );
+                    }elseif(isset($this->id_lang)) {
+                        $this->add(array(
+                            'type' => 'newLanguage',
+                            'data' => array(
+                                'id_domain'     => $this->id_domain,
+                                'id_lang'       => $this->id_lang,
+                                'default_lang'  => $this->default_lang
+                            )
+                        ));
+                        $this->getItems('lastLanguage',array('id'=>$this->id_domain),'one','row');
+                        $display = $this->template->fetch('domain/loop/langs.tpl');
+                        $this->header->set_json_headers();
+                        $this->message->json_post_response(true,'add',$display);
+
                     }else{
                         $this->template->display('domain/add.tpl');
                     }
@@ -164,21 +200,44 @@ class backend_controller_domain extends backend_db_domain
                         }
                     }else{
                         //$this->getItemsDomain($this->edit);
+                        $collectionLanguage = new component_collections_language();
+                        $language = $collectionLanguage->fetchData(array('context'=>'all','type'=>'active'));
+                        $this->template->assign('language',$language);
                         $this->getItems('domain',$this->edit);
+                        // ---- languages
+                        $this->getItems('langs',array(':id'=>$this->edit),'all');
+
                         $this->template->display('domain/edit.tpl');
                     }
 
                     break;
                 case 'delete':
                     if(isset($this->id_domain)) {
-                        $this->del(
-                            array(
-                                'type'=>'delDomain',
-                                'data'=>array(
-                                    'id' => $this->id_domain
+                        if(isset($this->tabs)) {
+                            switch ($this->tabs) {
+                                case 'langs':
+                                    $this->del(
+                                        array(
+                                            'type' => 'delLanguage',
+                                            'data' => array(
+                                                'id' => $this->id_domain
+                                            )
+                                        )
+                                    );
+                                    $this->header->set_json_headers();
+                                    $this->message->json_post_response(true, 'delete', array('id' => $this->id_domain));
+                                    break;
+                            }
+                        }else{
+                            $this->del(
+                                array(
+                                    'type'=>'delDomain',
+                                    'data'=>array(
+                                        'id' => $this->id_domain
+                                    )
                                 )
-                            )
-                        );
+                            );
+                        }
                     }
                     break;
             }

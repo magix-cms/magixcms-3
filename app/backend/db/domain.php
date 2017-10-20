@@ -36,6 +36,13 @@ class backend_db_domain
                     FROM mc_domain AS d $cond";
                     //$params = $data;
                 }
+                elseif ($config['type'] === 'langs') {
+                    $sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
+                            FROM mc_domain_language AS dl
+                            JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
+                            WHERE id_domain = :id';
+                    $params = $data;
+                }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             }
@@ -46,6 +53,14 @@ class backend_db_domain
                 }
                 elseif ($config['type'] === 'count') {
                     $sql = 'SELECT count(id_domain) AS nb FROM mc_domain';
+                }
+                elseif ($config['type'] === 'lastLanguage') {
+                    $sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
+                            FROM mc_domain_language AS dl
+                            JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
+                            WHERE dl.id_domain = :id
+                            ORDER BY dl.id_domain_lg DESC LIMIT 0,1';
+                    $params = $data;
                 }
 
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
@@ -68,6 +83,15 @@ class backend_db_domain
                         ':default_domain'	=> $data['default_domain']
                     )
                 );
+            }elseif ($config['type'] === 'newLanguage') {
+                $sql = 'INSERT INTO `mc_domain_language` (id_domain,id_lang,default_lang)
+						VALUES (:id_domain,:id_lang,:default_lang)';
+
+                component_routing_db::layer()->insert($sql,array(
+                    ':id_domain'	=> $data['id_domain'],
+                    ':id_lang'	    => $data['id_lang'],
+                    ':default_lang'	=> $data['default_lang']
+                ));
             }
         }
     }
@@ -103,6 +127,9 @@ class backend_db_domain
         if (is_array($config)) {
             if($config['type'] === 'delDomain'){
                 $sql = 'DELETE FROM mc_domain WHERE id_domain IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
+            }elseif($config['type'] === 'delLanguage') {
+                $sql = 'DELETE FROM mc_domain_language WHERE id_domain_lg IN ('.$data['id'].')';
                 component_routing_db::layer()->delete($sql,array());
             }
         }
