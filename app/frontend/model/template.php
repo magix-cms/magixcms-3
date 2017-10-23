@@ -50,7 +50,7 @@ class frontend_model_template{
 	 * @var string
 	 */
 	private $ConfigFile;
-	protected $amp;
+	protected $amp,$DBDomain;
     /**
      * @var component_collections_setting
      */
@@ -64,16 +64,35 @@ class frontend_model_template{
         $this->collectionsLang = new component_collections_language();
         $this->amp = http_request::isGet('amp') ? true : false;
         $this->ConfigFile = 'local_';
+        $this->DBDomain = new frontend_db_domain();
     }
 	/**
 	 * 
 	 */
-	/*public static function frontendTheme(){
-        if (!isset(self::$frontendtheme)){
-         	self::$frontendtheme = new frontend_model_template();
+    /**
+     * @return mixed|null
+     */
+    public function setDefaultLanguage(){
+        if(isset($_SERVER['HTTP_HOST'])){
+            $currentDomain = $this->DBDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST']));
+            if($currentDomain['id_domain'] != null) {
+                $data =  $this->DBDomain->fetchData(array('context' => 'one', 'type' => 'language'), array('id' => $currentDomain['id_domain']));
+                if($data != null){
+                    $lang = $data['iso_lang'];
+                }else{
+                    $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
+                    $lang = $data['iso_lang'];
+                }
+            }else{
+                $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
+                $lang = $data['iso_lang'];
+            }
+        }else{
+            $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
+            $lang = $data['iso_lang'];
         }
-    	return self::$frontendtheme;
-    }*/
+        return $lang;
+    }
     /**
      * @access public static
      * Paramètre de langue get
@@ -94,12 +113,12 @@ class frontend_model_template{
         if(http_request::isGet('strLangue')){
             $lang = self::getLanguage();
         }else{
-            if(http_request::isSession('strLangue')){
-                $lang = $_SESSION['strLangue'];//form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
+            $data = $this->setDefaultLanguage();
+            if($data != null){
+                $lang = $data;
             }else{
-                $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
-                if($data != null){
-                    $lang = $data['iso'];
+                if(http_request::isSession('strLangue')){
+                    $lang = $_SESSION['strLangue'];//form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
                 }
             }
         }
@@ -185,7 +204,8 @@ class frontend_model_template{
      * @return void
      */
     public function setCache($smarty){
-        $config = $this->collectionsSetting->fetch('cache');
+        //$config = $this->collectionsSetting->fetch('cache');
+        $config = $this->collectionsSetting->fetchData(array('context'=>'one','type'=>'setting'),array('name'=>'cache'));
         switch($config['value']){
             case 'none':
                 $smarty->setCaching(false);

@@ -96,7 +96,7 @@ class plugins_contact_public extends plugins_contact_db
 				$domain['url_subdomain'] = str_replace('www.','',$domain['url_domain']);
 				$validOrigins[] = 'https://'.$domain['url_subdomain'].'.cdn.ampproject.org';
 				$validOrigins[] = 'https://'.$domain['url_domain'].'.amp.cloudflare.com';
-				$validOrigins[] = 'http://'.$domain['url_domain'];
+				$validOrigins[] = 'https://'.$domain['url_domain'];
 			}
 			$this->header->amp_headers($this->origin,$validOrigins,false);
 			$this->header->set_json_headers();

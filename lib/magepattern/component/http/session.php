@@ -185,15 +185,7 @@ class http_session extends sessionUtils{
      * Affiche le debug pour les sessions
      */
     public function debug(){
-        if (M_FIREPHP) {
-            $firebug = new debug_firephp();
-            $firebug->group('Magepattern Session');
-            //$firebug->magixFireLog($_SESSION);
-            $firebug->dump('session run',$_SESSION);
-            $firebug->groupEnd();
-        }else{
-            var_dump($_SESSION);
-        }
+        var_dump($_SESSION);
     }
 }
 abstract class sessionUtils{

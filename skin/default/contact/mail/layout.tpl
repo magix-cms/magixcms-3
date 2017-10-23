@@ -35,6 +35,14 @@
             border-top: 1px solid #eeeeee;
         }
 
+        body {
+            color: #333333;
+        }
+
+        .body table.container {
+            box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+        }
+
         .footer{
             background: {$getDataCSSIColor[2].color_cssi};
         }
@@ -54,6 +62,11 @@
         .footer .container td{
             padding: 15px;
         }
+        .vignette {
+            -moz-box-shadow: 0 0 4px 0 rgba(0,0,0,.14),0 3px 4px 0 rgba(0,0,0,.12),0 1px 5px 0 rgba(0,0,0,.2);
+            -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+            box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+        }
         </style>
 </head>
 <body>
@@ -68,7 +81,7 @@
                             <table align="center" class="container">
                                 <tbody>
                                 <tr>
-                                    <td valign="middle">
+                                    <td align="center" valign="middle">
                                         <p class="text-center">
                                             <a href="{geturl}" target="_blank" title="{$companyData.name}" style="text-decoration: none; font-size: 46px; padding: 15px;">
                                                 <img src="{geturl}/skin/{template}/img/logo/{#logo_img_mail#}" alt="{#logo_img_alt#|ucfirst}" width="229" height="50"/>

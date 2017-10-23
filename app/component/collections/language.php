@@ -58,12 +58,26 @@ class component_collections_language{
                            WHERE l.active_lang = 1
                            ORDER BY l.default_lang DESC,l.id_lang ASC';
                 }
+                elseif ($config['type'] === 'domain') {
+                    $sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
+                            FROM mc_domain_language AS dl
+                            JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
+                            WHERE dl.id_domain = :id';
+                    $params = $data;
+                }
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }elseif($config['context'] === 'one') {
                 if ($config['type'] === 'default') {
-                    $sql = 'SELECT id_lang,iso_lang FROM mc_lang as lang
+                    $sql = 'SELECT id_lang,iso_lang 
+                    FROM mc_lang as lang
 		                    WHERE lang.default_lang = 1';
                     //$params = $data;
+                }
+                elseif ($config['type'] === 'currentDomain') {
+                    $sql = 'SELECT d.*
+                            FROM mc_domain AS d
+                            WHERE d.url_domain = :url';
+                    $params = $data;
                 }
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }

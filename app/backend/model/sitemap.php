@@ -97,7 +97,13 @@ class backend_model_sitemap{
         $this->progress = new component_core_feedback($this->template);
         $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'),'progress' => 10));
         // LOAD active languages
-        $lang = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
+        $langDomain = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$config['domain']));
+        $setLang = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'domain'),array('id'=>$langDomain['id_domain']));
+        if($setLang != null){
+            $lang = $setLang;
+        }else{
+            $lang = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
+        }
         $newData = array();
         // Basepath
         $basePath = component_core_system::basePath();

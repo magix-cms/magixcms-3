@@ -1,7 +1,7 @@
 # [Magix cms 3](http://www.magix-cms.com/)
 Magix CMS dans sa version 3, incluant une nouvelle librairie et de nouvelles fonctionnalités.
 
-![logo-magix_cms](https://cloud.githubusercontent.com/assets/356674/21895994/056c52c2-d8e5-11e6-9163-f7ac06e537c1.png)
+![logo-magix_cms](https://user-images.githubusercontent.com/356674/31891050-82862b34-b805-11e7-9d10-84066a7474dc.png)
 
 ### License
 

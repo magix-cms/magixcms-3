@@ -66,6 +66,7 @@ class component_core_language{
             }else{
                 $lang = 'fr';
             }
+
         }else{
             if(http_request::isSession(self::$setParams)){
                 $lang = $_SESSION[self::$setParams];//form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],5);
@@ -74,6 +75,46 @@ class component_core_language{
             }
         }
         return $lang;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAcceptedLanguages() {
+        $httplanguages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        $languages = array();
+        if (empty($httplanguages)) {
+            return $languages;
+        }
+
+        foreach (preg_split('/,\s*/', $httplanguages) as $accept) {
+            $result = preg_match('/^([a-z]{1,8}(?:[-_][a-z]{1,8})*)(?:;\s*q=(0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?))?$/i', $accept, $match);
+
+            if (!$result) {
+                continue;
+            }
+            if (isset($match[2])) {
+                $quality = (float)$match[2];
+            }
+            else {
+                $quality = 1.0;
+            }
+
+            $countries = explode('-', $match[1]);
+            $region = array_shift($countries);
+            $country_sub = explode('_', $region);
+            $region = array_shift($country_sub);
+
+            foreach($countries as $country)
+                $languages[$region . '_' . strtoupper($country)] = $quality;
+
+            foreach($country_sub as $country)
+                $languages[$region . '_' . strtoupper($country)] = $quality;
+
+            $languages[$region] = $quality;
+        }
+
+        return $languages;
     }
     /**
      * @return array|int|string
@@ -132,8 +173,10 @@ class component_core_language{
             setlocale(LC_TIME, 'en_US.UTF8', 'en');
         }
     }
+
     /**
      * Initialisation de la création de session de langue
+     * @param bool $debug
      */
     public function run($debug = false){
         $session = new http_session();

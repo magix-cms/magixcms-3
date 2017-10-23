@@ -115,7 +115,7 @@
             </div>
             {if $product.associated}
                 <h3>{#similar_products#|ucfirst}</h3>
-                <div class="product-list">
+                <div class="vignette-list">
                     <div class="section-block">
                         <div class="row row-center">
                             {include file="amp/catalog/loop/product.tpl" data=$product.associated classCol='vignette col-ph-12 col-xs-6 col-md-4'}

@@ -172,6 +172,20 @@ CREATE TABLE IF NOT EXISTS `mc_domain` (
   PRIMARY KEY (`id_domain`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `mc_domain_language` (
+  `id_domain_lg` int(5) NOT NULL AUTO_INCREMENT,
+  `id_domain` smallint(5) unsigned NOT NULL,
+  `id_lang` smallint(3) unsigned NOT NULL,
+  `default_lang` smallint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_domain_lg`),
+  KEY `id_lang` (`id_lang`),
+  KEY `id_domain` (`id_domain`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_domain_language`
+  ADD CONSTRAINT `mc_domain_language_ibfk_2` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang` (`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `mc_domain_language_ibfk_1` FOREIGN KEY (`id_domain`) REFERENCES `mc_domain` (`id_domain`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 CREATE TABLE IF NOT EXISTS `mc_config_img` (
   `id_config_img` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `module_img` enum('catalog','news','pages','plugins') NOT NULL,
