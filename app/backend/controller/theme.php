@@ -317,7 +317,7 @@ class backend_controller_theme extends backend_db_theme{
 								$plugin = $this->getItems($this->type,$this->id,'one',false);
 							}
 							foreach ($langs as $lang) {
-								$url = '/'.$lang['iso_lang'].'/'.(isset($plugin) ? $plugin['name'] : $this->type).'/';
+								$url = '/'.$lang['iso_lang'].'/'.(isset($plugin) ? $plugin['name'].'/' : ($this->type !== 'home' ? $this->type.'/' : ''));
 								$name = isset($plugin) ? $plugin['name'] : $this->template->getConfigVars($this->type);
 								$this->add(array(
 									'type' => 'link_content',

@@ -39,7 +39,7 @@
  * Time: 00:19
  * License: Dual licensed under the MIT or GPL Version
  */
-class frontend_controller_pages extends frontend_db_pages {
+class frontend_controller_about extends frontend_db_about {
     /**
      * @var
      */
@@ -55,7 +55,8 @@ class frontend_controller_pages extends frontend_db_pages {
         $this->header = new component_httpUtils_header($this->template);
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();
-        $this->modelPages = new frontend_model_pages($this->template);
+        $this->modelPages = new frontend_model_about($this->template);
+
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
         }
@@ -72,13 +73,53 @@ class frontend_controller_pages extends frontend_db_pages {
         return $this->data->getItems($type, $id, $context, $assign);
     }
 
+	/**
+	 * @return array|null
+	 */
+	private function getBuildRootItems()
+	{
+		$collection = $this->getItems('root',array('iso'=>$this->getlang),'all',false);
+
+		$newData = array();
+		foreach ($collection as $item) {
+			if($item['name_info'] === 'desc') {
+				$newData['name'] = $item['value_info'];
+			}
+			else {
+				$newData[$item['name_info']] = $item['value_info'];
+			}
+		}
+
+		return $this->modelPages->setItemData($newData,null);
+	}
+
+	/**
+	 * @return array|null
+	 */
+	private function getBuildPagesTree()
+	{
+		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.menu_pages = 1';
+		$collection = parent::fetchData(
+			array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+			array('iso' => $this->getlang)
+		);
+
+		$newarr = array();
+		foreach ($collection as $item) {
+			$newarr[] = $this->modelPages->setItemData($item,null);
+		}
+		$newarr = $this->modelPages->setPagesTree($newarr);
+
+		return $newarr;
+	}
+
     /**
      * set Data from database
      * @access private
      */
     private function getBuildItems()
     {
-        $collection = $this->getItems('page',array('id'=>$this->id,'iso'=>$this->getlang),'one',false);
+        $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
         return $this->modelPages->setItemData($collection,null);
     }
 
@@ -88,7 +129,7 @@ class frontend_controller_pages extends frontend_db_pages {
      */
     private function getBuildParent($page)
     {
-        $collection = $this->getItems('page',array('id'=>$page['id_parent'],'iso'=>$this->getlang),'one',false);
+        $collection = $this->getItems('page',array(':id'=>$page['id_parent'],':iso'=>$this->getlang),'one',false);
         return $this->modelPages->setItemData($collection,null);
     }
 
@@ -105,12 +146,20 @@ class frontend_controller_pages extends frontend_db_pages {
      */
     private function getData()
     {
-        $data = $this->getBuildItems();
-        $parent = $data['id_parent'] !== null ? $this->getBuildParent($data) : null;
-        $hreflang = $this->getBuildLangItems();
-        $this->template->assign('pages',$data,true);
-        $this->template->assign('parent',$parent,true);
-        $this->template->assign('hreflang',$hreflang,true);
+		$pages = $this->getBuildPagesTree();
+		$this->template->assign('pagesTree',$pages,true);
+		$data = $this->getBuildRootItems();
+		$this->template->assign('root',$data,true);
+
+		if(isset($this->id)) {
+			$data = $this->getBuildItems();
+			$parent = $data['id_parent'] !== null ? $this->getBuildParent($data) : null;
+			$hreflang = $this->getBuildLangItems();
+			$this->template->assign('parent',$parent,true);
+			$this->template->assign('hreflang',$hreflang,true);
+		}
+
+		$this->template->assign('pages',$data,true);
     }
 
     /**
@@ -118,7 +167,7 @@ class frontend_controller_pages extends frontend_db_pages {
      * run app
      */
     public function run(){
-        $this->getData();
-        $this->template->display('pages/index.tpl');
+		$this->getData();
+        $this->template->display('about/index.tpl');
     }
 }

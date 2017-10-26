@@ -69,13 +69,13 @@
         libjs/vendor/tabcomplete.min.js,
         libjs/vendor/livefilter.min.js,
         libjs/vendor/src/bootstrap-select.js,
-        libjs/vendor/filterlist.min.js
+        libjs/vendor/filterlist.min.js,
         {baseadmin}/template/js/pages.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
-            if (typeof pages == "undefined")
+            if (typeof pages === "undefined")
             {
                 console.log("pages is not defined");
             }else{

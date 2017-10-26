@@ -1,13 +1,14 @@
 <?php
 class frontend_model_collection{
 
-    protected $upload,$imagesComponent,$routingUrl;
+    protected $upload,$imagesComponent,$routingUrl,$DBNews;
 
     public function __construct($template)
     {
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
         $this->routingUrl = new component_routing_url();
+        $this->DBNews = new frontend_db_news();
     }
 
     /**
@@ -65,7 +66,7 @@ class frontend_model_collection{
      * @param null $tagData
      * @return array
      */
-    public function getBuildNews($data,$tagData = null){
+    public function getBuildNews($data){
         $imgPath = $this->upload->imgBasePath('upload/news');
         $arr = array();
         $conf = array();
@@ -83,12 +84,16 @@ class frontend_model_collection{
                 $arr[$page['id_news']]['id_news'] = $page['id_news'];
                 if($page['img_news'] != null) {
                     foreach ($fetchConfig as $key => $value) {
-                        $arr[$page['id_news']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_news'];
+                        $arr[$page['id_news']]['imgSrc'][$value['type_img']] = '/upload/news/'.$page['id_news'].'/'.$imgPrefix[$value['type_img']] . $page['img_news'];
                     }
                 }
                 //$arr[$page['id_news']]['menu_news'] = $page['menu_news'];
                 $arr[$page['id_news']]['date_register'] = $page['date_register'];
             }
+            $tagData = $this->DBNews->fetchData(
+                array('context'=>'all','type'=>'tags','conditions'=>' WHERE tag.id_lang = :id_lang'),
+                array('id_lang'=>$page['id_lang'])
+            );
 
             if($tagData != null){
                 $newArrayTags = array();
@@ -105,11 +110,12 @@ class frontend_model_collection{
                 'iso_lang'          => $page['iso_lang'],
                 'name_news'         => $page['name_news'],
                 'url_news'          => $page['url_news'],
+                'resume_news'       => $page['resume_news'],
                 'content_news'      => $page['content_news'],
                 'date_publish'      => $datePublish,
                 'published_news'    => $page['published_news'],
                 'public_url'        => $publicUrl,
-                'tags_news'         => $page['tags_news'],
+                //'tags_news'         => $page['tags_news'],
                 'tags'              => $tags
             );
         }

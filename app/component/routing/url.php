@@ -52,10 +52,8 @@ class component_routing_url{
             $type = $data['type'];
             switch($type){
                 case 'pages':
-                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
-                    break;
                 case 'about':
-                    $url = '/'.$iso.($this->amp ? '/amp' : '').'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
+					$url = '/'.$iso.($this->amp ? '/amp' : '').'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';
                     break;
                 case 'category':
                     $url = '/'.$iso.($this->amp ? '/amp' : '').'/catalog/'.$data['id'].'-'.$data['url'].'/';

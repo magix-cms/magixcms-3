@@ -382,6 +382,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_cat` (
   `id_cat` int(7) unsigned NOT NULL AUTO_INCREMENT,
   `id_parent` int(7) unsigned DEFAULT NULL,
   `img_cat` varchar(150) DEFAULT NULL,
+  `menu_cat` smallint(1) unsigned NOT NULL DEFAULT '0',
   `order_cat` smallint(5) unsigned NOT NULL DEFAULT '0',
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_cat`),

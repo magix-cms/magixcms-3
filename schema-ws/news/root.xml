@@ -3,25 +3,34 @@
     <pages>
         <page>
             <id>31</id>
+            <date>2017/07/28</date>
             <image>
-                <small xlink:href="http://www.magixcms3.dev/upload/pages/1/l_76283949.jpg"/>
-                <medium xlink:href="http://www.magixcms3.dev/upload/pages/1/m_76283949.jpg"/>
-                <large xlink:href="http://www.magixcms3.dev/upload/pages/1/s_76283949.jpg"/>
+                <small xlink:href="http://www.magixcms3.dev/upload/news/1/l_76283949.jpg"/>
+                <medium xlink:href="http://www.magixcms3.dev/upload/news/1/m_76283949.jpg"/>
+                <large xlink:href="http://www.magixcms3.dev/upload/news/1/s_76283949.jpg"/>
             </image>
             <languages>
                 <language>
-                    <id_lang>2</id_lang>
-                    <url>/en/pages/31-page-test-en/</url>
-                    <name>page test EN</name>
+                    <id_lang default="0">2</id_lang>
+                    <url>/en/news/2017/07/28/1-my-first-news/</url>
+                    <name>my first news</name>
                     <resume></resume>
                     <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                <tags>
+                    <tag>test</tag>
+                    <tag>ma cocote</tag>
+                    <tag>mon bizard</tag>
+                </tags>
                 </language>
                 <language>
-                    <id_lang>6</id_lang>
-                    <url>/fr/pages/31-img-zoom-et-img-galery/</url>
-                    <name>img-zoom et img-galery</name>
+                    <id_lang default="1">6</id_lang>
+                    <url>/fr/news/2017/09/25/1-news-de-test/</url>
+                    <name>news de test</name>
                     <resume></resume>
                     <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                    <tags>
+                        <tag>tatata</tag>
+                    </tags>
                 </language>
             </languages>
         </page>

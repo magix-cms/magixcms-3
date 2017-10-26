@@ -215,7 +215,8 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
 
             // *** Category
-            } elseif(isset($row['name_cat'])) {
+            }
+            elseif(isset($row['name_cat'])) {
 
                 /*$data['active']   =    false;
                 if (is_array($current) AND isset($current['category']['id'])) {
@@ -257,6 +258,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['name']       =    $row['name_cat'];
                 $data['content']    =    ($row['content_cat'] != '') ? $row['content_cat'] : NULL;
                 $data['resume']     =    ($row['resume_cat'] != '') ? $row['resume_cat'] : NULL;
+                $data['menu']       =    $row['menu_cat'];
                 $data['order']      =    $row['order_cat'];
                 // Plugin
                 if($newRow != false){

@@ -231,9 +231,14 @@ class backend_db_pages
                 		WHERE id_pages = :id_pages';
 			}
 			elseif ($config['type'] === 'pageActiveMenu') {
-				$sql = 'UPDATE mc_cms_page 
+				$query = 'UPDATE mc_cms_page 
 						SET menu_pages = :menu_pages 
 						WHERE id_pages IN ('.$data['id_pages'].')';
+                component_routing_db::layer()->update($query,
+                    array(
+                        ':menu_pages'	=> $data['menu_pages']
+                    )
+                );
 			}
 			elseif ($config['type'] === 'order') {
 				$sql = 'UPDATE mc_cms_page 

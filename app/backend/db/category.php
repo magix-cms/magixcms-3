@@ -8,7 +8,7 @@ class backend_db_category
         if (is_array($config)) {
             if ($config['context'] === 'all') {
                 if ($config['type'] === 'pages') {
-                    $sql = "SELECT p.id_cat, c.name_cat, c.content_cat, p.date_register, p.img_cat
+                    $sql = "SELECT p.id_cat, c.name_cat, c.content_cat,p.menu_cat, p.date_register, p.img_cat
 								FROM mc_catalog_cat AS p
 									JOIN mc_catalog_cat_content AS c USING ( id_cat )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -38,12 +38,15 @@ class backend_db_category
                                             $q = $dateFormat->date_to_db_format($q);
                                             $cond .= "p.".$key." LIKE '%".$q."%' ";
                                             break;
+                                        case 'menu_cat':
+                                            $cond .= 'p.'.$key.' = '.$q.' ';
+                                            break;
                                     }
                                     $nbc++;
                                 }
                             }
 
-                            $sql = "SELECT p.id_cat, c.name_cat, p.date_register, p.img_cat, ca.name_cat AS parent_cat
+                            $sql = "SELECT p.id_cat, c.name_cat, p.date_register,p.menu_cat, p.img_cat, ca.name_cat AS parent_cat
 								FROM mc_catalog_cat AS p
 									JOIN mc_catalog_cat_content AS c USING ( id_cat )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -74,13 +77,16 @@ class backend_db_category
                                         $q = $dateFormat->date_to_db_format($q);
                                         $cond .= "p.".$key." LIKE '%".$q."%' ";
                                         break;
+                                    case 'menu_cat':
+                                        $cond .= 'p.'.$key.' = '.$q.' ';
+                                        break;
                                 }
                                 $nbc++;
                             }
                         }
                     }
 
-                    $sql = "SELECT p.id_cat, c.name_cat, p.date_register,p.img_cat
+                    $sql = "SELECT p.id_cat, c.name_cat,p.menu_cat, p.date_register,p.img_cat
 							FROM mc_catalog_cat AS p
 								JOIN mc_catalog_cat_content AS c USING ( id_cat )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -184,6 +190,9 @@ class backend_db_category
     public function update($config,$data = false)
     {
         if (is_array($config)) {
+            $sql = '';
+            $params = $data;
+
             if ($config['type'] === 'content') {
                 $sql = 'UPDATE mc_catalog_cat_content SET name_cat = :name_cat, url_cat = :url_cat, resume_cat = :resume_cat, content_cat=:content_cat, published_cat=:published_cat
                 WHERE id_cat = :id_cat AND id_lang = :id_lang';
@@ -213,6 +222,17 @@ class backend_db_category
                     array(
                         ':id_catalog'	=> $data['id_catalog'],
                         ':order_p'	=> $data['order_p']
+                    )
+                );
+            }
+            elseif ($config['type'] === 'pageActiveMenu') {
+                $sql = 'UPDATE mc_catalog_cat 
+						SET menu_cat = :menu_cat 
+						WHERE id_cat IN ('.$data['id_cat'].')';
+                //if($sql && $params) component_routing_db::layer()->update($sql,$params);
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':menu_cat'	=> $data['menu_cat']
                     )
                 );
             }

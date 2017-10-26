@@ -1,4 +1,5 @@
 var pages = (function ($, undefined) {
+    'use strict';
     return {
         run: function(controller){
             $( ".ui-sortable" ).sortable({
@@ -19,16 +20,14 @@ var pages = (function ($, undefined) {
                             );
                         }
                     });
-                    //return false;
                 }
             });
             $( ".ui-sortable" ).disableSelection();
         },
-        runAdd: function(){
-            if($('#parent_id').val() != ''){
+        runAdd : function(){
+            if($('#parent_id').val() !== ''){
                 var id = $('#parent_id').val();
                 var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
-                //console.log(cus);
                 if(!cus.length) {
                     $('#parent').bootstrapSelect('clear');
                 } else {
@@ -38,9 +37,8 @@ var pages = (function ($, undefined) {
             }
             $('#parent_id').on('focusout',function(){
                 var id = $(this).val();
-                if(id != '') {
+                if(id !== '') {
                     var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
-                    //console.log(cus);
                     if(!cus.length) {
                         $('#parent').bootstrapSelect('clear');
                     } else {
@@ -50,5 +48,5 @@ var pages = (function ($, undefined) {
                 }
             });
         }
-    }
+    };
 })(jQuery);

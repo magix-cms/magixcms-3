@@ -160,6 +160,10 @@ class frontend_model_about extends frontend_db_about {
 		)
 	);
 
+	/**
+	 * frontend_model_about constructor.
+	 * @param $template
+	 */
 	public function __construct($template)
 	{
 		$this->routingUrl = new component_routing_url();
@@ -177,8 +181,98 @@ class frontend_model_about extends frontend_db_about {
 	 * @param boolean $assign
 	 * @return mixed
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true) {
+	private function getItems($type, $id = null, $context = null, $assign = true)
+	{
 		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
+	/**
+	 * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
+	 * @param $row
+	 * @param $current
+	 * @param bool $newRow
+	 * @return array|null
+	 */
+	public function setItemData($row,$current,$newRow = false)
+	{
+		$data = null;
+
+		if ($row != null) {
+			if (isset($row['name'])) {
+				$data['name']       = $row['name'];
+				$data['content']    = $row['content'];
+			}
+			elseif (isset($row['name_pages'])) {
+				$data['id']         = $row['id_pages'];
+				$data['id_parent']  = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
+				$data['title']      = $row['name_pages'];
+				$data['iso']        = $row['iso_lang'];
+				$data['url']  =
+					$this->routingUrl->getBuildUrl(array(
+							'type'      =>  'about',
+							'iso'       =>  $row['iso_lang'],
+							'id'        =>  $row['id_pages'],
+							'url'       =>  $row['url_pages']
+						)
+					);
+
+				$data['active'] = false;
+
+				if ($row['id_pages'] == $current['controller']['id']) {
+					$data['active'] = true;
+				}
+				$data['content'] = $row['content_pages'];
+				$data['menu'] = $row['menu_pages'];
+				$data['date']['update'] = $row['last_update'];
+				$data['date']['register'] = $row['date_register'];
+				$data['seo']['title'] = $row['seo_title_pages'];
+				$data['seo']['description'] = $row['seo_desc_pages'];
+				// Plugin
+				if($newRow != false){
+					if(is_array($newRow)){
+						foreach($newRow as $key => $value){
+							$data[$key] = $row[$value];
+						}
+					}
+				}
+			}
+			return $data;
+		}
+	}
+
+	/**
+	 * @param $pages
+	 * @param string $branch
+	 * @return mixed
+	 */
+	public function setPagesTree($pages, $branch = 'root')
+	{
+		$childs = array();
+		$id = 'id_pages';
+
+		foreach($pages as &$item) {
+			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+			if(!isset($item['id_pages'])) $id = 'id';
+
+			if($k === 'root')
+				$childs[$k][] = &$item;
+			else
+				$childs[$k]['subdata'][] = &$item;
+
+			$childs[$item[$id]] = &$item;
+		}
+		unset($item);
+
+		foreach($pages as &$item) {
+			if (isset($childs[$item[$id]])) {
+				$item['subdata'] = $childs[$item[$id]]['subdata'];
+			}
+		}
+
+		if($branch === 'root')
+			return $childs[$branch];
+		else
+			return array($childs[$branch]);
 	}
 
 	/**
@@ -284,13 +378,313 @@ class frontend_model_about extends frontend_db_about {
 
 		foreach ($row as $item) {
 			$arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
-                'type'      =>  'about',
-                'iso'       =>  $row['iso_lang'],
-                'id'        =>  $row['id_pages'],
-                'url'       =>  $row['url_pages']
+                'type' =>  'about',
+                'iso'  =>  $item['iso_lang'],
+                'id'   =>  $item['id_pages'],
+                'url'  =>  $item['url_pages']
             ));
 		}
 		return $arr;
+	}
+
+	/**
+	 * Retourne les données sql sur base des paramètres passés en paramète
+	 * @param $custom
+	 * @param array $current
+	 * @param bool $override
+	 * @return array|null
+	 */
+	public function getData($custom,$current,$override = false)
+	{
+		if (!(is_array($custom))) {
+			return null;
+		}
+
+		if (!(array_key_exists('controller', $current))) {
+			return null;
+		}
+
+		$conf = array(
+			'id' => null,
+			'type' => 'data',
+			'limit' => null,
+			'lang' => $current['lang']['iso'],
+			'context' => array(1 => 'parent')
+		);
+
+		!empty($current['controller']['name']) || $current['controller']['name'] !='' ? $current['controller']['name'] : $current['controller']['name'] = 'pages';
+		$current = $current['controller'];
+
+		// custom values: select or exclude
+		if (isset($custom['select'])) {
+			if ($custom['select'] == 'current') {
+				$conf['id'] = $current['id'];
+			}
+			elseif (is_array($custom['select'])) {
+				if (array_key_exists($conf['lang'], $custom['select'])) {
+					$conf['id'] = $custom['select'][$conf['lang']];
+				}
+			}
+		}
+		elseif (isset($custom['exclude'])) {
+			if (is_array($custom['exclude'])) {
+				if (array_key_exists($conf['lang'], $custom['exclude'])) {
+					$conf['id'] = $custom['exclude'][$conf['lang']];
+					//$conf['type'] = 'exclude';
+				}
+			}
+		}
+
+		// custom values: display
+		if (isset($custom['context'])) {
+			if (is_array($custom['context'])) {
+				foreach ($custom['context'] as $k => $v) {
+					$conf['context'][1] = $k;
+					$conf['context'][2] = $v;
+				}
+			}
+			else {
+				$allowed = array(
+					'',
+					'all',
+					'parent',
+					'child'
+				);
+
+				if (in_array($custom['context'], $allowed)) {
+					$conf['context'][1] = $custom['context'];
+				}
+			}
+		}
+
+		if (isset($custom['limit'])) {
+			$conf['limit'] = $custom['limit'];
+		}
+
+		// Override with plugin
+		if (isset($custom['plugins'])) {
+			$conf['plugins'] = $custom['plugins'];
+		}
+
+		// *** Load SQL data
+		$conditions = '';
+		if ($conf['context'][1] == 'all') {
+			if ($override) {
+				$getCallClass = $this->modelPlugins->getCallClass($override);
+				if(method_exists($getCallClass,'override')){
+					$conf['data'] = 'all';
+					$conf['controller'] = $current;
+					$data = call_user_func_array(
+						array(
+							$getCallClass,
+							'override'
+						),
+						array(
+							$conf,
+							$custom
+						)
+					);
+				}
+			}
+			else {
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
+
+				if (isset($custom['exclude'])) {
+					$conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
+				}
+
+				if ($conf['type'] == 'menu') {
+					$conditions .= ' AND p.menu_pages = 1';
+				}
+				// ORDER
+				$conditions .= ' ORDER BY p.order_pages ASC';
+
+				if ($conf['limit'] != null) {
+					$conditions .= ' LIMIT ' . $conf['limit'];
+				}
+
+				if ($conditions != '') {
+					$data = parent::fetchData(
+						array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+						array(
+							':iso' => $conf['lang']
+						)
+					);
+
+					if($data != null) {
+						$branch = isset($custom['select']) ? $conf['id'] : 'root';
+						$data = $this->setPagesTree($data,$branch);
+					}
+				}
+			}
+		}
+		elseif ($conf['context'][1] == 'parent') {
+			if ($override) {
+				$getCallClass = $this->modelPlugins->getCallClass($override);
+				if(method_exists($getCallClass,'override')){
+					$conf['data'] = 'parent';
+					$conf['controller'] = $current;
+					$data = call_user_func_array(
+						array(
+							$getCallClass,
+							'override'
+						),
+						array(
+							$conf,
+							$custom
+						)
+					);
+				}
+			} else {
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent IS NULL ';
+
+				if (isset($custom['select'])) {
+
+					$conditions .= ' AND p.id_pages IN (' . $conf['id'] . ') ';
+				}
+				if (isset($custom['exclude'])) {
+
+					$conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
+				}
+
+				if ($conf['type'] == 'menu') {
+					$conditions .= ' AND p.menu_pages = 1';
+				}
+				// ORDER
+				$conditions .= ' ORDER BY p.order_pages ASC';
+
+				if ($conf['limit'] != null) {
+					$conditions .= ' LIMIT ' . $conf['limit'];
+				}
+
+				if ($conditions != '') {
+					$data = parent::fetchData(
+						array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+						array(
+							':iso' => $conf['lang']
+						)
+					);
+				}
+			}
+			if($data != null AND ($conf['context'][2] == 'child'))
+			{
+				if ($override) {
+					$getCallClass = $this->modelPlugins->getCallClass($override);
+					if(method_exists($getCallClass,'override')){
+						foreach ($data as $k1 => $v1) {
+							$conf['data'] = 'child';
+							$conf['controller'] = $current;
+							$conf['id_pages'] = $v1['id_pages'];
+							$data_2 = call_user_func_array(
+								array(
+									$getCallClass,
+									'override'
+								),
+								array(
+									$conf,
+									$custom
+								)
+							);
+							if ($data_2 != null) {
+								$data[$k1]['subdata'] = $data_2;
+							}
+						}
+						$data_2 = null;
+					}
+				} else {
+
+					foreach ($data as $k1 => $v1) {
+
+						$conditions = '';
+						$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1
+                    AND p.id_parent = :id';
+
+						/*if (isset($custom['select'])) {
+
+							$conditions .= ' AND p.id_pages IN (' . $conf['id'] . ') ';
+						}*/
+						if (isset($custom['exclude'])) {
+
+							$conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
+						}
+
+						if ($conf['type'] == 'menu') {
+							$conditions .= ' AND p.menu_pages = 1';
+						}
+
+						$conditions .= ' GROUP BY p.id_pages ORDER BY p.order_pages ASC';
+
+						if ($conf['limit'] != null) {
+							$conditions .= ' LIMIT ' . $conf['limit'];
+						}
+
+
+						if ($conditions != '') {
+							$data_2 = parent::fetchData(
+								array('context' => 'all', 'type' => 'child', 'conditions' => $conditions),
+								array(
+									':iso' => $conf['lang'],
+									':id' => $v1['id_pages']
+								)
+							);
+						}
+
+						if ($data_2 != null) {
+							$data[$k1]['subdata'] = $data_2;
+						}
+					}
+					$data_2 = null;
+				}
+			}
+		}
+		elseif ($conf['context'][1] == 'child') {
+			if ($override) {
+				$getCallClass = $this->modelPlugins->getCallClass($override);
+				if(method_exists($getCallClass,'override')){
+					$conf['data'] = 'child';
+					$conf['controller'] = $current;
+					$data = call_user_func_array(
+						array(
+							$getCallClass,
+							'override'
+						),
+						array(
+							$conf,
+							$custom
+						)
+					);
+				}
+			} else {
+
+				$conditions = '';
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent = :id';
+
+				if ($conf['type'] == 'menu') {
+					$conditions .= ' AND p.menu_pages = 1';
+				}
+
+				$conditions .= ' GROUP BY p.id_pages';
+				if ($conf['sort'] != null) {
+					$conditions .= ' ORDER BY p.order_pages';
+				}
+				if ($conf['limit'] != null) {
+					$conditions .= ' LIMIT ' . $conf['limit'];
+				}
+
+				$data = parent::fetchData(
+					array(
+						'context' => 'all',
+						'type' => 'child',
+						'conditions' => $conditions
+					),
+					array(
+						':iso' => $conf['lang'],
+						':id' => $conf['id'])
+				);
+			}
+		}
+
+		return $data;
 	}
 }
 ?>

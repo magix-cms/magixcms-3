@@ -40,7 +40,6 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 */
     private function getBuildRootItems()
     {
-
         $collection = $this->getItems('root',array(':iso'=>$this->getlang),'all',false);
 
         $newData = array();

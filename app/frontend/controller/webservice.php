@@ -328,6 +328,26 @@ class frontend_controller_webservice{
         $this->xml->output();
 
     }
+    /**
+     * Build News items
+     */
+    private function getBuildNewsItems()
+    {
+        $collection = $this->DBNews->fetchData(
+            array('context' => 'all', 'type' => 'pages', 'conditions' => null)
+        );
+
+        $arr = $this->buildCollection->getBuildNews($collection);
+        //
+        print '<pre>';
+        print_r($arr);
+        print '</pre>';
+
+    }
+
+    /**
+     *
+     */
     public function run(){
         if(isset($this->collection)){
             switch($this->collection){
@@ -353,8 +373,8 @@ class frontend_controller_webservice{
                         print 'id : ' . $this->id;
 
                     }else{
-
-                        print 'test collection : ' . $this->collection;
+                        $this->getBuildNewsItems();
+                        //print 'test collection : ' . $this->collection;
 
                     }
                     break;

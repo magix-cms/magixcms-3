@@ -464,10 +464,14 @@ class backend_controller_pages extends backend_db_pages
                         $assign = array(
                             'id_pages',
                             'name_pages' => ['title' => 'name'],
+                            'resume_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                            'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                            'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                            'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
                             'menu_pages',
                             'date_register'
                         );
-                        $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
+                        $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
                         $this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
                         $this->template->display('pages/index.tpl');
                         break;

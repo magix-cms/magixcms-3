@@ -128,6 +128,7 @@ class backend_controller_category extends backend_db_category {
                 $arr[$page['id_cat']] = array();
                 $arr[$page['id_cat']]['id_cat'] = $page['id_cat'];
                 $arr[$page['id_cat']]['id_parent'] = $page['id_parent'];
+                $arr[$page['id_cat']]['menu_cat'] = $page['menu_cat'];
                 if($page['img_cat'] != null) {
                     $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_cat'].DIRECTORY_SEPARATOR.$page['img_cat']);
                     $arr[$page['id_cat']]['imgSrc']['original']['img'] = $page['img_cat'];
@@ -202,6 +203,15 @@ class backend_controller_category extends backend_db_category {
                         );
                     }
                 }
+                break;
+            case 'pageActiveMenu':
+                parent::update(
+                    array(
+                        'context' => $data['context'],
+                        'type' => $data['type']
+                    ),
+                    $data['data']
+                );
                 break;
         }
     }
@@ -406,9 +416,10 @@ class backend_controller_category extends backend_db_category {
                             'id_cat',
                             'name_cat' => ['title' => 'name'],
                             'img_cat' => ['type' => 'bin', 'input' => null, 'class' => ''],
+                            'menu_cat',
                             'date_register'
                         );
-                        $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat', 'date_register'), $assign);
+                        $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','menu_cat', 'date_register'), $assign);
                         $pageChild = $this->getItems('pagesChild', $this->edit, 'all');
                         // catalog (category => product)
                         $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
@@ -469,6 +480,33 @@ class backend_controller_category extends backend_db_category {
                         }
                     }
                     break;
+                case 'active-selected':
+                case 'unactive-selected':
+                if(isset($this->category) && is_array($this->category) && !empty($this->category)) {
+                    $this->upd(
+                        array(
+                            'type'=>'pageActiveMenu',
+                            'data'=>array(
+                                'menu_cat' => ($this->action == 'active-selected'?1:0),
+                                'id_cat' => implode($this->category, ',')
+                            )
+                        )
+                    );
+                }
+                $this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
+
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                $this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
+                $assign = array(
+                    'id_cat',
+                    'name_cat' => ['title' => 'name'],
+                    'img_cat' => ['type' => 'bin', 'input' => null, 'class' => ''],
+                    'content_cat' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                    'menu_cat',
+                    'date_register'
+                );
+                $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','menu_cat', 'date_register'), $assign);
+                $this->template->display('catalog/category/index.tpl');
             }
         }else {
 
@@ -480,6 +518,7 @@ class backend_controller_category extends backend_db_category {
                 'name_cat' => ['title' => 'name'],
                 'img_cat' => ['type' => 'bin', 'input' => null, 'class' => ''],
                 'content_cat' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                'menu_cat',
                 'date_register'
             );
             if (isset($this->search)) {
@@ -493,11 +532,12 @@ class backend_controller_category extends backend_db_category {
                         'img_cat' => ['type' => 'bin', 'input' => null, 'class' => ''],
                         'parent_cat' => ['col' => 'name_cat', 'title' => 'name'],
                         'content_cat' => ['type' => 'bin', 'input' => null],
+                        'menu_cat',
                         'date_register'
                     );
                 }
             }
-            $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat', 'date_register'), $assign);
+            $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','menu_cat', 'date_register'), $assign);
             $this->template->display('catalog/category/index.tpl');
         }
     }

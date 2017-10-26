@@ -2,7 +2,7 @@
 require('lib/frontend.inc.php');
 $language = new component_core_language('strLangue');
 $language->run();
-$controllerCollection = array('home','pages','news','catalog','cookie','webservice');
+$controllerCollection = array('home','about','pages','news','catalog','cookie','webservice');
 $formClean = new form_inputEscape();
 $template = new frontend_model_template();
 if(http_request::isGet('controller')){

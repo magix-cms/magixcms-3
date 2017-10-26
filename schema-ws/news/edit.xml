@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <date>2017/07/28</date>
+    <language id="6">
+        <name>news de test</name>
+        <url>news-de-test</url>
+        <resume>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
+        </resume>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <tags>
+            <tag>test</tag>
+            <tag>ma cocote</tag>
+            <tag>mon bizard</tag>
+        </tags>
+        <published_pages>1</published_pages>
+    </language>
+    <language id="2">
+        <name>my first news</name>
+        <url>my-first-news</url>
+        <resume>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
+        </resume>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <tags>
+            <tag>tatata</tag>
+        </tags>
+        <published_pages>0</published_pages>
+    </language>
+</magixcms>

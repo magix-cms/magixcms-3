@@ -26,17 +26,23 @@
 function smarty_function_amp_components($params)
 {
 	$content = $params['content'];
+	if(!isset($params['image'])) $params['image'] = true;
+	if(!isset($params['galery'])) $params['galery'] = true;
 	$components = array();
 
 	// --- Search for img-zoom anchor to convert them into apm-image-lightbox components
-	if(preg_match('/<a(.(?!<\/a>))*(img-zoom)(.(?!<a))*<\/a>/i',$content) || preg_match('/(.(?!<amp-image-lightbox))+/i',$content)) {
-		$components[] = '<script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>';
+	if($params['image']) {
+		if(preg_match('/<a(.(?!<\/a>))*(img-zoom)(.(?!<a))*<\/a>/i',$content) || preg_match('/(.(?!<amp-image-lightbox))+/i',$content)) {
+			$components[] = '<script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>';
+		}
 	}
 
 	// --- Search for img-gallery anchor to convert them into apm-lightbox gallery
-	if(preg_match('/<a(.(?!<\/a>))*(img-galery)(.(?!<a))*<\/a>/i',$content)) {
-		$components[] = '<script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>';
-    	$components[] = '<script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>';
+	if($params['galery']) {
+		if(preg_match('/<a(.(?!<\/a>))*(img-galery)(.(?!<a))*<\/a>/i',$content)) {
+			$components[] = '<script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>';
+			$components[] = '<script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>';
+		}
 	}
 
 	echo implode('',$components);
