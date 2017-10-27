@@ -1,9 +1,14 @@
 {extends file="amp/catalog/index.tpl"}
 {block name="stylesheet"}{fetch file="skin/{template}/amp/css/product.min.css"}{/block}
 {block name="amp-script"}
-    <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
-    <script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>
-    <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    {if count($product.img) > 1}
+        <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
+        <script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>
+        {amp_components content=$product.content galery=false}
+    {elseif count($product.img) > 0}
+        <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
+        {amp_components content=$product.content image=false}
+    {/if}
 {/block}
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
@@ -20,7 +25,7 @@
             </fieldset>
         </form>*}
         <p class="text-center interested-form">
-            <a href="{geturl}/{getlang}/contact/?moreinfo={$product.name}" class="btn btn-box btn-invert btn-main-theme">{#interested_in#} {$product.name}&thinsp;?</a>
+            <a href="{geturl}/{getlang}/amp/contact/?moreinfo={$product.name}" class="btn btn-box btn-invert btn-main-theme">{#interested_in#} {$product.name}&thinsp;?</a>
         </p>
     {/capture}
     <article class="catalog container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Series">
@@ -90,7 +95,7 @@
                     </div>
                 </amp-lightbox>
             </div>
-            {else}
+            {elseif count($product.img) > 0}
             {$img = $product.img[0]}
             <figure>
                 <amp-img on="tap:lightbox1"

@@ -3,15 +3,39 @@
 {block name="description"}{$home.seoDescr}{/block}
 {block name="stylesheet"}{fetch file="skin/{template}/amp/css/home.min.css"}{/block}
 {block name='body:id'}home{/block}
+{block name="amp-script"}
+    {amp_components content=$home.content}
+{/block}
 {block name='article'}
-    <article itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
+    <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}
-            <div class="container">
-                <h1 itemprop="name">{$home.name}</h1>
-            </div>
-            <div itemprop="text">
+            <h1 itemprop="name">{$home.name}</h1>
+            <div class="text" itemprop="text">
                 {amp_content content=$home.content}
             </div>
         {/block}
     </article>
+{/block}
+{block name="main:after"}
+    {widget_news_data
+        conf = [
+            'context' => 'all',
+            'limit' => 3
+            ]
+        assign="news"
+    }
+    {if $news}
+    <section id="last-news" class="container">
+        <h3>{#last_news#|ucfirst}</h3>
+        <div class="news-list">
+            <div class="section-block">
+                <div class="row">
+                    <div>
+                    {include file="amp/news/loop/news.tpl" data=$news classCol="news-tile"}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {/if}
 {/block}

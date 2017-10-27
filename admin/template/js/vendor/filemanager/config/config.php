@@ -1,6 +1,6 @@
 <?php
 //if (session_id() == '') session_start();
-$baseadmin = '../../../baseadmin.php';
+$baseadmin = '../../../../baseadmin.php';
 
 if(file_exists($baseadmin)){
     require_once $baseadmin;
@@ -18,25 +18,47 @@ if(file_exists($baseadmin)){
 class fileManagerAuth{
     public function basePath(){
         $realpathFilemanager = dirname(realpath( __FILE__ ));
-        $filemanagerArrayDir = array(PATHADMIN.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'filemanager'.DIRECTORY_SEPARATOR.'config');
+        $filemanagerArrayDir = array(PATHADMIN.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'filemanager'.DIRECTORY_SEPARATOR.'config');
         $filemanagerPath = str_replace($filemanagerArrayDir, array('') , $realpathFilemanager);
         return $filemanagerPath;
     }
     public function tinyMceVersion(){
         return VERSION_EDITOR;
     }
-    public function getLanguage(){
-        return backend_model_language::current_Language();
-    }
-    public function mcAuth(){
-        $members = new backend_controller_login();
-        $members->checkout();
-    }
 }
+
 $auth = new fileManagerAuth();
-require $auth->basePath().'lib/mcbackend.php';
-$current_language = $auth->getLanguage();
-$auth->mcAuth();
+$config_in = $auth->basePath().'/app/init/common.inc.php';
+
+if (file_exists($config_in)) {
+    require $config_in;
+}else{
+    throw new Exception('Error Ini Common Files');
+    exit;
+}
+/**
+ * Chargement du Bootsrap
+ */
+$bootstrap = $auth->basePath().'/lib/bootstrap.php';
+if (file_exists($bootstrap)){
+    require $bootstrap;
+}else{
+    throw new Exception('Boostrap is not exist');
+    exit;
+}
+
+$loader = new autoloader();
+$loader->addPrefixes(array(
+    'component' => $auth->basePath().'/app',
+    'backend' => $auth->basePath().'/app',
+));
+$loader->addPrefix('plugins',filter_path::basePath(array('lib','magepattern')));
+$loader->register();
+
+$current_language = backend_model_template::currentLanguage();
+$members = new backend_controller_login();
+$members->secure();
+
 session_write_close();
 session_start();
 
@@ -122,7 +144,7 @@ $config = array(
     | with final /
     |
     */
-    'current_path' => "../../../../media/",
+    'current_path' => "../../../../../media/",
 
     /*
     |--------------------------------------------------------------------------
@@ -133,7 +155,7 @@ $config = array(
     | DO NOT put inside upload folder
     |
     */
-    'thumbs_base_path' => "../../../../upload/pagehtml/",
+    'thumbs_base_path' => "../../../../../thumbs/",
 
 
 	/*

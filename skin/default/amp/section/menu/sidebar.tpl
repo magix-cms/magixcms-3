@@ -7,9 +7,10 @@
         {widget_menu_data lang={getlang}}
         <ul class="menu list-unstyled">
         {foreach $links as $link}
+            {if !{$link.url_link|strpos:'amp'}}{$link.url_link = {$link.url_link|replace:{'/'|cat:{getlang}|cat:'/'}:{'/'|cat:{getlang}|cat:'/amp/'}}}{/if}
             <li>
                 {if $link.mode_link eq 'simple'}
-                <a href="{$link.url_link|replace:{'/'|cat:{getlang}|cat:'/'}:{'/'|cat:{getlang}|cat:'/amp/'}}"
+                <a href="{$link.url_link}"
                    title="{if empty($link.title_link)}{$link.name_link}{else}{$link.title_link}{/if}">
                     {$link.name_link}
                 </a>
@@ -19,27 +20,48 @@
                     {if $link.mode_link eq 'dropdown'}{$context = 'parent'}{else}{$context = 'all'}{/if}
                     {widget_cms_data
                         conf = [
-                            'context' => $context
+                            'context' => $context,
+                            'type' => 'menu'
                             ]
                         assign="pages"
                     }
+                    {elseif $link.type_link eq 'about'}
+                    {if $link.mode_link eq 'dropdown'}{$context = 'parent'}{else}{$context = 'all'}{/if}
+                    {widget_about_data
+                        conf = [
+                            'context' => $context,
+                            'type' => 'menu'
+                            ]
+                        assign="pages"
+                    }
+                    {elseif $link.type_link eq 'about_page'}
+                    {if $link.mode_link eq 'dropdown'}{$context = 'child'}{else}{$context = 'all'}{/if}
+                    {widget_about_data
+                        conf = [
+                            'context' => $context,
+                            'select' => [{getlang} => $link.id_page],
+                            'type' => 'menu'
+                            ]
+                        assign="pages"
+                    }
+                    {$pages = $pages[0].subdata}
                     {elseif $link.type_link eq 'pages'}
                     {if $link.mode_link eq 'dropdown'}{$context = 'child'}{else}{$context = 'all'}{/if}
                     {widget_cms_data
                         conf = [
-                        'context' => $context,
-                        'select' => [{getlang} => $link.id_page]
-                        ]
+                            'context' => $context,
+                            'select' => [{getlang} => $link.id_page],
+                            'type' => 'menu'
+                            ]
                         assign="pages"
                     }
                     {$pages = $pages[0].subdata}
-                    {elseif $link.type_link eq 'about_page'}
                     {elseif $link.type_link eq 'catalog'}
                     {widget_catalog_data
                         conf =[
-                        'context' => 'category',
-                        'select' => 'all'
-                        ]
+                            'context' => 'category',
+                            'select' => 'all'
+                            ]
                         assign='pages'
                     }
                     {elseif $link.type_link eq 'category'}
@@ -48,7 +70,7 @@
                 <amp-accordion{if $link.mode_link eq 'mega'} disable-session-states{/if}>
                     <section>
                         <header>
-                            <a href="{$link.url_link|replace:{'/'|cat:{getlang}|cat:'/'}:{'/'|cat:{getlang}|cat:'/amp/'}}"
+                            <a href="{$link.url_link}"
                                title="{if empty($link.title_link)}{$link.name_link}{else}{$link.title_link}{/if}">
                                 {$link.name_link}
                             </a>
@@ -61,7 +83,7 @@
                             {foreach $pages as $p}
                                 {if $p.name}{$p.title = $p.name}{/if}
                                 <li>
-                                    <a href="{$p.url|replace:{'/'|cat:{getlang}|cat:'/'}:{'/'|cat:{getlang}|cat:'/amp/'}}"
+                                    <a href="{$p.url}"
                                        title="{$p.title}">
                                         {$p.title}
                                     </a>
@@ -75,7 +97,7 @@
                             {if $p.name}{$p.title = $p.name}{/if}
                             <section>
                                 <header>
-                                    <a href="{$p.url|replace:{'/'|cat:{getlang}|cat:'/'}:{'/'|cat:{getlang}|cat:'/amp/'}}"
+                                    <a href="{$p.url}"
                                        title="{$p.title}">
                                         {$p.title}
                                     </a>
@@ -87,7 +109,7 @@
                                     {foreach $p.subdata as $p}
                                         {if $p.name}{$p.title = $p.name}{/if}
                                         <li>
-                                            <a href="{$p.url|replace:{'/'|cat:{getlang}|cat:'/'}:{'/'|cat:{getlang}|cat:'/amp/'}}"
+                                            <a href="{$p.url}"
                                                title="{$p.title}">
                                                 {$p.title}
                                             </a>

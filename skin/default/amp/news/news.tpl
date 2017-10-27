@@ -5,6 +5,7 @@
 {block name="amp-script"}
     {if $news.imgSrc.large}
     <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
+    {amp_components content=$news.content image=false}
     {else}
     {amp_components content=$news.content}
     {/if}

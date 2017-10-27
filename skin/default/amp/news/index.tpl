@@ -15,14 +15,14 @@
             {/strip}
             <div class="row">
                 <div class="col-ph-6">
-                    <p class="label">Par thème</p>
+                    <p class="label">{#news_by_theme#|ucfirst}</p>
                     <div class="dropdown-select">
                         <div class="dropdown">
                             <amp-accordion disable-session-states>
                                 <section>
                                     <header>
                                         <button class="btn btn-block btn-box btn-default" type="button">
-                                            {if isset($tag)}{$tag.name}{else}Choisir un thème{/if}
+                                            {if isset($tag)}{$tag.name}{else}{#choose_a_theme#|ucfirst}{/if}
                                             <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
                                             <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
                                         </button>
@@ -46,14 +46,14 @@
                     </div>
                 </div>
                 <div class="col-ph-6">
-                    <p class="label">Par date</p>
+                    <p class="label">{#news_by_date#|ucfirst}</p>
                     <div class="dropdown-select">
                         <div class="dropdown">
                             <amp-accordion disable-session-states>
                                 <section>
                                     <header>
                                         <button class="btn btn-block btn-box btn-default" type="button">
-                                            {if $smarty.get.date}{$smarty.get.date|date_format:'%Y/%m/%d'}{elseif $monthName}{$smarty.get.year}/{if isset($smarty.get.month)}{$smarty.get.month}/{/if}{else}Choisir une date{/if}
+                                            {if $smarty.get.date}{$smarty.get.date|date_format:'%Y/%m/%d'}{elseif $monthName}{$smarty.get.year}/{if isset($smarty.get.month)}{$smarty.get.month}/{/if}{else}{#choose_a_date#|ucfirst}{/if}
                                             <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
                                             <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
                                         </button>
@@ -90,10 +90,14 @@
             </div>
             </header>
             {if $news}
-                <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    <div class="section-block">
-                        <div class="row row-center">
-                            {include file="amp/news/loop/news.tpl" data=$news classCol='vignette col-ph-12 col-xs-8 col-sm-6 col-md-4'}
+                <div itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    <div class="news-list">
+                        <div class="section-block">
+                            <div class="row">
+                                <div>
+                                    {include file="amp/news/loop/news.tpl" data=$news classCol='news-tile'}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

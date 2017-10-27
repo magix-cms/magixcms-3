@@ -18,16 +18,16 @@
 {* /Home *}
 
 {switch $smarty.get.controller}
-{case 'about' break}
+{case 'about'}
 {* About *}
-{* Parent *}
-{if $pages.id_parent}
-    {$bread[] = ['name' => {$parent.title},'url' => "{geturl}/{getlang}/{if $amp}amp/{/if}about/",'title' => "{#show_page#}: {$parent.title}"]}
+{if $root.name === ''}{$root.name = {#catalog#}}{/if}
+{* Root *}
+{if $smarty.get.id}
+    {$bread[] = ['name' => {$root.name},'url' => "{geturl}/{getlang}/{if $amp}amp/{/if}about/",'title' => {$root.name}]}
+{else}
+    {$bread[] = ['name' => {$root.name}]}
 {/if}
-{* /About *}
-
-{$bread[] = ['name' => {$pages.title}]}
-{* /Pages *}
+{* /Root *}
 
 {case 'pages' break}
 {* Pages *}
@@ -36,8 +36,9 @@
     {$bread[] = ['name' => {$parent.title},'url' => "{geturl}{$parent.url}",'title' => "{#show_page#}: {$parent.title}"]}
 {/if}
 {* /Parent *}
-
-{$bread[] = ['name' => {$pages.title}]}
+{if $smarty.get.id}
+    {$bread[] = ['name' => {$pages.title}]}
+{/if}
 {* /Pages *}
 
 {case 'catalog' break}

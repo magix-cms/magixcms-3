@@ -75,7 +75,7 @@
                         </div>
                     {/if}
                     <div class="form-group">
-                        <input id="title" type="text" name="msg[title]" placeholder="{if $smarty.post.moreinfo}{$smarty.post.moreinfo}{else}{#ph_contact_programme#|ucfirst}{/if}"  value="{$smarty.post.moreinfo}" class="form-control required" required />
+                        <input id="title" type="text" name="msg[title]" placeholder="{#ph_contact_programme#|ucfirst}"  value="{$title}" class="form-control required{if $title} user-valid valid{/if}" required />
                         <label for="title">{#pn_contact_programme#|ucfirst}*&nbsp;:</label>
                         {include file="amp/section/form/value-missing.tpl" msg="{#title_missing#}" input="title"}
                     </div>
@@ -90,14 +90,10 @@
                         <button type="submit" class="btn btn-box btn-invert btn-main-theme"><i class="material-icons">send</i> {#pn_contact_send#|ucfirst}</button>
                     </p>
                     <div class="alert alert-success" submit-success>
-                        {*<template type="amp-mustache">*}
-                            <p>{#message_send_success#|ucfirst}</p>
-                        {*</template>*}
+                        <p>{#message_send_success#|ucfirst}</p>
                     </div>
                     <div class="alert alert-warning" submit-error>
-                        {*<template type="amp-mustache">*}
-                            <p>{#message_send_error#|ucfirst}</p>
-                        {*</template>*}
+                        <p>{#message_send_error#|ucfirst}</p>
                     </div>
                 </form>
             </section>

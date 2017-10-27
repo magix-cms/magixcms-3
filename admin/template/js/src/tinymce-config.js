@@ -29,7 +29,7 @@
         menubar: false,
         toolbar_items_size: 'small',
         image_advtab: true,
-        external_filemanager_path: '/'+baseadmin+'/template/js/filemanager/',
+        external_filemanager_path: '/'+baseadmin+'/template/js/vendor/filemanager/',
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
             "filemanager" : '/'+baseadmin+'/template/js/vendor/filemanager/plugin.min.js'

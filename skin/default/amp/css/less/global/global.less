@@ -6,6 +6,11 @@ body {
 		padding: @headerH 0 50px;
 		box-sizing: border-box;
 		flex: 1 0 auto;
+
+		> .section-block {
+			&:first-child { margin-top: 0; }
+			&:last-child { margin-bottom: 0; }
+		}
 	}
 
 	> main ~ section {

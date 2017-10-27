@@ -1,24 +1,6 @@
 /* --------------------------------------------------------
                         News root
 ---------------------------------------------------------- */
-.news-list {
-	overflow: hidden;
-	margin: 0 -15px;
-
-	.section-block{
-		margin: 0 -15px;
-		padding-right: 30px;
-		padding-left: 30px;
-		background-color: #eee;
-		.shadow(1,inset);
-	}
-
-	.fa-tag,
-	.fa-tags {
-		margin-right: 8px;
-	}
-}
-
 [id^="news"] {
 	.content {
 		margin-bottom: 10px;
@@ -45,7 +27,7 @@
 		}
 	}
 
-	.news-list {
+	.vignette-list {
 		.time-figure {
 			position: relative;
 			text-align: center;
@@ -127,16 +109,4 @@
 			padding-left: 0;
 		}
 	}
-}
-
-
-/* --------------------------------------------------------
-                            Tag
----------------------------------------------------------- */
-.tag-list {
-	a {
-		position: relative;
-		z-index: @z-allhover + 1;
-	}
-	.normalize-link(@weight: 600);
 }
