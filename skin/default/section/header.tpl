@@ -33,10 +33,10 @@
             </picture>{/strip}
         </a>
     </div>
-    {if $viewport === 'mobile'}
-        {if $companyData.contact.phone}
-            <a class="btn btn-phone" href="tel:{$companyData.contact.phone|replace:'(0)':''|replace:' ':''|replace:'.':''}"><i class="material-icons">phone</i></a>
-        {/if}
+    {if $dataLang != null && count($dataLang) > 1}
+        <div class="select-lang">
+            {include file="section/brick/lang.tpl" display='menu'}
+        </div>
     {/if}
     {include file="section/menu/primary.tpl" type="dropdown" root=['home'=>false,'about'=>true,'catalog'=>true,'news'=>false,'contact'=>true] main=true submenu=true gmap=true mobile=false}
     {if $viewport !== 'mobile'}

@@ -78,9 +78,6 @@
     </div>
     {if $companyData.tva}<div><p>{#footer_tva#} {$companyData.tva}</p></div>{/if}
     <div>
-        {#footer_creator_info#|ucfirst}
-        <a href="http://www.web-solution-way.com">
-            Web Solution Way
-        </a>
+        {include file="amp/section/footer/powered.tpl"}
     </div>
 </div>
