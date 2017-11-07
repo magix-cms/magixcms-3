@@ -6,7 +6,7 @@
         <p class="lead">{#info_contact#|ucfirst}</p>
         {if $companyData.contact.mail}
             <p class="email">
-                <span class="fa fa-envelope"></span>
+                <i class="material-icons">email</i>
                 {if $companyData.contact.click_to_mail}
                     {mailto address={$companyData.contact.mail} encode="hex"}
                 {else}
@@ -20,23 +20,23 @@
             </p>
         {/if}
         {if $companyData.contact.phone}
-        <p><span class="fa fa-phone"></span>{if $companyData.contact.click_to_call}<a href="tel:{$companyData.contact.phone|replace:'(0)':''|replace:' ':''|replace:'.':''}">{/if}{$companyData.contact.phone}{if $companyData.contact.click_to_call}</a>{/if}</p>
+        <p><i class="material-icons">phone</i>{if $companyData.contact.click_to_call}<a href="tel:{$companyData.contact.phone|replace:'(0)':''|replace:' ':''|replace:'.':''}">{/if}{$companyData.contact.phone}{if $companyData.contact.click_to_call}</a>{/if}</p>
         {/if}
         {if $companyData.contact.mobile}
-        <p><span class="fa fa-mobile"></span>{if $companyData.contact.click_to_call}<a href="tel:{$companyData.contact.mobile|replace:'(0)':''|replace:' ':''|replace:'.':''}">{/if}{$companyData.contact.mobile}{if $companyData.contact.click_to_call}</a>{/if}</p>
+        <p><i class="material-icons">smartphone</i>{if $companyData.contact.click_to_call}<a href="tel:{$companyData.contact.mobile|replace:'(0)':''|replace:' ':''|replace:'.':''}">{/if}{$companyData.contact.mobile}{if $companyData.contact.click_to_call}</a>{/if}</p>
         {/if}
         {if $companyData.contact.fax}
             <p><span class="fa fa-fax"></span>{$companyData.contact.fax}</p>
         {/if}
         {if $companyData.contact.adress.street}
         <p itemscope itemtype="http://schema.org/PostalAddress" class="address">
-            <span class="fa fa-map-marker"></span> {$companyData.contact.adress.adress}
+            <i class="material-icons">place</i> {$companyData.contact.adress.street}, {$companyData.contact.adress.postcode} {$companyData.contact.adress.city}
         </p>
         {/if}
     </div>
     {if $companyData.openinghours}
     <div class="schedule col-ph-12 col-sm-6 col-md-12">
-        {include file="section/brick/openinghours.tpl"}
+        {include file="about/brick/openinghours.tpl"}
     </div>
     {/if}
     {*<h3 class="title-block">{#plan_acces#|ucfirst}</h3>

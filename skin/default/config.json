@@ -1,0 +1,69 @@
+{
+    "name":"default",
+    "description":"Default theme for Magix CMS",
+    "version":"1.0.0",
+    "keywords":[
+        "css",
+        "less",
+        "sass",
+        "mobile-first",
+        "responsive",
+        "front-end",
+        "framework",
+        "web",
+        "Magix CMS"
+    ],
+    "authors":[
+        "Salvatore Di Salvo"
+    ],
+    "license":"GPL",
+    "style":"css/style.min.css",
+    "magixcms":"3.0.0",
+    "cssProcessor":"less",
+    "jsLightbox":"featherlight",
+    "paths":{
+        "bowerDir":"./bower_components",
+        "skins":"../skin",
+        "themePath":{
+            "css":"css",
+            "cssSrc":"css/src",
+            "less":"css/src/less",
+            "scss":"css/src/scss",
+            "fonts":"fonts",
+            "img":"img",
+            "vendorSrc":"js/vendor/src",
+            "vendor":"js/vendor",
+            "jsSrc":"js/src",
+            "js":"js",
+            "bootstrapJS":"js/vendor/bootstrap"
+        }
+    },
+    "plugins":{},
+    "dependencies":{
+        "bootstrap":"^3.3.7",
+        "font-awesome":"fontawesome#^4.7.0",
+        "jquery":"^3.1.1",
+        "featherlight":"^1.7.0"
+    },
+    "bootstrapJS": {
+        "mobile":[
+            "transition.js",
+            "dropdown.js",
+            "collapse.js"
+        ],
+        "tablet":[
+            "transition.js",
+            "carousel.js",
+            "collapse.js",
+            "dropdown.js",
+            "tab.js"
+        ],
+        "desktop":[
+            "transition.js",
+            "carousel.js",
+            "collapse.js",
+            "dropdown.js",
+            "tab.js"
+        ]
+    }
+}

@@ -55,7 +55,7 @@ function initGallery(){
 
 	$(".show-img").off('click').click(function(){
 		var target = $(this).data('target');
-		$(".big-image a").animate({ opacity: 0, 'z-index': 0 }, 200);
+		$(".big-image a").animate({ opacity: 0, 'z-index': -1 }, 200);
 		$(target).animate({ opacity: 1, 'z-index': 1 }, 200);
 		return false;
 	});

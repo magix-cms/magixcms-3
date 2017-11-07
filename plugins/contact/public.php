@@ -6,7 +6,7 @@ include_once ('db.php');
  */
 class plugins_contact_public extends plugins_contact_db
 {
-    protected $template,$header,$data,$getlang,$sanitize,$mail,$origin,$modelDomain,$config,$settings;
+    protected $template,$header,$data,$getlang,$moreinfo,$sanitize,$mail,$origin,$modelDomain,$config,$settings;
     public $msg, $content;
 
     /**
@@ -32,8 +32,13 @@ class plugins_contact_public extends plugins_contact_db
 
 		if(http_request::isGet('__amp_source_origin')) {
 			$this->origin = $formClean->simpleClean($_GET['__amp_source_origin']);
-			//$request_body = file_get_contents('php://input');
-			//$this->msg = json_decode($request_body);
+		}
+
+		if(http_request::isGet('moreinfo')) {
+			$this->moreinfo = $formClean->simpleClean($_GET['moreinfo']);
+		}
+		elseif (http_request::isPost('moreinfo')) {
+			$this->moreinfo = $formClean->simpleClean($_POST['moreinfo']);
 		}
     }
 
@@ -254,6 +259,7 @@ class plugins_contact_public extends plugins_contact_db
         	$this->send_email();
 		}
 		else {
+        	if(isset($this->moreinfo)) $this->template->assign('title',$this->moreinfo);
         	$this->template->assign('address_enabled',$this->config['address_enabled']);
         	$this->template->assign('address_required',$this->config['address_required']);
 			$this->template->display('contact/index.tpl');

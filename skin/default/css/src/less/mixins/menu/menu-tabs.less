@@ -1,0 +1,56 @@
+/*------------*\
+----- Tabs -----
+\*------------*/
+// ---- Rules
+@media (min-width: @screen-sm-min) {
+	.menu-tabs,
+	.menu-tabs-arrow {
+		.nav {
+			width: 100%;
+			display: table;
+
+			> li {
+				display: table-cell;
+				width: auto;
+				float: none !important;
+
+				> a {
+					text-align: center;
+				}
+			}
+		}
+	}
+
+	// ---- Arrow display
+	.menu-tabs-arrow {
+		.nav > li > a {
+			padding: 25px 10px !important;
+
+			&:before {
+				content: '';
+				position: absolute;
+				width: 0;
+				height: 0;
+				border-style: solid;
+				border-width: 0 9.5px 10px 9.5px;
+				border-color: transparent transparent @arrow-color transparent;
+				bottom: 0;
+				left: 50%;
+				-moz-transform: translateX(-50%);
+				-ms-transform: translateX(-50%);
+				-o-transform: translateX(-50%);
+				-webkit-transform: translateX(-50%);
+				transform: translateX(-50%);
+				.auto-transition(.35s);
+				opacity: 0;
+			}
+
+			&:hover,
+			&.active {
+				&:before {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

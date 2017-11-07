@@ -20,7 +20,7 @@
                             {if $smarty.get.strLangue}
                                 {$smarty.get.strLangue|upper}
                             {else}
-                                {$defaultLang.iso|upper}
+                                {$defaultLang.iso_lang|upper}
                             {/if}
                         </button>
                     </header>

@@ -61,5 +61,6 @@
  * @return string
  */
 function smarty_function_getlang($params, $template){
-	return frontend_model_template::currentLanguage();
+	$tmp = new frontend_model_template();
+	return $tmp->currentLanguage();
 }

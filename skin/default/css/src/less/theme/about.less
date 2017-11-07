@@ -1,0 +1,49 @@
+/*
+ * Rules for About page
+ */
+#about {
+	.row > span {
+		padding-bottom: 15px;
+	}
+
+	@media (max-width: @screen-ph-max) {
+		h1 {
+			text-align: center;
+			border-bottom: 1px solid #eee;
+			padding-bottom: 5px;
+			margin-bottom: 20px;
+		}
+	}
+
+	@media (min-width: @screen-xs-min) {
+		h1 {
+			border-bottom: 1px solid #eee;
+
+			.row > span {
+				&:first-child {
+					border-right: 1px solid #eee;
+				}
+			}
+		}
+	}
+
+	.child-nav {
+		.normalize-link(@text-color,@hover-color: @sd-color,@decoration: none);
+
+		ul > li {
+			text-align: center;
+
+			a {
+				display: block;
+				padding: 6px 10px;
+			}
+
+			&.active {
+				a {
+					color: @sd-color;
+					font-weight: 600;
+				}
+			}
+		}
+	}
+}

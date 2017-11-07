@@ -1,0 +1,157 @@
+//
+// Rules for footer
+//
+#footer {
+	//background: @footer-bg;
+	//color: @footer-color;
+
+	.block {
+		padding: 20px 0;
+		margin-bottom: 20px;
+		border-top: 1px solid @light-grey;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	/*.block {
+		padding: 30px 0;
+	}*/
+
+	/*.material-icons + p > span:first-child {
+		padding-top: 7px;
+		border-top: 1px solid @light-gray;
+	}*/
+}
+
+.mobile-footer {
+	margin-bottom: @footbarH;
+}
+
+#block {
+	// --- Block contact
+	&-contact {
+		li {
+			margin: 5px 0 15px;
+
+			&.phone-number {
+				font-size: 20px;
+			}
+		}
+
+		&.fa,
+		&.material-icons{
+			width: 30px;
+			font-size: 20px;
+		}
+	}
+}
+
+#colophon {
+	//background-color: @colophon-bg;
+	//color: @colophon-color;
+
+	.footer-colophon {
+		border-top: 1px solid @light-grey;
+		padding: 15px;
+		font-size: 85%;
+
+		p {
+			margin: 0;
+			padding: 0;
+		}
+
+		/*> div:first-child {
+			position: absolute;
+		}*/
+	}
+
+	.material-icons {
+		font-size: inherit;
+		vertical-align: middle;
+	}
+}
+
+#footbar {
+	position: fixed;
+	bottom: 0;
+	display: block;
+	width: 100%;
+	z-index: @z-fixed;
+	padding: 0;
+	.shadow(4);
+
+	.wrapper {
+		background-color: @main-color;
+		color: @smooth-white;
+		height: @footbarH;
+		padding: 3px 0;
+	}
+
+	.material-icons {
+		vertical-align: bottom;
+	}
+
+	.dropup {
+		position: static;
+		.material-icons {
+			margin-right: 4px;
+		}
+	}
+
+	.share-nav {
+		position: absolute;
+		width: 100%;
+		z-index: -1;
+		bottom: -16px;
+		background: @sharebar-bg;
+		display: block;
+		padding: 8px 15px;
+		height: 50px;
+		.auto-transition(.5s);
+		box-shadow: 0 0 1px rgba(0,0,0,.2) inset;
+
+		li {
+			float: left;
+			margin-right: 15px;
+		}
+	}
+
+	.dropup.open + .share-nav {
+		bottom: @footbarH;
+	}
+
+	.btn {
+		display: flex;
+		align-items: center;
+	}
+}
+
+#newsletter {
+	padding: 20px 0;
+
+	header {
+		h3 {
+			margin: 0;
+		}
+	}
+
+	.form-inline {
+		.radio {
+			display: inline-block;
+
+			&:nth-of-type(n+2) {
+				margin-left: 15px;
+			}
+		}
+
+		.form-group {
+			margin-bottom: 15px;
+		}
+	}
+}
+
+#mailform {
+	padding: 15px 0;
+}

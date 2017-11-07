@@ -119,14 +119,18 @@ class component_httpUtils_header{
      *
      */
     public function mobileDetect(){
-        $detect = new Mobile_Detect;
-        $viewport = 'desktop';
-        if( $detect->isTablet() ){
-            $viewport = 'tablet';
-        }
-        elseif( $detect->isMobile() ){
-            $viewport = 'mobile';
-        }
-        $this->template->assign('viewport', $viewport);
+		$detect = new Mobile_Detect;
+		$viewport = 'desktop';
+		$touch = false;
+		if( $detect->isMobile() ){
+			$viewport = 'mobile';
+			$touch = true;
+		}
+		if( $detect->isTablet() ){
+			$viewport = 'tablet';
+			$touch = true;
+		}
+		$this->template->assign('viewport', $viewport);
+		$this->template->assign('touch', $touch);
     }
 }

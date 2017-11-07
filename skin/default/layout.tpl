@@ -22,7 +22,7 @@
     {if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
     <link rel="icon" type="image/png" href="{geturl}/skin/{template}/img/favicon.png" />
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{geturl}/skin/{template}/img/favicon.ico" /><![endif]-->
-    {include file="section/brick/google-font.tpl" fonts=['Roboto'=>'400,600,400italic']}
+    {include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,600,400italic','Raleway'=>'300,500']}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     {capture name="stylesheet"}/min/?f=skin/{template}/css/{$viewport}.min.css{/capture}
@@ -42,15 +42,15 @@
     {include file="section/header.tpl"}
     {block name="breadcrumb"}{/block}
     {block name="main:before"}
-        {if !isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
-            {include file="section/nav/breadcrumb.tpl" icon='home' mobile=($viewport === 'mobile')}
+        {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
+            {include file="section/brick/breadcrumb.tpl" icon='home' amp=false}
         {/if}
     {/block}
     {block name="main"}
     <main id="content">
         {block name="article:before"}{/block}
         {block name='article'}
-        <article itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
+        <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
             {block name='article:content'}{/block}
         </article>
         {/block}

@@ -3,6 +3,7 @@
     <date>2017/07/28</date>
     <language id="6">
         <name>news de test</name>
+        <public_url>/fr/news/2017/09/25/1-news-de-test/</public_url>
         <url>news-de-test</url>
         <resume>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -21,6 +22,7 @@
     </language>
     <language id="2">
         <name>my first news</name>
+        <public_url>/en/news/2017/07/28/1-my-first-news/</public_url>
         <url>my-first-news</url>
         <resume>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.

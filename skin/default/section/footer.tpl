@@ -6,22 +6,17 @@
     {widget_share_data assign="shareData"}
 {/strip}
 <footer id="footer"{if $touch} class="mobile-footer"{/if}>
-    <div id="block-contact" class="block">
-        <div class="container-fluid">
-            <h4 class="sr-only">{#contact_label_title#|ucfirst}</h4>
-            <div class="text-center">
-                {*<i class="material-icons">place</i>*}
-                {if !empty($companyData.contact.adress)}
-                <p><span>{$companyData.contact.adress.street}, {$companyData.contact.adress.postcode} {$companyData.contact.adress.city}</span>
-                </p>{/if}
-                {strip}{if $companyData.contact.phone || $companyData.contact.mobile}<p>
-                    {if $companyData.contact.phone}{$companyData.contact.phone}{/if}
-                    {if $companyData.contact.phone && $companyData.contact.mobile} &mdash; {/if}
-                    {if $companyData.contact.mobile}{$companyData.contact.mobile}{/if}
-                    </p>{/if}{/strip}
+    {if is_array($blocks) && !empty($blocks)}
+        <section id="footer-blocks">
+            <div class="container-fluid">
+                {if $viewport !== 'mobile'}<div class="row">{/if}
+                {foreach $blocks as $block}
+                    {include file="section/footer/block/$block.tpl"}
+                {/foreach}
+                {if $viewport !== 'mobile'}</div>{/if}
             </div>
-        </div>
-    </div>
+        </section>
+    {/if}
     <div id="colophon">
         <div class="container-fluid">
             {include file="section/footer/about.tpl"}

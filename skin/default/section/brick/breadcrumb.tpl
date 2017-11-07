@@ -1,7 +1,4 @@
 {strip}
-{if !isset($catalog)}
-    {assign var="catalog" value=true}
-{/if}
 {assign var=bread value=array()}
 
 {* Home *}

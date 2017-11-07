@@ -42,6 +42,49 @@ class frontend_db_catalog
                     WHERE p.id_product = :id AND cat.published_cat =1 AND pc.published_p =1';
                     $params = $data;
                 }
+                elseif ($config['type'] === 'product_ws') {
+
+                    $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+
+                    $sql = "SELECT p.*,c.*,lang.*
+                        FROM mc_catalog_product AS p
+                        JOIN mc_catalog_product_content AS c USING(id_product)
+                        JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                        $conditions";
+                    $params = $data;
+                }
+                elseif ($config['type'] === 'product_similar_ws') {
+                    $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+
+                    $sql = "SELECT rel.*,p.*,c.name_p, c.resume_p, c.content_p, c.url_p,lang.id_lang,lang.iso_lang,default_lang
+                    FROM mc_catalog_product_rel AS rel
+                    JOIN mc_catalog_product AS p ON ( rel.id_product_2 = p.id_product )
+                    JOIN mc_catalog_product_content AS c ON(p.id_product = c.id_product)
+                    JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                    $conditions";
+                    $params = $data;
+                }
+
+                elseif ($config['type'] === 'images_ws') {
+                    $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                    /*$sql = 'SELECT img.*,c.alt_img,c.title_img,c.id_lang,lang.iso_lang
+                        FROM mc_catalog_product_img AS img
+                        LEFT JOIN mc_catalog_product_img_content AS c ON (img.id_img = c.id_img)
+                        LEFT JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                        WHERE img.id_product = :id';*/
+                    $sql = "SELECT img.*
+                        FROM mc_catalog_product_img AS img
+                        $conditions";
+                    $params = $data;
+                }
+                elseif ($config['type'] === 'images_content_ws') {
+                    $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                    $sql = "SELECT c.*,lang.iso_lang
+                        FROM mc_catalog_product_img_content AS c
+                        JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                        $conditions";
+                    $params = $data;
+                }
                 elseif ($config['type'] === 'category') {
 
                     $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
@@ -87,6 +130,15 @@ class frontend_db_catalog
 
                     $params = $data;
                 }
+
+                /*elseif ($config['type'] === 'ws_cat') {
+                    $sql = "SELECT
+                    p.*,c.*,lang.iso_lang
+                    FROM mc_catalog_cat AS p
+                    JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat)
+                    JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)";
+                    $params = $data;
+                }*/
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }

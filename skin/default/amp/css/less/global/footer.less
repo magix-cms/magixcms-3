@@ -114,6 +114,12 @@
 			}
 		}
 
+		#menu-share {
+			.material-icons {
+				margin-right: 4px;
+			}
+		}
+
 		&[expanded] {
 			margin-bottom: -@sharebrH;
 
@@ -126,5 +132,10 @@
 	amp-accordion>section[expanded]>:last-child {
 		bottom: @footbarH + @sharebrH;
 		height: @sharebrH;
+	}
+
+	.btn {
+		display: flex;
+		align-items: center;
 	}
 }

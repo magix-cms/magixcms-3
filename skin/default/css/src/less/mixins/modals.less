@@ -1,0 +1,224 @@
+//
+// Modals
+// --------------------------------------------------
+
+// .modal-open      - body class for killing the scroll
+// .modal           - container to scroll within
+// .modal-dialog    - positioning shell for the actual modal
+// .modal-content   - actual modal w/ bg and corners and shit
+
+// Container that the modal scrolls within
+.modal {
+	display: -webkit-box !important;
+	display: -ms-flexbox !important;
+	display: flex !important;
+	position: fixed;
+	top: 0;
+	left: 0;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	visibility: hidden;
+	opacity: 0;
+	z-index: -1;
+	.auto-transition(.2s; @fct: ease-in-out);
+
+	// Prevent Chrome on Windows from adding a focus outline. For details, see
+	// https://github.com/twbs/bootstrap/pull/10951.
+	outline: 0;
+
+	.close {
+		//float: right;
+		//font-size: (@font-size-base * 1.5);
+		//font-weight: @close-font-weight;
+		line-height: 1;
+		color: @close-color;
+		//text-shadow: @close-text-shadow;
+		.opacity(.2);
+		padding: 0;
+		cursor: pointer;
+		background: transparent;
+		border: 0;
+		-webkit-appearance: none;
+
+		&:hover,
+		&:focus {
+			color: @close-color;
+			text-decoration: none;
+			cursor: pointer;
+			.opacity(.5);
+		}
+	}
+}
+
+.modal-open .modal {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+// Shell div to position the modal with bottom padding
+/*.modal-dialog {
+	position: relative;
+	width: auto;
+	margin: 10px;
+}*/
+
+// Actual modal
+.modal-content {
+	position: relative;
+	background-color: @modal-content-bg;
+	//border: 1px solid @modal-content-fallback-border-color; //old browsers fallback (ie8 etc)
+	//border: 1px solid @modal-content-border-color;
+	border-radius: 2px;
+	//.box-shadow(0 3px 9px rgba(0,0,0,.5));
+	.shadow(25);
+	//background-clip: padding-box;
+	// Remove focus outline from opened modal
+	outline: 0;
+	display: -webkit-inline-box;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	width: ~"calc(100% - 30px)";
+	min-width: @screen-ph-min;
+	.auto-transition(.2s; @fct: ease-in-out);
+	-webkit-transform: translateY(150px) scale(0.8);
+	transform: translateY(150px) scale(0.8);
+
+	@media (min-width: @screen-sm-min) {
+		min-width: @screen-xs-min;
+		max-width: @screen-xs-max;
+	}
+}
+
+.modal-lg, .modal-md {
+	@media (min-width: @screen-md-min) {
+		min-width: @screen-sm-min;
+		max-width: @screen-sm-max;
+	}
+}
+
+.modal-lg {
+	@media (min-width: @screen-lg-min) {
+		min-width: @screen-md-min;
+		max-width: @screen-md-max;
+	}
+}
+
+// Modal background
+.modal-backdrop {
+	background-color: rgba(0, 0, 0, 0.87);
+	position: fixed;
+	top: 0;
+	left: 0;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	z-index: -1;
+}
+
+.modal-open {
+	//height: 100vh;
+	//overflow: hidden;
+
+	.modal {
+		visibility: visible;
+		opacity: 1;
+		z-index: @zindex-modal;
+
+		.modal-content {
+			-webkit-transform: translateY(0) scale(1);
+			transform: translateY(0) scale(1);
+			opacity: 1;
+		}
+	}
+
+	.modal-backdrop {
+		opacity: .3;
+		z-index: 400;
+	}
+}
+
+// Modal header
+// Top section of the modal w/ title and dismiss
+.modal-header {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	padding: 24px 24px 0;
+	flex-flow: row-reverse;
+	justify-content: space-between;
+}
+
+// Title text within header
+.modal-title {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	letter-spacing: 0.02em;
+	-webkit-box-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	margin: 0;
+}
+
+// Modal body
+// Where all modal content resides (sibling of .modal-header and .modal-footer)
+.modal-body {
+	//position: relative;
+	//padding: @modal-inner-padding;
+	color: rgba(0, 0, 0, 0.54);
+	//font-family: Roboto, sans-serif;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	//font-size: 0.875rem;
+	//font-weight: 400;
+	letter-spacing: 0.04em;
+	//line-height: 1.25rem;
+	//text-decoration: inherit;
+	//text-transform: inherit;
+	margin-top: 20px;
+	padding: 0 24px 24px;
+}
+
+// Footer (for actions)
+.modal-footer {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-pack: end;
+	-ms-flex-pack: end;
+	justify-content: flex-end;
+	padding: 8px;
+
+	.btn {
+		margin-left: 0;
+		margin-right: 8px;
+
+		&:last-child {
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+}

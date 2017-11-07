@@ -96,10 +96,10 @@ $(document).ready(function(){
             elem.next().removeClass('is_empty');
 	}
 
-	$('.nice-form').each(function(){
-		var form = $(this);
-		var input = form.find('input');
-		var txtarea = form.find('textarea');
+    $('.nice-form').each(function(){
+        var form = $(this);
+        var input = form.find('input');
+        var txtarea = form.find('textarea');
 
         input.each(function(){
             var self = $(this);
@@ -111,7 +111,7 @@ $(document).ready(function(){
                 case 'tel':
                     updateParent(self);
                     self.on('change',function(){updateParent(self)});
-					break;
+                    break;
             }
         });
         txtarea.each(function(){
@@ -123,9 +123,8 @@ $(document).ready(function(){
         form.on('reset',function(){
             input.each(function(){updateParent($(this));});
             txtarea.each(function(){updateParent($(this));});
-		});
-	});
-
+        });
+    });
 });
 
 var globalForm = (function ($, undefined) {

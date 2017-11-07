@@ -1,0 +1,73 @@
+//
+// Rules for contact
+//
+#contact {
+	.contact-infos {
+		text-align: center;
+	}
+
+	#aside {
+		font-size: 14px;
+
+		h3 {
+			color: @text-color;
+		}
+
+		p {
+			margin: 25px 0;
+			&.adresse {
+				span.fa {
+					float: left;
+					height: 40px;
+				}
+			}
+			&.lead {
+				font-size: 14px;
+				+ p {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		.fa:first-child {
+			font-size: 24px;
+		}
+
+		.fa,
+		.material-icons {
+			color: @main-color;
+			vertical-align: middle;
+			display: block;
+			margin-bottom: 10px;
+		}
+
+		.email {
+			.fa.fa-at {
+				font-size: 100%;
+				margin: 0;
+				color: @text-color;
+				padding: 0;
+				width: auto;
+				display: inline;
+			}
+		}
+	}
+}
+
+#btn-contact {
+	margin-top: 15px;
+	text-align: center;
+
+	button {
+		display: inline-flex;
+		align-items: center;
+
+		.material-icons {
+			margin-right: 4px;
+		}
+	}
+}
+
+/*#map {
+	margin-bottom: 20px;
+}*/

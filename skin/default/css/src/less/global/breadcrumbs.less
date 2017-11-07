@@ -1,0 +1,78 @@
+//
+// Rules for breadcrumb
+//
+#breadcrumb-container {
+	padding-top: @headerH;
+
+	+ main { padding-top: 0; }
+}
+
+.breadcrumb {
+	font-size: 12px;
+	position: relative;
+	padding: 5px 15px;
+
+	> ol {
+		.no-martini;
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+
+		> li {
+			&+li:before {
+				color: @text-color;
+				content: "/";
+				padding: 4px 2px;
+			}
+		}
+	}
+
+	li {
+		display: flex;
+		font-weight: 500;
+		color: @bc-item-color;
+		.normalize-link(@bc-link-color,@bc-active-link-color,underline,400);
+
+		a, > span {
+			display: block;
+			padding: 5px;
+		}
+	}
+
+	.navbar-toggle {
+		float: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.material-icons {
+		font-size: inherit;
+		vertical-align: middle;
+		position: relative;
+		top: -2px;
+	}
+}
+
+#breadcrumb-collapse {
+	position: absolute;
+	left: 0;
+	top: 100%;
+	width: 100%;
+	background-color: #fff;
+	box-shadow: 0 3px 5px rgba(0,0,0,.2);
+
+	li {
+		text-align: center;
+		display: block;
+		color: @text-color;
+		text-shadow: none;
+		.normalize-link(@text-color,@main-color,underline,400);
+	}
+}
+
+#hellipsis{
+	span.fa{
+		padding: 5px;
+		font-size: 14px;
+	}
+}

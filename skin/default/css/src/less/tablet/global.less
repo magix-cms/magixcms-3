@@ -1,0 +1,15 @@
+//
+// Remove default margin.
+//
+body {
+	> main {
+		padding-top: @headerH-sm;
+		@media (min-width: @screen-md-min) {
+			padding-top: @headerH-md;
+		}
+	}
+}
+
+#breadcrumb-container {
+	padding-top: @headerH-sm;
+}

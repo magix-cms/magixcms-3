@@ -12,7 +12,8 @@
             <languages>
                 <language>
                     <id_lang default="0">2</id_lang>
-                    <url>/en/news/2017/07/28/1-my-first-news/</url>
+                    <url>my-first-news</url>
+                    <public_url>/en/news/2017/07/28/1-my-first-news/</public_url>
                     <name>my first news</name>
                     <resume></resume>
                     <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
@@ -24,7 +25,8 @@
                 </language>
                 <language>
                     <id_lang default="1">6</id_lang>
-                    <url>/fr/news/2017/09/25/1-news-de-test/</url>
+                    <url>news-de-test</url>
+                    <public_url>/fr/news/2017/09/25/1-news-de-test/</public_url>
                     <name>news de test</name>
                     <resume></resume>
                     <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>

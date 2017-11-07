@@ -1,0 +1,24 @@
+//
+// Company advantages
+//
+
+@media (min-width: @screen-sm-min) {
+	#advantages {
+		padding: 60px 0;
+
+		.media-body {
+			margin-bottom: 0;
+		}
+
+		&:before {
+			background: url('@{imgpath}advantage/bg_advantage_sm.jpg') repeat center center;
+
+			@media (min-width: @screen-md-min) {
+				background: url('@{imgpath}advantage/bg_advantage_md.jpg') repeat center center;
+			}
+			@media (min-width: @screen-lg-min) {
+				background: url('@{imgpath}advantage/bg_advantage_lg.jpg') repeat center center;
+			}
+		}
+	}
+}

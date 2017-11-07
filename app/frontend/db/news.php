@@ -8,7 +8,7 @@ class frontend_db_news
         if(is_array($config)) {
             if($config['context'] === 'all') {
                 if ($config['type'] === 'langs') {
-                    $sql = 'SELECT p.*,c.*,lang.iso_lang
+                    $sql = 'SELECT p.*,c.*,lang.iso_lang,lang.default_lang
                     		FROM mc_news AS p
                     		JOIN mc_news_content AS c ON(c.id_news = p.id_news)
                     		JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -19,7 +19,7 @@ class frontend_db_news
 
                     $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 
-                    $sql = "SELECT p.*,c.*,lang.iso_lang
+                    $sql = "SELECT p.*,c.*,lang.iso_lang,lang.default_lang
                     		FROM mc_news AS p
                     		JOIN mc_news_content AS c ON(c.id_news = p.id_news)
                     		JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -55,6 +55,15 @@ class frontend_db_news
 							ORDER BY date_publish DESC";
 					$params = $data;
 				}
+                elseif ($config['type'] === 'ws') {
+                    //Return current row
+                    $sql = 'SELECT p.img_news,c.*,lang.iso_lang,lang.default_lang
+                    		FROM mc_news AS p
+                    		JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+                    		JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
+                    		WHERE p.id_news = :id';
+                    $params = $data;
+                }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 

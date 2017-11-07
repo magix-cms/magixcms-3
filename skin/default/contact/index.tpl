@@ -16,59 +16,59 @@
                     <p>{#pn_questions#|ucfirst}</p>
                     <p>{#pn_fill_form#|ucfirst}</p>
                     <p class="help-block">{#contact_fiels_resquest#|ucfirst}</p>
-                    <form id="contact-form" class="validate_form" method="post" action="{$smarty.server.REQUEST_URI}">
+                    <form id="contact-form" class="validate_form nice-form" method="post" action="{$smarty.server.REQUEST_URI}">
                         <div class="row">
                             <div class="col-ph-12 col-sm-6">
                                 <div class="form-group">
-                                    <label for="lastname">{#pn_contact_lastname#|ucfirst}*&nbsp;:</label>
                                     <input id="lastname" type="text" name="lastname" placeholder="{#ph_contact_lastname#|ucfirst}" class="form-control required" required/>
+                                    <label for="lastname">{#pn_contact_lastname#|ucfirst}*&nbsp;:</label>
                                 </div>
                             </div>
                             <div class="col-ph-12 col-sm-6">
                                 <div class="form-group">
-                                    <label for="firstname">{#pn_contact_firstname#|ucfirst}*&nbsp;:</label>
                                     <input id="firstname" type="text" name="firstname" placeholder="{#ph_contact_firstname#|ucfirst}" class="form-control required" required/>
+                                    <label for="firstname">{#pn_contact_firstname#|ucfirst}*&nbsp;:</label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="email">{#pn_contact_mail#|ucfirst}*&nbsp;:</label>
                             <input id="email" type="email" name="email" placeholder="{#ph_contact_mail#|ucfirst}" class="form-control required" required/>
+                            <label for="email">{#pn_contact_mail#|ucfirst}*&nbsp;:</label>
                         </div>
                         <div class="form-group">
-                            <label for="tel">{#pn_contact_phone#|ucfirst}&nbsp;:</label>
                             <input id="phone" type="tel" name="phone" placeholder="{#ph_contact_phone#|ucfirst}" class="form-control phone" pattern="{literal}^((?=[0-9\+ \(\)-]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})${/literal}" maxlength="20" />
+                            <label for="tel">{#pn_contact_phone#|ucfirst}&nbsp;:</label>
                         </div>
                         {if $address_enabled}
                             <div class="row">
                                 <div class="col-ph-12 col-md-6">
                                     <div class="form-group">
-                                        <label for="address">{#pn_contact_address#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                         <input id="address" type="text" name="address" placeholder="{#ph_address#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
+                                        <label for="address">{#pn_contact_address#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                     </div>
                                 </div>
                                 <div class="col-ph-6 col-md-3">
                                     <div class="form-group">
-                                        <label for="postcode">{#pn_contact_postcode#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                         <input id="postcode" type="text" name="postcode" placeholder="{#ph_postcode#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
+                                        <label for="postcode">{#pn_contact_postcode#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                     </div>
                                 </div>
                                 <div class="col-ph-6 col-md-3">
                                     <div class="form-group">
-                                        <label for="city">{#pn_contact_city#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                         <input id="city" type="text" name="city" placeholder="{#ph_city#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
+                                        <label for="city">{#pn_contact_city#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                     </div>
                                 </div>
                             </div>
                         {/if}
                         <div class="form-group">
-                            <label for="title">{#pn_contact_programme#|ucfirst}*&nbsp;:</label>
                             <input id="title" type="text" name="title" placeholder="{if $smarty.post.moreinfo}{$smarty.post.moreinfo}{else}{#ph_contact_programme#|ucfirst}{/if}"  value="{$smarty.post.moreinfo}" class="form-control required" required/>
+                            <label for="title">{#pn_contact_programme#|ucfirst}*&nbsp;:</label>
                         </div>
 
                         <div class="form-group">
-                            <label for="content">{#pn_contact_message#|ucfirst}*&nbsp;:</label>
                             <textarea id="content" name="content" rows="5" class="form-control required" required></textarea>
+                            <label for="content">{#pn_contact_message#|ucfirst}*&nbsp;:</label>
                         </div>
                         <div class="mc-message"></div>
                         <p id="btn-contact">
@@ -77,7 +77,7 @@
                         </p>
                     </form>
                 </section>
-                <section id="sidebar" class="col-ph-12 col-md-4 col-lg-5">
+                <section id="aside" class="col-ph-12 col-md-4 col-lg-5">
                     {include file="contact/block/map.tpl"}
                 </section>
             </div>
@@ -92,10 +92,10 @@
         {script src="/min/?f=libjs/vendor/localization/messages_{getlang}.js" concat=$concat type="javascript"}
     {/if}
     <script type="text/javascript">
-		$.nicenotify.notifier = {
+		/*$.jm.notifier = {
 			box:"",
 			elemclass : '.mc-message'
-		};
+		};*/
 		$(function(){
 			if (typeof globalForm == "undefined")
 			{

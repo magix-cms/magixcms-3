@@ -194,7 +194,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                             $imgPrefix = $this->imagesComponent->prefix();
                             $fetchConfig = $this->imagesComponent->getConfigItems(array(
                                 'module_img'=>'catalog',
-                                'attribute_img'=>'category'
+                                'attribute_img'=>'product'
                             ));
                             foreach ($fetchConfig as $keyConfig => $valueConfig) {
                                 $data['associated'][$key]['imgSrc'][$valueConfig['type_img']] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img'];

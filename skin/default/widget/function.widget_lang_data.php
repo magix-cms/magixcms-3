@@ -50,17 +50,41 @@
 function smarty_function_widget_lang_data($params, $template)
 {
     $collectionsLang = new component_collections_language();
+    $collectionDomain =  new frontend_db_domain();
 
     // *** Catch location var
     $iso_current = http_request::isGet('strLangue');
 
-    // *** Load SQL DATA
-	if (!$iso_current) {
-		$default = $collectionsLang->fetchData(array('context'=>'unique','type'=>'default'));
-		$template->assign('defaultLang',$default);
-	}
+    $currentDomain = $collectionDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST']));
 
-    $data = $collectionsLang->fetchData(array('context'=>'all','type'=>'active'));
+    if($currentDomain['id_domain'] != null && isset($_SERVER['HTTP_HOST'])) {
+        $domain =  $collectionDomain->fetchData(array('context' => 'all', 'type' => 'languages'), array('id' => $currentDomain['id_domain']));
+
+        if($domain != null){
+            $data = $domain;
+            // *** Load SQL DATA
+            if (!$iso_current) {
+                $default = $collectionDomain->fetchData(array('context'=>'one','type'=>'language'),array('id' => $currentDomain['id_domain']));
+                $template->assign('defaultLang',$default);
+            }
+        }else{
+            $data = $collectionsLang->fetchData(array('context'=>'all','type'=>'active'));
+            // *** Load SQL DATA
+            if (!$iso_current) {
+                $default = $collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
+                $template->assign('defaultLang',$default);
+            }
+        }
+    }else{
+        $data = $collectionsLang->fetchData(array('context'=>'all','type'=>'active'));
+        // *** Load SQL DATA
+        if (!$iso_current) {
+            $default = $collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
+            $template->assign('defaultLang',$default);
+        }
+    }
+
+
     $assign = isset($params['assign']) ? $params['assign'] : 'data';
     $template->assign($assign,$data);
 }

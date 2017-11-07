@@ -1,0 +1,128 @@
+//
+// Theme Colors
+//
+
+// --- Theme Colors
+@main-color: #3b61a9;
+@sd-color: #808284;
+@dark-color: #222;
+
+//// --- Theme Colors Variant
+// --- Main Theme
+@main-colors:
+	darken(@main-color, 28%),
+	darken(@sd-color, 14%),
+	@main-color,
+	lighten(@sd-color, 14%),
+	lighten(@main-color, 28%);
+
+
+// --- Secondary Colors
+@sd-colors:
+	darken(@sd-color, 28%),
+	#545657,
+	@sd-color,
+	#afb1b4,
+	lighten(@sd-color, 28%);
+
+// --- Neutral Colors
+@grey-colors:
+	extract(@grey, 9),
+	extract(@grey, 8),
+	extract(@grey, 7),
+	extract(@grey, 6),
+	extract(@grey, 5);
+
+// --- Dark Color
+@dark-colors:
+	extract(@grey, 12),
+	#111,
+	extract(@grey, 11),
+	extract(@grey, 10),
+	extract(@grey, 9);
+
+
+//
+// Theme Textures
+//
+
+@main-texture:  	"@{patternpath}fabric_plaid.png";
+@header-texture:	@main-texture;
+@menu-texture:  	@main-texture;
+@footer-texture:	"@{patternpath}dark_wall.png";
+@sharebar-txt:		"@{patternpath}fabric_plaid.png";
+
+//
+// Toolbar
+//
+
+@toolbar-bg:		extract(@grey, 11);
+
+
+//
+// Menu
+//
+
+@menu-color: 		#444;
+@menu-bg: 			#fff;
+@menu-active-color: @text-color;
+@menu-active-bg:	@sd-color;
+
+// --- Sub-menu
+@submenu-color: 		#444;
+@submenu-active-color: 	#fff;
+@submenu-active-bg: 	@main-color;
+@arrow-color:			@menu-color;
+
+// --- Mega Dropdown
+@mg-link-color	: @text-color;
+@mg-hover-bg	: extract(@grey, 11);
+@mg-head-color	: @mg-hover-bg;
+
+
+//
+// Breadcrumb
+//
+
+@bc-item-color: @main-color;
+@bc-link-color: @text-color;
+@bc-active-link-color: same;
+@cb-nav-border-color: #ddd;
+
+
+//
+// Header
+//
+
+@header-fixed-bg:   rgba(242,242,242,.9);
+
+
+//
+// Slider
+//
+
+@slider-h-color: 	@smooth-white;
+@slider-desc-color: @smooth-white;
+
+
+//
+// Footer
+//
+
+@sharebar-bg:	extract(@grey, 2);
+@footer-bg: 	extract(@grey, 11);
+@footer-color: 	@white;
+@colophon-bg: 	@white;
+@colophon-color:@text-color;
+
+
+//
+// Socials
+//
+
+@facebook:  #425fb0, #5c79ca;
+@twitter:   #1e87d9, #38a1f3;
+@viadeo:    #0a0a0a, #242424;
+@google:    #c8311b, #e24b35;
+@linkedin:  #2f6296, #497cb0;
+@pinterest: #bd081c, #d62035;

@@ -4,6 +4,7 @@
     <language id="6">
         <name>ma page</name>
         <url>ma-page</url>
+        <public_url>/fr/pages/1-ma-page/</public_url>
         <resume>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
@@ -21,6 +22,7 @@
     <language id="2">
         <name>My new record</name>
         <url>my-new-record</url>
+        <public_url>/en/pages/1-my-new-record/</public_url>
         <resume>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui

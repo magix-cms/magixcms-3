@@ -1,0 +1,88 @@
+//
+// Rules for the header
+//
+// --- Main header
+#header {
+	z-index: @z-fixed;
+	padding: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	width: 100%;
+	background-color: @white;
+	left: 0;
+	height: 70px;
+	.shadow(4);
+}
+
+/*#navbar-brand {
+	a {
+		display: inline-block;
+		padding: 5px 15px;
+	}
+}*/
+
+.site-name {
+	flex: 1;
+	text-align: center;
+}
+
+.toggle-menu,
+.select-lang {
+	position: absolute;
+	border: none;
+	margin: 0;
+	line-height: 1;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.select-lang {
+	right: 10px;
+
+	.dropdown-toggle {
+		padding: 15px;
+		font-size: 16px;
+		border: none;
+		color: @text-color;
+	}
+
+	&:active {
+		box-shadow: none;
+		color: @brand-success;
+	}
+}
+
+.toggle-menu {
+	left: 5px;
+	padding: 15px;
+}
+
+//
+// Cookie Consent Alert
+//
+
+#cookies {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	z-index: @z-fixed + 1;
+	background-color: rgba(0,0,0,.6);
+	color: #f2f2f2;
+	padding: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-flow: row-reverse;
+
+	p {
+		margin: 0;
+	}
+
+	.normalize-link(@white);
+
+	.material-icons {
+		vertical-align: bottom;
+	}
+}

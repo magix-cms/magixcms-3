@@ -1,0 +1,123 @@
+// Used by the functions below to shift a color's luminance by approximately
+// one index within its tonal palette.
+// E.g., shift from Red 500 to Red 400 or Red 600.
+@_theme-tonal-offset: 7%;
+@luminance: 0;
+@color-base: 0;
+
+.theme-linear-channel(@deg) {
+	@c: @deg / 255;
+
+	.test-deg(@c) when (@c < 0.03928) {
+		@linear-channel-value: @c / 12.92;
+	}
+	.test-deg(@c) {
+		@linear-channel-value: pow((@c + 0.055) / 1.055, 2.4);
+	}
+	.test-deg(@c);
+}
+
+// Calculate the luminance for a color.
+// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+.theme-luminance(@color) {
+	.theme-linear-channel(red(@color) + 1);
+	@red: @linear-channel-value;
+
+	.theme-linear-channel(green(@color) + 1);
+	@green: @linear-channel-value;
+
+	.theme-linear-channel(blue(@color) + 1);
+	@blue: @linear-channel-value;
+
+
+	@return: (.2126 * @red + .7152 * @green + .0722 * @blue);
+}
+
+.set-color-base(@color) {
+	@color-base: @color;
+}
+
+// Generate light and dark variants of the given color, offset by approximately
+// the specified number of indexes within the color's tonal palette.
+.theme-tonal-variants_(@color, @num-indexes: 2) {
+	.set-color-base(@color);
+	//.theme-luminance(@color);
+	//@luminance: @return * 100%;
+	@luminance: luminance(@color-base);
+
+	// lighten() and darken() require values to be between 0% and 100%.
+	@amount-1x: max(0%, min(100%, (@_theme-tonal-offset * @num-indexes)));
+	@amount-2x: max(0%, min(100%, (@_theme-tonal-offset * @num-indexes * 2)));
+	@amount-3x: max(0%, min(100%, (@_theme-tonal-offset * @num-indexes * 3)));
+	@amount-4x: max(0%, min(100%, (@_theme-tonal-offset * @num-indexes * 4)));
+
+	@lower-bound: @amount-1x;
+	@upper-bound: 100% - @lower-bound;
+
+	.test-luminance(@lu, @l-b, @u-b) when(@lu <= @l-b) {
+		@dark: lighten(@color-base, @amount-1x);
+		@light: lighten(@color-base, @amount-2x);
+		@lighter: lighten(@color-base, @amount-3x);
+		@bright: lighten(@color-base, @amount-4x);
+
+		@colors: @color-base,
+				@dark,
+				@light,
+				@lighter,
+				@bright;
+	}
+	.test-luminance(@lu, @l-b, @u-b) when(@lu >= @u-b) {
+		@night: darken(@color-base, @amount-4x);
+		@darker: darken(@color-base, @amount-3x);
+		@dark: darken(@color-base, @amount-2x);
+		@light: darken(@color-base, @amount-1x);
+
+		@colors: @night,
+				@darker,
+				@dark,
+				@light,
+				@color-base;
+	}
+	.test-luminance(@lu, @l-b, @u-b) {
+		@darker: darken(@color-base, @amount-2x);
+		@dark: darken(@color-base, @amount-1x);
+		@light: lighten(@color-base, @amount-1x);
+		@lighter: lighten(@color-base, @amount-2x);
+
+		@colors: @darker,
+				@dark,
+				@color-base,
+				@light,
+				@lighter;
+	}
+
+	.test-luminance(@luminance, @lower-bound, @upper-bound);
+}
+
+// Darken the given color by approximately the specified number of indexes
+// within its tonal palette.
+//
+// If the color is already very dark, it will be lightened instead of darkened
+// to ensure that the returned value is visually distinct from the input color.
+//
+// If the color is very light, it will be darkened twice as much as usual to
+// ensure that the returned value is visually distinct from the light variant
+// (which will actually end up being a dark shade).
+.theme-dark-variant(@color, @num-indexes: 2) {
+	.theme-tonal-variants_(@color, @num-indexes);
+	@dark-variant: @dark;
+}
+
+// Lighten the given color by approximately the specified number of indexes
+// within its tonal palette.
+//
+// If the color is already very light, it will be darkened instead of lightened
+// to ensure that the returned value is visually distinct from the input color.
+//
+// If the color is very dark, it will be lightened twice as much as usual to
+// ensure that the returned value is visually distinct from the dark variant
+// (which will actually end up being a light tint).
+.theme-light-variant(@color, @num-indexes: 2) {
+	.theme-tonal-variants_(@color, @num-indexes);
+	@light-variant: @light;
+}

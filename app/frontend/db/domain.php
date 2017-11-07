@@ -11,6 +11,14 @@ class frontend_db_domain
                 if ($config['type'] === 'domain') {
                     $sql = "SELECT d.* FROM mc_domain AS d";
                 }
+                elseif ($config['type'] === 'languages') {
+                    $sql = 'SELECT dl.id_lang,lang.iso_lang, lang.name_lang
+                            FROM mc_domain_language AS dl
+                            JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
+                            WHERE dl.id_domain = :id
+                            ORDER BY dl.default_lang DESC,dl.id_lang ASC';
+                    $params = $data;
+                }
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             }
@@ -22,7 +30,7 @@ class frontend_db_domain
                     $params = $data;
                 }
                 elseif ($config['type'] === 'language') {
-                    $sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
+                    $sql = 'SELECT dl.id_lang,lang.iso_lang, lang.name_lang
                             FROM mc_domain_language AS dl
                             JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
                             WHERE dl.id_domain = :id AND dl.default_lang = 1';
