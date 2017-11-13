@@ -646,5 +646,5 @@ var globalForm = (function ($, undefined) {
             // --- Launch modal initialisations
             initModalActions();
         }
-    }
+    };
 })(jQuery);

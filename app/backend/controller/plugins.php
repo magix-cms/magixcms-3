@@ -19,12 +19,12 @@ class backend_controller_plugins extends backend_db_plugins{
         $this->system = new component_core_system();
         if (http_request::isPost('config')) {
             $array = $_POST['config'];
-            foreach($array as $key => $arr) {
-                foreach($arr as $k => $v) {
-                    $array[$key][$k] = html_entity_decode($v);
-                }
-            }
-            $this->config = $array;
+			foreach($array as $key => $arr) {
+				foreach($arr as $k => $v) {
+					$array[$key][$k] = html_entity_decode($v);
+				}
+			}
+			$this->config = $array;
         }
     }
 

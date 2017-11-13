@@ -331,22 +331,22 @@ class frontend_model_collection{
 
                 // Loop associated / similar product
                 foreach ($associatedCollection as $associated) {
-
+                    // associated Collection
                     $imgCollection = $this->DBCatalog->fetchData(
                         array('context' => 'all', 'type' => 'images_ws','conditions'=>'WHERE img.id_product = :id AND img.default_img = 1'),
                         array('id'=>$associated['id_product']/*,'iso'=>$page['iso_lang']*/)
                     );
-
+                    // images collection
                     if($imgCollection != null) {
                         $imgRel = '';
                         foreach ($imgCollection as $img) {
-
+                            // images collection each
                             if (!array_key_exists($page['id_img'], $arr)) {
                                 $imgRel['images'] = array();
-                                $imgRel['images']['id_img'] = $img['id_img'];
-                                $imgRel['images']['id_product'] = $img['id_product'];
-                                $imgRel['images']['name_img'] = $img['name_img'];
-                                $imgRel['images']['default_img'] = $img['default_img'];
+                                $imgRel['images']['id_img']             = $img['id_img'];
+                                $imgRel['images']['id_product']         = $img['id_product'];
+                                $imgRel['images']['name_img']           = $img['name_img'];
+                                $imgRel['images']['default_img']        = $img['default_img'];
                                 $imgRel['images']['imgSrc']['original'] = '/upload/catalog/p/' . $page['id_product'] . '/' . $img['name_img'];
                                 foreach ($fetchConfig as $key => $value) {
                                     $imgRel['images']['imgSrc'][$value['type_img']] = '/upload/catalog/p/' . $page['id_product'] . '/' . $imgPrefix[$value['type_img']] . $img['name_img'];
@@ -363,9 +363,9 @@ class frontend_model_collection{
                                 foreach ($imgContent as $content) {
 
                                     $imgRel['images']['content'][$content['id_lang']] = array(
-                                        'id_lang' => $content['id_lang'],
-                                        'iso_lang' => $content['iso_lang'],
-                                        'alt_img' => $content['alt_img'],
+                                        'id_lang'   => $content['id_lang'],
+                                        'iso_lang'  => $content['iso_lang'],
+                                        'alt_img'   => $content['alt_img'],
                                         'title_img' => $content['title_img']
                                     );
                                 }
@@ -394,9 +394,11 @@ class frontend_model_collection{
                     );
                 }
             }
+            // Content by languages for product ID
             $arr[$page['id_product']]['content'][$page['id_lang']] = array(
                 'id_lang'       => $page['id_lang'],
                 'iso_lang'      => $page['iso_lang'],
+                'default_lang'  => $page['default_lang'],
                 'name_p'        => $page['name_p'],
                 'url_p'         => $page['url_p'],
                 'resume_p'      => $page['resume_p'],

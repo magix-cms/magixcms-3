@@ -14,10 +14,11 @@
         {/if}
         <header class="panel-header panel-nav">
             <h2 class="panel-heading h5">{#appearance#|ucfirst}</h2>
+            {$tab = $smarty.get.tab}
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#theme" aria-controls="theme" role="tab" data-toggle="tab">Thème</a></li>
-                <li role="presentation"><a href="#theme-nav" aria-controls="theme-nav" role="tab" data-toggle="tab">Menu</a></li>
-                <li role="presentation"><a href="#share" aria-controls="share" role="tab" data-toggle="tab">Partage</a></li>
+                <li role="presentation"{if $tab == 'theme' || !$tab} class="active"{/if}><a href="#theme" aria-controls="theme" role="tab" data-toggle="tab">Thème</a></li>
+                <li role="presentation"{if $tab == 'menu'} class="active"{/if}><a href="#theme-nav" aria-controls="theme-nav" role="tab" data-toggle="tab">Menu</a></li>
+                <li role="presentation"{if $tab == 'share'} class="active"{/if}><a href="#share" aria-controls="share" role="tab" data-toggle="tab">Partage</a></li>
             </ul>
         </header>
         <div class="panel-body panel-body-form">
@@ -25,13 +26,13 @@
                 <div class="mc-message"></div>
             </div>
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="theme">
+                <div role="tabpanel" class="tab-pane{if $tab == 'theme' || !$tab} active{/if}" id="theme">
                     {include file="theme/form/skin.tpl" controller="theme"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="theme-nav">
+                <div role="tabpanel" class="tab-pane{if $tab == 'menu'} active{/if}" id="theme-nav">
                     {include file="theme/form/menu.tpl" controller="theme"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="share">
+                <div role="tabpanel" class="tab-pane{if $tab == 'share'} active{/if}" id="share">
                     {include file="theme/form/share.tpl" controller="theme"}
                 </div>
             </div>

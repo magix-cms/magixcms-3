@@ -80,11 +80,14 @@ DirectoryIndex index.php
 # ----------------------------------------------------------------------
 
 # You can add custom pages to handle 500 or 403 pretty easily, if you like.
+ErrorDocument 401 /index.php?http_error=401
 ErrorDocument 403 /index.php?http_error=403
 ErrorDocument 404 /index.php?http_error=404
 ErrorDocument 500 /index.php?http_error=500
 #RewriteRule ^([a-zA-Z]{1,3})/(.*)$		/index.php?strLangue=$1&$2		[QSA,L]
-RewriteCond %{REQUEST_URI} !^/(admin|install|webservice|var|faq|amp|skin|media|news|about|home|pages)
+RewriteCond %{QUERY_STRING} !(strLangue)+
+RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload)
+#RewriteCond %{REQUEST_URI} !^/(admin|install|webservice|var|faq|amp|skin|media|news|about|home|pages)
 RewriteRule ^([-_a-zA-Z]{1,5})/(.*) 										/$2?strLangue=$1		[QSA,L]
 RewriteCond %{REQUEST_URI} ^/amp
 RewriteRule ^(?:amp)/(.*) 										/$1?amp=1		[QSA,L]

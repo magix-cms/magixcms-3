@@ -11,10 +11,14 @@
             <weight></weight>
             <images>
                 <image>
-                    <original xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/d402baba.png"/>
-                    <small xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/s_d402baba.png"/>
-                    <medium xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/m_d402baba.png"/>
-                    <large xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/l_d402baba.png"/>
+                    <id>3</id>
+                    <name>d402baba.png</name>
+                    <src>
+                        <original xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/d402baba.png"/>
+                        <small xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/s_d402baba.png"/>
+                        <medium xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/m_d402baba.png"/>
+                        <large xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/l_d402baba.png"/>
+                    </src>
                     <languages>
                         <language>
                             <id_lang>2</id_lang>

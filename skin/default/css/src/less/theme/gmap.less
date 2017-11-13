@@ -58,6 +58,7 @@
         margin: 0 0 10px;
         border-left: none;
         border-right: none;
+		width: 100%;
         td {
             padding: 10px 15px;
         }
@@ -120,6 +121,15 @@
 	}
 }
 
+#showform {
+	&.open {
+		.open { display: none; }
+	}
+	&:not(.open) {
+		.close { display: none; }
+	}
+}
+
 #gmap-address {
 	position: absolute;
 	top: 0;
@@ -132,7 +142,7 @@
 	}
 
 	.alert {
-		background-color: @sd-color;
+		background-color: @main-color;
 		color: #f2f2f2;
 		margin-bottom: 0;
 		border-radius: 0;
@@ -153,39 +163,79 @@
 		font-size: inherit;
 	}
 
+	&.open {
+		-webkit-transform: translate(0,0);
+		-ms-transform: translate(0,0);
+		-o-transform: translate(0,0);
+		transform: translate(0,0);
+	}
+	&:not(.open) {
+		@media (max-width: @screen-xs-max) {
+			-webkit-transform: translate(0, -100%);
+			-ms-transform: translate(0, -100%);
+			-o-transform: translate(0, -100%);
+			transform: translate(0, -100%);
+		}
+		@media (min-width: @screen-sm-min) {
+			-webkit-transform: translate(-100%, 0);
+			-ms-transform: translate(-100%, 0);
+			-o-transform: translate(-100%, 0);
+			transform: translate(-100%, 0);
+		}
+	}
+
 	.hidepanel {
 		position: absolute;
 		opacity: 1;
 		color: @text-color;
 		.auto-transition(.35s);
 
-		&.left {
-			right: -27px;
-			top: -26px;
-			padding: 15px 10px;
+		&.open {
+			.show-more { display: none; }
 		}
-		&.up {
+		&:not(.open) {
+			.show-less { display: none; }
+		}
+
+		@media (max-width: @screen-xs-max) {
 			right: 50%;
-			bottom: -37px;
+			bottom: 0;
 			top: auto;
 			line-height: 1;
 			padding: 10px 20px;
-			-webkit-transform: translateX(50%);
-			-ms-transform: translateX(50%); // IE9 only
-			-o-transform: translateX(50%);
-			transform: translateX(50%);
+			-webkit-transform: translate(50%, 100%);
+			-ms-transform: translate(50%, 100%);
+			-o-transform: translate(50%, 100%);
+			transform: translate(50%, 100%);
+
+			.hor {
+				display: none;
+			}
+		}
+
+		@media (min-width: @screen-sm-min) {
+			right: 0;
+			top: -50%;
+			padding: 14px 10px;
+			-webkit-transform: translateX(100%);
+			-ms-transform: translateX(100%);
+			-o-transform: translateX(100%);
+			transform: translateX(100%);
+
+			.ver {
+				display: none;
+			}
 		}
 	}
 
 	.collapsed {
 		~ .hidepanel {
-			&.left {
-				top: 1px;
-				opacity: 0;
+			opacity: 0;
+			@media (min-width: @screen-sm-min) {
+				top: 0;
 			}
-			&.up {
+			@media (max-width: @screen-xs-max) {
 				bottom: -1px;
-				opacity: 0;
 			}
 		}
 	}

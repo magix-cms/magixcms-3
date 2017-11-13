@@ -1,11 +1,11 @@
 <?php
-class frontend_controller_webservice{
+class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * @var
      */
-    protected $template, $header, $data, $modelNews, $modelCore, $dateFormat, $xml;
+    protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
     protected $DBPages, $DBNews, $DBCatalog, $DBHome;
-    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection;
+    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws;
     public $collection, $retrieve, $id, $filter ,$sort, $url;
     /**
      * frontend_controller_pages constructor.
@@ -13,10 +13,12 @@ class frontend_controller_webservice{
     public function __construct(){
         $formClean = new form_inputEscape();
         $this->template = new frontend_model_template();
-        $this->header = new component_httpUtils_header($this->template);
+        $this->message = new component_core_message($this->template);
+        $this->UtilsHeader = new component_httpUtils_header($this->template);
         $this->modelPages = new frontend_model_pages($this->template);
         $this->xml = new component_xml_output();
-        //$this->data = new frontend_model_data($this);
+        $this->header = new http_header();
+        $this->data = new frontend_model_data($this);
         //$this->getlang = $this->template->currentLanguage();
         $this->buildCollection = new frontend_model_collection($this->template);
         $this->DBHome = new frontend_db_home();
@@ -26,6 +28,7 @@ class frontend_controller_webservice{
         $this->dateFormat = new date_dateformat();
         $this->DBCatalog = new frontend_db_catalog();
         $this->url = http_url::getUrl();
+        $this->ws = new frontend_model_webservice();
 
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
@@ -41,6 +44,32 @@ class frontend_controller_webservice{
         }
         if(http_request::isGet('sort')){
             $this->sort = $formClean->simpleClean($_GET['sort']);
+        }
+    }
+    /**
+     * Assign data to the defined variable or return the data
+     * @param string $type
+     * @param string|int|null $id
+     * @param string $context
+     * @param boolean $assign
+     * @return mixed
+     */
+    private function getItems($type, $id = null, $context = null, $assign = true) {
+        return $this->data->getItems($type, $id, $context, $assign);
+    }
+    /**
+     * @return string
+     */
+    public function setWsAuthKey(){
+        $data = $this->getItems('authentification',null,'one',false);
+        if($data != null){
+            if($data['status_ws'] != '0'){
+                return $data['key_ws'];
+            }else{
+                return false;
+            }
+        }else{
+            return false;
         }
     }
 
@@ -118,6 +147,22 @@ class frontend_controller_webservice{
                     'cData' => $key['content_page']
                 )
             );
+            // Start SEO
+            $this->xml->newStartElement('seo');
+            $this->xml->setElement(
+                array(
+                    'start' => 'title',
+                    'text' => $key['seo_title_page']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'description',
+                    'text' => $key['seo_desc_page']
+                )
+            );
+            //End SEO
+            $this->xml->newEndElement();
             $this->xml->newEndElement();
         }
         $this->xml->newEndElement();
@@ -858,9 +903,184 @@ class frontend_controller_webservice{
 
         $arr = $this->buildCollection->getBuildProductItems($collection);
         //WHERE p.id_product = :id
-        print '<pre>';
+        /*print '<pre>';
          print_r($arr);
-         print '</pre>';
+         print '</pre>';*/
+        $this->xml->newStartElement('pages');
+
+        foreach($arr as $key => $value) {
+            $this->xml->newStartElement('page');
+            $this->xml->setElement(
+                array(
+                    'start' => 'id',
+                    'text' => $value['id_product']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'price',
+                    'text' => $value['price_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'reference',
+                    'text' => $value['reference_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'width',
+                    'text' => $value['width_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'height',
+                    'text' => $value['height_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'depth',
+                    'text' => $value['depth_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'weight',
+                    'text' => $value['weight_p']
+                )
+            );
+
+            if(isset($value['images'])) {
+                $this->xml->newStartElement('images');
+                foreach ($value['images'] as $k) {
+                    $this->xml->newStartElement('image');
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'name',
+                            'text' => $k['name_img']
+                        )
+                    );
+                    //start src
+                    $this->xml->newStartElement('src');
+                    foreach ($k['imgSrc'] as $images => $imgSrc) {
+                        $this->xml->setElement(
+                            array(
+                                'start' => $images,
+                                'attrNS' => array(
+                                    array(
+                                        'prefix' => 'xlink',
+                                        'name' => 'href',
+                                        'uri' => $this->url . $imgSrc
+                                    )
+                                )
+                            )
+                        );
+                    }
+                    //End src
+                    $this->xml->newEndElement();
+                    if($k['content']!= null) {
+                        // Start languages loop
+                        $this->xml->newStartElement('languages');
+                        foreach ($k['content'] as $imgData) {
+                            // Start Language
+                            $this->xml->newStartElement('language');
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'id_lang',
+                                    'text' => $imgData['id_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'iso',
+                                    'text' => $imgData['iso_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'alt',
+                                    'text' => $imgData['alt_img']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'title',
+                                    'text' => $imgData['title_img']
+                                )
+                            );
+                            //End language img
+                            $this->xml->newEndElement();
+                        }
+                        //End languages img
+                        $this->xml->newEndElement();
+                    }
+                    // End loop image
+                    $this->xml->newEndElement();
+                }
+                // End images
+                $this->xml->newEndElement();
+            }
+            // Start languages loop
+            $this->xml->newStartElement('languages');
+            foreach($value['content'] as $item) {
+                // Start Language
+                $this->xml->newStartElement('language');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'id_lang',
+                        'text' => $item['id_lang'],
+                        'attr' => array(
+                            array(
+                                'name' => 'default',
+                                'content' => $item['default_lang']
+                            )
+                        )
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'iso',
+                        'text' => $item['iso_lang']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'name',
+                        'text' => $item['name_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'url',
+                        'text' => $item['url_p']
+                    )
+                );
+
+                $this->xml->setElement(
+                    array(
+                        'start' => 'resume',
+                        'text' => $item['resume_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'content',
+                        'cData' => $item['content_p']
+                    )
+                );
+                // End language loop
+                $this->xml->newEndElement();
+            }
+            $this->xml->newEndElement();
+            // End languages
+
+            $this->xml->newEndElement();
+        }
+        $this->xml->newEndElement();
+        $this->xml->output();
     }
 
     /**
@@ -874,88 +1094,581 @@ class frontend_controller_webservice{
 
         $arr = $this->buildCollection->getBuildProduct($collection);
         //WHERE p.id_product = :id
-        print '<pre>';
+        /*print '<pre>';
         print_r($arr);
-        print '</pre>';
+        print '</pre>';*/
+        $this->xml->newStartElement('pages');
+
+        foreach($arr as $key => $value) {
+            $this->xml->newStartElement('page');
+            $this->xml->setElement(
+                array(
+                    'start' => 'id',
+                    'text' => $value['id_product']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'price',
+                    'text' => $value['price_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'reference',
+                    'text' => $value['reference_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'width',
+                    'text' => $value['width_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'height',
+                    'text' => $value['height_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'depth',
+                    'text' => $value['depth_p']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'weight',
+                    'text' => $value['weight_p']
+                )
+            );
+
+            if(isset($value['images'])) {
+                $this->xml->newStartElement('images');
+                foreach ($value['images'] as $k) {
+                    $this->xml->newStartElement('image');
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'name',
+                            'text' => $k['name_img']
+                        )
+                    );
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'default',
+                            'text' => $k['default_img']
+                        )
+                    );
+                    //start src
+                    $this->xml->newStartElement('src');
+                    foreach ($k['imgSrc'] as $images => $imgSrc) {
+                        $this->xml->setElement(
+                            array(
+                                'start' => $images,
+                                'attrNS' => array(
+                                    array(
+                                        'prefix' => 'xlink',
+                                        'name' => 'href',
+                                        'uri' => $this->url . $imgSrc
+                                    )
+                                )
+                            )
+                        );
+                    }
+                    //End src
+                    $this->xml->newEndElement();
+                    if($k['content']!= null) {
+                        // Start languages loop
+                        $this->xml->newStartElement('languages');
+                        foreach ($k['content'] as $imgData) {
+                            // Start Language
+                            $this->xml->newStartElement('language');
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'id_lang',
+                                    'text' => $imgData['id_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'iso',
+                                    'text' => $imgData['iso_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'alt',
+                                    'text' => $imgData['alt_img']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'title',
+                                    'text' => $imgData['title_img']
+                                )
+                            );
+                            //End language img
+                            $this->xml->newEndElement();
+                        }
+                        //End languages img
+                        $this->xml->newEndElement();
+                    }
+                    // End loop image
+                    $this->xml->newEndElement();
+                }
+                // End images
+                $this->xml->newEndElement();
+            }
+            // Start languages loop
+            $this->xml->newStartElement('languages');
+            foreach($value['content'] as $item) {
+                // Start Language
+                $this->xml->newStartElement('language');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'id_lang',
+                        'text' => $item['id_lang'],
+                        'attr' => array(
+                            array(
+                                'name' => 'default',
+                                'content' => $item['default_lang']
+                            )
+                        )
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'iso',
+                        'text' => $item['iso_lang']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'name',
+                        'text' => $item['name_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'url',
+                        'text' => $item['url_p']
+                    )
+                );
+
+                $this->xml->setElement(
+                    array(
+                        'start' => 'resume',
+                        'text' => $item['resume_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'content',
+                        'cData' => $item['content_p']
+                    )
+                );
+                // End language loop
+                $this->xml->newEndElement();
+            }
+            // End languages
+            $this->xml->newEndElement();
+
+            // Start Associated
+            $this->xml->newStartElement('associated');
+            // Loop associated
+            foreach($value['associated'] as $assoKey => $item) {
+                $this->xml->newStartElement('product');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'id',
+                        'text' => $item['id_product']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'price',
+                        'text' => $item['price_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'reference',
+                        'text' => $item['reference_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'width',
+                        'text' => $item['width_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'height',
+                        'text' => $item['height_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'depth',
+                        'text' => $item['depth_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'weight',
+                        'text' => $item['weight_p']
+                    )
+                );
+                // Loop associated image product
+                if(isset($item['images'])) {
+                    $this->xml->newStartElement('images');
+
+                    //foreach ($item['images'] as $k) {
+                        $this->xml->newStartElement('image');
+                        $this->xml->setElement(
+                            array(
+                                'start' => 'name',
+                                'text' => $item['images']['name_img']
+                            )
+                        );
+                        //start src
+                        $this->xml->newStartElement('src');
+                        foreach ($item['images']['imgSrc'] as $images => $imgSrc) {
+                            $this->xml->setElement(
+                                array(
+                                    'start' => $images,
+                                    'attrNS' => array(
+                                        array(
+                                            'prefix' => 'xlink',
+                                            'name' => 'href',
+                                            'uri' => $this->url . $imgSrc
+                                        )
+                                    )
+                                )
+                            );
+                        }
+                        //End src
+                        $this->xml->newEndElement();
+                        if($item['images']['content']!= null) {
+                            // Start languages loop
+                            $this->xml->newStartElement('languages');
+                            foreach ($item['images']['content'] as $imgData) {
+                                // Start Language
+                                $this->xml->newStartElement('language');
+                                $this->xml->setElement(
+                                    array(
+                                        'start' => 'id_lang',
+                                        'text' => $imgData['id_lang']
+                                    )
+                                );
+                                $this->xml->setElement(
+                                    array(
+                                        'start' => 'iso',
+                                        'text' => $imgData['iso_lang']
+                                    )
+                                );
+                                $this->xml->setElement(
+                                    array(
+                                        'start' => 'alt',
+                                        'text' => $imgData['alt_img']
+                                    )
+                                );
+                                $this->xml->setElement(
+                                    array(
+                                        'start' => 'title',
+                                        'text' => $imgData['title_img']
+                                    )
+                                );
+                                //End language img
+                                $this->xml->newEndElement();
+                            }
+                            //End languages img
+                            $this->xml->newEndElement();
+                        }
+                        // End loop image
+                        $this->xml->newEndElement();
+                    //}
+                    // End images
+                    $this->xml->newEndElement();
+                }
+            }
+            // End Associated
+            $this->xml->newEndElement();
+            // End page
+            $this->xml->newEndElement();
+        }
+        $this->xml->newEndElement();
+        $this->xml->output();
+    }
+    //########## REQUEST POST, PUT, DELETE
+
+    /**
+     * @param bool $debug
+     * @return mixed|SimpleXMLElement
+     */
+    public function parse($debug = false){
+        return $this->ws->setParseData($debug);
+    }
+
+    /**
+     * @todo Fonction a déplacer (Cette méthode ne fonctionne pas correctement)
+     * @param $xmlObject
+     * @param array $out
+     * @return array
+     */
+    public function xml2array ( $xmlObject, $out = array () )
+    {
+        foreach ( (array) $xmlObject as $index => $node )
+            $out[$index] = ( is_object ( $node ) ) ? $this->xml2array ( $node ) : $node;
+
+        return $out;
+    }
+
+    /**
+     * Mise a jour des données
+     * @param $operation
+     * @param $arrData
+     */
+    private function getBuildSave($operation,$arrData)
+    {
+        switch($operation['type']){
+            case 'home':
+                $fetchRootData = $this->DBHome->fetchData(array('context'=>'one','type'=>'root'));
+                if($fetchRootData != null){
+                    $id_page = $fetchRootData['id_page'];
+                }else{
+                    parent::insert(array('type'=>'newHome'));
+                    $newData = $this->DBHome->fetchData(array('context'=>'one','type'=>'root'));
+                    $id_page = $newData['id_page'];
+                }
+
+                if($id_page) {
+                    foreach ($arrData['language'] as $lang => $content) {
+                        $content['published'] = (!isset($content['published']) ? 0 : 1);
+                        if ($this->DBHome->fetchData(array('context' => 'one', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $content['id_lang'])) != null) {
+                            $this->DBHome->update(array('type' => 'content'), array(
+                                    'title_page'        => $content['name'],
+                                    'content_page'      => $content['content'],
+                                    'seo_title_page'    => $content['seo']['title'],
+                                    'seo_desc_page'     => $content['seo']['description'],
+                                    'published'         => $content['published'],
+                                    'id_page'           => $id_page,
+                                    'id_lang'           => $content['id_lang']
+                                )
+                            );
+                        } else {
+                            $this->DBHome->insert(array('type' => 'newContent'), array(
+                                    'title_page'        => $content['name'],
+                                    'content_page'      => $content['content'],
+                                    'seo_title_page'    => $content['seo']['title'],
+                                    'seo_desc_page'     => $content['seo']['description'],
+                                    'published'         => $content['published'],
+                                    'id_page'           => $id_page,
+                                    'id_lang'           => $content['id_lang']
+                                )
+                            );
+                        }
+                    }
+                    $this->header->set_json_headers();
+                    $this->message->json_post_response(true, 'update', $id_page);
+                }
+                break;
+        }
+    }
+    /**
+     * Set parse data from XML OR JSON
+     * @param $operations
+     * @return array
+     * @throws Exception
+     */
+    private function getBuildParse($operations){
+        try {
+            $getContentType = $this->ws->getContentType();
+            //$this->ws->setHeaderType();
+            switch ($operations['type']) {
+                case 'home':
+                    /*if ($operations['scrud'] === 'create') {
+
+                    }*/
+                    if($this->ws->setMethod() === 'PUT'){
+                        if($getContentType === 'xml') {
+                            $arrData = json_decode(json_encode($this->parse()), TRUE);
+                            //
+                            //$arrData = $this->xml2array($this->parse());
+                            //print_r($arrData);
+                            /*print $arrData['parent'] . '<br />';
+                            foreach ($arrData['language'] as $key => $value) {
+                                print $value['id_lang'] . '<br />';
+                                print $value['name'];
+                            }*/
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }
+                    elseif($this->ws->setMethod() === 'POST'){
+                        if($getContentType === 'xml'){
+                            //print 'je suis xml';
+                            //$this->parse();
+                            //print $this->parse()->parent;
+                            /*oreach($this->parse()->languages->language as $key){
+                                $dta[]= $key->id_lang.'<br />';
+                            }*/
+                            /*foreach($this->parse()->languages->language as $key => $arr) {
+                                foreach($arr as $k => $v) {
+                                    $array[$key][$k] = $v;
+                                }
+                            }
+
+                            print_r($array);*/
+                            $arrData = json_decode(json_encode($this->parse()), TRUE);
+                            //
+                            //$arrData = $this->xml2array($this->parse());
+                            //print_r($arrData);
+                            /*print $arrData['parent'].'<br />';
+                            foreach($arrData['language'] as $key => $value){
+                                print $value['id_lang'].'<br />';
+                                print $value['name'];
+                            }*/
+                            $this->getBuildSave($operations,$arrData);
+                            //$this->header->set_json_headers();
+                            //print json_encode($arrData);
+                            //print '{"statut":'.json_encode(true).',"notify":'.json_encode("add").'}';
+
+
+                        }elseif($getContentType === 'json'){
+                            /*print json_encode(
+                                array('parent'=>2,
+                                    'language'=>
+                                        array(
+                                            0   =>  array('id_lang'=>6),
+                                            1  =>  array('id_lang'=>2)
+                                        )
+                                    )
+                            );*/
+                            //print_r($this->xml2array($this->parse()));
+                            //print 'POST';
+                            //{"parent":2,"languages":{"language":[{"id_lang":6},{"id_lang":2}]}}
+                            //{"parent":2,"language":[{"id_lang":6},{"id_lang":2}]}
+                            $arrData = json_decode(json_encode($this->parse()), TRUE);
+                            /*print_r($arrData);
+                            foreach($arrData['language'] as $key => $value){
+                                print $value['id_lang'];
+                            }*/
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }
+                    elseif($this->ws->setMethod() === 'DELETE'){
+                        print $getContentType;
+                        print 'DELETE';
+                        /*print json_encode(
+                            array('parent'=>2,
+                                'languages'=>
+                                    array(
+                                        'language'=>
+                                            array(
+                                                0   =>  array('id_lang'=>6),
+                                                1  =>  array('id_lang'=>2)
+                                            )
+                                    )
+                            )
+                        );*/
+
+                    }
+                    elseif($this->ws->setMethod() === 'GET'){
+                        //print $getContentType;
+                        $this->xml->getXmlHeader();
+                        $this->getBuildHomeData();
+
+                    }
+                    break;
+
+            }
+        }catch (Exception $e){
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
+        }
     }
     /**
      *
      */
     public function run(){
-        if(isset($this->collection)){
-            switch($this->collection){
-                case 'home':
-                    $this->xml->getXmlHeader();
-                    $this->getBuildHomeData();
+        if ($this->ws->authorization($this->setWsAuthKey())) {
+            if (isset($this->collection)) {
+                switch ($this->collection) {
+                    case 'home':
+                        $this->getBuildParse(array('type' => 'home'));
+                        break;
+                    case 'pages':
+                        if (isset($this->id)) {
+                            $this->xml->getXmlHeader();
+                            $this->getBuildPagesData();
 
-                    break;
-                case 'pages':
-                    if(isset($this->id)){
-                        $this->xml->getXmlHeader();
-                        $this->getBuildPagesData();
-
-                    }else{
-                        $this->xml->getXmlHeader();
-                        $this->getBuildPagesItems();
-                    }
-                    break;
-                case 'news':
-                    if(isset($this->id)){
-
-                        $this->xml->getXmlHeader();
-                        $this->getBuildNewsData();
-
-                    }else{
-                        $this->xml->getXmlHeader();
-                        $this->getBuildNewsItems();
-
-                    }
-                    break;
-                case 'catalog':
-                    if(isset($this->retrieve)){
-
-                        if($this->retrieve == 'category'){
-                            if(isset($this->id)){
-
-                                /*print 'test collection : ' . $this->collection.'<br />';
-                                print 'retrieve : ' . $this->retrieve.'<br />';
-                                print 'id : ' . $this->id;
-                                print_r($this->filter);*/
-                                $this->xml->getXmlHeader();
-                                $this->getBuildCategoryData();
-
-                            }else{
-
-                                /*print 'test collection : ' . $this->collection.'<br />';
-                                print 'retrieve : ' . $this->retrieve;*/
-                                $this->xml->getXmlHeader();
-                                $this->getBuildCategoryItems();
-
-                            }
-                        }elseif($this->retrieve == 'product'){
-                            if(isset($this->id)){
-
-                                /*print 'test collection : ' . $this->collection.'<br />';
-                                print 'retrieve : ' . $this->retrieve.'<br />';
-                                print 'id : ' . $this->id;
-                                print_r($this->filter);*/
-                                $this->getBuildProductData();
-
-                            }else{
-
-                                /*print 'test collection : ' . $this->collection.'<br />';
-                                print 'retrieve : ' . $this->retrieve;*/
-                                $this->getBuildProductItems();
-
-                            }
-                        }else{
-                            return;
+                        } else {
+                            $this->xml->getXmlHeader();
+                            $this->getBuildPagesItems();
                         }
-                    }
+                        break;
+                    case 'news':
+                        if (isset($this->id)) {
+
+                            $this->xml->getXmlHeader();
+                            $this->getBuildNewsData();
+
+                        } else {
+                            $this->xml->getXmlHeader();
+                            $this->getBuildNewsItems();
+
+                        }
+                        break;
+                    case 'catalog':
+                        if (isset($this->retrieve)) {
+
+                            if ($this->retrieve == 'category') {
+                                if (isset($this->id)) {
+
+                                    /*print 'test collection : ' . $this->collection.'<br />';
+                                    print 'retrieve : ' . $this->retrieve.'<br />';
+                                    print 'id : ' . $this->id;
+                                    print_r($this->filter);*/
+                                    $this->xml->getXmlHeader();
+                                    $this->getBuildCategoryData();
+
+                                } else {
+
+                                    /*print 'test collection : ' . $this->collection.'<br />';
+                                    print 'retrieve : ' . $this->retrieve;*/
+                                    $this->xml->getXmlHeader();
+                                    $this->getBuildCategoryItems();
+
+                                }
+                            } elseif ($this->retrieve == 'product') {
+                                if (isset($this->id)) {
+
+                                    /*print 'test collection : ' . $this->collection.'<br />';
+                                    print 'retrieve : ' . $this->retrieve.'<br />';
+                                    print 'id : ' . $this->id;
+                                    print_r($this->filter);*/
+                                    $this->xml->getXmlHeader();
+                                    $this->getBuildProductData();
+
+                                } else {
+
+                                    /*print 'test collection : ' . $this->collection.'<br />';
+                                    print 'retrieve : ' . $this->retrieve;*/
+                                    $this->xml->getXmlHeader();
+                                    $this->getBuildProductItems();
+
+                                }
+                            } else {
+                                return;
+                            }
+                        }
+                }
+            } else {
+                $this->xml->getXmlHeader();
+                $this->getBuildRootData();
             }
-        }else{
-            $this->xml->getXmlHeader();
-            $this->getBuildRootData();
         }
     }
 }

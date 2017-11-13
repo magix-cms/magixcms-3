@@ -74,6 +74,11 @@ class component_httpUtils_header{
                     $this->header->getStatus(403);
                     $status = $this->header->setStatusCode(403,$message);
                     break;
+                case 401:
+                    $message = $this->template->getConfigVars('title_status_401');
+                    $this->header->getStatus(401);
+                    $status = $this->header->setStatusCode(401,$message);
+                    break;
             }
             return $status;
         }
@@ -94,6 +99,10 @@ class component_httpUtils_header{
                 case 403:
                     $message = $this->template->getConfigVars('txt_status_403');
                     $status = $this->header->setStatusCode(403,$message);
+                    break;
+                case 401:
+                    $message = $this->template->getConfigVars('txt_status_401');
+                    $status = $this->header->setStatusCode(401,$message);
                     break;
             }
             return $status;
@@ -122,6 +131,7 @@ class component_httpUtils_header{
 		$detect = new Mobile_Detect;
 		$viewport = 'desktop';
 		$touch = false;
+		$mOS = false;
 		if( $detect->isMobile() ){
 			$viewport = 'mobile';
 			$touch = true;
@@ -130,7 +140,13 @@ class component_httpUtils_header{
 			$viewport = 'tablet';
 			$touch = true;
 		}
+		if( $detect->isiOS() ){
+			$mOS = 'IOS';
+		}elseif( $detect->isAndroidOS() ){
+			$mOS = 'Android';
+		}
 		$this->template->assign('viewport', $viewport);
 		$this->template->assign('touch', $touch);
+		$this->template->assign('mOS', $mOS);
     }
 }

@@ -8,6 +8,7 @@ class frontend_model_webservice{
     public $contentTypeCollection = array(
         'application/json'      =>'json',
         'text/xml'              =>'xml',
+        'application/xml'       =>'xml',
         'multipart/form-data'   =>'files'
     );
 
@@ -43,8 +44,8 @@ class frontend_model_webservice{
 
         if (isset($_SERVER['PHP_AUTH_USER']) AND !empty($_SERVER['PHP_AUTH_USER'])) {
             $key = base64_encode($_SERVER['PHP_AUTH_USER']);
-        } elseif (isset($_GET['ws_key'])) {
-            $key = base64_encode($_GET['ws_key']);
+        } elseif (isset($_GET['key_ws'])) {
+            $key = base64_encode($_GET['key_ws']);
         } else {
             header($_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized');
             header('WWW-Authenticate: Basic realm="Welcome to Magixcms Webservice, please enter the authentication key as the login. No password required."');
@@ -142,7 +143,7 @@ class frontend_model_webservice{
      * @param bool $debug
      * @return mixed|SimpleXMLElement
      */
-    public function getResultParse($debug = false){
+    public function setParseData($debug = false){
         $parse = $this->setParseMethod(array(
             'method'    =>  $this->getContentType(),
             'data'      =>  $this->setStreamData()

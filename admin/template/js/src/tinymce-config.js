@@ -29,6 +29,7 @@
         menubar: false,
         toolbar_items_size: 'small',
         image_advtab: true,
+        filemanager_crossdomain: true,
         external_filemanager_path: '/'+baseadmin+'/template/js/vendor/filemanager/',
         filemanager_title: "Responsive Filemanager",
         external_plugins: {

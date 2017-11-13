@@ -36,6 +36,7 @@
     {capture name="picturefill"}/min/?f=skin/{template}/js/vendor/picturefill.min.js{/capture}
     {strip}{script src=$smarty.capture.picturefill concat=$concat type="javascript" load="async"}{/strip}
     {block name="styleSheet"}{/block}
+    {google_tools tools='analytics'}
 </head>
 <body id="{block name='body:id'}layout{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
     {include file="section/brick/cookie-consent.tpl"}

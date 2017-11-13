@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <pages>
+        <page>
+            <id>4</id>
+            <price>500.00000</price>
+            <reference></reference>
+            <width></width>
+            <height></height>
+            <depth></depth>
+            <weight></weight>
+            <images>
+                <image>
+                    <id>3</id>
+                    <name>d402baba.png</name>
+                    <default>1</default>
+                    <src>
+                        <original xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/d402baba.png"/>
+                        <small xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/s_d402baba.png"/>
+                        <medium xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/m_d402baba.png"/>
+                        <large xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/l_d402baba.png"/>
+                    </src>
+                    <languages>
+                        <language>
+                            <id_lang>2</id_lang>
+                            <alt></alt>
+                            <title></title>
+                        </language>
+                        <language>
+                            <id_lang>6</id_lang>
+                            <alt>mon attribut de test</alt>
+                            <title>mon title de test</title>
+                        </language>
+                    </languages>
+                </image>
+                <image>
+                    <id>134</id>
+                    <name>1dd1c447.jpg</name>
+                    <default>0</default>
+                    <imgsrc>
+                        <original xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/1dd1c447.png"/>
+                        <small xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/s_1dd1c447.png"/>
+                        <medium xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/m_1dd1c447.png"/>
+                        <large xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/l_1dd1c447.png"/>
+                    </imgsrc>
+                </image>
+            </images>
+            <languages>
+                <language>
+                    <id_lang>2</id_lang>
+                    <url>test-product</url>
+                    <name>test product</name>
+                    <resume></resume>
+                    <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                    <published_pages>0</published_pages>
+                </language>
+                <language>
+                    <id_lang>6</id_lang>
+                    <url>test-produit</url>
+                    <name>test produit</name>
+                    <resume></resume>
+                    <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                    <published_pages>1</published_pages>
+                </language>
+            </languages>
+            <associated>
+                <product>
+                    <id>4</id>
+                    <price>500.00000</price>
+                    <reference></reference>
+                    <width></width>
+                    <height></height>
+                    <depth></depth>
+                    <weight></weight>
+                    <images>
+                        <image>
+                            <id>3</id>
+                            <name>d402baba.png</name>
+                            <src>
+                                <original xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/d402baba.png"/>
+                                <small xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/s_d402baba.png"/>
+                                <medium xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/m_d402baba.png"/>
+                                <large xlink:href="http://www.magixcms3.dev/upload/catalog/p/4/l_d402baba.png"/>
+                            </src>
+                            <languages>
+                                <language>
+                                    <id_lang>2</id_lang>
+                                    <alt></alt>
+                                    <title></title>
+                                </language>
+                                <language>
+                                    <id_lang>6</id_lang>
+                                    <alt>mon attribut de test</alt>
+                                    <title>mon title de test</title>
+                                </language>
+                            </languages>
+                        </image>
+                    </images>
+                    <languages>
+                        <language>
+                            <id_lang>2</id_lang>
+                            <url>test-product</url>
+                            <name>test product</name>
+                            <resume></resume>
+                            <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                            <published_pages>0</published_pages>
+                        </language>
+                        <language>
+                            <id_lang>6</id_lang>
+                            <url>test-produit</url>
+                            <name>test produit</name>
+                            <resume></resume>
+                            <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>]]></content>
+                            <published_pages>1</published_pages>
+                        </language>
+                    </languages>
+                </product>
+            </associated>
+        </page>
+    </pages>
+</magixcms>

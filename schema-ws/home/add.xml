@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <language>
+        <id_lang>6</id_lang>
+        <name>ma page</name>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <seo>
+            <title>mon seo title</title>
+            <description>mon seo description</description>
+        </seo>
+        <published_pages>1</published_pages>
+    </language>
+    <language>
+        <id_lang>2</id_lang>
+        <name>My new record</name>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <seo>
+            <title>my test update</title>
+            <description>my test update description</description>
+        </seo>
+        <published_pages>0</published_pages>
+    </language>
+    <language>
+        <id_lang>7</id_lang>
+        <name>canadien</name>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <seo>
+            <title>le test de canadien</title>
+            <description></description>
+        </seo>
+        <published_pages>0</published_pages>
+    </language>
+</magixcms>

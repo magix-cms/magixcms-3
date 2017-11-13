@@ -15,7 +15,7 @@
                 {$debug}
             {/if}
             <div id="logo">
-                <img src="/{baseadmin}/template/img/logo/logo-magix_cms.png" alt="Magix CMS" width="269" height="50">
+                <img src="/{baseadmin}/template/img/logo/logo-magix_cms@229.png" alt="Magix CMS" width="229" height="50">
             </div>
             <div class="flip-container">
                 <div class="flipper">
