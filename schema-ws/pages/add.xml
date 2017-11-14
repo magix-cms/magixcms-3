@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <magixcms>
-    <parent>2</parent>
+    <parent>16</parent>
         <language>
             <id_lang>6</id_lang>
             <name>ma page</name>
@@ -17,7 +17,7 @@
                 <title>mon seo title</title>
                 <description>mon seo description</description>
             </seo>
-            <published_pages>1</published_pages>
+            <published>1</published>
         </language>
         <language>
             <id_lang>2</id_lang>
@@ -35,6 +35,6 @@
                 <title></title>
                 <description></description>
             </seo>
-            <published_pages>0</published_pages>
+            <published>0</published>
         </language>
 </magixcms>

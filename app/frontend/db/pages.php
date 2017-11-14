@@ -63,10 +63,110 @@ class frontend_db_pages
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
 							WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1';
                     $params = $data;
+                }elseif ($config['type'] === 'root') {
+                    //Return current row
+                    $sql = 'SELECT * FROM mc_cms_page ORDER BY id_pages DESC LIMIT 0,1';
+                    //$params = $data;
+                }
+                elseif ($config['type'] === 'content') {
+                    $sql = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
+                    $params = $data;
                 }
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function insert($config,$data = false)
+    {
+        if (is_array($config)) {
+            $sql = '';
+            $params = $data;
+
+            if ($config['type'] === 'page') {
+                $cond = $data['id_parent'] != NULL ? 'IN ('.$data['id_parent'].')' : 'IS NULL';
+                $sql = "INSERT INTO `mc_cms_page`(id_parent,order_pages,date_register) 
+						SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_cms_page WHERE id_parent ".$cond;
+            }
+            elseif ($config['type'] === 'content') {
+                $sql = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
+				  		VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
+            }
+
+            if($sql && $params) component_routing_db::layer()->insert($sql,$params);
+        }
+    }
+
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function update($config,$data = false)
+    {
+        if (is_array($config)) {
+            $sql = '';
+            $params = $data;
+
+            if ($config['type'] === 'page') {
+                $sql = 'UPDATE mc_cms_page 
+							SET 
+								id_parent = :id_parent
+							WHERE id_pages = :id_pages';
+            }
+            elseif ($config['type'] === 'content') {
+                $sql = 'UPDATE mc_cms_page_content 
+						SET 
+							name_pages = :name_pages,
+							url_pages = :url_pages,
+							resume_pages = :resume_pages,
+							content_pages=:content_pages,
+							seo_title_pages=:seo_title_pages,
+							seo_desc_pages=:seo_desc_pages, 
+							published_pages=:published_pages
+                		WHERE id_pages = :id_pages 
+                		AND id_lang = :id_lang';
+            }
+            elseif ($config['type'] === 'img') {
+                $sql = 'UPDATE mc_cms_page 
+						SET img_pages = :img_pages
+                		WHERE id_pages = :id_pages';
+            }
+            elseif ($config['type'] === 'pageActiveMenu') {
+                $query = 'UPDATE mc_cms_page 
+						SET menu_pages = :menu_pages 
+						WHERE id_pages IN ('.$data['id_pages'].')';
+                component_routing_db::layer()->update($query,
+                    array(
+                        ':menu_pages'	=> $data['menu_pages']
+                    )
+                );
+            }
+            elseif ($config['type'] === 'order') {
+                $sql = 'UPDATE mc_cms_page 
+						SET order_pages = :order_pages
+                		WHERE id_pages = :id_pages';
+            }
+
+            if($sql && $params) component_routing_db::layer()->update($sql,$params);
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function delete($config,$data = false)
+    {
+        if (is_array($config)) {
+            if($config['type'] === 'delPages'){
+                $sql = 'DELETE FROM mc_cms_page 
+						WHERE id_pages IN ('.$data['id'].')';
+            }
+
+            if($sql) component_routing_db::layer()->delete($sql,array());
         }
     }
 }

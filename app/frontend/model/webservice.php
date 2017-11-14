@@ -148,6 +148,7 @@ class frontend_model_webservice{
             'method'    =>  $this->getContentType(),
             'data'      =>  $this->setStreamData()
         ));
+
         if (is_object($parse)) {
             if($debug){
                 print $this->getContentType();

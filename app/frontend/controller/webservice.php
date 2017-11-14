@@ -390,7 +390,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 $this->xml->newEndElement();
                 $this->xml->setElement(
                     array(
-                        'start' => 'published_pages',
+                        'start' => 'published',
                         'text' => $item['published_pages']
                     )
                 );
@@ -1413,20 +1413,6 @@ class frontend_controller_webservice extends frontend_db_webservice{
     }
 
     /**
-     * @todo Fonction a déplacer (Cette méthode ne fonctionne pas correctement)
-     * @param $xmlObject
-     * @param array $out
-     * @return array
-     */
-    public function xml2array ( $xmlObject, $out = array () )
-    {
-        foreach ( (array) $xmlObject as $index => $node )
-            $out[$index] = ( is_object ( $node ) ) ? $this->xml2array ( $node ) : $node;
-
-        return $out;
-    }
-
-    /**
      * Mise a jour des données
      * @param $operation
      * @param $arrData
@@ -1445,34 +1431,84 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 }
 
                 if($id_page) {
+                    //print_r($arrData['language']);
                     foreach ($arrData['language'] as $lang => $content) {
                         $content['published'] = (!isset($content['published']) ? 0 : 1);
+                        $data = array(
+                            'title_page'        => $content['name'],
+                            'content_page'      => $content['content'],
+                            'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                            'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                            'published'         => $content['published'],
+                            'id_page'           => $id_page,
+                            'id_lang'           => $content['id_lang']
+                        );
+
                         if ($this->DBHome->fetchData(array('context' => 'one', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $content['id_lang'])) != null) {
-                            $this->DBHome->update(array('type' => 'content'), array(
-                                    'title_page'        => $content['name'],
-                                    'content_page'      => $content['content'],
-                                    'seo_title_page'    => $content['seo']['title'],
-                                    'seo_desc_page'     => $content['seo']['description'],
-                                    'published'         => $content['published'],
-                                    'id_page'           => $id_page,
-                                    'id_lang'           => $content['id_lang']
-                                )
-                            );
+                            $this->DBHome->update(array('type' => 'content'), $data);
                         } else {
-                            $this->DBHome->insert(array('type' => 'newContent'), array(
-                                    'title_page'        => $content['name'],
-                                    'content_page'      => $content['content'],
-                                    'seo_title_page'    => $content['seo']['title'],
-                                    'seo_desc_page'     => $content['seo']['description'],
-                                    'published'         => $content['published'],
-                                    'id_page'           => $id_page,
-                                    'id_lang'           => $content['id_lang']
+                            $this->DBHome->insert(array('type' => 'newContent'), $data);
+                        }
+                    }
+                    //$this->header->set_json_headers();
+                    //$this->message->json_post_response(true, 'update', $id_page);
+                }
+                break;
+            case 'pages':
+                if (isset($this->id)) {
+                    // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
+                    $fetchRootData = $this->DBPages->fetchData(array('context'=>'one','type'=>'root'));
+                    if($fetchRootData != null){
+                        $id_page = $fetchRootData['id_pages'];
+                    }else{
+                        $this->DBPages->insert(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent']));
+                        $newData = $this->DBPages->fetchData(array('context'=>'one','type'=>'root'));
+                        $id_page = $newData['id_pages'];
+                    }
+                }else{
+                    $this->DBPages->insert(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent']));
+                    $newData = $this->DBPages->fetchData(array('context'=>'one','type'=>'root'));
+                    $id_page = $newData['id_pages'];
+                }
+
+
+                if($id_page) {
+                    //print_r($arrData);
+                    foreach ($arrData['language'] as $lang => $content) {
+                        //print_r($content);
+                        $content['published'] = (!isset($content['published']) ? 0 : 1);
+                        if (empty($content['url'])) {
+                            $content['url'] = http_url::clean($content['name'],
+                                array(
+                                    'dot' => false,
+                                    'ampersand' => 'strict',
+                                    'cspec' => '', 'rspec' => ''
                                 )
                             );
                         }
+                        $data = array(
+                            'name_pages'        => !is_array($content['name']) ? $content['name'] : '',
+                            'url_pages'         => !is_array($content['url']) ? $content['url'] : '',
+                            'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : '',
+                            'content_pages'     => !is_array($content['content']) ? $content['content'] : '',
+                            'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                            'seo_desc_pages'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                            'published_pages'   => $content['published'],
+                            'id_pages'          => $id_page,
+                            'id_lang'           => $content['id_lang']
+                        );
+
+                        if ($this->DBPages->fetchData(array('context' => 'one', 'type' => 'content'), array('id_pages' => $id_page, 'id_lang' => $content['id_lang'])) != null) {
+
+                            $this->DBPages->update(array('type' => 'content'), $data);
+
+                        } else {
+
+                            $this->DBPages->insert(array('type' => 'content'), $data);
+                        }
                     }
-                    $this->header->set_json_headers();
-                    $this->message->json_post_response(true, 'update', $id_page);
+                    //$this->header->set_json_headers();
+                    //$this->message->json_post_response(true, 'update', $id_page);
                 }
                 break;
         }
@@ -1494,10 +1530,9 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }*/
                     if($this->ws->setMethod() === 'PUT'){
                         if($getContentType === 'xml') {
-                            $arrData = json_decode(json_encode($this->parse()), TRUE);
+                            $arrData = json_decode(json_encode($this->parse()), true);
                             //
                             //$arrData = $this->xml2array($this->parse());
-                            //print_r($arrData);
                             /*print $arrData['parent'] . '<br />';
                             foreach ($arrData['language'] as $key => $value) {
                                 print $value['id_lang'] . '<br />';
@@ -1521,7 +1556,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             }
 
                             print_r($array);*/
-                            $arrData = json_decode(json_encode($this->parse()), TRUE);
+                            $arrData = json_decode(json_encode($this->parse()), true);
                             //
                             //$arrData = $this->xml2array($this->parse());
                             //print_r($arrData);
@@ -1550,7 +1585,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             //print 'POST';
                             //{"parent":2,"languages":{"language":[{"id_lang":6},{"id_lang":2}]}}
                             //{"parent":2,"language":[{"id_lang":6},{"id_lang":2}]}
-                            $arrData = json_decode(json_encode($this->parse()), TRUE);
+                            $arrData = json_decode(json_encode($this->parse()), true);
                             /*print_r($arrData);
                             foreach($arrData['language'] as $key => $value){
                                 print $value['id_lang'];
@@ -1582,6 +1617,84 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                     }
                     break;
+                case 'pages':
+                    /*if ($operations['scrud'] === 'create') {
+
+                    }*/
+                    if($this->ws->setMethod() === 'PUT'){
+                        if($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }
+                    elseif($this->ws->setMethod() === 'POST'){
+                        if($getContentType === 'xml'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+
+
+                        }elseif($getContentType === 'json'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }
+                    elseif($this->ws->setMethod() === 'DELETE'){
+                        //print_r($this->parse());
+
+                        if($getContentType === 'xml') {
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            //print_r($arrData);
+                            //print_r(implode(",",$arrData['id']));
+                            if($arrData['id'] != null){
+                                $this->DBPages->delete(
+                                    array(
+                                        'type'      =>    'delPages'
+                                    ),
+                                    array('id'=>implode(",",$arrData['id'])
+                                    )
+                                );
+                            }
+
+                            /*print json_encode(
+                                array('id'=>
+                                    array(
+                                        0   =>  53,
+                                        1  =>  54
+                                    )
+                                )
+                            );*/
+                        }elseif($getContentType === 'json'){
+                            //{"id":[53,54]}
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            if($arrData['id'] != null){
+                                $del = implode(",",$arrData['id']);
+                                $this->DBPages->delete(
+                                    array(
+                                        'type'      =>    'delPages'
+                                    ),
+                                    array('id'=>$del)
+                                );
+                            }
+                        }
+                        $this->header->set_json_headers();
+                        $this->message->json_post_response(true,'delete',$del);
+
+                    }
+                    elseif($this->ws->setMethod() === 'GET'){
+                        if (isset($this->id)) {
+                            $this->xml->getXmlHeader();
+                            $this->getBuildPagesData();
+
+                        } else {
+                            $this->xml->getXmlHeader();
+                            $this->getBuildPagesItems();
+                        }
+
+                    }
+                    break;
 
             }
         }catch (Exception $e){
@@ -1600,14 +1713,15 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         $this->getBuildParse(array('type' => 'home'));
                         break;
                     case 'pages':
-                        if (isset($this->id)) {
+                        /*if (isset($this->id)) {
                             $this->xml->getXmlHeader();
                             $this->getBuildPagesData();
 
                         } else {
                             $this->xml->getXmlHeader();
                             $this->getBuildPagesItems();
-                        }
+                        }*/
+                        $this->getBuildParse(array('type' => 'pages'));
                         break;
                     case 'news':
                         if (isset($this->id)) {
