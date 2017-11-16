@@ -55,7 +55,7 @@ class filesystem_makefile{
      * @copyright symfony 2
      * 
      */
-    public function mkdir($dirs, $mode = 0755){
+    public function mkdir($dirs, $mode = 0777){
         foreach ($this->toIterator($dirs) as $dir) {
             if (is_dir($dir)) {
                 continue;

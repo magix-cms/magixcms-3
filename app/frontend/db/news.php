@@ -93,8 +93,152 @@ class frontend_db_news
 					$sql = "SELECT id_tag as id, name_tag as name FROM mc_news_tag WHERE id_tag = :id";
 					$params = $data;
 				}
+                // Web Service
+                elseif ($config['type'] === 'root') {
+                    //Return current row
+                    $sql = 'SELECT * FROM mc_news ORDER BY id_news DESC LIMIT 0,1';
+                    //$params = $data;
+                }
+                elseif ($config['type'] === 'image') {
+                    //Return image
+                    $sql = 'SELECT img_news FROM mc_news WHERE `id_news` = :id_news';
+                    $params = $data;
+                }
+                elseif ($config['type'] === 'content') {
+
+                    $sql = 'SELECT * FROM `mc_news_content` WHERE `id_news` = :id_news AND `id_lang` = :id_lang';
+                    $params = $data;
+
+                }
+                elseif ($config['type'] === 'tag_ws') {
+                    $sql = 'SELECT tag.*, (SELECT id_rel FROM mc_news_tag_rel WHERE id_news = :id_news AND id_tag = tag.id_tag) AS rel_tag
+                        FROM mc_news_tag AS tag
+                        WHERE tag.id_lang = :id_lang AND tag.name_tag LIKE :name_tag';
+                    $params = $data;
+                }
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+            }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function insert($config,$data = false)
+    {
+        if (is_array($config)) {
+            if ($config['type'] === 'page') {
+
+                $sql = 'INSERT INTO `mc_news`(date_register) VALUE (NOW())';
+                component_routing_db::layer()->insert($sql,array());
+
+            }elseif ($config['type'] === 'content') {
+
+                $sql = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,date_publish,published_news) 
+				  VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:date_publish,:published_news)';
+
+                component_routing_db::layer()->insert($sql,array(
+                    ':id_lang'	       => $data['id_lang'],
+                    ':id_news'	       => $data['id_news'],
+                    ':name_news'       => $data['name_news'],
+                    ':url_news'        => $data['url_news'],
+                    ':resume_news'     => $data['resume_news'],
+                    ':content_news'    => $data['content_news'],
+                    ':date_publish'    => $data['date_publish'],
+                    ':published_news'  => $data['published_news']
+                ));
+
+            }elseif ($config['type'] === 'newTagComb') {
+                $queries = array(
+                    array('request'=>'INSERT INTO mc_news_tag (id_lang,name_tag) VALUE (:id_lang,:name_tag)','params'=>array(':id_lang' => $data['id_lang'],':name_tag' => $data['name_tag'])),
+                    array('request'=>'SET @tag_id = LAST_INSERT_ID()','params'=>array()),
+                    array('request'=>'SET @news_id = :id_news','params'=>array(':id_news'=>$data['id_news'])),
+                    array('request'=>'INSERT INTO mc_news_tag_rel (id_news,id_tag) VALUE (@news_id,@tag_id)','params'=>array())
+                );
+
+                component_routing_db::layer()->transaction($queries);
+
+            }elseif ($config['type'] === 'newTag') {
+
+                $sql = 'INSERT INTO mc_news_tag (id_lang,name_tag) VALUES (:id_lang,:name_tag)';
+                component_routing_db::layer()->insert($sql,
+                    array(
+                        ':id_lang'	=> $data['id_lang'],
+                        ':name_tag'	=> $data['name_tag']
+                    )
+                );
+
+            }elseif ($config['type'] === 'newTagRel') {
+
+                $sql = 'INSERT INTO mc_news_tag_rel (id_news,id_tag) VALUES (:id_news,:id_tag)';
+                component_routing_db::layer()->insert($sql,
+                    array(
+                        ':id_news'	=> $data['id_news'],
+                        ':id_tag'	=> $data['id_tag']
+                    )
+                );
+
+            }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function update($config,$data = false)
+    {
+        if (is_array($config)) {
+            if ($config['type'] === 'content') {
+                $sql = 'UPDATE mc_news_content SET name_news = :name_news, url_news = :url_news, resume_news = :resume_news, content_news=:content_news, date_publish=:date_publish, 
+                published_news=:published_news
+                WHERE id_news = :id_news AND id_lang = :id_lang';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_lang'	       => $data['id_lang'],
+                        ':id_news'	       => $data['id_news'],
+                        ':name_news'       => $data['name_news'],
+                        ':url_news'        => $data['url_news'],
+                        ':resume_news'     => $data['resume_news'],
+                        ':content_news'    => $data['content_news'],
+                        ':date_publish'    => $data['date_publish'],
+                        ':published_news'  => $data['published_news']
+                    )
+                );
+            }elseif ($config['type'] === 'img') {
+                $sql = 'UPDATE mc_news SET img_news = :img_news
+                WHERE id_news = :id_news';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_news'	      => $data['id_news'],
+                        ':img_news'       => $data['img_news']
+                    )
+                );
+            }elseif ($config['type'] === 'order') {
+                $sql = 'UPDATE mc_news SET order_news = :order_news
+                WHERE id_news = :id_news';
+                component_routing_db::layer()->update($sql,
+                    array(
+                        ':id_news'	    => $data['id_news'],
+                        ':order_news'	=> $data['order_news']
+                    )
+                );
+            }
+        }
+    }
+    /**
+     * @param $config
+     * @param bool $data
+     */
+    public function delete($config,$data = false)
+    {
+        if (is_array($config)) {
+            if($config['type'] === 'delPages'){
+                $sql = 'DELETE FROM mc_news WHERE id_news IN ('.$data['id'].')';
+                component_routing_db::layer()->delete($sql,array());
+            } elseif($config['type'] === 'tagRel'){
+                $sql = 'DELETE FROM mc_news_tag_rel WHERE id_rel = :id_rel';
+                component_routing_db::layer()->delete($sql,array(':id_rel'=>$data['id_rel']));
             }
         }
     }

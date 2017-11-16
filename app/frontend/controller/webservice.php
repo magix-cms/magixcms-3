@@ -20,6 +20,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->header = new http_header();
         $this->data = new frontend_model_data($this);
         //$this->getlang = $this->template->currentLanguage();
+        $this->imagesComponent = new component_files_images($this->template);
         $this->buildCollection = new frontend_model_collection($this->template);
         $this->DBHome = new frontend_db_home();
         $this->DBPages = new frontend_db_pages();
@@ -1477,7 +1478,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     foreach ($arrData['language'] as $lang => $content) {
                         //print_r($content);
                         $content['published'] = (!isset($content['published']) ? 0 : 1);
-                        if (empty($content['url'])) {
+                        if (is_array($content['url'])) {
                             $content['url'] = http_url::clean($content['name'],
                                 array(
                                     'dot' => false,
@@ -1488,7 +1489,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                         $data = array(
                             'name_pages'        => !is_array($content['name']) ? $content['name'] : '',
-                            'url_pages'         => !is_array($content['url']) ? $content['url'] : '',
+                            'url_pages'         => $content['url'],
                             'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : '',
                             'content_pages'     => !is_array($content['content']) ? $content['content'] : '',
                             'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
@@ -1511,6 +1512,280 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     //$this->message->json_post_response(true, 'update', $id_page);
                 }
                 break;
+            case 'news':
+                if (isset($this->id)) {
+                    // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
+                    $fetchRootData = $this->DBNews->fetchData(array('context'=>'one','type'=>'root'));
+                    if($fetchRootData != null){
+                        $id_news = $fetchRootData['id_news'];
+                    }else{
+                        $this->DBNews->insert(array('type'=>'page'));
+                        $newData = $this->DBNews->fetchData(array('context'=>'one','type'=>'root'));
+                        $id_news = $newData['id_news'];
+                    }
+                }else{
+                    $this->DBNews->insert(array('type'=>'page'));
+                    $newData = $this->DBNews->fetchData(array('context'=>'one','type'=>'root'));
+                    $id_news = $newData['id_news'];
+                }
+                if($id_news) {
+                    //print_r($arrData);
+                    foreach ($arrData['language'] as $lang => $content) {
+                        $content['published'] = (!isset($content['published']) ? 0 : 1);
+                        if (is_array($content['url'])) {
+                            $content['url'] = http_url::clean($content['name'],
+                                array(
+                                    'dot' => false,
+                                    'ampersand' => 'strict',
+                                    'cspec' => '', 'rspec' => ''
+                                )
+                            );
+                        }
+                        $dateFormat = new date_dateformat();
+                        $datePublish = !empty($content['date']) ? $dateFormat->SQLDateTime($content['date']) : $dateFormat->SQLDateTime($dateFormat->dateToDefaultFormat());
+                        $data = array(
+                            'id_lang'           => $content['id_lang'],
+                            'id_news'           => $id_news,
+                            'name_news'         => !is_array($content['name']) ? $content['name'] : '',
+                            'url_news'          => $content['url'],
+                            'content_news'      => !is_array($content['content']) ? $content['content'] : '',
+                            'resume_news'       => !is_array($content['resume']) ? $content['resume'] : '',
+                            'date_publish'      => $datePublish,
+                            'published_news'    => $content['published']
+                        );
+                        if ($this->DBNews->fetchData(array('context' => 'one', 'type' => 'content'), array('id_news' => $id_news, 'id_lang' => $content['id_lang'])) != null) {
+
+                            $this->DBNews->update(array('type' => 'content'), $data);
+
+                        } else {
+
+                            $this->DBNews->insert(array('type' => 'content'), $data);
+                        }
+                        // Add Tags
+                        if(!empty($content['tag']) && isset($content['tag'])) {
+                            //$tagNews = explode(',', $content['tag_news']);
+                            //if ($tagNews != null) {
+                            if(is_array($content['tag'])){
+                                foreach ($content['tag'] as $key => $value) {
+                                    $setTags = $this->DBNews->fetchData(
+                                        array('context' => 'one', 'type' => 'tag'),
+                                        array(':id_news' => $id_news, ':id_lang' => $content['id_lang'], ':name_tag' => $value)
+                                    );
+                                    if ($setTags['id_tag'] != null) {
+                                        if ($setTags['rel_tag'] == null) {
+                                            $this->DBNews->insert(
+                                                array(
+                                                    'type' => 'newTagRel'
+                                                ),
+                                                array(
+                                                    'id_news'=> $id_news,
+                                                    'id_tag' => $setTags['id_tag']
+                                                )
+                                            );
+                                        }
+                                    } else {
+                                        $this->DBNews->insert(
+                                            array(
+                                                'type' => 'newTagComb'
+                                            ),
+                                            array(
+                                                'id_news' => $id_news,
+                                                'id_lang' => $content['id_lang'],
+                                                'name_tag'=> $value
+                                            )
+                                        );
+                                    }
+                                }
+                            }else{
+                                $setTags = $this->DBNews->fetchData(
+                                    array('context' => 'one', 'type' => 'tag'),
+                                    array(':id_news' => $id_news, ':id_lang' => $content['id_lang'], ':name_tag' => $content['tag'])
+                                );
+                                if ($setTags['id_tag'] != null) {
+                                    if ($setTags['rel_tag'] == null) {
+                                        $this->DBNews->insert(
+                                            array(
+                                                'type' => 'newTagRel'
+                                            ),
+                                            array(
+                                                'id_news'=> $id_news,
+                                                'id_tag' => $setTags['id_tag']
+                                            )
+                                        );
+                                    }
+                                } else {
+                                    $this->DBNews->insert(
+                                        array(
+                                            'type' => 'newTagComb'
+                                        ),
+                                        array(
+                                            'id_news' => $id_news,
+                                            'id_lang' => $content['id_lang'],
+                                            'name_tag'=> $content['tag']
+                                        )
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
+     * @param $operation
+     * @param $arrData
+     */
+    private function getBuildRemove($operation,$arrData){
+        $makeFiles = new filesystem_makefile();
+        switch($operation['type']){
+            case 'pages':
+                $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
+                $imgPrefix = $this->imagesComponent->prefix();
+                if($arrData['id'] != null) {
+                    if (is_array($arrData['id'])) {
+                        foreach ($arrData['id'] as $key => $value) {
+                            $fetchImg[$key] = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'image'), array('id_pages' => $value));
+
+                            if ($fetchImg[$key] != null) {
+                                $imgPath[$key] = component_core_system::basePath() . 'upload/pages/' . $value;
+                                // Supprime le dossier des images et les fichiers
+                                if (file_exists($imgPath[$key])) {
+                                    $makeFiles->remove(array(
+                                        $imgPath[$key]
+                                    ));
+                                }
+                            }
+                        }
+
+                        $this->DBPages->delete(
+                            array(
+                                'type' => 'delPages'
+                            ),
+                            array('id' => implode(",", $arrData['id'])
+                            )
+                        );
+
+                    } else {
+                        $fetchImg = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'image'), array('id_pages' => $arrData['id']));
+
+                        if ($fetchImg != null) {
+                            $imgPath = component_core_system::basePath() . 'upload/pages/' . $arrData['id'];
+                            // Supprime l'image original
+                            /*$original = $imgPath . '/' . $fetchImg['img_pages'];
+                            if (file_exists($original)) {
+                                $makeFiles->remove(array(
+                                    $original
+                                ));
+                            }
+                            $img = '';
+                            // Supprime les images recadrer
+                            foreach ($fetchConfig as $key => $value) {
+                                $img[$key]= $imgPath . '/' . $imgPrefix[$value['type_img']] . $fetchImg['img_pages'];
+                                if (file_exists($img[$key])) {
+                                    $makeFiles->remove(array(
+                                        $img[$key]
+                                    ));
+                                }
+                            }*/
+                            // Supprime le dossier des images et les fichiers
+                            if (file_exists($imgPath)) {
+                                $makeFiles->remove(array(
+                                    $imgPath
+                                ));
+                            }
+                        }
+
+                        $this->DBPages->delete(
+                            array(
+                                'type' => 'delPages'
+                            ),
+                            array('id' => $arrData['id'])
+                        );
+
+                    }
+                }
+                break;
+            case 'news':
+                if (isset($this->id)) {
+                    foreach ($arrData['language'] as $lang => $content) {
+                        if ($content['tag'] != null) {
+                            if (is_array($content['tag'])) {
+                                foreach ($content['tag'] as $key => $value) {
+                                    $setTags = $this->DBNews->fetchData(
+                                        array('context' => 'one', 'type' => 'tag_ws'),
+                                        array(':id_news' => $this->id, ':id_lang' => $content['id_lang'], ':name_tag' => $value)
+                                    );
+
+                                    if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
+                                        $this->DBNews->delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
+                                    }
+                                }
+                            }else{
+                                $setTags = $this->DBNews->fetchData(
+                                    array('context' => 'one', 'type' => 'tag_ws'),
+                                    array(':id_news' => $this->id, ':id_lang' => $content['id_lang'], ':name_tag' => $content['tag'])
+                                );
+
+                                if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
+                                    $this->DBNews->delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
+                                }
+                            }
+                        }
+                    }
+                }else {
+                    $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img' => 'news', 'attribute_img' => 'news'));
+                    $imgPrefix = $this->imagesComponent->prefix();
+                    if ($arrData['id'] != null) {
+                        if (is_array($arrData['id'])) {
+                            foreach ($arrData['id'] as $key => $value) {
+                                $fetchImg[$key] = $this->DBNews->fetchData(array('context' => 'one', 'type' => 'image'), array('id_news' => $value));
+
+                                if ($fetchImg[$key] != null) {
+                                    $imgPath[$key] = component_core_system::basePath() . 'upload/news/' . $value;
+                                    // Supprime le dossier des images et les fichiers
+                                    if (file_exists($imgPath[$key])) {
+                                        $makeFiles->remove(array(
+                                            $imgPath[$key]
+                                        ));
+                                    }
+                                }
+                            }
+
+                            $this->DBNews->delete(
+                                array(
+                                    'type' => 'delPages'
+                                ),
+                                array('id' => implode(",", $arrData['id'])
+                                )
+                            );
+
+                        } else {
+                            $fetchImg = $this->DBNews->fetchData(array('context' => 'one', 'type' => 'image'), array('id_news' => $arrData['id']));
+
+                            if ($fetchImg != null) {
+                                $imgPath = component_core_system::basePath() . 'upload/news/' . $arrData['id'];
+
+                                // Supprime le dossier des images et les fichiers
+                                if (file_exists($imgPath)) {
+                                    $makeFiles->remove(array(
+                                        $imgPath
+                                    ));
+                                }
+                            }
+
+                            $this->DBNews->delete(
+                                array(
+                                    'type' => 'delPages'
+                                ),
+                                array('id' => $arrData['id'])
+                            );
+
+                        }
+                    }
+                }
+                break;
         }
     }
     /**
@@ -1530,86 +1805,30 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }*/
                     if($this->ws->setMethod() === 'PUT'){
                         if($getContentType === 'xml') {
+
                             $arrData = json_decode(json_encode($this->parse()), true);
-                            //
-                            //$arrData = $this->xml2array($this->parse());
-                            /*print $arrData['parent'] . '<br />';
-                            foreach ($arrData['language'] as $key => $value) {
-                                print $value['id_lang'] . '<br />';
-                                print $value['name'];
-                            }*/
                             $this->getBuildSave($operations,$arrData);
                         }
                     }
                     elseif($this->ws->setMethod() === 'POST'){
                         if($getContentType === 'xml'){
-                            //print 'je suis xml';
-                            //$this->parse();
-                            //print $this->parse()->parent;
-                            /*oreach($this->parse()->languages->language as $key){
-                                $dta[]= $key->id_lang.'<br />';
-                            }*/
-                            /*foreach($this->parse()->languages->language as $key => $arr) {
-                                foreach($arr as $k => $v) {
-                                    $array[$key][$k] = $v;
-                                }
-                            }
-
-                            print_r($array);*/
                             $arrData = json_decode(json_encode($this->parse()), true);
-                            //
-                            //$arrData = $this->xml2array($this->parse());
-                            //print_r($arrData);
-                            /*print $arrData['parent'].'<br />';
-                            foreach($arrData['language'] as $key => $value){
-                                print $value['id_lang'].'<br />';
-                                print $value['name'];
-                            }*/
+
                             $this->getBuildSave($operations,$arrData);
                             //$this->header->set_json_headers();
-                            //print json_encode($arrData);
                             //print '{"statut":'.json_encode(true).',"notify":'.json_encode("add").'}';
 
 
                         }elseif($getContentType === 'json'){
-                            /*print json_encode(
-                                array('parent'=>2,
-                                    'language'=>
-                                        array(
-                                            0   =>  array('id_lang'=>6),
-                                            1  =>  array('id_lang'=>2)
-                                        )
-                                    )
-                            );*/
-                            //print_r($this->xml2array($this->parse()));
-                            //print 'POST';
+
                             //{"parent":2,"languages":{"language":[{"id_lang":6},{"id_lang":2}]}}
                             //{"parent":2,"language":[{"id_lang":6},{"id_lang":2}]}
                             $arrData = json_decode(json_encode($this->parse()), true);
-                            /*print_r($arrData);
-                            foreach($arrData['language'] as $key => $value){
-                                print $value['id_lang'];
-                            }*/
+
                             $this->getBuildSave($operations,$arrData);
                         }
                     }
-                    elseif($this->ws->setMethod() === 'DELETE'){
-                        print $getContentType;
-                        print 'DELETE';
-                        /*print json_encode(
-                            array('parent'=>2,
-                                'languages'=>
-                                    array(
-                                        'language'=>
-                                            array(
-                                                0   =>  array('id_lang'=>6),
-                                                1  =>  array('id_lang'=>2)
-                                            )
-                                    )
-                            )
-                        );*/
 
-                    }
                     elseif($this->ws->setMethod() === 'GET'){
                         //print $getContentType;
                         $this->xml->getXmlHeader();
@@ -1618,9 +1837,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
                     break;
                 case 'pages':
-                    /*if ($operations['scrud'] === 'create') {
 
-                    }*/
                     if($this->ws->setMethod() === 'PUT'){
                         if($getContentType === 'xml') {
 
@@ -1645,42 +1862,18 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         //print_r($this->parse());
 
                         if($getContentType === 'xml') {
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            //print_r($arrData);
-                            //print_r(implode(",",$arrData['id']));
-                            if($arrData['id'] != null){
-                                $this->DBPages->delete(
-                                    array(
-                                        'type'      =>    'delPages'
-                                    ),
-                                    array('id'=>implode(",",$arrData['id'])
-                                    )
-                                );
-                            }
 
-                            /*print json_encode(
-                                array('id'=>
-                                    array(
-                                        0   =>  53,
-                                        1  =>  54
-                                    )
-                                )
-                            );*/
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildRemove($operations,$arrData);
+
                         }elseif($getContentType === 'json'){
                             //{"id":[53,54]}
                             $arrData = json_decode(json_encode($this->parse()), true);
-                            if($arrData['id'] != null){
-                                $del = implode(",",$arrData['id']);
-                                $this->DBPages->delete(
-                                    array(
-                                        'type'      =>    'delPages'
-                                    ),
-                                    array('id'=>$del)
-                                );
-                            }
+                            $this->getBuildRemove($operations,$arrData);
+
                         }
-                        $this->header->set_json_headers();
-                        $this->message->json_post_response(true,'delete',$del);
+                        //$this->header->set_json_headers();
+                        //$this->message->json_post_response(true,'delete',$del);
 
                     }
                     elseif($this->ws->setMethod() === 'GET'){
@@ -1695,6 +1888,56 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                     }
                     break;
+                case 'news':
+                    if($this->ws->setMethod() === 'PUT'){
+                        if($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }
+                    elseif($this->ws->setMethod() === 'POST'){
+                        if($getContentType === 'xml'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+
+
+                        }elseif($getContentType === 'json'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }elseif($this->ws->setMethod() === 'DELETE'){
+                        //print_r($this->parse());
+
+                        if($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildRemove($operations,$arrData);
+
+                        }elseif($getContentType === 'json'){
+                            //{"id":[53,54]}
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildRemove($operations,$arrData);
+                        }
+                        //$this->header->set_json_headers();
+                        //$this->message->json_post_response(true,'delete',$del);
+
+                    }elseif($this->ws->setMethod() === 'GET'){
+                        if (isset($this->id)) {
+
+                            $this->xml->getXmlHeader();
+                            $this->getBuildNewsData();
+
+                        } else {
+                            $this->xml->getXmlHeader();
+                            $this->getBuildNewsItems();
+
+                        }
+                    }
+                    break;
+
 
             }
         }catch (Exception $e){
@@ -1710,32 +1953,22 @@ class frontend_controller_webservice extends frontend_db_webservice{
             if (isset($this->collection)) {
                 switch ($this->collection) {
                     case 'home':
+
                         $this->getBuildParse(array('type' => 'home'));
+
                         break;
                     case 'pages':
-                        /*if (isset($this->id)) {
-                            $this->xml->getXmlHeader();
-                            $this->getBuildPagesData();
 
-                        } else {
-                            $this->xml->getXmlHeader();
-                            $this->getBuildPagesItems();
-                        }*/
                         $this->getBuildParse(array('type' => 'pages'));
+
                         break;
                     case 'news':
-                        if (isset($this->id)) {
 
-                            $this->xml->getXmlHeader();
-                            $this->getBuildNewsData();
+                        $this->getBuildParse(array('type' => 'news'));
 
-                        } else {
-                            $this->xml->getXmlHeader();
-                            $this->getBuildNewsItems();
-
-                        }
                         break;
                     case 'catalog':
+
                         if (isset($this->retrieve)) {
 
                             if ($this->retrieve == 'category') {

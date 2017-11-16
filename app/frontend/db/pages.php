@@ -68,6 +68,11 @@ class frontend_db_pages
                     $sql = 'SELECT * FROM mc_cms_page ORDER BY id_pages DESC LIMIT 0,1';
                     //$params = $data;
                 }
+                elseif ($config['type'] === 'image') {
+                    //Return image
+                    $sql = 'SELECT img_pages FROM mc_cms_page WHERE `id_pages` = :id_pages';
+                    $params = $data;
+                }
                 elseif ($config['type'] === 'content') {
                     $sql = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
                     $params = $data;
