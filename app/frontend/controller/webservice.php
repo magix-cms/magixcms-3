@@ -4,7 +4,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
      * @var
      */
     protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
-    protected $DBPages, $DBNews, $DBCatalog, $DBHome;
+    protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory;
     protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws;
     public $collection, $retrieve, $id, $filter ,$sort, $url;
     /**
@@ -28,6 +28,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->DBCatalog = new frontend_db_news();
         $this->dateFormat = new date_dateformat();
         $this->DBCatalog = new frontend_db_catalog();
+        $this->DBCategory = new frontend_db_category();
         $this->url = http_url::getUrl();
         $this->ws = new frontend_model_webservice();
 
@@ -1630,6 +1631,59 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
                 }
                 break;
+            case 'category':
+                if (isset($this->id)) {
+                    // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
+                    $fetchRootData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'root'));
+                    if($fetchRootData != null){
+                        $id_cat = $fetchRootData['id_cat'];
+                    }else{
+                        $this->DBCategory->insert(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent']));
+                        $newData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'root'));
+                        $id_cat = $newData['id_cat'];
+                    }
+                }else{
+                    $this->DBCategory->insert(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent']));
+                    $newData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'root'));
+                    $id_cat = $newData['id_cat'];
+                }
+                if($id_cat) {
+                    //print_r($arrData);
+                    foreach ($arrData['language'] as $lang => $content) {
+                        //print_r($content);
+                        $content['published'] = (!isset($content['published']) ? 0 : 1);
+                        if (is_array($content['url'])) {
+                            $content['url'] = http_url::clean($content['name'],
+                                array(
+                                    'dot' => false,
+                                    'ampersand' => 'strict',
+                                    'cspec' => '', 'rspec' => ''
+                                )
+                            );
+                        }
+                        $data = array(
+                            'name_cat'        => !is_array($content['name']) ? $content['name'] : '',
+                            'url_cat'         => $content['url'],
+                            'resume_cat'      => !is_array($content['resume']) ? trim($content['resume']) : '',
+                            'content_cat'     => !is_array($content['content']) ? $content['content'] : '',
+                            'published_cat'   => $content['published'],
+                            'id_cat'          => $id_cat,
+                            'id_lang'         => $content['id_lang']
+                        );
+
+                        if ($this->DBCategory->fetchData(array('context' => 'one', 'type' => 'content'), array('id_cat' => $id_cat, 'id_lang' => $content['id_lang'])) != null) {
+
+                            $this->DBCategory->update(array('type' => 'content'), $data);
+
+                        } else {
+
+                            $this->DBCategory->insert(array('type' => 'content'), $data);
+                        }
+                    }
+                    //$this->header->set_json_headers();
+                    //$this->message->json_post_response(true, 'update', $id_page);
+                }
+                break;
         }
     }
 
@@ -1786,6 +1840,56 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
                 }
                 break;
+            case 'category':
+                $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'category'));
+                $imgPrefix = $this->imagesComponent->prefix();
+                if($arrData['id'] != null) {
+                    if (is_array($arrData['id'])) {
+                        foreach ($arrData['id'] as $key => $value) {
+                            $fetchImg[$key] = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'image'), array('id_cat' => $value));
+
+                            if ($fetchImg[$key] != null) {
+                                $imgPath[$key] = component_core_system::basePath() . 'upload/catalog/c/' . $value;
+                                // Supprime le dossier des images et les fichiers
+                                if (file_exists($imgPath[$key])) {
+                                    $makeFiles->remove(array(
+                                        $imgPath[$key]
+                                    ));
+                                }
+                            }
+                        }
+
+                        $this->DBCategory->delete(
+                            array(
+                                'type' => 'delPages'
+                            ),
+                            array('id' => implode(",", $arrData['id'])
+                            )
+                        );
+
+                    } else {
+                        $fetchImg = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'image'), array('id_cat' => $arrData['id']));
+
+                        if ($fetchImg != null) {
+                            $imgPath = component_core_system::basePath() . 'upload/catalog/c/' . $arrData['id'];
+                            // Supprime le dossier des images et les fichiers
+                            if (file_exists($imgPath)) {
+                                $makeFiles->remove(array(
+                                    $imgPath
+                                ));
+                            }
+                        }
+
+                        $this->DBCategory->delete(
+                            array(
+                                'type' => 'delPages'
+                            ),
+                            array('id' => $arrData['id'])
+                        );
+
+                    }
+                }
+                break;
         }
     }
     /**
@@ -1937,8 +2041,63 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                     }
                     break;
+                case 'category':
+                    if($this->ws->setMethod() === 'PUT'){
+                        if($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }
+                    elseif($this->ws->setMethod() === 'POST'){
+                        if($getContentType === 'xml'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
 
 
+                        }elseif($getContentType === 'json'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+                        }
+
+                    }elseif($this->ws->setMethod() === 'DELETE'){
+                        //print_r($this->parse());
+
+                        if($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildRemove($operations,$arrData);
+
+                        }elseif($getContentType === 'json'){
+                            //{"id":[53,54]}
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildRemove($operations,$arrData);
+                        }
+                        //$this->header->set_json_headers();
+                        //$this->message->json_post_response(true,'delete',$del);
+
+                    }elseif($this->ws->setMethod() === 'GET'){
+                        if (isset($this->id)) {
+
+                            /*print 'test collection : ' . $this->collection.'<br />';
+                            print 'retrieve : ' . $this->retrieve.'<br />';
+                            print 'id : ' . $this->id;
+                            print_r($this->filter);*/
+                            $this->xml->getXmlHeader();
+                            $this->getBuildCategoryData();
+
+                        } else {
+
+                            /*print 'test collection : ' . $this->collection.'<br />';
+                            print 'retrieve : ' . $this->retrieve;*/
+                            $this->xml->getXmlHeader();
+                            $this->getBuildCategoryItems();
+
+                        }
+                    }
+                    break;
             }
         }catch (Exception $e){
             $logger = new debug_logger(MP_LOG_DIR);
@@ -1972,24 +2131,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         if (isset($this->retrieve)) {
 
                             if ($this->retrieve == 'category') {
-                                if (isset($this->id)) {
 
-                                    /*print 'test collection : ' . $this->collection.'<br />';
-                                    print 'retrieve : ' . $this->retrieve.'<br />';
-                                    print 'id : ' . $this->id;
-                                    print_r($this->filter);*/
-                                    $this->xml->getXmlHeader();
-                                    $this->getBuildCategoryData();
+                                $this->getBuildParse(array('type' => 'category'));
 
-                                } else {
-
-                                    /*print 'test collection : ' . $this->collection.'<br />';
-                                    print 'retrieve : ' . $this->retrieve;*/
-                                    $this->xml->getXmlHeader();
-                                    $this->getBuildCategoryItems();
-
-                                }
-                            } elseif ($this->retrieve == 'product') {
+                            }elseif ($this->retrieve == 'product') {
                                 if (isset($this->id)) {
 
                                     /*print 'test collection : ' . $this->collection.'<br />';
