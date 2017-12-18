@@ -1,6 +1,28 @@
 #news,
 #news-tag,
-#new-date {
+#news-date {
+	@media (min-width: @screen-md-min) {
+		article {
+			> .container {
+				.label {
+					.sr-only();
+				}
+
+				> header {
+					padding-bottom: 15px;
+					border-bottom: 1px solid #eee;
+					margin-bottom: 15px;
+
+					h1 {
+						margin: 0;
+						padding: 0;
+						border: none;
+					}
+				}
+			}
+		}
+	}
+
 	.news-list {
 		> div {
 			#figure {

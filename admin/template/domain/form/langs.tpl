@@ -1,6 +1,6 @@
 <h3>Ajouter une langue au domaine</h3>
 <div class="row">
-    <div class="col-xs-12 col-md-4">
+    <div class="col-ph-12 col-md-4">
         <div class="form-group">
             <label>{#default_lang#|ucfirst}&nbsp;*</label>
             <div class="radio">
@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-12 col-md-8">
+    <div class="col-ph-12 col-md-8">
         <div class="form-group">
             <label for="id_lang">{#language#|ucfirst}</label>
             <select name="id_lang" id="id_lang" class="form-control required">
@@ -28,7 +28,7 @@
     </div>
 </div>
 <div class="row">
-    <div id="submit" class="col-xs-12 col-md-6">
+    <div id="submit" class="col-ph-12 col-md-6">
         <input type="hidden" id="id_domain" name="id" value="{$id}">
         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="add">{#save#|ucfirst}</button>
     </div>

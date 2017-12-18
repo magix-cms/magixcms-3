@@ -5,7 +5,7 @@
                 <a id="{if $item.default}default{else}img{$k}{/if}" class="img-gallery" href="{$item.imgSrc.large}" rel="productGallery" title="{$product.name}" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
                     <meta itemprop="contentUrl" content="{$item.imgSrc.medium}" />
                     <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                        <img itemprop="image" class="img-responsive"  src="{$item.imgSrc.small}" alt="{$product.name|ucfirst}" itemprop="contentUrl"/>
+                        <img itemprop="image" class="img-responsive"  src="{$item.imgSrc.medium}" alt="{$product.name|ucfirst}" itemprop="contentUrl"/>
                     </span>
                 </a>
             {/foreach}

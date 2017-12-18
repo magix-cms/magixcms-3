@@ -25,24 +25,24 @@
 		.auto-transition(.2s);
 		position: relative;
 		z-index: 1;
-		border: 2px solid @main-color;
+		border: 2px solid @sd-color;
 		border-radius: 50%;
 
 		.material-icons {
 			font-size: 2em;
 			position: relative;
 			top: 0;
-			color: @main-color;
+			color: @sd-color;
 			.auto-transition(.2s);
 		}
 
 		&:hover, &:focus, &:active {
 			text-decoration: none;
-			border-color: @sd-color;
+			border-color: @main-color;
 
 			.material-icons {
-				top: -73%;
-				color: @sd-color;
+				//top: -73%;
+				color: @main-color;
 			}
 		}
 	}

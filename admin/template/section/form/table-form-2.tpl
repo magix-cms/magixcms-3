@@ -74,7 +74,7 @@
                 {include file="section/form/loop/rows-2.tpl" data=$data section='pages' idcolumn=$idcolumn controller=$controller subcontroller=$subcontroller readonly=$readonly}
                 </tbody>
             </table>
-            <div class="hidden-xs">
+            <div class="hidden-ph hidden-xs">
                 <p>
                     <span class="fa fa-reply fa-rotate-180"></span>
                     <button class="btn btn-link update-checkbox" id="check-all" value="check-all" data-table="{$controller}">
@@ -100,7 +100,7 @@
                     {/if}
                 </p>
             </div>
-            <div class="dropup visible-xs">
+            <div class="dropup visible-ph visible-xs">
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {#recursive_actions#|ucfirst}
                     <span class="caret"></span>

@@ -6,7 +6,7 @@
 {/block}
 {block name='article:content'}
     <div class="panels row">
-        <section class="panel col-xs-12 col-md-8">
+        <section class="panel col-ph-12 col-md-8">
             {if $debug}
                 {$debug}
             {/if}

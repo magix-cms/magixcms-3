@@ -4,9 +4,7 @@
 .share-nav {
 	a {
 		display: block;
-		/*&:hover {
-			text-decoration: none;
-		}*/
+
 		&:focus, &:active {
 			text-decoration: none;
 		}
@@ -38,60 +36,35 @@
 }
 
 #sharebar {
-	/*background: @sharebar-bg;
-	padding: 18px 0;*/
 
 	.label {
 		color: @light-grey;
 		font-size: 21px;
 	}
 
-	/*ul {
-		display: inline-block;
-		li {
-			float: left;
-			& + li {
-				margin-left: 10px;
-			}
-		}
-	}*/
-
 	.followbox {
-		display: flex;
-		flex-flow: column;
-		align-items: center;
+		@media (max-width: @screen-md-max) {
+			display: flex;
+			flex-flow: column;
+			align-items: center;
 
-		ul {
-			margin: 0 0 18px;
-		}
+			li {
+				a {
+					display: flex;
+					width: 30px;
+					height: 30px;
+					justify-content: center;
+					align-items: center;
+					border-radius: 50%;
+					color: #fff;
+				}
+			}
 
-		li {
-			a {
-				display: flex;
-				width: 30px;
-				height: 30px;
-				justify-content: center;
-				align-items: center;
-				border-radius: 50%;
-				color: #fff;
+			ul {
+				margin: 0 0 18px;
 			}
 		}
 
 		.share-buttons();
-
-		/*ul {
-			margin: 0 0 -6px;
-			li {
-				font-size: 20px;
-
-				a {
-					color: #555;
-
-					&:focus,&:active {
-						color: @main-color;
-					}
-				}
-			}
-		}*/
 	}
 }

@@ -43,10 +43,14 @@ class frontend_db_menu
 
 				return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
 			}
-			/*elseif($config['context'] === 'one') {
+			elseif($config['context'] === 'one') {
+				if ($config['type'] === 'plugin') {
+					$sql = 'SELECT id_plugins as id, name FROM mc_plugins WHERE id_plugins = :id';
+					$params = $data;
+				}
 
 				return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
-			}*/
+			}
 		}
 	}
 }

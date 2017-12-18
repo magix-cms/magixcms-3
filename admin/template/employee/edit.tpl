@@ -8,7 +8,7 @@
 {block name='article:content'}
     {if {employee_access type="append" class_name=$cClass} eq 1}
     <div class="panels row">
-        <section class="panel col-xs-12 col-md-8">
+        <section class="panel col-ph-12 col-md-8">
             {if $debug}
                 {$debug}
             {/if}
@@ -20,7 +20,7 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="row">
-                    <form id="edit_employee" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$employee.id_admin}" method="post" class="validate_form edit_form col-xs-12 col-md-6">
+                    <form id="edit_employee" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$employee.id_admin}" method="post" class="validate_form edit_form col-ph-12 col-md-6">
                         <div class="form-group radio-group">
                             <label>{#title#|ucfirst}&nbsp;*</label>
                             <div class="radio">
@@ -35,13 +35,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12 col-md-6">
+                            <div class="col-ph-12 col-md-6">
                                 <div class="form-group">
                                     <label for="firstname_admin">{#firstname#|ucfirst}&nbsp;*</label>
                                     <input type="text" class="form-control required" name="firstname_admin" id="firstname_admin" placeholder="{#ph_firstname#|ucfirst}" value="{$employee.firstname_admin}" required>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6">
+                            <div class="col-ph-12 col-md-6">
                                 <div class="form-group">
                                     <label for="lastname_admin">{#lastname#|ucfirst}&nbsp;*</label>
                                     <input type="text" class="form-control required" name="lastname_admin" id="lastname_admin" placeholder="{#ph_lastname#|ucfirst}" value="{$employee.lastname_admin}" required>
@@ -114,7 +114,7 @@
                         <input type="hidden" id="id_admin" name="id" value="{$employee.id_admin}">
                         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
                     </form>
-                    <form id="change_pwd" action="{$smarty.server.SCRIPT_NAME}?action=edit&edit={$employee.id_admin}" method="post" class="validate_form edit_form col-xs-12 col-md-6">
+                    <form id="change_pwd" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$employee.id_admin}" method="post" class="validate_form col-ph-12 col-md-6">
                         <div class="form-group">
                             <label for="passwd_admin">{#passwd#|ucfirst}&nbsp;*</label>
                             <input type="password" class="form-control required" name="passwd_admin" id="passwd_admin" placeholder=" {#ph_passwd#|ucfirst}" required>
@@ -123,7 +123,7 @@
                             <label for="repeat_passwd">{#repeat_passwd#|ucfirst}&nbsp;*</label>
                             <input type="password" class="form-control required" name="repeat_passwd" id="repeat_passwd" placeholder=" {#repeat_passwd#|ucfirst}" equalTo="#passwd_admin" required>
                         </div>
-                        <input type="hidden" id="id_admin" name="id" value="{$employee.id_admin}" required>
+                        <input type="hidden" id="id_admin_pwd" name="id" value="{$employee.id_admin}" required>
                         <button class="btn btn-main-theme" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
                     </form>
                 </div>

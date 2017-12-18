@@ -1,17 +1,30 @@
 //
 // Rules for footer
 //
+#cph {
+	position: absolute;
+}
+
 #footer {
 	//background: @footer-bg;
 	//color: @footer-color;
+	.blocks {
+		border-top: 1px solid @light-grey;
+	}
 
 	.block {
-		padding: 20px 0;
+		padding: 20px 15px;
 		margin-bottom: 20px;
-		border-top: 1px solid @light-grey;
 
 		&:last-child {
 			margin-bottom: 0;
+		}
+
+		h4 {
+			padding-bottom: 8px;
+			margin-bottom: 10px;
+			border-bottom: 1px solid @light-grey;
+			.normalize-link(@text-color);
 		}
 	}
 
@@ -54,7 +67,7 @@
 
 	.footer-colophon {
 		border-top: 1px solid @light-grey;
-		padding: 15px;
+		padding: 15px 0;
 		font-size: 85%;
 
 		p {

@@ -43,7 +43,7 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @var component_routing_url
      */
-    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$data;
 
     public function __construct($template)
     {
@@ -51,6 +51,7 @@ class frontend_model_catalog extends frontend_db_catalog {
         $this->imagesComponent = new component_files_images($template);
         $this->modelPlugins = new frontend_model_plugins();
         $this->coreTemplate = new frontend_model_template();
+		$this->data = new frontend_model_data($this);
     }
     /**
      * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
@@ -147,7 +148,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                             $data['imgSrc'][$value['type_img']] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img'];
                         }
                     }else{
-                        $data['img']['imgSrc']['default']   =
+                        $data['imgSrc']['default']   =
                             '/skin/'.$this->coreTemplate->themeSelected().'/img/catalog/p/default.png';
                     }
 
@@ -343,10 +344,12 @@ class frontend_model_catalog extends frontend_db_catalog {
 			}
 		}
 
+		//var_dump($childs);
+
 		if($branch === 'root')
 			return $childs[$branch];
 		else
-			return array($childs[$branch]);
+			return $childs[$branch]['subdata'];
 	}
 
     /**
@@ -481,7 +484,8 @@ class frontend_model_catalog extends frontend_db_catalog {
             } else {
                 $allowed = array(
                     'category',
-                    'product'
+                    'product',
+					'lastProduct'
                 );
 
                 if (in_array($custom['context'],$allowed)) {
@@ -523,9 +527,9 @@ class frontend_model_catalog extends frontend_db_catalog {
 						$conditions .= ' AND p.id_cat NOT IN (' . $conf['id'] . ') ';
 					}
 
-					if (isset($custom['select'])) {
+					/*if (isset($custom['select'])) {
 						$conditions .= ' AND p.id_cat IN (' . $conf['id'] . ') ';
-					}
+					}*/
 				}
 
                 // ORDER
@@ -545,7 +549,8 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 					if($data != null) {
 						$branch = (isset($custom['select']) && $custom['select'] !== 'all') ? $conf['id'] : 'root';
-						$data = $this->setPagesTree($data,$branch);
+						//data = $this->setPagesTree($data,$branch);
+						$data = $this->data->setPagesTree($data,'cat',$branch);
 					}
                 }
             }
@@ -612,7 +617,7 @@ class frontend_model_catalog extends frontend_db_catalog {
             // Product
             if ($override) {
                 $getCallClass = $this->modelPlugins->getCallClass($override);
-                if(method_exists($getCallClass,'override')){
+                if(method_exists($getCallClass,'override')) {
                     $conf['data'] = 'product';
                     $conf['controller'] = $current;
                     $data = call_user_func_array(
@@ -626,9 +631,21 @@ class frontend_model_catalog extends frontend_db_catalog {
                         )
                     );
                 }
-            }else{
+            }
+            else {
+                /*$conditions .= ' WHERE lang.iso_lang = :iso
+                				AND cat.published_cat =1 
+                				AND pc.published_p =1 
+                				AND catalog.default_c = 1 
+                				AND img.default_img = 1 
+                				AND catalog.id_cat = '.$current['id'];*/
 
-                $conditions .= ' WHERE lang.iso_lang = :iso AND cat.published_cat =1 AND pc.published_p =1 AND catalog.default_c = 1 AND img.default_img = 1 AND catalog.id_cat = '.$current['id'];
+                $conditions .= ' WHERE lang.iso_lang = :iso 
+                				AND cat.published_cat = 1 
+                				AND pc.published_p = 1 
+                				AND catalog.default_c = 1 
+                				AND (img.default_img = 1 
+                				OR img.default_img IS NULL)';
                 /*if(isset($current['id'])){
                     $conditions .= ' AND p.id_parent = '.$current['id'];
                 }*/
@@ -638,7 +655,6 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
 
                 if (isset($custom['select'])) {
-
                     $conditions .= ' AND catalog.id_product IN (' . $conf['id'] . ') ';
                 }
 
@@ -669,4 +685,3 @@ class frontend_model_catalog extends frontend_db_catalog {
         return $data;
     }
 }
-?>

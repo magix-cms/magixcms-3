@@ -1,5 +1,7 @@
 {extends file="news/index.tpl"}
 {block name='body:id'}topicality{/block}
+{block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$news.title}] record={$news.title}}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$news.resume}] record={$news.title}}{/block}
 {block name="webType"}WebPage{/block}
 {block name='article'}
     <article id="article" class="container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Article">
@@ -114,7 +116,7 @@
                     </figure>
                 {/if}
                 <div class="desc">
-                    {amp_content content=$news.content}
+                    {$news.content}
                 </div>
             </div>
             {strip}

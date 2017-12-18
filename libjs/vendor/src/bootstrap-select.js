@@ -42,7 +42,7 @@
     DropdownSelect.prototype.parts = function() {
         return {
             $select         : this.$element,
-            $section        : this.$element.attr('id'),
+            $section        : this.$element.attr('data-section') ? this.$element.attr('data-section') : this.$element.attr('id'),
             $display        : $(this.options.display, this.$element),
             $list           : $(this.options.list, this.$element),
             $placeholder    : $(this.options.placeholder, this.$element),

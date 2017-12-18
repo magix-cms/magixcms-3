@@ -3,6 +3,7 @@
 {widget_about_data}
 {widget_lang_data assign="dataLang"}
 {widget_share_data assign="shareData"}
+{widget_menu_data lang={getlang}}
 {/strip}<!DOCTYPE html>
 <!--[if lt IE 7]><html lang="{getlang}" class="lt-ie9 lt-ie8 lt-ie7" dir="ltr"><![endif]-->
 <!--[if IE 7]><html lang="{getlang}" class="lt-ie9 lt-ie8" dir="ltr"><![endif]-->
@@ -41,12 +42,12 @@
 <body id="{block name='body:id'}layout{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
     {include file="section/brick/cookie-consent.tpl"}
     {include file="section/header.tpl"}
-    {block name="breadcrumb"}{/block}
-    {block name="main:before"}
+    {block name="breadcrumb"}
         {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
             {include file="section/brick/breadcrumb.tpl" icon='home' amp=false}
         {/if}
     {/block}
+    {block name="main:before"}{/block}
     {block name="main"}
     <main id="content">
         {block name="article:before"}{/block}
@@ -60,7 +61,7 @@
     </main>
     {/block}
     {block name="main:after"}{/block}
-    {include file="section/footer.tpl" adjust="clip" blocks=['contact']}
+    {include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','contact']}
     {strip}{capture name="vendors"}
         /min/?f=skin/{template}/js/vendor/jquery.min.js,
         skin/{template}/js/vendor/bootstrap-{$viewport}.min.js,

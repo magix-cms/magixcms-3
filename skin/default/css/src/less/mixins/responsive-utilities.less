@@ -225,7 +225,18 @@
 
 
 // --- Pull block right or left on different breakpoint
-@media (max-width: @screen-xs-max) {
+@media (max-width: @screen-ph-max) {
+    .pull-ph-left {
+        float: left !important;
+    }
+
+    .pull-ph-right {
+        float: right !important;
+    }
+}
+
+// --- Pull block right or left on different breakpoint
+@media (max-width: @screen-xs-min) and (max-width: @screen-xs-max) {
     .pull-xs-left {
         float: left !important;
     }

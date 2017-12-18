@@ -1,5 +1,5 @@
 // Compiler options
-@import (reference) "compiler";
+@import (reference) "mixins/compiler";
 @import "../../font-awesome/less/font-awesome";
 
 // Core variables and mixins
@@ -10,6 +10,7 @@
 // Custom variables
 @import (reference) "mixins/variables";
 @import (reference) "mixins/colors";
+@import (reference) "mixins/theme";
 
 // Plugins variables
 @import (optional) "plugins/bootstrap-select/variables";
@@ -27,11 +28,11 @@
 @import "mixins/grid";
 @import "../../bootstrap/less/tables";
 @import "../../bootstrap/less/forms";
-@import "../../bootstrap/less/buttons";
+//@import "../../bootstrap/less/buttons";
 
 // Components
 @import "../../bootstrap/less/component-animations";
-//@import "../../bootstrap/less/dropdowns";
+@import "../../bootstrap/less/dropdowns";
 @import "../../bootstrap/less/button-groups";
 @import "../../bootstrap/less/input-groups";
 @import "../../bootstrap/less/navs";
@@ -61,7 +62,8 @@
 // Utility classes
 //@import "../../bootstrap/less/utilities";
 @import "mixins/utilities";
-@import "../../bootstrap/less/responsive-utilities";
+//@import "../../bootstrap/less/responsive-utilities";
+@import "mixins/responsive-utilities";
 
 // Custom Mixins
 @import (reference) "mixins/media-queries";
@@ -69,35 +71,33 @@
 @import "mixins/sizes";
 @import "mixins/fonts";
 @import (reference) "mixins/type-mixins";
-@import "mixins/type";
+@import "mixins/type_mobile";
 @import "mixins/images";
 @import (reference) "mixins/buttons-prefixes";
 @import "mixins/buttons";
 //@import (reference) "mixins/socials";
-@import "mixins/menu";
-@import (reference) "mixins/shadows";
+@import "mixins/shadows";
 @import "mixins/forms";
 @import "mixins/switch";
 @import "mixins/table";
 @import "mixins/panels";
 //@import "mixins/media";
-@import (optional) "mixins/livefilter";
 
 // Plugins
 @import "plugins/bootstrap-select/bootstrap-select";
+@import (optional) "mixins/livefilter";
 
 // Theme Rules
-@import "critical/global";
-//@import "critical/toolbar";
-@import "critical/header";
-//@import "critical/breadcrumbs";
-//@import "critical/carousel";
-@import "critical/navs";
-@import "critical/login";
-@import "critical/toolbar";
-@import "critical/message";
+@import "global/global";
+@import "global/header";
+//@import "global/breadcrumbs";
+@import "global/menu";
+@import "global/navs";
+@import "theme/login";
+@import "global/toolbar";
+@import "global/message";
+//@import "global/affix";
 @import "theme/body";
-@import "theme/affix";
 @import "theme/sidebar";
 @import "theme/block";
 @import "theme/footer";

@@ -1,10 +1,10 @@
-<div id="sharebar">
+<div id="sharebar" class="visible-lg">
     {if $adjust == 'clip'}
     <div class="container">
         {/if}
         <div class="sharebox">
             {*<span class="label">{#share#|ucfirst}&nbsp;:</span>*}
-            <span class="fa fa-share-alt"></span>
+            <i class="material-icons">share</i>
             <ul class="list-unstyled list-inline share-nav">
                 {include file="section/loop/share.tpl" data=$shareData}
             </ul>
@@ -37,6 +37,41 @@
                     <li>
                         <a href="{$companyData.socials.linkedin}" title="{#lk_follow_title#|ucfirst}">
                             <span class="fa fa-linkedin"></span><span class="sr-only">{#lk_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.viadeo != null}
+                    <li>
+                        <a href="{$companyData.socials.viadeo}" title="{#vi_follow_title#|ucfirst}">
+                            <span class="fa fa-viadeo"></span><span class="sr-only">{#vi_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.pinterest != null}
+                    <li>
+                        <a href="{$companyData.socials.pinterest}" title="{#pi_follow_title#|ucfirst}">
+                            <span class="fa fa-pinterest"></span><span class="sr-only">{#pi_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.instagram != null}
+                    <li>
+                        <a href="{$companyData.socials.instagram}" title="{#ig_follow_title#|ucfirst}">
+                            <span class="fa fa-instagram"></span><span class="sr-only">{#ig_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.github != null}
+                    <li>
+                        <a href="{$companyData.socials.github}" title="{#gh_follow_title#|ucfirst}">
+                            <span class="fa fa-github"></span><span class="sr-only">{#gh_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.soundcloud != null}
+                    <li>
+                        <a href="{$companyData.socials.soundcloud}" title="{#sc_follow_title#|ucfirst}">
+                            <span class="fa fa-soundcloud"></span><span class="sr-only">{#sc_follow_label#|ucfirst}</span>
                         </a>
                     </li>
                 {/if}

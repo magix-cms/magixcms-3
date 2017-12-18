@@ -104,11 +104,13 @@ class date_dateformat extends DateTime{
 
         return false;
     }
-	/**
-	 * 
-	 * @param string $format
-	 * @param string $time
+
+    /**
+     *
+     * @param string $format
+     * @param string $time
      * @return string
+     * @throws Exception
      */
 	public function dateDefine($format='Y-m-d',$time=null){
 		return $this->_datetime($time)->format($format) ;
@@ -118,8 +120,9 @@ class date_dateformat extends DateTime{
      * @access public
      * Retourne la date au format européen avec slash (2000/01/01)
      * @param null $time
-     * @internal param \timestamp $date
      * @return string
+     * @throws Exception
+     * @internal param \timestamp $date
      * @example
      * $datecreate = new date_dateformat();
      * echo $datecreate->dateToEuropeanFormat('01-01-2000');
@@ -132,8 +135,9 @@ class date_dateformat extends DateTime{
      * @access public
      * Retourne la date au format classique avec slash (2000/01/01)
      * @param null $time
-     * @internal param \timestamp $date
      * @return string
+     * @throws Exception
+     * @internal param \timestamp $date
      * @example
      * $datecreate = new date_dateformat();
      * echo $datecreate->dateToDefaultFormat('2000-01-01');
@@ -156,6 +160,7 @@ class date_dateformat extends DateTime{
         }
         return "$year-$month-$day";
     }
+
     /**
      * @access public
      * Retourne la date au format W3C
@@ -164,6 +169,7 @@ class date_dateformat extends DateTime{
      * 2005-08-15T15:52:01+00:00
      * @param null $time
      * @return string
+     * @throws Exception
      */
 	public function dateW3C($time=null){
 		return $this->dateDefine(DATE_W3C,$time);
@@ -174,6 +180,7 @@ class date_dateformat extends DateTime{
      * Retourne le timestamp au format unix
      * @param null $time
      * @return int|string
+     * @throws Exception
      */
 	public function getTimestamp($time=null){
 		return $this->dateDefine("U",$time);
@@ -184,6 +191,7 @@ class date_dateformat extends DateTime{
      * Retourne la date au format SQL
      * @param null $time
      * @return string
+     * @throws Exception
      */
 	public function SQLDate($time=null){
 		return $this->dateDefine("Y-m-d",$time);
@@ -194,6 +202,7 @@ class date_dateformat extends DateTime{
      * Retourne la date et l'heure au format SQL
      * @param null $time
      * @return string
+     * @throws Exception
      */
 	public function SQLDateTime($time=null){
 		return $this->dateDefine("Y-m-d H:i:s",$time);
@@ -206,7 +215,9 @@ class date_dateformat extends DateTime{
      * @param $time2
      * @param string $return_f
      * @return mixed
+     * @throws Exception
      * @internal param string $dateTime
+     * @throws Exception
      */
 	public function dateDiff($time1,$time2,$return_f = '%R%a'){
 		$datetime1 = $this->_datetime($time1);
@@ -225,9 +236,9 @@ class date_dateformat extends DateTime{
      * @return \DateTime|string DateTime
      * @example :
         $dateformat = new date_dateformat();
-        $dateformat->modify('+1 day',"Y-m-d H:i:s");
+        $dateformat->ovrModify('+1 day',"Y-m-d H:i:s");
      */
-    public function modify($modify,$format='Y-m-d',$time=null){
+    public function ovrModify($modify,$format='Y-m-d',$time=null){
         if($modify != null){
             $datetime = $this->_datetime($time);
             $datetime->modify($modify);
@@ -269,6 +280,7 @@ class date_dateformat extends DateTime{
      * @param $time
      * @param string $config
      * @return string
+     * @throws Exception
      */
     public function setInterval($time,$config='YMD'){
         $datetime = $this->_datetime($time);
@@ -296,18 +308,18 @@ class date_dateformat extends DateTime{
      * @param $time1
      * @param $time2
      * @return string
+     * @throws Exception
      * @example :
-        $date = new date_dateformat();
-        $datestart = $date->dateDefine('2012-01-01');
-        $interval = $date->setInterval('2012-01-01','D');
-        $dateend = $date->add(
-        array('interval'=>$interval,'type'=>'object'),
-            'Y-m-d',
-            '2012-01-30'
-        );
-        print $date->getStateDiff($dateend,$datestart);
-        Return expired
-     *
+     * $date = new date_dateformat();
+     * $datestart = $date->dateDefine('2012-01-01');
+     * $interval = $date->setInterval('2012-01-01','D');
+     * $dateend = $date->ovrAdd(
+     * array('interval'=>$interval,'type'=>'object'),
+     * 'Y-m-d',
+     * '2012-01-30'
+     * );
+     * print $date->getStateDiff($dateend,$datestart);
+     * Return expired
      *
      */
     public function getStateDiff($time1,$time2){
@@ -330,19 +342,19 @@ class date_dateformat extends DateTime{
      * @return \DateTime|string DateTime
      * @example :
      Utilisation avec object dateTime
-     $dateformat->add(
+     $dateformat->ovrAdd(
         array('interval'=>'P10D','type'=>'object'),
         'Y-m-d H:i:s',
         '2009-10-13'
      );
      Utilisation avec chaine pour la durée
-     $dateformat->add(
+     $dateformat->ovrAdd(
         array('interval'=>'+1 day','type'=>'string'),
         'Y-m-d H:i:s',
         '2009-10-13'
      );
      */
-    public function add(array $interval_spec,$format='Y-m-d',$time=null){
+    public function ovrAdd(array $interval_spec,$format='Y-m-d',$time=null){
         if(is_array($interval_spec)){
             $datetime = $this->_datetime($time);
             $duration = $this->optionInterval($interval_spec);
@@ -361,19 +373,19 @@ class date_dateformat extends DateTime{
      * @throws Exception
      * @return \DateTime
      Utilisation avec object dateTime
-     $dateformat->sub(
+     $dateformat->ovrSub(
         array('interval'=>'P10D','type'=>'object'),
         'Y-m-d H:i:s',
         '2009-10-13'
      );
      Utilisation avec chaine pour la durée
-     $dateformat->sub(
+     $dateformat->ovrSub(
         array('interval'=>'+1 day','type'=>'string'),
         'Y-m-d H:i:s',
         '2009-10-13'
      );
      */
-    public function sub(array $interval_spec,$format='Y-m-d',$time=null){
+    public function ovrSub(array $interval_spec,$format='Y-m-d',$time=null){
         if($interval_spec != null){
             $datetime = $this->_datetime($time);
             $duration = $this->optionInterval($interval_spec);
@@ -391,6 +403,7 @@ class date_dateformat extends DateTime{
      * @param int $day
      * @param string $format
      * @return mixed
+     * @throws Exception
      * @example :
      * $dateformat->isoDate(2008, 2);
      * $dateformat->isoDate(2008, 2, 7);
@@ -400,6 +413,7 @@ class date_dateformat extends DateTime{
         $datetime->setISODate($year, $month, $day);
         return $datetime->format($format);
     }
+
     /**
      * Assigne la date courante de l'objet à une nouvelle date.
      * @param $year
@@ -407,6 +421,7 @@ class date_dateformat extends DateTime{
      * @param $day
      * @param string $format
      * @return mixed
+     * @throws Exception
      * @example :
      * $dateformat->assignDate(2008, 2, 1);
      */

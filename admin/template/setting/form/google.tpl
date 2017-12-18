@@ -4,7 +4,7 @@
 ]}
 <form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
-        <div class="col-xs-12 col-md-4">
+        <div class="col-ph-12 col-md-4">
             <div class="form-group">
                 <label for="analytics">{#analytics#|ucfirst}</label>
                 <input type="text" id="analytics" name="setting[analytics]" class="form-control" placeholder="{#ph_analytics#}" value="{$settings.analytics}" />

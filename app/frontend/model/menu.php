@@ -57,6 +57,18 @@ class frontend_model_menu extends frontend_db_menu {
 	}
 
 	/**
+	 * @param $params
+	 * @return array
+	 */
+	public function getPluginPages($params)
+	{
+		$plugin = $this->getItems('plugin',array('id' => $params['id']),'one',false);
+		$plugin_class = 'plugins_'.$plugin['name'].'_public';
+		$plugin = new $plugin_class;
+		return $plugin->submenu($params['lang']);
+	}
+
+	/**
 	 * @param $iso
 	 * @return array
 	 */
@@ -68,10 +80,20 @@ class frontend_model_menu extends frontend_db_menu {
 				case 'pages':
 					$link['url_link']  =
 						$this->routingUrl->getBuildUrl(array(
-								'type'      =>  'pages',
-								'iso'       =>  $link['iso_lang'],
-								'id'        =>  $link['id_page'],
-								'url'       =>  $link['url_link']
+								'type' =>  'pages',
+								'iso'  =>  $link['iso_lang'],
+								'id'   =>  $link['id_page'],
+								'url'  =>  $link['url_link']
+							)
+						);
+					break;
+				case 'category':
+					$link['url_link']  =
+						$this->routingUrl->getBuildUrl(array(
+								'type' =>  'category',
+								'iso'  =>  $link['iso_lang'],
+								'id'   =>  $link['id_page'],
+								'url'  =>  $link['url_link']
 							)
 						);
 					break;
@@ -81,4 +103,3 @@ class frontend_model_menu extends frontend_db_menu {
 		return $links;
 	}
 }
-?>

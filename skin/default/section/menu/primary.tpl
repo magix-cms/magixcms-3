@@ -39,7 +39,6 @@
 {assign var="contact_current" value=1}
 {/switch}
 
-{widget_menu_data lang={getlang}}
 {* --- Array Menu --- *}
 {foreach $links as $k => $link}
     {if $link.mode_link !== 'simple'}
@@ -92,6 +91,15 @@
                 assign='pages'
                 }
             {elseif $link.type_link eq 'category'}
+                {widget_catalog_data
+                conf =[
+                'context' => 'category',
+                'select' => [{getlang} => $link.id_page]
+                ]
+                assign='pages'
+                }
+            {elseif $link.type_link eq 'plugin'}
+                {widget_menu_data conf=['type' => 'plugin', 'id' => $link.id_page, 'lang' => {getlang}]}
             {/if}
             {$links[$k]['subdata'] = $pages}
         {/strip}

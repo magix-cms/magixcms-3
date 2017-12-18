@@ -1,6 +1,8 @@
 {extends file="amp/catalog/index.tpl"}
 {block name="stylesheet"}{fetch file="skin/{template}/amp/css/catalog.min.css"}{/block}
 {block name='body:id'}category{/block}
+{block name="title"}{seo_rewrite conf=['level'=>'parent','type'=>'title','default'=>{$cat.name}] parent={$cat.name}}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'parent','type'=>'description','default'=>{$cat.resume}] parent={$cat.name}}{/block}
 {block name="amp-script"}
     {if $cat.imgSrc.large}
         <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>

@@ -20,16 +20,16 @@
         plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen colorpicker textpattern wordcount directionality',
-            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager'
+            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager mc_pages'
         ],
         toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | fontsizeselect | forecolor backcolor',
         toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media | link unlink anchor',
-        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample | code preview',
+        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample | code preview | mc_pages',
         imagetools_toolbar: "imageoptions",
         menubar: false,
         toolbar_items_size: 'small',
         image_advtab: true,
-        filemanager_crossdomain: true,
+        //filemanager_crossdomain: false,
         external_filemanager_path: '/'+baseadmin+'/template/js/vendor/filemanager/',
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
@@ -52,8 +52,8 @@
         image_class_list: [
             {title: 'None', value: ''},
             {title: 'Image Responsive', value: 'img-responsive'},
-            {title: 'Image float left', value: 'pull-left img-float'},
-            {title: 'Image float right', value: 'pull-right img-float'},
+            {title: 'Image float left', value: 'img-float float-left'},
+            {title: 'Image float right', value: 'img-float float-right'},
             {title: 'Image rounded', value: 'img-rounded'},
             {title: 'Image circle', value: 'img-circle'},
             {title: 'Image thumbnail', value: 'img-thumbnail'}
@@ -103,8 +103,9 @@
                     }
                 },
                 {title: 'Image Responsive', selector: 'img', classes: 'img-responsive'},
-                {title: 'Image float left', selector: 'img', classes: 'pull-left img-float'},
-                {title: 'Image float right', selector: 'img', classes: 'pull-right img-float'},
+                {title: 'Image float left', selector: 'img', classes: 'img-float float-left'},
+                {title: 'Image float right', selector: 'img', classes: 'img-float float-right'},
+                {title: 'Image center', selector: 'img', classes: 'center-block'},
                 {title: 'Image rounded', selector: 'img', classes: 'img-rounded'},
                 {title: 'Image circle', selector: 'img', classes: 'img-circle'},
                 {title: 'Image thumbnail', selector: 'img', classes: 'img-thumbnail'}
@@ -138,7 +139,15 @@
                     {title: "Div center", block: "div", classes: 'center-block'},
                     {title: "Div clearfix", block: "div", classes: 'clearfix'}
                 ]},
+                {title: "Header", items: [
+                    {title: "Title 1 Center", block: "h1", classes: 'text-center'},
+                    {title: "Title 2 Center", block: "h2", classes: 'text-center'},
+                    {title: "Title 3 Center", block: "h3", classes: 'text-center'},
+                    {title: "Title 4 Center", block: "h4", classes: 'text-center'},
+                    {title: "Title 5 Center", block: "h5", classes: 'text-center'}
+                ]},
                 {title: "Paragraph", items: [
+                    {title: "Text Center", block: "p", classes: 'text-center'},
                     {title: "Text Muted", block: "p", classes: 'text-muted'},
                     {title: "Text Primary", block: "p", classes: 'text-primary'},
                     {title: "Text Success", block: "p", classes: 'text-success'},

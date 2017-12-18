@@ -105,6 +105,8 @@ class component_routing_dispatcher{
                                     ),
                                     true
                                 );
+                                $this->template->assign('error_code', '404', true);
+								$this->header->mobileDetect();
                                 $this->template->display('error/index.tpl');
                             }
                         }else{
@@ -141,6 +143,8 @@ class component_routing_dispatcher{
                                         ),
                                         true
                                     );
+									$this->template->assign('error_code', '404', true);
+									$this->header->mobileDetect();
                                     $this->template->display('error/index.tpl');
                                 }
                             }

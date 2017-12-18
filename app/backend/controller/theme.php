@@ -92,6 +92,16 @@ class backend_controller_theme extends backend_db_theme{
 				$arr[$item['id_link']]['id_link'] = $item['id_link'];
 				$arr[$item['id_link']]['type_link'] = $item['type_link'];
 				$arr[$item['id_link']]['mode_link'] = $item['mode_link'];
+
+				if($item['type_link'] === 'plugin') {
+					$plugin = $this->getItems('plugin',array('id' => $item['id_page']),'one',false);
+					$plugin_class = 'plugins_'.$plugin['name'].'_admin';
+
+					if(method_exists($plugin_class,'menu_mode')) {
+						$plugin_instance = new $plugin_class;
+						$arr[$item['id_link']]['mode_opt'] = $plugin_instance->menu_mode();
+					}
+				}
 			}
 			$arr[$item['id_link']]['content'][$item['id_lang']] = array(
 				'id_lang'    => $item['id_lang'],

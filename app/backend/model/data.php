@@ -21,6 +21,47 @@ class backend_model_data extends backend_db_scheme{
 	}
 
 	/**
+	 * @param $data
+	 * @param $type
+	 * @param string $branch
+	 * @return array|mixed
+	 */
+	public function setPagesTree($data, $type, $branch = 'root')
+	{
+		$childs = array();
+		$id = 'id_'.$type;
+
+		foreach ($data as &$item) {
+			if(!isset($item[$id])) $id = 'id';
+			$childs[$item[$id]] = &$item;
+			$childs[$item[$id]]['subdata'] = array();
+		}
+		unset($item);
+
+		foreach($data as &$item) {
+			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+			if(!isset($item[$id])) $id = 'id';
+
+			if($k === 'root')
+				$childs[$k][] = &$item;
+			else
+				$childs[$k]['subdata'][] = &$item;
+		}
+		unset($item);
+
+		foreach($data as &$item) {
+			if (isset($childs[$item[$id]])) {
+				$item['subdata'] = $childs[$item[$id]]['subdata'];
+			}
+		}
+
+		if($branch === 'root')
+			return $childs[$branch];
+		else
+			return array($childs[$branch]);
+	}
+
+	/**
 	 * Retrieve data
 	 * @param string $context
 	 * @param string $type
@@ -47,9 +88,10 @@ class backend_model_data extends backend_db_scheme{
 	 * Assign data to the defined variable or return the data
 	 * @param string $type
 	 * @param string|int|null $id
-	 * @param string $context
-	 * @param boolean $assign
+	 * @param string|null $context
+	 * @param string|boolean $assign
 	 * @return mixed
+	 * @throws Exception
 	 */
 	public function getItems($type, $id = null, $context = null, $assign = true) {
 		$data = $this->setItems($context, $type, $id);
@@ -219,6 +261,8 @@ class backend_model_data extends backend_db_scheme{
 	 * @param array $tables
 	 * @param array $columns
 	 * @param null|array $assign
+	 * @param string $tpl_var
+	 * @throws Exception
 	 */
 	public function getScheme($tables, $columns, $assign = null, $tpl_var = 'scheme')
 	{
@@ -229,4 +273,3 @@ class backend_model_data extends backend_db_scheme{
 		$this->template->assign($tpl_var,$this->parseScheme($scheme, $columns, $assign));
 	}
 }
-?>

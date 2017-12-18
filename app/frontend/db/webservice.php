@@ -11,7 +11,7 @@ class frontend_db_webservice
                 //$params = $data;
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             } elseif ($config['context'] === 'one') {
-                if ($config['type'] === 'authentification') {
+                if ($config['type'] === 'auth') {
                     //Return current skin
                     $sql = 'SELECT ws.* FROM mc_webservice AS ws LIMIT 1';
                     //$params = $data;

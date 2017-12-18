@@ -1,6 +1,6 @@
 {extends file="layout.tpl"}
-{*{block name="title"}{static_metas param=$smarty.config.website_name dynamic=$home.seoTitle}{/block}*}
-{*{block name="description"}{static_metas param=$smarty.config.website_name dynamic=$home.seoDescr}{/block}*}
+{block name="title"}{if $home.seoTitle}{$home.seoTitle}{else}{$home.name}{/if}{/block}
+{block name="description"}{if $home.seoTitle}{$home.seoDescr}{elseif !empty($home.content)}{$home.content|truncate:100:'...'}{/if}{/block}
 {block name='body:id'}home{/block}
 
 {block name='article:content'}

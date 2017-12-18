@@ -12,21 +12,27 @@
     </header>
     <div id="link{$link.id_link}" class="collapse" role="tabpanel">
         <form action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=editlink&amp;edit={$link.id_link}" class="validate_form edit_in_list">
-            {if in_array($link.type_link,array('home','pages','about','about_page','catalog'))}
+            {if in_array($link.type_link,array('home','pages','about','about_page','catalog','category')) || ($link.mode_opt && is_array($link.mode_opt))}
             <div class="form-group">
                 <div class="btn-group btn-group-justified" data-toggle="buttons">
+                    {if !$link.mode_opt || $link.mode_opt && in_array('simple', $link.mode_opt)}
                     <label class="btn btn-default{if $link.mode_link === 'simple'} active{/if}">
                         <input type="radio" name="link[{$link.id_link}][mode]" value="simple" id="simple{$link.id_link}" autocomplete="off"{if $link.mode_link === 'simple'} checked{/if}>
                         Simple
                     </label>
+                    {/if}
+                    {if !$link.mode_opt || $link.mode_opt && in_array('dropdown', $link.mode_opt)}
                     <label class="btn btn-default{if $link.mode_link === 'dropdown'} active{/if}">
                         <input type="radio" name="link[{$link.id_link}][mode]" value="dropdown" id="dropdown{$link.id_link}" autocomplete="off"{if $link.mode_link === 'dropdown'} checked{/if}>
                         Dropdown
                     </label>
+                    {/if}
+                    {if !$link.mode_opt || $link.mode_opt && in_array('mega', $link.mode_opt)}
                     <label class="btn btn-default{if $link.mode_link === 'mega'} active{/if}">
                         <input type="radio" name="link[{$link.id_link}][mode]" value="mega" id="mega{$link.id_link}" autocomplete="off"{if $link.mode_link === 'mega'} checked{/if}>
                         Megadropdown
                     </label>
+                    {/if}
                 </div>
             </div>
             {else}

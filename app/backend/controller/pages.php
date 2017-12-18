@@ -2,9 +2,9 @@
 class backend_controller_pages extends backend_db_pages
 {
 
-    public $edit, $action, $tabs, $search, $plugin;
+    public $edit, $action, $tabs, $search, $plugin, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl;
-    public $id_pages,$parent_id,$content,$pages,$img;
+    public $id_pages,$parent_id,$content,$pages,$img,$iso;
 
     public function __construct()
     {
@@ -41,7 +41,10 @@ class backend_controller_pages extends backend_db_pages
         }
 
         // --- ADD or EDIT
-        if (http_request::isPost('id')) {
+        if (http_request::isGet('id')) {
+            $this->id_pages = $formClean->simpleClean($_GET['id']);
+        }
+        elseif (http_request::isPost('id')) {
             $this->id_pages = $formClean->simpleClean($_POST['id']);
         }
         if (http_request::isPost('parent_id')) {
@@ -74,6 +77,11 @@ class backend_controller_pages extends backend_db_pages
         if(http_request::isGet('plugin')){
             $this->plugin = $formClean->simpleClean($_GET['plugin']);
         }
+
+        # JSON LINK (TinyMCE)
+		if(http_request::isGet('iso')){
+			$this->iso = $formClean->simpleClean($_GET['iso']);
+		}
     }
 
 	/**
@@ -83,9 +91,23 @@ class backend_controller_pages extends backend_db_pages
 	 * @param string $context
 	 * @param boolean $assign
 	 * @return mixed
+	 * @throws Exception
 	 */
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
+	/**
+	 * @param $id_lang
+	 * @return array|mixed
+	 * @throws Exception
+	 */
+	public function getListPages($id_lang)
+	{
+		//$this->modelLanguage->getLanguage();
+		//$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+		$list = $this->getItems('pagesPublishedSelect',array(':default_lang'=>$id_lang),'all',false);
+		return $this->data->setPagesTree($list,'pages');
 	}
 
     /**
@@ -96,6 +118,7 @@ class backend_controller_pages extends backend_db_pages
         $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
         $this->getItems('lastPages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
     }
+
     /**
      * @param $data
      * @return array
@@ -323,12 +346,7 @@ class backend_controller_pages extends backend_db_pages
                         );
                         $this->data->getScheme(array('mc_cms_page', 'mc_cms_page_content'), array('id_pages', 'name_pages', 'menu_pages', 'date_register'), $assign);
                         // Execute un plugin core
-                        $this->modelPlugins->getItems(
-                            array(
-                                'type' => 'core',
-                                'controller' => $this->controller
-                            )
-                        );
+                        $this->modelPlugins->getCoreItem();
                         break;
                 }
             }
@@ -419,12 +437,17 @@ class backend_controller_pages extends backend_db_pages
                             $this->template->assign('page',$setEditData[$this->edit]);
 
                             $assign = array(
-                                'id_pages',
-                                'name_pages' => ['title' => 'name'],
-                                'menu_pages',
-                                'date_register'
+								'id_pages',
+								'name_pages' => ['title' => 'name'],
+								'img_pages' => ['type' => 'bin', 'input' => null, 'class' => ''],
+								'resume_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+								'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+								'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+								'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+								'menu_pages',
+								'date_register'
                             );
-                            $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','menu_pages','date_register'),$assign);
+							$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
                             $pageChild = $this->getItems('pagesChild',$this->edit,'all');
 
                             if(isset($this->search)) {
@@ -496,6 +519,24 @@ class backend_controller_pages extends backend_db_pages
                             );
                         }
                         break;
+					case 'getLink':
+						if(isset($this->id_pages) && isset($this->iso)) {
+							$page = $this->getItems('pageLang',array('id' => $this->id_pages,'iso' => $this->iso),'one',false);
+							if($page) {
+								$page['url'] = $this->routingUrl->getBuildUrl(array(
+									'type'      =>  'pages',
+									'iso'       =>  $page['iso_lang'],
+									'id'        =>  $page['id_pages'],
+									'url'       =>  $page['url_pages']
+								));
+								$link = '<a title="'.$page['url'].'" href="'.$page['name_pages'].'">'.$page['name_pages'].'</a>';
+								$this->header->set_json_headers();
+								print '{"name":'.json_encode($page['name_pages']).',"url":'.json_encode($page['url']).'}';
+							} else {
+								print false;
+							}
+						}
+						break;
                 }
             }
             else {
@@ -505,6 +546,7 @@ class backend_controller_pages extends backend_db_pages
                 $assign = array(
                     'id_pages',
                     'name_pages' => ['title' => 'name'],
+					'img_pages' => ['type' => 'bin', 'input' => null, 'class' => ''],
                     'resume_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
                     'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
                     'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
@@ -522,6 +564,7 @@ class backend_controller_pages extends backend_db_pages
                             'id_pages',
                             'name_pages' => ['title' => 'name'],
                             'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
+							'img_pages' => ['type' => 'bin', 'input' => null, 'class' => ''],
                             'resume_pages' => ['type' => 'bin', 'input' => null],
                             'content_pages' => ['type' => 'bin', 'input' => null],
                             'seo_title_pages' => ['title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null],
@@ -531,7 +574,7 @@ class backend_controller_pages extends backend_db_pages
                         );
                     }
                 }
-                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
                 $this->template->display('pages/index.tpl');
             }
         }

@@ -86,16 +86,16 @@ class backend_db_news
                             WHERE c.published_news = 1 AND c.id_lang = :id_lang";
                     $params = $data;
 
-                }elseif ($config['type'] === 'lastNews'){
+                }
+                elseif ($config['type'] === 'lastNews'){
                     //### -- Dashboard Data
-
                     $sql = 'SELECT p.id_news,c.name_news,c.last_update,c.date_publish,c.published_news, p.date_register
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE c.id_lang = :default_lang
 							ORDER BY p.id_news DESC
-								LIMIT 4';
+							LIMIT 5';
                     $params = $data;
                 }
 

@@ -78,6 +78,7 @@ class plugins_contact_admin extends plugins_contact_db{
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
     /**
      * @param $data
      * @return array
@@ -309,4 +310,12 @@ class plugins_contact_admin extends plugins_contact_db{
             $this->template->display('index.tpl');
         }
     }
+
+	/**
+	 * @return array|bool
+	 */
+	public function menu_mode()
+	{
+		return class_exists('plugins_gmap_public') ? array('simple','dropdown') : false;
+	}
 }

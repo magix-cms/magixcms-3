@@ -73,20 +73,24 @@ class backend_model_plugins{
                     }
 
                     break;
-                case 'core':
-                    if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'core.php')) {
-                        $class = 'plugins_' . $item['name'] . '_core';
-                        if (method_exists($class, 'run')) {
-                            if(isset($this->plugin)){
-                                $executeClass = $this->getCallClass('plugins_' . $this->plugin . '_core');
-                                $executeClass->run();
-                            }
-                        }
-                    }
-                    break;
             }
         }
         return $newsItems;
+    }
+
+    /**
+     *
+     */
+    public function getCoreItem(){
+        if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$this->plugin.DIRECTORY_SEPARATOR.'core.php')) {
+            $class = 'plugins_' . $this->plugin . '_core';
+            if (method_exists($class, 'run')) {
+                if(isset($this->plugin)){
+                    $executeClass = $this->getCallClass('plugins_' . $this->plugin . '_core');
+                    $executeClass->run();
+                }
+            }
+        }
     }
 
     /**

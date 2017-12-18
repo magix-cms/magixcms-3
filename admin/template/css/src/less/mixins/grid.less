@@ -39,11 +39,23 @@
 .row {
 	.make-row();
 }
+.row-center {
+	justify-content: center;
+}
+
 
 
 // Columns
 //
 // Common styles for small and large grid columns
+
+.col {
+	-ms-flex-preferred-size: 0;
+	flex-basis: 0;
+	-ms-flex-positive: 1;
+	flex-grow: 1;
+	max-width: 100%;
+}
 
 .make-grid-columns();
 
@@ -65,6 +77,10 @@
 @media (min-width: @screen-xs-min) {
 	.make-grid(xs);
 	.make-rows(xs);
+	.col-xs {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }
 
 
@@ -76,6 +92,10 @@
 @media (min-width: @screen-sm-min) {
 	.make-grid(sm);
 	.make-rows(sm);
+	.col-sm {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }
 
 
@@ -86,6 +106,10 @@
 @media (min-width: @screen-md-min) {
 	.make-grid(md);
 	.make-rows(md);
+	.col-md {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }
 
 
@@ -96,4 +120,8 @@
 @media (min-width: @screen-lg-min) {
 	.make-grid(lg);
 	.make-rows(lg);
+	.col-lg {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }

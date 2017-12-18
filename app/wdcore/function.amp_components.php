@@ -27,7 +27,7 @@ function smarty_function_amp_components($params)
 {
 	$content = $params['content'];
 	if(!isset($params['image'])) $params['image'] = true;
-	if(!isset($params['galery'])) $params['galery'] = true;
+	if(!isset($params['gallery'])) $params['gallery'] = true;
 	$components = array();
 
 	// --- Search for img-zoom anchor to convert them into apm-image-lightbox components
@@ -38,8 +38,8 @@ function smarty_function_amp_components($params)
 	}
 
 	// --- Search for img-gallery anchor to convert them into apm-lightbox gallery
-	if($params['galery']) {
-		if(preg_match('/<a(.(?!<\/a>))*(img-galery)(.(?!<a))*<\/a>/i',$content)) {
+	if($params['gallery']) {
+		if(preg_match('/<a(.(?!<\/a>))*(img-gallery)(.(?!<a))*<\/a>/i',$content)) {
 			$components[] = '<script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>';
 			$components[] = '<script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>';
 		}

@@ -1,33 +1,32 @@
 @charset "utf-8";
-/*
- * Custom rules for text
- */
-/*---------------------------*\
------ Font weight classes -----
-\*---------------------------*/
-.semiBold {
-    font-weight: 600;
+//
+// Custom rules for text
+//
+.material-icons {
+	vertical-align: bottom;
 }
 
-.extraBold {
-    font-weight: 800;
+//
+// Font weight classes
+//
+.quote {
+	font-family: @quote-font;
 }
 
-/*-------------*\
------ Liens -----
-\*-------------*/
-.bold-link {
-	color: inherit !important;
-	font-weight: bold !important;
+.title-font {
+	font-family: @headings-font-family;
 }
 
+//
+// Liens
+//
 .all-hover {
 	.hover-link();
 }
 
-/*----------------------*\
------ Citation style -----
-\*----------------------*/
+//
+// Quote
+//
 blockquote {
     border-left: none;
     padding-left: 40px;
@@ -66,9 +65,9 @@ blockquote {
 }
 
 
-/*--------------*\
------ Listes -----
-\*--------------*/
+//
+// List
+//
 .link-bar {
 	text-align: center;
 	.list-unstyled;
@@ -88,10 +87,19 @@ blockquote {
 		}
 	}
 }
+.link-list {
+	.normalize-link(@text-color);
+	li {
+		a {
+			display: inline-block;
+			padding: 2px 0 3px;
+		}
+	}
+}
 
-/*-----------------------*\
------ Text font sizes -----
-\*-----------------------*/
+//
+// Text font sizes
+//
 // --- justify content
 .text-justify {
 	.text-justify;

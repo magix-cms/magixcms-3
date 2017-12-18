@@ -33,6 +33,19 @@
 	.set-hover(@color, @hover-color, @decoration);
 }
 
+// set a link to cover all his relative parent
+.hover-link() {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: @z-allhover;
+	text-indent: 200%;
+	white-space: nowrap;
+	font-size: 0;
+	opacity: 0;
+	.square(100%);
+}
+
 /*--------------------------*\
 -----  Headings styling  -----
 ----- shortcut functions -----
@@ -72,20 +85,26 @@
 
 // Normalize content
 .normalize-content(@color: @main-color) {
-	#article {
+	article {
 		// Normalize the main title of the content
 		> h1:first-child {
 			.main-title;
 		}
 		// Normalize images in content
 		img {
-			.img-responsive;
-	
-			&.pull-right {
-				margin: 0 0 1rem 1rem !important;
+			&.float-right {
+				float: right;
+				margin: 0 0 1rem 1rem;
 			}
-			&.pull-left {
-				margin: 0 1rem 1rem 0 !important;
+			&.float-left {
+				float: left;
+				margin: 0 1rem 1rem 0;
+			}
+			@media (min-width: @screen-sm-min) {
+				&.float-right,
+				&.float-left {
+					max-width: 50%;
+				}
 			}
 		}
 		
@@ -102,7 +121,7 @@
 		small.datePublished {
 			display: block;
 			margin-bottom: 15px;
-			color: @light-gray;
+			color: @light-grey;
 		}
 		.description {
 			margin-bottom: 30px;
@@ -112,72 +131,63 @@
 			color: @text-color;
 		});
 	}
-
-	.normalize-link(@color);
 }
 
 // --- Responsive text sizes
 .adaptive-font-size() {
-	@media (min-width: @screen-sm-min) {
-		h1 { font-size: (@font-size-h1 * 1.4); } 			   // - 1.75 rem
-		h2 { font-size: (@font-size-h2 * 1.255); }			   // - 1.5 rem
-		h3 { font-size: (@font-size-h3 * 1.230769230769231); } // - 1.4 rem
-		h4 { font-size: (@font-size-h4 * 1.214285714285714); } // - 1.275 rem
-		h5 { font-size: (@font-size-h5 * 1.125); } 			   // - 1.15 rem
-
-		@media (min-width: @screen-md-min) {
-			h1 { font-size: (@font-size-h1 * 1.6); }				// - 2 rem
-			h2 { font-size: (@font-size-h2 * 1.416666666666667); }	// - 1.7rem
-			h3 { font-size: (@font-size-h3 * 1.384615384615385); }	// - 1.575 rem
-			h4 { font-size: (@font-size-h4 * 1.357142857142857); }	// - 1.425 rem
-			h5 { font-size: (@font-size-h5 * 1.25); } 				// - 1.25 rem
-
-			@media (min-width: @screen-lg-min) {
-				h1 { font-size: @font-size-h1 * 2; } 				 // - 2.5 rem
-				h2 { font-size: @font-size-h2 * 1.666666666666667; } // - 2 rem
-				h3 { font-size: @font-size-h3 * 1.538461538461538; } // - 1.75 rem
-				h4 { font-size: @font-size-h4 * 1.428571428571429; } // - 1.5 rem
-				h5 { font-size: @font-size-h5 * 1.25; }				 // - 1.25 rem
-			}
-		}
+	// --- Small Screen
+	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+		h1 { font-size: extract(@font-size-sm, 1); }
+		h2 { font-size: extract(@font-size-sm, 2); }
+		h3 { font-size: extract(@font-size-sm, 3); }
+	}
+	// --- Medium Screen
+	@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+		h1 { font-size: extract(@font-size-md, 1); }
+		h2 { font-size: extract(@font-size-md, 2); }
+		h3 { font-size: extract(@font-size-md, 3); }
+	}
+	// --- Large Screen
+	@media (min-width: @screen-lg-min) {
+		h1 { font-size: extract(@font-size-lg, 1); }
+		h2 { font-size: extract(@font-size-lg, 2); }
+		h3 { font-size: extract(@font-size-lg, 3); }
+		h4 { font-size: extract(@font-size-lg, 4); }
 	}
 
 	// These declarations are kept separate from and placed after
 	// the previous tag-based declarations so that the classes beat the tags in
 	// the CSS cascade, and thus <h1 class="h2"> will be styled like an h2.
-	@media (min-width: @screen-sm-min) {
-		.h1 { font-size: (@font-size-h1 * 1.4); } 			   // - 1.75 rem
-		.h2 { font-size: (@font-size-h2 * 1.255); }			   // - 1.5 rem
-		.h3 { font-size: (@font-size-h3 * 1.230769230769231); } // - 1.4 rem
-		.h4 { font-size: (@font-size-h4 * 1.214285714285714); } // - 1.275 rem
-		.h5 { font-size: (@font-size-h5 * 1.125); } 			   // - 1.15 rem
-
-		@media (min-width: @screen-md-min) {
-			.h1 { font-size: (@font-size-h1 * 1.6); }				// - 2 rem
-			.h2 { font-size: (@font-size-h2 * 1.416666666666667); }	// - 1.7rem
-			.h3 { font-size: (@font-size-h3 * 1.384615384615385); }	// - 1.575 rem
-			.h4 { font-size: (@font-size-h4 * 1.357142857142857); }	// - 1.425 rem
-			.h5 { font-size: (@font-size-h5 * 1.25); } 				// - 1.25 rem
-
-			@media (min-width: @screen-lg-min) {
-				.h1 { font-size: @font-size-h1 * 2; } 				 // - 2.5 rem
-				.h2 { font-size: @font-size-h2 * 1.666666666666667; } // - 2 rem
-				.h3 { font-size: @font-size-h3 * 1.538461538461538; } // - 1.75 rem
-				.h4 { font-size: @font-size-h4 * 1.428571428571429; } // - 1.5 rem
-				.h5 { font-size: @font-size-h5 * 1.25; }				 // - 1.25 rem
-			}
-		}
+	// --- Small Screen
+	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+		.h1 { font-size: extract(@font-size-sm, 1); }
+		.h2 { font-size: extract(@font-size-sm, 2); }
+		.h3 { font-size: extract(@font-size-sm, 3); }
+	}
+	// --- Medium Screen
+	@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+		.h1 { font-size: extract(@font-size-md, 1); }
+		.h2 { font-size: extract(@font-size-md, 2); }
+		.h3 { font-size: extract(@font-size-md, 3); }
+	}
+	// --- Large Screen
+	@media (min-width: @screen-lg-min) {
+		.h1 { font-size: extract(@font-size-lg, 1); }
+		.h2 { font-size: extract(@font-size-lg, 2); }
+		.h3 { font-size: extract(@font-size-lg, 3); }
+		.h4 { font-size: extract(@font-size-lg, 4); }
 	}
 
-	@media (min-width: @screen-sm-min) {
+	// --- Small Screen
+	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
 		.lead { font-size: @lead-font-size * 1.03030303030303; } // - 1.0625 rem
-
-		@media (min-width: @screen-md-min) {
-			.lead { font-size: @lead-font-size * 1.090909090909091; } // - 1.125 rem
-
-			@media (min-width: @screen-lg-min) {
-				.lead { font-size: @lead-font-size * 1.151515151515152; } // - 1.1875 rem
-			}
-		}
+	}
+	// --- Medium Screen
+	@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+		.lead { font-size: @lead-font-size * 1.090909090909091; } // - 1.125 rem
+	}
+	// --- Large Screen
+	@media (min-width: @screen-lg-min) {
+		.lead { font-size: @lead-font-size * 1.151515151515152; } // - 1.1875 rem
 	}
 }

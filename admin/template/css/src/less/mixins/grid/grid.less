@@ -23,6 +23,7 @@
 	margin-left: auto;
 	padding-left: floor((@gutter / 2));
 	padding-right: ceil((@gutter / 2));
+	width: 100%;
 }
 
 // Centered container element
@@ -41,21 +42,24 @@
 	.grid-display();
 }
 .make-rows(@class) {
+	.row-@{class}-center {
+		justify-content: center;
+	}
 	.row-@{class}-reverse {
 		flex-direction: row-reverse;
 	}
 }
 
 // Generate the phone columns
-.make-column(@class; @columns; @gutter: @grid-gutter-width) {
+.make-column(@columns, @type) when (@type = col){
 	.col-width(@columns);
 }
-.make-column-offset(@class; @columns) {
-	margin-left: percentage((@columns / @grid-columns));
-}
-.make-column-push(@class; @columns) {
+.make-column(@columns, @type) when (@type = push){
 	left: percentage((@columns / @grid-columns));
 }
-.make-column-pull(@class; @columns) {
+.make-column(@columns, @type) when (@type = pull){
 	right: percentage((@columns / @grid-columns));
+}
+.make-column(@columns, @type) when (@type = offset){
+	margin-left: percentage((@columns / @grid-columns));
 }

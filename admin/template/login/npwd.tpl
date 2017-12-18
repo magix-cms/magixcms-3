@@ -15,7 +15,7 @@
                 {$debug}
             {/if}
             <div id="logo">
-                <img src="/{baseadmin}/template/img/logo/logo-magix_cms.png" alt="Magix CMS" width="269" height="50">
+                <img src="/{baseadmin}/template/img/logo/logo-magix_cms.png" alt="Magix CMS" width="229" height="50">
             </div>
             <div class="flip-container">
                 <div class="flipper">
@@ -34,7 +34,7 @@
                             </div>
                             {/if}
                             <div class="panel-footer">
-                                <a class="btn btn-default" href="{geturl}/login.php" type="button">
+                                <a class="btn btn-default" href="{geturl}/admin/" type="button">
                                     <i class="icon-caret-left"></i>
                                     Retour à la connexion
                                 </a>

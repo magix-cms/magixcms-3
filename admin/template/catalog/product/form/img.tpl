@@ -10,7 +10,7 @@
         </div>
     </div>
     <form id="add_img_product" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}" method="post" enctype="multipart/form-data" class="form-gen col-ph-12">
-        {*<div class="col-xs-12">
+        {*<div class="col-ph-12">
             <div class="form-group">
                 <input type="hidden" name="MAX_FILE_SIZE" value="4048576" />
                 <input type="file" id="img_multiple" name="img_multiple[]" class="inputfile inputimg" value="" multiple />

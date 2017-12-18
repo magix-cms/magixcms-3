@@ -27,7 +27,7 @@
 
 	a:hover,
 	a:focus {
-		.tab-focus();
+		//.tab-focus();
 		text-decoration: @decoration;
 		.set-hover(@color, @hover-color);
 	}
@@ -92,11 +92,19 @@
 		}
 		// Normalize images in content
 		img {
-			&.pull-right {
+			&.float-right {
+				float: right;
 				margin: 0 0 1rem 1rem;
 			}
-			&.pull-left {
+			&.float-left {
+				float: left;
 				margin: 0 1rem 1rem 0;
+			}
+			@media (min-width: @screen-sm-min) {
+				&.float-right,
+				&.float-left {
+					max-width: 50%;
+				}
 			}
 		}
 

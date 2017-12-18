@@ -12,7 +12,7 @@ class backend_model_language{
     /**
      * @return array
      */
-    private function setLanguage(){
+    public function setLanguage(){
         $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
         foreach ($data as $key) {
             $id_lang[]  = $key['id_lang'];

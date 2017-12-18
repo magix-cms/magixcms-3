@@ -1,8 +1,84 @@
-/*
- * Rules for CMS page
- */
-#cms {
-	article {
-		margin-bottom: 30px;
+//
+// Rules for CMS page
+//
+.cms {
+	header {
+		display: flex;
+		//justify-content: space-between;
+		margin: 8px auto 25px;
+		padding-bottom: 15px;
+		border-bottom: 1px solid #eee;
+
+		h1 {
+			margin: 0;
+		}
+	}
+}
+
+.toc-drop {
+	.btn-link {
+		color: @text-color;
+	}
+
+	> .dropdown-menu {
+		//right: 0;
+		//left: auto;
+		padding: 10px;
+
+		.material-icons {
+			color: @light-grey;
+		}
+
+		.dropdown-header {
+			color: @text-color;
+		}
+
+		> .dropdown-header {
+			font-size: inherit;
+			padding: 5px;
+			margin-bottom: 5px;
+		}
+
+		li {
+			padding: 3px 6px;
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+
+			a {
+				padding: 0;
+			}
+
+			&:not(.dropdown-header) {
+				.material-icons {
+					font-size: 8px;
+					width: 24px;
+					margin-right: 5px;
+					text-align: center;
+				}
+			}
+		}
+
+		.btn-link {
+			padding: 0;
+			border: none;
+
+			a {
+				color: @text-color;
+			}
+		}
+
+		.dropdown-menu {
+			position: relative;
+			top: auto;
+			border: none;
+			box-shadow: none;
+			margin: 4px 0 4px 8px;
+		}
+
+		> .dropdown-menu {
+			display: block;
+			border-left: 1px solid #eee;
+		}
 	}
 }

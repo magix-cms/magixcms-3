@@ -2,11 +2,6 @@
 // Different block style
 //
 .dropdown {
-	.show-less,
-	.show-more {
-		float: right;
-	}
-
 	&:not(.open) {
 		.dropdown-toggle .show-less {
 			display: none;
@@ -38,14 +33,24 @@
 		box-shadow: 0 0 3px rgba(0,0,0,.4);
 		border-radius: 0;
 		border: none;
-		min-width: 100%;
-		top: ~"calc(100% - 2px)";
 
 		> li {
 			&.active, > a {
 				font-weight: 400;
 				padding: 5px 8px;
 			}
+		}
+	}
+
+	&:not(.toc-drop) {
+		.show-less,
+		.show-more {
+			float: right;
+		}
+
+		.dropdown-menu {
+			min-width: 100%;
+			top: ~"calc(100% - 2px)";
 		}
 	}
 
@@ -106,16 +111,18 @@
 	}
 }
 
-.vignette-list {
-	overflow: hidden;
-	margin: 0 -15px;
-
-	.section-block{
+@media (max-width: @screen-xs-max) {
+	.vignette-list {
+		overflow: hidden;
 		margin: 0 -15px;
-		padding-right: 30px;
-		padding-left: 30px;
-		background-color: #eee;
-		.shadow(1,inset);
+
+		.section-block{
+			margin: 0 -15px;
+			padding-right: 30px;
+			padding-left: 30px;
+			background-color: #eee;
+			.shadow(1,inset);
+		}
 	}
 }
 
@@ -129,7 +136,7 @@
 		background-color: #eee;
 		.shadow(1,inset);
 
-		> .row > div {
+		.tile-list {
 			padding: 30px 15px 30px 30px;
 			margin-left: 105px;
 			border-left: 2px solid #dfdfdf;

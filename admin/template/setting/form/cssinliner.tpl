@@ -1,6 +1,6 @@
 <form id="edit_setting_cssinliner" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
-        <div class="col-xs-12 col-md-4">
+        <div class="col-ph-12 col-md-4">
             <header>
                 <div class="form-group">
                     <label for="cssinliner_enabled">{#cssinliner#|ucfirst}&nbsp;?</label>
@@ -16,7 +16,7 @@
                     Header
                 </h3>
                 <div class="row">
-                    <div class="form-group col-xs-12 col-md-6">
+                    <div class="form-group col-ph-12 col-md-6">
                         <label>
                             Background
                         </label>
@@ -25,7 +25,7 @@
                             <span class="input-group-addon"><i></i></span>
                         </div>
                     </div>
-                    <div class="form-group col-xs-12 col-md-6">
+                    <div class="form-group col-ph-12 col-md-6">
                         <label>
                             Color
                         </label>
@@ -39,7 +39,7 @@
                     Footer
                 </h3>
                 <div class="row">
-                    <div class="form-group col-xs-12 col-md-6">
+                    <div class="form-group col-ph-12 col-md-6">
                         <label>
                             Background
                         </label>
@@ -48,7 +48,7 @@
                             <span class="input-group-addon"><i></i></span>
                         </div>
                     </div>
-                    <div class="form-group col-xs-12 col-md-6">
+                    <div class="form-group col-ph-12 col-md-6">
                         <label>
                             Color
                         </label>

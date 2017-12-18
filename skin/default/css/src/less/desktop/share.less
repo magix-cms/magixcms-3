@@ -1,0 +1,79 @@
+//
+// Social Share Buttons
+//
+.sharebox {
+	> .material-icons {
+		color: @light-grey;
+		float: left;
+		font-weight: 300;
+		line-height: 1.4;
+		font-size: 24px;
+		padding: 0.2em 15px 0.3em 0;
+
+		+ ul {
+			opacity: 0;
+			visibility: hidden;
+			.auto-transition(.35s,all,ease,.5s);
+		}
+
+		&:hover + ul,
+		& + ul:hover {
+			opacity: 1;
+			visibility: visible;
+			.auto-transition(.35s,all,ease);
+		}
+	}
+}
+
+.share-nav {
+	padding: 7px 0;
+	margin: -4px 0 0;
+
+	.fa {
+		.square(35px);
+	}
+	a:hover {
+		text-decoration: none;
+	}
+}
+
+#sharebar {
+	//background: @sharebar-bg;
+	overflow: hidden;
+	padding: 20px 0 16px;
+
+	.label {
+		float: left;
+		line-height: 1.4;
+		padding: 0.2em 0 0.3em;
+		margin-right: 8px;
+	}
+
+	ul {
+		float: left;
+		li {
+			float: left;
+			& + li {
+				margin-left: 10px;
+			}
+		}
+	}
+
+	.followbox {
+		ul {
+			margin: 5px 0 0 10px;
+
+			li {
+				font-size: 20px;
+
+				a {
+					color: #555;
+
+					&:hover,&:active {
+						color: @main-color;
+					}
+				}
+			}
+		}
+	}
+}

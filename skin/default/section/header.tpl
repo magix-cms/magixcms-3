@@ -1,4 +1,5 @@
 <header id="header" class="header" role="navigation"{if !$touch}class="at-top"{/if}>
+    <div class="container">
     {* Show Nav Button (xs ad sm only) *}
     <button type="button" class="toggle-menu navbar-toggle" data-toggle="collapse" data-target="#menu">
         <i class="material-icons">menu</i>
@@ -8,10 +9,9 @@
     <div class="site-name">
         <a href="{geturl}/{getlang}/" title="{#logo_link_title#|ucfirst}">
             {strip}{capture name="sizes"}
-                (min-width: 1500px) 5vw,
-                (min-width: 992px) 8vw,
-                (orientation: portrait) and (min-width: 768px) 15vw,
-                (orientation: landscape) and (min-width: 768px) 10vw,
+                (min-width: 1200px) 10vw,
+                (min-width: 992px) 15vw,
+                (orientation: landscape) and (min-width: 768px) 20vw,
                 (orientation: portrait) and (min-width: 480px) 25vw,
                 200px
             {/capture}
@@ -39,5 +39,6 @@
             {include file="section/brick/lang.tpl" display='menu'}
         </div>
     {/if}
+    </div>
 </header>
 {include file="section/menu/primary.tpl" type="dropdown" root=['home'=>true,'about'=>true,'catalog'=>true,'news'=>true,'contact'=>true] menu="side" main=false submenu=true gmap=true mobile=true}

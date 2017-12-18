@@ -3,15 +3,16 @@
 }
 
 @media (orientation: landscape), (min-width: @screen-md-min){
-	#header {
+	#header .container {
 		justify-content: space-between;
+		max-width: @screen-lg-min;
 	}
 
 	/*#navbar-brand {
 		margin-left: 15px;
 	}*/
 
-	#header > div {
+	#header .container > div {
 		padding-left: 15px;
 		padding-right: 15px;
 	}

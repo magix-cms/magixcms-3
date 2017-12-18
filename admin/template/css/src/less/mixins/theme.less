@@ -1,0 +1,108 @@
+//
+// Theme Colors
+//
+@text-color: #555;
+
+// --- Theme Colors
+@main-color: #3b61a9;
+@sd-color: #808284;
+@dark-color: #222;
+
+//// --- Theme Colors Variant
+// --- Main Theme
+@main-colors:
+	darken(@main-color, 28%),
+	darken(@sd-color, 14%),
+	@main-color,
+	lighten(@sd-color, 14%),
+	lighten(@main-color, 28%);
+
+// --- Secondary Color
+@sd-colors:
+	darken(@sd-color, 28%),
+	#545657,
+	@sd-color,
+	#afb1b4,
+	lighten(@sd-color, 28%);
+
+// --- Neutral Colors
+@grey-colors:
+	extract(@grey, 9),
+	extract(@grey, 8),
+	extract(@grey, 7),
+	extract(@grey, 6),
+	extract(@grey, 5);
+
+// --- Dark Color
+@dark-colors:
+	extract(@grey, 12),
+	#111,
+	extract(@grey, 11),
+	extract(@grey, 10),
+	extract(@grey, 9);
+
+
+//
+// Theme Textures
+//
+
+@main-texture:  	"@{patternpath}fabric_plaid.png";
+@header-texture:	@main-texture;
+@menu-texture:  	@main-texture;
+@footer-texture:	@main-texture;
+
+//
+// Toolbar
+//
+
+@toolbar-bg:		@dark-color;
+
+
+//
+// Menu
+//
+
+@menu-color: 		@main-color;
+@menu-bg: 			@smooth-white;
+@menu-active-color: @smooth-white;
+@menu-active-bg:	@main-color;
+
+
+//
+// Breadcrumb
+//
+
+@cb-nav-border-color: #ddd;
+
+
+//
+// Header
+//
+
+@header-bg: 		@dark-color;
+@header-fixed-bg:   rgba(242,242,242,.9);
+
+
+/*--------------*\
+----- Footer -----
+\*--------------*/
+
+//@sharebar-bg:	@smooth-white url("@{sharebar-txt}") repeat top left;
+@sharebar-bg:	@smooth-white;
+@footer-bg: 	#333;
+@footer-color: 	#e6e6e6;
+
+
+//
+// Socials
+//
+
+@facebook:  #425fb0, #5c79ca;
+@twitter:   #1e87d9, #38a1f3;
+@viadeo:    #0a0a0a, #242424;
+@google:    #c8311b, #e24b35;
+@linkedin:  #2f6296, #497cb0;
+@pinterest: #bd081c, #d62035;
+@soundcloud: #f50, #ff621a;
+@github: #111111, #222222;
+@instagram: #913AC5, #D82F81;

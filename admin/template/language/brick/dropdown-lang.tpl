@@ -1,5 +1,5 @@
 {*<div class="row">
-    <div class="col-xs-12 col-md-4">
+    <div class="col-ph-12 col-md-4">
         <label for="id_lang">{#language#|ucfirst} *</label>
         <div class="dropdown dropdown-lang">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

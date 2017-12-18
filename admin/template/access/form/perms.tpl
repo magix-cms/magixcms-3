@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-ph-12">
         {if !isset($row)}
         <div class="form-group">
             <label for="id_module">{#module#|ucfirst}</label>
@@ -34,7 +34,7 @@
             </label>
         </div>
     </div>
-    <div class="col-xs-12 col-md-4">
+    <div class="col-ph-12 col-md-4">
         {if $row}
         <input type="hidden" id="id_access{$row.id_access}" name="id_access" value="{$row.id_access}" required>
         <input type="hidden" id="id_role{$row.id_access}" name="id" value="{$id}" required>

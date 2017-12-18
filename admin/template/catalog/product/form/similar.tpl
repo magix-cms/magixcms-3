@@ -1,12 +1,12 @@
 <h3>Ajouter un produit similaire</h3>
 <div class="row">
-    <div class="col-xs-12 col-md-4">
+    <div class="col-ph-12 col-md-4">
         <div class="form-group">
             <label for="product_id">{#id#|ucfirst} {#product#}&nbsp;</label>
             <input type="text" name="product_id" id="product_id" class="form-control mygroup" placeholder="{#ph_id#}" value="" />
         </div>
     </div>
-    <div class="col-xs-12 col-md-8">
+    <div class="col-ph-12 col-md-8">
         <div class="form-group">
             <label for="product">{#product#|ucfirst}&nbsp;</label>
             <div id="product" class="btn-group btn-block selectpicker" data-clear="true" data-live="true">
@@ -48,7 +48,7 @@
     </div>
 </div>
 <div class="row">
-    <div id="submit" class="col-xs-12 col-md-6">
+    <div id="submit" class="col-ph-12 col-md-6">
         <input type="hidden" id="id_product" name="id" value="{$id}">
         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="add">{#save#|ucfirst}</button>
     </div>

@@ -33,7 +33,7 @@
 
                             <div class="form-group submit-group">
                                 <input type="hidden" id="hashtoken" name="hashtoken" value="{$hashpass}" />
-                                <input type="submit" class="btn btn-block btn-primary" value="{#login#|upper}" />
+                                <input type="submit" class="btn btn-block btn-main-theme" value="{#login#|upper}" />
                             </div>
 
                             <div class="form-group">

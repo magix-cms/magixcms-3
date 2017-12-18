@@ -10,9 +10,9 @@
  */
 $(document).ready(function(){
     // *** Set default values for forms validation
-	jQuery.validator.addClassRules("phone", {
-		pattern: '/^((?=[0-9\+\-\ \(\)]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})$/'
-	});
+	/*jQuery.validator.addClassRules("phone", {
+		pattern: '((?=[0-9\+\-\ \(\)]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})'
+	});*/
 
 	$.validator.setDefaults({
         debug: false,
@@ -128,6 +128,7 @@ $(document).ready(function(){
 });
 
 var globalForm = (function ($, undefined) {
+	'use strict';
 	/**
 	 * Replace the submit button by a loader icon.
 	 * @param {string} f - id of the form.
@@ -138,7 +139,7 @@ var globalForm = (function ($, undefined) {
 		closeForm = typeof closeForm !== 'undefined' ? closeForm : false;
 		var loader = $(document.createElement("div")).addClass("loader")
 			.append(
-				$(document.createElement("i")).addClass("fa fa-spinner fa-pulse fa-2x fa-fw"),
+				$(document.createElement("i")).addClass("fa fa-spinner fa-pulse fa-fw"),
 				$(document.createElement("span")).append("Chargement en cours...").addClass("sr-only")
 			);
 		if(closeForm) $(f).collapse();
@@ -166,8 +167,8 @@ var globalForm = (function ($, undefined) {
 	function initAlert(m,timeout,sub) {
         sub = typeof sub !== 'undefined' ? sub : false;
 		timeout = typeof timeout !== 'undefined' ? timeout : false;
-        if(sub) $.nicenotify.notifier = { box:"", elemclass : '.mc-message-'+sub };
-		$.nicenotify.initbox(m,{ display:true });
+        if(sub) $.jmRequest.notifier = { box:"", elemclass : '.mc-message-'+sub };
+		$.jmRequest.initbox(m,{ display:true });
 		if(timeout) window.setTimeout(function () { $('.mc-message .alert').removeClass('in').remove(); }, timeout);
 	}
 
@@ -178,15 +179,15 @@ var globalForm = (function ($, undefined) {
 	function successHandler(f) {
 		// --- Default options of the ajax request
 		var options = {
-			ntype: "submit",
-			uri: $(f).attr('action'),
-			typesend: 'post',
-			idforms: $(f),
-			resetform: true,
-			beforeParams: function () {
+            handler: "submit",
+			url: $(f).attr('action'),
+            method: 'post',
+            form: $(f),
+            resetForm: true,
+			beforeSend: function () {
 				displayLoader(f);
 			},
-			successParams: function (d) {
+			success: function (d) {
 				removeLoader(f);
 				var modal = $(f).data('modal');
 				if(modal) { $(modal).modal('hide'); }
@@ -203,8 +204,18 @@ var globalForm = (function ($, undefined) {
 			}
 		};
 
+        // --- Rules form classic add form
+        if($(f).hasClass('button_feedback')) {
+            options.beforeSend = function(){
+            	$(f).find('button[type="submit"]').replaceWith('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
+			};
+            options.success = function () {
+                $(f).hide().next('.success').removeClass('hide');
+            };
+        }
+
 		// --- Initialise the ajax request
-		$.nicenotify(options);
+		$.jmRequest(options);
 	}
 
 	/**
@@ -237,5 +248,5 @@ var globalForm = (function ($, undefined) {
 			// --- Launch forms validators initialisation
 			initValidation();
 		}
-	}
+	};
 })(jQuery);

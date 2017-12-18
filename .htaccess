@@ -61,7 +61,7 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    #RewriteRule ^(.*)$ index.php/$1 [L]
+
 </IfModule>
 <IfModule mod_rewrite.c>
 <IfModule mod_ssl.c>
@@ -84,20 +84,13 @@ ErrorDocument 401 /index.php?http_error=401
 ErrorDocument 403 /index.php?http_error=403
 ErrorDocument 404 /index.php?http_error=404
 ErrorDocument 500 /index.php?http_error=500
-#RewriteRule ^([a-zA-Z]{1,3})/(.*)$		/index.php?strLangue=$1&$2		[QSA,L]
-RewriteCond %{QUERY_STRING} !(strLangue)+
 RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload)
-#RewriteCond %{REQUEST_URI} !^/(admin|install|webservice|var|faq|amp|skin|media|news|about|home|pages)
+RewriteCond %{QUERY_STRING} !(strLangue)+
 RewriteRule ^([-_a-zA-Z]{1,5})/(.*) 										/$2?strLangue=$1		[QSA,L]
 RewriteCond %{REQUEST_URI} ^/amp
 RewriteRule ^(?:amp)/(.*) 										/$1?amp=1		[QSA,L]
-#RewriteRule ^(?:amp)/{0,1}/(.*)     	/index.php?amp=1		[QSA,L]
-#RewriteRule ^(?:amp)/([0-9a-zA-Z]+)/{0,1}$     	/index.php?amp=1&controller=$1		[QSA,L]
-#RewriteRule ^(?:amp)/([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?amp=1&controller=$1&id=$2&url=$3		[QSA,L]
-#RewriteRule ^(?:amp)/([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?amp=1&controller=$1&id_parent=$2&url_parent=$3&id=$4&url=$5		[QSA,L]
 
-#RewriteRule ^(?:news)/{0,1}$   /index.php&controller=news				[QSA,L]
-#RewriteCond %{REQUEST_URI} !^/(admin|install|webservice)
+RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload)
 RewriteRule ^([0-9a-zA-Z]+)/{0,1}$     	/index.php?controller=$1		[QSA,L]
 RewriteRule ^([0-9a-zA-Z]+)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$     	/index.php?controller=$1&tag=$2		[QSA,L]
 RewriteRule ^([0-9a-zA-Z]+)/(\d{4})/{0,1}$     	/index.php?controller=$1&year=$2		[QSA,L]

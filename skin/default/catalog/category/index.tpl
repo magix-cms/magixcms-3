@@ -1,12 +1,14 @@
 {extends file="catalog/index.tpl"}
 {block name='body:id'}category{/block}
+{block name="title"}{seo_rewrite conf=['level'=>'parent','type'=>'title','default'=>{$cat.name}] parent={$cat.name}}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'parent','type'=>'description','default'=>{$cat.resume}] parent={$cat.name}}{/block}
 
 {block name='article'}
     <article class="catalog container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Series">
         {block name='article:content'}
             <h1 itemprop="name">{$cat.name}</h1>
             <div class="text" itemprop="text">
-                {if !empty($cat.imgSrc)}
+                {if !$cat.imgSrc.default}
                     <figure>
                         <a href="{$cat.imgSrc.large}" class="img-zoom">
                             <img class="img-responsive" src="{$cat.imgSrc.medium}" alt="{$cat.title}" title="{$cat.title}" />

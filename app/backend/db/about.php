@@ -83,7 +83,7 @@ class backend_db_about
 								}
 							}
 
-							$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
+							$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
 								FROM mc_about_page AS p
 									JOIN mc_about_page_content AS c USING ( id_pages )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -298,8 +298,12 @@ class backend_db_about
 						WHEN 'google' THEN :google
 						WHEN 'linkedin' THEN :linkedin
 						WHEN 'viadeo' THEN :viadeo
+						WHEN 'pinterest' THEN :pinterest
+						WHEN 'instagram' THEN :instagram
+						WHEN 'github' THEN :github
+						WHEN 'soundcloud' THEN :soundcloud
 					END
-					WHERE `name_info` IN ('facebook','twitter','google','linkedin','viadeo')";
+					WHERE `name_info` IN ('facebook','twitter','google','linkedin','viadeo','pinterest','instagram','github','soundcloud')";
 
 					$params = $data['socials'];
 
@@ -411,4 +415,3 @@ class backend_db_about
         }
     }
 }
-?>

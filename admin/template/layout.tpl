@@ -14,6 +14,7 @@
     <!--[if IE]>
     <link rel="shortcut icon" type="image/x-icon" href="{geturl}/{baseadmin}/template/img/favicon.ico" />
     <![endif]-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {headlink rel="stylesheet" href="/{baseadmin}/min/?g=publiccss" media="screen"}
     {block name="stylesheets"}{/block}
     {capture name="scriptHtml5"}{strip}
@@ -23,7 +24,7 @@
     {/strip}{/capture}
     {strip}<!--[if lt IE 9]>{script src=$smarty.capture.scriptHtml5 type="javascript"}<![endif]-->{/strip}
     </head>
-<body id="{block name='body:id'}layout{/block}">
+<body id="{block name='body:id'}layout{/block}" class="{$viewport}{if $touch} touchscreen{/if}">
 {block name="header"}{include file="section/header.tpl"}{/block}
 {block name="main"}
     <main id="{block name='main:id'}page{/block}">
@@ -34,17 +35,16 @@
             {widget_plugins}
             <div id="content" class="container-fluid pull-right">
                 <header>
-                    <button id="toggle-menu" type="button" class="open-menu navbar-toggle" data-target="#mobile-menu1">
+                    <button id="toggle-menu" type="button" class="open-menu navbar-toggle" data-target="#aside">
                         <span class="sr-only">{#toggleNavigation#|ucfirst}</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-                    </button>
-                    <button id="toggle-menu2" type="button" class="open-menu navbar-toggle pull-right" data-target="#mobile-menu2">
-                        <span class="sr-only">{#toggleNavigation#|ucfirst}</span>
-                        <span class="fa fa-cog"></span>
                     </button>
                     {block name='article:header'}{/block}
+                    <nav class="pull-right visible-ph visible-xs">
+                        {include file="section/menu/account.tpl"}
+                    </nav>
                 </header>
                 {block name='article:content'}
                 {/block}
@@ -52,9 +52,9 @@
         {/block}
 
         {block name="aside"}
-            <nav id="aside" class="hidden-xs">
+            <nav id="aside">
                 {block name='aside:content'}
-                    {include file="section/menu/section.tpl"}
+                    {include file="section/menu/section.tpl" menuId='aside'}
                 {/block}
             </nav>
         {/block}

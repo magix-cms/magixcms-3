@@ -1,7 +1,7 @@
-<div id="block-sitemap" class="col-ph-12 col-sm-3 col-lg-2 block">
+<div id="block-sitemap" class="col block">
     <h4><a href="{geturl}/{getlang}/" title="">{#site_navigation#|ucfirst}</a></h4>
     <ul class="link-list list-unstyled">
-        <li>
+        {*<li>
             <a href="{geturl}/{getlang}/" title="">Accueil</a>
         </li>
         {widget_cms_data
@@ -36,6 +36,13 @@
         </li>
         <li>
             <a href="{geturl}/{getlang}/contact/" title="{#show_contact_form#|ucfirst}">{#contact#|ucfirst}</a>
-        </li>
+        </li>*}
+        {foreach $links as $k => $link}
+            <li>
+                <a href="{$link.url_link}" title="{if empty($link.title_link)}{$link.name_link}{else}{$link.title_link}{/if}">
+                    <span>{$link.name_link}</span>
+                </a>
+            </li>
+        {/foreach}
     </ul>
 </div>

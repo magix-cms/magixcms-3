@@ -125,7 +125,7 @@ class plugins_contact_public extends plugins_contact_db
 		}
 		else {
 			$this->template->assign('message',$this->setNotify($type,$subContent));
-			$this->template->display('notify/message.tpl');
+			$this->template->display('contact/notify/message.tpl');
 		}
 	}
 
@@ -143,21 +143,9 @@ class plugins_contact_public extends plugins_contact_db
                 'title' => "Test Mail",
                 'content' => "My test mail"
             );
-        }else{
-			$data = array(
-				'lastname' => $this->msg['lastname'],
-				'firstname' => $this->msg['firstname'],
-				'email' => $this->msg['email'],
-				'phone' => $this->msg['phone'],
-				'title' => $this->msg['title'],
-				'content' => $this->msg['content']
-			);
-
-			if ($this->config['address_enabled']) {
-				$data['address'] = $this->msg['address'];
-				$data['postcode'] = $this->msg['postcode'];
-				$data['city'] = $this->msg['city'];
-			}
+        }
+        else {
+			$data = $this->msg;
         }
 		return $data;
     }
@@ -165,25 +153,33 @@ class plugins_contact_public extends plugins_contact_db
 	/**
 	 * @return string
 	 */
-	private function setTitleMail(){
-		$about = new frontend_model_about($this->template);
-		$collection = $about->getCompanyData();
-		$subject = $this->template->getConfigVars('subject_contact');
-		$title   = $this->template->getConfigVars('contact_request');
-		$website = $collection['name'];
-		return sprintf($subject,$title,$website);
+	private function setTitleMail($error = false){
+		if($error) {
+			$title = $this->msg['title'];
+		}
+		else {
+			$about = new frontend_model_about($this->template);
+			$collection = $about->getCompanyData();
+			$subject = $this->template->getConfigVars('subject_contact');
+			$title   = $this->template->getConfigVars('contact_request');
+			$website = $collection['name'];
+			$title = sprintf($subject,$title,$website);
+		}
+		return $title;
 	}
 
 	/**
+	 * @param string $tpl
 	 * @param bool $debug
 	 * @return string
+	 * @throws Exception
 	 */
-	private function getBodyMail($debug = false){
+	private function getBodyMail($tpl = 'admin', $debug = false){
 		$cssInliner = $this->settings->getSetting('css_inliner');
 		$this->template->assign('getDataCSSIColor',$this->settings->fetchCSSIColor());
 		$this->template->assign('data',$this->setBodyMail($debug));
 
-		$bodyMail = $this->template->fetch('contact/mail/admin.tpl');
+		$bodyMail = $this->template->fetch('contact/mail/'.$tpl.'.tpl');
 		if ($cssInliner['value']) {
 			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->themeSelected().'/contact/css' => 'foundation-emails.css'));
 		}
@@ -212,10 +208,10 @@ class plugins_contact_public extends plugins_contact_db
 	protected function send_email() {
 		if(!empty($this->msg['email'])) {
 			$this->template->configLoad();
-			if(empty($this->msg['lastname']) || empty($this->msg['firstname']) || empty($this->msg['email'])) {
+			if((empty($this->msg['lastname']) || empty($this->msg['firstname']) || empty($this->msg['email'])) && $this->msg['email'] !== 'error-mail') {
 				$this->getNotify('warning','empty');
 			}
-			elseif(!$this->sanitize->mail($this->msg['email'])) {
+			elseif(!$this->sanitize->mail($this->msg['email']) && $this->msg['email'] !== 'error-mail') {
 				$this->getNotify('warning','mail');
 			}
 			elseif(!empty($this->msg['moreinfo'])) {
@@ -227,12 +223,26 @@ class plugins_contact_public extends plugins_contact_db
 					if($contacts != null) {
 						//Initialisation du contenu du message
 						$send = false;
+						$tpl = 'admin';
+						$error = false;
+						if($this->msg['email'] === 'error-mail') {
+							$allowed_hosts = array_map(function($dom) { return $dom['url_domain']; },$this->modelDomain->getValidDomains());
+							if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $allowed_hosts)) {
+								header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request');
+								exit;
+							}
+							else {
+								$this->msg['email'] = 'noreply@'.str_replace('www.','',$_SERVER['HTTP_HOST']);
+								$tpl = 'error';
+								$error = true;
+							}
+						}
 						foreach ($contacts as $recipient) {
 							$message = $this->mail->body_mail(
-								self::setTitleMail(),
+								self::setTitleMail($error),
 								array($this->msg['email']),
 								array($recipient['mail_contact']),
-								self::getBodyMail(),
+								self::getBodyMail($tpl),
 								false
 							);
 							$isSend = $this->mail->batch_send_mail($message);
@@ -263,6 +273,29 @@ class plugins_contact_public extends plugins_contact_db
         	$this->template->assign('address_enabled',$this->config['address_enabled']);
         	$this->template->assign('address_required',$this->config['address_required']);
 			$this->template->display('contact/index.tpl');
+		}
+    }
+
+	/**
+	 * @param $iso
+	 * @return array
+	 * @throws Exception
+	 */
+	public function submenu($iso)
+	{
+		if(class_exists('plugins_gmap_public')) {
+            $this->template->addConfigFile(
+                array(component_core_system::basePath().'/plugins/gmap/i18n/'),
+                array('public_local_'),
+                false
+            );
+            $this->template->configLoad();
+
+			return array(array(
+				'name' => $this->template->getConfigVars('gmap'),
+				'title' => $this->template->getConfigVars('gmap'),
+				'url' => '/'.$iso.'/gmap/'
+			));
 		}
     }
 }

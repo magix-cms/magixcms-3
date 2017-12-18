@@ -40,7 +40,7 @@
  */
 class frontend_model_pages extends frontend_db_pages{
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$data;
 
     public function __construct($template)
     {
@@ -48,6 +48,7 @@ class frontend_model_pages extends frontend_db_pages{
         $this->imagesComponent = new component_files_images($template);
         $this->modelPlugins = new frontend_model_plugins();
         $this->coreTemplate = new frontend_model_template();
+        $this->data = new frontend_model_data($this);
     }
 
     /**
@@ -117,41 +118,6 @@ class frontend_model_pages extends frontend_db_pages{
 			return $data;
         }
     }
-
-	/**
-	 * @param $pages
-	 * @param string $branch
-	 * @return mixed
-	 */
-	public function setPagesTree($pages, $branch = 'root')
-	{
-		$childs = array();
-		$id = 'id_pages';
-
-		foreach($pages as &$item) {
-			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
-			if(!isset($item['id_pages'])) $id = 'id';
-
-			if($k === 'root')
-				$childs[$k][] = &$item;
-			else
-				$childs[$k]['subdata'][] = &$item;
-
-			$childs[$item[$id]] = &$item;
-		}
-		unset($item);
-
-		foreach($pages as &$item) {
-			if (isset($childs[$item[$id]])) {
-				$item['subdata'] = $childs[$item[$id]]['subdata'];
-			}
-		}
-
-		if($branch === 'root')
-			return $childs[$branch];
-		else
-			return array($childs[$branch]);
-	}
 
     /**
      * @param $row
@@ -299,7 +265,8 @@ class frontend_model_pages extends frontend_db_pages{
 
 					if($data != null) {
 						$branch = isset($custom['select']) ? $conf['id'] : 'root';
-						$data = $this->setPagesTree($data,$branch);
+						//$data = $this->setPagesTree($data,$branch);
+						$data = $this->data->setPagesTree($data,'pages',$branch);
 					}
 				}
 			}

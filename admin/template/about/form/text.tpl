@@ -1,11 +1,11 @@
 {include file="language/brick/dropdown-lang.tpl"}
 <div class="row">
-    <form id="edit_company_text" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-10">
+    <form id="edit_company_text" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10">
         <div class="tab-content">
             {foreach $langs as $id => $iso}
                 <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="content[{$id}][company_desc]">{#company_desc#|ucfirst} :</label>
                                 <input type="text" class="form-control" id="content[{$id}][company_desc]" name="content[{$id}][company_desc]" value="{$contentData.{$id}.desc}" size="50" placeholder="{#company_desc_ph#|ucfirst}" />
@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="content[{$id}][company_slogan]">{#company_slogan#|ucfirst} :</label>
                                 <input type="text" class="form-control" id="content[{$id}][company_slogan]" name="content[{$id}][company_slogan]" value="{$contentData.{$id}.slogan}" size="50" placeholder="{#company_slogan_ph#|ucfirst}" />

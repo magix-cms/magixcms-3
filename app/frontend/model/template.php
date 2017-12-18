@@ -112,11 +112,13 @@ class frontend_model_template{
 	public function currentLanguage(){
         if(http_request::isGet('strLangue')){
             $lang = self::getLanguage();
-        }else{
+        }
+        else {
             $data = $this->setDefaultLanguage();
             if($data != null){
                 $lang = $data;
-            }else{
+            }
+            else {
                 if(http_request::isSession('strLangue')){
                     $lang = $_SESSION['strLangue'];//form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
                 }
@@ -347,6 +349,16 @@ class frontend_model_template{
     public function getConfigDir($index=null){
         return frontend_model_smarty::getInstance()->getConfigDir($index);
     }
+
+    /**
+     * @return array
+     */
+    public function setDefaultConfigDir(){
+        return array(
+            component_core_system::basePath()."locali18n/",
+            component_core_system::basePath() . "skin/" . $this->themeSelected() . '/i18n/'
+        );
+    }
 	/**
 	 * Ajoute un ou plusieurs dossier de configuration et charge les fichiers associés ainsi que les variables
 	 * @access public
@@ -357,7 +369,10 @@ class frontend_model_template{
 	 */
 	public function addConfigFile(array $addConfigDir,array $load_files,$debug=false){
 		if(is_array($addConfigDir)){
-			frontend_model_smarty::getInstance()->addConfigDir($addConfigDir);
+            $setDefaultConfigDir = $this->setDefaultConfigDir();
+            //frontend_model_smarty::getInstance()->addConfigDir($addConfigDir);
+            frontend_model_smarty::getInstance()->setConfigDir(array_merge($setDefaultConfigDir,$addConfigDir));
+
 		}else{
 			throw new Exception('Error: addConfigDir is not array');
 		}

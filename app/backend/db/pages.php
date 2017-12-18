@@ -1,6 +1,11 @@
 <?php
 class backend_db_pages
 {
+	/**
+	 * @param $config
+	 * @param bool $data
+	 * @return mixed|null
+	 */
     public function fetchData($config, $data = false)
     {
         $sql = '';
@@ -49,7 +54,7 @@ class backend_db_pages
 								}
 							}
 
-							$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
+							$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
 								FROM mc_cms_page AS p
 									JOIN mc_cms_page_content AS c USING ( id_pages )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -115,6 +120,20 @@ class backend_db_pages
                     ORDER BY p.id_pages DESC";
                     $params = $data;
                 }
+                elseif ($config['type'] === 'pagesPublishedSelect') {
+                    //List pages for select
+                    $sql = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
+                    FROM mc_cms_page AS p
+                        JOIN mc_cms_page_content AS c USING ( id_pages )
+                        JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+                        LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
+                        LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+                        WHERE c.id_lang = :default_lang
+                        AND c.published_pages = 1
+                        GROUP BY p.id_pages 
+                    ORDER BY p.id_pages DESC";
+                    $params = $data;
+                }
                 elseif ($config['type'] === 'page') {
                     $sql = 'SELECT p.*,c.*,lang.*
                         FROM mc_cms_page AS p
@@ -136,16 +155,17 @@ class backend_db_pages
                         WHERE c.published_pages = 1 AND c.id_lang = :id_lang
                         ORDER BY p.id_pages ASC';
                     $params = $data;
-                }elseif ($config['type'] === 'lastPages') {
+                }
+                elseif ($config['type'] === 'lastPages') {
                     //### -- Dashboard Data
                     $sql = "SELECT p.id_pages, c.name_pages, p.date_register
-								FROM mc_cms_page AS p
-									JOIN mc_cms_page_content AS c USING ( id_pages )
-									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-									WHERE c.id_lang = :default_lang
-									GROUP BY p.id_pages 
-								ORDER BY p.id_pages DESC
-								LIMIT 4";
+							FROM mc_cms_page AS p
+							JOIN mc_cms_page_content AS c USING ( id_pages )
+							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+							WHERE c.id_lang = :default_lang
+							GROUP BY p.id_pages 
+							ORDER BY p.id_pages DESC
+							LIMIT 5";
                     $params = $data;
                 }
 
@@ -164,6 +184,16 @@ class backend_db_pages
                 elseif ($config['type'] === 'page') {
                     //Return current row
                     $sql = 'SELECT * FROM mc_cms_page WHERE `id_pages` = :id_pages';
+                    $params = $data;
+                }
+                elseif ($config['type'] === 'pageLang') {
+                    //Return current row
+                    $sql = 'SELECT p.*,c.*,lang.*
+                        FROM mc_cms_page AS p
+                        JOIN mc_cms_page_content AS c USING(id_pages)
+                        JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                        WHERE p.id_pages = :id
+                        AND lang.iso_lang = :iso';
                     $params = $data;
                 }
 

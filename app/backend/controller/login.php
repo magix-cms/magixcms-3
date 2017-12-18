@@ -46,7 +46,7 @@ class backend_controller_login extends backend_db_employee{
      *
      * @var string
      */
-    protected $hashtoken,$header,$message,$template,$mail,$setting,$settings;
+    protected $hashtoken,$header,$message,$template,$mail,$setting,$settings,$modelDomain;
 
     /**
      * @var $email_admin,$passwd_admin
@@ -67,6 +67,7 @@ class backend_controller_login extends backend_db_employee{
         $this->template = new backend_model_template();
         $this->message = new component_core_message($this->template);
 		$this->mail = new mail_swift('mail');
+		$this->modelDomain = new backend_controller_domain();
 		$this->setting = new backend_model_setting();
 		$this->settings = $this->setting->getSetting();
 		$formClean = new form_inputEscape();
@@ -336,14 +337,15 @@ class backend_controller_login extends backend_db_employee{
 
 	/**
 	 * @param $type
+	 * @param $domain
 	 * @return string
 	 */
-	private function setTitleMail($type)
+	private function setTitleMail($type,$domain)
 	{
 		$this->template->configLoad();
 		$title = $this->template->getConfigVars('titlemail');
 		$subject = $this->template->getConfigVars($type);
-		return sprintf($title,$subject,'monsite.be/admin/');
+		return sprintf($title,$subject,$domain);
     }
 
 	/**
@@ -354,13 +356,13 @@ class backend_controller_login extends backend_db_employee{
 	 */
 	private function getBodyMail($data, $type, $debug){
 		$this->template->configLoad();
-		$fetchColor = new backend_db_setting();
-		$this->template->assign('getDataCSSIColor',$fetchColor->fetchCSSIColor());
+		$cssInliner = $this->settings['css_inliner'];
+		$this->template->assign('getDataCSSIColor',$this->setting->fetchCSSIColor());
 		$this->template->assign('data', $data);
 		$bodyMail = $this->template->fetch('login/mail/'.$type.'.tpl');
 
-		if ($this->settings['css_inliner']) {
-			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array('login/css' => 'foundation-emails.css'));
+		if ($cssInliner['css_inliner']) {
+			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'/admin/template/login/css' => 'foundation-emails.css'));
 		}
 
 		if($debug){
@@ -376,18 +378,29 @@ class backend_controller_login extends backend_db_employee{
 	 * @param $type
 	 */
 	private function sendMail($data,$mail,$type,$json_response = false){
-		$message = $this->mail->body_mail(
-			self::setTitleMail($type),
-			array($this->settings['mail_admin']),
-			array($mail),
-			self::getBodyMail($data,$type,false),
-			false
-		);
-		$this->mail->batch_send_mail($message);
+		$noreply = false;
+		$allowed_hosts = array_map(function($dom) { return $dom['url_domain']; },$this->modelDomain->getValidDomains());
+		if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $allowed_hosts)) {
+			header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request');
+			exit;
+		}
+		else {
+			$noreply = 'noreply@'.str_replace('www.','',$_SERVER['HTTP_HOST']);
+		}
+		if ($noreply) {
+			$message = $this->mail->body_mail(
+				self::setTitleMail($type,$_SERVER['HTTP_HOST']),
+				array($noreply),
+				array($mail),
+				self::getBodyMail($data,$type,false),
+				false
+			);
+			$this->mail->batch_send_mail($message);
 
-		if($json_response){
-			$this->header->set_json_headers();
-			$this->message->json_post_response(true,'send');
+			if($json_response){
+				$this->header->set_json_headers();
+				$this->message->json_post_response(true,'send');
+			}
 		}
 	}
 

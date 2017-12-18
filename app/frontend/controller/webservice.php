@@ -63,7 +63,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
      * @return string
      */
     public function setWsAuthKey(){
-        $data = $this->getItems('authentification',null,'one',false);
+        $data = $this->getItems('auth',null,'one',false);
         if($data != null){
             if($data['status_ws'] != '0'){
                 return $data['key_ws'];
@@ -1569,7 +1569,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             if(is_array($content['tag'])){
                                 foreach ($content['tag'] as $key => $value) {
                                     $setTags = $this->DBNews->fetchData(
-                                        array('context' => 'one', 'type' => 'tag'),
+                                        array('context' => 'one', 'type' => 'tag_ws'),
                                         array(':id_news' => $id_news, ':id_lang' => $content['id_lang'], ':name_tag' => $value)
                                     );
                                     if ($setTags['id_tag'] != null) {
@@ -1599,7 +1599,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 }
                             }else{
                                 $setTags = $this->DBNews->fetchData(
-                                    array('context' => 'one', 'type' => 'tag'),
+                                    array('context' => 'one', 'type' => 'tag_ws'),
                                     array(':id_news' => $id_news, ':id_lang' => $content['id_lang'], ':name_tag' => $content['tag'])
                                 );
                                 if ($setTags['id_tag'] != null) {

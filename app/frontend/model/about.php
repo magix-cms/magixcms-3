@@ -25,16 +25,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -- END LICENSE BLOCK -----------------------------------
-
+#
 # DISCLAIMER
-
+#
 # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
 # versions in the future. If you wish to customize MAGIX CMS for your
 # needs please refer to http://www.magix-cms.com for more information.
 */
 class frontend_model_about extends frontend_db_about {
 
-	protected $data, $routingUrl, $modelPlugins, $language, $languages;
+	protected $data, $routingUrl, $modelPlugins, $language, $languages, $touch, $mOS;
 
 	/**
 	 * @var array, type of website allowed
@@ -93,11 +93,15 @@ class frontend_model_about extends frontend_db_about {
 			'languages' => 'Français'
 		),
 		'socials' => array(
-			'facebook' 	=> NULL,
-			'twitter' 	=> NULL,
-			'google' 	=> NULL,
-			'linkedin' 	=> NULL,
-			'viadeo' 	=> NULL
+			'facebook' 	 => NULL,
+			'twitter' 	 => NULL,
+			'google' 	 => NULL,
+			'linkedin' 	 => NULL,
+			'viadeo' 	 => NULL,
+			'pinterest'  => NULL,
+			'instagram'  => NULL,
+			'github' 	 => NULL,
+			'soundcloud' => NULL
 		),
 		'openinghours' => '0',
 		'specifications' => array(
@@ -171,6 +175,20 @@ class frontend_model_about extends frontend_db_about {
 		$this->data = new frontend_model_data($this);
 		$this->language = new frontend_controller_language();
 		$this->languages = $this->language->setCollection();
+
+		$detect = new Mobile_Detect;
+		$this->touch = false;
+		$this->mOS = false;
+
+		if( $detect->isMobile() || $detect->isTablet() ){
+			$this->touch = true;
+
+			if( $detect->isiOS() ){
+				$this->mOS = 'IOS';
+			}elseif( $detect->isAndroidOS() ){
+				$this->mOS = 'Android';
+			}
+		}
 	}
 
 	/**
@@ -325,7 +343,51 @@ class frontend_model_about extends frontend_db_about {
 					break;
 				case 'socials':
 					foreach ($value as $social_name => $link) {
-						$this->company['socials'][$social_name] = $about[$social_name];
+						//$this->company['socials'][$social_name] = $about[$social_name];
+						$link = null;
+
+						if($about[$social_name] !== null) {
+							switch ($social_name) {
+								case 'facebook':
+									$link = (($this->touch) ? 'fb://facewebmodal/f?href=' : '') . 'https://www.facebook.com/'.$about[$social_name].'/';
+									//$link = 'https://www.facebook.com/'.$about[$social_name].'/';
+									break;
+								case 'twitter':
+									//$link = (($this->touch) ? 'twitter://user?screen_name=' : 'https://twitter.com/') . $about[$social_name];
+									$link = 'https://twitter.com/'. $about[$social_name];
+									break;
+								case 'google':
+									//$link = (($this->touch) ? 'gplus://' : 'https://') . 'plus.google.com/'.$about[$social_name].'/posts';
+									//$link = ($this->touch) ? 'gplus://plus.google.com/app/basic/'.$about[$social_name].'/posts' : 'https://plus.google.com/'.$about[$social_name].'/posts';
+									$link = 'https://plus.google.com/'.$about[$social_name].'/posts';
+									break;
+								case 'linkedin':
+									//$link = (($this->touch) ? 'linkedin://profile?id=' : 'https://www.linkedin.com/in/') . $about[$social_name];
+									$link = 'https://www.linkedin.com/in/'.$about[$social_name];
+									break;
+								case 'viadeo':
+									//$link = (($this->touch) ? 'viadeo://profile?id=' : 'http://www.viadeo.com/fr/profile/') . $about[$social_name];
+									$link = 'http://www.viadeo.com/fr/profile/'.$about[$social_name];
+									break;
+								case 'pinterest':
+									//$link = (($this->touch) ? 'pinterest://user/' : 'https://www.pinterest.fr/') . $about[$social_name];
+									$link = 'https://www.pinterest.fr/'.$about[$social_name];
+									break;
+								case 'instagram':
+									//$link = ($this->touch) ? 'instagram://user?username='.$about[$social_name] : 'https://www.instagram.com/'.$about[$social_name].'/';
+									$link = 'https://www.instagram.com/'.$about[$social_name].'/';
+									break;
+								case 'github':
+									$link = 'https://github.com/'.$about[$social_name];
+									break;
+								case 'soundcloud':
+									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
+									$link = 'https://soundcloud.com/'.$about[$social_name];
+									break;
+							}
+						}
+
+						$this->company['socials'][$social_name] = $link;
 					}
 					break;
 				case 'specifications':
@@ -687,4 +749,3 @@ class frontend_model_about extends frontend_db_about {
 		return $data;
 	}
 }
-?>

@@ -38,13 +38,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-ph-12 col-sm-6">
             <div class="form-group">
                 <label for="{$type}_ts">{#city#|ucfirst}</label>
                 <input id="{$type}_ts" class="form-control" type="text" name="{$type}_ts" placeholder="{#ph_city#|ucfirst}" value=""{if $required} required{/if}/>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-ph-12 col-sm-6">
             <div class="form-group">
                 <label for="{$type}_ts_id">{#postcode#|ucfirst}</label>
                 <input id="{$type}_ts_id" class="form-control" type="text" name="{$type}_ts_id" placeholder="{#ph_postcode#|ucfirst}" value=""{if $required} required{/if}/>

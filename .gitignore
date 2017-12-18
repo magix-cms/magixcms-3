@@ -17,3 +17,6 @@
 /admin/caching/tpl_caches/*
 /admin/template/js/vendor/filemanager/js/jPlayer/node_modules/*
 plugins/gmap/
+plugins/opinion/
+plugins/slideshow/
+/skin/wsw/*

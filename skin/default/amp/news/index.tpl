@@ -1,6 +1,8 @@
 {extends file="amp/layout.tpl"}
 {block name="stylesheet"}{fetch file="skin/{template}/amp/css/news.min.css"}{/block}
 {block name='body:id'}news{/block}
+{block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{#news#}]}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{#last_news#}]}{/block}
 {block name="webType"}CollectionPage{/block}
 {block name='article'}
     <article id="article" class="container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Periodical">

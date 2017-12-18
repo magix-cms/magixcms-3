@@ -20,7 +20,7 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="row">
-                    <form id="edit_webservice" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-4">
+                    <form id="edit_webservice" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-4">
                         <div class="form-group">
                             <label for="key_ws">Clé API</label>
                             <div class="input-group">

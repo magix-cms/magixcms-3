@@ -1,0 +1,98 @@
+@charset "utf-8";
+/*
+ * Custom rules for text
+ */
+/*---------------------------*\
+----- Font weight classes -----
+\*---------------------------*/
+.semiBold {
+    font-weight: 600;
+}
+
+.extraBold {
+    font-weight: 800;
+}
+
+/*-------------*\
+----- Liens -----
+\*-------------*/
+.bold-link {
+	color: inherit !important;
+	font-weight: bold !important;
+}
+
+.all-hover {
+	.hover-link();
+}
+
+/*----------------------*\
+----- Citation style -----
+\*----------------------*/
+blockquote {
+    border-left: none;
+    padding-left: 40px;
+    position: relative;
+	font-size: @font-size-base;
+
+	&:before {
+		.quote;
+		position: absolute;
+		left: 0;
+		top: 0;
+		content: "“";
+		color: #ccc;
+		font-size: 70px;
+		line-height: 1;
+	}
+
+	p {
+		font-style: italic;
+		.text-justify;
+	}
+
+	footer {
+		.quote;
+		text-align: right;
+		font-size: 100%;
+		font-weight: lighter;
+		color: #959595;
+		&:before {
+			content: "— ";
+		}
+		&:after {
+			content: " —";
+		}
+	}
+}
+
+
+/*--------------*\
+----- Listes -----
+\*--------------*/
+.link-bar {
+	text-align: center;
+	.list-unstyled;
+	.list-inline;
+	.normalize-link(@main-color);
+
+	li {
+		border-right: 1px solid #959595;
+		margin: 5px 0;
+
+		a {
+			padding: 5px;
+		}
+
+		&:last-child {
+			border-right: none;
+		}
+	}
+}
+
+/*-----------------------*\
+----- Text font sizes -----
+\*-----------------------*/
+// --- justify content
+.text-justify {
+	.text-justify;
+}

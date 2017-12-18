@@ -1,10 +1,5 @@
-<header>
-    <div id="header" class="section-block container-fluid">
-        <nav class="navbar hidden-xs">
-            {include file="section/menu/primary.tpl"}
-        </nav>
-        <nav class="visible-xs">
-            {include file="section/menu/mobile.tpl"}
-        </nav>
+<header id="header" class="section-block container-fluid hidden-ph hidden-xs">
+    <div class="navbar">
+        {include file="section/menu/primary.tpl"}
     </div>
 </header>

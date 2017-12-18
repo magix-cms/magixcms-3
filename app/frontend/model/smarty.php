@@ -85,17 +85,18 @@ class frontend_model_smarty extends Smarty{
 		 * Path -> configs
 		 */
         $this->setConfigDir(array(
-            self::setPath()."locali18n/"
+            self::setPath()."locali18n/",
+            self::setPath() . "skin/" . $template->themeSelected() . '/i18n/'
         ));
-        /**
+		/**
          * additionnal Path -> configs
          */
 
-        if(file_exists(self::setPath()."skin/".$template->themeSelected().'/i18n/')) {
+        /*if(file_exists(self::setPath()."skin/".$template->themeSelected().'/i18n/')) {
             $this->addConfigDir([
                 self::setPath() . "skin/" . $template->themeSelected() . '/i18n/'
             ]);
-        }
+        }*/
 		/**
 		 * Path -> templates
 		 */
@@ -162,6 +163,7 @@ class frontend_model_smarty extends Smarty{
 		 */
 		//$this->load_filter('pre','magixmin');
 		$this->autoload_filters = array('pre' => array('magixmin'));
+		$this->loadFilter('output', 'trimwhitespace');
         $this->loadPlugin('smarty_compiler_switch');
 		/**
 		 * 

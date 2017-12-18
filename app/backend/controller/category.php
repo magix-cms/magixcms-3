@@ -81,6 +81,15 @@ class backend_controller_category extends backend_db_category {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
 
+	/**
+	 * Return Last pages (Dashboard)
+	 */
+	public function getItemsCat(){
+		$this->modelLanguage->getLanguage();
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+		$this->getItems('lastCats',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+	}
+
     /**
      * @return array
      */

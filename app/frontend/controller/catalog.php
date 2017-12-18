@@ -97,7 +97,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 */
     private function getBuildProductList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso AND pc.published_p = 1 AND c.id_cat = :id_cat AND img.default_img = 1';
+		$conditions = ' WHERE lang.iso_lang = :iso AND pc.published_p = 1 AND c.id_cat = :id_cat AND (img.default_img = 1 OR img.default_img IS NULL)';
 		$collection = parent::fetchData(
 			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
 			array('iso' => $this->getlang,'id_cat' => $this->id)

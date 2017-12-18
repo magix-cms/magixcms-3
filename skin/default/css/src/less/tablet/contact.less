@@ -1,0 +1,37 @@
+//
+// Rules for contact
+//
+#contact {
+	.contact-infos {
+		text-align: left;
+	}
+
+	.contact-infos p {
+		padding-left: 36px;
+		position: relative;
+
+		> .material-icons,
+		> .fa {
+			position: absolute;
+			left: 0;
+			top: -3px;
+		}
+
+		&.address {
+			.material-icons,
+			.fa {
+				float: left;
+				height: 40px;
+			}
+		}
+
+		&.lead {
+			font-size: 14px;
+			padding: 0;
+
+			+ p {
+				margin-bottom: 0;
+			}
+		}
+	}
+}

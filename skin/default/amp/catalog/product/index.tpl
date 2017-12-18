@@ -12,6 +12,8 @@
 {/block}
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
+{block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$product.name}] parent={$parent.name} record={$product.name}}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$product.resume}] parent={$parent.name} record={$product.name}}{/block}
 {block name='article'}
     {capture name="contact"}
         {*<form action="/{getlang}/contact/" method="get" class="interested-form">

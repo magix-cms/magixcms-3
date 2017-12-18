@@ -214,6 +214,7 @@ class component_files_upload{
      * @return string
      */
     public function dirImgUpload($data){
+        $makeFiles = new filesystem_makefile();
         if(is_array($data)){
             if(array_key_exists('upload_root_dir',$data)){
                 if(array_key_exists('imgBasePath',$data)){
@@ -221,6 +222,9 @@ class component_files_upload{
                         $url = $this->imgBasePath($data['upload_root_dir'].DIRECTORY_SEPARATOR);
                     }else{
                         $url = $data['upload_root_dir'].DIRECTORY_SEPARATOR;
+                    }
+                    if(!file_exists($url)){
+                        $makeFiles->mkdir($url);
                     }
                 }
                 return $url;

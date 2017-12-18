@@ -17,7 +17,7 @@
 {block name='article:content'}
     {if {employee_access type="view" class_name=$cClass} eq 1}
     <div class="panels row">
-        <section class="panel col-xs-12">
+        <section class="panel col-ph-12">
             {if $debug}
                 {$debug}
             {/if}

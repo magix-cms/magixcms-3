@@ -1,5 +1,6 @@
 <div class="footer-colophon text-center" itemprop="isPartOf" itemscope itemtype="http://schema.org/WebSite">
-    <div itemprop="copyrightHolder" itemscope itemtype="http://schema.org/{$companyData.type}"{if $smarty.get.magixmod == 'contact' && $companyData.openinghours} itemref="schedule"{/if}>
+    <div class="container">
+    <div id="cph" itemprop="copyrightHolder" itemscope itemtype="http://schema.org/{$companyData.type}"{if $smarty.get.magixmod == 'contact' && $companyData.openinghours} itemref="schedule"{/if}>
         <meta itemprop="name" content="{$companyData.name}"/>
         <meta itemprop="url" content="{geturl}"/>
         <meta itemprop="brand" content="{$companyData.name}"/>
@@ -79,5 +80,6 @@
     {if $companyData.tva}<div><p>{#footer_tva#} {$companyData.tva}</p></div>{/if}
     <div>
         {include file="amp/section/footer/powered.tpl"}
+    </div>
     </div>
 </div>

@@ -66,6 +66,14 @@ class backend_controller_domain extends backend_db_domain
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
 
+	/**
+	 * Return the valid domains
+	 */
+	public function getValidDomains()
+	{
+		return $this->getItems('domain',null,'all',false);
+	}
+
 
     /**
      * Insertion de données

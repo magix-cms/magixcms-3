@@ -35,4 +35,11 @@ class backend_model_setting extends component_collections_setting{
         }
         return $settings;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function fetchCSSIColor() {
+		return parent::fetchData(array('context' => 'all', 'type' => 'cssinliner'));
+	}
 }

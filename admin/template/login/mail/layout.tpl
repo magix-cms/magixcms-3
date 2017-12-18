@@ -69,8 +69,8 @@
                                 <tr>
                                     <td valign="middle">
                                         <!-- Gmail/Hotmail image display fix -->
-                                        <a href="{geturl}" target ="_blank" title="Dubois - Tanier" style="text-decoration: none;font-size: 46px;">
-                                            <img src="{geturl}/skin/img/logo/dubois-tanier.png" alt="Dubois - Tanier" width="120" height="120"/>
+                                        <a href="{geturl}" target ="_blank" title="Magix CMS" style="text-decoration: none;font-size: 46px;">
+                                            <img src="{geturl}/admin/template/img/logo/logo-magix_cms@229.png" alt="Magix CMS" width="229" height="50"/>
                                         </a>
                                     </td>
                                 </tr>

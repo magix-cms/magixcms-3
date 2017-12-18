@@ -8,7 +8,7 @@
 {block name='article:content'}
 {if {employee_access type="append" class_name=$cClass} eq 1}
 <div class="panels row">
-    <section class="panel col-xs-12 col-md-6">
+    <section class="panel col-ph-12 col-md-6">
         {if $debug}
             {$debug}
         {/if}

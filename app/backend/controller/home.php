@@ -144,12 +144,7 @@ class backend_controller_home extends backend_db_home{
 
         if(isset($this->plugin)){
             // Execute un plugin core
-            $this->modelPlugins->getItems(
-                array(
-                    'type'      =>  'core',
-                    'controller'=>  $this->controller
-                )
-            );
+            $this->modelPlugins->getCoreItem();
         }else{
             if(isset($this->action)) {
                 switch ($this->action) {

@@ -1,6 +1,8 @@
 {extends file="amp/news/index.tpl"}
 {block name="stylesheet"}{fetch file="skin/{template}/amp/css/topicality.min.css"}{/block}
 {block name='body:id'}topicality{/block}
+{block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$news.title}] record={$news.title}}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$news.resume}] record={$news.title}}{/block}
 {block name="webType"}WebPage{/block}
 {block name="amp-script"}
     {if $news.imgSrc.large}

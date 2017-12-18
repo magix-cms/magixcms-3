@@ -5,13 +5,13 @@
             {foreach $langs as $id => $iso}
                 <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="content[{$id}][name_cat]">{#title#|ucfirst} :</label>
                                 <input type="text" class="form-control" id="content[{$id}][name_cat]" name="content[{$id}][name_cat]" value="{$page.content[{$id}].name_cat}" size="50" />
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-ph-12 col-sm-4">
                             <div class="form-group">
                                 <label for="content[{$id}][published_cat]">{#status#|ucfirst}</label>
                                 <input id="content[{$id}][published_cat]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_cat]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger"{if (!isset($page) && $iso@first) || $page.content[{$id}].published_cat} checked{/if}>
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="content[{$id}][url_cat]">{#url_rewriting#|ucfirst}</label>
                                 <div class="input-group">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="public-url[{$id}]">URL</label>
                                 <input type="text" class="form-control public-url" data-lang="{$id}" id="public_url[{$id}]" readonly="readonly" size="50" value="{$page.content[{$id}].public_url}" />

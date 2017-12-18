@@ -67,6 +67,7 @@ class backend_model_template{
     public function __construct(){
         self::$collectionsSetting = new component_collections_setting();
         //self::$collectionsLang = new component_collections_language();
+		self::getReleaseData();
     }
 	/**
 	 * 
@@ -77,6 +78,35 @@ class backend_model_template{
         }
     	return self::$frontendtheme;
     }
+
+
+	/**
+	 *
+	 */
+	public function getReleaseData()
+	{
+		$basePath = component_core_system::basePath().DIRECTORY_SEPARATOR;
+		$XMLFiles = $basePath . 'release.xml';
+		if (file_exists($XMLFiles)) {
+			try {
+				if ($stream = fopen($XMLFiles, 'r')) {
+					$streamData = stream_get_contents($stream, -1, 0);
+					$streamData = urldecode($streamData);
+					$xml = simplexml_load_string($streamData, null, LIBXML_NOCDATA);
+					$newData = array();
+					foreach ($xml->children() as $item => $value) {
+						$newData[$item] = $value->__toString();
+					}
+					fclose($stream);
+					self::assign('releaseData',$newData);
+				}
+			} catch (Exception $e) {
+				$logger = new debug_logger(MP_LOG_DIR);
+				$logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
+			}
+		}
+	}
+
     /**
      * @access public static
      * Paramètre de langue get

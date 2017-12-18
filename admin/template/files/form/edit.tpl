@@ -1,6 +1,6 @@
 <form id="edit_imagesize" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&amp;edit={$size.id_config_img}" method="post" class="validate_form edit_form">
     <div class="row">
-        <div class="col-xs-12 col-md-12">
+        <div class="col-ph-12 col-md-12">
             <div class="row">
                 <div class="col-xs-6">
                     <div class="form-group">
@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="row">
-        <div id="submit" class="col-xs-12 col-md-12">
+        <div id="submit" class="col-ph-12 col-md-12">
             <input type="hidden" id="id_config_img" name="id" value="{$size.id_config_img}">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>

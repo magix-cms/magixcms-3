@@ -40,42 +40,17 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class backend_controller_dashboard{
-    protected $router,$template,$employee,$pages,$news;
+    protected $router,$template,$employee,$news,$pages,$cats,$products;
     public $http_error;
     public function __construct(){
         $this->employee = new backend_controller_employee();
-        $this->pages = new backend_controller_pages();
-        $this->news = new backend_controller_news();
+		$this->news = new backend_controller_news();
+		$this->pages = new backend_controller_pages();
+		$this->cats = new backend_controller_category();
+		$this->products = new backend_controller_product();
         $this->template = new backend_model_template();
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
-        }
-    }
-    /**
-     * @param $id
-     * @return array
-     */
-    public function setReleaseData()
-    {
-        $basePath = component_core_system::basePath().DIRECTORY_SEPARATOR;
-        $XMLFiles = $basePath . 'release.xml';
-        if (file_exists($XMLFiles)) {
-            try {
-                if ($stream = fopen($XMLFiles, 'r')) {
-                    $streamData = stream_get_contents($stream, -1, 0);
-                    $streamData = urldecode($streamData);
-                    $xml = simplexml_load_string($streamData, null, LIBXML_NOCDATA);
-                    $newData = array();
-                    foreach ($xml->children() as $item => $value) {
-                        $newData[$item] = $value->__toString();
-                    }
-                    fclose($stream);
-                    return $newData;
-                }
-            } catch (Exception $e) {
-                $logger = new debug_logger(MP_LOG_DIR);
-                $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
-            }
         }
     }
 
@@ -102,10 +77,11 @@ class backend_controller_dashboard{
 
             $this->template->display('error/index.tpl');
         }else{
-            $this->template->assign('getReleaseData',$this->setReleaseData());
             $this->employee->getItemsEmployee();
-            $this->pages->getItemsPages();
-            $this->news->getItemsNews();
+			$this->news->getItemsNews();
+			$this->pages->getItemsPages();
+			$this->cats->getItemsCat();
+			$this->products->getItemsProduct();
             $this->template->display('dashboard/index.tpl');
             // Create a Router
             /*$this->router->get('/', function(){

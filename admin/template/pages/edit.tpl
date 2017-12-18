@@ -8,7 +8,7 @@
 {block name='article:content'}
     {if {employee_access type="edit" class_name=$cClass} eq 1}
     <div class="panels row">
-        <section class="panel col-xs-12 col-md-12">
+        <section class="panel col-ph-12 col-md-12">
             {if $debug}
                 {$debug}
             {/if}
@@ -59,6 +59,8 @@
             </div>
         </section>
     </div>
+    {include file="modal/delete.tpl" data_type='pages' title={#modal_delete_title#|ucfirst} info_text=true delete_message={#delete_pages_message#}}
+    {include file="modal/error.tpl"}
     {/if}
 {/block}
 {block name="foot" append}

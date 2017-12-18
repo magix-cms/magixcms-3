@@ -3,13 +3,13 @@
     <form id="edit_pages" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&amp;tabs=pages" method="post" class="validate_form edit_form_extend col-ph-12 col-lg-6">
         <div class="tab-content">
             <div class="row">
-                <div class="col-xs-12 col-md-2">
+                <div class="col-ph-12 col-md-2">
                     <div class="form-group">
                         <label for="parent_id">{#id#|ucfirst} {#pages#}&nbsp;</label>
                         <input type="text" name="parent_id" id="parent_id" class="form-control mygroup" placeholder="{#ph_id#}" value="{$page.id_parent}" />
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class="col-ph-12 col-md-6">
                     <div class="form-group">
                         <label for="parent">{#parent_page#|ucfirst}&nbsp;</label>
                         <div id="parent" class="btn-group btn-block selectpicker" data-clear="true" data-live="true">
@@ -53,13 +53,13 @@
             {foreach $langs as $id => $iso}
                 <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="content[{$id}][name_pages]">{#title#|ucfirst} :</label>
                                 <input type="text" class="form-control" id="content[{$id}][name_pages]" name="content[{$id}][name_pages]" value="{$page.content[{$id}].name_pages}" size="50" />
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-ph-12 col-sm-4">
                             <div class="form-group">
                                 <label for="content[{$id}][published_pages]">Statut</label>
                                 <input id="content[{$id}][published_pages]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_pages]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger"{if (!isset($page) && $iso@first) || $page.content[{$id}].published_pages} checked{/if}>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="content[{$id}][url_pages]">{#url_rewriting#|ucfirst}</label>
                                 <div class="input-group">
@@ -82,7 +82,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 col-sm-8">
+                        <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
                                 <label for="public-url[{$id}]">URL</label>
                                 <input type="text" class="form-control public-url" data-lang="{$id}" id="public_url[{$id}]" readonly="readonly" size="50" value="{$page.content[{$id}].public_url}" />
@@ -104,7 +104,7 @@
                     </div>
                     <div id="metas-{$id}" class="collapse" role="tabpanel" aria-labelledby="heading{$id}">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-8">
+                            <div class="col-ph-12 col-sm-8">
                                 <div class="form-group">
                                     <label for="content[{$id}][seo_title_pages]">{#title#|ucfirst} :</label>
                                     <textarea class="form-control" id="content[{$id}][seo_title_pages]" name="content[{$id}][seo_title_pages]" cols="70" rows="3">{$page.content[{$id}].seo_title_pages}</textarea>
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12 col-sm-8">
+                            <div class="col-ph-12 col-sm-8">
                                 <div class="form-group">
                                     <label for="content[{$id}][seo_desc_pages]">Description :</label>
                                     <textarea class="form-control" id="content[{$id}][seo_desc_pages]" name="content[{$id}][seo_desc_pages]" cols="70" rows="3">{$page.content[{$id}].seo_desc_pages}</textarea>

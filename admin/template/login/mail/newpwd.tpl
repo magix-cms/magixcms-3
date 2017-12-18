@@ -44,7 +44,7 @@
                                 <td>
                                     <table>
                                         <tr>
-                                            <td><a href="{geturl}/login.php">Se connecter</a></td>
+                                            <td><a href="{geturl}/admin/index.php?controller=login">Se connecter</a></td>
                                         </tr>
                                     </table>
                                 </td>

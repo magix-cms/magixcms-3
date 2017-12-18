@@ -71,7 +71,7 @@ function smarty_function_amp_content($params)
 	}
 
 	// --- Search for img-gallery anchor to convert them into apm-lightbox gallery
-	$pattern = '/<a(.(?!<\/a>))*(img-galery)(.(?!<a))*<\/a>/i';
+	$pattern = '/<a(.(?!<\/a>))*(img-gallery)(.(?!<a))*<\/a>/i';
 	if(preg_match_all($pattern,$content,$matches)) {
 		$lbGal = '<amp-lightbox id="lightbox-gallery" layout="nodisplay"><div class="lightbox"><amp-carousel id="carousel" layout="fill" type="slides">';
 		$slides = array();
@@ -83,7 +83,7 @@ function smarty_function_amp_content($params)
 
 		for ($k = 0;$k < $links->length; $k ++) {
 			$classes = $links->item($k)->getAttribute('class');
-			if(strpos($classes, 'img-galery') !== false)
+			if(strpos($classes, 'img-gallery') !== false)
 			{
 				$src = $links->item($k)->getAttribute('href');
 				list($width, $height, $type, $attr) = getimagesize('.' . $src);

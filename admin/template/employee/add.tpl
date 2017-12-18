@@ -8,7 +8,7 @@
 {block name='article:content'}
     {if {employee_access type="append" class_name=$cClass} eq 1}
     <div class="panels row">
-        <section class="panel col-xs-12 col-md-8">
+        <section class="panel col-ph-12 col-md-8">
             {if $debug}
                 {$debug}
             {/if}
@@ -21,7 +21,7 @@
                 </div>
                 <form id="add_employee" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" method="post" class="validate_form add_form collapse in">
                     <div class="row">
-                        <div class="col-xs-12 col-md-6">
+                        <div class="col-ph-12 col-md-6">
                             <div class="form-group radio-group">
                                 <label>{#title#|ucfirst}&nbsp;*</label>
                                 <div class="radio">
@@ -36,13 +36,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-12 col-md-6">
+                                <div class="col-ph-12 col-md-6">
                                     <div class="form-group">
                                         <label for="firstname_admin">{#firstname#|ucfirst}&nbsp;*</label>
                                         <input type="text" class="form-control required" name="firstname_admin" id="firstname_admin" placeholder="{#ph_firstname#|ucfirst}" required>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6">
+                                <div class="col-ph-12 col-md-6">
                                     <div class="form-group">
                                         <label for="lastname_admin">{#lastname#|ucfirst}&nbsp;*</label>
                                         <input type="text" class="form-control required" name="lastname_admin" id="lastname_admin" placeholder="{#ph_lastname#|ucfirst}" required>
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6">
+                        <div class="col-ph-12 col-md-6">
                             <div class="form-group">
                                 <label for="passwd_admin">{#passwd#|ucfirst}&nbsp;*</label>
                                 <input type="password" class="form-control required" name="passwd_admin" id="passwd_admin" placeholder=" {#ph_passwd#|ucfirst}" required>
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div id="submit" class="col-xs-12 col-md-6">
+                        <div id="submit" class="col-ph-12 col-md-6">
                             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="add">{#save#|ucfirst}</button>
                         </div>
                     </div>

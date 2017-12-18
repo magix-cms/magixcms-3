@@ -1,7 +1,7 @@
 {if is_array($skin) && !empty($skin)}
 <div class="theme-manager row">
 {foreach $skin as $item}
-    <div class="col-xs-12 col-sm-6 col-md-3">
+    <div class="col-ph-12 col-sm-6 col-md-3">
         <figure>
             {if $item.screenshot.small}
                 <a class="img-zoom" href="{$item.screenshot.large}">

@@ -7,61 +7,56 @@
 {/block}
 {block name='article:content'}
     <div class="row">
-        <section id="quick-access" class="col-xs-12 col-md-6 col-lg-3">
+        <section id="quick-access" class="col-ph-12 col-lg-6">
             <header>
-                <h2 class="h5"><span class="fa fa-certificate"></span> Analyse de l'installation</h2>
+                <h2 class="h5">Accès rapide</h2>
             </header>
-            <div>
-                {if is_array($getReleaseData) && !empty($getReleaseData)}
-                <div class="row folder-box">
-                    <div class="col-xs-6">
-                        <p>Version</p>
-                    </div>
-                    <div class="col-xs-6">
-                        <p class="text-right"><strong>{$getReleaseData.version}</strong></p>
-                    </div>
-                </div>
-                    <div class="row folder-box">
-                        <div class="col-xs-6">
-                            <p>Phase</p>
-                        </div>
-                        <div class="col-xs-6">
-                            <p class="text-right">{$getReleaseData.phase}</p>
-                        </div>
-                    </div>
-                {/if}
+            <div class="quick-links" role="group">
+                <a href="{geturl}/{baseadmin}/index.php?controller=news&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                    <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter une </span><span class="add-type">actualité</span>
+                </a>
+                <a href="{geturl}/{baseadmin}/index.php?controller=pages&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                    <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter une </span><span class="add-type">page</span>
+                </a>
+                <a href="{geturl}/{baseadmin}/index.php?controller=category&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                    <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter une </span><span class="add-type">catégorie</span>
+                </a>
+                <a href="{geturl}/{baseadmin}/index.php?controller=product&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                    <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter un </span><span class="add-type">produit</span>
+                </a>
             </div>
         </section>
-        <section id="tasks" class="col-xs-12 col-md-6 col-lg-3 pull-right">
+    </div>
+    <div class="row">
+        {if {employee_access type="view" class_name="backend_controller_news"} eq 1}
+        <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <a href="{geturl}/{baseadmin}/index.php?controller=news">
-                        <span class="fa fa-newspaper-o"></span> {#last_news#|ucfirst}
-                    </a>
+                    <span class="fa fa-newspaper-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=news">{#last_news#|ucfirst}</a>
                 </h2>
             </header>
 
             {if is_array($lastNews) && !empty($lastNews)}
-                {foreach $lastNews as $item}
-                    <div>
-                        <div class="row folder-box">
-                            <div class="col-xs-6">
-                                <p><a href="{geturl}/{baseadmin}/index.php?controller=news&action=edit&edit={$item.id_news}">{$item.name_news}</a></p>
-                            </div>
-                            <div class="col-xs-6">
-                                <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
-                            </div>
+            {foreach $lastNews as $item}
+                <div>
+                    <div class="row folder-box">
+                        <div class="col-ph-8">
+                            <p><a href="{geturl}/{baseadmin}/index.php?controller=news&action=edit&edit={$item.id_news}">{$item.name_news}</a></p>
+                        </div>
+                        <div class="col-ph-4">
+                            <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
                         </div>
                     </div>
-                {/foreach}
+                </div>
+            {/foreach}
             {/if}
         </section>
+        {/if}
         {if {employee_access type="view" class_name="backend_controller_pages"} eq 1}
-        <section class="col-xs-12 col-md-6 col-lg-3 pull-left">
+        <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
-                <h2 class="h5"><a href="{geturl}/{baseadmin}/index.php?controller=pages">
-                        <span class="fa fa-file-text-o"></span> {#last_pages#|ucfirst}
-                    </a>
+                <h2 class="h5">
+                    <span class="fa fa-file-text-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=pages">{#last_pages#|ucfirst}</a>
                 </h2>
             </header>
 
@@ -69,10 +64,10 @@
             {foreach $lastPages as $item}
             <div>
                 <div class="row folder-box">
-                    <div class="col-xs-6">
+                    <div class="col-ph-8">
                         <p><a href="{geturl}/{baseadmin}/index.php?controller=pages&action=edit&edit={$item.id_pages}">{$item.name_pages}</a></p>
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-ph-4">
                         <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
                     </div>
                 </div>
@@ -81,8 +76,56 @@
             {/if}
         </section>
         {/if}
-        {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
-            <section class="col-xs-12 col-md-6 col-lg-3 pull-left">
+        {if {employee_access type="view" class_name="backend_controller_category"} eq 1}
+        <section class="col-ph-12 col-xs-6 col-lg-3">
+            <header>
+                <h2 class="h5">
+                    <span class="fa fa-folder-open-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=category">{#last_categories#|ucfirst}</a>
+                </h2>
+            </header>
+
+            {if is_array($lastCats) && !empty($lastCats)}
+            {foreach $lastCats as $item}
+            <div>
+                <div class="row folder-box">
+                    <div class="col-ph-8">
+                        <p><a href="{geturl}/{baseadmin}/index.php?controller=category&action=edit&edit={$item.id_cat}">{$item.name_cat}</a></p>
+                    </div>
+                    <div class="col-ph-4">
+                        <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+            {/if}
+        </section>
+        {/if}
+        {if {employee_access type="view" class_name="backend_controller_product"} eq 1}
+        <section class="col-ph-12 col-xs-6 col-lg-3">
+            <header>
+                <h2 class="h5">
+                    <span class="fa fa-tag"></span> <a href="{geturl}/{baseadmin}/index.php?controller=product">{#last_products#|ucfirst}</a>
+                </h2>
+            </header>
+
+            {if is_array($lastProducts) && !empty($lastProducts)}
+            {foreach $lastProducts as $item}
+            <div>
+                <div class="row folder-box">
+                    <div class="col-ph-8">
+                        <p><a href="{geturl}/{baseadmin}/index.php?controller=product&action=edit&edit={$item.id_product}">{$item.name_p}</a></p>
+                    </div>
+                    <div class="col-ph-4">
+                        <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+            {/if}
+        </section>
+        {/if}
+        {*{if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
+            <section class="col-ph-12 col-xs-6 col-lg-3 pull-left">
                 <header>
                     <h2 class="h5"><a href="{geturl}/{baseadmin}/index.php?controller=employee">
                             <span class="fa fa-user"></span> {#employees#|ucfirst}
@@ -94,10 +137,10 @@
                         {$title_admin = "title_"|cat:$item.title_admin}
                         <div>
                             <div class="row folder-box">
-                                <div class="col-xs-6">
+                                <div class="col-ph-6">
                                     <p>{#$title_admin#} {$item.lastname_admin} {$item.firstname_admin}</p>
                                 </div>
-                                <div class="col-xs-6">
+                                <div class="col-ph-6">
                                     <p class="text-right">{$item.role_name|ucfirst}</p>
                                 </div>
                             </div>
@@ -105,8 +148,8 @@
                     {/foreach}
                 {/if}
             </section>
-        {/if}
-        <section class="col-xs-12 col-lg-9">
+        {/if}*}
+        {*<section class="col-ph-12 col-lg-9">
             <header>
                 <h2 class="h5">Statistiques</h2>
             </header>
@@ -134,7 +177,7 @@
                     <canvas id="chart" height="8" width="20"></canvas>
                 </div>
             </div>
-        </section>
+        </section>*}
     </div>
 {/block}
 {block name="foot" append}

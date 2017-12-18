@@ -7,11 +7,11 @@
 {block name='main:id'}plugins{/block}
 {block name='article:content'}
     <div class="row">
-        <h2 class="col-xs-12">liste des extensions installées</h2>
+        <h2 class="col-ph-12">liste des extensions installées</h2>
     {if is_array($getListPlugins) && !empty($getListPlugins)}
         {foreach $getListPlugins as $item}
             {if {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
-            <section class="col-xs-12 col-md-6 col-lg-3">
+            <section class="col-ph-12 col-md-6 col-lg-3">
                 <header>
                     <h2 class="h5">{$item.name}</h2>
                 </header>
@@ -34,10 +34,10 @@
     {/if}
     </div>
     <div class="row">
-        <h2 class="col-xs-12">liste des extensions non installées</h2>
+        <h2 class="col-ph-12">liste des extensions non installées</h2>
     {if is_array($getListPluginsNotRegister) && !empty($getListPluginsNotRegister)}
         {foreach $getListPluginsNotRegister as $item}
-            <section class="col-xs-12 col-md-6 col-lg-3">
+            <section class="col-ph-12 col-md-6 col-lg-3">
                 <header>
                     <h2 class="h5">{$item}</h2>
                 </header>

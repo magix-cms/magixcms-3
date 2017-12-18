@@ -1,6 +1,6 @@
 {$eClass = $smarty.get.controller}
 <div class="panels row">
-    <section class="panel col-xs-12">
+    <section class="panel col-ph-12">
         {if $debug}
             {$debug}
         {/if}

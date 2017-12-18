@@ -1,7 +1,7 @@
 <?php
 class backend_controller_news extends backend_db_news{
-    public $edit, $action, $tabs, $search;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent;
+    public $edit, $action, $tabs, $search, $plugin, $controller;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins;
     public $id_news,$content,$news,$img,$id_lang,$name_tag;
 
     public function __construct()
@@ -15,8 +15,12 @@ class backend_controller_news extends backend_db_news{
         $this->collectionLanguage = new component_collections_language();
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
+        $this->modelPlugins = new backend_model_plugins();
 
         // --- GET
+        if(http_request::isGet('controller')) {
+            $this->controller = $formClean->simpleClean($_GET['controller']);
+        }
         if (http_request::isGet('edit')) {
             $this->edit = $formClean->numeric($_GET['edit']);
         }
@@ -69,6 +73,10 @@ class backend_controller_news extends backend_db_news{
         if (http_request::isPost('name_tag')) {
             $this->name_tag = $formClean->simpleClean($_POST['name_tag']);
         }
+        # plugin
+        if(http_request::isGet('plugin')){
+            $this->plugin = $formClean->simpleClean($_GET['plugin']);
+        }
     }
 
 	/**
@@ -82,6 +90,7 @@ class backend_controller_news extends backend_db_news{
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
+
     /**
      * Return Last pages (Dashboard)
      */
@@ -90,6 +99,7 @@ class backend_controller_news extends backend_db_news{
         $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
         $this->getItems('lastNews',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
     }
+
     /**
      * @param $data
      * @return array
@@ -392,69 +402,99 @@ class backend_controller_news extends backend_db_news{
      */
     public function run()
     {
-        if (isset($this->action)) {
-            switch ($this->action) {
-                case 'add':
-                    if(isset($this->content)){
-                        $this->save();
-                    }else {
-                        $this->modelLanguage->getLanguage();
-                        $this->template->display('news/add.tpl');
-                    }
-                    break;
-                case 'edit':
-                    if (isset($this->id_news)) {
-                        $this->save();
-                    }else{
-                        $this->modelLanguage->getLanguage();
-                        $setEditData = parent::fetchData(
-                            array('context'=>'all','type'=>'page'),
-                            array('edit'=>$this->edit)
-                        );
-                        $setEditData = $this->setItemData($setEditData);
-                        $this->template->assign('page',$setEditData[$this->edit]);
-                        $this->template->display('news/edit.tpl');
-                    }
-                    break;
-                case 'delete':
-                    if(isset($this->name_tag)) {
-                        $setTags = parent::fetchData(
-                            array('context' => 'one', 'type' => 'tag'),
-                            array(':id_news' => $this->id_news, ':id_lang' => $this->id_lang, ':name_tag' => $this->name_tag)
-                        );
-                        if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
-                            parent::delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
-                        }
-                    }
-                    elseif(isset($this->id_news)) {
-                        $this->del(
+        if(isset($this->plugin)) {
+            if(isset($this->action)) {
+                switch ($this->action) {
+                    case 'edit':
+                        // Initialise l'API menu des plugins core
+                        $this->modelPlugins->getItems(
                             array(
-                                'type'=>'delPages',
-                                'data'=>array(
-                                    'id' => $this->id_news
-                                )
+                                'type'      =>  'tabs',
+                                'controller'=>  $this->controller
                             )
                         );
-                    }
-                    break;
+                        $this->modelLanguage->getLanguage();
+                        $setEditData = parent::fetchData(
+                            array('context' => 'all', 'type' => 'page'),
+                            array('edit' => $this->edit)
+                        );
+                        $setEditData = $this->setItemData($setEditData);
+                        $this->template->assign('page', $setEditData[$this->edit]);
+                        // Execute un plugin core
+                        $this->modelPlugins->getCoreItem();
+                        break;
+                }
+            }
+        }else {
+            if (isset($this->action)) {
+                switch ($this->action) {
+                    case 'add':
+                        if (isset($this->content)) {
+                            $this->save();
+                        } else {
+                            $this->modelLanguage->getLanguage();
+                            $this->template->display('news/add.tpl');
+                        }
+                        break;
+                    case 'edit':
+                        if (isset($this->id_news)) {
+                            $this->save();
+                        } else {
+                            $this->modelLanguage->getLanguage();
+                            // Initialise l'API menu des plugins core
+                            $this->modelPlugins->getItems(
+                                array(
+                                    'type'      =>  'tabs',
+                                    'controller'=>  $this->controller
+                                )
+                            );
+                            $setEditData = parent::fetchData(
+                                array('context' => 'all', 'type' => 'page'),
+                                array('edit' => $this->edit)
+                            );
+                            $setEditData = $this->setItemData($setEditData);
+                            $this->template->assign('page', $setEditData[$this->edit]);
+                            $this->template->display('news/edit.tpl');
+                        }
+                        break;
+                    case 'delete':
+                        if (isset($this->name_tag)) {
+                            $setTags = parent::fetchData(
+                                array('context' => 'one', 'type' => 'tag'),
+                                array(':id_news' => $this->id_news, ':id_lang' => $this->id_lang, ':name_tag' => $this->name_tag)
+                            );
+                            if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
+                                parent::delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
+                            }
+                        } elseif (isset($this->id_news)) {
+                            $this->del(
+                                array(
+                                    'type' => 'delPages',
+                                    'data' => array(
+                                        'id' => $this->id_news
+                                    )
+                                )
+                            );
+                        }
+                        break;
+                }
+            } else {
+                $this->modelLanguage->getLanguage();
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                $this->getItems('news', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
+                $assign = array(
+                    'id_news',
+                    'name_news',
+                    'content_news' => ['type' => 'bin', 'input' => null],
+                    'img_news' => ['type' => 'bin', 'input' => null, 'class' => ''],
+                    'last_update' => ['title' => 'last_update', 'input' => ['type' => 'text', 'class' => 'date-input']],
+                    'date_publish',
+                    'published_news'
+                );
+                $this->data->getScheme(array('mc_news', 'mc_news_content'), array('id_news', 'name_news', 'content_news', 'img_news', 'last_update', 'date_publish', 'published_news'), $assign);
+                $this->template->display('news/index.tpl');
             }
         }
-        else {
-			$this->modelLanguage->getLanguage();
-			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-			$this->getItems('news',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
-			$assign = array(
-				'id_news',
-				'name_news',
-				'content_news' => ['type' => 'bin', 'input' => null],
-				'img_news' => ['type' => 'bin', 'input' => null, 'class' => ''],
-				'last_update' => ['title' => 'last_update', 'input' => ['type' => 'text', 'class' => 'date-input']],
-				'date_publish',
-				'published_news'
-			);
-			$this->data->getScheme(array('mc_news','mc_news_content'),array('id_news','name_news','content_news','img_news','last_update','date_publish','published_news'),$assign);
-			$this->template->display('news/index.tpl');
-		}
     }
 }
 ?>

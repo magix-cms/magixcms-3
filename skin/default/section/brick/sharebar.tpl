@@ -33,6 +33,41 @@
                         </a>
                     </li>
                 {/if}
+                {if $companyData.socials.viadeo != null}
+                    <li class="share-viadeo">
+                        <a href="{$companyData.socials.viadeo}" title="{#vi_follow_title#|ucfirst}">
+                            <span class="fa fa-viadeo"></span><span class="sr-only">{#vi_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.pinterest != null}
+                    <li class="share-pinterest">
+                        <a href="{$companyData.socials.pinterest}" title="{#pi_follow_title#|ucfirst}">
+                            <span class="fa fa-pinterest"></span><span class="sr-only">{#pi_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.instagram != null}
+                    <li class="share-instagram">
+                        <a href="{$companyData.socials.instagram}" title="{#ig_follow_title#|ucfirst}">
+                            <span class="fa fa-instagram"></span><span class="sr-only">{#ig_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.github != null}
+                    <li class="share-github">
+                        <a href="{$companyData.socials.github}" title="{#gh_follow_title#|ucfirst}">
+                            <span class="fa fa-github"></span><span class="sr-only">{#gh_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
+                {if $companyData.socials.soundcloud != null}
+                    <li class="share-soundcloud">
+                        <a href="{$companyData.socials.soundcloud}" title="{#sc_follow_title#|ucfirst}">
+                            <span class="fa fa-soundcloud"></span><span class="sr-only">{#sc_follow_label#|ucfirst}</span>
+                        </a>
+                    </li>
+                {/if}
             </ul>
         </div>
         {if $adjust == 'clip'}

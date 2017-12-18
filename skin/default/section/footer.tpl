@@ -6,14 +6,21 @@
     {widget_share_data assign="shareData"}
 {/strip}
 <footer id="footer"{if $touch} class="mobile-footer"{/if}>
+    {if !$touch}{include file="section/footer/sharebar.tpl"}{/if}
     {if is_array($blocks) && !empty($blocks)}
         <section id="footer-blocks">
             <div class="container-fluid">
-                {if $viewport !== 'mobile'}<div class="row">{/if}
-                {foreach $blocks as $block}
-                    {include file="section/footer/block/$block.tpl"}
-                {/foreach}
-                {if $viewport !== 'mobile'}</div>{/if}
+                <div class="blocks">
+                    <div class="row">
+                        <div class="container">
+                            <div class="row">
+                            {foreach $blocks as $block}
+                                {include file="section/footer/block/$block.tpl"}
+                            {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     {/if}

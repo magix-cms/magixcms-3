@@ -58,6 +58,7 @@ class backend_db_theme{
 				if ($config['type'] === 'links') {
 					$sql = "SELECT 
 								m.id_link as id_link, 
+								m.id_page, 
 								m.type_link as type_link, 
 								m.mode_link as mode_link, 
 								mc.id_lang, 
@@ -81,6 +82,7 @@ class backend_db_theme{
 					//Return current skin
 					$sql = "SELECT 
 								m.id_link as id_link, 
+								m.id_page, 
 								m.type_link as type_link, 
 								m.mode_link as mode_link, 
 								mc.id_lang, 
@@ -110,7 +112,7 @@ class backend_db_theme{
 							LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
 							WHERE p.menu_pages =1
 							AND pc.published_pages =1
-							ORDER BY p.id_pages ASC , l.default_lang ASC
+							ORDER BY p.id_pages ASC , l.default_lang DESC
 							) as pt
 							GROUP BY pt.id';
 					// $params = $data;
@@ -124,7 +126,7 @@ class backend_db_theme{
 							LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
 							WHERE p.menu_pages =1
 							AND pc.published_pages =1
-							ORDER BY p.id_pages ASC , l.default_lang ASC
+							ORDER BY p.id_pages ASC , l.default_lang DESC
 							) as pt
 							GROUP BY pt.id';
 					// $params = $data;
@@ -137,7 +139,7 @@ class backend_db_theme{
 							USING(id_cat)
 							LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
 							WHERE pc.published_cat =1
-							ORDER BY p.id_cat ASC , l.default_lang ASC
+							ORDER BY p.id_cat ASC , l.default_lang DESC
 							) as pt
 							GROUP BY pt.id';
 					// $params = $data;

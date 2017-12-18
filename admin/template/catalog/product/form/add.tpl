@@ -6,13 +6,13 @@
                 {foreach $langs as $id => $iso}
                     <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-8">
+                            <div class="col-ph-12 col-sm-8">
                                 <div class="form-group">
                                     <label for="content[{$id}][name_p]">{#title#|ucfirst} *</label>
                                     <input type="text" class="form-control" id="content[{$id}][name_p]" name="content[{$id}][name_p]" value="" size="50" />
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-4">
+                            <div class="col-ph-12 col-sm-4">
                                 <div class="form-group">
                                     <label for="content[{$id}][published_p]">Statut</label>
                                     <input id="content[{$id}][published_p]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_p]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger">
@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-12 col-sm-8">
+                            <div class="col-ph-12 col-sm-8">
                                 <div class="form-group">
                                     <label for="content[{$id}][url_p]">{#url_rewriting#|ucfirst}</label>
                                     <div class="input-group">

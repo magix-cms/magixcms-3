@@ -107,6 +107,15 @@ class backend_controller_product extends backend_db_product
 	}
 
 	/**
+	 * Return Last pages (Dashboard)
+	 */
+	public function getItemsProduct(){
+		$this->modelLanguage->getLanguage();
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+		$this->getItems('lastProducts',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+	}
+
+	/**
 	 * @return array
 	 */
 	private function setItemsData()

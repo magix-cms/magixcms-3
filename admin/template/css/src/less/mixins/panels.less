@@ -127,7 +127,16 @@
 			}
 
 			&.panel-body-form {
-				padding: 40px;
+				padding: 15px;
+				@media (min-width: @screen-sm-min) {
+					padding: 20px;
+				}
+				@media (min-width: @screen-md-min) {
+					padding: 30px;
+				}
+				@media (min-width: @screen-lg-min) {
+					padding: 40px;
+				}
 			}
 
 			&.panel-form {

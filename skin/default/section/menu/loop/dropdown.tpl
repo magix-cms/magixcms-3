@@ -13,7 +13,8 @@
             {if !$mobile && $item.subdata}
                 <ul class="dropdown hidden-xs"{if $microData} itemprop="hasPart" itemscope itemtype="http://schema.org/SiteNavigationElement"{/if}>
                     {foreach $item.subdata as $child}
-                        <li{if $child.active} class="active"{/if} itemprop="name"><a itemprop="url_link" href="{$child.url_link}" title="{if empty($link.title_link)}{$link.name_link}{else}{$link.title_link}{/if}"><span>{$child.name_link}</span></a></li>
+                        {if $child.name}{$child.title = $child.name}{/if}
+                        <li{if $child.active} class="active"{/if} itemprop="name"><a itemprop="url_link" href="{$child.url}" title="{$child.title}"><span>{$child.title}</span></a></li>
                     {/foreach}
                 </ul>
             {/if}

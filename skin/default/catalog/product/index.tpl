@@ -1,6 +1,8 @@
 {extends file="catalog/index.tpl"}
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
+{block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$product.name}] parent={$parent.name} record={$product.name}}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$product.resume}] parent={$parent.name} record={$product.name}}{/block}
 {block name='article'}
     {capture name="contact"}
         <form action="/{getlang}/contact/" method="get" class="interested-form">
@@ -27,22 +29,24 @@
                 <meta itemprop="name" content="{$parent.name}">
                 <meta itemprop="url" content="{$parent.url}">
             </div>
-            {if count($product.img) > 1}
-                {include file="catalog/loop/gallery.tpl"}
-            {elseif count($product.img) > 0}
-                {$img = $product.img[0]}
-                <figure{if $img.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
-                    {if $img.imgSrc.medium}
-                        <meta itemprop="contentUrl" content="{$img.imgSrc.large}" />
-                        <a href="{$img.imgSrc.large}" class="img-zoom" title="{$product.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                            <img src="{$img.imgSrc.medium}" alt="{$product.name}" class="img-responsive" itemprop="contentUrl"/>
-                        </a>
-                    {else}
-                        <img class="img-responsive" src="/skin/{template}/img/catalog/product-default.png" alt="{$product.name}" />
-                    {/if}
-                </figure>
+            {if !$product.img.default}
+                {if count($product.img) > 1}
+                    {include file="catalog/loop/gallery.tpl"}
+                {elseif count($product.img) > 0}
+                    {$img = $product.img[0]}
+                    <figure{if $img.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
+                        {if $img.imgSrc.medium}
+                            <meta itemprop="contentUrl" content="{$img.imgSrc.large}" />
+                            <a href="{$img.imgSrc.large}" class="img-zoom" title="{$product.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
+                                <img src="{$img.imgSrc.medium}" alt="{$product.name}" class="img-responsive" itemprop="contentUrl"/>
+                            </a>
+                        {else}
+                            <img class="img-responsive" src="/skin/{template}/img/catalog/product-default.png" alt="{$product.name}" />
+                        {/if}
+                    </figure>
+                {/if}
             {/if}
-            <div itemprop="description">
+            <div class="text" itemprop="description">
                 {$product.content}
             </div>
             <div class="row-center">

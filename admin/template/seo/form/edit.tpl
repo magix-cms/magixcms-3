@@ -51,7 +51,7 @@
             {foreach $langs as $id => $iso}
                 <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-12">
+                        <div class="col-ph-12 col-sm-12">
                             <div class="form-group">
                                 <label for="content[{$id}][content_seo]">{#content#|ucfirst} :</label>
                                 <textarea name="content[{$id}][content_seo]" id="content-{$id}-content_seo" class="form-control">{$seo.content[{$id}].content_seo}</textarea>

@@ -8,7 +8,7 @@ class backend_db_category
         if (is_array($config)) {
             if ($config['context'] === 'all') {
                 if ($config['type'] === 'pages') {
-                    $sql = "SELECT p.id_cat, c.name_cat, c.content_cat,p.menu_cat, p.date_register, p.img_cat
+                    $sql = "SELECT p.id_cat, c.name_cat, c.content_cat, p.menu_cat, p.date_register, p.img_cat
 								FROM mc_catalog_cat AS p
 									JOIN mc_catalog_cat_content AS c USING ( id_cat )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -46,7 +46,7 @@ class backend_db_category
                                 }
                             }
 
-                            $sql = "SELECT p.id_cat, c.name_cat, p.date_register,p.menu_cat, p.img_cat, ca.name_cat AS parent_cat
+                            $sql = "SELECT p.id_cat, c.name_cat, c.content_cat, p.menu_cat, p.date_register, p.img_cat, ca.name_cat AS parent_cat
 								FROM mc_catalog_cat AS p
 									JOIN mc_catalog_cat_content AS c USING ( id_cat )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -159,6 +159,18 @@ class backend_db_category
 							ORDER BY catalog.order_p';
                     $params = $data;
                 }
+				elseif ($config['type'] === 'lastCats') {
+					//### -- Dashboard Data
+					$sql = "SELECT p.id_cat, c.name_cat, p.date_register
+							FROM mc_catalog_cat AS p
+							JOIN mc_catalog_cat_content AS c USING ( id_cat )
+							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+							WHERE c.id_lang = :default_lang
+							GROUP BY p.id_cat 
+							ORDER BY p.id_cat DESC
+							LIMIT 5";
+					$params = $data;
+				}
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             }

@@ -1,7 +1,7 @@
-<form id="enable_op_form" method="post" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-10">
+<form id="enable_op_form" method="post" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10">
     <div class="row">
         <div class="row">
-            <div class="col-xs-12 col-md-4">
+            <div class="col-ph-12 col-md-4">
                 <div class="form-group">
                     <label for="enable_op">{#op_enabled#|ucfirst}</label>
                     <input id="enable_op" data-toggle="toggle" type="checkbox" name="enable_op" data-toggle="toggle" type="checkbox" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if $companyData.openinghours} checked{/if}>
@@ -11,7 +11,7 @@
     </div>
     <input type="hidden" id="data_type" name="data_type" value="enable_op">
 </form>
-<form id="info_opening_form" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-xs-12 col-md-10 {if $companyData.openinghours} collapse{else} collapse in{/if}">
+<form id="info_opening_form" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10 {if $companyData.openinghours} collapse{else} collapse in{/if}">
     <div class="row">
         <table id="openingHours" class="table table-bordered">
             <thead>
@@ -36,7 +36,7 @@
         </table>
     </div>
     <div class="row">
-        <div id="submit" class="col-xs-12 col-md-4">
+        <div id="submit" class="col-ph-12 col-md-4">
             <input type="hidden" id="data_type" name="data_type" value="openinghours">
             <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>

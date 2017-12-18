@@ -8,7 +8,7 @@
 {block name='article:content'}
     {if {employee_access type="append" class_name=$cClass} eq 1}
     <div class="panels row">
-        <section class="panel col-xs-12 col-md-8">
+        <section class="panel col-ph-12 col-md-8">
             {if $debug}
                 {$debug}
             {/if}
@@ -20,7 +20,7 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="row">
-                    <form id="edit_language" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$lang.id_lang}" method="post" class="validate_form edit_form col-xs-12 col-md-6">
+                    <form id="edit_language" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$lang.id_lang}" method="post" class="validate_form edit_form col-ph-12 col-md-6">
                         <div class="row">
                             <div class="col-xs-8">
                                 <div class="form-group">

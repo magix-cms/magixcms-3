@@ -92,6 +92,18 @@ class backend_db_product{
                         WHERE img.id_img = :edit';
                     $params = $data;
                 }
+				elseif ($config['type'] === 'lastProducts') {
+					//### -- Dashboard Data
+					$sql = "SELECT p.id_product, c.name_p, p.date_register
+							FROM mc_catalog_product AS p
+							JOIN mc_catalog_product_content AS c USING ( id_product )
+							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+							WHERE c.id_lang = :default_lang
+							GROUP BY p.id_product 
+							ORDER BY p.id_product DESC
+							LIMIT 5";
+					$params = $data;
+				}
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             }
