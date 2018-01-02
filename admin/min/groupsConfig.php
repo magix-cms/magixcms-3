@@ -37,7 +37,7 @@ return array(
     'publiccss' => array(
         //'//'.PATHADMIN.'/template/css/bootstrap/critical.min.css',
         //'//'.PATHADMIN.'/template/css/bootstrap/bootstrap.min.css',
-        '//'.PATHADMIN.'/template/css/src/style.min.css',
+        '//'.PATHADMIN.'/template/css/desktop.min.css',
         '//'.PATHADMIN.'/template/css/bootstrap-toggle.min.css',
         '//'.PATHADMIN.'/template/css/bootstrap-colorpicker.min.css',
         '//'.PATHADMIN.'/template/css/fancybox/jquery.fancybox.min.css',

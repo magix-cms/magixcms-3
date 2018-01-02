@@ -43,6 +43,7 @@ class component_collections_setting{
     /**
      * @param $name
      * @return mixed
+     * @throws Exception
      * @deprecated
      */
     public function fetch($name){
@@ -57,6 +58,7 @@ class component_collections_setting{
 
     /**
      * @return mixed
+     * @throws Exception
      * @deprecated
      */
     public function fetchAll(){
@@ -69,6 +71,7 @@ class component_collections_setting{
      * @param $config
      * @param bool $data
      * @return mixed|null
+     * @throws Exception
      */
     public function fetchData($config,$data = false){
         $sql = '';

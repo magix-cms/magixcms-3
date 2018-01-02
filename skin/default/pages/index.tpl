@@ -1,7 +1,7 @@
 {extends file="layout.tpl"}
 {block name='body:id'}pages{/block}
 {block name="title"}{if $pages.seoTitle}{$pages.seoTitle}{else}{$pages.title}{/if}{/block}
-{block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif !empty($pages.content)}{$pages.content|truncate:100:'...'}{/if}{/block}
+{block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|truncate:100:'...'}{/if}{/block}
 {block name='article'}
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}

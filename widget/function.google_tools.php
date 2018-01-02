@@ -71,7 +71,7 @@ function smarty_function_google_tools($params, $template){
 	}
 	switch ($type){
 		case 'analytics':
-		$analyticsdata = $collectionsSetting->fetch('analytics');
+		$analyticsdata = $collectionsSetting->fetchData(array('context'=>'one','type'=>'setting'),array('name'=>'analytics'));
 		$analytics = $analyticsdata['value'];
 		if($analytics != null){
 $tools = <<<EOT
@@ -97,7 +97,7 @@ EOT;
 		}
 			break;
         case 'amp-analytics':
-			$analyticsdata = $collectionsSetting->fetch('analytics');
+			$analyticsdata = $config = $collectionsSetting->fetchData(array('context'=>'one','type'=>'setting'),array('name'=>'analytics'));//$collectionsSetting->fetch('analytics');
 			$analytics = $analyticsdata['value'];
 			if($analytics != null){
 				print '<script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>';
@@ -123,7 +123,7 @@ EOT;
 			}
         	break;
         case 'robots':
-            $robotsdata = $collectionsSetting->fetch('robots');
+            $robotsdata = $collectionsSetting->fetchData(array('context'=>'one','type'=>'setting'),array('name'=>'robots'));//$collectionsSetting->fetch('robots');
             $tools = $robotsdata['value'];
 	}
 	return $tools;
