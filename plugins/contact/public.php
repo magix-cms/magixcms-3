@@ -7,7 +7,7 @@ include_once ('db.php');
 class plugins_contact_public extends plugins_contact_db
 {
     protected $template,$header,$data,$getlang,$moreinfo,$sanitize,$mail,$origin,$modelDomain,$config,$settings;
-    public $msg, $content;
+    public $msg, $type, $content;
 
     /**
      * frontend_controller_home constructor.
@@ -28,6 +28,10 @@ class plugins_contact_public extends plugins_contact_db
 
 		if (http_request::isPost('msg')) {
 			$this->msg = $formClean->arrayClean($_POST['msg']);
+		}
+
+		if (http_request::isPost('type')) {
+			$this->type = $formClean->simpleClean($_POST['type']);
 		}
 
 		if(http_request::isGet('__amp_source_origin')) {
@@ -161,7 +165,12 @@ class plugins_contact_public extends plugins_contact_db
 			$about = new frontend_model_about($this->template);
 			$collection = $about->getCompanyData();
 			$subject = $this->template->getConfigVars('subject_contact');
-			$title   = $this->template->getConfigVars('contact_request');
+			if($this->type === 'order') {
+				$title   = $this->template->getConfigVars('order_request');
+			}
+			else {
+				$title   = $this->template->getConfigVars('contact_request');
+			}
 			$website = $collection['name'];
 			$title = sprintf($subject,$title,$website);
 		}
@@ -223,7 +232,7 @@ class plugins_contact_public extends plugins_contact_db
 					if($contacts != null) {
 						//Initialisation du contenu du message
 						$send = false;
-						$tpl = 'admin';
+						$tpl = $this->type ? $this->type : 'admin';
 						$error = false;
 						if($this->msg['email'] === 'error-mail') {
 							$allowed_hosts = array_map(function($dom) { return $dom['url_domain']; },$this->modelDomain->getValidDomains());

@@ -190,7 +190,6 @@ class frontend_model_news extends frontend_db_news {
             return null;
         }
 
-
         // set default values for query
         $conf = array(
             'id' => null,

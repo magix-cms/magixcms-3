@@ -23,6 +23,14 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label for="tracking_domain">{#tracking_domain#|ucfirst}</label>
+                    <textarea class="form-control" id="tracking_domain" name="tracking_domain" cols="85" rows="10">{$domain.tracking_domain}</textarea>
+                </div>
+            </div>
+        </div>
         <input type="hidden" id="data_type" name="data_type" value="domain">
         <input type="hidden" id="id_domain" name="id" value="{$domain.id_domain}">
         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>

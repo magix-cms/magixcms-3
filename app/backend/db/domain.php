@@ -99,18 +99,20 @@ class backend_db_domain
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function update($config,$data = false)
     {
         if (is_array($config)) {
             if ($config['type'] === 'domain') {
-                $sql = 'UPDATE mc_domain SET url_domain = :url_domain, 
+                $sql = 'UPDATE mc_domain SET url_domain = :url_domain,tracking_domain = :tracking_domain, 
                 default_domain=:default_domain 
                 WHERE id_domain = :id_domain';
                 component_routing_db::layer()->update($sql,
                     array(
                         ':id_domain'	    => $data['id_domain'],
                         ':url_domain'	    => $data['url_domain'],
+                        ':tracking_domain'	=> $data['tracking_domain'],
                         ':default_domain'	=> $data['default_domain']
                     )
                 );
@@ -121,6 +123,7 @@ class backend_db_domain
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function delete($config,$data = false)
     {

@@ -140,11 +140,15 @@
                     {title: "Div clearfix", block: "div", classes: 'clearfix'}
                 ]},
                 {title: "Header", items: [
-                    {title: "Title 1 Center", block: "h1", classes: 'text-center'},
-                    {title: "Title 2 Center", block: "h2", classes: 'text-center'},
-                    {title: "Title 3 Center", block: "h3", classes: 'text-center'},
-                    {title: "Title 4 Center", block: "h4", classes: 'text-center'},
-                    {title: "Title 5 Center", block: "h5", classes: 'text-center'}
+                    {title: "Title 1", selector: "h1,h2,h3,h4,h5,h6,p", classes: 'h1'},
+                    {title: "Title 2", selector: "h2,h1,h3,h4,h5,h6,p", classes: 'h2'},
+                    {title: "Title 3", selector: "h3,h1,h2,h4,h5,h6,p", classes: 'h3'},
+                    {title: "Title 4", selector: "h4,h1,h2,h3,h5,h6,p", classes: 'h4'},
+                    {title: "Title 5", selector: "h5,h1,h2,h3,h4,h6,p", classes: 'h5'},
+                    {title: "Title 6", selector: "h6,h1,h2,h3,h4,h5,p", classes: 'h6'}
+                ]},
+                {title: "Alignment", items: [
+                    {title: "Text Center", selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table", classes: 'text-center'}
                 ]},
                 {title: "Paragraph", items: [
                     {title: "Text Center", block: "p", classes: 'text-center'},
@@ -185,7 +189,7 @@
                 ]}
             ]}
         ],
-        //templates : '/'+baseadmin+'/ajax.php?action=list&tab=snippet',
+        templates : '/'+baseadmin+'/index.php?controller=setting&action=getSnippet',
         template_popup_width: 800,
         language : tinyLanguage,
         schema: "html5",

@@ -1,44 +1,4 @@
 {strip}
-{* Smarty switch to detect current element *}
-{switch $smarty.get.controller}
-    {* Home *}
-{case 'home' break}
-{assign var="home_current" value=1}
-    {* Pages *}
-{case 'pages' break}
-{if isset($smarty.get.getidpage_p)}
-    {assign var="pageSection" value=$smarty.get.getidpage_p}
-{else}
-    {assign var="pageSection" value=$smarty.get.getidpage}
-{/if}
-{assign var="activePage" value=$smarty.get.getidpage}
-    {* Catalogue *}
-{case 'catalog' break}
-{if isset($smarty.get.idclc)}
-    {assign var="parentCat" value=$smarty.get.idclc}
-{/if}
-{if isset($smarty.get.idcls)}
-    {assign var="subCat" value=$smarty.get.idcls}
-{/if}
-    {* Actualités *}
-{case 'news' break}
-{assign var="news_current" value=1}
-    {* Plugins *}
-    {* Contact *}
-{case 'contact' break}
-{assign var="contact_current" value=1}
-    {* About *}
-{case 'about' break}
-{assign var="about_current" value=1}
-    {* FAQ *}
-{case 'faq' break}
-{assign var="faq_current" value=1}
-    {* Gmap *}
-{case 'gmap' break}
-{assign var="gmap_current" value=1}
-{assign var="contact_current" value=1}
-{/switch}
-
 {* --- Array Menu --- *}
 {foreach $links as $k => $link}
     {if $link.mode_link !== 'simple'}

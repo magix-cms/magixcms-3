@@ -48,6 +48,7 @@
     "bootstrapJS": {
         "mobile":[
             "transition.js",
+            "carousel.js",
             "dropdown.js",
             "collapse.js"
         ],

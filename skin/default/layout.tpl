@@ -3,6 +3,7 @@
 {widget_about_data}
 {widget_lang_data assign="dataLang"}
 {widget_share_data assign="shareData"}
+{widget_domain_data assign="domainData"}
 {widget_menu_data lang={getlang}}
 {/strip}<!DOCTYPE html>
 <!--[if lt IE 7]><html lang="{getlang}" class="lt-ie9 lt-ie8 lt-ie7" dir="ltr"><![endif]-->
@@ -20,7 +21,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
-    {if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
+    {if $domainData != null && $domainData.tracking_domain != ''}{$domainData.tracking_domain}{else}{if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}{/if}
     <link rel="icon" type="image/png" href="{geturl}/skin/{template}/img/favicon.png" />
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{geturl}/skin/{template}/img/favicon.ico" /><![endif]-->
     {include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,600,400italic','Raleway'=>'300,500']}
@@ -39,7 +40,7 @@
     {block name="styleSheet"}{/block}
     {google_tools tools='analytics'}
 </head>
-<body id="{block name='body:id'}layout{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
+<body id="{block name='body:id'}layout{/block}" class="{$viewport}{if $touch} touchscreen{/if}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
     {include file="section/brick/cookie-consent.tpl"}
     {include file="section/header.tpl"}
     {block name="breadcrumb"}

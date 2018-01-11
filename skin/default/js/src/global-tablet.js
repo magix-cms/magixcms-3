@@ -60,6 +60,23 @@ var C = {
             return false;
         });
 
+        // *** Auto-position of the affix header
+        var tar = document.documentElement.clientHeight * (1/3);
+        function affixHead() {
+            var pos = window.pageYOffset,
+                atTop = $('#header').hasClass('at-top');
+
+            if (pos > tar && atTop) {
+                $('#header').removeClass('at-top');
+                $('body > .toTop').addClass('affix');
+            } else if(pos < tar && !atTop){
+                $('#header').addClass('at-top');
+                $('body > .toTop').removeClass('affix');
+            }
+        }
+        $(window).scroll(affixHead);
+        affixHead();
+
         // *** add the class 'open' on a collapse button when his collapsible element is opened
         $('[data-toggle="collapse"]').each(function(){
             var self = $(this), target = $($(this).data('target'));

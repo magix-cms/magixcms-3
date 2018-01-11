@@ -673,6 +673,7 @@ class backend_controller_about extends backend_db_about{
 							case 'contact':
 							case 'company':
 							case 'socials':
+								$this->company['socials'] = array_map(function($v){ return empty($v) ? null : $v; },$this->company['socials']);
 								$data = $this->company;
 								break;
 						}

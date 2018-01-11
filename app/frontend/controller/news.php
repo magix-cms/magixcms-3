@@ -86,7 +86,7 @@ class frontend_controller_news extends frontend_db_news
 				$params['tag'] = $this->tag;
 			}
 		}
-		$conditions .= ' AND c.published_news = 1';
+		$conditions .= ' AND c.published_news = 1 ORDER BY c.date_publish DESC';
 
 		$collection = parent::fetchData(
 			array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),

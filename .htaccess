@@ -90,15 +90,30 @@ RewriteRule ^([-_a-zA-Z]{1,5})/(.*) 										/$2?strLangue=$1		[QSA,L]
 RewriteCond %{REQUEST_URI} ^/amp
 RewriteRule ^(?:amp)/(.*) 										/$1?amp=1		[QSA,L]
 
+# RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload)
+# RewriteRule ^([0-9a-zA-Z]+)/{0,1}$     	/index.php?controller=$1		[QSA,L]
+# RewriteRule ^([0-9a-zA-Z]+)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$     	/index.php?controller=$1&tag=$2		[QSA,L]
+# RewriteRule ^([0-9a-zA-Z]+)/(\d{4})/{0,1}$     	/index.php?controller=$1&year=$2		[QSA,L]
+# RewriteRule ^([0-9a-zA-Z]+)/(\d{4})/(\d{2})/{0,1}$     	/index.php?controller=$1&year=$2&month=$3		[QSA,L]
+# RewriteRule ^([0-9a-zA-Z]+)/(\d{4}/\d{2}/\d{2})/{0,1}$     	/index.php?controller=$1&date=$2		[QSA,L]
+# RewriteRule ^([0-9a-zA-Z]+)/(\d{4}/\d{2}/\d{2})/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&date=$2&id=$3&url=$4		[QSA,L]
+# RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id=$2&url=$3		[QSA,L]
+# RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id_parent=$2&url_parent=$3&id=$4&url=$5		[QSA,L]
+
+RewriteRule (.*)/page/(\d*)/{0,1}$ /$1?page=$2 [QSA,L]
+RewriteCond %{QUERY_STRING} (id)+
+RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id_parent=$2&url_parent=$3 [QSA,L]
+RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id=$2&url=$3 [QSA,L]
+RewriteRule (.*)/(\d{4}/\d{2}/\d{2})/{0,1}$ /$1?date=$2 [QSA,L]
+RewriteCond %{QUERY_STRING} !(date)+
+RewriteRule (.*)/(\d{4})/(\d{2})/{0,1}$ /$1?year=$2&month=$3 [QSA,L]
+RewriteCond %{QUERY_STRING} !(year)+
+RewriteRule (.*)/(\d{4})/{0,1}$ /$1?year=$2 [QSA,L]
+RewriteCond %{QUERY_STRING} !(tag)+
+RewriteRule (.*)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?tag=$2 [QSA,L]
 RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload)
-RewriteRule ^([0-9a-zA-Z]+)/{0,1}$     	/index.php?controller=$1		[QSA,L]
-RewriteRule ^([0-9a-zA-Z]+)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$     	/index.php?controller=$1&tag=$2		[QSA,L]
-RewriteRule ^([0-9a-zA-Z]+)/(\d{4})/{0,1}$     	/index.php?controller=$1&year=$2		[QSA,L]
-RewriteRule ^([0-9a-zA-Z]+)/(\d{4})/(\d{2})/{0,1}$     	/index.php?controller=$1&year=$2&month=$3		[QSA,L]
-RewriteRule ^([0-9a-zA-Z]+)/(\d{4}/\d{2}/\d{2})/{0,1}$     	/index.php?controller=$1&date=$2		[QSA,L]
-RewriteRule ^([0-9a-zA-Z]+)/(\d{4}/\d{2}/\d{2})/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&date=$2&id=$3&url=$4		[QSA,L]
-RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id=$2&url=$3		[QSA,L]
-RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id_parent=$2&url_parent=$3&id=$4&url=$5		[QSA,L]
+RewriteRule ^([0-9a-zA-Z]+)/{0,1}$ /index.php?controller=$1 [QSA,L]
+
 # Web Service
 RewriteRule ^webservice/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice [QSA,L]
 RewriteRule ^webservice[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1 [QSA,L]

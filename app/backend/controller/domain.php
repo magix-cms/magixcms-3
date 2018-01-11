@@ -3,7 +3,7 @@ class backend_controller_domain extends backend_db_domain
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $xml;
-    public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang;
+    public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang,$tracking_domain;
 
     public function __construct()
     {
@@ -47,6 +47,9 @@ class backend_controller_domain extends backend_db_domain
         if (http_request::isPost('data_type')) {
             $this->data_type = $formClean->simpleClean($_POST['data_type']);
         }
+        if (http_request::isPost('tracking_domain')) {
+            $this->tracking_domain = $formClean->cleanQuote($_POST['tracking_domain']);
+        }
         // --- Search
         if (http_request::isGet('search')) {
             $this->search = $formClean->arrayClean($_GET['search']);
@@ -54,14 +57,15 @@ class backend_controller_domain extends backend_db_domain
 
     }
 
-	/**
-	 * Assign data to the defined variable or return the data
-	 * @param string $type
-	 * @param string|int|null $id
-	 * @param string $context
-	 * @param boolean $assign
-	 * @return mixed
-	 */
+    /**
+     * Assign data to the defined variable or return the data
+     * @param string $type
+     * @param string|int|null $id
+     * @param string $context
+     * @param boolean $assign
+     * @return mixed
+     * @throws Exception
+     */
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
@@ -119,15 +123,18 @@ class backend_controller_domain extends backend_db_domain
                     ),array(
                         'id_domain'       => $this->id_domain,
                         'url_domain'      => $this->url_domain,
+                        'tracking_domain' => $this->tracking_domain,
                         'default_domain'  => $this->default_domain
                     )
                 );
                 break;
         }
     }
+
     /**
      * Insertion de données
      * @param $data
+     * @throws Exception
      */
     private function del($data){
         switch($data['type']){

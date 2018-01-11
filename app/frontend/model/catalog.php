@@ -109,6 +109,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                     )
                 );
 
+                $data['cat']    	= $row['name_cat'];
                 $data['id_lang']    = $row['id_lang'];
                 $data['iso']        = $row['iso_lang'];
                 $data['price']      = $row['price_p'];
@@ -576,10 +577,10 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
             }else{
 
-                $conditions .= ' WHERE lang.iso_lang = :iso AND cat.published_cat =1 AND pc.published_p =1 AND catalog.default_c = 1 AND img.default_img = 1 AND catalog.id_cat = '.$current['id'];
-                /*if(isset($current['id'])){
-                    $conditions .= ' AND p.id_parent = '.$current['id'];
-                }*/
+                $conditions .= ' WHERE lang.iso_lang = :iso AND cat.published_cat =1 AND pc.published_p =1 AND catalog.default_c = 1 AND img.default_img = 1';
+                if(isset($current['id'])){
+                    $conditions .= ' AND catalog.id_cat = '.$current['id'];
+                }
 
                 if (isset($custom['exclude'])) {
                     $conditions .= ' AND catalog.id_product NOT IN (' . $conf['id'] . ') ';

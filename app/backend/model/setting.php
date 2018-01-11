@@ -12,7 +12,7 @@ class backend_model_setting extends component_collections_setting{
 	 */
 	public function select_uniq_setting($setting_id){
 		if(!is_null($setting_id));
-		return parent::publicDbSetting()->s_uniq_setting_value($setting_id);
+		return parent::fetch($setting_id);
 	}
 
 	/**

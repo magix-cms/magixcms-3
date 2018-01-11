@@ -46,6 +46,7 @@ class backend_controller_plugins extends backend_db_plugins{
      */
     private function setNotRegisterItems(){
         $newsItems = array();
+		$registerItems = array();
         $pluginsDir = $this->finder->scanRecursiveDir(component_core_system::basePath().'/plugins');
         $pluginsRegister = $this->getItems('list',null,'all',false);
         foreach($pluginsRegister as $item){

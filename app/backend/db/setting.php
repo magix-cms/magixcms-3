@@ -49,9 +49,8 @@ class backend_db_setting{
      * @return mixed
      * @throws Exception
      */
-    public function fetchData($config,$data = false){
+    public function fetchData($config,$params = array()){
         $sql = '';
-        $params = false;
 
         if(is_array($config)) {
             if($config['context'] === 'all') {
@@ -70,6 +69,9 @@ class backend_db_setting{
                     $sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
                     //$params = $data;
                 }
+				elseif ($config['type'] === 'setting') {
+					$sql = 'SELECT * FROM mc_setting WHERE name = :setting';
+				}
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }

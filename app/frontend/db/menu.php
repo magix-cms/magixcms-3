@@ -25,7 +25,8 @@ class frontend_db_menu
 								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link,
 								mc.title_link as title_link,
 								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
-								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
+								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link,
+								pl.name as plugin_name
 							FROM mc_menu as m
 							LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
 							LEFT JOIN mc_lang as l ON mc.id_lang = l.id_lang

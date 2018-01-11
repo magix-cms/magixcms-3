@@ -1,7 +1,7 @@
 <?php
 class backend_controller_setting extends backend_db_setting{
     public $edit, $action, $tabs;
-    protected $message, $template, $header, $data;
+    protected $message, $template, $header, $data, $settings, $setSkinPath;
     public $setting, $type, $color;
     public function __construct()
     {
@@ -9,6 +9,7 @@ class backend_controller_setting extends backend_db_setting{
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
+        $this->settings = new backend_model_setting();
         $formClean = new form_inputEscape();
 
         // --- GET
@@ -36,6 +37,8 @@ class backend_controller_setting extends backend_db_setting{
         if (http_request::isPost('type')) {
             $this->type = $formClean->simpleClean($_POST['type']);
         }
+
+		$this->setSkinPath = component_core_system::basePath().'skin'.DIRECTORY_SEPARATOR;
     }
 
 	/**
@@ -109,6 +112,100 @@ class backend_controller_setting extends backend_db_setting{
             fclose($fh);
         }
     }
+
+	/**
+	 * @return string
+	 */
+	private function setSkinData(){
+		$currentSkin = $this->settings->select_uniq_setting('theme');
+		if($currentSkin['value'] != null){
+			if($currentSkin['value'] == 'default'){
+				if(file_exists($this->setSkinPath.'default/')){
+					$setData =  'default';
+				}
+			}
+			elseif(file_exists($this->setSkinPath.$currentSkin['value'].'/')){
+				$setData = $currentSkin['value'];
+			}
+			else{
+				$setData = 'default';
+			}
+			return $setData;
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	private function setSnippetPath(){
+		$setData = array();
+		if(file_exists($this->setSkinPath.$this->setSkinData().DIRECTORY_SEPARATOR.'snippet')){
+			$setData['path'] = $this->setSkinPath.$this->setSkinData().DIRECTORY_SEPARATOR.'snippet';
+			$setData['type'] = 'skin';
+			$setData['directory'] = $this->setSkinData().'/snippet';
+		}else{
+			$setData['path'] = component_core_system::basePath().PATHADMIN.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'snippet';
+			$setData['type'] = 'admin';
+			$setData['directory'] = 'snippet';
+		}
+		return $setData;
+	}
+
+	/**
+	 * Parcourt le dossier des snippets HTML dans le skin courant ou le dossier de base
+	 */
+	private function setSnippet(){
+		$setPath = $this->setSnippetPath();
+		if(is_array($setPath)) {
+			$directory = new RecursiveDirectoryIterator($setPath['path'], RecursiveDirectoryIterator::SKIP_DOTS);
+			$iterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::LEAVES_ONLY);
+			//extension
+			$extensions = array("html");
+			// delimiteur
+			$delimiter = "\n";
+			if (is_object($iterator)) {
+				foreach ($iterator as $fileinfo) {
+					// Compatibility with php < 5.3.6
+					if (version_compare(phpversion(), '5.3.6', '<')) {
+						$getExtension = pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION);
+					} else {
+						$getExtension = $fileinfo->getExtension();
+					}
+					if (in_array($getExtension, $extensions)) {
+						if ($setPath['type'] === 'skin') {
+							$pos = strpos($fileinfo->getPathname(), $setPath['type']);
+							//$len = strlen($pos);
+							if (stripos($_SERVER['HTTP_USER_AGENT'], 'win')) {
+								$url = '/skin/' . $setPath['directory'] . '/' . $fileinfo->getFilename();
+							} else {
+								$url = DIRECTORY_SEPARATOR . substr($fileinfo->getPathname(), $pos);
+							}
+						} elseif ($setPath['type'] === 'admin') {
+							$pos = strpos($fileinfo->getPathname(), PATHADMIN);
+							//$len = strlen($pos);
+							if (stripos($_SERVER['HTTP_USER_AGENT'], 'win')) {
+								$url = '/' . PATHADMIN . '/template/' . $setPath['directory'] . '/' . $fileinfo->getFilename();
+							} else {
+								$url = DIRECTORY_SEPARATOR . substr($fileinfo->getPathname(), $pos);
+							}
+						}
+
+						$files[] = /*$delimiter.*/'{'.'"title":"'.$fileinfo->getBasename('.'.$getExtension).'","url":"'.$url.'"}';
+					}
+				}
+				if (is_array($files)) {
+					asort($files, SORT_REGULAR);
+					//$ouput = 'templates = [';
+					$ouput = '['.implode(',', $files).']';
+					//$ouput .= implode(',', $files);
+					//$ouput .= $delimiter . ']';
+					$this->header->set_json_headers();
+					print $ouput;
+				}
+			}
+		}
+	}
+
     /**
      * Mise a jour des données
      * @param $data
@@ -193,6 +290,7 @@ class backend_controller_setting extends backend_db_setting{
         $this->header->set_json_headers();
         $this->message->json_post_response(true,'update',$data['type']);
     }
+
     /**
      *
      */
@@ -212,8 +310,12 @@ class backend_controller_setting extends backend_db_setting{
                         }
                     }
                     break;
+				case 'getSnippet':
+					$this->setSnippet();
+					break;
             }
-        }else{
+        }
+        else {
             $this->template->assign('settings',$this->setItemsData());
             $this->setItemsSkin();
             $this->template->display('setting/index.tpl');

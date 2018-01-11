@@ -81,10 +81,10 @@
                             <a href="#" class="btn btn-box btn-invert btn-main-theme select-marker" data-marker="{$addr@index}">{#see_on_map#}</a>
                         </p>
                     {/capture}
-                    {if !empty($addr.img)}
+                    {if !empty($addr.img_address)}
                         <div class="row">
                             <div class="col-ph-12 col-xs-6 col-sm-12 col-lg-6">
-                                <img class="img-responsive" src="{geturl}/upload/gmap/address/{$addr.img}" alt="{$addr.company}">
+                                <img class="img-responsive" src="{geturl}/upload/gmap/{$addr.id_address}/{$addr.img_address}" alt="{$addr.company}">
                             </div>
                             <div class="col-ph-12 col-xs-6 col-sm-12 col-lg-6">
                                 {$smarty.capture.content}

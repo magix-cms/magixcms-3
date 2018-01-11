@@ -83,7 +83,7 @@ class file_finder{
      */
     public function scanRecursiveDir($directory,$exclude=''){
         try{
-            $file = '';
+            $file = array();
             $it = new DirectoryIterator($directory);
             for($it->rewind(); $it->valid(); $it->next()) {
                 if($it->isDir() && !$it->isDot()){

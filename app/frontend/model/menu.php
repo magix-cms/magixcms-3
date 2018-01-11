@@ -98,6 +98,13 @@ class frontend_model_menu extends frontend_db_menu {
 						);
 					break;
 			}
+
+			switch ($link['type_link']) {
+				case 'about_page': $link['controller'] = 'about'; break;
+				case 'category': $link['controller'] = 'catalog'; break;
+				case 'plugin': $link['controller'] = $link['plugin_name']; break;
+				default: $link['controller'] = $link['type_link'];
+			}
 		}
 
 		return $links;
