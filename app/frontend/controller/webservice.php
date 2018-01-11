@@ -5,7 +5,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
      */
     protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
     protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory;
-    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws;
+    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage;
     public $collection, $retrieve, $id, $filter ,$sort, $url;
     /**
      * frontend_controller_pages constructor.
@@ -30,6 +30,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->DBCatalog = new frontend_db_catalog();
         $this->DBCategory = new frontend_db_category();
         $this->url = http_url::getUrl();
+        $this->collectionLanguage = new component_collections_language();
         $this->ws = new frontend_model_webservice();
 
         if (http_request::isGet('id')) {
@@ -48,6 +49,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
             $this->sort = $formClean->simpleClean($_GET['sort']);
         }
     }
+
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
@@ -55,12 +57,15 @@ class frontend_controller_webservice extends frontend_db_webservice{
      * @param string $context
      * @param boolean $assign
      * @return mixed
+     * @throws Exception
      */
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
     /**
      * @return string
+     * @throws Exception
      */
     public function setWsAuthKey(){
         $data = $this->getItems('auth',null,'one',false);
@@ -80,7 +85,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
      * Global Root
      */
     private function getBuildRootData(){
-        $data = array('home','pages','news','catalog');
+        $data = array('languages','home','pages','news','catalog');
         $this->xml->newStartElement('modules');
         foreach($data as $key) {
             $this->xml->setElement(
@@ -100,6 +105,49 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->output();
     }
 
+    /**
+     * Build language Data
+     */
+    private function getBuildLanguageData(){
+        // Collection
+        $collection = $this->collectionLanguage->fetchData(
+            array('context' => 'all', 'type' => 'langs')
+        );
+
+        $this->xml->newStartElement('languages');
+
+        foreach($collection as $key) {
+            $this->xml->newStartElement('language');
+
+            $this->xml->setElement(
+                array(
+                    'start' => 'id_lang',
+                    'text' => $key['id_lang']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'iso_lang',
+                    'text' => $key['iso_lang']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'name_lang',
+                    'text' => $key['name_lang']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'default_lang',
+                    'text' => $key['default_lang']
+                )
+            );
+            $this->xml->newEndElement();
+        }
+        $this->xml->newEndElement();
+        $this->xml->output();
+    }
     /**
      * Build Home Data (EDIT)
      */
@@ -1903,6 +1951,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
             $getContentType = $this->ws->getContentType();
             //$this->ws->setHeaderType();
             switch ($operations['type']) {
+                case 'languages':
+
+                    $this->xml->getXmlHeader();
+                    $this->getBuildLanguageData();
+
+                    break;
                 case 'home':
                     /*if ($operations['scrud'] === 'create') {
 
@@ -2111,6 +2165,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
         if ($this->ws->authorization($this->setWsAuthKey())) {
             if (isset($this->collection)) {
                 switch ($this->collection) {
+                    case 'languages':
+
+                        $this->getBuildParse(array('type' => 'languages'));
+
+                        break;
                     case 'home':
 
                         $this->getBuildParse(array('type' => 'home'));
