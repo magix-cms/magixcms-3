@@ -69,11 +69,16 @@ class backend_controller_seo extends backend_db_seo {
     private function collectionModule(){
         $core =  array('catalog','news');
         $plugins = $this->dbPlugins->fetchData(array('context'=>'all','type'=>'seo'));
-        foreach($plugins as $key){
-            $newData[] = /*'plugins:'.*/$key['name'];
+        if($plugins != null) {
+            $newData = array();
+            foreach ($plugins as $key) {
+                $newData[] = /*'plugins:'.*/
+                    $key['name'];
+            }
+            return array_merge($core,$newData);
+        }else{
+            return $core;
         }
-        return array_merge($core,$newData);
-
     }
     /**
      * @param $data
