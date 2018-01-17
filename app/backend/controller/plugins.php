@@ -95,9 +95,9 @@ class backend_controller_plugins extends backend_db_plugins{
             $config = $this->modelPlugins->readConfigXML($id);
             if($config){
                 if(isset($config['release']['version'])){
-                    $this->setSQLProcess($id);
-                    parent::insert(array('type'=>'register'),array('name'=>$id,'version'=>$config['release']['version']));
-                    $this->message->getNotify('setup_success',array('method'=>'fetch','assignFetch'=>'message'));
+					parent::insert(array('type'=>'register'),array('name'=>$id,'version'=>$config['release']['version']));
+					$this->setSQLProcess($id);
+					$this->message->getNotify('setup_success',array('method'=>'fetch','assignFetch'=>'message'));
                     $this->template->display('plugins/setup.tpl');
                 }else{
                     $this->message->getNotify('setup_error',array('method'=>'fetch','assignFetch'=>'message'));

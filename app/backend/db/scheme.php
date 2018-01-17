@@ -42,13 +42,13 @@
  * @author Gérits Aurélien <aurelien@magix-cms.com> <aurelien@magix-dev.be>
  *
  */
-class backend_db_scheme{
-    /**
-     * @param $config
-     * @param bool $data
-     * @return mixed
-     * @throws Exception
-     */
+class backend_db_scheme {
+	/**
+	 * @param $config
+	 * @param bool $data
+	 * @return mixed
+	 * @throws Exception
+	 */
     public function fetchData($config,$data = false){
         $sql = '';
         $params = false;
@@ -66,12 +66,6 @@ class backend_db_scheme{
 				}
 				//print $sql;
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-
-            } elseif($config['context'] === 'one') {
-
-                if ($config['type'] === 'skin') {}
-
-                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
         }
     }

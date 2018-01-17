@@ -1,6 +1,6 @@
 <?php
 class component_routing_dispatcher{
-    protected $header,$template,$pluginsCollection,$settingCollection;
+    protected $header,$template,$pluginsCollection,$settingCollection,$pathadmin;
     /**
      * @var Dispatcher
      */
@@ -25,6 +25,7 @@ class component_routing_dispatcher{
         $this->template = $template;
         $this->pluginsCollection = new component_collections_plugins();
         $this->settingCollection = new component_collections_setting();
+        $this->pathadmin = component_core_system::basePath().PATHADMIN.DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -42,13 +43,25 @@ class component_routing_dispatcher{
         $data = $this->settingCollection->fetchData(array('context'=>'all','type'=>'setting'));
         $arr = array();
         if($data != null) {
-
             foreach ($data as $item) {
                 $arr[$item['name']] = array();
                 $arr[$item['name']]['value'] = $item['value'];
                 $arr[$item['name']]['category'] = $item['category'];
             }
             $this->template->assign('setting', $arr);
+
+            /*if($arr['fav']['value'] !== '') {
+            	$faDir = $this->pathadmin.'template'.DIRECTORY_SEPARATOR.'fonts'.DIRECTORY_SEPARATOR.'fontawesome'.DIRECTORY_SEPARATOR.$arr['fav']['value'].DIRECTORY_SEPARATOR;
+            	if(!file_exists($faDir)){
+					$content = file_get_contents('https://maxcdn.bootstrapcdn.com/font-awesome/'.$arr['fav']['value'].'/fonts/fontawesome-webfont.ttf');
+
+					if ($content !== false) {
+						$makeFiles = new filesystem_makefile();
+						$makeFiles->mkdir($faDir);
+						file_put_contents($faDir.'fontawesome-webfont.ttf', $content);
+					}
+				}
+			}*/
         }
     }
 

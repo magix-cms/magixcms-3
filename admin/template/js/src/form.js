@@ -243,6 +243,10 @@ var globalForm = (function ($, undefined) {
         else if($(f).hasClass('add_to_ullist')) {
             options.resetForm = true;
             options.success = function (d) {
+                if($(f).find('.selectpicker')) {
+                    $(f).find('.selectpicker').bootstrapSelect('clear');
+                    $(f).find('.selectpicker').bootstrapSelect('empty');
+                }
                 sub = $(f).data('sub') == '' ? false : $(f).data('sub');
                 initAlert(d.notify,4000,sub);
                 if(d.statut && d.result) {
@@ -265,6 +269,7 @@ var globalForm = (function ($, undefined) {
                 }
                 initValidation(controller,'.edit_in_list');
                 initModalActions();
+                $('.additional-fields').collapse('hide');
             };
         }
         // --- Rules for edit form that edit a record into a table list

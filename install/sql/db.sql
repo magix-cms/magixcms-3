@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `mc_cms_page`
-  ADD CONSTRAINT `mc_cms_page_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `mc_cms_page_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
   `id_content` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -454,7 +454,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_cat_content` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `mc_catalog_cat`
-  ADD CONSTRAINT `mc_catalog_cat_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_catalog_cat` (`id_cat`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `mc_catalog_cat_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `mc_catalog_cat` (`id_cat`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `mc_catalog_cat_content`
   ADD CONSTRAINT `mc_catalog_cat_content_ibfk_1` FOREIGN KEY (`id_cat`) REFERENCES `mc_catalog_cat` (`id_cat`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -578,7 +578,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_rel` (
 
 CREATE TABLE IF NOT EXISTS `mc_menu` (
   `id_link` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type_link` enum('home','pages','about','about_page','catalog','category','news','contact','plugin') NOT NULL,
+  `type_link` enum('home','pages','about','about_page','catalog','category','news','plugin') NOT NULL,
   `id_page` int(10) unsigned DEFAULT NULL,
   `mode_link` enum('simple','dropdown','mega') NOT NULL DEFAULT 'simple',
   `order_link` int(10) unsigned NOT NULL DEFAULT '0',

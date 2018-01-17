@@ -79,7 +79,7 @@
     </div>
     {if $companyData.tva}<div><p>{#footer_tva#} {$companyData.tva}</p></div>{/if}
     <div>
-        {include file="amp/section/footer/powered.tpl"}
+        {include file="section/footer/powered.tpl"}
     </div>
     </div>
 </div>

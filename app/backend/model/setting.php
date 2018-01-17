@@ -28,10 +28,10 @@ class backend_model_setting extends component_collections_setting{
 		return $settings;
 	}
 	public function getSetting(){
-        $data = parent::fetchAll();
+        $data = parent::fetchData(array('context'=>'all','type'=>'setting'));
         $settings = array();
         foreach($data as $r) {
-            $settings[$r['setting_id']] = $r['value'];
+            $settings[$r['name']] = $r['value'];
         }
         return $settings;
     }
