@@ -58,6 +58,17 @@ class backend_model_plugins{
                         }
                         if (class_exists($class)) {
                             //Si la méthode run existe on ajoute le plugin dans le menu
+                            if (method_exists($class, 'getExtensionName')) {
+								$this->template->addConfigFile(
+									array(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR),
+									array($item['name'].'_admin_')
+								);
+								//$this->template->configLoad();
+                            	$ext = new $class();
+                                $item['title'] = $ext->getExtensionName();
+                            } else {
+                            	$item['title'] = $item['name'];
+							}
                             if (method_exists($class, 'run')) {
                                 $newsItems[] = $item;
                             }
@@ -75,6 +86,9 @@ class backend_model_plugins{
                     break;
             }
         }
+
+		component_format_array::array_sortBy('title', $newsItems);
+
         return $newsItems;
     }
 
@@ -173,7 +187,7 @@ class backend_model_plugins{
                         component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/'
                     ),
                     array(
-                        'admin_local_',
+						$this->controller_name.'_admin_',
                     )
                     ,false
                 );

@@ -33,7 +33,7 @@
  # needs please refer to http://www.magix-cms.com for more information.
  */
 
-if (version_compare(phpversion(), '5.3.0', '<')) {
+if (version_compare(phpversion(), '5.5.0', '<')) {
 	echo  'Votre version de PHP est incompatible';
 	exit;
 }

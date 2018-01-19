@@ -23,11 +23,11 @@
         <nav id="nav-pages" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'pages'} in{/if}">
             <ul class="nav list-unstyled">
                 <li{if $smarty.get.controller == 'pages'} class="active"{/if}>
-                    <a href="{geturl}/{baseadmin}/index.php?controller=pages">Listes des pages</a>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=pages">{#list_page#}</a>
                 </li>
                 {if {employee_access type="append" class_name="backend_controller_pages"} eq 1}
                     <li{if $smarty.get.controller == 'pages' && $smarty.get.action == 'add'} class="active"{/if}>
-                        <a href="{geturl}/{baseadmin}/index.php?controller=pages&action=add">Ajouter une page</a>
+                        <a href="{geturl}/{baseadmin}/index.php?controller=pages&action=add">{#add_page#}</a>
                     </li>
                 {/if}
             </ul>
@@ -46,11 +46,11 @@
         <nav id="nav-news" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'news'} in{/if}">
             <ul class="nav list-unstyled">
                 <li{if $smarty.get.controller == 'news'} class="active"{/if}>
-                    <a href="{geturl}/{baseadmin}/index.php?controller=news">Listes des Actualités</a>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=news">{#list_news#}</a>
                 </li>
                 {if {employee_access type="append" class_name="backend_controller_pages"} eq 1}
                     <li{if $smarty.get.controller == 'news' && $smarty.get.action == 'add'} class="active"{/if}>
-                        <a href="{geturl}/{baseadmin}/index.php?controller=news&action=add">Ajouter une actualité</a>
+                        <a href="{geturl}/{baseadmin}/index.php?controller=news&action=add">{#add_new#}</a>
                     </li>
                 {/if}
             </ul>
@@ -71,21 +71,21 @@
             <ul class="nav list-unstyled">
                 {if {employee_access type="view" class_name="backend_controller_category"} eq 1}
                 <li{if $smarty.get.controller == 'category'} class="active"{/if}>
-                    <a href="{geturl}/{baseadmin}/index.php?controller=category">Listes des categories</a>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=category">{#list_cats#}</a>
                 </li>
                 {if {employee_access type="append" class_name="backend_controller_category"} eq 1}
                 <li{if $smarty.get.controller == 'category' && $smarty.get.action == 'add'} class="active"{/if}>
-                    <a href="{geturl}/{baseadmin}/index.php?controller=category&action=add">Ajouter une categorie</a>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=category&action=add">{#add_cat#}</a>
                 </li>
                 {/if}
                 {/if}
                 {if {employee_access type="view" class_name="backend_controller_category"} eq 1}
                 <li{if $smarty.get.controller == 'product'} class="active"{/if}>
-                    <a href="{geturl}/{baseadmin}/index.php?controller=product">Listes des produits</a>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=product">{#list_products#}</a>
                 </li>
                 {if {employee_access type="append" class_name="backend_controller_product"} eq 1}
                 <li{if $smarty.get.controller == 'product' && $smarty.get.action == 'add'} class="active"{/if}>
-                    <a href="{geturl}/{baseadmin}/index.php?controller=product&action=add">Ajouter un produit</a>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=product&action=add">{#add_products#}</a>
                 </li>
                 {/if}
                 {/if}
@@ -176,7 +176,7 @@
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
         {*<a href="#">*}
-            <span><span class="fa fa-cog"></span> Configuration</span>
+            <span><span class="fa fa-cog"></span> {#config#|ucfirst}</span>
         {*</a>*}
         <nav id="nav-setting" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'setting' || $smarty.get.controller == 'files' || $smarty.get.controller == 'webservice' || $smarty.get.controller == 'domain' || $smarty.get.controller == 'seo'} in{/if}">
             <ul class="nav list-unstyled">
@@ -197,7 +197,7 @@
                 {if {employee_access type="view" class_name="backend_controller_webservice"} eq 1}
                     <li{if $smarty.get.controller == 'webservice'} class="active"{/if}>
                         <a href="{geturl}/{baseadmin}/index.php?controller=webservice">
-                            <span class="fa fa-cloud"></span> Web Service
+                            <span class="fa fa-cloud"></span> {#webservice#}
                         </a>
                     </li>
                 {/if}
@@ -224,7 +224,7 @@
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
         {*<a href="#">*}
-            <span><span class="fa fa-location-arrow"></span> Localisation</span>
+            <span><span class="fa fa-location-arrow"></span> {#localisation#}</span>
         {*</a>*}
         <nav id="nav-lang" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'language' || $smarty.get.controller == 'country' || $smarty.get.controller == 'translate'} in{/if}">
             <ul class="nav list-unstyled">
@@ -259,21 +259,21 @@
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
         <a href="{geturl}/{baseadmin}/index.php?controller=employee">
-            <span class="fa fa-user"></span> Administration
+            <span class="fa fa-user"></span> {#administration#}
         </a>
         <nav id="nav-employee" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'employee'} in{/if}">
             <ul class="nav list-unstyled">
                 <li{if $smarty.get.controller == 'employee'} class="active"{/if}>
-                    <a href="{geturl}/{baseadmin}/index.php?controller=employee">Listes des employés</a>
+                    <a href="{geturl}/{baseadmin}/index.php?controller=employee">{#list_employees#}</a>
                 </li>
                 {if {employee_access type="append" class_name="backend_controller_employee"} eq 1}
                     <li{if $smarty.get.controller == 'employee' && $smarty.get.action == 'add'} class="active"{/if}>
-                        <a href="{geturl}/{baseadmin}/index.php?controller=employee&action=add">Ajouter un employé</a>
+                        <a href="{geturl}/{baseadmin}/index.php?controller=employee&action=add">{#add_employees#}</a>
                     </li>
                 {/if}
                 {if {employee_access type="view" class_name="backend_controller_access"} eq 1}
                     <li{if $smarty.get.controller == 'access'} class="active"{/if}>
-                        <a href="{geturl}/{baseadmin}/index.php?controller=access">Gestion des permissions</a>
+                        <a href="{geturl}/{baseadmin}/index.php?controller=access">{#perms#}</a>
                     </li>
                 {/if}
             </ul>
@@ -282,7 +282,7 @@
     {/if}
     <li><hr></li>
     {if {employee_access type="view" class_name="backend_controller_plugins"} eq 1}
-    <li class="has-submenu {if $smarty.get.controller == 'plugins'}active{/if}">
+    <li class="has-submenu {if $smarty.get.controller == 'plugins' || (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee')) && $smarty.get.controller)}active{/if}">
         <button type="button" class="navbar-toggle{if $smarty.get.controller == 'plugins'} open{/if}" data-toggle="collapse" data-parent="#{$menuId}" data-target="#nav-plugins">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>
@@ -297,7 +297,7 @@
                 {if {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
                 <li class="{if $smarty.get.controller == {$item.name}}active{/if}">
                     <a href="{geturl}/{baseadmin}/index.php?controller={$item.name}">
-                        <span class="fa {if $smarty.get.controller == {$item.name}}fa-angle-right{else}fa-angle-down{/if}"></span> {$item.name}
+                        <span class="fa {if $smarty.get.controller == {$item.name}}fa-angle-right{else}fa-angle-down{/if}"></span> {$item.title}
                     </a>
                 </li>
                 {/if}

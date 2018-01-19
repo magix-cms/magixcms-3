@@ -67,6 +67,15 @@ class plugins_contact_admin extends plugins_contact_db{
         }
     }
 
+	/**
+	 * Method to override the name of the plugin in the admin menu
+	 * @return string
+	 */
+	public function getExtensionName()
+	{
+		return $this->template->getConfigVars('contact_plugin');
+	}
+
     /**
      * Assign data to the defined variable or return the data
      * @param string $type

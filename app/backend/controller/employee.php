@@ -49,7 +49,7 @@ class backend_controller_employee extends backend_db_employee
             $this->email_admin = $formClean->simpleClean($_POST['email_admin']);
         }
         if (http_request::isPost('passwd_admin')) {
-            $this->passwd_admin = filter_escapeHtml::clean(filter_rsa::hashEncode('sha1',$_POST['passwd_admin']));
+            $this->passwd_admin = $formClean->simpleClean(password_hash($_POST['passwd_admin'], PASSWORD_DEFAULT));//filter_escapeHtml::clean(filter_rsa::hashEncode('sha1',$_POST['passwd_admin']));
         }
         if (http_request::isPost('title_admin')) {
             $this->title_admin = $formClean->simpleClean($_POST['title_admin']);

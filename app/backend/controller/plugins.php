@@ -65,9 +65,24 @@ class backend_controller_plugins extends backend_db_plugins{
                         }
                     }
                 }*/
-                $newsItems[]=$item;
+				$class = 'plugins_' . $item . '_admin';
+				$plugin = array('name' => $item, 'title' => $item);
+				if (class_exists($class)) {
+					//Si la méthode run existe on ajoute le plugin dans le menu
+					if (method_exists($class, 'getExtensionName')) {
+						$this->template->addConfigFile(
+							array(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR),
+							array($item.'_admin_')
+						);
+						//$this->template->configLoad();
+						$ext = new $class();
+						$plugin['title'] = $ext->getExtensionName();
+					}
+				}
+				$newsItems[]=$plugin;
             }
         }
+		component_format_array::array_sortBy('title', $newsItems);
         return $newsItems;
     }
 

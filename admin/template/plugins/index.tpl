@@ -13,7 +13,7 @@
             {if {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
             <section class="col-ph-12 col-md-6 col-lg-3">
                 <header>
-                    <h2 class="h5">{$item.name}</h2>
+                    <h2 class="h5">{$item.title}</h2>
                 </header>
                 <div>
                     <div class="row folder-box">
@@ -39,7 +39,7 @@
         {foreach $getListPluginsNotRegister as $item}
             <section class="col-ph-12 col-md-6 col-lg-3">
                 <header>
-                    <h2 class="h5">{$item}</h2>
+                    <h2 class="h5">{$item.title}</h2>
                 </header>
                 <div>
                     <div class="row folder-box">
@@ -47,7 +47,7 @@
                             {*<p><span class="fa fa-check"></span> Installé</p>*}
                         </div>
                         <div class="col-xs-6">
-                            <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item}&amp;action=setup">Installation</a></p>
+                            <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=setup">Installation</a></p>
                         </div>
                     </div>
                 </div>

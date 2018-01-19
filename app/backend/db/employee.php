@@ -9,7 +9,17 @@ class backend_db_employee
      */
     public function fetchData($config,$data = false){
         if(is_array($config)) {
-            if ($config['type'] === 'auth') {
+            if ($config['type'] === 'mail') {
+                //Return Auth status
+                $query='SELECT em.email_admin,em.passwd_admin from mc_admin_employee AS em
+                    JOIN mc_admin_access_rel AS acrel ON ( em.id_admin = acrel.id_admin )
+                    WHERE em.email_admin = :email_admin
+                    AND em.active_admin = 1 AND acrel.id_admin=em.id_admin';
+                return component_routing_db::layer()->fetch($query,array(
+                        ':email_admin'  => $data['email_admin']
+                    )
+                );
+            } elseif ($config['type'] === 'auth') {
                 //Return Auth status
                 $query='SELECT em.* from mc_admin_employee AS em
                 JOIN mc_admin_access_rel AS acrel ON ( em.id_admin = acrel.id_admin )

@@ -148,5 +148,6 @@ class component_httpUtils_header{
 		$this->template->assign('viewport', $viewport);
 		$this->template->assign('touch', $touch);
 		$this->template->assign('mOS', $mOS);
+		header("Vary: User-Agent");
     }
 }

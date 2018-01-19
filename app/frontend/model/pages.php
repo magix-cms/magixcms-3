@@ -245,7 +245,7 @@ class frontend_model_pages extends frontend_db_pages{
 					$conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
 				}
 
-				if ($conf['type'] == 'menu') {
+				if ($custom['type'] == 'menu') {
 					$conditions .= ' AND p.menu_pages = 1';
 				}
 				// ORDER
@@ -300,7 +300,7 @@ class frontend_model_pages extends frontend_db_pages{
                     $conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
                 }
 
-                if ($conf['type'] == 'menu') {
+                if ($custom['type'] == 'menu') {
                     $conditions .= ' AND p.menu_pages = 1';
                 }
                 // ORDER
@@ -412,7 +412,7 @@ class frontend_model_pages extends frontend_db_pages{
                 $conditions = '';
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent = :id';
 
-                if ($conf['type'] == 'menu') {
+                if ($custom['type'] == 'menu') {
                     $conditions .= ' AND p.menu_pages = 1';
                 }
 
@@ -440,4 +440,3 @@ class frontend_model_pages extends frontend_db_pages{
         return $data;
     }
 }
-?>

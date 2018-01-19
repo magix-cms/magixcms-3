@@ -28,6 +28,15 @@ class plugins_clearcache_admin{
         }
     }
 
+	/**
+	 * Method to override the name of the plugin in the admin menu
+	 * @return string
+	 */
+	public function getExtensionName()
+	{
+		return $this->template->getConfigVars('clearcache_plugin');
+	}
+
     /**
      * @param $data
      * @return string
