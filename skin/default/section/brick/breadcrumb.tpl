@@ -102,7 +102,11 @@
 
 {default}
 {if isset($smarty.get.controller) && $smarty.get.controller != 'home'}
-    {$bread[] = ['name' => {#$smarty.get.controller#}]}
+    {if isset($breadplugin) && !empty($breadplugin)}
+        {$bread = array_merge($bread,$breadplugin)}
+    {else}
+        {$bread[] = ['name' => {#$smarty.get.controller#}]}
+    {/if}
 {/if}
 {/switch}
 {* /Plugins *}

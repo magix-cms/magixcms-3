@@ -111,6 +111,10 @@ RewriteCond %{QUERY_STRING} !(year)+
 RewriteRule (.*)/(\d{4})/{0,1}$ /$1?year=$2 [QSA,L]
 RewriteCond %{QUERY_STRING} !(tag)+
 RewriteRule (.*)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?tag=$2 [QSA,L]
+RewriteCond %{QUERY_STRING} !(action)+
+RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?action=$2 [QSA,L]
+RewriteCond %{QUERY_STRING} !(hash)+
+RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?hash=$2 [QSA,L]
 RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload)
 RewriteRule ^([0-9a-zA-Z]+)/{0,1}$ /index.php?controller=$1 [QSA,L]
 

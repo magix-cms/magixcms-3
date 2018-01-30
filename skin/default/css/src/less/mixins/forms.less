@@ -102,8 +102,12 @@ textarea.form-control {
 				visibility: visible;
 				width: 100%;
 				background-color: @state-danger-text;
-				bottom: 36px + @padb;
+				bottom: 32px + @padb;
 			}
+		}
+
+		.error {
+			font-size: 80%;
 		}
 
 		input:focus {
@@ -122,7 +126,8 @@ textarea.form-control {
 		padding: 20px 0 @padb;
 	}
 
-	label {
+	.error + label,
+	input + label {
 		bottom: 0;
 		color: rgba(0,0,0,.26);
 		font-size: 16px;
@@ -165,12 +170,12 @@ textarea.form-control {
 	}
 
 	// Test
-	input:not([type="submit"]),
-	input:not([type="reset"]),
-	input:not([type="button"]),
-	input:not([type="radio"]),
-	input:not([type="checkbox"]),
-	input:not([type="color"]),
+	input[type="text"],
+	input[type="search"],
+	input[type="email"],
+	input[type="tel"],
+	input[type="number"],
+	input[type="password"],
 	textarea {
 		border: none;
 		border-bottom: 1px solid rgba(0,0,0,.12);
@@ -184,7 +189,7 @@ textarea.form-control {
 		color: inherit;
 
 		&:focus {
-			+ label {
+			~ label {
 				color: @main-color;
 				font-size: 12px;
 				top: 4px;

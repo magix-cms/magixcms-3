@@ -183,6 +183,10 @@ var globalForm = (function ($, undefined) {
                 }
             };
         }
+        // --- Rules form search form
+        else if($(f).hasClass('pwd_form')) {
+            options.resetForm = true;
+        }
         // --- Rules form classic edit form but with replace from extend data
         else if($(f).hasClass('edit_form_extend')) {
             options.success = function (d) {

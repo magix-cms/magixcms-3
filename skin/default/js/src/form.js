@@ -26,7 +26,7 @@ $(document).ready(function(){
 					$(element).parent().addClass("has-error has-feedback");
 				}
 			}
-			else if($(element).is('[type="radio"]')) {
+			else if($(element).is('[type="radio"]') || $(element).is('[type="checkbox"]')) {
 				$(element).parent().parent().addClass("has-error").parent().addClass("has-error");
 			}
 		},
@@ -40,7 +40,7 @@ $(document).ready(function(){
 					$(element).parent().removeClass("has-error has-feedback");
 				}
 			}
-			else if($(element).is('[type="radio"]')) {
+			else if($(element).is('[type="radio"]') || $(element).is('[type="checkbox"]')) {
 				$(element).parent().parent().removeClass("has-error").parent().removeClass("has-error");
 			}
 		},
@@ -49,7 +49,7 @@ $(document).ready(function(){
 			if ( element.is(":radio") ){
 				element.parent().parent().parent().append(error);
 			}else if ( element.is(":checkbox") ){
-				error.insertAfter(element);
+				error.insertAfter(element.next());
 			}else if ( element.is("select")){
 				error.insertAfter(element);
 			}else if ( element.is(".checkMail") ){
@@ -107,6 +107,8 @@ $(document).ready(function(){
             switch (self.attr('type')) {
                 case 'text':
                 case 'number':
+                case 'search':
+                case 'password':
                 case 'email':
                 case 'tel':
                     updateParent(self);
@@ -213,6 +215,23 @@ var globalForm = (function ($, undefined) {
                 $(f).hide().next('.success').removeClass('hide');
             };
         }
+        else if($(f).hasClass('static_feedback')) {
+            options.success = function (d) {
+                removeLoader(f);
+                var modal = $(f).data('modal');
+                if(modal) { $(modal).modal('hide'); }
+                var sub = $(f).data('sub');
+                if(d.debug != undefined && d.debug != '') {
+                    initAlert(d.debug,false,sub);
+                }
+                else if(d.notify != undefined && d.notify != '') {
+                    initAlert(d.notify,false,sub);
+                }
+                else if(d != undefined && d != '') {
+                    initAlert(d,false,sub);
+                }
+            }
+		}
 
 		// --- Initialise the ajax request
 		$.jmRequest(options);

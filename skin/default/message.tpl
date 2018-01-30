@@ -1,324 +1,147 @@
 {autoload_i18n}
 {switch $message}
 {case 'add' break}
-    {** Add **}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_add#}
-{/capture}
+{** Add **}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_add#}{/capture}
 {case 'add_redirect' break}
-    {** Add **}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
+{** Add **}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{strip}
     {#request_success_add_redirect#}
     <i class="fa fa-spinner fa-pulse fa-fw"></i>
     <span class="sr-only">Redirection...</span>
-{/capture}
-    {** Update **}
+{/strip}{/capture}
+{** Update **}
 {case 'update' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_update#}
-{/capture}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_update#}{/capture}
 {case 'refresh_lang' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_refresh#}
-{/capture}
-    {** Upload **}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_refresh#}{/capture}
+{** Upload **}
 {case 'upload' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_update#}
-{/capture}
-    {** Delete **}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_update#}{/capture}
+{** Delete **}
 {case 'delete' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_delete#}
-{/capture}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_delete#}{/capture}
 {case 'delete_multi' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_delete_m#}
-{/capture}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_delete_m#}{/capture}
 {case 'delete_min' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_min#}
-{/capture}
-    {** Test Remote data **}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_min#}{/capture}
+{** Test Remote data **}
 {case 'remote_data' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_remote_data#}
-{/capture}
-    {** Install **}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_remote_data#}{/capture}
+{** Install **}
 {case 'setup_success' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_setup#}
-{/capture}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_setup#}{/capture}
 {case 'setup_info' break}
-{capture name="alert_type"}{strip}
-    info
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    info-circle
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_info_setup#}
-{/capture}
+{capture name="alert_type"}{strip}info{/strip}{/capture}
+{capture name="icon"}{strip}info-circle{/strip}{/capture}
+{capture name="alert_message"}{#request_info_setup#}{/capture}
 {case 'setup_error' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_setup#}
-{/capture}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_setup#}{/capture}
 {case 'upgrade_succes' break}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_upgrade#}
-{/capture}
+{capture name="alert_type"}{strip}success{/strip}{/capture}
+{capture name="icon"}{strip}check{/strip}{/capture}
+{capture name="alert_message"}{#request_success_upgrade#}{/capture}
 {case 'upgrade_empty' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_empty_upgrade#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_empty_upgrade#}{/capture}
 {********* Warning *********}
-    {** Empty **}
+{** Empty **}
 {case 'empty' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_empty#}
-{/capture}
-    {** lang_exist **}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_empty#}{/capture}
+{** lang_exist **}
 {case 'lang_exist' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_lang_exist#}
-{/capture}
-    {** lang_default **}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_lang_exist#}{/capture}
+{** lang_default **}
 {case 'lang_default' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_lang_default#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_lang_default#}{/capture}
 {case 'country_exist' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_country_exist#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_country_exist#}{/capture}
 {case 'child_exist' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_child_exist#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_child_exist#}{/capture}
 {case 'cannot_delete' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_delete#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_delete#}{/capture}
 {case 'cannot_multiple_delete' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_multiple_delete#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_multiple_delete#}{/capture}
 {case 'no_images' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_no_images#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_no_images#}{/capture}
 {case 'error_writable' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_writable#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_writable#}{/capture}
 {case 'error_mail_account' break}
-{capture name="alert_type"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_mail_account#}
-{/capture}
+{capture name="alert_type"}{strip}warning{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_mail_account#}{/capture}
 {********* Error *********}
-    {** error_login **}
+{** error_login **}
 {case 'error_login' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_login#}
-{/capture}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_login#}{/capture}
+{** error_hash **}
 {case 'error_hash' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_hash#}
-{/capture}
-    {** access_denied **}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_hash#}{/capture}
+{** access_denied **}
 {case 'access_denied' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_access_denied#}
-{/capture}
-    {** access_error **}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_access_denied#}{/capture}
+{** access_error **}
 {case 'access_error' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_access_error#}
-{/capture}
-    {** error_remote **}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_access_error#}{/capture}
+{** error_remote **}
 {case 'error_remote' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_remote#}
-{/capture}
-    {** upload_error **}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_remote#}{/capture}
+{** upload_error **}
 {case 'upload_error' break}
-{capture name="alert_type"}{strip}
-    danger
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    warning
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_error_upload#}
-{/capture}
+{capture name="alert_type"}{strip}danger{/strip}{/capture}
+{capture name="icon"}{strip}warning{/strip}{/capture}
+{capture name="alert_message"}{#request_error_upload#}{/capture}
 {/switch}
 <p class="{if $message neq 'error_login' AND $message neq 'error_hash'}col-sm-12{/if} alert alert-{$smarty.capture.alert_type} fade in">
     <button type="button" class="close" data-dismiss="alert">&times;</button>

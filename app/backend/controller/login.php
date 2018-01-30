@@ -129,6 +129,17 @@ class backend_controller_login extends backend_db_employee{
         $session->token('ap_auth_token');
     }
 
+	/**
+	 * @throws Exception
+	 */
+	public function getAdminProfile()
+	{
+		if(isset($_SESSION['keyuniqid_admin'])) {
+			$adminProfile = parent::fetchData(array('type'=>'session'),array('keyuniqid_admin' => $_SESSION['keyuniqid_admin']));
+			$this->template->assign('adminProfile',$adminProfile);
+		}
+    }
+
     /**
      * Authentification sur la page de login
      * @param bool $debug

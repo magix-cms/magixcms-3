@@ -11,7 +11,6 @@ class frontend_model_data{
 		$this->caller = $caller;
 		$this->db = (new ReflectionClass(get_parent_class($caller)))->newInstance();
 		$this->template = new frontend_model_template();
-
 	}
 
 	/**
@@ -85,13 +84,17 @@ class frontend_model_data{
 	 * @param string $context
 	 * @param boolean $assign
 	 * @return mixed
-	 * @throws Exception
 	 */
 	public function getItems($type, $id = null, $context = null, $assign = true) {
 		$data = $this->setItems($context, $type, $id);
 		if($assign) {
 			$varName = gettype($assign) == 'string' ? $assign : $type;
-			$this->template->assign($varName,$data);
+			try {
+				$this->template->assign($varName, $data);
+			} catch(Exception $e) {
+				$logger = new debug_logger(MP_LOG_DIR);
+				$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			}
 		}
 		return $data;
 	}

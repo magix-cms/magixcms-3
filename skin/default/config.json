@@ -50,6 +50,8 @@
             "transition.js",
             "carousel.js",
             "dropdown.js",
+            "modal.js",
+            "alert.js",
             "collapse.js"
         ],
         "tablet":[
@@ -57,6 +59,8 @@
             "carousel.js",
             "collapse.js",
             "dropdown.js",
+            "modal.js",
+            "alert.js",
             "tab.js"
         ],
         "desktop":[
@@ -64,6 +68,8 @@
             "carousel.js",
             "collapse.js",
             "dropdown.js",
+            "modal.js",
+            "alert.js",
             "tab.js"
         ]
     }

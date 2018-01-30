@@ -208,7 +208,7 @@ class backend_model_data extends backend_db_scheme{
 				$column['type'] =  'date';
 
 				if(preg_match('/^date/i', $pre)) {
-					$column['input'] =  array('type' => 'text', 'class' => 'date-input');
+					$column['input'] =  array('type' => 'text', 'class' => 'date-input', 'placeholder' => '__/__/____');
 				}
 				else if(preg_match('/^time/i', $pre)){
 					$column['input'] =  array('type' => 'text', 'class' => 'time-input');
@@ -274,15 +274,15 @@ class backend_model_data extends backend_db_scheme{
 		$params = array(':dbname' => MP_DBNAME, 'table' => $tables, 'columns' => $cols);
 		try {
 			$scheme = parent::fetchData(array('context' => 'all', 'type' => 'scheme'), $params);
+			try {
+				$this->template->assign($tpl_var,$this->parseScheme($scheme, $columns, $assign));
+			} catch(Exception $e) {
+				$logger = new debug_logger(MP_LOG_DIR);
+				$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			}
 		} catch(Exception $e) {
 			$logger = new debug_logger(MP_LOG_DIR);
 			$logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-		}
-		try {
-			$this->template->assign($tpl_var,$this->parseScheme($scheme, $columns, $assign));
-		} catch(Exception $e) {
-			$logger = new debug_logger(MP_LOG_DIR);
-			$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
 		}
 	}
 }

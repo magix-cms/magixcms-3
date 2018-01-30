@@ -35,6 +35,7 @@ if(http_request::isGet('controller')){
             $members = new backend_controller_login();
             $members->checkout();
             if (http_request::isSession('keyuniqid_admin')) {
+            	$members->getAdminProfile();
                 $dispatcher = new component_routing_dispatcher($routes, $template, $plugins);
                 $dispatcher->dispatch();
             }
@@ -48,6 +49,7 @@ if(http_request::isGet('controller')){
         $members = new backend_controller_login();
         $members->checkout();
         if (http_request::isSession('keyuniqid_admin')) {
+        	$members->getAdminProfile();
             $pluginsSetConfig = new backend_model_plugins();
             $pluginsSetConfig->addConfigDir($routes, $template);
             $pluginsSetConfig->templateDir($routes, $template, $plugins);
