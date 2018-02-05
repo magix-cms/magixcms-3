@@ -520,7 +520,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 ';
 
                 if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
-					if(isset($current['id'])){
+					if(isset($current['id']) && !isset($custom['select'])){
 						$conditions .= ' AND p.id_parent = '.$current['id'];
 					}
 
@@ -552,6 +552,8 @@ class frontend_model_catalog extends frontend_db_catalog {
 						$branch = (isset($custom['select']) && $custom['select'] !== 'all') ? $conf['id'] : 'root';
 						//data = $this->setPagesTree($data,$branch);
 						$data = $this->data->setPagesTree($data,'cat',$branch);
+						//var_dump($branch);
+						//var_dump($data);
 					}
                 }
             }
@@ -646,7 +648,8 @@ class frontend_model_catalog extends frontend_db_catalog {
                 				AND pc.published_p = 1 
                 				AND catalog.default_c = 1 
                 				AND (img.default_img = 1 
-                				OR img.default_img IS NULL)';
+                				OR img.default_img IS NULL)
+								GROUP BY catalog.id_product';
                 /*if(isset($current['id'])){
                     $conditions .= ' AND p.id_parent = '.$current['id'];
                 }*/

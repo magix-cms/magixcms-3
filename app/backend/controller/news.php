@@ -103,6 +103,7 @@ class backend_controller_news extends backend_db_news{
     /**
      * @param $data
      * @return array
+     * @throws Exception
      */
     private function setItemData($data){
         $imgPath = $this->upload->imgBasePath('upload/news');
@@ -119,10 +120,12 @@ class backend_controller_news extends backend_db_news{
                 $arr[$page['id_news']] = array();
                 $arr[$page['id_news']]['id_news'] = $page['id_news'];
                 if($page['img_news'] != null) {
-                    $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_news'].DIRECTORY_SEPARATOR.$page['img_news']);
-                    $arr[$page['id_news']]['imgSrc']['original']['img'] = $page['img_news'];
-                    $arr[$page['id_news']]['imgSrc']['original']['width'] = $originalSize[0];
-                    $arr[$page['id_news']]['imgSrc']['original']['height'] = $originalSize[1];
+                    if(file_exists($imgPath.DIRECTORY_SEPARATOR.$page['id_news'].DIRECTORY_SEPARATOR.$page['img_news'])) {
+                        $originalSize = getimagesize($imgPath . DIRECTORY_SEPARATOR . $page['id_news'] . DIRECTORY_SEPARATOR . $page['img_news']);
+                        $arr[$page['id_news']]['imgSrc']['original']['img'] = $page['img_news'];
+                        $arr[$page['id_news']]['imgSrc']['original']['width'] = $originalSize[0];
+                        $arr[$page['id_news']]['imgSrc']['original']['height'] = $originalSize[1];
+                    }
                     foreach ($fetchConfig as $key => $value) {
                         $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_news'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_news']);
                         $arr[$page['id_news']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_news'];

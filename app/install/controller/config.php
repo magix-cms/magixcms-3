@@ -25,22 +25,27 @@ class install_controller_config{
         if (http_request::isPost('MP_LOG')) {
             $this->MP_LOG = $formClean->simpleClean($_POST['MP_LOG']);
         }
-        if (http_request::isPost('MP_FIREPHP')) {
-            $this->MP_FIREPHP = $formClean->simpleClean($_POST['MP_FIREPHP']);
-        }
     }
 
-    private function testConnexion(){
+    /*private function testConnexion(){
         $database = component_routing_db::layer();
         if($database){
             print 'ok';
         }
-    }
+    }*/
+
+    /**
+     * @return string
+     */
     private function filesBasePath(){
         return component_core_system::basePath().'app'.DIRECTORY_SEPARATOR.'init'.DIRECTORY_SEPARATOR;
     }
-    private function createConfigFiles(){
 
+    /**
+     *
+     */
+    private function createConfigFiles(){
+        $makefiles = new filesystem_makefile();
     }
     /**
      *

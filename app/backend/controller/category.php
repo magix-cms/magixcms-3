@@ -139,10 +139,12 @@ class backend_controller_category extends backend_db_category {
                 $arr[$page['id_cat']]['id_parent'] = $page['id_parent'];
                 $arr[$page['id_cat']]['menu_cat'] = $page['menu_cat'];
                 if($page['img_cat'] != null) {
-                    $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_cat'].DIRECTORY_SEPARATOR.$page['img_cat']);
-                    $arr[$page['id_cat']]['imgSrc']['original']['img'] = $page['img_cat'];
-                    $arr[$page['id_cat']]['imgSrc']['original']['width'] = $originalSize[0];
-                    $arr[$page['id_cat']]['imgSrc']['original']['height'] = $originalSize[1];
+                    if(file_exists($imgPath.DIRECTORY_SEPARATOR.$page['id_cat'].DIRECTORY_SEPARATOR.$page['img_cat'])) {
+                        $originalSize = getimagesize($imgPath . DIRECTORY_SEPARATOR . $page['id_cat'] . DIRECTORY_SEPARATOR . $page['img_cat']);
+                        $arr[$page['id_cat']]['imgSrc']['original']['img'] = $page['img_cat'];
+                        $arr[$page['id_cat']]['imgSrc']['original']['width'] = $originalSize[0];
+                        $arr[$page['id_cat']]['imgSrc']['original']['height'] = $originalSize[1];
+                    }
                     foreach ($fetchConfig as $key => $value) {
                         $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_cat'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_cat']);
                         $arr[$page['id_cat']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_cat'];

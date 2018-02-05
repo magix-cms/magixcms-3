@@ -57,17 +57,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-ph-12 col-sm-6">
-                    <div class="form-group">
-                        <label for="M_FIREPHP">FirePHP*&nbsp;:</label>
-                        <select id="M_FIREPHP" name="M_FIREPHP" class="form-control required">
-                            <option value="true">ON</option>
-                            <option value="false" selected="selected">OFF</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
             <p id="btn-contact">
                 <button type="submit" class="btn btn-box btn-invert btn-main-theme">{#save#|ucfirst}</button>
                 {*<button type="button" id="test_connexion" class="btn btn-box btn-invert btn-fr-theme">{#connexion_test#|ucfirst}</button>*}

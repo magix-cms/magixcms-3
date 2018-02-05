@@ -146,10 +146,12 @@ class backend_controller_pages extends backend_db_pages
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
                 $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
                 if($page['img_pages'] != null) {
-                    $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages']);
-                    $arr[$page['id_pages']]['imgSrc']['original']['img'] = $page['img_pages'];
-                    $arr[$page['id_pages']]['imgSrc']['original']['width'] = $originalSize[0];
-                    $arr[$page['id_pages']]['imgSrc']['original']['height'] = $originalSize[1];
+                    if(file_exists($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages'])){
+                        $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages']);
+                        $arr[$page['id_pages']]['imgSrc']['original']['img'] = $page['img_pages'];
+                        $arr[$page['id_pages']]['imgSrc']['original']['width'] = $originalSize[0];
+                        $arr[$page['id_pages']]['imgSrc']['original']['height'] = $originalSize[1];
+                    }
                     foreach ($fetchConfig as $key => $value) {
                         $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_pages']);
                         $arr[$page['id_pages']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_pages'];
@@ -176,10 +178,11 @@ class backend_controller_pages extends backend_db_pages
         return $arr;
     }
 
-	/**
-	 * @param $idpage
-	 * @return array
-	 */
+    /**
+     * @param $idpage
+     * @return array
+     * @throws Exception
+     */
 	private function saveContent($idpage)
 	{
 		$extendData = array();
@@ -300,6 +303,7 @@ class backend_controller_pages extends backend_db_pages
     /**
      * Insertion de données
      * @param $data
+     * @throws Exception
      */
     private function del($data){
         switch($data['type']){
@@ -340,7 +344,7 @@ class backend_controller_pages extends backend_db_pages
                         $this->template->assign('page', $setEditData[$this->edit]);
                         $assign = array(
                             'id_pages',
-                            'name_pages' => ['title' => 'name'],
+                            'name_pages' => array('title' => 'name'),
                             'menu_pages',
                             'date_register'
                         );
@@ -438,12 +442,12 @@ class backend_controller_pages extends backend_db_pages
 
                             $assign = array(
 								'id_pages',
-								'name_pages' => ['title' => 'name'],
-								'img_pages' => ['type' => 'bin', 'input' => null, 'class' => ''],
-								'resume_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-								'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-								'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-								'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+								'name_pages' => array('title' => 'name'),
+								'img_pages' => array('type' => 'bin', 'input' => null, 'class' => ''),
+								'resume_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+								'content_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+								'seo_title_pages' => array('title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+								'seo_desc_pages' => array('title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
 								'menu_pages',
 								'date_register'
                             );
@@ -486,11 +490,11 @@ class backend_controller_pages extends backend_db_pages
                         $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
                         $assign = array(
                             'id_pages',
-                            'name_pages' => ['title' => 'name'],
-                            'resume_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-                            'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-                            'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-                            'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                            'name_pages' => array('title' => 'name'),
+                            'resume_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+                            'content_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+                            'seo_title_pages' => array('title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+                            'seo_desc_pages' => array('title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
                             'menu_pages',
                             'date_register'
                         );
@@ -545,12 +549,12 @@ class backend_controller_pages extends backend_db_pages
                 $this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
                 $assign = array(
                     'id_pages',
-                    'name_pages' => ['title' => 'name'],
-					'img_pages' => ['type' => 'bin', 'input' => null, 'class' => ''],
-                    'resume_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-                    'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-                    'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-                    'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                    'name_pages' => array('title' => 'name'),
+					'img_pages' => array('type' => 'bin', 'input' => null, 'class' => ''),
+                    'resume_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+                    'content_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+                    'seo_title_pages' => array('title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+                    'seo_desc_pages' => array('title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
                     'menu_pages',
                     'date_register'
                 );
@@ -562,13 +566,13 @@ class backend_controller_pages extends backend_db_pages
                     if(is_array($search) && !empty($search)) {
                         $assign = array(
                             'id_pages',
-                            'name_pages' => ['title' => 'name'],
-                            'parent_pages' => ['col' => 'name_pages', 'title' => 'name'],
-							'img_pages' => ['type' => 'bin', 'input' => null, 'class' => ''],
-                            'resume_pages' => ['type' => 'bin', 'input' => null],
-                            'content_pages' => ['type' => 'bin', 'input' => null],
-                            'seo_title_pages' => ['title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null],
-                            'seo_desc_pages' => ['title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null],
+                            'name_pages' => array('title' => 'name'),
+                            'parent_pages' => array('col' => 'name_pages', 'title' => 'name'),
+							'img_pages' => array('type' => 'bin', 'input' => null, 'class' => ''),
+                            'resume_pages' => array('type' => 'bin', 'input' => null),
+                            'content_pages' => array('type' => 'bin', 'input' => null),
+                            'seo_title_pages' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
+                            'seo_desc_pages' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
                             'menu_pages',
                             'date_register'
                         );

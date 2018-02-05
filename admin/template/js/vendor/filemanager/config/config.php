@@ -1,5 +1,5 @@
 <?php
-$version = "9.12.1";
+$version = "9.12.2";
 $baseadmin = '../../../../baseadmin.php';
 
 if(file_exists($baseadmin)){
@@ -126,14 +126,14 @@ $config = array(
 	|
 	*/
 	'base_url' => ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http"). "://". @$_SERVER['HTTP_HOST'],
-	/*
-	|--------------------------------------------------------------------------
-	| path from base_url to base of upload folder
-	|--------------------------------------------------------------------------
-	|
-	| with start and final /
-	|
-	*/
+    /*
+    |--------------------------------------------------------------------------
+    | path from base_url to base of upload folder
+    |--------------------------------------------------------------------------
+    |
+    | with start and final /
+    |
+    */
     'upload_dir' => '/media/',
     /*
     |--------------------------------------------------------------------------

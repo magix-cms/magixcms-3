@@ -45,6 +45,7 @@ class backend_model_plugins{
     private function setItems($config){
         $data =  $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
         $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+		$newsItems = array();
         foreach($data as $item){
             switch($config['type']){
                 case 'self':

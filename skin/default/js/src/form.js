@@ -207,7 +207,29 @@ var globalForm = (function ($, undefined) {
 		};
 
         // --- Rules form classic add form
-        if($(f).hasClass('button_feedback')) {
+        if($(f).hasClass('edit_form')) {
+            options.resetForm = false;
+        }
+        else if($(f).hasClass('refresh_form')) {
+            options.resetForm = false;
+            options.success = function (d) {
+                removeLoader(f);
+                var modal = $(f).data('modal');
+                if(modal) { $(modal).modal('hide'); }
+                var sub = $(f).data('sub');
+                if(d.debug != undefined && d.debug != '') {
+                    initAlert(d.debug,false,sub);
+                }
+                else if(d.notify != undefined && d.notify != '') {
+                    initAlert(d.notify,4000,sub);
+                }
+                else if(d != undefined && d != '') {
+                    initAlert(d,4000,sub);
+                }
+                window.reload();
+            };
+        }
+        else if($(f).hasClass('button_feedback')) {
             options.beforeSend = function(){
             	$(f).find('button[type="submit"]').replaceWith('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
 			};
@@ -230,7 +252,7 @@ var globalForm = (function ($, undefined) {
                 else if(d != undefined && d != '') {
                     initAlert(d,false,sub);
                 }
-            }
+            };
 		}
 
 		// --- Initialise the ajax request

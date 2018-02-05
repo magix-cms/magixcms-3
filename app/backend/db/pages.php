@@ -205,6 +205,7 @@ class backend_db_pages
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function insert($config,$data = false)
     {
@@ -226,10 +227,11 @@ class backend_db_pages
         }
     }
 
-	/**
-	 * @param $config
-	 * @param bool $data
-	 */
+    /**
+     * @param $config
+     * @param bool $data
+     * @throws Exception
+     */
 	public function update($config,$data = false)
 	{
 		if (is_array($config)) {
@@ -283,6 +285,7 @@ class backend_db_pages
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function delete($config,$data = false)
     {

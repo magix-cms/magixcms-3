@@ -1,6 +1,6 @@
 {extends file="layout.tpl"}
-{*{block name="title"}{seo_rewrite config_param=['level'=>'0','idmetas'=>'1','default'=>{$smarty.config.seo_t_static_signup|sprintf:$companyData.name}]}{/block}*}
-{*{block name="description"}{seo_rewrite config_param=['level'=>'0','idmetas'=>'2','default'=>{$smarty.config.seo_d_static_signup|sprintf:$companyData.name}]}{/block}*}
+{block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>#seo_signup_title#]}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>#seo_signup_desc#]}{/block}
 {block name="recaptcha"}<script src='https://www.google.com/recaptcha/api.js'></script>{/block}
 {block name='body:id'}signup{/block}
 {block name="main"}
@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control required" id="repeat_passwd" name="account[repeat_passwd]" placeholder="{#ph_psw_conf#|ucfirst}" equalTo="#passwd" required>
-                                        <label for="repeat_passwd" class="is_empty">{#account_password_confirm#|ucfirst}&nbsp;*</label>
+                                        <label for="repeat_passwd" class="is_empty">{#repeat_passwd#|ucfirst}&nbsp;*</label>
                                     </div>
                                     {if isset($newsletter) && $newsletter}
                                         <div class="form-group">
@@ -59,8 +59,8 @@
                                             </label>
                                         </div>
                                     </div>
-                                    {if $googleRecaptcha.google_recaptcha eq '1'}
-                                        <div class="g-recaptcha" data-sitekey="{$googleRecaptcha.recaptchaApiKey}"></div>
+                                    {if $config.google_recaptcha eq '1'}
+                                        <div class="g-recaptcha" data-sitekey="{$config.recaptchaApiKey}"></div>
                                         <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
                                         <script type="text/javascript"
                                                 src="https://www.google.com/recaptcha/api.js?hl={getlang}">

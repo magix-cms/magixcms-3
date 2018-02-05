@@ -209,6 +209,14 @@ var globalForm = (function ($, undefined) {
                 }
             };
         }
+        else if($(f).hasClass('delete_form_img')) {
+            options.success = function (d) {
+                $.jmRequest.initbox(d.notify,{ display:false });
+                if(d.statut && d.result) {
+                    $('.block-img').empty();
+                }
+            };
+        }
         // --- Rules for add form in a modal
         else if($(f).hasClass('add_modal_form')) {
             options.success = function (d) {

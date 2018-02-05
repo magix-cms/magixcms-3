@@ -72,11 +72,18 @@
         libjs/vendor/livefilter.min.js,
         libjs/vendor/src/bootstrap-select.js,
         libjs/vendor/filterlist.min.js,
+        {baseadmin}/template/js/table-form.min.js,
         {baseadmin}/template/js/pages.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
+            if (typeof tableForm == "undefined")
+            {
+                console.log("tableForm is not defined");
+            }else{
+                tableForm.run();
+            }
             if (typeof pages === "undefined")
             {
                 console.log("pages is not defined");

@@ -16,11 +16,11 @@
 </head>
 <body>
     <span class="preheader"></span>
-    <table class="body" data-made-with-foundation>
+    <table class="body">
     <tr>
-        <td valign="top">
+        <td class="center" align="center" valign="top">
             <center data-parsed="">
-                <table class="container">
+                <table align="center" class="container float-center">
                     <tbody>
                     <tr>
                         <td>

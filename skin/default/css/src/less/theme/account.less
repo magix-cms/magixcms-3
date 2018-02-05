@@ -11,6 +11,7 @@
 #login,
 #signup,
 #activated,
+#new-password,
 #profil-sheet,
 #private {
     /*#article {
@@ -180,6 +181,22 @@
             &.active a {
                 background-color: extract(@dark-colors, 2);
                 color: @smooth-white;
+            }
+        }
+    }
+
+    .tab-list {
+        li {
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            text-align: left;
+
+            .fa {
+                margin-right: 4px;
             }
         }
     }

@@ -1,6 +1,6 @@
 {extends file="layout.tpl"}
-{*{block name="title"}{seo_rewrite config_param=['level'=>'0','idmetas'=>'1','default'=>#seo_t_static_login#]}{/block}*}
-{*{block name="description"}{seo_rewrite config_param=['level'=>'0','idmetas'=>'2','default'=>#seo_d_static_login#]}{/block}*}
+{block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>#seo_activate_title#]}{/block}
+{block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>#seo_activate_desc#]}{/block}
 {block name='body:id'}activated{/block}
 
 {block name="main"}

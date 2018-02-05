@@ -289,21 +289,27 @@ class frontend_model_template{
     /**
      * @access public
      * Assign les variables dans les fichiers phtml
-     * @param void $tpl_var
+     * @param string|array $tpl_var
      * @param string $value
      * @param bool $nocache
-     * @throws Exception
      * @return void
      */
 	public function assign($tpl_var, $value = null, $nocache = false){
-		if (is_array($tpl_var)){
-			frontend_model_smarty::getInstance()->assign($tpl_var);
-		}else{
-			if($tpl_var){
-				frontend_model_smarty::getInstance()->assign($tpl_var,$value,$nocache);
-			}else{
-				throw new Exception('Unable to assign a variable in template');
+		try {
+			if (is_array($tpl_var)) {
+				frontend_model_smarty::getInstance()->assign($tpl_var);
 			}
+			else {
+				if($tpl_var) {
+					frontend_model_smarty::getInstance()->assign($tpl_var,$value,$nocache);
+				}
+				else {
+					throw new Exception('Unable to assign a variable in template');
+				}
+			}
+		} catch(Exception $e) {
+			$logger = new debug_logger(MP_LOG_DIR);
+			$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
 		}
 	}
 
