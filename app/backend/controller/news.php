@@ -1,8 +1,8 @@
 <?php
 class backend_controller_news extends backend_db_news{
     public $edit, $action, $tabs, $search, $plugin, $controller;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins;
-    public $id_news,$content,$news,$img,$id_lang,$name_tag;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$makeFiles,$finder;
+    public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img;
 
     public function __construct()
     {
@@ -16,6 +16,9 @@ class backend_controller_news extends backend_db_news{
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
         $this->modelPlugins = new backend_model_plugins();
+
+        $this->makeFiles = new filesystem_makefile();
+        $this->finder = new file_finder();
 
         // --- GET
         if(http_request::isGet('controller')) {
@@ -41,6 +44,10 @@ class backend_controller_news extends backend_db_news{
         // --- ADD or EDIT
         if (http_request::isPost('id')) {
             $this->id_news = $formClean->simpleClean($_POST['id']);
+        }
+
+        if (http_request::isPost('del_img')) {
+            $this->del_img = $formClean->simpleClean($_POST['del_img']);
         }
 
         if (http_request::isPost('content')) {
@@ -478,6 +485,43 @@ class backend_controller_news extends backend_db_news{
                                     )
                                 )
                             );
+                        } elseif(isset($this->del_img)) {
+
+                            $this->upd(array(
+                                'type'             => 'img',
+                                'id_news'          => $this->del_img,
+                                'img_news'         => NULL
+                            ));
+
+                            $this->header->set_json_headers();
+
+                            $setEditData = parent::fetchData(
+                                array('context'=>'all','type'=>'page'),
+                                array('edit'=>$this->del_img)
+                            );
+                            $setEditData = $this->setItemData($setEditData);
+
+                            $setImgDirectory = $this->upload->dirImgUpload(
+                                array_merge(
+                                    array('upload_root_dir'=>'upload/news/'.$this->del_img),
+                                    array('imgBasePath'=>true)
+                                )
+                            );
+
+                            if(file_exists($setImgDirectory)){
+                                $setFiles = $this->finder->scanDir($setImgDirectory);
+                                $clean = '';
+                                if($setFiles != null){
+                                    foreach($setFiles as $file){
+                                        $clean .= $this->makeFiles->remove($setImgDirectory.$file);
+                                    }
+                                }
+                            }
+
+                            $this->template->assign('page',$setEditData[$this->del_img]);
+                            $display = $this->template->fetch('news/brick/img.tpl');
+
+                            $this->message->json_post_response(true, 'update',$display);
                         }
                         break;
                 }

@@ -214,6 +214,7 @@ var globalForm = (function ($, undefined) {
                 $.jmRequest.initbox(d.notify,{ display:false });
                 if(d.statut && d.result) {
                     $('.block-img').empty();
+                    $('.block-img').html(d.result);
                 }
             };
         }

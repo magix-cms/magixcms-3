@@ -18,4 +18,10 @@
             </div>
         </div>
     </form>
+    <form id="delete_img_news" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=delete" method="post" class="validate_form delete_form_img col-ph-12">
+        <div class="form-group">
+            <input type="hidden" id="del_img" name="del_img" value="{$page.id_news}">
+            <button class="btn btn-danger" type="submit" name="action" value="img">{#remove#|ucfirst}</button>
+        </div>
+    </form>
 </div>

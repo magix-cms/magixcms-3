@@ -3,8 +3,8 @@ class backend_controller_pages extends backend_db_pages
 {
 
     public $edit, $action, $tabs, $search, $plugin, $controller;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl;
-    public $id_pages,$parent_id,$content,$pages,$img,$iso;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl,$makeFiles,$finder;
+    public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img;
 
     public function __construct()
     {
@@ -19,6 +19,8 @@ class backend_controller_pages extends backend_db_pages
         $this->imagesComponent = new component_files_images($this->template);
         $this->modelPlugins = new backend_model_plugins();
         $this->routingUrl = new component_routing_url();
+        $this->makeFiles = new filesystem_makefile();
+        $this->finder = new file_finder();
         // --- GET
         if(http_request::isGet('controller')) {
             $this->controller = $formClean->simpleClean($_GET['controller']);
@@ -50,7 +52,9 @@ class backend_controller_pages extends backend_db_pages
         if (http_request::isPost('parent_id')) {
             $this->parent_id = $formClean->simpleClean($_POST['parent_id']);
         }
-
+        if (http_request::isPost('del_img')) {
+            $this->del_img = $formClean->simpleClean($_POST['del_img']);
+        }
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
             foreach($array as $key => $arr) {
@@ -245,10 +249,11 @@ class backend_controller_pages extends backend_db_pages
 		if(!empty($extendData)) return $extendData;
 	}
 
-	/**
-	 * Update data
-	 * @param $data
-	 */
+    /**
+     * Update data
+     * @param $data
+     * @throws Exception
+     */
 	private function add($data)
 	{
 		switch ($data['type']) {
@@ -268,6 +273,7 @@ class backend_controller_pages extends backend_db_pages
     /**
      * Mise a jour des données
      * @param $data
+     * @throws Exception
      */
     private function upd($data)
     {
@@ -521,6 +527,39 @@ class backend_controller_pages extends backend_db_pages
                                     )
                                 )
                             );
+                        } elseif(isset($this->del_img)) {
+                            $this->upd(array(
+                                'type' => 'img',
+                                'data' => array(
+                                    'id_pages' => $this->del_img,
+                                    'img_pages' => NULL
+                                )
+                            ));
+
+                            $setEditData = $this->getItems('page',array('edit'=>$this->del_img),'all',false);
+                            $setEditData = $this->setItemData($setEditData);
+
+                            $setImgDirectory = $this->upload->dirImgUpload(
+                                array_merge(
+                                    array('upload_root_dir'=>'upload/pages/'.$this->del_img),
+                                    array('imgBasePath'=>true)
+                                )
+                            );
+
+                            if(file_exists($setImgDirectory)){
+                                $setFiles = $this->finder->scanDir($setImgDirectory);
+                                $clean = '';
+                                if($setFiles != null){
+                                    foreach($setFiles as $file){
+                                        $clean .= $this->makeFiles->remove($setImgDirectory.$file);
+                                    }
+                                }
+                            }
+                            $this->template->assign('page',$setEditData[$this->del_img]);
+                            $display = $this->template->fetch('pages/brick/img.tpl');
+
+                            $this->header->set_json_headers();
+                            $this->message->json_post_response(true, 'update',$display);
                         }
                         break;
 					case 'getLink':
