@@ -96,12 +96,7 @@ class backend_model_data extends backend_db_scheme{
 		$data = $this->setItems($context, $type, $id);
 		if($assign) {
 			$varName = gettype($assign) == 'string' ? $assign : $type;
-			try {
-				$this->template->assign($varName, $data);
-			} catch(Exception $e) {
-				$logger = new debug_logger(MP_LOG_DIR);
-				$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-			}
+			$this->template->assign($varName,$data);
 		}
 		return $data;
 	}
@@ -272,17 +267,7 @@ class backend_model_data extends backend_db_scheme{
 		$tables = "'".implode("','", $tables)."'";
 		$cols = "'".implode("','", $columns)."'";
 		$params = array(':dbname' => MP_DBNAME, 'table' => $tables, 'columns' => $cols);
-		try {
-			$scheme = parent::fetchData(array('context' => 'all', 'type' => 'scheme'), $params);
-			try {
-				$this->template->assign($tpl_var,$this->parseScheme($scheme, $columns, $assign));
-			} catch(Exception $e) {
-				$logger = new debug_logger(MP_LOG_DIR);
-				$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-			}
-		} catch(Exception $e) {
-			$logger = new debug_logger(MP_LOG_DIR);
-			$logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-		}
+		$scheme = parent::fetchData(array('context'=>'all','type'=>'scheme'),$params);
+		$this->template->assign($tpl_var,$this->parseScheme($scheme, $columns, $assign));
 	}
 }

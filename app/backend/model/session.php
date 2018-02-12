@@ -52,10 +52,12 @@ class backend_model_session{
         if($connexion){
             if (!headers_sent()) {
                 header('location: '.http_url::getUrl().'/admin/index.php?controller=dashboard');
+                exit;
             }
         }else{
             if (!headers_sent()) {
                 header('location: '.http_url::getUrl().'/admin/index.php?controller=login');
+                exit;
             }
         }
     }

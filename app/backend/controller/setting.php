@@ -287,7 +287,6 @@ class backend_controller_setting extends backend_db_setting{
                 );
                 break;
         }
-        $this->header->set_json_headers();
         $this->message->json_post_response(true,'update',$data['type']);
     }
 

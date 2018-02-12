@@ -303,8 +303,6 @@ class backend_controller_news extends backend_db_news{
                 $setEditData = $this->setItemData($setEditData);
                 $extendData[$lang] = $setEditData[$this->id_news]['content'][$lang]['public_url'];
             }
-
-            $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', array('result' => $this->id_news, 'extend' => $extendData));
 
         }else if (isset($this->content) && !isset($this->id_news)) {
@@ -347,8 +345,6 @@ class backend_controller_news extends backend_db_news{
                         )
                     );
                 }
-
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
             }
 
@@ -376,7 +372,6 @@ class backend_controller_news extends backend_db_news{
                 'id_news'          => $this->id_news,
                 'img_news'         => $resultUpload['file']
             ));
-            $this->header->set_json_headers();
 
             $setEditData = parent::fetchData(
                 array('context'=>'all','type'=>'page'),
@@ -402,7 +397,6 @@ class backend_controller_news extends backend_db_news{
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }
@@ -492,8 +486,6 @@ class backend_controller_news extends backend_db_news{
                                 'id_news'          => $this->del_img,
                                 'img_news'         => NULL
                             ));
-
-                            $this->header->set_json_headers();
 
                             $setEditData = parent::fetchData(
                                 array('context'=>'all','type'=>'page'),

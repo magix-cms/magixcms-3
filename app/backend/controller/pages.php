@@ -320,7 +320,6 @@ class backend_controller_pages extends backend_db_pages
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }
@@ -380,7 +379,6 @@ class backend_controller_pages extends backend_db_pages
 
 							if ($page['id_pages']) {
 								$this->saveContent($page['id_pages']);
-								$this->header->set_json_headers();
 								$this->message->json_post_response(true,'add_redirect');
 							}
                         }
@@ -423,13 +421,10 @@ class backend_controller_pages extends backend_db_pages
 							$setEditData = $this->setItemData($setEditData);
 							$this->template->assign('page',$setEditData[$this->id_pages]);
 							$display = $this->template->fetch('pages/brick/img.tpl');
-
-							$this->header->set_json_headers();
 							$this->message->json_post_response(true, 'update',$display);
 						}
 						elseif (isset($this->id_pages)) {
 							$extendData = $this->saveContent($this->id_pages);
-							$this->header->set_json_headers();
 							$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
 						}
                         else {
@@ -469,7 +464,6 @@ class backend_controller_pages extends backend_db_pages
                                 $this->template->assign('readonly',array());
                                 $this->template->assign('cClass','backend_controller_pages');
                                 $display = $this->template->fetch('section/form/loop/rows-2.tpl');
-                                $this->header->set_json_headers();
                                 $this->message->json_post_response(true,'',$display);
                             }
                             else {
@@ -557,8 +551,6 @@ class backend_controller_pages extends backend_db_pages
                             }
                             $this->template->assign('page',$setEditData[$this->del_img]);
                             $display = $this->template->fetch('pages/brick/img.tpl');
-
-                            $this->header->set_json_headers();
                             $this->message->json_post_response(true, 'update',$display);
                         }
                         break;

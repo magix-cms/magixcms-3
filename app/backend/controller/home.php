@@ -128,7 +128,6 @@ class backend_controller_home extends backend_db_home{
                     );
                 }
             }
-            $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', $id_page);
         }
     }

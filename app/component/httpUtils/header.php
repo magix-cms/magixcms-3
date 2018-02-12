@@ -130,21 +130,34 @@ class component_httpUtils_header{
     public function mobileDetect(){
 		$detect = new Mobile_Detect;
 		$viewport = 'desktop';
+		$device = '';
 		$touch = false;
 		$mOS = false;
+		$bodyClass = '';
+
 		if( $detect->isMobile() ){
 			$viewport = 'mobile';
 			$touch = true;
+
+			if($detect->is('iphone')) {
+				$device = ' iphone';
+			}
 		}
 		if( $detect->isTablet() ){
 			$viewport = 'tablet';
 			$touch = true;
+
+			if($detect->is('ipad')) {
+				$device = ' ipad';
+			}
 		}
 		if( $detect->isiOS() ){
 			$mOS = 'IOS';
 		}elseif( $detect->isAndroidOS() ){
 			$mOS = 'Android';
 		}
+		$bodyClass = $viewport.' '.$mOS.' '.$device;
+		$this->template->assign('bodyClass', $bodyClass);
 		$this->template->assign('viewport', $viewport);
 		$this->template->assign('touch', $touch);
 		$this->template->assign('mOS', $mOS);

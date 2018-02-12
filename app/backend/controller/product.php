@@ -301,8 +301,6 @@ class backend_controller_product extends backend_db_product
 					),
 					$data['data']
 				);
-
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update');
 				break;
 			case 'order':
@@ -351,7 +349,6 @@ class backend_controller_product extends backend_db_product
 					),
 					$data['data']
 				);
-                $this->header->set_json_headers();
 				$this->message->json_post_response(true, 'delete', $data['data']);
 				break;
 			case 'delImages':
@@ -364,7 +361,7 @@ class backend_controller_product extends backend_db_product
                 $id_product = false;
 
 			    foreach($imgArray as $key => $value){
-                    $img = $this->getItems('img',$value,'one');
+                    $img = $this->getItems('img',$value,'one',false);
 					$id_product = $img['id_product'];
 					if($img['default_img']) $defaultErased = true;
 
@@ -412,6 +409,33 @@ class backend_controller_product extends backend_db_product
 							)
 						));
 					}
+                }
+				break;
+			case 'delImagesProducts':
+                $makeFiles = new filesystem_makefile();
+			    $imgArray = explode(',',$data['data']['id']);
+
+			    foreach($imgArray as $key => $value){
+                    $imgPath = $this->upload->dirFileUpload(
+                        array_merge(
+                            array(
+                                'upload_root_dir' => 'upload/catalog/p',
+                                'upload_dir' => $value
+							),
+							array(
+                                'fileBasePath'=>true
+                            )
+                        )
+                    );
+
+                    if(file_exists($imgPath)) {
+						try {
+							$makeFiles->remove(array($imgPath));
+						} catch(Exception $e) {
+							$logger = new debug_logger(MP_LOG_DIR);
+							$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+						}
+                    }
                 }
 				break;
 			case 'oldCatRel':
@@ -470,8 +494,6 @@ class backend_controller_product extends backend_db_product
 
 							$this->add(array( 'type' => 'newContent', 'data' => $content ));
 						}
-
-						$this->header->set_json_headers();
 						$this->message->json_post_response(true, 'add_redirect');
 					}
 					elseif(isset($this->id_product_2)) {
@@ -488,7 +510,6 @@ class backend_controller_product extends backend_db_product
 						$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 						$this->getItems('lastProductRel',array('default_lang' => $defaultLanguage['id_lang'],'id'=>$this->id_product),'one','row');
 						$display = $this->template->fetch('catalog/product/loop/similar.tpl');
-						$this->header->set_json_headers();
 						$this->message->json_post_response(true,'add',$display);
 						//$this->header->set_json_headers();
 						//$this->message->json_post_response(true, 'add');
@@ -556,8 +577,6 @@ class backend_controller_product extends backend_db_product
 								$setEditData = $this->setItemData($setEditData);
 								$extendData[$lang] = $setEditData[$this->id_product]['content'][$lang]['public_url'];*/
 							}
-
-							$this->header->set_json_headers();
 							$this->message->json_post_response(true, 'update', array('result' => $this->id_product, 'extend' => $extendData));
 						}
 						elseif (isset($this->img_multiple)) {
@@ -642,7 +661,6 @@ class backend_controller_product extends backend_db_product
                                     ));
                                 }
                             }
-							$this->header->set_json_headers();
 							$this->message->json_post_response(true, 'add_redirect');
 
 						}
@@ -693,8 +711,6 @@ class backend_controller_product extends backend_db_product
 								'data' => array(':id' => $this->edit)
 							));
 						}
-
-						$this->header->set_json_headers();
 						$this->message->json_post_response(true,'update');
 					}
 					else {
@@ -743,8 +759,6 @@ class backend_controller_product extends backend_db_product
 					if(isset($this->edit)) {
 						$this->getItems('images',$this->edit, 'all');
 						$display = $this->template->fetch('catalog/product/brick/img.tpl');
-
-						$this->header->set_json_headers();
 						$this->message->json_post_response(true,'',$display);
 					}
 					break;
@@ -770,8 +784,6 @@ class backend_controller_product extends backend_db_product
 											)
 										)
 									);
-
-									$this->header->set_json_headers();
 									$this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
 									break;
                                 case 'similar':
@@ -783,7 +795,6 @@ class backend_controller_product extends backend_db_product
                                             )
                                         )
                                     );
-                                    $this->header->set_json_headers();
                                     $this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
                                     break;
 							}
@@ -791,7 +802,7 @@ class backend_controller_product extends backend_db_product
 						else {
                             $this->del(
                                 array(
-                                    'type' => 'delImages',
+                                    'type' => 'delImagesProducts',
                                     'data' => array(
                                         'id' => $this->id_product
                                     )
@@ -843,4 +854,3 @@ class backend_controller_product extends backend_db_product
 		}
 	}
 }
-?>

@@ -94,7 +94,6 @@ class backend_controller_access extends backend_db_access{
                 $this->template->configLoad();
                 $this->getItems('lastRole',null,'one','data');
                 $display = $this->template->fetch('access/loop/rows.tpl');
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add',$display);
                 break;
             case 'newAccess':
@@ -122,7 +121,6 @@ class backend_controller_access extends backend_db_access{
                 $this->template->configLoad();
                 $this->getItems('lastAccess', $this->id, 'one', 'row');
                 $display = $this->template->fetch('access/loop/perms.tpl');
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add',$display);
                 break;
         }
@@ -145,7 +143,6 @@ class backend_controller_access extends backend_db_access{
                         'role_name'    => $this->role_name
                     )
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'update',$this->id);
                 break;
             case 'access':
@@ -170,7 +167,6 @@ class backend_controller_access extends backend_db_access{
                         'action_access'=> $action_access
                     )
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'update',$this->id);
                 break;
         }
@@ -189,7 +185,6 @@ class backend_controller_access extends backend_db_access{
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }

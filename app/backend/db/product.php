@@ -345,4 +345,3 @@ class backend_db_product{
         }
     }
 }
-?>

@@ -58,6 +58,7 @@
                 ]
                 assign='pages'
                 }
+                {$pages = $pages[0]['subdata']}
             {elseif $link.type_link eq 'plugin'}
                 {widget_menu_data conf=['type' => 'plugin', 'id' => $link.id_page, 'lang' => {getlang}]}
             {/if}

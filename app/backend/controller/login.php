@@ -108,6 +108,8 @@ class backend_controller_login extends backend_db_employee{
 
         $this->httpSession = new http_session();
         $this->session = new backend_model_session();
+		$this->httpSession->start('mc_admin');
+		$this->tokenInitSession();
     }
 
     /**
@@ -125,8 +127,7 @@ class backend_controller_login extends backend_db_employee{
      * Initialisation du token
      */
     private function tokenInitSession(){
-        $session = new http_session();
-        $session->token('ap_auth_token');
+        $this->httpSession->token('ap_auth_token');
     }
 
 	/**
@@ -146,9 +147,10 @@ class backend_controller_login extends backend_db_employee{
      * @throws Exception
      */
     private function getAuth($debug = false){
-        $token = isset($_SESSION['ap_auth_token']) ? $_SESSION['ap_auth_token'] : filter_rsa::tokenID();
+        $token = $this->httpSession->token('ap_auth_token');
         $tokentools = $this->hashPassCreate($token);
         $this->template->assign('hashpass',$tokentools);
+
         if (isset($this->email_admin) AND isset($this->passwd_admin)) {
             if(strcasecmp($this->hashtoken,$tokentools) == 0){
                 if($debug == true){
@@ -159,78 +161,50 @@ class backend_controller_login extends backend_db_employee{
                             $status = 'session error';
                         }
                     }
-
-                    $dataDebug = array_merge(
-                        $_SESSION,
-                        array('status'=>$status)
-                    );
-                    $this->message->getNotify('debug',array(
-                            'method'        =>  'debug',
-                            'result'        =>  $dataDebug
-                        )
-                    );
+                    $dataDebug = array_merge($_SESSION, array('status'=>$status));
+                    $this->message->getNotify('debug',array('method' => 'debug', 'result' => $dataDebug));
                 }
                 //Check database Mail exist
-                $mailExist = parent::fetchData(
-                    array(
-                        'type'=>'mail'
-                    ),
-                    array(
-                        'email_admin'   =>  $this->email_admin
-                    )
-                );
+                $mailExist = parent::fetchData(array('type' => 'mail'), array('email_admin' => $this->email_admin));
+
                 //check password verify
                 if(password_verify($this->passwd_admin,$mailExist['passwd_admin'])) {
                     //Check database Authentification exist
-                    $authExist = parent::fetchData(
-                        array(
-                            'type' => 'auth'
-                        ),
-                        array(
-                            'email_admin'   =>  $this->email_admin,
-                            'passwd_admin'  =>  $mailExist['passwd_admin']
-                        )
-                    );
-                    if (count($authExist['id_admin']) == true) {
-                        $data = parent::fetchData(
-                            array(
-                                'type' => 'session'
-                            ),
-                            array(
-                                'keyuniqid_admin' => $authExist['keyuniqid_admin']
-                            )
-                        );
+                    $authExist = parent::fetchData(array('type' => 'auth'), array('email_admin' => $this->email_admin, 'passwd_admin' => $mailExist['passwd_admin']));
 
-                        $language = new component_core_language('strLanguage');
-                        $this->httpSession->start('lang');
+                    if (count($authExist['id_admin'])) {
+                        $data = parent::fetchData(array('type' => 'session'), array('keyuniqid_admin' => $authExist['keyuniqid_admin']));
 
-                        $array_sess = array(
-                            'email_admin' => $data['email_admin'],
-                            'keyuniqid_admin' => $data['keyuniqid_admin']
-                        );
+                        //$language = new component_core_language('strLanguage');
+                        $this->httpSession->start('mc_admin');
 
-                        if (!isset($_SESSION['email_admin']) AND !isset($_SESSION['keyuniqid_admin'])) {
+                        /*if (!isset($_SESSION['email_admin']) AND !isset($_SESSION['keyuniqid_admin'])) {
                             session_regenerate_id(true);
                             $array_sess['id_admin'] = $data['id_admin'];
-                        }
+                        }*/
+
+						$this->httpSession->regenerate();
 
                         $this->session->openSession(array('id_admin' => $data['id_admin'], 'id_admin_session' => session_id(), 'keyuniqid_admin' => $data['keyuniqid_admin']));
-                        $array_sess = array(
-                            'email_admin' => $data['email_admin'],
-                            'keyuniqid_admin' => $data['keyuniqid_admin']
-                        );
 
-                        $this->httpSession->run($array_sess, $language->run());
+                        $array_sess = array(
+							'id_admin' => $data['id_admin'],
+							'email_admin' => $data['email_admin'],
+							'keyuniqid_admin' => $data['keyuniqid_admin']
+						);
+
+                        //$this->httpSession->run($array_sess, $language->run());
+                        $this->httpSession->run($array_sess);
+
                         if ($debug == true) {
                             $dataDebug = array_merge(
                                 $_SESSION,
                                 array('ip' => $this->httpSession->ip())
                             );
                             $this->message->getNotify('debug', array(
-                                    'method' => 'debug',
-                                    'result' => $dataDebug
-                                )
-                            );
+								'method' => 'debug',
+								'result' => $dataDebug
+							));
                         } else {
                             if (isset($this->stay_logged)) {
                                 $this->template->assign('kpl', '{"m":' . json_encode($_SESSION["email_admin"]) . ',"k":' . json_encode($_SESSION['keyuniqid_admin']) . ',"t":' . json_encode(session_id()) . '}');
@@ -333,7 +307,7 @@ class backend_controller_login extends backend_db_employee{
      */
     public function secure(){
         //ini_set("session.cookie_lifetime",3600);
-        $this->httpSession->start('lang');
+        //$this->httpSession->start('lang');
         $compareSessionId = $this->session->compareSessionId();
         if (!isset($_SESSION["email_admin"]) || empty($_SESSION['email_admin'])){
             if (!isset($this->email_admin)) {
@@ -352,10 +326,11 @@ class backend_controller_login extends backend_db_employee{
         if (isset($this->logout)) {
             if (isset($_SESSION['email_admin']) AND isset($_SESSION['keyuniqid_admin'])) {
                 $this->session->closeSession();
-                session_unset();
+                /*session_unset();
                 $_SESSION = array();
                 session_destroy();
-                session_start();
+                session_start();*/
+				$this->httpSession->close('mc_admin');
                 $this->session->redirect(false);
             }
         }
@@ -424,7 +399,6 @@ class backend_controller_login extends backend_db_employee{
 			$this->mail->batch_send_mail($message);
 
 			if($json_response){
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'send');
 			}
 		}
@@ -449,11 +423,9 @@ class backend_controller_login extends backend_db_employee{
 							parent::update(array('context'=>'employee','type'=>'askPassword'),array('email_admin'=>$this->email_forgot,'token'=>$pwdTicket));
 							$this->sendMail($data,$this->email_forgot,$this->action,true);
 						} else {
-							$this->header->set_json_headers();
 							$this->message->json_post_response(false,'error_mail_account');
 						}
 					} else {
-						$this->header->set_json_headers();
 						$this->message->json_post_response(false,'empty');
 					}
 					break;
@@ -473,8 +445,8 @@ class backend_controller_login extends backend_db_employee{
 					break;
 			}
         } else {
-            $this->httpSession->start('lang');
-            $this->tokenInitSession();
+            //$this->httpSession->start('lang');
+            //$this->tokenInitSession();
             $this->getAuth(false);
             $this->template->display('login/index.tpl');
         }

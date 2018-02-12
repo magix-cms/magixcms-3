@@ -174,7 +174,6 @@ class backend_controller_seo extends backend_db_seo {
                     );
                 }
             }
-            $this->header->set_json_headers();
             $this->message->json_post_response(true,'update',$this->id_seo);
         }
         elseif (isset($this->content) && !isset($this->id_seo)) {
@@ -205,7 +204,6 @@ class backend_controller_seo extends backend_db_seo {
                         )
                     );
                 }
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
             }
 
@@ -224,7 +222,6 @@ class backend_controller_seo extends backend_db_seo {
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }

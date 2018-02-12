@@ -240,7 +240,6 @@ class backend_controller_plugins extends backend_db_plugins{
     public function translate($id){
         if(isset($this->config)){
             $this->saveConfig($id);
-            $this->header->set_json_headers();
             $this->message->json_post_response(true,'update',$id);
         }else{
             $this->modelLanguage->getLanguage();

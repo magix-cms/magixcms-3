@@ -44,7 +44,7 @@ class frontend_controller_pages extends frontend_db_pages {
      * @var
      */
     protected $template,$header,$data,$modelPages,$modelCore;
-    public $getlang,$id;
+    public $getlang,$http_error,$id;
 
     /**
      * frontend_controller_pages constructor.
@@ -118,7 +118,26 @@ class frontend_controller_pages extends frontend_db_pages {
      * run app
      */
     public function run(){
-        $this->getData();
-        $this->template->display('pages/index.tpl');
+        if(isset($this->id)){
+            $this->getData();
+            $this->template->display('pages/index.tpl');
+        }else{
+            $this->template->assign(
+                'getTitleHeader',
+                $this->header->getTitleHeader(
+                    404
+                ),
+                true
+            );
+            $this->template->assign(
+                'getTxtHeader',
+                $this->header->getTxtHeader(
+                    404
+                ),
+                true
+            );
+
+            $this->template->display('error/index.tpl');
+        }
     }
 }

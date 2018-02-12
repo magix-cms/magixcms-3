@@ -94,7 +94,6 @@ class backend_controller_files extends backend_db_files{
                     'resize_img'       => $this->resize_img
                 )
             );
-            $this->header->set_json_headers();
             $this->message->json_post_response(true,'update',$this->id_config_img);
         }else{
 
@@ -109,7 +108,6 @@ class backend_controller_files extends backend_db_files{
                     'resize_img'       => $this->resize_img
                 )
             );
-            $this->header->set_json_headers();
             $this->message->json_post_response(true,'add_redirect');
 
         }
@@ -128,7 +126,6 @@ class backend_controller_files extends backend_db_files{
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }

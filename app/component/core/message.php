@@ -58,8 +58,8 @@ class component_core_message{
     }
 
     /**
-     * Return a json object with the statut of the post action, the notification and the eventual result of the post
-     * @param bool $statut
+     * Return a json object with the status of the post action, the notification and the eventual result of the post
+     * @param bool $status
      * @param string $notify
      * @param bool $result
      */
@@ -70,9 +70,9 @@ class component_core_message{
 	 * 	'extend' => array('id_category' => 2, 'id_subcategory' => 3)
 	 * )
 	 * the json output will be
-	 * {"statut":true,"notify":...,"result":1,"id_category":2,"id_subcategory":3}
+	 * {"status":true,"notify":...,"result":1,"id_category":2,"id_subcategory":3}
 	 */
-    public function json_post_response($statut=true,$notify='save',$result = null,$options = null)
+    public function json_post_response($status=true,$notify='save',$result = null,$options = null)
     {
         if (is_array($options))
             $options = $options + $this->default;
@@ -108,9 +108,8 @@ class component_core_message{
 			$output = $result;
 		}
 
-		//@ToDo set_json_headers required to do a json_post_repsonse
-		//$this->header->set_json_headers();
-        print '{"statut":'.json_encode($statut).',"notify":'.json_encode($notify).',"result":'.json_encode($output).$extend.'}';
+		$this->header->set_json_headers();
+        print '{"status":'.json_encode($status).',"notify":'.json_encode($notify).',"result":'.json_encode($output).$extend.'}';
     }
 }
 ?>

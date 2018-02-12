@@ -139,9 +139,7 @@ class backend_controller_translate extends backend_db_theme{
                 case 'translate':
                     if(isset($this->skin)){
                         if(isset($this->config)){
-
                             $this->saveConfig();
-                            $this->header->set_json_headers();
                             $this->message->json_post_response(true,'update',$this->skin);
 
                         }else{

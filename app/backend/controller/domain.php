@@ -95,7 +95,6 @@ class backend_controller_domain extends backend_db_domain
                         'default_domain'  => $this->default_domain
                     )
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
                 break;
             case 'newLanguage':
@@ -146,7 +145,6 @@ class backend_controller_domain extends backend_db_domain
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
             case 'delLanguage':
@@ -184,7 +182,6 @@ class backend_controller_domain extends backend_db_domain
                         ));
                         $this->getItems('lastLanguage',array('id'=>$this->id_domain),'one','row');
                         $display = $this->template->fetch('domain/loop/langs.tpl');
-                        $this->header->set_json_headers();
                         $this->message->json_post_response(true,'add',$display);
 
                     }else{
@@ -199,7 +196,6 @@ class backend_controller_domain extends backend_db_domain
                                     'type' => 'domain'
                                 )
                             );
-                            $this->header->set_json_headers();
                             $this->message->json_post_response(true,'update',$this->id_domain);
                         }else{
                             $data = parent::fetchData(
@@ -239,7 +235,6 @@ class backend_controller_domain extends backend_db_domain
                                             )
                                         )
                                     );
-                                    $this->header->set_json_headers();
                                     $this->message->json_post_response(true, 'delete', array('id' => $this->id_domain));
                                     break;
                             }

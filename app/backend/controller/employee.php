@@ -228,7 +228,6 @@ class backend_controller_employee extends backend_db_employee
 						'id_role'	=> $this->id_role
 					)
 				);
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'add_redirect');
 				break;
         }
@@ -260,7 +259,6 @@ class backend_controller_employee extends backend_db_employee
 						'active_admin'		=> $this->active_admin
 					)
 				);
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update',$this->id_admin);
 				break;
 			case 'employeePwd':
@@ -274,7 +272,6 @@ class backend_controller_employee extends backend_db_employee
 						'passwd_admin'      => $this->passwd_admin
 					)
 				);
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update',$this->id_admin);
 				break;
 			case 'employeeActive':
@@ -303,7 +300,6 @@ class backend_controller_employee extends backend_db_employee
 					),
 					$data['data']
 				);
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'delete',$data['data']);
 				break;
 		}

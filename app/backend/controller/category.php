@@ -276,8 +276,6 @@ class backend_controller_category extends backend_db_category {
                 $setEditData = $this->setItemData($setEditData);
                 $extendData[$lang] = $setEditData[$this->id_cat]['content'][$lang]['public_url'];
             }
-
-            $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', array('result'=>$this->id_cat,'extend'=>$extendData));
 
         }else if (isset($this->content) && !isset($this->id_cat)) {
@@ -326,8 +324,6 @@ class backend_controller_category extends backend_db_category {
                         )
                     );
                 }
-
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
             }
         }else  if(isset($this->img)){
@@ -354,7 +350,6 @@ class backend_controller_category extends backend_db_category {
                 'id_cat'         => $this->id_cat,
                 'img_cat'        => $resultUpload['file']
             ));
-            $this->header->set_json_headers();
 
             $setEditData = parent::fetchData(
                 array('context'=>'all','type'=>'page'),
@@ -381,7 +376,6 @@ class backend_controller_category extends backend_db_category {
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
             case 'delProduct':
@@ -391,7 +385,6 @@ class backend_controller_category extends backend_db_category {
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }
@@ -458,7 +451,6 @@ class backend_controller_category extends backend_db_category {
                             $this->template->assign('readonly', array());
                             $this->template->assign('cClass', 'backend_controller_category');
                             $display = $this->template->fetch('section/form/loop/rows-2.tpl');
-                            $this->header->set_json_headers();
                             $this->message->json_post_response(true, '', $display);
                         } else {
                             $this->template->display('catalog/category/edit.tpl');
@@ -503,7 +495,6 @@ class backend_controller_category extends backend_db_category {
                             'id_cat'         => $this->del_img,
                             'img_cat'        => NULL
                         ));
-                        $this->header->set_json_headers();
 
                         $setEditData = parent::fetchData(
                             array('context'=>'all','type'=>'page'),

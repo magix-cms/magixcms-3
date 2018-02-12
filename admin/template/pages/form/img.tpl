@@ -10,7 +10,7 @@
                       <span class="fa fa-upload fa-stack-1x fa-inverse"></span>
                     </span>
                 </figure>
-                <span id="input-label">Choisissez une image&hellip;</span>
+                <span id="input-label">{#choose_an_image#}&hellip;</span>
             </label>
             <input type="hidden" id="id_pages" name="id" value="{$page.id_pages}">
             <button class="btn btn-main-theme" type="submit" name="action" value="img">{#save#|ucfirst}</button>

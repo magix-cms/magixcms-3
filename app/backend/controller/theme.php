@@ -241,7 +241,6 @@ class backend_controller_theme extends backend_db_theme{
 						'theme' => $this->theme
 					)
 				);
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update',$data['type']);
 				break;
             case 'share':
@@ -251,7 +250,6 @@ class backend_controller_theme extends backend_db_theme{
 					),
 					$this->setShare()
 				);
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update',$data['type']);
 				break;
             case 'link':
@@ -277,7 +275,6 @@ class backend_controller_theme extends backend_db_theme{
 						)
 					);
 				}
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'update',$data['type']);
 				break;
         }
@@ -296,7 +293,6 @@ class backend_controller_theme extends backend_db_theme{
 					),
 					$data['data']
 				);
-				$this->header->set_json_headers();
 				$this->message->json_post_response(true,'delete',$data['data']);
 				break;
 		}
@@ -360,7 +356,6 @@ class backend_controller_theme extends backend_db_theme{
 						$links = $this->getItems('link',$link['id_link'],'all',false);
 						$this->setLinksData($links,true);
 						$display = $this->template->fetch('theme/loop/link.tpl');
-						$this->header->set_json_headers();
 						$this->message->json_post_response(true,'add',$display);
 					}
                 	break;
@@ -395,8 +390,6 @@ class backend_controller_theme extends backend_db_theme{
 								'data' => $link
 							));
 						}
-
-						$this->header->set_json_headers();
 						$this->message->json_post_response(true,'update',$this->edit);
 					}
 					break;

@@ -97,7 +97,6 @@ class backend_controller_language extends backend_db_language{
                         'active_lang'	=> $this->active_lang
                     )
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
                 break;
         }
@@ -144,7 +143,6 @@ class backend_controller_language extends backend_db_language{
                 $fetchData = parent::fetchData(array('context'=>'one','type'=>'count'));
                 $countID = count(explode(',',$data['data']['id']));
                 if(($fetchData['nb'] > 1) && ($fetchData['nb'] > $countID)){
-                    $this->header->set_json_headers();
                     $this->message->json_post_response(true,'delete',$data['data']);
                     parent::delete(
                         array(
@@ -154,7 +152,6 @@ class backend_controller_language extends backend_db_language{
                         $data['data']
                     );
                 }else{
-                    $this->header->set_json_headers();
                     $this->message->json_post_response(false,'delete_min');
                 }
                 break;
@@ -186,7 +183,6 @@ class backend_controller_language extends backend_db_language{
                                 'type' => 'lang'
                             )
                         );
-                        $this->header->set_json_headers();
                         $this->message->json_post_response(true,'update',$this->id_lang);
                     }else{
                         $this->getCollection();

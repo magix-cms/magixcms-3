@@ -237,7 +237,6 @@ class plugins_contact_admin extends plugins_contact_db{
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }
@@ -265,7 +264,6 @@ class plugins_contact_admin extends plugins_contact_db{
 
                         if ($contact['id_contact']) {
                             $this->saveContent($contact['id_contact']);
-                            $this->header->set_json_headers();
                             $this->message->json_post_response(true,'add_redirect');
                         }
                     }else {
@@ -276,12 +274,10 @@ class plugins_contact_admin extends plugins_contact_db{
                 case 'edit':
                     if (isset($this->id_contact)) {
                         $this->saveContent($this->id_contact);
-                        $this->header->set_json_headers();
                         $this->message->json_post_response(true, 'update', array('result'=>$this->id_contact));
                     }elseif(isset($this->id_config)) {
 
                         $this->save(array('address_enabled'=>$this->address_enabled,'address_required'=>$this->address_required));
-                        $this->header->set_json_headers();
                         $this->message->json_post_response(true, 'update', array('result'=>$this->id_config));
 
                     }else{

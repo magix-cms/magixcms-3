@@ -178,7 +178,7 @@ var globalForm = (function ($, undefined) {
         else if($(f).hasClass('search_form')) {
             options.method = 'get';
             options.success = function (d) {
-                if(d.statut && d.result) {
+                if(d.status && d.result) {
                     $(f).find('tbody').empty().append(d.result);
                 }
             };
@@ -203,7 +203,7 @@ var globalForm = (function ($, undefined) {
             options.success = function (d) {
                 $.jmRequest.initbox(d.notify,{ display:false });
                 //initAlert(d.notify,4000);
-                if(d.statut && d.result) {
+                if(d.status && d.result) {
                     $('.block-img').empty();
                     $('.block-img').html(d.result);
                 }
@@ -212,7 +212,7 @@ var globalForm = (function ($, undefined) {
         else if($(f).hasClass('delete_form_img')) {
             options.success = function (d) {
                 $.jmRequest.initbox(d.notify,{ display:false });
-                if(d.statut && d.result) {
+                if(d.status && d.result) {
                     $('.block-img').empty();
                     $('.block-img').html(d.result);
                 }
@@ -223,7 +223,7 @@ var globalForm = (function ($, undefined) {
             options.success = function (d) {
                 initAlert(d.notify,4000);
                 $('#add_modal').modal('hide');
-                if(d.statut && d.result) {
+                if(d.status && d.result) {
                     //controller = controller.substr(1,(controller.indexOf('.')-1));
                     var table = '#table-'+controller;
                     var nbr = $(table).find('tbody').find('tr').length;
@@ -241,7 +241,7 @@ var globalForm = (function ($, undefined) {
             options.success = function (d) {
                 sub = $(f).data('sub') == '' ? false : $(f).data('sub');
                 initAlert(d.notify,4000,sub);
-                if(d.statut && d.result) {
+                if(d.status && d.result) {
                     var table = $(f).next().find('table');
                     $(table).children('tbody').prepend(d.result).find('a.targetblank').off().on('click',function(){
                         window.open($(this).attr('href'));
@@ -262,7 +262,7 @@ var globalForm = (function ($, undefined) {
                 }
                 sub = $(f).data('sub') == '' ? false : $(f).data('sub');
                 initAlert(d.notify,4000,sub);
-                if(d.statut && d.result) {
+                if(d.status && d.result) {
                     var ul = $(f).next().children('ul');
                     var nen = $('.no-entry');
                     if(!nen.hasClass('hide')) {
@@ -289,7 +289,7 @@ var globalForm = (function ($, undefined) {
         else if($(f).hasClass('edit_in_list')) {
             options.success = function (d) {
                $.jmRequest.initbox(d.notify, { display: false });
-               if(d.statut) {
+               if(d.status) {
                    $('[type="submit"]', f).hide();
                    $('.text-success', f).removeClass('hide');
 
@@ -313,7 +313,7 @@ var globalForm = (function ($, undefined) {
                     cssClass : '.mc-message-'+controller
                 };
                 initAlert(d.notify,4000);
-                if(d.statut && d.result) {
+                if(d.status && d.result) {
                     var ids = d.result.id.split(',');
                     var nbr = 0;
                     var table = $('#table-'+controller);

@@ -59,11 +59,9 @@ class backend_controller_webservice extends backend_db_webservice{
         }
         if($data['id_ws'] != null){
             parent::update(array('type'=>'ws'),array('id_ws'=>$data['id_ws'],'key_ws'=>$this->key_ws,'status_ws'=>$status_ws));
-            $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', $data['id_ws']);
         }else{
             parent::insert(array('type'=>'newWs'),array('key_ws'=>$this->key_ws,'status_ws'=>$status_ws));
-            $this->header->set_json_headers();
             $this->message->json_post_response(true, 'add');
         }
 

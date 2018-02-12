@@ -467,12 +467,14 @@ class component_files_upload{
             $msg .= 'Disk write error';
         }
     }
+
     /**
      * Upload unique image
      * @param files $img
      * @param dir $path
      * @param bool $debug
-     * @return null|string
+     * @return array
+     * @throws Exception
      */
     public function uploadImg($img,$path,$debug=false){
         $msg = null;

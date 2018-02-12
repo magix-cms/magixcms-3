@@ -88,8 +88,6 @@ class backend_controller_catalog extends backend_db_catalog {
                     );
                 }
             }
-
-            $this->header->set_json_headers();
             $this->message->json_post_response(true, 'update', $this->content);
         }
     }

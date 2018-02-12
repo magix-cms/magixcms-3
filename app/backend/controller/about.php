@@ -578,7 +578,6 @@ class backend_controller_about extends backend_db_about{
 
 						if ($page['id_pages']) {
 							$this->saveContent($page['id_pages']);
-							$this->header->set_json_headers();
 							$this->message->json_post_response(true,'add_redirect');
 						}
 					}
@@ -596,7 +595,6 @@ class backend_controller_about extends backend_db_about{
                 	if(isset($this->tabs) && $this->tabs = 'pages') {
 						if(isset($this->id_pages)) {
 							$extendData = $this->saveContent($this->id_pages);
-							$this->header->set_json_headers();
 							$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
 						}
 						else {
@@ -626,7 +624,6 @@ class backend_controller_about extends backend_db_about{
 								$this->template->assign('readonly',array());
 								$this->template->assign('cClass','backend_controller_pages');
 								$display = $this->template->fetch('section/form/loop/rows-2.tpl');
-								$this->header->set_json_headers();
 								$this->message->json_post_response(true,'',$display);
 							}
 							else {
@@ -688,7 +685,6 @@ class backend_controller_about extends backend_db_about{
 							);
 						}
 
-						$this->header->set_json_headers();
 						$this->message->json_post_response(true, $msg);
 					}
                     break;

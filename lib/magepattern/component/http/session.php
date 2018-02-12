@@ -56,13 +56,20 @@ class http_session extends sessionUtils{
     }
 
 	/**
+	 * Regenerate the session id
+	 * and update the session
 	 * @return string
 	 */
 	public function regenerate(){
-		// Regenerate the session id
-		session_regenerate_id();
+		session_regenerate_id(true);
+		$nid = session_id();
+		$sname = session_name();
+		$this->_write();
+		session_name($sname);
+		session_id($nid);
+		session_start();
 
-		return session_id();
+		return $nid;
 	}
 
 	/**
@@ -76,14 +83,24 @@ class http_session extends sessionUtils{
 				//$string .= 'SHIFLETT';
 				/* Add any other data that is consistent */
 				//$fingerprint = md5($string);
+
+				if (!isset($_SESSION)) session_cache_limiter('nocache');
+
 				//Fermeture de la première session, ses données sont sauvegardées.
-				if (!isset($_SESSION)) {
-					session_cache_limiter('nocache');
-				}
 				$this->_write();
-				session_name($session_name);
-				ini_set('session.hash_function',1);
-				session_start();
+
+				if(!isset($_COOKIE[$session_name])) {
+					session_name($session_name);
+					ini_set('session.hash_function',1);
+					session_start();
+					session_regenerate_id();
+				}
+				else {
+					$ssid = $_COOKIE[$session_name];
+					session_name($session_name);
+					session_id($ssid);
+					session_start();
+				}
 			}
 			else {
 				throw new Exception('Unable to start a new session. No session name defined');
@@ -96,12 +113,33 @@ class http_session extends sessionUtils{
 
 	/**
 	 * Reset a session
+	 * @param string|array|null $keys
 	 */
     public function delete(){
-        session_unset();
-        $_SESSION = array();
+    	session_unset();
+    	$_SESSION = array();
         session_destroy();
         session_start();
+    }
+
+	/**
+	 * Close a session
+	 * @param string $session_name
+	 */
+    public function close($session_name){
+    	session_name($session_name);
+		session_start();
+		session_unset();
+
+		$CookieInfo = session_get_cookie_params();
+		if ( (empty($CookieInfo['domain'])) && (empty($CookieInfo['secure'])) ) {
+			setcookie(session_name(), '', time()-3600, $CookieInfo['path']);
+		} elseif (empty($CookieInfo['secure'])) {
+			setcookie(session_name(), '', time()-3600, $CookieInfo['path'], $CookieInfo['domain']);
+		} else {
+			setcookie(session_name(), '', time()-3600, $CookieInfo['path'], $CookieInfo['domain'], $CookieInfo['secure']);
+		}
+		session_destroy();
     }
 
 	/**

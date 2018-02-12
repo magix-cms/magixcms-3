@@ -100,7 +100,6 @@ class backend_controller_country extends backend_db_country
                         'order_country'	   => $nb
                     )
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'add_redirect');
                 break;
         }
@@ -154,7 +153,6 @@ class backend_controller_country extends backend_db_country
                     ),
                     $data['data']
                 );
-                $this->header->set_json_headers();
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
         }
@@ -186,7 +184,6 @@ class backend_controller_country extends backend_db_country
                                 'type' => 'country'
                             )
                         );
-                        $this->header->set_json_headers();
                         $this->message->json_post_response(true,'update',$this->id_country);
                     }else{
                         $this->getCollection();
