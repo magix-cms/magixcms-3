@@ -15,11 +15,22 @@ class frontend_db_catalog
                     $params = $data;
                 }
                 elseif ($config['type'] === 'images') {
-                    $sql = 'SELECT img.*,c.alt_img,c.title_img,c.id_lang,lang.iso_lang
-                        	FROM mc_catalog_product_img AS img
-                        	LEFT JOIN mc_catalog_product_img_content AS c ON (img.id_img = c.id_img)
-                        	LEFT JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-                        	WHERE img.id_product = :id AND (lang.iso_lang = :iso OR lang.iso_lang IS NULL)
+                    $sql = 'SELECT 
+								img.id_img,
+								img.id_product,
+								img.name_img,
+								COALESCE(c.alt_img, pc.name_p) as alt_img,
+								COALESCE(c.title_img, pc.name_p) as title_img,
+								img.default_img,
+								img.order_img,
+								c.id_lang,
+								lang.iso_lang
+                        	FROM mc_catalog_product AS p
+                        	LEFT JOIN mc_catalog_product_content AS pc ON (p.id_product = pc.id_product)
+                        	LEFT JOIN mc_catalog_product_img AS img ON (img.id_product = p.id_product)
+                        	LEFT JOIN mc_catalog_product_img_content AS c ON (img.id_img = c.id_img AND c.id_lang = pc.id_lang)
+                        	LEFT JOIN mc_lang AS lang ON(pc.id_lang = lang.id_lang)
+                        	WHERE img.id_product = :id AND lang.iso_lang = :iso
                         	ORDER BY img.order_img ASC';
                     $params = $data;
                 }

@@ -99,6 +99,15 @@ RewriteRule ^(?:amp)/(.*) 										/$1?amp=1		[QSA,L]
 # RewriteRule ^([0-9a-zA-Z]+)/(\d{4}/\d{2}/\d{2})/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&date=$2&id=$3&url=$4		[QSA,L]
 # RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id=$2&url=$3		[QSA,L]
 # RewriteRule ^([0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/([/0-9]+)[-]([-_0-9a-zA-Z]+)[/]{0,1}$     	/index.php?controller=$1&id_parent=$2&url_parent=$3&id=$4&url=$5		[QSA,L]
+# Web Service
+RewriteRule ^webservice/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice [QSA,L]
+RewriteRule ^webservice[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1 [QSA,L]
+RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2 [QSA,L]
+RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2&action=$3 [QSA,L]
+RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2 [QSA,L]
+RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2&id=$3 [QSA,L]
+#RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}webservice.php?collection=$1&retrieve=$2&id=$3&action=$4 [QSA,L]
+#RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)[/]([a-zA-Z]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}webservice.php?collection=$1&retrieve=$2&id=$3&action=$4&subaction=$5 [QSA,L]
 
 RewriteRule (.*)/page/(\d*)/{0,1}$ /$1?page=$2 [QSA,L]
 RewriteCond %{QUERY_STRING} (id)+
@@ -117,13 +126,3 @@ RewriteCond %{QUERY_STRING} !(hash)+
 RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?hash=$2 [QSA,L]
 RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload)
 RewriteRule ^([0-9a-zA-Z]+)/{0,1}$ /index.php?controller=$1 [QSA,L]
-
-# Web Service
-RewriteRule ^webservice/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2&action=$3 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2&id=$3 [QSA,L]
-#RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}webservice.php?collection=$1&retrieve=$2&id=$3&action=$4 [QSA,L]
-#RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)[/]([a-zA-Z]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}webservice.php?collection=$1&retrieve=$2&id=$3&action=$4&subaction=$5 [QSA,L]
