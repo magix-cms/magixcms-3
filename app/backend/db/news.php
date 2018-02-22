@@ -1,6 +1,12 @@
 <?php
 class backend_db_news
 {
+    /**
+     * @param $config
+     * @param bool $data
+     * @return mixed|null
+     * @throws Exception
+     */
     public function fetchData($config, $data = false)
     {
         $sql = '';
@@ -130,10 +136,11 @@ class backend_db_news
         }
     }
 
-	/**
-	 * @param $config
-	 * @param array $data
-	 */
+    /**
+     * @param $config
+     * @param array $data
+     * @throws Exception
+     */
 	public function insert($config,$data = array())
 	{
 		if (is_array($config)) {
@@ -173,6 +180,7 @@ class backend_db_news
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function update($config,$data = false)
     {
@@ -218,6 +226,7 @@ class backend_db_news
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function delete($config,$data = false)
     {

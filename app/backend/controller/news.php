@@ -174,9 +174,11 @@ class backend_controller_news extends backend_db_news{
 
         return $arr;
     }
+
     /**
      * Mise a jour des données
      * @param $data
+     * @throws Exception
      */
     private function upd($data)
     {
@@ -212,6 +214,7 @@ class backend_controller_news extends backend_db_news{
     private function save()
     {
         if (isset($this->content) && isset($this->id_news)) {
+            // IF news Edit
             foreach ($this->content as $lang => $content) {
                 $content['published_news'] = (!isset($content['published_news']) ? 0 : 1);
                 if (empty($content['url_news'])) {
@@ -252,6 +255,7 @@ class backend_controller_news extends backend_db_news{
                             'id_news' => $this->id_news,
                             'name_news' => $content['name_news'],
                             'url_news' => $content['url_news'],
+                            'resume_news' => $content['resume_news'],
                             'content_news' => $content['content_news'],
                             'date_publish' => $datePublish,
                             'published_news' => $content['published_news']
@@ -306,6 +310,7 @@ class backend_controller_news extends backend_db_news{
             $this->message->json_post_response(true, 'update', array('result' => $this->id_news, 'extend' => $extendData));
 
         }else if (isset($this->content) && !isset($this->id_news)) {
+            // If Add News
 
             parent::insert(
                 array(
@@ -318,9 +323,10 @@ class backend_controller_news extends backend_db_news{
             );
 
             if ($setNewData['id_news']) {
-                foreach ($this->content as $lang => $content) {
 
+                foreach ($this->content as $lang => $content) {
                     $content['published_news'] = (!isset($content['published_news']) ? 0 : 1);
+
                     $url_news = http_url::clean($content['name_news'],
                         array(
                             'dot' => false,
@@ -330,6 +336,7 @@ class backend_controller_news extends backend_db_news{
                     );
                     $dateFormat = new date_dateformat();
                     $datePublish = !empty($content['date_publish']) ? $dateFormat->SQLDateTime($content['date_publish']) : $dateFormat->SQLDateTime($dateFormat->dateToDefaultFormat());
+
                     parent::insert(
                         array(
                             'type' => 'newContent',
@@ -339,6 +346,7 @@ class backend_controller_news extends backend_db_news{
                             'id_news' => $setNewData['id_news'],
                             'name_news' => $content['name_news'],
                             'url_news' => $url_news,
+                            'resume_news' => $content['resume_news'],
                             'content_news' => $content['content_news'],
                             'date_publish' => $datePublish,
                             'published_news' => $content['published_news']
@@ -384,9 +392,11 @@ class backend_controller_news extends backend_db_news{
             $this->message->json_post_response(true, 'update',$display);
         }
     }
+
     /**
      * Insertion de données
      * @param $data
+     * @throws Exception
      */
     private function del($data){
         switch($data['type']){
