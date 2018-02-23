@@ -11,7 +11,7 @@
         <form id="contact-form" class="validate_form button_feedback" method="post" action="{geturl}/{getlang}/contact/">
             <input type="hidden" name="msg[email]" value="error-mail" class="required" required/>
             <input type="hidden" name="msg[title]" value="Tracking errors" class="required" required/>
-            <input type="hidden" name="msg[error]" value="{$error_code}" class="required" required/>
+            <input type="hidden" name="msg[error]" value="{if $error_code}{$error_code}{else}404{/if}" class="required" required/>
             <input type="hidden" name="msg[content]" value="{geturl}{$smarty.server.REQUEST_URI}" class="required" required>
             <input type="hidden" name="msg[moreinfo]" value="" />
             <p class="lead">{#report_link#}<br><button type="submit" class="btn btn-box btn-link">{#report#} <i class="material-icons">error_outline</i></button></p>

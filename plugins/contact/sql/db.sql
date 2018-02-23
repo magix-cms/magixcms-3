@@ -29,3 +29,6 @@ CREATE TABLE IF NOT EXISTS `mc_contact_config` (
 
 INSERT INTO `mc_contact_config` (`id_config`, `address_enabled`, `address_required`) VALUES
 (NULL, 0, 0);
+
+INSERT INTO `mc_admin_access` (`id_role`, `id_module`, `view`, `append`, `edit`, `del`, `action`)
+  SELECT 1, m.id_module, 1, 1, 1, 1, 1 FROM mc_module as m WHERE name = 'contact';

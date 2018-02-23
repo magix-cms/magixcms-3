@@ -43,6 +43,7 @@ class backend_controller_plugins extends backend_db_plugins{
     /**
      * List of unregistered plugins
      * @return array
+     * @throws Exception
      */
     private function setNotRegisterItems(){
         $newsItems = array();
@@ -89,6 +90,7 @@ class backend_controller_plugins extends backend_db_plugins{
     /**
      * set SQL Process (setup SQL
      * @param $id
+     * @throws Exception
      */
     private function setSQLProcess($id){
         $routingDB = new component_routing_db();
@@ -97,9 +99,11 @@ class backend_controller_plugins extends backend_db_plugins{
             $routingDB->setupSQL($files);
         }
     }
+
     /**
      * Register Plugin
      * @param $id
+     * @throws Exception
      */
     public function register($id){
         $data = parent::fetchData(array('context'=>'one','type'=>'register'),array(':id'=>$id));
@@ -125,6 +129,7 @@ class backend_controller_plugins extends backend_db_plugins{
     /**
      * system for upgrade Plugin
      * @param $id
+     * @throws Exception
      */
     public function upgrade($id){
         if(isset($id)){
@@ -162,6 +167,7 @@ class backend_controller_plugins extends backend_db_plugins{
     /**
      * @param $id
      * @return array
+     * @throws Exception
      */
     private function setConfigFile($id){
 
@@ -236,6 +242,7 @@ class backend_controller_plugins extends backend_db_plugins{
 
     /**
      * @param $id
+     * @throws Exception
      */
     public function translate($id){
         if(isset($this->config)){

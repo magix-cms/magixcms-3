@@ -108,6 +108,7 @@ class component_routing_db{
      * @param $files
      * @return bool
      * Création des tables avec la lecture du fichier SQL
+     * @throws Exception
      */
     public function setupSQL($files){
         if($this->importSQLFile($files) != false){
