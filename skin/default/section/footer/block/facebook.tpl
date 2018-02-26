@@ -9,7 +9,7 @@
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));</script>
         <div id="follow">
-            <div class="fb-page" data-href="{$companyData.socials.facebook}" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"></div>
+            <div class="fb-page" data-href="{$companyData.socials.facebook}" data-width="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"></div>
         </div>
     </div>
 {/if}

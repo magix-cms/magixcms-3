@@ -8,7 +8,7 @@
     </div>
     <div class="row">
     <section id="form" class="col-ph-12 col-md-8 col-lg-7" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
-        <form id="config-form" class="validate_form" method="post" action="{$smarty.server.REQUEST_URI}">
+        <form id="config-form" class="validate_form config_form" method="post" action="{$smarty.server.REQUEST_URI}">
             <div class="row">
                 <div class="col-ph-12 col-sm-6">
                     <div class="form-group">
@@ -50,9 +50,9 @@
                     <div class="form-group">
                         <label for="MP_LOG">Log*&nbsp;:</label>
                         <select id="MP_LOG" name="MP_LOG" class="form-control required">
-                            <option value="log">LOG</option>
+                            <option value="log" selected="selected">LOG</option>
                             <option value="debug">DEBUG</option>
-                            <option value="false" selected="selected">OFF</option>
+                            <option value="false">OFF</option>
                         </select>
                     </div>
                 </div>
@@ -64,4 +64,18 @@
         </form>
     </section>
     </div>
+{/block}
+{block name="foot" append}
+    {script src="/install/min/?f=libjs/vendor/localization/messages_fr.js" concat=$concat type="javascript"}
+<script type="text/javascript">
+    $(function(){
+        if (typeof globalForm == "undefined")
+        {
+            console.log("globalForm is not defined");
+        }else{
+            var controller = "/install/employee.php";
+            globalForm.run(controller);
+        }
+    });
+</script>
 {/block}

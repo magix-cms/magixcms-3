@@ -37,6 +37,17 @@ class install_controller_analysis{
         }else{
             $data['spl'] = 1;
         }
+        if(!is_writable(component_core_system::basePath().'app'.DIRECTORY_SEPARATOR.'init'.DIRECTORY_SEPARATOR)){
+            $data['writable_config'] = 0;
+        }else{
+            $data['writable_config'] = 1;
+        }
+        if(!is_writable(component_core_system::basePath().'var'.DIRECTORY_SEPARATOR)){
+            $data['writable_var'] = 0;
+        }else{
+            $data['writable_var'] = 1;
+        }
+
         return $data;
     }
 

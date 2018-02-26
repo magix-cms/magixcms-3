@@ -14,10 +14,10 @@
     <!--[if IE]>
     <link rel="shortcut icon" type="image/x-icon" href="{geturl}/install/template/img/favicon.ico" />
     <![endif]-->
-    {headlink rel="stylesheet" href="/min/?f=install/template/css/src/style.min.css" media="screen"}
+    {headlink rel="stylesheet" href="/install/min/?f=install/template/css/src/style.min.css" media="screen"}
     {block name="stylesheets"}{/block}
     {capture name="scriptHtml5"}{strip}
-        /min/?f=
+        /install/min/?f=
         libjs/vendor/html5shiv.js,
         libjs/vendor/respond.min.js
     {/strip}{/capture}
@@ -54,14 +54,19 @@
 {block name="footer"}{include file="section/footer.tpl"}{/block}
 {block name="foot"}
     {strip}{capture name="vendors"}
-        /min/?f=libjs/vendor/jquery-3.0.0.min.js,
-        install/js/vendor/bootstrap.min.js,
+        /install/min/?f=libjs/vendor/jquery-3.0.0.min.js,
+        install/template/js/vendor/bootstrap.min.js,
         libjs/vendor/jquery.form.4.2.1.min.js,
         libjs/vendor/jquery.validate.1.17.0.min.js,
         libjs/vendor/jimagine/plugins/jquery.jmRequest.js,
-        install/js/form.min.js
+        install/template/js/form.min.js
     {/capture}
         {script src=$smarty.capture.vendors concat=$concat type="javascript"}{/strip}
+    <script type="text/javascript">
+        $.jmRequest.notifier = {
+            cssClass : '.mc-message'
+        };
+    </script>
 {/block}
 </body>
 </html>

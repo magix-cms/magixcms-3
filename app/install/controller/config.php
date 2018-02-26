@@ -69,7 +69,7 @@ class install_controller_config{
                 $this->makefiles->writeConstValue('MP_DBUSER', $this->MP_DBUSER, $readConfigIn);
                 $this->makefiles->writeConstValue('MP_DBPASSWORD', $this->MP_DBPASSWORD, $readConfigIn);
                 $this->makefiles->writeConstValue('MP_DBNAME', $this->MP_DBNAME, $readConfigIn);
-                switch ($this->M_LOG) {
+                switch ($this->MP_LOG) {
                     case 'debug':
                         $this->makefiles->writeConstValue('MP_LOG', $this->MP_LOG, $readConfigIn);
                         break;
@@ -77,26 +77,28 @@ class install_controller_config{
                         $this->makefiles->writeConstValue('MP_LOG', $this->MP_LOG, $readConfigIn);
                         break;
                     case 'false':
-                        $this->makefiles->writeConstValue('MP_LOG', $this->MP_LOG, $readConfigIn, false);
+                        $this->makefiles->writeConstValue('MP_LOG', 'false', $readConfigIn, false);
                 }
                 $this->makefiles->writeConstValue('MP_LOG_DIR', component_core_system::basePath() . 'var' . DIRECTORY_SEPARATOR . 'log', $readConfigIn);
                 $this->makefiles->writeConstValue('MP_FIREPHP', 'false', $readConfigIn, false);
+
                 $fp = fopen($configFiles, 'wb');
-                if ($fp === false) {
+                /*if ($fp === false) {
                     throw new Exception(sprintf('Cannot write %s file.', $configFiles));
                     exit();
-                }
+                }*/
                 fwrite($fp, $readConfigIn);
                 fclose($fp);
-                $this->databaseProcess();
+                return true;
+                /*$this->databaseProcess();
 
                 if (!headers_sent()) {
                     header('location: ' . http_url::getUrl() . '/install/employee.php');
-                    exit;
-                }
+                    //exit;
+                }*/
             }catch(Exception $e) {
-                $logger = new debug_logger(component_core_system::basePath() . 'var' . DIRECTORY_SEPARATOR . 'log');
-                $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+                /*$logger = new debug_logger(component_core_system::basePath() . 'var' . DIRECTORY_SEPARATOR . 'log');
+                $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);*/
             }
         }
     }
@@ -105,7 +107,17 @@ class install_controller_config{
      */
     public function run(){
         //$this->testConnexion();
-        $this->createConfigFiles();
+        //print component_core_system::basePath().'install/sql/db.sql';
+        if($this->createConfigFiles()){
+            $config_in = '../app/init/common.inc.php';
+            if (file_exists($config_in)) {
+                require $config_in;
+            }else{
+                throw new Exception('Error Ini Common Files');
+                exit;
+            }
+            $this->databaseProcess();
+        }
         install_model_smarty::getInstance()->display('config/index.tpl');
     }
 }
