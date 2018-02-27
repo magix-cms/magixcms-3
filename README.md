@@ -9,7 +9,7 @@ Magix CMS dans sa version 3, incluant une nouvelle librairie et de nouvelles fon
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ### version 
 
-[![release](https://img.shields.io/github/release/magix-cms/magixcms-3.svg)](https://github.com/magix-cms/magixcms/releases/latest)
+[![release](https://img.shields.io/github/release/magix-cms/magixcms-3.svg)](https://github.com/magix-cms/magixcms-3/releases/latest)
 
 ## Note
     N'utilisez pas la version de ce dépôt pour autre chose que vos propres tests,
@@ -37,3 +37,22 @@ Ressources
  * http://getbootstrap.com/
  * http://www.smarty.net
  * https://github.com/gtraxx/magepattern
+ 
+Requirements
+------------
+
+### Server
+ * APACHE / IIS / NGINX
+     * Le serveur doit avoir la réécriture d'url activé pour fonctionner (rewrite_mod).
+ * PHP 5.5 et plus
+     * GD activé
+     * SPL
+     * SimpleXML et XML READER
+     * PDO
+ * MYSQL
+
+#### Note: Pour utiliser Magix CMS avec PHP 5.6 et plus
+<pre>
+error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
+</pre>
+#### Note: Magix CMS 3.x.x est optimisé pour PHP 7 !!
