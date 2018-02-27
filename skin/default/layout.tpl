@@ -5,7 +5,6 @@
 {widget_share_data assign="shareData"}
 {widget_domain_data assign="domainData"}
 {widget_menu_data lang={getlang}}
-{account_data}
 {/strip}<!DOCTYPE html>
 <!--[if lt IE 7]><html lang="{getlang}" class="lt-ie9 lt-ie8 lt-ie7" dir="ltr"><![endif]-->
 <!--[if IE 7]><html lang="{getlang}" class="lt-ie9 lt-ie8" dir="ltr"><![endif]-->
