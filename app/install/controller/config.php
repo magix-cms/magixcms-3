@@ -79,7 +79,7 @@ class install_controller_config{
                     case 'false':
                         $this->makefiles->writeConstValue('MP_LOG', 'false', $readConfigIn, false);
                 }
-                $this->makefiles->writeConstValue('MP_LOG_DIR', component_core_system::basePath() . 'var' . DIRECTORY_SEPARATOR . 'log', $readConfigIn);
+                $this->makefiles->writeConstValue('MP_LOG_DIR', component_core_system::basePath() . 'var' . DIRECTORY_SEPARATOR . 'logs', $readConfigIn);
                 $this->makefiles->writeConstValue('MP_FIREPHP', 'false', $readConfigIn, false);
 
                 $fp = fopen($configFiles, 'wb');
