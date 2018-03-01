@@ -31,8 +31,8 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" id="data_type" name="data_type" value="domain">
-        <input type="hidden" id="id_domain" name="id" value="{$domain.id_domain}">
+        <input type="hidden" name="data_type" value="domain">
+        <input type="hidden" name="id" value="{$domain.id_domain}">
         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
     </form>
 </div>

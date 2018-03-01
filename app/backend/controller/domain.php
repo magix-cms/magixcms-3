@@ -3,7 +3,7 @@ class backend_controller_domain extends backend_db_domain
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $xml;
-    public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang,$tracking_domain;
+    public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang,$tracking_domain,$config;
 
     public function __construct()
     {
@@ -49,6 +49,11 @@ class backend_controller_domain extends backend_db_domain
         }
         if (http_request::isPost('tracking_domain')) {
             $this->tracking_domain = $formClean->cleanQuote($_POST['tracking_domain']);
+        }
+        if (http_request::isPost('config')) {
+            $this->config = $formClean->arrayClean($_POST['config']);
+        }else{
+            $this->config = array();
         }
         // --- Search
         if (http_request::isGet('search')) {
@@ -111,6 +116,7 @@ class backend_controller_domain extends backend_db_domain
     /**
      * Mise a jour des données
      * @param $data
+     * @throws Exception
      */
     private function upd($data)
     {
@@ -124,6 +130,39 @@ class backend_controller_domain extends backend_db_domain
                         'url_domain'      => $this->url_domain,
                         'tracking_domain' => $this->tracking_domain,
                         'default_domain'  => $this->default_domain
+                    )
+                );
+                break;
+            case 'modules':
+                if(!isset($this->config['pages'])){
+                    $pages = '0';
+                }else{
+                    $pages = '1';
+                }
+
+                if(!isset($this->config['news'])){
+                    $news = '0';
+                }else{
+                    $news = '1';
+                }
+                if(!isset($this->config['catalog'])){
+                    $catalog = '0';
+                }else{
+                    $catalog = '1';
+                }
+                if(!isset($this->config['about'])){
+                    $about = '0';
+                }else{
+                    $about = '1';
+                }
+                parent::update(
+                    array(
+                        'type'=>$data['type']
+                    ),array(
+                        'pages'	    => $pages,
+                        'news'	    => $news,
+                        'catalog'	=> $catalog,
+                        'about'	    => $about
                     )
                 );
                 break;
@@ -157,6 +196,7 @@ class backend_controller_domain extends backend_db_domain
                 break;
         }
     }
+
     /**
      *
      */
@@ -191,12 +231,23 @@ class backend_controller_domain extends backend_db_domain
                 case 'edit':
                     if (isset($this->data_type)) {
                         if (isset($this->url_domain) && $this->data_type === 'domain') {
+
                             $this->upd(
                                 array(
                                     'type' => 'domain'
                                 )
                             );
                             $this->message->json_post_response(true,'update',$this->id_domain);
+
+                        }elseif ($this->data_type === 'modules') {
+
+                            $this->upd(
+                                array(
+                                    'type' => 'modules'
+                                )
+                            );
+                            $this->message->json_post_response(true,'update',$this->data_type);
+
                         }else{
                             $data = parent::fetchData(
                                 array(
@@ -259,6 +310,8 @@ class backend_controller_domain extends backend_db_domain
 				'default_domain' => ['title' => 'default_domain']
 			);
 			$this->data->getScheme(array('mc_domain'),array('id_domain','url_domain','default_domain'),$assign);
+
+            $this->template->assign('setConfig',$this->xml->setConfigData());
             $this->template->display('domain/index.tpl');
         }
     }

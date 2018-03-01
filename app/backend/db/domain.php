@@ -116,6 +116,24 @@ class backend_db_domain
                         ':default_domain'	=> $data['default_domain']
                     )
                 );
+            }elseif($config['type'] === 'modules'){
+                $query = "UPDATE `mc_config`
+					SET `status` = CASE `attr_name`
+						WHEN 'pages' THEN :pages
+						WHEN 'news' THEN :news
+						WHEN 'catalog' THEN :catalog
+						WHEN 'about' THEN :about
+					END
+					WHERE `attr_name` IN ('pages','news','catalog','about')";
+
+                component_routing_db::layer()->update($query,
+                    array(
+                        ':pages'	=> $data['pages'],
+                        ':news'	    => $data['news'],
+                        ':catalog'	=> $data['catalog'],
+                        ':about'	=> $data['about']
+                    )
+                );
             }
         }
     }

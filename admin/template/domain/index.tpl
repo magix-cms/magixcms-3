@@ -21,14 +21,25 @@
             {if $debug}
                 {$debug}
             {/if}
-            <header class="panel-header">
+            <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#root_domain#|ucfirst}</h2>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#domain_list" aria-controls="domain_list" role="tab" data-toggle="tab">{#list_of_domains#|ucfirst}</a></li>
+                    <li role="presentation"><a href="#module" aria-controls="module" role="tab" data-toggle="tab">{#modules#|ucfirst}</a></li>
+                </ul>
             </header>
-            <div class="panel-body">
+            <div class="panel-body panel-body-form">
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-{$smarty.get.controller}">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form-2.tpl" idcolumn='id_domain' data=$domain controller="domain"}
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane tab-table active" id="domain_list">
+                        {include file="section/form/table-form-2.tpl" idcolumn='id_domain' data=$domain controller="domain"}
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="module">
+                        {include file="domain/form/modules.tpl"}
+                    </div>
+                </div>
             </div>
         </section>
     </div>

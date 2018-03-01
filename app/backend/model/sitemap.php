@@ -3,7 +3,7 @@ class backend_model_sitemap{
     /**
      * @var xml_sitemap
      */
-    protected $xml,$setting,$collectionLanguage,$DBPages,$DBNews,$DBCatalog,$DBPlugins,$template,$modelPlugins,$routingUrl;
+    protected $xml,$setting,$collectionLanguage,$DBPages,$DBNews,$DBCatalog,$DBPlugins,$template,$modelPlugins,$routingUrl,$configCollection;
 
     /**
      * backend_model_sitemap constructor.
@@ -21,8 +21,20 @@ class backend_model_sitemap{
         $this->modelPlugins = new backend_model_plugins();
         $this->template = $template;
         $this->routingUrl = new component_routing_url();
+        $this->configCollection = new component_collections_config();
     }
 
+    /**
+     * Assign data to the defined value
+     */
+    public function setConfigData(){
+        $newArray = array();
+        $config = $this->configCollection->fetchData(array('context'=>'all','type'=>'config'));
+        foreach($config as $key){
+            $newArray[$key['attr_name']] = $key['status'];
+        }
+        return $newArray;
+    }
     /**
      * @param $data
      * @return string
@@ -87,8 +99,10 @@ class backend_model_sitemap{
             }
         }
     }
+
     /**
      * @param $config
+     * @throws Exception
      */
     public function setItems($config){
         $dateFormat = new date_dateformat();
@@ -119,6 +133,9 @@ class backend_model_sitemap{
         $this->xml->setIndent(true);
         /*Ecrit la DTD ainsi que l'entête complète suivi de l'encodage souhaité*/
         $this->xml->headerSitemap(array('encode' => 'UTF-8', 'type' => 'parent'));
+
+        // Chargement de la configuration des mudles Core
+        $setConfig = $this->setConfigData();
 
         if($lang != null) {
             $i = 0;
@@ -161,77 +178,85 @@ class backend_model_sitemap{
                 $this->xml->setIndent(true);
                 /*Ecrit la DTD ainsi que l'entête complète suivi de l'encodage souhaité*/
                 $this->xml->headerSitemap(array('encode' => 'UTF-8', 'type' => 'image'));
-                // Load Data pages
-                $dataPages = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
+                # WriteNode Pages
+                if($setConfig['pages'] != '0') {
+                    // Load Data pages
+                    $dataPages = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
 
-                foreach ($dataPages as $key => $value) {
-                    $url = '/' . $value['iso_lang'] . '/pages/' . $value['id_pages'] . '-' . $value['url_pages'] . '/';
-                    if($value['img_pages'] != NULL) {
-                        $this->xml->writeNode(
-                            array(
-                                'type' => 'image',
-                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                                'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/pages/' . $value['id_pages'] . '/')), 'imageloc' => $value['img_pages'])
-                            )
-                        );
-                    }
-                }
-                // Load Data news
-                $dataNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
-
-                foreach ($dataNews as $key => $value) {
-                    $datePublish = $dateFormat->dateToDefaultFormat($value['date_publish']);
-                    $url = '/' . $value['iso_lang'] . '/news/' . $datePublish . '/' . $value['id_news'] . '-' . $value['url_news'] . '/';
-                    if($value['img_news'] != NULL) {
-                        $this->xml->writeNode(
-                            array(
-                                'type' => 'image',
-                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                                'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/news/' . $value['id_news'] . '/')), 'imageloc' => $value['img_news'])
-                            )
-                        );
-                    }
-                }
-
-                // WriteNode category catalog
-                $dataCategory = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'category'), array('id_lang' => $item['id_lang']));
-                foreach ($dataCategory as $key => $value) {
-                    $url = '/' . $value['iso_lang'] . '/catalog/' . $value['id_cat'] . '-' . $value['url_cat'] . '/';
-                    //$newData[$item['iso_lang']][$key] = $this->url(array('domain' => $config['domain'], 'url' => $url));
-                    if($value['img_cat'] != NULL) {
-                        $this->xml->writeNode(
-                            array(
-                                'type' => 'image',
-                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                                'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/catalog/c/' . $value['id_cat'] . '/')), 'imageloc' => $value['img_cat'])
-                            )
-                        );
-                    }
-                }
-
-                // WriteNode product catalog
-                $newImgArr = '';
-                $dataProduct = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'product'), array('id_lang' => $item['id_lang']));
-                foreach ($dataProduct as $key => $value) {
-                    $url = '/' . $value['iso_lang'] . '/catalog/' . $value['id_cat'] . '-' . $value['url_cat'] . '/' . $value['id_product'] . '-' . $value['url_p'] . '/';
-
-                    $dataProductImg = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'images'), array('id' => $value['id_product']));
-                    if($dataProductImg != null) {
-                        // Multi images
-                        foreach ($dataProductImg as $img) {
-                            $newImgArr[] = $img['name_img'];
-                        }
-
-                        $this->xml->writeNode(
-                            array(
-                                'type' => 'image',
-                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                                'image' => array(
-                                    'url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/catalog/p/' . $value['id_product'] . '/')),
-                                    'loop' => $newImgArr
+                    foreach ($dataPages as $key => $value) {
+                        $url = '/' . $value['iso_lang'] . '/pages/' . $value['id_pages'] . '-' . $value['url_pages'] . '/';
+                        if ($value['img_pages'] != NULL) {
+                            $this->xml->writeNode(
+                                array(
+                                    'type' => 'image',
+                                    'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                    'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/pages/' . $value['id_pages'] . '/')), 'imageloc' => $value['img_pages'])
                                 )
-                            )
-                        );
+                            );
+                        }
+                    }
+                }
+                #WriteNode News
+                if($setConfig['news'] != '0') {
+                    // Load Data news
+                    $dataNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
+
+                    foreach ($dataNews as $key => $value) {
+                        $datePublish = $dateFormat->dateToDefaultFormat($value['date_publish']);
+                        $url = '/' . $value['iso_lang'] . '/news/' . $datePublish . '/' . $value['id_news'] . '-' . $value['url_news'] . '/';
+                        if ($value['img_news'] != NULL) {
+                            $this->xml->writeNode(
+                                array(
+                                    'type' => 'image',
+                                    'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                    'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/news/' . $value['id_news'] . '/')), 'imageloc' => $value['img_news'])
+                                )
+                            );
+                        }
+                    }
+                }
+                // WriteNode category catalog
+                if($setConfig['catalog'] != '0') {
+                    $dataCategory = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'category'), array('id_lang' => $item['id_lang']));
+                    foreach ($dataCategory as $key => $value) {
+                        $url = '/' . $value['iso_lang'] . '/catalog/' . $value['id_cat'] . '-' . $value['url_cat'] . '/';
+                        //$newData[$item['iso_lang']][$key] = $this->url(array('domain' => $config['domain'], 'url' => $url));
+                        if ($value['img_cat'] != NULL) {
+                            $this->xml->writeNode(
+                                array(
+                                    'type' => 'image',
+                                    'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                    'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/catalog/c/' . $value['id_cat'] . '/')), 'imageloc' => $value['img_cat'])
+                                )
+                            );
+                        }
+                    }
+
+                    // WriteNode product catalog
+                    $newImgArr = array();
+                    $dataProduct = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'product'), array('id_lang' => $item['id_lang']));
+                    foreach ($dataProduct as $key => $value) {
+                        $url = '/' . $value['iso_lang'] . '/catalog/' . $value['id_cat'] . '-' . $value['url_cat'] . '/' . $value['id_product'] . '-' . $value['url_p'] . '/';
+
+                        $dataProductImg = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'images'), array('id' => $value['id_product']));
+                        if ($dataProductImg != null) {
+                            // Multi images
+                            foreach ($dataProductImg as $img) {
+                                $newImgArr[] = $img['name_img'];
+                            }
+                            //print_r($newImgArr);
+
+                            $this->xml->writeNode(
+                                array(
+                                    'type' => 'image',
+                                    'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                    'image' => array(
+                                        'url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/catalog/p/' . $value['id_product'] . '/')),
+                                        'loop' => $newImgArr
+                                    )
+                                )
+                            );
+                        }
                     }
                 }
                 $this->xml->endElement();
@@ -265,152 +290,156 @@ class backend_model_sitemap{
                         'priority' => '0.7'
                     )
                 );
+                // WriteNode pages
+                if($setConfig['pages'] != '0') {
+                    // Load Data pages
+                    $dataPages = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
+                    foreach ($dataPages as $key => $value) {
 
-                // Load Data pages
-                $dataPages = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
-                foreach ($dataPages as $key => $value) {
+                        $url = $this->routingUrl->getBuildUrl(array(
+                            'type' => 'pages',
+                            'iso' => $value['iso_lang'],
+                            'id' => $value['id_pages'],
+                            'url' => $value['url_pages']
+                        ));
 
-                    $url = $this->routingUrl->getBuildUrl(array(
-                        'type'      =>  'pages',
-                        'iso'       =>  $value['iso_lang'],
-                        'id'        =>  $value['id_pages'],
-                        'url'       =>  $value['url_pages']
-                    ));
-
+                        $this->xml->writeNode(
+                            array(
+                                'type' => 'child',
+                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                'image' => false,
+                                'lastmod' => $value['last_update'],
+                                'changefreq' => 'always',
+                                'priority' => '0.7'
+                            )
+                        );
+                    }
+                }
+                // WriteNode News
+                if($setConfig['news'] != '0') {
+                    // WriteNode Root News
+                    $url = '/' . $item['iso_lang'] . '/news/';
                     $this->xml->writeNode(
                         array(
                             'type' => 'child',
                             'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
                             'image' => false,
-                            'lastmod' => $value['last_update'],
+                            'lastmod' => $dateFormat->dateDefine(),
                             'changefreq' => 'always',
                             'priority' => '0.7'
                         )
                     );
+
+                    // Load Data news
+                    $dataNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
+                    foreach ($dataNews as $key => $value) {
+
+                        $url = $this->routingUrl->getBuildUrl(array(
+                                'type' => 'news',
+                                'iso' => $value['iso_lang'],
+                                'date' => $value['date_publish'],
+                                'id' => $value['id_news'],
+                                'url' => $value['url_news']
+                            )
+                        );
+                        $this->xml->writeNode(
+                            array(
+                                'type' => 'child',
+                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                'image' => false,
+                                'lastmod' => $value['last_update'],
+                                'changefreq' => 'always',
+                                'priority' => '0.7'
+                            )
+                        );
+                    }
+                    $dataTagsNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'tags'), array('id_lang' => $item['id_lang']));
+
+                    foreach ($dataTagsNews as $key => $value) {
+                        $url = $this->routingUrl->getBuildUrl(array(
+                                'type' => 'tag',
+                                'iso' => $item['iso_lang'],
+                                'id' => $value['id_tag'],
+                                'url' => $value['name_tag']
+                            )
+                        );
+                        $this->xml->writeNode(
+                            array(
+                                'type' => 'child',
+                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                'image' => false,
+                                'lastmod' => $value['last_update'],
+                                'changefreq' => 'always',
+                                'priority' => '0.7'
+                            )
+                        );
+                    }
                 }
-
-
-                // WriteNode Root News
-                $url = '/' . $item['iso_lang'] . '/news/';
-                $this->xml->writeNode(
-                    array(
-                        'type' => 'child',
-                        'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                        'image' => false,
-                        'lastmod' => $dateFormat->dateDefine(),
-                        'changefreq' => 'always',
-                        'priority' => '0.7'
-                    )
-                );
-                // Load Data news
-                $dataNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
-                foreach ($dataNews as $key => $value) {
-
-                    $url = $this->routingUrl->getBuildUrl(array(
-                            'type'      =>  'news',
-                            'iso'       =>  $value['iso_lang'],
-                            'date'      =>  $value['date_publish'],
-                            'id'        =>  $value['id_news'],
-                            'url'       =>  $value['url_news']
-                        )
-                    );
-                    $this->xml->writeNode(
-                        array(
-                            'type' => 'child',
-                            'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                            'image' => false,
-                            'lastmod' => $value['last_update'],
-                            'changefreq' => 'always',
-                            'priority' => '0.7'
-                        )
-                    );
-                }
-                $dataTagsNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'tags'), array('id_lang' => $item['id_lang']));
-
-                foreach ($dataTagsNews as $key => $value) {
-                    $url = $this->routingUrl->getBuildUrl(array(
-                            'type' => 'tag',
-                            'iso' => $item['iso_lang'],
-                            'id' => $value['id_tag'],
-                            'url' => $value['name_tag']
-                        )
-                    );
-                    $this->xml->writeNode(
-                        array(
-                            'type' => 'child',
-                            'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                            'image' => false,
-                            'lastmod' => $value['last_update'],
-                            'changefreq' => 'always',
-                            'priority' => '0.7'
-                        )
-                    );
-                }
-
                 // Load Data catalog
-                // WriteNode Root catalog
-                $url = '/' . $item['iso_lang'] . '/catalog/';
-                $this->xml->writeNode(
-                    array(
-                        'type' => 'child',
-                        'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                        'image' => false,
-                        'lastmod' => $dateFormat->dateDefine(),
-                        'changefreq' => 'always',
-                        'priority' => '0.7'
-                    )
-                );
-                // WriteNode category catalog
-                $dataCategory = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'category'), array('id_lang' => $item['id_lang']));
-                foreach ($dataCategory as $key => $value) {
-
-                    $url = $this->routingUrl->getBuildUrl(array(
-                            'type'      =>  'category',
-                            'iso'       =>  $value['iso_lang'],
-                            'id'        =>  $value['id_cat'],
-                            'url'       =>  $value['url_cat']
-                        )
-                    );
-
-                    //$newData[$item['iso_lang']][$key] = $this->url(array('domain' => $config['domain'], 'url' => $url));
+                if($setConfig['catalog'] != '0') {
+                    // WriteNode Root catalog
+                    $url = '/' . $item['iso_lang'] . '/catalog/';
                     $this->xml->writeNode(
                         array(
                             'type' => 'child',
                             'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
                             'image' => false,
-                            'lastmod' => $value['last_update'],
+                            'lastmod' => $dateFormat->dateDefine(),
                             'changefreq' => 'always',
-                            'priority' => '0.8'
+                            'priority' => '0.7'
                         )
                     );
+                    // WriteNode category catalog
+                    $dataCategory = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'category'), array('id_lang' => $item['id_lang']));
+                    foreach ($dataCategory as $key => $value) {
+
+                        $url = $this->routingUrl->getBuildUrl(array(
+                                'type' => 'category',
+                                'iso' => $value['iso_lang'],
+                                'id' => $value['id_cat'],
+                                'url' => $value['url_cat']
+                            )
+                        );
+
+                        //$newData[$item['iso_lang']][$key] = $this->url(array('domain' => $config['domain'], 'url' => $url));
+                        $this->xml->writeNode(
+                            array(
+                                'type' => 'child',
+                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                'image' => false,
+                                'lastmod' => $value['last_update'],
+                                'changefreq' => 'always',
+                                'priority' => '0.8'
+                            )
+                        );
+                    }
+                    // WriteNode product catalog
+                    $dataProduct = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'product'), array('id_lang' => $item['id_lang']));
+                    foreach ($dataProduct as $key => $value) {
+
+                        $url = $this->routingUrl->getBuildUrl(array(
+                                'type' => 'product',
+                                'iso' => $value['iso_lang'],
+                                'id' => $value['id_product'],
+                                'url' => $value['url_p'],
+                                'id_parent' => $value['id_cat'],
+                                'url_parent' => $value['url_cat']
+                            )
+                        );
+
+
+                        $this->xml->writeNode(
+                            array(
+                                'type' => 'child',
+                                'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                'image' => false,
+                                'lastmod' => $value['last_update'],
+                                'changefreq' => 'always',
+                                'priority' => '0.9'
+                            )
+                        );
+                    }
                 }
-                // WriteNode product catalog
-                $dataProduct = $this->DBCatalog->fetchData(array('context' => 'all', 'type' => 'product'), array('id_lang' => $item['id_lang']));
-                foreach ($dataProduct as $key => $value) {
-
-                    $url = $this->routingUrl->getBuildUrl(array(
-                            'type'              =>  'product',
-                            'iso'               =>  $value['iso_lang'],
-                            'id'                =>  $value['id_product'],
-                            'url'               =>  $value['url_p'],
-                            'id_parent'         =>  $value['id_cat'],
-                            'url_parent'        =>  $value['url_cat']
-                        )
-                    );
-
-
-                    $this->xml->writeNode(
-                        array(
-                            'type' => 'child',
-                            'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
-                            'image' => false,
-                            'lastmod' => $value['last_update'],
-                            'changefreq' => 'always',
-                            'priority' => '0.9'
-                        )
-                    );
-                }
-
                 $this->setPluginsItems(
                     array(
                         'domain'        => $config['domain'],
