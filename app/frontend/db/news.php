@@ -99,6 +99,11 @@ class frontend_db_news
                     $sql = 'SELECT * FROM mc_news ORDER BY id_news DESC LIMIT 0,1';
                     //$params = $data;
                 }
+                elseif ($config['type'] === 'wsEdit') {
+                    //Return current row
+                    $sql = 'SELECT * FROM mc_news WHERE `id_news` = :id';
+                    $params = $data;
+                }
                 elseif ($config['type'] === 'image') {
                     //Return image
                     $sql = 'SELECT img_news FROM mc_news WHERE `id_news` = :id_news';

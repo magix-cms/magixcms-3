@@ -20,6 +20,11 @@ class frontend_db_category
                     $sql = 'SELECT * FROM `mc_catalog_cat_content` WHERE `id_cat` = :id_cat AND `id_lang` = :id_lang';
                     $params = $data;
                 }
+                elseif ($config['type'] === 'wsEdit') {
+                    //Return image
+                    $sql = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id';
+                    $params = $data;
+                }
                 elseif ($config['type'] === 'image') {
                     //Return image
                     $sql = 'SELECT img_cat FROM mc_catalog_cat WHERE `id_cat` = :id_cat';

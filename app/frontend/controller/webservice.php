@@ -1507,7 +1507,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
             case 'pages':
                 if (isset($this->id)) {
                     // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
-                    $fetchRootData = $this->DBPages->fetchData(array('context'=>'one','type'=>'root'));
+                    $fetchRootData = $this->DBPages->fetchData(array('context'=>'one','type'=>'wsEdit'),array('id'=>$this->id));
                     if($fetchRootData != null){
                         $id_page = $fetchRootData['id_pages'];
                     }else{
@@ -1564,7 +1564,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
             case 'news':
                 if (isset($this->id)) {
                     // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
-                    $fetchRootData = $this->DBNews->fetchData(array('context'=>'one','type'=>'root'));
+                    $fetchRootData = $this->DBNews->fetchData(array('context'=>'one','type'=>'wsEdit'),array('id'=>$this->id));
                     if($fetchRootData != null){
                         $id_news = $fetchRootData['id_news'];
                     }else{
@@ -1682,7 +1682,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
             case 'category':
                 if (isset($this->id)) {
                     // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
-                    $fetchRootData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'root'));
+                    $fetchRootData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'wsEdit'),array('id'=>$this->id));
                     if($fetchRootData != null){
                         $id_cat = $fetchRootData['id_cat'];
                     }else{

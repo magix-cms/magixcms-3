@@ -67,6 +67,10 @@ class frontend_db_pages
                     //Return current row
                     $sql = 'SELECT * FROM mc_cms_page ORDER BY id_pages DESC LIMIT 0,1';
                     //$params = $data;
+                }elseif ($config['type'] === 'wsEdit') {
+                    //Return current row
+                    $sql = 'SELECT * FROM mc_cms_page WHERE `id_pages` = :id';
+                    $params = $data;
                 }
                 elseif ($config['type'] === 'image') {
                     //Return image
