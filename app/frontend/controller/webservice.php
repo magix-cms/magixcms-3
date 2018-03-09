@@ -1463,9 +1463,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
     }
 
     /**
-     * Mise a jour des données
+     * Ajout et Mise a jour des données
      * @param $operation
      * @param $arrData
+     * @throws Exception
      */
     private function getBuildSave($operation,$arrData)
     {
@@ -1475,7 +1476,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 if($fetchRootData != null){
                     $id_page = $fetchRootData['id_page'];
                 }else{
-                    parent::insert(array('type'=>'newHome'));
+                    $this->DBHome->insert(array('type'=>'newHome'));
                     $newData = $this->DBHome->fetchData(array('context'=>'one','type'=>'root'));
                     $id_page = $newData['id_page'];
                 }
@@ -1485,8 +1486,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     foreach ($arrData['language'] as $lang => $content) {
                         $content['published'] = (!isset($content['published']) ? 0 : 1);
                         $data = array(
-                            'title_page'        => $content['name'],
-                            'content_page'      => $content['content'],
+                            'title_page'        => !is_array($content['name']) ? $content['name'] : '',
+                            'content_page'      => !is_array($content['content']) ? $content['content'] : '',
                             'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
                             'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
                             'published'         => $content['published'],
@@ -1538,7 +1539,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                         $data = array(
                             'name_pages'        => !is_array($content['name']) ? $content['name'] : '',
-                            'url_pages'         => $content['url'],
+                            'url_pages'         => !is_array($content['url']) ? $content['url'] : '',
                             'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : '',
                             'content_pages'     => !is_array($content['content']) ? $content['content'] : '',
                             'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
@@ -1596,7 +1597,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             'id_lang'           => $content['id_lang'],
                             'id_news'           => $id_news,
                             'name_news'         => !is_array($content['name']) ? $content['name'] : '',
-                            'url_news'          => $content['url'],
+                            'url_news'          => !is_array($content['url']) ? $content['url'] : '',
                             'content_news'      => !is_array($content['content']) ? $content['content'] : '',
                             'resume_news'       => !is_array($content['resume']) ? $content['resume'] : '',
                             'date_publish'      => $datePublish,
@@ -1711,7 +1712,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                         $data = array(
                             'name_cat'        => !is_array($content['name']) ? $content['name'] : '',
-                            'url_cat'         => $content['url'],
+                            'url_cat'         => !is_array($content['url']) ? $content['url'] : '',
                             'resume_cat'      => !is_array($content['resume']) ? trim($content['resume']) : '',
                             'content_cat'     => !is_array($content['content']) ? $content['content'] : '',
                             'published_cat'   => $content['published'],
@@ -1738,6 +1739,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * @param $operation
      * @param $arrData
+     * @throws Exception
      */
     private function getBuildRemove($operation,$arrData){
         $makeFiles = new filesystem_makefile();
