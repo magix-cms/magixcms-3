@@ -6,7 +6,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
     protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
     protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory;
     protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage;
-    public $collection, $retrieve, $id, $filter ,$sort, $url;
+    public $collection, $retrieve, $id, $filter ,$sort, $url, $img;
     /**
      * frontend_controller_pages constructor.
      */
@@ -21,6 +21,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->data = new frontend_model_data($this);
         //$this->getlang = $this->template->currentLanguage();
         $this->imagesComponent = new component_files_images($this->template);
+        $this->upload = new component_files_upload();
         $this->buildCollection = new frontend_model_collection($this->template);
         $this->DBHome = new frontend_db_home();
         $this->DBPages = new frontend_db_pages();
@@ -47,6 +48,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
         }
         if(http_request::isGet('sort')){
             $this->sort = $formClean->simpleClean($_GET['sort']);
+        }
+
+        // --- Image Upload
+        if(isset($_FILES['img']["name"])){
+            $this->img = http_url::clean($_FILES['img']["name"]);
         }
     }
 
@@ -1484,7 +1490,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 if($id_page) {
                     //print_r($arrData['language']);
                     foreach ($arrData['language'] as $lang => $content) {
-                        $content['published'] = (!isset($content['published']) ? 0 : 1);
+                        //$content['published'] = (!isset($content['published']) ? 0 : 1);
+
                         $data = array(
                             'title_page'        => !is_array($content['name']) ? $content['name'] : '',
                             'content_page'      => !is_array($content['content']) ? $content['content'] : '',
@@ -1501,8 +1508,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             $this->DBHome->insert(array('type' => 'newContent'), $data);
                         }
                     }
-                    //$this->header->set_json_headers();
-                    //$this->message->json_post_response(true, 'update', $id_page);
+                    $this->header->set_json_headers();
+                    $this->message->json_post_response(true, null, array('id'=>$id_page));
                 }
                 break;
             case 'pages':
@@ -1527,7 +1534,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     //print_r($arrData);
                     foreach ($arrData['language'] as $lang => $content) {
                         //print_r($content);
-                        $content['published'] = (!isset($content['published']) ? 0 : 1);
+                        //$content['published'] = (!isset($content['published']) ? 0 : 1);
                         if (is_array($content['url'])) {
                             $content['url'] = http_url::clean($content['name'],
                                 array(
@@ -1558,8 +1565,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             $this->DBPages->insert(array('type' => 'content'), $data);
                         }
                     }
-                    //$this->header->set_json_headers();
-                    //$this->message->json_post_response(true, 'update', $id_page);
+                    $this->header->set_json_headers();
+                    $this->message->json_post_response(true, null, array('id'=>$id_page));
                 }
                 break;
             case 'news':
@@ -2016,6 +2023,40 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                             $arrData = json_decode(json_encode($this->parse()), true);
                             $this->getBuildSave($operations,$arrData);
+
+                        }elseif($getContentType === 'files'){
+
+                            if (isset($this->id)) {
+
+                                $fetchRootData = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
+
+                                $resultUpload = $this->upload->setImageUpload(
+                                    'img',
+                                    array(
+                                        'name' => filter_rsa::randMicroUI(),
+                                        'edit' => $fetchRootData['img_pages'],
+                                        'prefix' => array('s_', 'm_', 'l_'),
+                                        'module_img' => 'pages',
+                                        'attribute_img' => 'page',
+                                        'original_remove' => false
+                                    ),
+                                    array(
+                                        'upload_root_dir' => 'upload/pages', //string
+                                        'upload_dir' => $this->id //string ou array
+                                    ),
+                                    false
+                                );
+
+                                $this->DBPages->update(
+                                    array(
+                                        'type' => 'img'
+                                    ),
+                                    array(
+                                        'id_pages' => $this->id,
+                                        'img_pages' => $resultUpload['file']
+                                    )
+                                );
+                            }
                         }
                     }
                     elseif($this->ws->setMethod() === 'DELETE'){

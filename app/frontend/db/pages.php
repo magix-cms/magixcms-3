@@ -1,6 +1,12 @@
 <?php
 class frontend_db_pages
 {
+    /**
+     * @param $config
+     * @param bool $data
+     * @return mixed|null
+     * @throws Exception
+     */
     public function fetchData($config,$data = false){
         $sql = '';
         $params = false;
@@ -86,9 +92,11 @@ class frontend_db_pages
             }
         }
     }
+
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function insert($config,$data = false)
     {
@@ -113,6 +121,7 @@ class frontend_db_pages
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function update($config,$data = false)
     {
@@ -163,9 +172,11 @@ class frontend_db_pages
             if($sql && $params) component_routing_db::layer()->update($sql,$params);
         }
     }
+
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function delete($config,$data = false)
     {
