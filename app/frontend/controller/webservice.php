@@ -5,7 +5,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
      */
     protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
     protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory;
-    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage;
+    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage,$collectionDomain;
     public $collection, $retrieve, $id, $filter ,$sort, $url, $img;
     /**
      * frontend_controller_pages constructor.
@@ -30,6 +30,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->dateFormat = new date_dateformat();
         $this->DBCatalog = new frontend_db_catalog();
         $this->DBCategory = new frontend_db_category();
+        $this->collectionDomain = new frontend_model_domain($this->template);
         $this->url = http_url::getUrl();
         $this->collectionLanguage = new component_collections_language();
         $this->ws = new frontend_model_webservice();
@@ -154,6 +155,43 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->newEndElement();
         $this->xml->output();
     }
+    /**
+     * Build language Data
+     */
+    private function getBuildDomainData(){
+        // Collection
+        $collection = $this->collectionDomain->getValidDomains();
+
+        $this->xml->newStartElement('domains');
+
+        foreach($collection as $key) {
+            $this->xml->newStartElement('domain');
+
+            $this->xml->setElement(
+                array(
+                    'start' => 'id_domain',
+                    'text' => $key['id_domain']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'url_domain',
+                    'text' => $key['url_domain']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'default_domain',
+                    'text' => $key['default_domain']
+                )
+            );
+            $this->xml->newEndElement();
+        }
+
+        $this->xml->newEndElement();
+        $this->xml->output();
+    }
+
     /**
      * Build Home Data (EDIT)
      */
@@ -1966,6 +2004,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     $this->getBuildLanguageData();
 
                     break;
+                case 'domain':
+
+                    $this->xml->getXmlHeader();
+                    $this->getBuildDomainData();
+
+                    break;
                 case 'home':
                     /*if ($operations['scrud'] === 'create') {
 
@@ -2211,6 +2255,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     case 'languages':
 
                         $this->getBuildParse(array('type' => 'languages'));
+
+                        break;
+                    case 'domain':
+
+                        $this->getBuildParse(array('type' => 'domain'));
 
                         break;
                     case 'home':

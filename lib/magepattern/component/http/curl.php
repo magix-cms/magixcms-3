@@ -235,7 +235,14 @@ class http_curl{
                 }
                 if ($curlInfo['http_code'] == '200') {
                     if ($response) {
-                        return $response;
+                        switch ($data['type']){
+                            case 'print':
+                                print ($response);
+                                break;
+                            case 'return':
+                            default:
+                                return $response;
+                        }
                     }
                 }
             }
@@ -338,9 +345,9 @@ class http_curl{
                             CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
                             //CURLOPT_CUSTOMREQUEST   => "POST",
                             CURLOPT_POST            => true,
-                            CURLOPT_POSTFIELDS      => $img,
+                            CURLOPT_POSTFIELDS      => $img//,
                             //CURLOPT_VERBOSE         => true,
-                            CURLOPT_SAFE_UPLOAD     => false
+                            //CURLOPT_SAFE_UPLOAD     => false
                         );
                         //curl_setopt($ch, CURLOPT_SAFE_UPLOAD, true);
                     } else {
@@ -398,6 +405,8 @@ class http_curl{
                     CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
                     CURLOPT_USERPWD => $encodedAuth,
                     CURLOPT_HTTPHEADER => array("Content-Type: text/xml; charset=utf-8"),
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_VERBOSE => true,
                     CURLOPT_CUSTOMREQUEST => "GET"
                 );
 

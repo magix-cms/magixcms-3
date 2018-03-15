@@ -21,4 +21,5 @@ plugins/gmap/
 plugins/opinion/
 plugins/slideshow/
 plugins/account/
+plugins/hipay/
 /skin/wsw/*
