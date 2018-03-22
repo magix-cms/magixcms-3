@@ -492,6 +492,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 $this->xml->newEndElement();
             }
             //End Languages
+            $this->xml->setElement(
+                array(
+                    'start' => 'menu',
+                    'text' => $value['menu_pages']
+                )
+            );
             $this->xml->newEndElement();
         }
         $this->xml->newEndElement();
@@ -1556,6 +1562,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     $fetchRootData = $this->DBPages->fetchData(array('context'=>'one','type'=>'wsEdit'),array('id'=>$this->id));
                     if($fetchRootData != null){
                         $id_page = $fetchRootData['id_pages'];
+                        $this->DBPages->update(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent'],':menu_pages' => empty($arrData['menu']) ? NULL : $arrData['menu'],':id_pages'=>$id_page));
+
                     }else{
                         $this->DBPages->insert(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent']));
                         $newData = $this->DBPages->fetchData(array('context'=>'one','type'=>'root'));

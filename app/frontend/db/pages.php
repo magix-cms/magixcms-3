@@ -132,7 +132,8 @@ class frontend_db_pages
             if ($config['type'] === 'page') {
                 $sql = 'UPDATE mc_cms_page 
 							SET 
-								id_parent = :id_parent
+								id_parent = :id_parent,
+								menu_pages = :menu_pages
 							WHERE id_pages = :id_pages';
             }
             elseif ($config['type'] === 'content') {
