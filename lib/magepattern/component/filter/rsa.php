@@ -54,6 +54,11 @@ class filter_rsa{
         return preg_replace('/=+$/','',base64_encode(pack('H*',md5($data))));
     }
 
+    /**
+     * @param string $type
+     * @param $data
+     * @return string
+     */
     public static function hashEncode($type = 'md5',$data){
 
         switch($type){
@@ -227,6 +232,27 @@ class filter_rsa{
             $out = strrev($out); // reverse
         }
         return $out;
+    }
+    /**
+     * @param $length
+     * @return string
+     * @throws Exception
+     */
+    public function randomInt($length) {
+
+        if (version_compare(phpversion(), '7.0.0', '>')) {
+            $int = '';
+            for ($i = 0; $i < $length; $i++) {
+                $int .= random_int(0, 9);
+            }
+        }else{
+            $int = '';
+            for ($i = 0; $i < $length; $i++) {
+                $int .= mt_rand(0, 9);
+            }
+        }
+
+        return $int;
     }
 }
 ?>
