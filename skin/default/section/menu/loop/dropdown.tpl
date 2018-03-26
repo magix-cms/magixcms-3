@@ -9,7 +9,7 @@
                     <span class="show-less"><i class="material-icons">close</i></span>
                 </button>
             {/if}
-            <a itemprop="url_link" href="{$item.url_link}" title="{if empty($link.title_link)}{$link.name_link}{else}{$link.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>
+            <a itemprop="url_link" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>
                 <span itemprop="name">{$item.name_link}</span>
             </a>
             {if !$mobile && $item.subdata}
@@ -17,7 +17,7 @@
                     {foreach $item.subdata as $child}
                         {if $child.name}{$child.title = $child.name}{/if}
                         <li{if $child.url === $smarty.server.REQUEST_URI} class="active"{/if} itemprop="name">
-                            <a itemprop="url_link" href="{$child.url}" title="{$child.title}"{if $item.subdata} class="has-dropdown"{/if}><span>{$child.title}</span></a>
+                            <a itemprop="url_link" href="{$child.url}" title="{$child.title}"{if $child.subdata} class="has-dropdown"{/if}><span>{$child.title}</span></a>
                             {if $item.mode_link eq 'mega' && $child.subdata}
                                 <ul class="dropdown" itemprop="hasPart" itemscope itemtype="http://schema.org/SiteNavigationElement">
                                     {foreach $child.subdata as $ch}
