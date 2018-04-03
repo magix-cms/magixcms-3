@@ -51,8 +51,48 @@ Requirements
      * PDO
  * MYSQL
 
-#### Note: Pour utiliser Magix CMS avec PHP 5.6 et plus
+##### Note: Pour utiliser Magix CMS avec PHP 5.6 et plus
 <pre>
 error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 </pre>
-#### Note: Magix CMS 3.x.x est optimisé pour PHP 7 !!
+##### Note: Magix CMS 3.x.x est optimisé pour PHP 7 !!
+
+## Watchers PHP STORM
+#### Script Plugins
+<pre>
+file:plugins/*/js/src/*.js
+</pre>
+#### Plugin Style
+<pre>
+file:plugins/*/css/src/*.less
+</pre>
+
+#### AMP
+<pre>
+file:skin/*/amp/css/less//*
+</pre>
+
+#### Mobile
+<pre>
+(file:skin/*/css/font-awesome/less//*||file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*)&&!file:skin/*/css/src/less/tablet//*&&!file:skin/*/css/src/less/tablet.less&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less
+</pre>
+
+#### Tablet
+<pre>
+(file:skin/*/css/font-awesome/less//*||file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*)&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less
+</pre>
+
+#### Desktop
+<pre>
+file:skin/*/css/font-awesome/less//*||file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*
+</pre>
+
+#### Script
+<pre>
+file:skin/*/js/src/*.js
+</pre>
+
+#### Script Vendors
+<pre>
+file:skin/*/js/vendor/src/*.js
+</pre>
