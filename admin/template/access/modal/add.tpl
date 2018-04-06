@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">{#add_role#|ucfirst}</h4>
             </div>
-            <form id="add_provider" class="validate_form add_modal_form" action="{geturl}/{baseadmin}/index.php?controller=access?action=add" method="post">
+            <form id="add_provider" class="validate_form add_modal_form" action="{geturl}/{baseadmin}/index.php?controller=access&amp;action=add" method="post">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="role_name">{#role#|ucfirst}&nbsp;*</label>
