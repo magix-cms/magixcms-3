@@ -197,8 +197,9 @@ class backend_model_data extends backend_db_scheme{
 				$column['type'] =  'content';
 				$column['input'] = null;
 			}
-			else if(preg_match('/^datetime/i', $type)
-				|| preg_match('/^timestamp/i', $type)) {
+            else if(preg_match('/^datetime/i', $type)
+                || preg_match('/^timestamp/i', $type)
+                || preg_match('/^date/i', $type)) {
 				$column['class'] =  'fixed-td-lg';
 				$column['type'] =  'date';
 
