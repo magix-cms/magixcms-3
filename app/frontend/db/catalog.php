@@ -14,6 +14,11 @@ class frontend_db_catalog
                             WHERE lang.iso_lang = :iso';
                     $params = $data;
                 }
+                elseif ($config['type'] === 'rootWs') {
+                    $sql = 'SELECT a.*,lang.iso_lang,lang.default_lang
+                    		FROM mc_catalog_data AS a
+                    		JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
+                }
                 elseif ($config['type'] === 'images') {
                     $sql = 'SELECT 
 								img.id_img,

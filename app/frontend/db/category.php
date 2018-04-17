@@ -88,14 +88,32 @@ class frontend_db_category
         if (is_array($config)) {
             $sql = '';
             $params = $data;
+            if ($config['type'] === 'page') {
+                $sql = 'UPDATE mc_catalog_cat 
+							SET 
+								id_parent = :id_parent,
+								menu_cat = :menu_cat
+							WHERE id_cat = :id_cat';
 
-            if ($config['type'] === 'content') {
-                $sql = 'UPDATE mc_catalog_cat_content SET 
-                name_cat = :name_cat, url_cat = :url_cat, resume_cat = :resume_cat, 
-                content_cat=:content_cat, published_cat=:published_cat
-                WHERE id_cat = :id_cat AND id_lang = :id_lang';
                 component_routing_db::layer()->update($sql,$data);
+
+            }
+
+            elseif ($config['type'] === 'content') {
+
+                $sql = 'UPDATE mc_catalog_cat_content 
+                  SET 
+                    name_cat = :name_cat, 
+                    url_cat = :url_cat, 
+                    resume_cat = :resume_cat, 
+                    content_cat=:content_cat, 
+                    published_cat=:published_cat
+                    WHERE id_cat = :id_cat AND id_lang = :id_lang';
+
+                component_routing_db::layer()->update($sql,$data);
+
             }elseif ($config['type'] === 'img') {
+
                 $sql = 'UPDATE mc_catalog_cat SET img_cat = :img_cat
                 WHERE id_cat = :id_cat';
                 component_routing_db::layer()->update($sql,
@@ -104,7 +122,9 @@ class frontend_db_category
                         ':img_cat'       => $data['img_cat']
                     )
                 );
+
             }elseif ($config['type'] === 'order') {
+
                 $sql = 'UPDATE mc_catalog_cat SET order_cat = :order_cat
                 WHERE id_cat = :id_cat';
                 component_routing_db::layer()->update($sql,
@@ -113,6 +133,7 @@ class frontend_db_category
                         ':order_cat'	=> $data['order_cat']
                     )
                 );
+
             }
         }
     }

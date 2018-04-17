@@ -769,6 +769,67 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->output();
 
     }
+
+    /**
+     * Build Home Data (EDIT)
+     */
+    private function getBuildCatalogData(){
+        // Collection
+        $collectionData = $this->DBCatalog->fetchData(
+            array('context' => 'all', 'type' => 'rootWs')
+        );
+
+        $collection = array();
+        if($collectionData != null) {
+            foreach ($collectionData as $item) {
+                $collection[$item['id_lang']][$item['name_info']] = $item['value_info'];
+                $collection[$item['id_lang']]['iso_lang'] = $item['iso_lang'];
+                $collection[$item['id_lang']]['id_lang'] = $item['id_lang'];
+                $collection[$item['id_lang']]['default_lang'] = $item['default_lang'];
+            }
+        }
+        $this->xml->newStartElement('pages');
+        if($collectionData != null) {
+            foreach ($collection as $key) {
+                $this->xml->newStartElement('page');
+
+                $this->xml->setElement(
+                    array(
+                        'start' => 'id_lang',
+                        'text' => $key['id_lang'],
+                        'attr' => array(
+                            array(
+                                'name' => 'default',
+                                'content' => $key['default_lang']
+                            )
+                        )
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'iso',
+                        'text' => $key['iso_lang']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'name',
+                        'text' => $key['name']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'content',
+                        'cData' => $key['content']
+                    )
+                );
+                $this->xml->newEndElement();
+            }
+        }
+        $this->xml->newEndElement();
+        $this->xml->output();
+    }
+
     /**
      * Build News items
      */
@@ -1739,6 +1800,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     $fetchRootData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'wsEdit'),array('id'=>$this->id));
                     if($fetchRootData != null){
                         $id_cat = $fetchRootData['id_cat'];
+                        $this->DBCategory->update(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent'],':menu_cat' => empty($arrData['menu']) ? NULL : $arrData['menu'],':id_cat'=>$id_cat));
                     }else{
                         $this->DBCategory->insert(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent']));
                         $newData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'root'));
@@ -1753,8 +1815,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     //print_r($arrData);
                     foreach ($arrData['language'] as $lang => $content) {
                         //print_r($content);
-                        $content['published'] = (!isset($content['published']) ? 0 : 1);
-                        if (is_array($content['url'])) {
+                        //$content['published'] = (!isset($content['published']) ? 0 : 1);
+                        /*if (is_array($content['url'])) {
                             $content['url'] = http_url::clean($content['name'],
                                 array(
                                     'dot' => false,
@@ -1762,10 +1824,17 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                     'cspec' => '', 'rspec' => ''
                                 )
                             );
-                        }
+                        }*/
+
                         $data = array(
                             'name_cat'        => !is_array($content['name']) ? $content['name'] : '',
-                            'url_cat'         => !is_array($content['url']) ? $content['url'] : '',
+                            'url_cat'         => !is_array($content['url']) ? http_url::clean($content['name'],
+                                array(
+                                    'dot' => false,
+                                    'ampersand' => 'strict',
+                                    'cspec' => '', 'rspec' => ''
+                                )
+                            ) : '',
                             'resume_cat'      => !is_array($content['resume']) ? trim($content['resume']) : '',
                             'content_cat'     => !is_array($content['content']) ? $content['content'] : '',
                             'published_cat'   => $content['published'],
@@ -2190,6 +2259,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                     }
                     break;
+                case 'catalog':
+                    if($this->ws->setMethod() === 'GET') {
+                        $this->xml->getXmlHeader();
+                        $this->getBuildCatalogData();
+                    }
+                    break;
                 case 'category':
                     if($this->ws->setMethod() === 'PUT'){
                         if($getContentType === 'xml') {
@@ -2347,6 +2422,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             } else {
                                 return;
                             }
+                        }else{
+                            $this->getBuildParse(array('type' => 'catalog'));
                         }
                 }
             } else {
