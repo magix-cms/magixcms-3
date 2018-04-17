@@ -1782,8 +1782,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             $this->DBCategory->insert(array('type' => 'content'), $data);
                         }
                     }
-                    //$this->header->set_json_headers();
-                    //$this->message->json_post_response(true, 'update', $id_page);
+                    $this->header->set_json_headers();
+                    $this->message->json_post_response(true, null, array('id'=>$id_cat));
                 }
                 break;
         }
@@ -2209,6 +2209,39 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                             $arrData = json_decode(json_encode($this->parse()), true);
                             $this->getBuildSave($operations,$arrData);
+                        }elseif($getContentType === 'files'){
+
+                            if (isset($this->id)) {
+
+                                $fetchRootData = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
+
+                                $resultUpload = $this->upload->setImageUpload(
+                                    'img',
+                                    array(
+                                        'name' => filter_rsa::randMicroUI(),
+                                        'edit' => $fetchRootData['img_cat'],
+                                        'prefix' => array('s_', 'm_', 'l_'),
+                                        'module_img'        => 'catalog',
+                                        'attribute_img'     => 'category',
+                                        'original_remove' => false
+                                    ),
+                                    array(
+                                        'upload_root_dir' => 'upload/catalog/c', //string
+                                        'upload_dir' => $this->id //string ou array
+                                    ),
+                                    false
+                                );
+
+                                $this->DBCategory->update(
+                                    array(
+                                        'type' => 'img'
+                                    ),
+                                    array(
+                                        'id_cat' => $this->id,
+                                        'img_cat' => $resultUpload['file']
+                                    )
+                                );
+                            }
                         }
 
                     }elseif($this->ws->setMethod() === 'DELETE'){
