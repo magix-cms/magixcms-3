@@ -338,7 +338,7 @@ class frontend_model_collection{
                     );
                     // images collection
                     if($imgCollection != null) {
-                        $imgRel = '';
+                        $imgRel = array();
                         foreach ($imgCollection as $img) {
                             // images collection each
                             if (!array_key_exists($page['id_img'], $arr)) {

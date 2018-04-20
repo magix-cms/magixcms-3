@@ -4,9 +4,9 @@ class frontend_controller_webservice extends frontend_db_webservice{
      * @var
      */
     protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
-    protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory;
+    protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory,$DBProduct;
     protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage,$collectionDomain;
-    public $collection, $retrieve, $id, $filter ,$sort, $url, $img;
+    public $collection, $retrieve, $id, $filter ,$sort, $url, $img, $imgData;
     /**
      * frontend_controller_pages constructor.
      */
@@ -30,6 +30,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->dateFormat = new date_dateformat();
         $this->DBCatalog = new frontend_db_catalog();
         $this->DBCategory = new frontend_db_category();
+        $this->DBProduct = new frontend_db_product();
         $this->collectionDomain = new frontend_model_domain($this->template);
         $this->url = http_url::getUrl();
         $this->collectionLanguage = new component_collections_language();
@@ -54,6 +55,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
         // --- Image Upload
         if(isset($_FILES['img']["name"])){
             $this->img = http_url::clean($_FILES['img']["name"]);
+        }
+
+        if (http_request::isPost('data')) {
+            $this->imgData = array();
+            parse_str($_POST['data'],$this->imgData);
         }
     }
 
@@ -1434,59 +1440,59 @@ class frontend_controller_webservice extends frontend_db_webservice{
             }
             // End languages
             $this->xml->newEndElement();
+            if($value['associated']) {
+                // Start Associated
+                $this->xml->newStartElement('associated');
+                // Loop associated
+                foreach ($value['associated'] as $assoKey => $item) {
+                    $this->xml->newStartElement('product');
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'id',
+                            'text' => $item['id_product']
+                        )
+                    );
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'price',
+                            'text' => $item['price_p']
+                        )
+                    );
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'reference',
+                            'text' => $item['reference_p']
+                        )
+                    );
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'width',
+                            'text' => $item['width_p']
+                        )
+                    );
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'height',
+                            'text' => $item['height_p']
+                        )
+                    );
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'depth',
+                            'text' => $item['depth_p']
+                        )
+                    );
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'weight',
+                            'text' => $item['weight_p']
+                        )
+                    );
+                    // Loop associated image product
+                    if (isset($item['images'])) {
+                        $this->xml->newStartElement('images');
 
-            // Start Associated
-            $this->xml->newStartElement('associated');
-            // Loop associated
-            foreach($value['associated'] as $assoKey => $item) {
-                $this->xml->newStartElement('product');
-                $this->xml->setElement(
-                    array(
-                        'start' => 'id',
-                        'text' => $item['id_product']
-                    )
-                );
-                $this->xml->setElement(
-                    array(
-                        'start' => 'price',
-                        'text' => $item['price_p']
-                    )
-                );
-                $this->xml->setElement(
-                    array(
-                        'start' => 'reference',
-                        'text' => $item['reference_p']
-                    )
-                );
-                $this->xml->setElement(
-                    array(
-                        'start' => 'width',
-                        'text' => $item['width_p']
-                    )
-                );
-                $this->xml->setElement(
-                    array(
-                        'start' => 'height',
-                        'text' => $item['height_p']
-                    )
-                );
-                $this->xml->setElement(
-                    array(
-                        'start' => 'depth',
-                        'text' => $item['depth_p']
-                    )
-                );
-                $this->xml->setElement(
-                    array(
-                        'start' => 'weight',
-                        'text' => $item['weight_p']
-                    )
-                );
-                // Loop associated image product
-                if(isset($item['images'])) {
-                    $this->xml->newStartElement('images');
-
-                    //foreach ($item['images'] as $k) {
+                        //foreach ($item['images'] as $k) {
                         $this->xml->newStartElement('image');
                         $this->xml->setElement(
                             array(
@@ -1512,7 +1518,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                         //End src
                         $this->xml->newEndElement();
-                        if($item['images']['content']!= null) {
+                        if ($item['images']['content'] != null) {
                             // Start languages loop
                             $this->xml->newStartElement('languages');
                             foreach ($item['images']['content'] as $imgData) {
@@ -1550,13 +1556,14 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                         // End loop image
                         $this->xml->newEndElement();
-                    //}
-                    // End images
-                    $this->xml->newEndElement();
+                        //}
+                        // End images
+                        $this->xml->newEndElement();
+                    }
                 }
+                // End Associated
+                $this->xml->newEndElement();
             }
-            // End Associated
-            $this->xml->newEndElement();
             // End page
             $this->xml->newEndElement();
         }
@@ -1853,6 +1860,69 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
                     $this->header->set_json_headers();
                     $this->message->json_post_response(true, null, array('id'=>$id_cat));
+                }
+                break;
+            case 'product':
+                if(isset($arrData['category'])){
+                    if (isset($this->id)) {
+                        foreach ($arrData['category'] as $category => $content) {
+                            $control = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'category'), array('id' => $this->id, 'id_cat' => $content['id']));
+                            if(!$control['id_catalog']){
+                                $this->DBProduct->insert(array('type' => 'catRel'), array('id' => $this->id, 'id_cat' => $content['id'], 'default_c' => $content['default']));
+                            }
+                        }
+                        $this->header->set_json_headers();
+                        $this->message->json_post_response(true, null);
+                    }
+                }else {
+                    if (isset($this->id)) {
+                        // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
+                        $fetchRootData = $this->DBProduct->fetchData(array('context'=>'one','type'=>'page'),array('id'=>$this->id));
+                        if($fetchRootData != null){
+                            $id_product = $fetchRootData['id_product'];
+                            $this->DBProduct->update(array('type'=>'page'),array(':price_p' => empty($arrData['price']) ? NULL : $arrData['price'],':reference_p' => empty($arrData['reference']) ? NULL : $arrData['reference'],':id_product'=>$id_product));
+                        }else{
+                            $this->DBProduct->insert(array('type'=>'newPages'),array(':price_p' => empty($arrData['price']) ? NULL : $arrData['price'],':reference_p' => empty($arrData['reference']) ? NULL : $arrData['reference']));//reference_p
+                            $newData = $this->DBProduct->fetchData(array('context'=>'one','type'=>'root'));
+                            $id_product = $newData['id_product'];
+                        }
+                    }else{
+                        $this->DBProduct->insert(array('type'=>'newPages'),array(':price_p' => empty($arrData['price']) ? NULL : $arrData['price'],':reference_p' => empty($arrData['reference']) ? NULL : $arrData['reference']));
+                        $newData = $this->DBProduct->fetchData(array('context'=>'one','type'=>'root'));
+                        $id_product = $newData['id_product'];
+                    }
+
+                    if($id_product) {
+
+                        foreach ($arrData['language'] as $lang => $content) {
+
+                            $data = array(
+                                'name_p'        => !is_array($content['name']) ? $content['name'] : '',
+                                'url_p'         => !is_array($content['url']) ? http_url::clean($content['name'],
+                                    array(
+                                        'dot' => false,
+                                        'ampersand' => 'strict',
+                                        'cspec' => '', 'rspec' => ''
+                                    )
+                                ) : '',
+                                'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : '',
+                                'content_p'     => !is_array($content['content']) ? $content['content'] : '',
+                                'published_p'   => $content['published'],
+                                'id_product'    => $id_product,
+                                'id_lang'       => $content['id_lang']
+                            );
+                            if ($this->DBProduct->fetchData(array('context' => 'one', 'type' => 'content'), array('id_product' => $id_product, 'id_lang' => $content['id_lang'])) != null) {
+
+                                $this->DBProduct->update(array('type' => 'content'), $data);
+
+                            } else {
+
+                                $this->DBProduct->insert(array('type' => 'newContent'), $data);
+                            }
+                        }
+                        $this->header->set_json_headers();
+                        $this->message->json_post_response(true, null, array('id'=>$id_product));
+                    }
                 }
                 break;
         }
@@ -2355,6 +2425,87 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                     }
                     break;
+                case 'product':
+                    if($this->ws->setMethod() === 'PUT'){
+                        if($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+                        }
+                    }elseif($this->ws->setMethod() === 'POST'){
+                        if($getContentType === 'xml'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+
+
+                        }elseif($getContentType === 'json'){
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations,$arrData);
+
+                        }elseif($getContentType === 'files'){
+
+                            if (isset($this->id)) {
+                                $fetchRootData = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'img'), array('name_img' => $this->img));
+
+                                $imgPath = component_core_system::basePath() . 'upload/catalog/p/' . $this->id;
+                                if (file_exists($imgPath.'/'.$this->img)) {
+                                    $makeFiles = new filesystem_makefile();
+                                    $makeFiles->remove(array(
+                                        $imgPath.'/'.$this->img,
+                                        $imgPath.'/s_'.$this->img,
+                                        $imgPath.'/m_'.$this->img,
+                                        $imgPath.'/l_'.$this->img
+                                    ));
+                                }
+                                //print_r($this->imgData);
+                                $resultUpload = $this->upload->setImageUpload(
+                                    'img',
+                                    array(
+                                        'name' => $this->imgData['img'],
+                                        'edit' => NULL,
+                                        'prefix' => array('s_', 'm_', 'l_'),
+                                        'module_img'        => 'catalog',
+                                        'attribute_img'     => 'product',
+                                        'original_remove' => false
+                                    ),
+                                    array(
+                                        'upload_root_dir' => 'upload/catalog/p', //string
+                                        'upload_dir' => $this->id //string ou array
+                                    ),
+                                    false
+                                );
+
+                                if($fetchRootData['name_img'] == null){
+                                    $this->DBProduct->insert(array('type' => 'newImg'), array('id_product' => $this->id, 'name_img' => $this->img));
+                                }
+
+                                /*$this->header->set_json_headers();
+                                $this->message->json_post_response(true, null, array('id'=>$this->id));*/
+                            }
+                        }
+
+                    }elseif($this->ws->setMethod() === 'GET'){
+                        if (isset($this->id)) {
+
+                            /*print 'test collection : ' . $this->collection.'<br />';
+                            print 'retrieve : ' . $this->retrieve.'<br />';
+                            print 'id : ' . $this->id;
+                            print_r($this->filter);*/
+                            $this->xml->getXmlHeader();
+                            $this->getBuildProductData();
+
+                        } else {
+
+                            /*print 'test collection : ' . $this->collection.'<br />';
+                            print 'retrieve : ' . $this->retrieve;*/
+                            $this->xml->getXmlHeader();
+                            $this->getBuildProductItems();
+
+                        }
+                    }
+                    break;
             }
         }catch (Exception $e){
             $logger = new debug_logger(MP_LOG_DIR);
@@ -2402,23 +2553,9 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 $this->getBuildParse(array('type' => 'category'));
 
                             }elseif ($this->retrieve == 'product') {
-                                if (isset($this->id)) {
 
-                                    /*print 'test collection : ' . $this->collection.'<br />';
-                                    print 'retrieve : ' . $this->retrieve.'<br />';
-                                    print 'id : ' . $this->id;
-                                    print_r($this->filter);*/
-                                    $this->xml->getXmlHeader();
-                                    $this->getBuildProductData();
+                                $this->getBuildParse(array('type' => 'product'));
 
-                                } else {
-
-                                    /*print 'test collection : ' . $this->collection.'<br />';
-                                    print 'retrieve : ' . $this->retrieve;*/
-                                    $this->xml->getXmlHeader();
-                                    $this->getBuildProductItems();
-
-                                }
                             } else {
                                 return;
                             }

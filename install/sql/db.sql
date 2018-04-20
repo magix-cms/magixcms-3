@@ -500,8 +500,6 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_img` (
   `id_img` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_product` int(11) unsigned NOT NULL,
   `name_img` varchar(150) NOT NULL,
-  `alt_img` varchar(35) DEFAULT NULL,
-  `title_img` varchar(35) DEFAULT NULL,
   `default_img` smallint(1) NOT NULL DEFAULT '0',
   `order_img` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_img`),
