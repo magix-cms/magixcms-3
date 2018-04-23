@@ -62,7 +62,7 @@ class frontend_model_mail {
 
 		$bodyMail = $this->template->fetch($this->tpl_dir.'/mail/'.$tpl.'.tpl');
 		if ($cssInliner['value']) {
-			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->themeSelected().'/mail/css' => 'mail.css'));
+			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->themeSelected().'/mail/css' => 'mail.min.css'));
 		}
 
 		if($debug) {
@@ -78,9 +78,11 @@ class frontend_model_mail {
 	 * @param $email
 	 * @param $tpl
 	 * @param $data
+	 * @param string $title
+	 * @param string $sender
 	 * @return bool
 	 */
-	public function send_email($email, $tpl, $data) {
+	public function send_email($email, $tpl, $data, $title = '', $sender = '') {
 		if($email) {
 			$this->template->configLoad();
 			if(!$this->sanitize->mail($email)) {
@@ -90,19 +92,25 @@ class frontend_model_mail {
 				if($this->lang) {
 					$noreply = '';
 
-					$allowed_hosts = array_map(function($dom) { return $dom['url_domain']; },$this->modelDomain->getValidDomains());
-					if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $allowed_hosts)) {
-						header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request');
-						exit;
+					if($sender === '') {
+						$allowed_hosts = array_map(function($dom) { return $dom['url_domain']; },$this->modelDomain->getValidDomains());
+						if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $allowed_hosts)) {
+							header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request');
+							exit;
+						}
+						else {
+							$noreply = 'noreply@'.str_replace('www.','',$_SERVER['HTTP_HOST']);
+						}
 					}
 					else {
-						$noreply = 'noreply@'.str_replace('www.','',$_SERVER['HTTP_HOST']);
+						$noreply = $sender;
 					}
+
 
 					if(!empty($noreply)) {
 
 						$message = $this->mail->body_mail(
-							self::setTitleMail($tpl),
+							($title === '') ? self::setTitleMail($tpl) : $title,
 							array($noreply),
 							array($email),
 							self::getBodyMail($tpl,$data),

@@ -6,8 +6,30 @@ include_once ('db.php');
  */
 class plugins_contact_public extends plugins_contact_db
 {
-    protected $template,$header,$data,$getlang,$moreinfo,$sanitize,$mail,$origin,$modelDomain,$config,$settings;
-    public $msg, $type, $content;
+	/**
+	 * @var object
+	 */
+    protected $template,
+		$header,
+		$data,
+		$getlang,
+		$moreinfo,
+		$sanitize,
+		$mail,
+		$origin,
+		$modelDomain,
+		$config,
+		$settings;
+
+	/**
+	 * @var array
+	 */
+    public $msg;
+
+	/**
+	 * @var string
+	 */
+    public $type;
 
     /**
      * frontend_controller_home constructor.
@@ -21,7 +43,8 @@ class plugins_contact_public extends plugins_contact_db
 		$this->header = new http_header();
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();
-        $this->mail = new mail_swift('mail');
+        //$this->mail = new mail_swift('mail');
+        $this->mail = new frontend_model_mail('contact');
         $this->modelDomain = new frontend_model_domain($this->template);
 		$this->config = $this->getItems('config',null,'one',false);
 		$this->settings = new frontend_model_setting();
@@ -137,7 +160,7 @@ class plugins_contact_public extends plugins_contact_db
 	 * @access private
 	 * setBodyMail
 	 */
-	private function setBodyMail($debug) {
+	/*private function setBodyMail($debug) {
         if($debug) {
             $data = array(
                 'lastname' => "My Name",
@@ -152,9 +175,10 @@ class plugins_contact_public extends plugins_contact_db
 			$data = $this->msg;
         }
 		return $data;
-    }
+    }*/
 
 	/**
+	 * @param bool $error
 	 * @return string
 	 */
 	private function setTitleMail($error = false){
@@ -166,10 +190,10 @@ class plugins_contact_public extends plugins_contact_db
 			$collection = $about->getCompanyData();
 			$subject = $this->template->getConfigVars('subject_contact');
 			if($this->type === 'order') {
-				$title   = $this->template->getConfigVars('order_request');
+				$title = $this->template->getConfigVars('order_request');
 			}
 			else {
-				$title   = $this->template->getConfigVars('contact_request');
+				$title = $this->template->getConfigVars('contact_request');
 			}
 			$website = $collection['name'];
 			$title = sprintf($subject,$title,$website);
@@ -183,7 +207,7 @@ class plugins_contact_public extends plugins_contact_db
 	 * @return string
 	 * @throws Exception
 	 */
-	private function getBodyMail($tpl = 'admin', $debug = false){
+	/*private function getBodyMail($tpl = 'admin', $debug = false){
 		$cssInliner = $this->settings->getSetting('css_inliner');
 		$this->template->assign('getDataCSSIColor',$this->settings->fetchCSSIColor());
 		$this->template->assign('data',$this->setBodyMail($debug));
@@ -199,7 +223,7 @@ class plugins_contact_public extends plugins_contact_db
 		else {
 			return $bodyMail;
 		}
-	}
+	}*/
 
 	/**
 	 * @return array
@@ -234,27 +258,22 @@ class plugins_contact_public extends plugins_contact_db
 						$send = false;
 						$tpl = $this->type ? $this->type : 'admin';
 						$error = false;
+						$sender = $this->msg['email'];
 						if($this->msg['email'] === 'error-mail') {
-							$allowed_hosts = array_map(function($dom) { return $dom['url_domain']; },$this->modelDomain->getValidDomains());
-							if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $allowed_hosts)) {
-								header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request');
-								exit;
-							}
-							else {
-								$this->msg['email'] = 'noreply@'.str_replace('www.','',$_SERVER['HTTP_HOST']);
-								$tpl = 'error';
-								$error = true;
-							}
+							$tpl = 'error';
+							$error = true;
+							$sender = '';
 						}
 						foreach ($contacts as $recipient) {
-							$message = $this->mail->body_mail(
+							/*$message = $this->mail->body_mail(
 								self::setTitleMail($error),
 								array($this->msg['email']),
 								array($recipient['mail_contact']),
 								self::getBodyMail($tpl),
 								false
 							);
-							$isSend = $this->mail->batch_send_mail($message);
+							$isSend = $this->mail->batch_send_mail($message);*/
+							$isSend = $this->mail->send_email($recipient['mail_contact'],$tpl,$this->msg,$this->setTitleMail($error),$sender);
 							if(!$send) $send = $isSend;
 						}
 						if($send)

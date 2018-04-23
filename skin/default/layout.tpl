@@ -34,9 +34,9 @@
         skin/{template}/js/vendor/html5shiv.min.js,
         skin/{template}/js/vendor/respond.min.js
     {/strip}{/capture}
-    {strip}<!--[if lt IE 9]>{script src=$smarty.capture.scriptHtml5 concat=$concat type="javascript"}<![endif]-->{/strip}
+    {strip}<!--[if lt IE 9]>{script src=$smarty.capture.scriptHtml5 concat=$setting.concat.value type="javascript"}<![endif]-->{/strip}
     {capture name="picturefill"}/min/?f=skin/{template}/js/vendor/picturefill.min.js{/capture}
-    {strip}{script src=$smarty.capture.picturefill concat=$concat type="javascript" load="async"}{/strip}
+    {strip}{script src=$smarty.capture.picturefill concat=$setting.concat.value type="javascript" load="async"}{/strip}
     {block name="styleSheet"}{/block}
     {google_tools tools='analytics'}
 </head>
@@ -70,11 +70,11 @@
         skin/{template}/js/vendor/featherlight.min.js,
         skin/{template}/js/vendor/featherlight.gallery.min.js
     {/capture}
-        {script src=$smarty.capture.vendors concat=$concat type="javascript"}{/strip}
+        {script src=$smarty.capture.vendors concat=$setting.concat.value type="javascript"}{/strip}
     {strip}{capture name="scriptSkin"}
         /min/?f=skin/{template}/js/global-{$viewport}.min.js
     {/capture}
-        {script src=$smarty.capture.scriptSkin concat=$concat type="javascript" load='async'}{/strip}
+        {script src=$smarty.capture.scriptSkin concat=$setting.concat.value type="javascript" load='async'}{/strip}
     {block name="foot"}{/block}
 </body>
 </html>

@@ -16,12 +16,10 @@ var theme = (function ($, undefined) {
                         $.jmRequest.initbox(data.notify, {
                             display: false
                         });
-                        $('.skin-select').text(btnData[0]);
-                        $('.skin-select.btn-fr-theme').removeClass('btn-fr-theme').addClass('btn-default');
+                        $('.skin-select').text(btnData[0]).removeClass('btn-success').addClass('btn-default');
                         if (self.hasClass('btn-default')) {
-                            self.removeClass('btn-default').addClass('btn-fr-theme').text(btnData[1]);
+                            self.removeClass('btn-default').addClass('btn-success').text(btnData[1]);
                         }
-
                     }
                 });
                 return false;

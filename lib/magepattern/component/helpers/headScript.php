@@ -98,17 +98,37 @@ class helpers_headScript{
 	}
 
 	/**
-	 * 
+	 * Retourne le type de chargement
+	 * @param $load
+	 * @return string
+	 */
+	private function load($load){
+		if(self::getInstance()){
+			switch($load){
+				case 'async':
+					return ' async';
+					break;
+				case 'defer':
+					return ' defer';
+					break;
+				default:
+					return '';
+			}
+		}
+	}
+
+	/**
 	 * helpers_headScript::src($uri,$type)
 	 * <script type="text/javascript" src="/monscript.js"></script>
-	 * 
-	 * @param string $uri
-	 * @param string media
-     * @return string
-     */
-	public static function src($uri,$type){
+	 *
+	 * @param $uri
+	 * @param $type
+	 * @param string $load
+	 * @return string
+	 */
+	public static function src($uri,$type,$load = 'normal'){
 		if(self::getInstance()){
-			return self::getInstance()->startScript().'src="'.$uri.'" '.self::getInstance()->type($type).'>'.self::getInstance()->endScript();
+			return self::getInstance()->startScript().'src="'.$uri.'" '.self::getInstance()->type($type).self::getInstance()->load($load).'>'.self::getInstance()->endScript();
 		}
 	}
 }

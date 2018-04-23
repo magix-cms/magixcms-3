@@ -62,15 +62,14 @@ class backend_controller_domain extends backend_db_domain
 
     }
 
-    /**
-     * Assign data to the defined variable or return the data
-     * @param string $type
-     * @param string|int|null $id
-     * @param string $context
-     * @param boolean $assign
-     * @return mixed
-     * @throws Exception
-     */
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}

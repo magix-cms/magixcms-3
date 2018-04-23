@@ -467,7 +467,7 @@ class backend_controller_about extends backend_db_about{
 	/**
 	 * @return array
 	 */
-    private function getCompanyData()
+    public function getCompanyData()
     {
 		$infoData = parent::fetchData(array('context'=>'all','type'=>'info'));
 		$about = array();

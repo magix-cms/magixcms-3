@@ -40,7 +40,7 @@
                                                     </table>
                                                     <p class="text-center">
                                                         <a href="{geturl}" target="_blank" title="{$companyData.name}" style="text-decoration: none; font-size: 46px; padding: 15px;">
-                                                            <img src="{geturl}/skin/{template}/img/logo/{#logo_img_mail#}" alt="{#logo_img_alt#|ucfirst}" width="229" height="50"/>
+                                                            <img src="{geturl}/skin/{template}/img/logo/{#logo_img_mail#}" alt="Logo {$companyData.name}" width="250" height="250"/>
                                                         </a>
                                                     </p>
                                                     <table class="spacer">

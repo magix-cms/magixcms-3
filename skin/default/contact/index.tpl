@@ -37,7 +37,7 @@
                         </div>
                         <div class="form-group">
                             <input id="phone" type="tel" name="msg[phone]" placeholder="{#ph_contact_phone#|ucfirst}" class="form-control phone" pattern="{literal}^((?=[0-9\+ \(\)-]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})${/literal}" maxlength="20" />
-                            <label for="tel">{#pn_contact_phone#|ucfirst}&nbsp;:</label>
+                            <label for="phone">{#pn_contact_phone#|ucfirst}&nbsp;:</label>
                         </div>
                         {if $address_enabled}
                             <div class="row">

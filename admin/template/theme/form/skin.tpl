@@ -14,7 +14,7 @@
             {/if}
             <figcaption>
                 <h3>{$item.name|ucfirst}</h3>
-                <a class="btn btn-block {if $item.current eq 'true'}btn-fr-theme{else}btn-default {/if} skin-select" data-skin="{$item.name}" href="#">{if $item.current eq 'true'}Sélectionné{else}Choisir{/if}</a>
+                <a class="btn btn-block {if $item.current eq 'true'}btn-success{else}btn-default{/if} skin-select" data-skin="{$item.name}" href="#">{if $item.current eq 'true'}Sélectionné{else}Choisir{/if}</a>
             </figcaption>
         </figure>
     </div>

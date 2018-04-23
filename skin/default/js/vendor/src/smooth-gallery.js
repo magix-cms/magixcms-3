@@ -10,7 +10,7 @@
 	// SMOOTH GALLERY PUBLIC CLASS DEFINITION
 	// =======================================
 
-	var SmoothGallery = function (element, options) {
+	const SmoothGallery = function (element, options) {
 		this.$element  = $(element)
 		this.options   = $.extend({}, this.defaults(), options)
 		this.structure   = $.extend({}, this.parts())
@@ -58,7 +58,7 @@
 	}
 
 	SmoothGallery.prototype.init = function() {
-		var $this = this,
+		let $this = this,
 			nbli = this.structure.$items.length;
 
 		if (nbli > $this.options.ipl) {
@@ -89,10 +89,10 @@
 	}
 
 	SmoothGallery.prototype.getItemForDirection = function(dir, active) {
-		var $this = this;
-		var $lastActive = active[$this.options.ipl];
-		var $lAIndex = $this.structure.$items.index($lastActive);
-		var next;
+		let $this = this;
+		let $lastActive = active[$this.options.ipl];
+		let $lAIndex = $this.structure.$items.index($lastActive);
+		let next;
 
 		if(dir === 'next') {
 			next = $lAIndex + 1;
@@ -104,10 +104,10 @@
 	}
 
 	SmoothGallery.prototype.click = function(dir) {
-		var $this = this;
-		var $active = this.$element.find('.item.active');
-		var $next   = this.getItemForDirection(dir, $active);
-		var ni = $this.structure.$items.length;
+		let $this = this;
+		let $active = this.$element.find('.item.active');
+		let $next   = this.getItemForDirection(dir, $active);
+		let ni = $this.structure.$items.length;
 
 		if(dir === 'next') {
 			$($next).addClass('active').attr('aria-hidden',false);
@@ -131,20 +131,20 @@
 	// =================================
 
 	function Plugin() {
-		var arg = arguments;
+		let arg = arguments;
 		return this.each(function () {
-			var $this   = $(this),
+			let $this   = $(this),
 				data    = $this.data('bs.dropdownselect'),
 				method  = arg[0];
 
-			if( typeof(method) == 'object' || !method ) {
-				var options = typeof method == 'object' && method;
+			if( typeof(method) === 'object' || !method ) {
+				let options = typeof method === 'object' && method;
 				if (!data) $this.data('bs.dropdownselect', (data = new SmoothGallery(this, options)));
 			} else {
 				if (data[method]) {
 					method = data[method];
 					arg = Array.prototype.slice.call(arg, 1);
-					if(arg != null || arg != undefined || arg != [])  method.apply(data, arg);
+					if(arg != null || arg !== undefined || arg !== [])  method.apply(data, arg);
 				} else {
 					$.error( 'Method ' +  method + ' does not exist on jQuery.SmoothGallery' );
 					return this;
@@ -152,7 +152,7 @@
 			} })
 	}
 
-	var old = $.fn.smoothGallery
+	let old = $.fn.smoothGallery
 
 	$.fn.smoothGallery             = Plugin
 	$.fn.smoothGallery.Constructor = SmoothGallery

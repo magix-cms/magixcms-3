@@ -12,35 +12,35 @@
 // Modified by Simon Freytag for syntax, namespace, jQuery and Bootstrap
 // Modified by Salvatore Di Salvo for optimisation and Magix CMS
 
-var C = {
-        createCookie: function() {
-            var date = new Date();
-            date.setTime(date.getTime() + (365*24*60*60*1000));
-            var expires = date.toGMTString();
-            document.cookie = 'complianceCookie=on; expires=' + expires + '; path=/';
-            $("#cookies").removeClass('in').addClass('hide');
-        },
+const C = {
+    createCookie: function() {
+        let date = new Date();
+        date.setTime(date.getTime() + (365*24*60*60*1000));
+        let expires = date.toGMTString();
+        document.cookie = 'complianceCookie=on; expires=' + expires + '; path=/';
+        $("#cookies").removeClass('in').addClass('hide');
+    },
 
-        checkCookie: function() {
-            var nameEQ = 'complianceCookie=';
-            var ca = document.cookie.split(';');
-            for(var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1, c.length);
-                }
-
-                if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
+    checkCookie: function() {
+        let nameEQ = 'complianceCookie=';
+        let ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1, c.length);
             }
-            return null;
-        },
 
-        init: function() {
-            if (this.checkCookie() !== 'on') {
-                $("#cookies").removeClass('hide');
-            }
+            if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
         }
-    };
+        return null;
+    },
+
+    init: function() {
+        if (this.checkCookie() !== 'on') {
+            $("#cookies").removeClass('hide');
+        }
+    }
+};
 
 +function ($) {
     'use strict';
@@ -61,9 +61,9 @@ var C = {
         });
 
         // *** Auto-position of the affix header
-        var tar = document.documentElement.clientHeight * (1/3);
+        let tar = document.documentElement.clientHeight * (1/3);
         function affixHead() {
-            var pos = window.pageYOffset,
+            let pos = window.pageYOffset,
                 atTop = $('#header').hasClass('at-top');
 
             if (pos > tar && atTop) {
@@ -79,7 +79,7 @@ var C = {
 
         // *** add the class 'open' on a collapse button when his collapsible element is opened
         $('[data-toggle="collapse"]').each(function(){
-            var self = $(this), target = $($(this).data('target'));
+            let self = $(this), target = $($(this).data('target'));
 
             target.on('hidden.bs.collapse',function(){
                 if(self.hasClass('open') && !target.hasClass('collapse in')){
@@ -98,25 +98,21 @@ var C = {
         $('.dropdown [data-toggle="collapse"]').click(function (e) {
             e.stopPropagation();
             e.preventDefault();
-
             $(this).closest(".dropdown").addClass("open");
-            var target = $($(this).data("target"));
-
-            target.collapse('toggle');
+            $($(this).data("target")).collapse('toggle');
         });
 
         // *** for gallery pictures
         $(".show-img").off('click').click(function(){
-            var target = $($(this).data('target'));
             $(".big-image a").animate({ opacity: 0, 'z-index': -1 }, 200);
-            target.animate({ opacity: 1, 'z-index': 1 }, 200);
+            $($(this).data('target')).animate({ opacity: 1, 'z-index': 1 }, 200);
             return false;
         });
 
         // *** featherlight lightbox init
         if($.featherlight !== undefined) {
-            var afterContent = function () {
-                var caption = this.$currentTarget.find('img').attr('alt');
+            let afterContent = function () {
+                let caption = this.$currentTarget.find('img').attr('alt');
                 this.$instance.find('.caption').remove();
                 this.$instance.find('figure').remove();
                 this.$content
@@ -126,9 +122,7 @@ var C = {
                     .text(caption)
                     .appendTo(this.$instance.find('.featherlight-content figure'))
                     .wrapAll('<figcaption class="caption">');
-                //this.$instance.find('.featherlight-content img').height('calc(100% - '+this.$instance.find('.caption').height()+')');
             };
-
             $.featherlight.prototype.afterContent = afterContent;
 
             $('.img-zoom').featherlight();
@@ -137,7 +131,6 @@ var C = {
                 $.featherlightGallery.prototype.afterContent = afterContent;
                 $.featherlightGallery.prototype.previousIcon = '<span class="fa fa-angle-left"></span>';
                 $.featherlightGallery.prototype.nextIcon = '<span class="fa fa-angle-right"></span>';
-
                 $('.img-gallery').featherlightGallery();
             }
             else {
