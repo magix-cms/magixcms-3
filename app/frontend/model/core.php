@@ -66,8 +66,6 @@ class frontend_model_core{
 
         $current['lang']['iso']  = $ModelTemplate->currentLanguage();
 
-
         return $current;
-
     }
 }
