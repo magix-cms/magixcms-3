@@ -58,9 +58,11 @@ class http_session extends sessionUtils{
 	/**
 	 * Regenerate the session id
 	 * and update the session
+	 * @param int $lifetime
 	 * @return string
 	 */
-	public function regenerate(){
+	public function regenerate($lifetime = 0){
+		$cparams = session_get_cookie_params();
 		session_regenerate_id(true);
 		$nid = session_id();
 		$sname = session_name();
@@ -68,6 +70,7 @@ class http_session extends sessionUtils{
 		session_name($sname);
 		session_id($nid);
 		session_start();
+		setcookie($sname,$nid,$lifetime,'/',$cparams['domain'],true,true);
 
 		return $nid;
 	}
@@ -75,32 +78,52 @@ class http_session extends sessionUtils{
 	/**
 	 * Start a new session
 	 * @param string $session_name
+	 * @param array $params
+	 * @return string session id
 	 */
-    public function start($session_name = 'mp_default_s'){
+    public function start($session_name = 'mp_default_s',$params = array()){
 		try {
 			if (is_string($session_name) && $session_name !== '') {
 				//$string = $_SERVER['HTTP_USER_AGENT'];
 				//$string .= 'SHIFLETT';
 				/* Add any other data that is consistent */
 				//$fingerprint = md5($string);
+				$ssid = session_id();
 
 				if (!isset($_SESSION)) session_cache_limiter('nocache');
 
 				//Fermeture de la première session, ses données sont sauvegardées.
-				$this->_write();
+				if(session_name() !== $session_name || !empty($params)) {
+					$this->_write();
 
-				if(!isset($_COOKIE[$session_name])) {
-					session_name($session_name);
-					ini_set('session.hash_function',1);
-					session_start();
-					session_regenerate_id();
+					// **PREVENTING SESSION FIXATION**
+					// Session ID cannot be passed through URLs
+					ini_set('session.use_only_cookies', 1);
+
+					$cparams = array_merge(session_get_cookie_params(),$params);
+					session_set_cookie_params(
+						$cparams['lifetime'],
+						'/',
+						$cparams['domain'],
+						true,
+						true
+					);
+
+					if(!isset($_COOKIE[$session_name])) {
+						session_name($session_name);
+						ini_set('session.hash_function',1);
+						session_start();
+						session_regenerate_id();
+						$ssid = session_id();
+					}
+					else {
+						$ssid = $_COOKIE[$session_name];
+						session_name($session_name);
+						session_id($ssid);
+						session_start();
+					}
 				}
-				else {
-					$ssid = $_COOKIE[$session_name];
-					session_name($session_name);
-					session_id($ssid);
-					session_start();
-				}
+				return $ssid;
 			}
 			else {
 				throw new Exception('Unable to start a new session. No session name defined');
@@ -130,16 +153,15 @@ class http_session extends sessionUtils{
     	session_name($session_name);
 		session_start();
 		session_unset();
-
+		session_destroy();
 		$CookieInfo = session_get_cookie_params();
 		if ( (empty($CookieInfo['domain'])) && (empty($CookieInfo['secure'])) ) {
-			setcookie(session_name(), '', time()-3600, $CookieInfo['path']);
+			setcookie($session_name, '', time()-3600, $CookieInfo['path']);
 		} elseif (empty($CookieInfo['secure'])) {
-			setcookie(session_name(), '', time()-3600, $CookieInfo['path'], $CookieInfo['domain']);
+			setcookie($session_name, '', time()-3600, $CookieInfo['path'], $CookieInfo['domain']);
 		} else {
-			setcookie(session_name(), '', time()-3600, $CookieInfo['path'], $CookieInfo['domain'], $CookieInfo['secure']);
+			setcookie($session_name, '', time()-3600, $CookieInfo['path'], $CookieInfo['domain'], $CookieInfo['secure']);
 		}
-		session_destroy();
     }
 
 	/**
