@@ -179,7 +179,7 @@ class component_core_language{
      * @param bool $debug
      */
     public function run($debug = false){
-        $session = new http_session();
+        $session = new http_session(0);
         $session->start('lang');
         if($debug){
             $session->debug();
@@ -188,4 +188,3 @@ class component_core_language{
         self::setTimeLocal();
 	}
 }
-?>

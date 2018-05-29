@@ -52,7 +52,8 @@ class backend_model_access extends backend_db_employee{
     public function dataSession(){
         $data_session = parent::fetchData(
             array(
-                'type'=>'session'
+            	'context' => 'one',
+                'type' => 'session'
             ),
             array(
                 'keyuniqid_admin'  =>  $_SESSION['keyuniqid_admin']
@@ -72,7 +73,8 @@ class backend_model_access extends backend_db_employee{
         $id_role = $data_session['id_role'];
         $data_access = parent::fetchData(
             array(
-                'type'=>'currentAccess'
+            	'context' => 'one',
+                'type' => 'currentAccess'
             ),
             array(
                 'id_role'  =>  $id_role,
@@ -96,7 +98,8 @@ class backend_model_access extends backend_db_employee{
         $id_role = $data_session['id_role'];
         $array_access = parent::fetchData(
             array(
-                'type'=>'access'
+            	'context' => 'all',
+                'type' => 'access'
             ),
             array(
                 'id_role'  =>  $id_role

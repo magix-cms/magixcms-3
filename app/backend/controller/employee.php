@@ -24,7 +24,7 @@ class backend_controller_employee extends backend_db_employee
     public $edit, $action, $tabs;
 	public $search = array();
 	public $employee;
-	public $id_admin;
+	public $id_admin, $id_account_session;
 
     /**
      * Constructor
@@ -89,6 +89,9 @@ class backend_controller_employee extends backend_db_employee
         if (http_request::isGet('tabs')) {
             $this->tabs = $formClean->simpleClean($_GET['tabs']);
         }
+		if(http_request::isSession('id_account')){
+			$this->id_account_session = (int)$formClean->simpleClean($_SESSION['id_account']);
+		}
 
         // --- Search
 		if (http_request::isGet('search')) {
@@ -121,18 +124,10 @@ class backend_controller_employee extends backend_db_employee
      */
     private function role($idadmin = null){
         if($idadmin != null){
-            $data = parent::fetchData(
-                array(
-                    'type'  =>  'currentRole'
-                )
-                ,array(
-                    'id_admin'   =>  $idadmin
-                )
-            );
-        }else{
-            if(parent::fetchData(array('type'=>'role')) != null){
-                $data =  parent::fetchData(array('type'=>'role'));
-            }
+            $data = $this->getItems('currentRole',array('id_admin' => $idadmin),'one',false);
+        }
+        else{
+        	$data = $this->getItems('role',null,'one',false);
         }
         return $data;
     }
@@ -141,7 +136,8 @@ class backend_controller_employee extends backend_db_employee
      * @return mixed
      */
     private function setItemsEmployee(){
-        $data = parent::fetchData(array('type'=>'employees','search'=>$this->search));
+        //$data = parent::fetchData(array('type'=>'employees','search'=>$this->search));
+        $data = $this->getItems('employees',null,'all',false);
 		$employees = array();
 
 		foreach($data as $row) {
@@ -166,7 +162,7 @@ class backend_controller_employee extends backend_db_employee
     	if($id_admin) {
 			//$data = parent::fetchData(array('type'=>'employee'),array('id_admin' => $id_admin));
 			//$this->template->assign('employee',$data);//
-			$this->getItems('employee',$id_admin);
+			$this->getItems('employee',$id_admin,'one');
 		} else {
 			//$data = $this->setItemsEmployee();
 			//$this->template->assign('getItemsEmployee',$data);
@@ -178,7 +174,7 @@ class backend_controller_employee extends backend_db_employee
      * @return mixed
      */
     private function setItemsJobs(){
-        $data = parent::fetchData(array('type'=>'jobs'));
+        $data = $this->getItems('jobs',null,'all',false);
         return $data;
     }
 
@@ -217,7 +213,7 @@ class backend_controller_employee extends backend_db_employee
 						'active_admin'      => $this->active_admin
 					)
 				);
-				$lastInsert = parent::fetchData(array('type' => 'lastEmployee'));
+				$lastInsert = $this->getItems('lastEmployee',null,'one',false);
 				parent::insert(
 					array(
 						'context' 	=> 'employee',

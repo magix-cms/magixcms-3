@@ -23,16 +23,16 @@
                         <form id="login_form" method="post" action="{geturl}/admin/index.php?controller=login">
                             <div class="form-group">
                                 <label class="control-label" for="email_admin">Adresse e-mail</label>
-                                <input type="text" class="form-control" placeholder=" {#placeholder_login#}" id="email_admin" name="email_admin" value="" />
+                                <input type="text" class="form-control" placeholder=" {#placeholder_login#}" id="email_admin" name="employee[email_admin]" value="" />
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label" for="passwd_admin">Mot de passe</label>
-                                <input type="password" class="form-control" placeholder=" {#placeholder_password#}" id="passwd_admin" name="passwd_admin" value="" />
+                                <input type="password" class="form-control" placeholder=" {#placeholder_password#}" id="passwd_admin" name="employee[passwd_admin]" value="" />
                             </div>
 
                             <div class="form-group submit-group">
-                                <input type="hidden" id="hashtoken" name="hashtoken" value="{$hashpass}" />
+                                <input type="hidden" id="hashtoken" name="employee[hashtoken]" value="{$hashpass}" />
                                 <input type="submit" class="btn btn-block btn-main-theme" value="{#login#|upper}" />
                             </div>
 

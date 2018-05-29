@@ -4,7 +4,7 @@
  #
  # This file is part of MAGIX CMS.
  # MAGIX CMS, The content management system optimized for users
- # Copyright (C) 2008 - 2013 magix-cms.com <support@magix-cms.com>
+ # Copyright (C) 2008 - 2018 magix-cms.com <support@magix-cms.com>
  #
  # OFFICIAL TEAM :
  #
@@ -20,19 +20,18 @@
  # but WITHOUT ANY WARRANTY; without even the implied warranty of
  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  # GNU General Public License for more details.
-
+ #
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
  #
  # -- END LICENSE BLOCK -----------------------------------
-
+ #
  # DISCLAIMER
-
+ #
  # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
  # versions in the future. If you wish to customize MAGIX CMS for your
  # needs please refer to http://www.magix-cms.com for more information.
  */
-
 class backend_controller_login extends backend_db_employee{
     // --- SESSION
     /**
@@ -46,18 +45,35 @@ class backend_controller_login extends backend_db_employee{
      *
      * @var string
      */
-    protected $hashtoken,$header,$message,$template,$mail,$setting,$settings,$modelDomain;
+    protected $hashtoken,
+		$header,
+		$data,
+		$message,
+		$template,
+		$mail,
+		$setting,
+		$settings,
+		$modelDomain;
 
     /**
      * @var $email_admin,$passwd_admin
      */
-    public $action,$email_admin,$email_forgot,$key,$passwd_admin,$stay_logged,$kpl,$ticket,$ticket_passwd,$logout;
+    public $action,
+		$email_admin,
+		$email_forgot,
+		$key,
+		$passwd_admin,
+		$stay_logged,
+		$kpl,
+		$token,
+		$logout;
+
     public static $notify = '';
 
     /**
      * @var
      */
-    protected static $session,$httpSession;
+    private $employee, $session, $httpSession;
 
     /**
      * Constructor
@@ -65,6 +81,7 @@ class backend_controller_login extends backend_db_employee{
     public function __construct(){
         $this->header = new http_header();
         $this->template = new backend_model_template();
+		$this->data = new backend_model_data($this);
         $this->message = new component_core_message($this->template);
 		$this->mail = new mail_swift('mail');
 		$this->modelDomain = new backend_controller_domain();
@@ -73,23 +90,11 @@ class backend_controller_login extends backend_db_employee{
 		$formClean = new form_inputEscape();
 
         // --- LOGIN
-        if(http_request::isPost('email_admin')){
-            $this->email_admin = $formClean->simpleClean($_POST['email_admin']);
-        }
-        if(http_request::isPost('passwd_admin')){
-            $this->passwd_admin = $formClean->simpleClean($_POST['passwd_admin']);//filter_escapeHtml::clean(filter_rsa::hashEncode('sha1',$_POST['passwd_admin']));
-        }
+		if (http_request::isPost('employee')) {
+			$this->employee = (array)$formClean->arrayClean($_POST['employee']);
+		}
         if(http_request::isPost('stay_logged')){
             $this->stay_logged = true;
-        }
-        if(http_request::isPost('ticket')){
-        	$this->ticket = $formClean->arrayClean($_POST['ticket']);
-        }
-        if (http_request::isGet('t')) {
-			$this->ticket_passwd = $formClean->simpleClean($_GET['t']);
-		}
-        if(http_request::isPost('hashtoken')){
-            $this->hashtoken = $formClean->simpleClean($_POST['hashtoken']);
         }
         if (http_request::isGet('logout')) {
             $this->logout = $formClean->simpleClean($_GET['logout']);
@@ -106,11 +111,23 @@ class backend_controller_login extends backend_db_employee{
 			$this->key = $formClean->simpleClean($_GET['k']);
 		}
 
-        $this->httpSession = new http_session();
+        $this->httpSession = new http_session($this->settings['ssl']);
         $this->session = new backend_model_session();
-		$this->httpSession->start('mc_admin');
-		$this->tokenInitSession();
+
+		$this->securePage();
     }
+
+	/**
+	 * Assign data to the defined variable or return the data
+	 * @param string $type
+	 * @param string|int|null $id
+	 * @param string $context
+	 * @param boolean $assign
+	 * @return mixed
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true) {
+		return $this->data->getItems($type, $id, $context, $assign);
+	}
 
     /**
      * Crypt md5
@@ -123,20 +140,13 @@ class backend_controller_login extends backend_db_employee{
         return filter_rsa::hashEncode('md5',$hash);
     }
 
-    /**
-     * Initialisation du token
-     */
-    private function tokenInitSession(){
-        $this->httpSession->token('ap_auth_token');
-    }
-
 	/**
-	 * @throws Exception
+	 *
 	 */
 	public function getAdminProfile()
 	{
 		if(isset($_SESSION['keyuniqid_admin'])) {
-			$adminProfile = parent::fetchData(array('type'=>'session'),array('keyuniqid_admin' => $_SESSION['keyuniqid_admin']));
+			$adminProfile = $this->getItems('session',array('keyuniqid_admin' => $_SESSION['keyuniqid_admin']),'one',false);
 			$this->template->assign('adminProfile',$adminProfile);
 		}
     }
@@ -146,16 +156,14 @@ class backend_controller_login extends backend_db_employee{
      * @param bool $debug
      * @throws Exception
      */
-    private function getAuth($debug = false){
-        $token = $this->httpSession->token('ap_auth_token');
-        $tokentools = $this->hashPassCreate($token);
-        $this->template->assign('hashpass',$tokentools);
-
-        if (isset($this->email_admin) AND isset($this->passwd_admin)) {
-            if(strcasecmp($this->hashtoken,$tokentools) == 0){
+    private function getAuth($debug = false) {
+		$agtoken = $this->httpSession->token('ap_auth_token');
+		$this->template->assign('hashpass',$agtoken);
+        if ( !empty($this->employee) ) {
+            if( strcasecmp($this->employee['hashtoken'], $agtoken) == 0 ){
                 if($debug == true){
-                    if($this->hashtoken) {
-                        if (strcasecmp($this->hashtoken, $tokentools) == 0) {
+                    if($this->employee['hashtoken']) {
+                        if ( strcasecmp($this->employee['hashtoken'], $agtoken) == 0 ) {
                             $status = 'session success';
                         } else {
                             $status = 'session error';
@@ -164,36 +172,33 @@ class backend_controller_login extends backend_db_employee{
                     $dataDebug = array_merge($_SESSION, array('status'=>$status));
                     $this->message->getNotify('debug',array('method' => 'debug', 'result' => $dataDebug));
                 }
+
                 //Check database Mail exist
-                $mailExist = parent::fetchData(array('type' => 'mail'), array('email_admin' => $this->email_admin));
+                $account = $this->getItems('mail',array('email_admin' => $this->employee['email_admin']),'one',false);
 
                 //check password verify
-                if(password_verify($this->passwd_admin,$mailExist['passwd_admin'])) {
+                if(password_verify($this->employee['passwd_admin'], $account['passwd_admin'])) {
                     //Check database Authentification exist
-                    $authExist = parent::fetchData(array('type' => 'auth'), array('email_admin' => $this->email_admin, 'passwd_admin' => $mailExist['passwd_admin']));
+                    $authExist = $this->getItems('auth',array('email_admin' => $this->employee['email_admin'], 'passwd_admin' => $account['passwd_admin']),'one',false);
 
                     if (count($authExist['id_admin'])) {
-                        $data = parent::fetchData(array('type' => 'session'), array('keyuniqid_admin' => $authExist['keyuniqid_admin']));
+						$account = $this->getItems('session',array('keyuniqid_admin' => $authExist['keyuniqid_admin']),'one',false);
 
-                        //$language = new component_core_language('strLanguage');
-                        $this->httpSession->start('mc_admin');
+						$expires = $this->stay_logged ? strtotime("+13 month") : 0;
+						$this->httpSession->regenerate($expires);
+						if($expires) {
+							$hash = $account['keyuniqid_admin'].session_id();
+							$cparams = session_get_cookie_params();
+							setcookie($hash,$expires,0,'/',$cparams['domain'],($this->settings['ssl'] ? true : false),true);
+						}
 
-                        /*if (!isset($_SESSION['email_admin']) AND !isset($_SESSION['keyuniqid_admin'])) {
-                            session_regenerate_id(true);
-                            $array_sess['id_admin'] = $data['id_admin'];
-                        }*/
-
-						$this->httpSession->regenerate();
-
-                        $this->session->openSession(array('id_admin' => $data['id_admin'], 'id_admin_session' => session_id(), 'keyuniqid_admin' => $data['keyuniqid_admin']));
+                        $this->session->openSession(array('id_admin' => $account['id_admin'], 'id_admin_session' => session_id(), 'keyuniqid_admin' => $account['keyuniqid_admin'], 'expires' => ($this->stay_logged ? $expires : null)));
 
                         $array_sess = array(
-							'id_admin' => $data['id_admin'],
-							'email_admin' => $data['email_admin'],
-							'keyuniqid_admin' => $data['keyuniqid_admin']
+							'id_admin' => $account['id_admin'],
+							'email_admin' => $account['email_admin'],
+							'keyuniqid_admin' => $account['keyuniqid_admin']
 						);
-
-                        //$this->httpSession->run($array_sess, $language->run());
                         $this->httpSession->run($array_sess);
 
                         if ($debug == true) {
@@ -205,86 +210,73 @@ class backend_controller_login extends backend_db_employee{
 								'method' => 'debug',
 								'result' => $dataDebug
 							));
-                        } else {
-                            if (isset($this->stay_logged)) {
-                                $this->template->assign('kpl', '{"m":' . json_encode($_SESSION["email_admin"]) . ',"k":' . json_encode($_SESSION['keyuniqid_admin']) . ',"t":' . json_encode(session_id()) . '}');
-                                $this->template->display('login/checkout.tpl');
-                            } else {
-                                $this->session->redirect(true);
-                            }
+                        }
+                        else {
+                        	$this->session->redirect(true);
                         }
 
-                    } else {
+                    }
+                    else {
                         $this->message->getNotify('error_login', array('method' => 'fetch', 'assignFetch' => 'error'));
                     }
-                }else {
+                }
+                else {
                     $this->message->getNotify('error_login', array('method' => 'fetch', 'assignFetch' => 'error'));
                 }
-
-            }else{
+            }
+            else{
                 $this->message->getNotify('error_hash',array('method'=>'fetch','assignFetch'=>'error'));
             }
         }
     }
 
 	/**
-	 * Authentification when valid ticket found
+	 * Sécurise l'espace membre
+	 * @param bool $debug
 	 */
-	private function setAuth()
-	{
-		$token = isset($_SESSION['ap_auth_token']) ? $_SESSION['ap_auth_token'] : filter_rsa::tokenID();
-		$tokentools = $this->hashPassCreate($token);
-		$this->template->assign('hashpass',$tokentools);
+	public function securePage($debug = false){
+		$ssid = $this->httpSession->start('mc_admin');
+		$this->httpSession->token('ap_auth_token');
+		$cparams = session_get_cookie_params();
 
-		$data = parent::fetchData(
-			array(
-				'type'=>'session'
-			),
-			array(
-				'keyuniqid_admin'  =>  $this->ticket['k']
-			)
-		);
+		if(isset($_SESSION['keyuniqid_admin']) && !empty($_SESSION['keyuniqid_admin'])) {
+			$hash = $_SESSION['keyuniqid_admin'].$ssid;
+			if(isset($_COOKIE[$hash])) {
+				$array_sess = array(
+					'id_admin'   =>  $_SESSION['id_admin'],
+					'keyuniqid_admin' =>  $_SESSION['keyuniqid_admin'],
+					'email_admin'     =>  $_SESSION['email_admin']
+				);
+				setcookie('mc_admin',$ssid,$_COOKIE[$hash],'/',$cparams['domain'],($this->settings['ssl'] ? true : false),true);
+				$this->httpSession->run($array_sess);
+			}
+		}
+		else {
+			$sess = $this->getItems('session',array('id_session'=>$ssid),'one',false);
+			if($sess) {
+				$account = $this->getItems('account_from_key',array('keyuniqid_admin' => $sess['keyuniqid_admin']),'one',false);
 
-		$language = new component_core_language('strLanguage');
-		$this->httpSession->start('lang');
+				$this->httpSession->regenerate($sess['expires']);
+				$this->session->openSession(array(
+					'id_admin_session' => session_id(),
+					'id_admin' => $account['id_admin'],
+					'keyuniqid_admin' => $account['keyuniqid_admin'],
+					'expires' => $sess['expires']
+				));
+				$hash = $account['keyuniqid_admin'].session_id();
+				setcookie($hash,$sess['expires'],0,'/',$cparams['domain'],($this->settings['ssl'] ? true : false),true);
 
-		$array_sess = array(
-			'email_admin'       =>  $data['email_admin'],
-			'keyuniqid_admin'   =>  $data['keyuniqid_admin']
-		);
-
-		if (!isset($_SESSION['email_admin']) AND !isset($_SESSION['keyuniqid_admin'])) {
-			session_regenerate_id(true);
-			$array_sess['id_admin'] = $data['id_admin'];
+				$array_sess = array(
+					'id_admin'   => $account['id_admin'],
+					'email_admin'     => $account['email_admin'],
+					'keyuniqid_admin' => $account['keyuniqid_admin']
+				);
+				$this->httpSession->run($array_sess);
+			}
 		}
 
-		$this->session->openSession(array('id_admin'=>$data['id_admin'],'id_admin_session'=>session_id(), 'keyuniqid_admin'=>$data['keyuniqid_admin']));
-		$array_sess = array(
-			'email_admin'       =>  $data['email_admin'],
-			'keyuniqid_admin'   =>  $data['keyuniqid_admin']
-		);
-
-		$this->httpSession->run($array_sess,$language->run());
-
-		$this->header->set_json_headers();
-		print '{"m":'.json_encode($_SESSION["email_admin"]).',"k":'.json_encode($_SESSION['keyuniqid_admin']).',"t":'.json_encode(session_id()).'}';
-    }
-
-	/**
-	 * Verify ticket
-	 */
-	public function checkTicket()
-	{
-		$record = parent::fetchData(array('context'=>'session','type'=>'uniq_session'),$this->ticket);
-
-		if ($record != null) {
-			$this->httpSession->start('lang');
-			$this->tokenInitSession();
-			$this->setAuth();
-		} else {
-			print false;
-		}
-    }
+		if($debug) $this->httpSession->debug();
+	}
 
 	/**
 	 * Check if a ticket exist
@@ -292,8 +284,10 @@ class backend_controller_login extends backend_db_employee{
 	public function checkout()
 	{
 		if(!isset($_SESSION["email_admin"]) || empty($_SESSION['email_admin'])) {
-			$this->template->display('login/checkout.tpl');
-		} else {
+			//$this->template->display('login/checkout.tpl');
+			$this->session->redirect(false);
+		}
+		else {
 			$this->secure();
 			$this->close();
 			if(!http_request::isGet('controller')){
@@ -313,7 +307,8 @@ class backend_controller_login extends backend_db_employee{
             if (!isset($this->email_admin)) {
                 $this->session->redirect(false);
             }
-        }elseif(!$compareSessionId['id_admin_session']){
+        }
+        elseif(!$compareSessionId['id_admin_session']){
             $this->session->redirect(false);
         }
     }
@@ -408,15 +403,13 @@ class backend_controller_login extends backend_db_employee{
      * Execution des scripts pour les sessions et le login
      */
     public function run(){
-        if (http_request::isGet('newlogin')) {
+        //if (http_request::isGet('newlogin')) {
 
-        } elseif (isset($this->ticket)) {
-        	$this->checkTicket();
-        } elseif (isset($this->action)) {
+        if (isset($this->action)) {
         	switch ($this->action) {
 				case 'rstpwd':
 					if(isset($this->email_forgot)){
-						$data = parent::fetchData(array('context'=>'employee','type'=>'key'),$this->email_forgot);
+						$data = $this->getItems('key',array('email_forgot'=> $this->email_forgot),'one',false);
 						if($data) {
 							$pwdTicket = filter_rsa::randString(32);
 							$data['ticket'] = $pwdTicket;
@@ -429,10 +422,9 @@ class backend_controller_login extends backend_db_employee{
 						$this->message->json_post_response(false,'empty');
 					}
 					break;
-
 				case 'newpwd':
 					if(isset($this->key)){
-						$data = parent::fetchData(array('context'=>'employee','type'=>'by_key'),array('key'=>$this->key,'ticket'=>$this->ticket_passwd));
+						$data = $this->getItems('by_key',array('keyuniqid_admin'=>$this->key,'ticket'=>$this->ticket_passwd),'one',false);
 						if($data){
 							$cryptpass = filter_rsa::randMicroUI();
 							parent::update(array('context'=>'employee','type'=>'newPassword'),array('newPassword'=>password_hash($cryptpass, PASSWORD_DEFAULT)/*filter_rsa::hashEncode('sha1',$cryptpass)*/,'email_admin'=>$data['email_admin']));
@@ -444,12 +436,10 @@ class backend_controller_login extends backend_db_employee{
 					}
 					break;
 			}
-        } else {
-            //$this->httpSession->start('lang');
-            //$this->tokenInitSession();
+        }
+        else {
             $this->getAuth(false);
             $this->template->display('login/index.tpl');
         }
     }
 }
-?>

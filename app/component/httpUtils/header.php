@@ -130,6 +130,7 @@ class component_httpUtils_header{
     public function mobileDetect(){
 		$detect = new Mobile_Detect;
 		$viewport = 'desktop';
+		$browser = '';
 		$device = '';
 		$touch = false;
 		$mOS = false;
@@ -152,11 +153,19 @@ class component_httpUtils_header{
 			}
 		}
 		if( $detect->isiOS() ){
-			$mOS = 'IOS';
+			$mOS = ' IOS';
 		}elseif( $detect->isAndroidOS() ){
-			$mOS = 'Android';
+			$mOS = ' Android';
 		}
-		$bodyClass = $viewport.' '.$mOS.' '.$device;
+
+		if($detect->is('IE')) $browser = ' IE';
+		if($detect->is('Edge')) $browser = ' Edge';
+		if($detect->is('Chrome')) $browser = ' Chrome';
+		if($detect->is('Safari')) $browser = ' Safari';
+		if($detect->is('UCBrowser')) $browser = ' UCBrowser';
+		if($detect->is('Opera')) $browser = ' Opera';
+
+		$bodyClass = $viewport.$browser.$mOS.$device;
 		$this->template->assign('bodyClass', $bodyClass);
 		$this->template->assign('viewport', $viewport);
 		$this->template->assign('touch', $touch);

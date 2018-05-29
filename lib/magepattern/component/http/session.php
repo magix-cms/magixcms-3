@@ -45,7 +45,17 @@
  *
  */
 class http_session extends sessionUtils{
-    /**
+	protected $ssl;
+
+	/**
+	 * http_session constructor.
+	 */
+	public function __construct($ssl)
+	{
+		$this->ssl = $ssl;
+	}
+
+	/**
      * @return bool
      */
     protected function _write(){
@@ -105,7 +115,7 @@ class http_session extends sessionUtils{
 						$cparams['lifetime'],
 						'/',
 						$cparams['domain'],
-						true,
+						($this->ssl ? true : false),
 						true
 					);
 
@@ -176,9 +186,9 @@ class http_session extends sessionUtils{
      * @param string $tokename
      * @return string
      */
-    public function token($tokename = 'token'){
+    public function token($tokename = 'token', $token = null){
         if (!isset($_SESSION[$tokename]) && empty($_SESSION[$tokename])){
-            return $_SESSION[$tokename] = filter_rsa::tokenID();
+            return $_SESSION[$tokename] = $token === null ? filter_rsa::tokenID() : $token;
         }
         else {
         	return $_SESSION[$tokename];

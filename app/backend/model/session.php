@@ -1,10 +1,12 @@
 <?php
 class backend_model_session{
-    private $employee,$httpSession;
+    private $employee,$httpSession,$setting,$settings;
     public function __construct()
     {
         $this->employee = new backend_db_employee();
-        $this->httpSession = new http_session();
+		$this->setting = new backend_model_setting();
+		$this->settings = $this->setting->getSetting();
+        $this->httpSession = new http_session($this->settings['ssl']);
     }
 
     /**
@@ -35,11 +37,12 @@ class backend_model_session{
                 'type'=>'newSession'
             ),
             array(
-                'id_admin_session'  =>  $data['id_admin_session'],
-                'id_admin'          =>  $data['id_admin'],
-                'ip_session'        =>  $this->httpSession->getIp(),
-                'browser_admin'     =>  $this->httpSession->getBrowser(),
-                'keyuniqid_admin'   =>  $data['keyuniqid_admin']
+                'id_admin_session'  => $data['id_admin_session'],
+                'id_admin'          => $data['id_admin'],
+				'expires' 			=> $data['expires'] ? $data['expires'] : null,
+                'ip_session'        => $this->httpSession->getIp(),
+                'browser_admin'     => $this->httpSession->getBrowser(),
+                'keyuniqid_admin'   => $data['keyuniqid_admin']
             )
         );
         return true;
@@ -75,7 +78,8 @@ class backend_model_session{
     public function compareSessionId(){
         return $this->employee->fetchData(
             array(
-                'type'=>'sid'
+            	'context' => 'one',
+                'type' => 'sid'
             )
         );
     }
