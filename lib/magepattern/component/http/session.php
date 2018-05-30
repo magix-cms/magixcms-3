@@ -80,7 +80,7 @@ class http_session extends sessionUtils{
 		session_name($sname);
 		session_id($nid);
 		session_start();
-		setcookie($sname,$nid,$lifetime,'/',$cparams['domain'],true,true);
+		setcookie($sname,$nid,$lifetime,'/',$cparams['domain'],($this->ssl ? true : false),true);
 
 		return $nid;
 	}
