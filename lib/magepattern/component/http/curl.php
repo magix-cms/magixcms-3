@@ -216,7 +216,8 @@ class http_curl{
                     //CURLOPT_FRESH_CONNECT =>1,
                     CURLOPT_CONNECTTIMEOUT => 300,
                     CURLOPT_CUSTOMREQUEST => $data['customRequest'],
-                    CURLOPT_POSTFIELDS => $generatedData
+                    CURLOPT_POSTFIELDS => $generatedData,
+                    CURLOPT_SSL_VERIFYPEER => false
                     //CURLOPT_SAFE_UPLOAD     => false*/
                 );
                 $ch = curl_init();
@@ -288,7 +289,8 @@ class http_curl{
                         CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: multipart/form-data"*/),
                         CURLOPT_CUSTOMREQUEST   => "POST",
                         CURLOPT_POST            => true,
-                        CURLOPT_POSTFIELDS      => $img
+                        CURLOPT_POSTFIELDS      => $img,
+                        CURLOPT_SSL_VERIFYPEER => false
                         //CURLOPT_SAFE_UPLOAD   => false
                     );
                     $ch = curl_init();
@@ -345,7 +347,8 @@ class http_curl{
                             CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
                             //CURLOPT_CUSTOMREQUEST   => "POST",
                             CURLOPT_POST            => true,
-                            CURLOPT_POSTFIELDS      => $img//,
+                            CURLOPT_POSTFIELDS      => $img,
+                            CURLOPT_SSL_VERIFYPEER => false
                             //CURLOPT_VERBOSE         => true,
                             //CURLOPT_SAFE_UPLOAD     => false
                         );
@@ -363,7 +366,8 @@ class http_curl{
                             CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
                             //CURLOPT_CUSTOMREQUEST   => "POST",
                             CURLOPT_POST            => true,
-                            CURLOPT_POSTFIELDS      => $img
+                            CURLOPT_POSTFIELDS      => $img,
+                            CURLOPT_SSL_VERIFYPEER => false
                         );
                     }
                     $ch = curl_init();
