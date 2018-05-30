@@ -1646,21 +1646,19 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                 if($id_page) {
                     //print_r($arrData);
-                    foreach ($arrData['language'] as $lang => $content) {
-                        //print_r($content);
-                        //$content['published'] = (!isset($content['published']) ? 0 : 1);
-                        if (is_array($content['url'])) {
-                            $content['url'] = http_url::clean($content['name'],
+                    if(!array_key_exists('0',$arrData['language'])) {
+
+                        $content = $arrData['language'];
+
+                        $data = array(
+                            'name_pages'        => !is_array($content['name']) ? $content['name'] : '',
+                            'url_pages'         => !is_array($content['url']) ? http_url::clean($content['name'],
                                 array(
                                     'dot' => false,
                                     'ampersand' => 'strict',
                                     'cspec' => '', 'rspec' => ''
                                 )
-                            );
-                        }
-                        $data = array(
-                            'name_pages'        => !is_array($content['name']) ? $content['name'] : '',
-                            'url_pages'         => !is_array($content['url']) ? $content['url'] : '',
+                            ) : '',
                             'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : '',
                             'content_pages'     => !is_array($content['content']) ? $content['content'] : '',
                             'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
@@ -1678,7 +1676,41 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                             $this->DBPages->insert(array('type' => 'content'), $data);
                         }
+
+                    }else{
+                        foreach ($arrData['language'] as $lang => $content) {
+                            //print_r($content);
+                            //$content['published'] = (!isset($content['published']) ? 0 : 1);
+
+                            $data = array(
+                                'name_pages'        => !is_array($content['name']) ? $content['name'] : '',
+                                'url_pages'         => !is_array($content['url']) ? http_url::clean($content['name'],
+                                    array(
+                                        'dot' => false,
+                                        'ampersand' => 'strict',
+                                        'cspec' => '', 'rspec' => ''
+                                    )
+                                ) : '',
+                                'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : '',
+                                'content_pages'     => !is_array($content['content']) ? $content['content'] : '',
+                                'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                'seo_desc_pages'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'published_pages'   => $content['published'],
+                                'id_pages'          => $id_page,
+                                'id_lang'           => $content['id_lang']
+                            );
+
+                            if ($this->DBPages->fetchData(array('context' => 'one', 'type' => 'content'), array('id_pages' => $id_page, 'id_lang' => $content['id_lang'])) != null) {
+
+                                $this->DBPages->update(array('type' => 'content'), $data);
+
+                            } else {
+
+                                $this->DBPages->insert(array('type' => 'content'), $data);
+                            }
+                        }
                     }
+
                     $this->header->set_json_headers();
                     $this->message->json_post_response(true, null, array('id'=>$id_page));
                 }
@@ -1801,6 +1833,48 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
                 }
                 break;
+            case 'catalog':
+                if(!array_key_exists('0',$arrData['language'])) {
+
+                    $content = $arrData['language'];
+
+                    if ($this->DBCatalog->fetchData(array('context' => 'one', 'type' => 'root'), array('id_lang' => $content['id_lang'])) != null) {
+                        $this->DBCatalog->update(array('type' => 'content'), array(
+                                'name' => !is_array($content['name']) ? $content['name'] : '',
+                                'content' => !is_array($content['content']) ? $content['content'] : '',
+                                'id_lang' => $content['id_lang']
+                            )
+                        );
+                    } else {
+                        $this->DBCatalog->insert(array('type' => 'newContent'), array(
+                                'name' => !is_array($content['name']) ? $content['name'] : '',
+                                'content' => !is_array($content['content']) ? $content['content'] : '',
+                                'id_lang' => $content['id_lang']
+                            )
+                        );
+                    }
+
+                }else{
+                    foreach ($arrData['language'] as $lang => $content) {
+                        if ($this->DBCatalog->fetchData(array('context' => 'one', 'type' => 'root'), array('id_lang' => $content['id_lang'])) != null) {
+                            $this->DBCatalog->update(array('type' => 'content'), array(
+                                    'name' => !is_array($content['name']) ? $content['name'] : '',
+                                    'content' => !is_array($content['content']) ? $content['content'] : '',
+                                    'id_lang' => $content['id_lang']
+                                )
+                            );
+                        } else {
+                            $this->DBCatalog->insert(array('type' => 'newContent'), array(
+                                    'name' => !is_array($content['name']) ? $content['name'] : '',
+                                    'content' => !is_array($content['content']) ? $content['content'] : '',
+                                    'id_lang' => $content['id_lang']
+                                )
+                            );
+                        }
+                    }
+                }
+
+                break;
             case 'category':
                 if (isset($this->id)) {
                     // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
@@ -1818,37 +1892,32 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     $newData = $this->DBCategory->fetchData(array('context'=>'one','type'=>'root'));
                     $id_cat = $newData['id_cat'];
                 }
-                if($id_cat) {
-                    //print_r($arrData);
-                    foreach ($arrData['language'] as $lang => $content) {
-                        //print_r($content);
-                        //$content['published'] = (!isset($content['published']) ? 0 : 1);
-                        /*if (is_array($content['url'])) {
-                            $content['url'] = http_url::clean($content['name'],
-                                array(
-                                    'dot' => false,
-                                    'ampersand' => 'strict',
-                                    'cspec' => '', 'rspec' => ''
-                                )
-                            );
-                        }*/
 
+                if($id_cat) {
+
+                    /*print '<pre>';
+                    print_r($arrData);
+                    print '</pre>';*/
+
+                    if(!array_key_exists('0',$arrData['language'])) {
+
+                        $content = $arrData['language'];
                         $data = array(
-                            'name_cat'        => !is_array($content['name']) ? $content['name'] : '',
-                            'url_cat'         => !is_array($content['url']) ? http_url::clean($content['name'],
+                            'name_cat' => !is_array($content['name']) ? $content['name'] : '',
+                            'url_cat' => !is_array($content['url']) ? http_url::clean($content['name'],
                                 array(
                                     'dot' => false,
                                     'ampersand' => 'strict',
                                     'cspec' => '', 'rspec' => ''
                                 )
                             ) : '',
-                            'resume_cat'      => !is_array($content['resume']) ? trim($content['resume']) : '',
-                            'content_cat'     => !is_array($content['content']) ? $content['content'] : '',
-                            'published_cat'   => $content['published'],
-                            'id_cat'          => $id_cat,
-                            'id_lang'         => $content['id_lang']
+                            'resume_cat'    => !is_array($content['resume']) ? trim($content['resume']) : '',
+                            'content_cat'   => !is_array($content['content']) ? $content['content'] : '',
+                            'published_cat' => $content['published'],
+                            'id_cat'        => $id_cat,
+                            'id_lang'       => $content['id_lang']
                         );
-
+                        //print_r($data);
                         if ($this->DBCategory->fetchData(array('context' => 'one', 'type' => 'content'), array('id_cat' => $id_cat, 'id_lang' => $content['id_lang'])) != null) {
 
                             $this->DBCategory->update(array('type' => 'content'), $data);
@@ -1857,20 +1926,60 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                             $this->DBCategory->insert(array('type' => 'content'), $data);
                         }
+                    }else{
+                        foreach ($arrData['language'] as $lang => $content) {
+                            //print_r($content);
+
+                            $data = array(
+                                'name_cat' => !is_array($content['name']) ? $content['name'] : '',
+                                'url_cat' => !is_array($content['url']) ? http_url::clean($content['name'],
+                                    array(
+                                        'dot' => false,
+                                        'ampersand' => 'strict',
+                                        'cspec' => '', 'rspec' => ''
+                                    )
+                                ) : '',
+                                'resume_cat' => !is_array($content['resume']) ? trim($content['resume']) : '',
+                                'content_cat' => !is_array($content['content']) ? $content['content'] : '',
+                                'published_cat' => $content['published'],
+                                'id_cat' => $id_cat,
+                                'id_lang' => $content['id_lang']
+                            );
+                            //print_r($data);
+                            if ($this->DBCategory->fetchData(array('context' => 'one', 'type' => 'content'), array('id_cat' => $id_cat, 'id_lang' => $content['id_lang'])) != null) {
+
+                                $this->DBCategory->update(array('type' => 'content'), $data);
+
+                            } else {
+
+                                $this->DBCategory->insert(array('type' => 'content'), $data);
+                            }
+                        }
                     }
                     $this->header->set_json_headers();
                     $this->message->json_post_response(true, null, array('id'=>$id_cat));
                 }
                 break;
             case 'product':
+
                 if(isset($arrData['category'])){
                     if (isset($this->id)) {
-                        foreach ($arrData['category'] as $category => $content) {
+                        $content = $arrData['category'];
+
+                        if(!array_key_exists('0',$arrData['language'])) {
                             $control = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'category'), array('id' => $this->id, 'id_cat' => $content['id']));
                             if(!$control['id_catalog']){
                                 $this->DBProduct->insert(array('type' => 'catRel'), array('id' => $this->id, 'id_cat' => $content['id'], 'default_c' => $content['default']));
                             }
+                        }else{
+                            foreach ($arrData['category'] as $category => $content) {
+                                $control = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'category'), array('id' => $this->id, 'id_cat' => $content['id']));
+                                if(!$control['id_catalog']){
+                                    $this->DBProduct->insert(array('type' => 'catRel'), array('id' => $this->id, 'id_cat' => $content['id'], 'default_c' => $content['default']));
+                                }
+                            }
                         }
+
                         $this->header->set_json_headers();
                         $this->message->json_post_response(true, null);
                     }
@@ -1893,9 +2002,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
 
                     if($id_product) {
-
-                        foreach ($arrData['language'] as $lang => $content) {
-
+                        if(!array_key_exists('0',$arrData['language'])) {
+                            $content = $arrData['language'];
                             $data = array(
                                 'name_p'        => !is_array($content['name']) ? $content['name'] : '',
                                 'url_p'         => !is_array($content['url']) ? http_url::clean($content['name'],
@@ -1919,7 +2027,36 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                                 $this->DBProduct->insert(array('type' => 'newContent'), $data);
                             }
+
+                        }else{
+                            foreach ($arrData['language'] as $lang => $content) {
+
+                                $data = array(
+                                    'name_p'        => !is_array($content['name']) ? $content['name'] : '',
+                                    'url_p'         => !is_array($content['url']) ? http_url::clean($content['name'],
+                                        array(
+                                            'dot' => false,
+                                            'ampersand' => 'strict',
+                                            'cspec' => '', 'rspec' => ''
+                                        )
+                                    ) : '',
+                                    'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : '',
+                                    'content_p'     => !is_array($content['content']) ? $content['content'] : '',
+                                    'published_p'   => $content['published'],
+                                    'id_product'    => $id_product,
+                                    'id_lang'       => $content['id_lang']
+                                );
+                                if ($this->DBProduct->fetchData(array('context' => 'one', 'type' => 'content'), array('id_product' => $id_product, 'id_lang' => $content['id_lang'])) != null) {
+
+                                    $this->DBProduct->update(array('type' => 'content'), $data);
+
+                                } else {
+
+                                    $this->DBProduct->insert(array('type' => 'newContent'), $data);
+                                }
+                            }
                         }
+
                         $this->header->set_json_headers();
                         $this->message->json_post_response(true, null, array('id'=>$id_product));
                     }
@@ -2330,7 +2467,20 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
                     break;
                 case 'catalog':
-                    if($this->ws->setMethod() === 'GET') {
+                    if($this->ws->setMethod() === 'POST') {
+                        if ($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations, $arrData);
+
+
+                        } elseif ($getContentType === 'json') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildSave($operations, $arrData);
+                        }
+                    }
+                    elseif($this->ws->setMethod() === 'GET') {
                         $this->xml->getXmlHeader();
                         $this->getBuildCatalogData();
                     }
