@@ -73,7 +73,7 @@ class http_session extends sessionUtils{
 	 */
 	public function regenerate($lifetime = 0){
 		$cparams = session_get_cookie_params();
-		session_regenerate_id(true);
+		session_regenerate_id();
 		$nid = session_id();
 		$sname = session_name();
 		$this->_write();
