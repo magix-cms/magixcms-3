@@ -41,6 +41,7 @@ var pages = (function ($, undefined) {
                     var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
                     if(!cus.length) {
                         $('#parent').bootstrapSelect('clear');
+                        $('#parent_id').val('');
                     } else {
                         var cu = $(cus[0]);
                         $('#parent').bootstrapSelect('select',cu);

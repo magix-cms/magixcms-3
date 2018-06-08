@@ -22,4 +22,5 @@ plugins/opinion/
 plugins/slideshow/
 plugins/account/
 plugins/hipay/
+plugins/mollie/
 /skin/wsw/*

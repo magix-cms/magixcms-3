@@ -65,6 +65,10 @@
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         libjs/vendor/jquery-ui-1.12.min.js,
+        libjs/vendor/tabcomplete.min.js,
+        libjs/vendor/livefilter.min.js,
+        libjs/vendor/src/bootstrap-select.js,
+        libjs/vendor/filterlist.min.js,
         {baseadmin}/template/js/table-form.min.js,
         {baseadmin}/template/js/category.min.js
     {/strip}{/capture}
@@ -77,6 +81,7 @@
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 category.run(controller);
+                category.runAdd(controller);
             }
         });
     </script>

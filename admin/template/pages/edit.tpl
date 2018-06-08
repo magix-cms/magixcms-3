@@ -90,6 +90,7 @@
             }else{
                 var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 pages.run(controller);
+                pages.runAdd(controller);
             }
         });
     </script>

@@ -32,8 +32,11 @@
                                     </div>
                                     <div id="filter-pages" class="list-to-filter">
                                         <ul class="list-unstyled">
+                                            {$incorrectParents=array($page.id_pages)}
                                             {foreach $pagesSelect as $items}
-                                                {if $items.id_pages != $page.id_pages}
+                                                {if in_array($items.id_parent,$incorrectParents)}
+                                                    {if !in_array($items.id_pages,$incorrectParents)}{$incorrectParents[] = $page.id_pages}{/if}
+                                                {elseif $items.id_pages != $page.id_pages}
                                                     <li class="filter-item items{if isset($page.id_parent) && $items.id_pages == $page.id_parent} selected{/if}" data-filter="{$items.name_pages}" data-value="{$items.id_pages}" data-id="{$items.id_pages}">
                                                         {$items.name_pages}&nbsp;<small>({$items.id_pages})</small>
                                                     </li>

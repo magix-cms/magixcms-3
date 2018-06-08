@@ -198,6 +198,7 @@ class backend_db_category
     /**
      * @param $config
      * @param bool $data
+     * @throws Exception
      */
     public function update($config,$data = false)
     {
@@ -205,7 +206,15 @@ class backend_db_category
             $sql = '';
             $params = $data;
 
-            if ($config['type'] === 'content') {
+            if ($config['type'] === 'page') {
+                $sql = 'UPDATE mc_catalog_cat 
+							SET 
+								id_parent = :id_parent
+							WHERE id_cat = :id_cat';
+
+                component_routing_db::layer()->update($sql,$data);
+            }
+            elseif ($config['type'] === 'content') {
                 $sql = 'UPDATE mc_catalog_cat_content SET name_cat = :name_cat, url_cat = :url_cat, resume_cat = :resume_cat, content_cat=:content_cat, published_cat=:published_cat
                 WHERE id_cat = :id_cat AND id_lang = :id_lang';
                 component_routing_db::layer()->update($sql,$data);

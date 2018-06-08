@@ -174,13 +174,16 @@ class backend_controller_category extends backend_db_category {
         }
         return $arr;
     }
+
     /**
      * Mise a jour des données
      * @param $data
+     * @throws Exception
      */
     private function upd($data)
     {
         switch ($data['type']) {
+            case 'page':
             case 'content':
                 parent::update(
                     array(
@@ -412,7 +415,17 @@ class backend_controller_category extends backend_db_category {
                     break;
                 case 'edit':
                     if (isset($this->id_cat)) {
+
+                        $this->upd(array(
+                            'type' => 'page',
+                            'data' => array(
+                                'id_cat' => $this->id_cat,
+                                'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+                            )
+                        ));
+
                         $this->save();
+
                     } else {
                         $this->modelLanguage->getLanguage();
                         $setEditData = parent::fetchData(
@@ -453,6 +466,10 @@ class backend_controller_category extends backend_db_category {
                             $display = $this->template->fetch('section/form/loop/rows-2.tpl');
                             $this->message->json_post_response(true, '', $display);
                         } else {
+
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+                            $this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
+
                             $this->template->display('catalog/category/edit.tpl');
                         }
                     }
