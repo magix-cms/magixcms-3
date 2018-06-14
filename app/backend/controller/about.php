@@ -339,6 +339,26 @@ class backend_controller_about extends backend_db_about{
     }
 
 	/**
+	 * Update data
+	 * @param $data
+	 */
+	private function del($data)
+	{
+		switch ($data['type']) {
+			case 'page':
+				parent::delete(
+					array(
+						'context' => $data['context'],
+						'type' => $data['type']
+					),
+					$data['data']
+				);
+				$this->message->json_post_response(true,'delete',$data['data']);
+				break;
+		}
+    }
+
+	/**
 	 * @param $data
 	 * @return array
 	 */
@@ -693,6 +713,18 @@ class backend_controller_about extends backend_db_about{
 						$this->upd(
 							array(
 								'type' => 'order'
+							)
+						);
+					}
+					break;
+				case 'delete':
+					if(isset($this->id_pages)) {
+						$this->del(
+							array(
+								'type' => 'page',
+								'data' => array(
+									'id' => $this->id_pages
+								)
 							)
 						);
 					}

@@ -414,4 +414,33 @@ class backend_db_about
             if($sql && $params) component_routing_db::layer()->update($sql,$params);
         }
     }
+
+	/**
+	 * @param $config
+	 * @param array $params
+	 * @return bool|string
+	 */
+	public function delete($config, $params = array())
+	{
+		if (!is_array($config)) return '$config must be an array';
+		$sql = '';
+
+		switch ($config['type']) {
+			case 'page':
+				$sql = 'DELETE FROM `mc_about_page` 
+						WHERE `id_pages` IN ('.$params['id'].')';
+				$params = array();
+				break;
+		}
+
+		if($sql === '') return 'Unknown request asked';
+
+		try {
+			component_routing_db::layer()->delete($sql,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
+		}
+	}
 }
