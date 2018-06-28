@@ -11,7 +11,7 @@
         <ul class="link-list list-unstyled">
             {foreach $pages as $child}
                 <li>
-                    <a href="{geturl}/{getlang}/about/{$child.uri}-{$child.id}/" title="{$child.title|ucfirst}">{$child.title|ucfirst}</a>
+                    <a href="{geturl}{$child.url}" title="{$child.title|ucfirst}">{$child.title|ucfirst}</a>
                 </li>
             {/foreach}
         </ul>
