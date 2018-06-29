@@ -365,58 +365,59 @@ class frontend_model_about extends frontend_db_about {
 					}
 					break;
 				case 'socials':
-					if($this->is_array_empty($value)) {
+					/*if($this->is_array_empty($value)) {
 						$this->company['socials'] = array();
 					}
-					else{
-						foreach ($value as $social_name => $link) {
-							//$this->company['socials'][$social_name] = $about[$social_name];
-							$link = null;
+					else{*/
+					foreach ($value as $social_name => $link) {
+						//$this->company['socials'][$social_name] = $about[$social_name];
+						$link = null;
 
-							if($about[$social_name] !== null) {
-								switch ($social_name) {
-									case 'facebook':
-										$link = (($this->touch) ? 'fb://facewebmodal/f?href=' : '') . 'https://www.facebook.com/'.$about[$social_name].'/';
-										//$link = 'https://www.facebook.com/'.$about[$social_name].'/';
-										break;
-									case 'twitter':
-										//$link = (($this->touch) ? 'twitter://user?screen_name=' : 'https://twitter.com/') . $about[$social_name];
-										$link = 'https://twitter.com/'. $about[$social_name];
-										break;
-									case 'google':
-										//$link = (($this->touch) ? 'gplus://' : 'https://') . 'plus.google.com/'.$about[$social_name].'/posts';
-										//$link = ($this->touch) ? 'gplus://plus.google.com/app/basic/'.$about[$social_name].'/posts' : 'https://plus.google.com/'.$about[$social_name].'/posts';
-										$link = 'https://plus.google.com/'.$about[$social_name].'/posts';
-										break;
-									case 'linkedin':
-										//$link = (($this->touch) ? 'linkedin://profile?id=' : 'https://www.linkedin.com/in/') . $about[$social_name];
-										$link = 'https://www.linkedin.com/in/'.$about[$social_name];
-										break;
-									case 'viadeo':
-										//$link = (($this->touch) ? 'viadeo://profile?id=' : 'http://www.viadeo.com/fr/profile/') . $about[$social_name];
-										$link = 'http://www.viadeo.com/fr/profile/'.$about[$social_name];
-										break;
-									case 'pinterest':
-										//$link = (($this->touch) ? 'pinterest://user/' : 'https://www.pinterest.fr/') . $about[$social_name];
-										$link = 'https://www.pinterest.fr/'.$about[$social_name];
-										break;
-									case 'instagram':
-										//$link = ($this->touch) ? 'instagram://user?username='.$about[$social_name] : 'https://www.instagram.com/'.$about[$social_name].'/';
-										$link = 'https://www.instagram.com/'.$about[$social_name].'/';
-										break;
-									case 'github':
-										$link = 'https://github.com/'.$about[$social_name];
-										break;
-									case 'soundcloud':
-										//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
-										$link = 'https://soundcloud.com/'.$about[$social_name];
-										break;
-								}
+						if($about[$social_name] !== null) {
+							switch ($social_name) {
+								case 'facebook':
+									$link = (($this->touch) ? 'fb://facewebmodal/f?href=' : '') . 'https://www.facebook.com/'.$about[$social_name].'/';
+									//$link = 'https://www.facebook.com/'.$about[$social_name].'/';
+									break;
+								case 'twitter':
+									//$link = (($this->touch) ? 'twitter://user?screen_name=' : 'https://twitter.com/') . $about[$social_name];
+									$link = 'https://twitter.com/'. $about[$social_name];
+									break;
+								case 'google':
+									//$link = (($this->touch) ? 'gplus://' : 'https://') . 'plus.google.com/'.$about[$social_name].'/posts';
+									//$link = ($this->touch) ? 'gplus://plus.google.com/app/basic/'.$about[$social_name].'/posts' : 'https://plus.google.com/'.$about[$social_name].'/posts';
+									$link = 'https://plus.google.com/'.$about[$social_name].'/posts';
+									break;
+								case 'linkedin':
+									//$link = (($this->touch) ? 'linkedin://profile?id=' : 'https://www.linkedin.com/in/') . $about[$social_name];
+									$link = 'https://www.linkedin.com/in/'.$about[$social_name];
+									break;
+								case 'viadeo':
+									//$link = (($this->touch) ? 'viadeo://profile?id=' : 'http://www.viadeo.com/fr/profile/') . $about[$social_name];
+									$link = 'http://www.viadeo.com/fr/profile/'.$about[$social_name];
+									break;
+								case 'pinterest':
+									//$link = (($this->touch) ? 'pinterest://user/' : 'https://www.pinterest.fr/') . $about[$social_name];
+									$link = 'https://www.pinterest.fr/'.$about[$social_name];
+									break;
+								case 'instagram':
+									//$link = ($this->touch) ? 'instagram://user?username='.$about[$social_name] : 'https://www.instagram.com/'.$about[$social_name].'/';
+									$link = 'https://www.instagram.com/'.$about[$social_name].'/';
+									break;
+								case 'github':
+									$link = 'https://github.com/'.$about[$social_name];
+									break;
+								case 'soundcloud':
+									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
+									$link = 'https://soundcloud.com/'.$about[$social_name];
+									break;
 							}
-
-							$this->company['socials'][$social_name] = $link;
 						}
+
+						$this->company['socials'][$social_name] = $link;
 					}
+					$this->company['socials'] = $this->is_array_empty($this->company['socials']) ? array() : $this->company['socials'];
+					/*}*/
 					break;
 				case 'specifications':
 					foreach ($value as $day => $op_info) {
