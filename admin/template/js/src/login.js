@@ -65,19 +65,19 @@ $(document).ready(function() {
                 resetForm:true,
                 beforeSend:function(){},
                 success:function(d){
-                    if(d.statut) {
+                    if(d.status) {
                         $(f).find('.form-group').hide();
                         $(f).find('[type="submit"]').hide();
                         var content = $(f).find('.mc-message').html();
                         $(f).find('.mc-message').toggleClass('alert-info').toggleClass('alert-success').find('h4').text('Demande de mot de passe envoyée !');
-                        $(f).find('.mc-message').find('p').text("Un mail vous a été envoyé à votre adresse pour réinitialisé votre mot de passe. Si vous n'avez rien reçu, pensez à regarder dans le dossier des spams");
+                        $(f).find('.mc-message').find('p').text(d.result);
 
                         setTimeout(function(){
                             $(f).find('.form-group').show();
                             $(f).find('[type="submit"]').show();
                             $(f).find('.mc-message').empty();
                             $(f).find('.mc-message').toggleClass('alert-info').toggleClass('alert-success').prepend(content);
-                        },6000);
+                        },10000);
                     }
                 }
             });

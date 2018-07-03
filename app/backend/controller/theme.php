@@ -380,15 +380,50 @@ class backend_controller_theme extends backend_db_theme{
 							)
 						));
 
-						foreach ($this->link['content'] as $k => $link) {
-							$link['id'] = $this->edit;
-							$link['id_lang'] = $k;
-							$link['name_link'] = $link['name_link'] === '' ? NULL : $link['name_link'];
-							$link['title_link'] = $link['title_link'] === '' ? NULL : $link['title_link'];
-							$this->upd(array(
-								'type' => 'link_content',
-								'data' => $link
-							));
+						foreach ($this->link['content'] as $k => $l) {
+							$link = array();
+							$cl = $this->getItems('link_content',array('id' => $this->edit, 'lang' => $k),'one',false);
+
+							if($cl) {
+								$link['id'] = $this->edit;
+								$link['id_lang'] = $k;
+								$link['name_link'] = $l['name_link'] === '' ? NULL : $l['name_link'];
+								$link['title_link'] = $l['title_link'] === '' ? NULL : $l['title_link'];
+
+								$this->upd(array(
+									'type' => 'link_content',
+									'data' => $link
+								));
+							}
+							else {
+								$link['id'] = $this->edit;
+								$link['id_lang'] = $k;
+
+								$lang = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'lang'),array('id' => $k));
+								$cl = $this->getItems('link',array('id' => $this->edit),'one',false);
+
+								if(in_array($cl['type_link'],$this->roots)) {
+									$this->template->configLoad();
+									if($cl['type_link'] === 'plugin') {
+										$plugin = $this->getItems($cl['type_link'],$this->id,'one',false);
+									}
+
+									$url = '/'.$lang['iso_lang'].'/'.(isset($plugin) ? $plugin['name'].'/' : ($cl['type_link'] !== 'home' ? $cl['type_link'].'/' : ''));
+									$name = isset($plugin) ? $plugin['name'] : $this->template->getConfigVars($cl['type_link']);
+								}
+								else {
+									$page = $this->getItems($cl['type_link'],array('id' => $cl['id_page'],'id_lang' => $k),'one',false);
+									$name = $page['name'] ? $page['name'] : null;
+								}
+
+								$link['url_link'] = $url ? $url : null;
+								$link['name_link'] = $l['name_link'] === '' ? $name : $l['name_link'];
+
+								$this->add(array(
+									'type' => 'link_content',
+									'data' => $link
+								));
+							}
 						}
 						$this->message->json_post_response(true,'update',$this->edit);
 					}

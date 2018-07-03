@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{if $smarty.get.vactivate}{$smarty.config.activate_profil}{else}{$smarty.config.subject_profil}{/if}</title>
-    <style>
+    {*<style>
         .header {
             background: {$getDataCSSIColor[0].color_cssi};
         }
@@ -53,36 +53,109 @@
         .footer .container td{
             padding: 15px;
         }
+    </style>*}
+    <style>
+        .header { background: {$getDataCSSIColor[0].color_cssi}; }
+        .header .container { background: {$getDataCSSIColor[0].color_cssi}; }
+        .header p { color: {$getDataCSSIColor[1].color_cssi}; }
+        .footer{ background: {$getDataCSSIColor[2].color_cssi}; }
+        .footer .container { background: {$getDataCSSIColor[2].color_cssi}; }
+        .footer p{ color: {$getDataCSSIColor[3].color_cssi}; }
+        .footer ul li{ color: {$getDataCSSIColor[3].color_cssi}; }
     </style>
 </head>
 <body>
-<!-- <style> -->
-<table class="body" data-made-with-foundation>
-    <tr>
-        <td class="float-center" align="center" valign="top">
-            <center data-parsed>
-                <table align="center" class="container header float-center">
-                    <tr>
-                        <td class="wrapper-inner">
-                            <table align="center" class="container">
-                                <tbody>
-                                <tr>
-                                    <td valign="middle">
-                                        <!-- Gmail/Hotmail image display fix -->
-                                        <a href="{geturl}" target ="_blank" title="Magix CMS" style="text-decoration: none;font-size: 46px;">
-                                            <img src="{geturl}/admin/template/img/logo/logo-magix_cms@229.png" alt="Magix CMS" width="229" height="50"/>
-                                        </a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                {block name='body:content'}{/block}
-            </center>
-        </td>
-    </tr>
-</table>
+    <span class="preheader"></span>
+    <table class="body">
+        <tr>
+            <td {*class="center"*} {*align="center"*} valign="top">
+                <center data-parsed="">
+                    <table {*align="center"*} {*class="float-center"*}>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <table class="row">
+                                    <tbody>
+                                    <tr>
+                                        <th class="small-12 large-12 columns first last">
+                                            <table>
+                                                <tr>
+                                                    <th>
+                                                        <table class="spacer">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <p class="text-right" style="text-align: right;">
+                                                            <a href="{geturl}" target ="_blank" title="Magix CMS" style="text-decoration: none;font-size: 46px;">
+                                                                <img src="{geturl}/admin/template/img/logo/logo-magix_cms@229.png" alt="Magix CMS" width="229" height="50"/>
+                                                            </a>
+                                                        </p>
+                                                        <table class="spacer">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </th>
+                                                    <th class="expander"></th>
+                                                </tr>
+                                            </table>
+                                        </th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="container">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <table class="row">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <table class="row">
+                                                            <tbody>
+                                                            <tr>
+                                                                <th class="vignette small-12 large-12 columns first last">
+                                                                    <table>
+                                                                        <tr>
+                                                                            <th>
+                                                                                {block name='body:content'}{/block}
+                                                                            </th>
+                                                                            <th class="expander"></th>
+                                                                        </tr>
+                                                                    </table>
+                                                                </th>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="spacer">
+                                    <tbody>
+                                    <tr>
+                                        <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </center>
+            </td>
+        </tr>
+    </table>
+    <!-- prevent Gmail on iOS font size manipulation -->
+    <div style="display:none; white-space:nowrap; font:15px courier; line-height:0;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
 </body>
 </html>

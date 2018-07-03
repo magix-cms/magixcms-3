@@ -22,12 +22,12 @@
                     <div class="login-box front panel">{* {$smarty.server.PHP_SELF} *}
                         <form id="login_form" method="post" action="{geturl}/admin/index.php?controller=login">
                             <div class="form-group">
-                                <label class="control-label" for="email_admin">Adresse e-mail</label>
+                                <label class="control-label" for="email_admin">{#email#}</label>
                                 <input type="text" class="form-control" placeholder=" {#placeholder_login#}" id="email_admin" name="employee[email_admin]" value="" />
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label" for="passwd_admin">Mot de passe</label>
+                                <label class="control-label" for="passwd_admin">{#passwd#}</label>
                                 <input type="password" class="form-control" placeholder=" {#placeholder_password#}" id="passwd_admin" name="employee[passwd_admin]" value="" />
                             </div>
 
@@ -40,18 +40,18 @@
                                 <div class="checkbox pull-left">
                                     <label for="stay_logged">
                                         <input type="checkbox" id="stay_logged" name="stay_logged" value="1" />
-                                        Rester connecté
+                                        {#stay_logged#}
                                     </label>
                                 </div>
-                                <a class="forgot-password pull-right" href="#"> Mot de passe oublié </a>
+                                <a class="forgot-password pull-right" href="#"> {#passwd_forgot#} </a>
                             </div>
                         </form>
                     </div>
                     <div class="pwd-box back panel">
                         <form id="forgot_password_form" method="post" action="#">
                             <div class="mc-message alert alert-info">
-                                <h4>Mot de passe oublié ?</h4>
-                                <p>Veuillez saisir l'adresse e-mail indiquée lors de votre inscription afin de recevoir vos codes d'accès par e-mail.</p>
+                                <h4>{#passwd_forgot#} ?</h4>
+                                <p>{#passwd_forgot_txt#}</p>
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="email_forgot"> E-mail </label>
@@ -60,18 +60,18 @@
                             <div class="panel-footer">
                                 <button class="btn btn-default login-form" href="#" type="button">
                                     <i class="icon-caret-left"></i>
-                                    Retour à la connexion
+                                    {#back_to_login#}
                                 </button>
                                 <button class="btn btn-default pull-right" type="submit" name="submitLogin">
                                     <i class="icon-ok text-success"></i>
-                                    Envoyer
+                                    {#send#}
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <p><i class="fa fa-copyright"></i> 2016 Magix CMS &mdash; Tous droits réservés</p>
+            <p><i class="fa fa-copyright"></i> 2016 Magix CMS &mdash; {#all_right_reserved#}</p>
         </div>
     </main>
 {/block}

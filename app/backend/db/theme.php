@@ -55,14 +55,15 @@ class backend_db_theme{
 
         if(is_array($config)) {
             if($config['context'] === 'all') {
-				if ($config['type'] === 'links') {
-					$sql = "SELECT 
-								m.id_link as id_link, 
-								m.id_page, 
-								m.type_link as type_link, 
-								m.mode_link as mode_link, 
-								mc.id_lang, 
-								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
+            	switch ($config['type']) {
+					case 'links':
+						/*$sql = "SELECT
+								m.id_link as id_link,
+								m.id_page,
+								m.type_link as type_link,
+								m.mode_link as mode_link,
+								mc.id_lang,
+								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link,
 								mc.title_link as title_link,
 								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
 								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
@@ -76,11 +77,30 @@ class backend_db_theme{
 							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
 							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
 							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
+							ORDER BY m.order_link ASC";*/
+						$sql = "SELECT 
+								m.id_link as id_link, 
+								m.id_page, 
+								m.type_link as type_link, 
+								m.mode_link as mode_link, 
+								COALESCE(pc.id_lang, apc.id_lang, cc.id_lang, mc.id_lang) as id_lang, 
+								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
+								mc.title_link as title_link,
+								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
+								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
+							FROM mc_menu as m
+							LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
+							LEFT JOIN mc_cms_page as p ON m.id_page = p.id_pages AND m.type_link = 'pages'
+							LEFT JOIN mc_cms_page_content as pc ON p.id_pages = pc.id_pages
+							LEFT JOIN mc_about_page as ap ON m.id_page = ap.id_pages AND m.type_link = 'about_page'
+							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages
+							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
+							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat
+							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 							ORDER BY m.order_link ASC";
-				}
-				elseif ($config['type'] === 'link') {
-					//Return current skin
-					$sql = "SELECT 
+						break;
+					case 'link':
+						$sql = "SELECT 
 								m.id_link as id_link, 
 								m.id_page, 
 								m.type_link as type_link, 
@@ -101,10 +121,10 @@ class backend_db_theme{
 							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
 							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 							WHERE m.id_link = :id";
-					$params = $data;
-				}
-				elseif ($config['type'] === 'pages') {
-					$sql = 'SELECT * FROM (
+						$params = $data;
+						break;
+					case 'pages':
+						$sql = 'SELECT * FROM (
 							SELECT p.id_pages AS id, p.id_parent AS parent, pc.name_pages AS name
 							FROM mc_cms_page AS p
 							LEFT JOIN mc_cms_page_content AS pc
@@ -115,10 +135,9 @@ class backend_db_theme{
 							ORDER BY p.id_pages ASC , l.default_lang DESC
 							) as pt
 							GROUP BY pt.id';
-					// $params = $data;
-				}
-				elseif ($config['type'] === 'about_page') {
-					$sql = 'SELECT * FROM (
+						break;
+					case 'about_page':
+						$sql = 'SELECT * FROM (
 							SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
 							FROM mc_about_page as p
 							LEFT JOIN mc_about_page_content as pc
@@ -129,10 +148,9 @@ class backend_db_theme{
 							ORDER BY p.id_pages ASC , l.default_lang DESC
 							) as pt
 							GROUP BY pt.id';
-					// $params = $data;
-				}
-				elseif ($config['type'] === 'category') {
-					$sql = 'SELECT * FROM (
+						break;
+					case 'category':
+						$sql = 'SELECT * FROM (
 							SELECT p.id_cat as id, p.id_parent as parent, pc.name_cat as name
 							FROM mc_catalog_cat as p
 							LEFT JOIN mc_catalog_cat_content as pc
@@ -142,60 +160,66 @@ class backend_db_theme{
 							ORDER BY p.id_cat ASC , l.default_lang DESC
 							) as pt
 							GROUP BY pt.id';
-					// $params = $data;
-				}
-				elseif ($config['type'] === 'plugin') {
-					$sql = 'SELECT id_plugins as id, name FROM mc_plugins';
-					// $params = $data;
+						break;
+					case 'plugin':
+						$sql = 'SELECT id_plugins as id, name FROM mc_plugins';
+						break;
 				}
 
 				return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }
             elseif($config['context'] === 'one') {
-                if ($config['type'] === 'skin') {
-                    //Return current skin
-                    $sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
-                }
-                elseif ($config['type'] === 'newLink') {
-					//Return current skin
-					$sql = 'SELECT id_link FROM mc_menu ORDER BY id_link DESC LIMIT 0,1';
-				}
-				elseif ($config['type'] === 'pages') {
-					$sql = 'SELECT p.id_pages as id, pc.name_pages as name, pc.url_pages as url
+            	switch ($config['type']) {
+					case 'skin':
+						$sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
+						break;
+					case 'newLink':
+						$sql = 'SELECT id_link FROM mc_menu ORDER BY id_link DESC LIMIT 0,1';
+						break;
+					case 'link':
+						$sql = 'SELECT * FROM mc_menu as m WHERE id_link = :id';
+						$params = $data;
+						break;
+					case 'link_content':
+						$sql = 'SELECT * FROM mc_menu as m LEFT JOIN mc_menu_content as mc USING(id_link) WHERE id_link = :id AND id_lang = :lang';
+						$params = $data;
+						break;
+					case 'pages':
+						$sql = 'SELECT p.id_pages as id, pc.name_pages as name, pc.url_pages as url
 							FROM mc_cms_page as p
 							LEFT JOIN mc_cms_page_content as pc
 							USING(id_pages)
 							WHERE id_lang = :id_lang
 							AND id_pages = :id
 							AND pc.published_pages = 1';
-					$params = $data;
-				}
-				elseif ($config['type'] === 'about_page') {
-					$sql = 'SELECT p.id_pages as id, pc.name_pages as name, pc.url_pages as url
+						$params = $data;
+						break;
+					case 'about_page':
+						$sql = 'SELECT p.id_pages as id, pc.name_pages as name, pc.url_pages as url
 							FROM mc_about_page as p
 							LEFT JOIN mc_about_page_content as pc
 							USING(id_pages)
 							WHERE id_lang = :id_lang
 							AND id_pages = :id
 							AND pc.published_pages = 1';
-					$params = $data;
-				}
-				elseif ($config['type'] === 'category') {
-					$sql = 'SELECT p.id_cat as id, pc.name_cat as name, pc.url_cat as url
+						$params = $data;
+						break;
+					case 'category':
+						$sql = 'SELECT p.id_cat as id, pc.name_cat as name, pc.url_cat as url
 							FROM mc_catalog_cat as p
 							LEFT JOIN mc_catalog_cat_content as pc
 							USING(id_cat)
 							WHERE id_lang = :id_lang
 							AND id_cat = :id
 							AND pc.published_cat = 1';
-					$params = $data;
-				}
-				elseif ($config['type'] === 'plugin') {
-					$sql = 'SELECT id_plugins as id, name FROM mc_plugins WHERE id_plugins = :id';
-					$params = $data;
-				}
-				elseif ($config['type'] === 'shareConfig') {
-					$sql = 'SELECT 
+						$params = $data;
+						break;
+					case 'plugin':
+						$sql = 'SELECT id_plugins as id, name FROM mc_plugins WHERE id_plugins = :id';
+						$params = $data;
+						break;
+					case 'shareConfig':
+						$sql = 'SELECT 
 								facebook,
 								twitter,
 								viadeo,
@@ -205,6 +229,7 @@ class backend_db_theme{
 								twitter_id
 							FROM mc_share_config 
 							LIMIT 0,1';
+						break;
 				}
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;

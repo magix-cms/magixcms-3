@@ -239,6 +239,14 @@ class backend_controller_category extends backend_db_category {
     }
     private function save(){
         if (isset($this->content) && isset($this->id_cat)) {
+			$this->upd(array(
+				'type' => 'page',
+				'data' => array(
+					'id_cat' => $this->id_cat,
+					'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+				)
+			));
+
             foreach ($this->content as $lang => $content) {
             	$content['id_lang'] = $lang;
             	$content['id_cat'] = $this->id_cat;
@@ -415,18 +423,9 @@ class backend_controller_category extends backend_db_category {
                     break;
                 case 'edit':
                     if (isset($this->id_cat)) {
-
-                        $this->upd(array(
-                            'type' => 'page',
-                            'data' => array(
-                                'id_cat' => $this->id_cat,
-                                'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
-                            )
-                        ));
-
                         $this->save();
-
-                    } else {
+                    }
+                    else {
                         $this->modelLanguage->getLanguage();
                         $setEditData = parent::fetchData(
                             array('context' => 'all', 'type' => 'page'),
