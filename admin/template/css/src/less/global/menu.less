@@ -281,9 +281,13 @@
 								display: block;
 								background-color: #282d33;
 								top: 0;
-								left: @siderbarWidth;
+								left: @siderbarWidth-sm;
 								width: 200px;
 								margin: 0;
+
+								@media (min-width: @screen-md-min) {
+									left: @siderbarWidth;
+								}
 							}
 						}
 					}

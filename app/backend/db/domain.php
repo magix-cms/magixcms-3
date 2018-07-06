@@ -13,6 +13,7 @@ class backend_db_domain
                     $cond = '';
                     if (isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
                         $nbc = 0;
+                        $params = array();
                         foreach ($config['search'] as $key => $q) {
                             if ($q != '') {
                                 if ($nbc > 0) {
@@ -20,12 +21,13 @@ class backend_db_domain
                                 } else {
                                     $cond = 'WHERE ';
                                 }
+								$params[$key] = $q;
                                 switch ($key) {
                                     case 'id_domain':
-                                        $cond .= 'd.' . $key . ' = ' . $q . ' ';
+                                        $cond .= 'd.' . $key . ' = :' . $key . ' ';
                                         break;
                                     case 'url_domain':
-                                        $cond .= "d." . $key . " LIKE '%" . $q . "%' ";
+                                        $cond .= "d." . $key . " LIKE '%:" . $key . "%' ";
                                         break;
                                 }
                                 $nbc++;

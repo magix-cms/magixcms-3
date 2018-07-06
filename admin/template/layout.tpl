@@ -29,9 +29,7 @@
 {block name="main"}
     <main id="{block name='main:id'}page{/block}">
         {block name='article'}
-            {function cleantextarea}
-                {$field|escape:'html':'UTF-8':TRUE}
-            {/function}
+            {function cleantextarea}{$field|escape:'html':'UTF-8':TRUE}{/function}
             {widget_plugins}
             <div id="content" class="container-fluid pull-right">
                 <header>

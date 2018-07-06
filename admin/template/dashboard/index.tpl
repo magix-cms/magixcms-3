@@ -7,7 +7,7 @@
 {/block}
 {block name='article:content'}
     <div class="row">
-        <section id="quick-access" class="col-ph-12 col-lg-6">
+        <section id="quick-access" class="col-ph-12 col-lg-8 col-xl-6">
             <header>
                 <h2 class="h5">Accès rapide</h2>
             </header>
@@ -35,21 +35,24 @@
                     <span class="fa fa-newspaper-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=news">{#last_news#|ucfirst}</a>
                 </h2>
             </header>
-
-            {if is_array($lastNews) && !empty($lastNews)}
-            {foreach $lastNews as $item}
-                <div>
-                    <div class="row folder-box">
-                        <div class="col-ph-8">
-                            <p><a href="{geturl}/{baseadmin}/index.php?controller=news&action=edit&edit={$item.id_news}">{$item.name_news}</a></p>
-                        </div>
-                        <div class="col-ph-4">
-                            <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
-                        </div>
-                    </div>
-                </div>
-            {/foreach}
-            {/if}
+            <div>
+                <table class="folder-box">
+                    <tbody>
+                    {if is_array($lastNews) && !empty($lastNews)}
+                        {foreach $lastNews as $item}
+                            <tr>
+                                <td>
+                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=news&action=edit&edit={$item.id_news}">{$item.name_news}</a></p>
+                                </td>
+                                <td>
+                                    <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
+                                </td>
+                            </tr>
+                        {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
         </section>
         {/if}
         {if {employee_access type="view" class_name="backend_controller_pages"} eq 1}
@@ -59,21 +62,24 @@
                     <span class="fa fa-file-text-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=pages">{#last_pages#|ucfirst}</a>
                 </h2>
             </header>
-
-            {if is_array($lastPages) && !empty($lastPages)}
-            {foreach $lastPages as $item}
             <div>
-                <div class="row folder-box">
-                    <div class="col-ph-8">
-                        <p><a href="{geturl}/{baseadmin}/index.php?controller=pages&action=edit&edit={$item.id_pages}">{$item.name_pages}</a></p>
-                    </div>
-                    <div class="col-ph-4">
-                        <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
-                    </div>
-                </div>
+                <table class="folder-box">
+                    <tbody>
+                    {if is_array($lastPages) && !empty($lastPages)}
+                        {foreach $lastPages as $item}
+                            <tr>
+                                <td>
+                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=pages&action=edit&edit={$item.id_pages}">{$item.name_pages}</a></p>
+                                </td>
+                                <td>
+                                    <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
+                                </td>
+                            </tr>
+                        {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
             </div>
-            {/foreach}
-            {/if}
         </section>
         {/if}
         {if {employee_access type="view" class_name="backend_controller_category"} eq 1}
@@ -83,21 +89,24 @@
                     <span class="fa fa-folder-open-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=category">{#last_categories#|ucfirst}</a>
                 </h2>
             </header>
-
-            {if is_array($lastCats) && !empty($lastCats)}
-            {foreach $lastCats as $item}
             <div>
-                <div class="row folder-box">
-                    <div class="col-ph-8">
-                        <p><a href="{geturl}/{baseadmin}/index.php?controller=category&action=edit&edit={$item.id_cat}">{$item.name_cat}</a></p>
-                    </div>
-                    <div class="col-ph-4">
-                        <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
-                    </div>
-                </div>
+                <table class="folder-box">
+                    <tbody>
+                    {if is_array($lastCats) && !empty($lastCats)}
+                        {foreach $lastCats as $item}
+                            <tr>
+                                <td>
+                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=category&action=edit&edit={$item.id_cat}">{$item.name_cat}</a></p>
+                                </td>
+                                <td>
+                                    <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
+                                </td>
+                            </tr>
+                        {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
             </div>
-            {/foreach}
-            {/if}
         </section>
         {/if}
         {if {employee_access type="view" class_name="backend_controller_product"} eq 1}
@@ -107,21 +116,24 @@
                     <span class="fa fa-tag"></span> <a href="{geturl}/{baseadmin}/index.php?controller=product">{#last_products#|ucfirst}</a>
                 </h2>
             </header>
-
-            {if is_array($lastProducts) && !empty($lastProducts)}
-            {foreach $lastProducts as $item}
             <div>
-                <div class="row folder-box">
-                    <div class="col-ph-8">
-                        <p><a href="{geturl}/{baseadmin}/index.php?controller=product&action=edit&edit={$item.id_product}">{$item.name_p}</a></p>
-                    </div>
-                    <div class="col-ph-4">
-                        <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
-                    </div>
-                </div>
+                <table class="folder-box">
+                    <tbody>
+                    {if is_array($lastProducts) && !empty($lastProducts)}
+                        {foreach $lastProducts as $item}
+                            <tr>
+                                <td>
+                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=product&action=edit&edit={$item.id_product}">{$item.name_p}</a></p>
+                                </td>
+                                <td>
+                                    <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
+                                </td>
+                            </tr>
+                        {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
             </div>
-            {/foreach}
-            {/if}
         </section>
         {/if}
         {*{if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
@@ -180,7 +192,7 @@
         </section>*}
     </div>
 {/block}
-{block name="foot" append}
+{*block name="foot" append}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         {baseadmin}/template/js/dashboard.min.js
@@ -196,4 +208,4 @@
             }
         });
     </script>
-{/block}
+{/block*}

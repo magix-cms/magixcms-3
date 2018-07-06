@@ -16,9 +16,25 @@
                     <h2 class="h5">{$item.title}</h2>
                 </header>
                 <div>
+                    <table class="folder-box">
+                        <tbody>
+                            <tr>
+                                <td>
+                                {if $item.translate eq '1'}
+                                    <p><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=translate"><span class="fa fa-language"></span> {#translate#}</a></p>
+                                {/if}
+                                </td>
+                                <td>
+                                    <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {*<div>
                     <div class="row folder-box">
                         <div class="col-xs-6">
-                            {*<p><span class="fa fa-check"></span> Installé</p>*}
+                            *}{*<p><span class="fa fa-check"></span> Installé</p>*}{*
                             {if $item.translate eq '1'}
                             <p><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=translate"><span class="fa fa-language"></span> {#translate#}</a></p>
                             {/if}
@@ -27,7 +43,7 @@
                             <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a></p>
                         </div>
                     </div>
-                </div>
+                </div>*}
             </section>
             {/if}
         {/foreach}
@@ -41,15 +57,29 @@
                 <header>
                     <h2 class="h5">{$item.title}</h2>
                 </header>
-                <div>
+                {*<div>
                     <div class="row folder-box">
                         <div class="col-xs-6">
-                            {*<p><span class="fa fa-check"></span> Installé</p>*}
+                            *}{*<p><span class="fa fa-check"></span> Installé</p>*}{*
                         </div>
                         <div class="col-xs-6">
                             <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=setup">Installation</a></p>
                         </div>
                     </div>
+                </div>*}
+                <div>
+                    <table class="folder-box">
+                        <tbody>
+                        <tr>
+                            <td>
+                                {*<p><span class="fa fa-check"></span> Installé</p>*}
+                            </td>
+                            <td>
+                                <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=setup">Installation</a></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         {/foreach}

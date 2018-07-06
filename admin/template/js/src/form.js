@@ -314,30 +314,44 @@ var globalForm = (function ($, undefined) {
                 };
                 initAlert(d.notify,4000);
                 if(d.status && d.result) {
-                    var ids = d.result.id.split(',');
-                    var nbr = 0;
-                    var table = $('#table-'+controller);
-                    var container;
+                    if(typeof d.result.id === 'string' || typeof d.result.id === 'number') {
+                        let ids = 0;
+                        if(typeof d.result.id === 'string') {
+                            ids = d.result.id.split(',');
+                        }
+                        else if(typeof d.result.id === 'number') {
+                            ids = [d.result.id];
+                        }
+                        let nbr = 0;
+                        let table = $('#table-'+controller);
+                        let container = null;
 
-                    for(var i = 0;i < ids.length; i++) {
-                        container = $('#'+controller+'_' + ids[i]).parent();
-                        $('#'+controller+'_' + ids[i]).next('.collapse').remove();
-                        $('#'+controller+'_' + ids[i]).remove();
-                        if(table.is("table")) {
-                            nbr = table.find('tbody').find('tr').length;
+                        for(var i = 0;i < ids.length; i++) {
+                            container = $('#'+controller+'_' + ids[i]).parent();
+                            $('#'+controller+'_' + ids[i]).next('.collapse').remove();
+                            $('#'+controller+'_' + ids[i]).remove();
+                            if(table.is("table")) {
+                                nbr = table.find('tbody').find('tr').length;
+                            }
+                            else if(table.is("ul") && !nbr) {
+                                nbr = table.children('li').length;
+                            }
+                        }
+
+                        container.trigger('change');
+
+                        if(table.is("table") && !nbr) {
+                            table.addClass('hide').next('.no-entry').removeClass('hide');
                         }
                         else if(table.is("ul") && !nbr) {
-                            nbr = table.children('li').length;
+                            table.next('.no-entry').removeClass('hide');
                         }
+                        $('.nbr-'+controller).text(nbr);
                     }
-                    container.trigger('change');
-                    if(table.is("table") && !nbr) {
-                        table.addClass('hide').next('.no-entry').removeClass('hide');
+                    else {
+                        console.log(d.result);
                     }
-                    else if(table.is("ul") && !nbr) {
-                        table.next('.no-entry').removeClass('hide');
-                    }
-                    $('.nbr-'+controller).text(nbr);
+
                     initModalActions();
                 }
             };

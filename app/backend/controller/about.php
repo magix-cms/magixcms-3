@@ -664,11 +664,13 @@ class backend_controller_about extends backend_db_about{
 											'desc'      => $content['company_desc'],
 											'slogan'    => $content['company_slogan'],
 											'content'   => $content['company_content'],
+											'seo_title' => $content['seo_title'],
+											'seo_desc'  => $content['seo_desc'],
 											'id_lang'   => $lang
 										)
 									);
 
-									if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang)) != null) {
+									if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang))) {
 										$this->upd($config);
 									}
 									else {

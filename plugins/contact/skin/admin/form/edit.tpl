@@ -3,8 +3,8 @@
     <div class="row">
         <div class="col-xs-12 col-md-6">
             <div class="form-group">
-                <label for="mail_contact">{#mail_contact#|ucfirst}&nbsp;</label>
-                <input type="text" name="mail_contact" id="mail_contact" class="form-control" placeholder="{#mail_contact#}" value="{$contact.mail_contact}" />
+                <label for="email_contact">{#email_contact#|ucfirst}&nbsp;</label>
+                <input type="text" name="email_contact" id="email_contact" class="form-control" placeholder="{#email_contact#}" value="{$contact.email_contact}" />
             </div>
         </div>
     </div>
@@ -18,12 +18,12 @@
                                 <div class="form-group">
                                     <label>{#active#|ucfirst}&nbsp;*</label>
                                     <div class="radio">
-                                        <label for="content[{$id}][published_contact]_1">
-                                            <input type="radio" name="content[{$id}][published_contact]" id="content[{$id}][published_contact]_1" value="1" {if $contact.content[{$id}].published_contact == 1} checked{/if}>
+                                        <label for="content[{$id}][active_contact]_1">
+                                            <input type="radio" name="content[{$id}][active_contact]" id="content[{$id}][active_contact]_1" value="1" {if $contact.content[{$id}].active_contact == 1} checked{/if}>
                                             {#bin_1#}
                                         </label>
-                                        <label for="content[{$id}][published_contact]_0">
-                                            <input type="radio" name="content[{$id}][published_contact]" id="content[{$id}][published_contact]_0" value="0" {if $contact.content[{$id}].published_contact == 0} checked{/if}>
+                                        <label for="content[{$id}][active_contact]_0">
+                                            <input type="radio" name="content[{$id}][active_contact]" id="content[{$id}][active_contact]_0" value="0" {if $contact.content[{$id}].active_contact == 0} checked{/if}>
                                             {#bin_0#}
                                         </label>
                                     </div>

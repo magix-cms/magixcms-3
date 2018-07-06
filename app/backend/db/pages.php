@@ -15,6 +15,7 @@ class backend_db_pages
         if (is_array($config)) {
             if ($config['context'] === 'all') {
                 if ($config['type'] === 'pages') {
+					$params = $data;
 					$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
 								FROM mc_cms_page AS p
 									JOIN mc_cms_page_content AS c USING ( id_pages )
@@ -28,26 +29,29 @@ class backend_db_pages
 						$config['search'] = array_filter($config['search']);
                     	if(is_array($config['search']) && !empty($config['search'])) {
 							$nbc = 0;
+							$params = array();
 							foreach ($config['search'] as $key => $q) {
 								if($q != '') {
 									$cond .= 'AND ';
+									$params[$key] = $q;
 									switch ($key) {
 										case 'id_pages':
 										case 'published_pages':
-											$cond .= 'c.'.$key.' = '.$q.' ';
+											$cond .= 'c.'.$key.' = :'.$key.' ';
 											break;
 										case 'name_pages':
-											$cond .= "c.".$key." LIKE '%".$q."%' ";
+											$cond .= "c.".$key." LIKE '%:".$key."%' ";
 											break;
 										case 'parent_pages':
-											$cond .= "ca.name_pages"." LIKE '%".$q."%' ";
+											$cond .= "ca.name_pages"." LIKE '%:".$key."%' ";
 											break;
 										case 'menu_pages':
-											$cond .= 'p.'.$key.' = '.$q.' ';
+											$cond .= 'p.'.$key.' = :'.$key.' ';
 											break;
 										case 'date_register':
 											$q = $dateFormat->date_to_db_format($q);
-											$cond .= "p.".$key." LIKE '%".$q."%' ";
+											$cond .= "p.".$key." LIKE '%:".$key."%' ";
+											$params[$key] = $q;
 											break;
 									}
 									$nbc++;
@@ -65,29 +69,30 @@ class backend_db_pages
 								ORDER BY p.order_pages";
 						}
                     }
-
-                    $params = $data;
                 }
                 elseif ($config['type'] === 'pagesChild') {
                     $cond = '';
+					$params = $data;
                     if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
                         $nbc = 0;
                         foreach ($config['search'] as $key => $q) {
                             if($q != '') {
                                 $cond .= 'AND ';
+                                $params[$key] = $q;
                                 switch ($key) {
                                     case 'id_pages':
-                                        $cond .= 'c.'.$key.' = '.$q.' ';
+                                        $cond .= 'c.'.$key.' = :'.$key.' ';
                                         break;
                                     case 'name_pages':
-                                        $cond .= "c.".$key." LIKE '%".$q."%' ";
+                                        $cond .= "c.".$key." LIKE '%:".$key."%' ";
                                         break;
                                     case 'menu_pages':
-                                        $cond .= 'p.'.$key.' = '.$q.' ';
+                                        $cond .= 'p.'.$key.' = :'.$key.' ';
                                         break;
                                     case 'date_register':
 										$q = $dateFormat->date_to_db_format($q);
-                                        $cond .= "p.".$key." LIKE '%".$q."%' ";
+                                        $cond .= "p.".$key." LIKE '%:".$key."%' ";
+										$params[$key] = $q;
                                         break;
                                 }
                                 $nbc++;
@@ -104,8 +109,6 @@ class backend_db_pages
                         WHERE p.id_parent = :id $cond
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";
-
-                    $params = $data;
                 }
                 elseif ($config['type'] === 'pagesSelect') {
                     //List pages for select

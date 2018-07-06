@@ -8,6 +8,7 @@ class backend_db_category
         if (is_array($config)) {
             if ($config['context'] === 'all') {
                 if ($config['type'] === 'pages') {
+					$params = $data;
                     $sql = "SELECT p.id_cat, c.name_cat, c.content_cat, p.menu_cat, p.date_register, p.img_cat
 								FROM mc_catalog_cat AS p
 									JOIN mc_catalog_cat_content AS c USING ( id_cat )
@@ -23,23 +24,25 @@ class backend_db_category
                             foreach ($config['search'] as $key => $q) {
                                 if($q != '') {
                                     $cond .= 'AND ';
+									$params[$key] = $q;
                                     switch ($key) {
                                         case 'id_cat':
                                         case 'published_cat':
-                                            $cond .= 'c.'.$key.' = '.$q.' ';
+                                            $cond .= 'c.'.$key.' = :'.$key.' ';
                                             break;
                                         case 'name_cat':
-                                            $cond .= "c.".$key." LIKE '%".$q."%' ";
+                                            $cond .= "c.".$key." LIKE '%:".$key."%' ";
                                             break;
                                         case 'parent_cat':
-                                            $cond .= "ca.name_cat"." LIKE '%".$q."%' ";
+                                            $cond .= "ca.name_cat"." LIKE '%:".$key."%' ";
                                             break;
                                         case 'date_register':
                                             $q = $dateFormat->date_to_db_format($q);
-                                            $cond .= "p.".$key." LIKE '%".$q."%' ";
+                                            $cond .= "p.".$key." LIKE '%:".$key."%' ";
+											$params[$key] = $q;
                                             break;
                                         case 'menu_cat':
-                                            $cond .= 'p.'.$key.' = '.$q.' ';
+                                            $cond .= 'p.'.$key.' = :'.$key.' ';
                                             break;
                                     }
                                     $nbc++;
@@ -57,35 +60,36 @@ class backend_db_category
 								ORDER BY p.order_cat";
                         }
                     }
-                    $params = $data;
                 }
                 elseif ($config['type'] === 'pagesChild') {
                     $cond = '';
+					$params = $data;
                     if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
                         $nbc = 0;
                         foreach ($config['search'] as $key => $q) {
                             if($q != '') {
                                 $cond .= 'AND ';
+								$params[$key] = $q;
                                 switch ($key) {
                                     case 'id_cat':
-                                        $cond .= 'c.'.$key.' = '.$q.' ';
+                                        $cond .= 'c.'.$key.' = :'.$key.' ';
                                         break;
                                     case 'name_cat':
-                                        $cond .= "c.".$key." LIKE '%".$q."%' ";
+                                        $cond .= "c.".$key." LIKE '%:".$key."%' ";
                                         break;
                                     case 'date_register':
                                         $q = $dateFormat->date_to_db_format($q);
-                                        $cond .= "p.".$key." LIKE '%".$q."%' ";
+                                        $cond .= "p.".$key." LIKE '%:".$key."%' ";
+                                        $params[$key] = $q;
                                         break;
                                     case 'menu_cat':
-                                        $cond .= 'p.'.$key.' = '.$q.' ';
+                                        $cond .= 'p.'.$key.' = :'.$key.' ';
                                         break;
                                 }
                                 $nbc++;
                             }
                         }
                     }
-
                     $sql = "SELECT p.id_cat, c.name_cat,p.menu_cat, p.date_register,p.img_cat
 							FROM mc_catalog_cat AS p
 								JOIN mc_catalog_cat_content AS c USING ( id_cat )
@@ -95,7 +99,6 @@ class backend_db_category
 								WHERE p.id_parent = :id $cond
 								GROUP BY p.id_cat 
 							ORDER BY p.order_cat";
-                    $params = $data;
                 }
                 elseif ($config['type'] === 'pagesSelect') {
                     //List pages for select

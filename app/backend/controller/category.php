@@ -456,6 +456,7 @@ class backend_controller_category extends backend_db_category {
 
                         if (isset($this->search)) {
                             $this->template->assign('ajax_form', true);
+                            $this->template->assign('edit', true);
                             $this->template->assign('data', $pageChild);
                             $this->template->assign('section', 'pages');
                             $this->template->assign('idcolumn', 'id_cat');

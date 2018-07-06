@@ -79,6 +79,12 @@ class component_collections_language{
                             WHERE d.url_domain = :url';
                     $params = $data;
                 }
+                elseif ($config['type'] === 'isoFromId') {
+                    $sql = 'SELECT * 
+                    		FROM mc_lang as lang
+		                    WHERE id_lang = :id';
+                    $params = $data;
+                }
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
             }
         }

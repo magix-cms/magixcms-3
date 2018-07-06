@@ -127,7 +127,7 @@ class backend_controller_employee extends backend_db_employee
             $data = $this->getItems('currentRole',array('id_admin' => $idadmin),'one',false);
         }
         else{
-        	$data = $this->getItems('role',null,'one',false);
+        	$data = $this->getItems('role',null,'all',false);
         }
         return $data;
     }
@@ -339,7 +339,8 @@ class backend_controller_employee extends backend_db_employee
                         }else{
 							$country = new component_collections_country();
 							$this->template->assign('countries',$country->getCountries());
-                        	$this->template->assign('roles',$this->role());
+                        	//$this->template->assign('roles',$this->role());
+							$this->getItems('roles');
                             $this->template->display('employee/add.tpl');
                         }
                         break;

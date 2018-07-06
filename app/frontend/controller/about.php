@@ -82,7 +82,7 @@ class frontend_controller_about extends frontend_db_about {
 
 		$newData = array();
 		foreach ($collection as $item) {
-			if($item['name_info'] === 'desc') {
+			if ($item['name_info'] === 'desc') {
 				$newData['name'] = $item['value_info'];
 			}
 			else {

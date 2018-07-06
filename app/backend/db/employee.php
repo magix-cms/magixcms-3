@@ -25,6 +25,7 @@ class backend_db_employee
 						$cond = '';
 						if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
 							$nbc = 0;
+							$params = array();
 							foreach ($config['search'] as $key => $q) {
 								if($q != '') {
 									if($nbc > 0) {
@@ -32,21 +33,22 @@ class backend_db_employee
 									} else {
 										$cond = 'WHERE ';
 									}
+									$params[$key] = $q;
 									switch ($key) {
 										case 'id_admin':
 										case 'active_admin':
-											$cond .= 'em.'.$key.' = '.$q.' ';
+											$cond .= 'em.'.$key.' = :'.$key.' ';
 											break;
 										case 'title_admin':
-											$cond .= "em.".$key." = '".$q."' ";
+											$cond .= "em.".$key." = :'".$key."' ";
 											break;
 										case 'firstname_admin':
 										case 'lastname_admin':
 										case 'email_admin':
-											$cond .= "em.".$key." LIKE '%".$q."%' ";
+											$cond .= "em.".$key." LIKE '%:".$key."%' ";
 											break;
 										case 'role':
-											$cond .= "pr.role_name LIKE '%".$q."%' ";
+											$cond .= "pr.role_name LIKE '%:".$key."%' ";
 											break;
 									}
 									$nbc++;
@@ -64,6 +66,9 @@ class backend_db_employee
 						break;
 					case 'LastJobs':
 						$sql = 'SELECT jobs.* FROM mc_admin_jobs AS jobs ORDER BY jobs.id_job DESC LIMIT 0,1';
+						break;
+					case 'roles':
+						$sql = 'SELECT * FROM mc_admin_role_user';
 						break;
 				}
 

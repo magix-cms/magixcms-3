@@ -13,6 +13,7 @@ class backend_db_language{
                     $cond = '';
                     if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
                         $nbc = 0;
+                        $params = array();
                         foreach ($config['search'] as $key => $q) {
                             if($q != '') {
                                 if($nbc > 0) {
@@ -20,15 +21,16 @@ class backend_db_language{
                                 } else {
                                     $cond = 'WHERE ';
                                 }
+                                $params[$key] = $q;
                                 switch ($key) {
                                     case 'id_lang':
                                     case 'default_lang':
                                     case 'active_lang':
-                                        $cond .= 'lang.'.$key.' = '.$q.' ';
+                                        $cond .= 'lang.'.$key.' = :'.$key.' ';
                                         break;
                                     case 'name_lang':
                                     case 'iso_lang':
-                                        $cond .= "lang.".$key." LIKE '%".$q."%' ";
+                                        $cond .= "lang.".$key." LIKE '%:".$key."%' ";
                                         break;
                                 }
                                 $nbc++;

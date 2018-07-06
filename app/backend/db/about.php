@@ -47,6 +47,7 @@ class backend_db_about
 									WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
 									GROUP BY p.id_pages 
 								ORDER BY p.order_pages";
+					$params = $data;
 					if(isset($config['search'])) {
 						$cond = '';
 						$config['search'] = array_filter($config['search']);
@@ -66,17 +67,20 @@ class backend_db_about
 											$cond .= 'c.' . $key . ' = ' . $q . ' ';
 											break;
 										case 'name_pages':
-											$cond .= "c." . $key . " LIKE '%" . $q . "%' ";
+											$cond .= "c." . $key . " LIKE '%:" . $key . "%' ";
+											$params[$key] = $q;
 											break;
 										case 'parent_pages':
-											$cond .= "ca.name_pages" . " LIKE '%" . $q . "%' ";
+											$cond .= "ca.name_pages" . " LIKE '%:" . $key . "%' ";
+											$params[$key] = $q;
 											break;
 										case 'menu_pages':
 											$cond .= 'p.' . $key . ' = ' . $q . ' ';
 											break;
 										case 'date_register':
 											$q = $dateFormat->date_to_db_format($q);
-											$cond .= "p." . $key . " LIKE '%" . $q . "%' ";
+											$cond .= "p." . $key . " LIKE '%:" . $key . "%' ";
+											$params[$key] = $q;
 											break;
 									}
 									$nbc++;
@@ -94,7 +98,6 @@ class backend_db_about
 								ORDER BY p.order_pages";
 						}
 					}
-					$params = $data;
 				}
 				elseif ($config['type'] === 'pagesSelect') {
 					$sql = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
@@ -110,24 +113,27 @@ class backend_db_about
 				}
 				elseif ($config['type'] === 'pagesChild') {
 					$cond = '';
+					$params = $data;
 					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
 						$nbc = 0;
 						foreach ($config['search'] as $key => $q) {
 							if($q != '') {
 								$cond .= 'AND ';
+								$params[$key] = $q;
 								switch ($key) {
 									case 'id_pages':
-										$cond .= 'c.'.$key.' = '.$q.' ';
+										$cond .= 'c.'.$key.' = :'.$key.' ';
 										break;
 									case 'name_pages':
-										$cond .= "c.".$key." LIKE '%".$q."%' ";
+										$cond .= "c.".$key." LIKE '%:".$key."%' ";
 										break;
 									case 'menu_pages':
-										$cond .= 'p.'.$key.' = '.$q.' ';
+										$cond .= 'p.'.$key.' = :'.$key.' ';
 										break;
 									case 'date_register':
 										$q = $dateFormat->date_to_db_format($q);
-										$cond .= "p.".$key." LIKE '%".$q."%' ";
+										$cond .= "p.".$key." LIKE '%:".$key."%' ";
+										$params[$key] = $q;
 										break;
 								}
 								$nbc++;
@@ -143,8 +149,6 @@ class backend_db_about
                         WHERE p.id_parent = :id $cond
                         GROUP BY p.id_pages 
                     ORDER BY p.order_pages";
-
-					$params = $data;
 				}
 
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;

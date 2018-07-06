@@ -13,6 +13,7 @@ class backend_db_files
                     $cond = '';
                     if (isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
                         $nbc = 0;
+                        $params = array();
                         foreach ($config['search'] as $key => $q) {
                             if ($q != '') {
                                 if ($nbc > 0) {
@@ -20,13 +21,14 @@ class backend_db_files
                                 } else {
                                     $cond = 'WHERE ';
                                 }
+								$params[$key] = $q;
                                 switch ($key) {
                                     case 'id_config_img':
-                                        $cond .= 'conf.' . $key . ' = ' . $q . ' ';
+                                        $cond .= 'conf.' . $key . ' = :' . $key . ' ';
                                         break;
                                     case 'module_img':
                                     case 'attribute_img':
-                                        $cond .= "conf." . $key . " LIKE '%" . $q . "%' ";
+                                        $cond .= "conf." . $key . " LIKE '%:" . $key . "%' ";
                                         break;
                                 }
                                 $nbc++;

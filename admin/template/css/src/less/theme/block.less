@@ -100,10 +100,18 @@ section#quick-access {
 	}
 }
 .folder-box {
-	padding: 10px 15px;
-	border-bottom: 1px solid #eee;
+	width: 100%;
+	max-width: 100%;
 
-	> div {
+	tbody > tr {
+		border-bottom: 1px solid #eee;
+
+		> td {
+			padding: 10px 15px;
+			border-bottom: none;
+		}
+	}
+	/*> div {
 		> p {
 			&:first-child {
 				.normalize-link(#555);
@@ -120,6 +128,10 @@ section#quick-access {
 				}
 			}
 		}
+	}*/
+
+	p {
+		margin: 0;
 	}
 
 	.text-ready,

@@ -57,7 +57,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
      */
     private function getBuildCategoryList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent IS NULL ';
+		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent IS NULL ORDER BY p.order_cat';
 		$collection = parent::fetchData(
 			array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
 			array(':iso' => $this->getlang)
@@ -77,7 +77,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 */
     private function getBuildSubCategoryList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent = :id_parent ';
+		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent = :id_parent ORDER BY p.order_cat';
 		$collection = parent::fetchData(
 			array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
 			array('iso' => $this->getlang,'id_parent' => $this->id)

@@ -274,6 +274,7 @@ var product = (function ($, undefined) {
                 if($(e.target).attr('href') === '#images') {
                     initDropZone();
                     initDefaultImg(edit);
+                    initSortable(edit);
                 }
             });
 
@@ -300,8 +301,6 @@ var product = (function ($, undefined) {
                     $(this).next().next().find('input[type="radio"]').prop('checked',false).prop('disabled',true);
                 }
             });
-
-            initSortable(edit);
         },
         runAdd: function(){
             if($('#product_id').val() != ''){

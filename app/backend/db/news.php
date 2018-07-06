@@ -31,6 +31,7 @@ class backend_db_news
                     $params = $data;
                 }
                 elseif ($config['type'] === 'news') {
+					$params = $data;
 					$sql = 'SELECT c.id_news,c.name_news,c.content_news,p.img_news,c.last_update,c.date_publish,c.published_news
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
@@ -45,18 +46,20 @@ class backend_db_news
 							foreach ($config['search'] as $key => $q) {
 								if($q != '') {
 									$cond .= 'AND ';
+									$params[$key] = $q;
 									switch ($key) {
 										case 'id_news':
 										case 'published_news':
-											$cond .= 'c.'.$key.' = '.$q.' ';
+											$cond .= 'c.'.$key.' = :'.$key.' ';
 											break;
 										case 'name_news':
-											$cond .= "c.".$key." LIKE '%".$q."%' ";
+											$cond .= "c.".$key." LIKE '%:".$key."%' ";
 											break;
 										case 'last_update':
 										case 'date_publish':
 											$q = $dateFormat->date_to_db_format($q);
-											$cond .= "c.".$key." LIKE '%".$q."%' ";
+											$cond .= "c.".$key." LIKE '%:".$key."%' ";
+											$params[$key] = $q;
 											break;
 									}
 									$nbc++;
@@ -70,8 +73,6 @@ class backend_db_news
 									WHERE c.id_lang = :default_lang $cond";
 						}
 					}
-
-					$params = $data;
                 }
                 elseif ($config['type'] === 'img') {
                     $sql = 'SELECT p.id_news, p.img_news

@@ -8,6 +8,7 @@ class backend_db_product{
         if (is_array($config)) {
             if ($config['context'] === 'all') {
                 if ($config['type'] === 'pages') {
+					$params = $data;
                     $sql = "SELECT p.id_product, c.name_p, p.reference_p, p.price_p, c.resume_p, c.content_p, p.date_register
 								FROM mc_catalog_product AS p
 									JOIN mc_catalog_product_content AS c USING ( id_product )
@@ -23,20 +24,22 @@ class backend_db_product{
                             foreach ($config['search'] as $key => $q) {
                                 if ($q != '') {
                                     $cond .= 'AND ';
+									$params[$key] = $q;
                                     switch ($key) {
                                         case 'id_product':
                                         case 'published_p':
-                                            $cond .= 'c.' . $key . ' = ' . $q . ' ';
+                                            $cond .= 'c.' . $key . ' = :' . $key . ' ';
                                             break;
                                         case 'name_p':
-                                            $cond .= "c." . $key . " LIKE '%" . $q . "%' ";
+                                            $cond .= "c." . $key . " LIKE '%:" . $key . "%' ";
                                             break;
                                         case 'reference_p':
-                                            $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
+                                            $cond .= "p." . $key . " LIKE '%:" . $key . "%' ";
                                             break;
                                         case 'date_register':
                                             $q = $dateFormat->date_to_db_format($q);
-                                            $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
+                                            $cond .= "p." . $key . " LIKE '%:" . $key . "%' ";
+											$params[$key] = $q;
                                             break;
                                     }
                                     $nbc++;
@@ -52,7 +55,6 @@ class backend_db_product{
 								ORDER BY p.id_product";
                         }
                     }
-                    $params = $data;
                 }
                 elseif ($config['type'] === 'page') {
                     $sql = 'SELECT p.*,c.*,lang.*
