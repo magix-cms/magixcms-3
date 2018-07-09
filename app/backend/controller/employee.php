@@ -362,7 +362,8 @@ class backend_controller_employee extends backend_db_employee
 							$this->template->assign('countries',$country->getCountries());
 							//$this->getItemsEmployee($this->edit);
 							$this->getItems('employee',$this->edit);
-							$this->template->assign('roles', $this->role());
+							//$this->template->assign('roles', $this->role());
+							$this->getItems('roles');
 							$this->template->display('employee/edit.tpl');
 						}
                         break;
