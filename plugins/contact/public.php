@@ -1,52 +1,8 @@
 <?php
 include_once ('db.php');
-/*
- # -- BEGIN LICENSE BLOCK ----------------------------------
- #
- # This file is part of MAGIX CMS.
- # MAGIX CMS, The content management system optimized for users
- # Copyright (C) 2008 - 2018 magix-cms.com <support@magix-cms.com>
- #
- # OFFICIAL TEAM :
- #
- #   * Gerits Aurelien (Author - Developer) <aurelien@magix-cms.com> <contact@aurelien-gerits.be>
- #
- # Redistributions of files must retain the above copyright notice.
- # This program is free software: you can redistribute it and/or modify
- # it under the terms of the GNU General Public License as published by
- # the Free Software Foundation, either version 3 of the License, or
- # (at your option) any later version.
- #
- # This program is distributed in the hope that it will be useful,
- # but WITHOUT ANY WARRANTY; without even the implied warranty of
- # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- # GNU General Public License for more details.
- #
- # You should have received a copy of the GNU General Public License
- # along with this program.  If not, see <http://www.gnu.org/licenses/>.
- #
- # -- END LICENSE BLOCK -----------------------------------
- #
- # DISCLAIMER
- #
- # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
- # versions in the future. If you wish to customize MAGIX CMS for your
- # needs please refer to http://www.magix-cms.com for more information.
- */
 /**
- * MAGIX CMS
- * @category   Contact
- * @package    plugins
- * @copyright  MAGIX CMS Copyright (c) 2011 - 2018 Gerits Aurelien,
- * http://www.magix-dev.be, http://www.magix-cms.com
- * @license    Dual licensed under the MIT or GPL Version 3 licenses.
- * @version    3.0
- * @create	  10-04-2010
- * @Update    04-07-2018
- * @author Gérits Aurélien <contact@magix-dev.be>
- * @contributor Salvatore di Salvo
- * @name plugins_contact_public
- * Frontend of Contact plugin
+ * Class plugins_test_public
+ * Fichier pour l'éxecution frontend d'un plugin
  */
 class plugins_contact_public extends plugins_contact_db
 {
@@ -55,7 +11,6 @@ class plugins_contact_public extends plugins_contact_db
 	 */
     protected $template,
 		$header,
-		$message,
 		$data,
 		$getlang,
 		$moreinfo,
@@ -82,17 +37,17 @@ class plugins_contact_public extends plugins_contact_db
     public function __construct()
     {
         $this->template = new frontend_model_template();
+        $formClean = new form_inputEscape();
         $this->sanitize = new filter_sanitize();
+        //$this->header = new component_httpUtils_header($this->template);
 		$this->header = new http_header();
-		$this->message = new component_core_message($this->template);
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();
+        //$this->mail = new mail_swift('mail');
         $this->mail = new frontend_model_mail('contact');
         $this->modelDomain = new frontend_model_domain($this->template);
 		$this->config = $this->getItems('config',null,'one',false);
 		$this->settings = new frontend_model_setting();
-
-		$formClean = new form_inputEscape();
 
 		if (http_request::isPost('msg')) {
 			$this->msg = $formClean->arrayClean($_POST['msg']);
@@ -132,7 +87,7 @@ class plugins_contact_public extends plugins_contact_db
 	 * @param null $subContent
 	 * @return string
 	 */
-	/*private function setNotify($type,$subContent=null){
+	private function setNotify($type,$subContent=null){
 		$this->template->configLoad();
 		switch($type){
 			case 'warning':
@@ -158,7 +113,7 @@ class plugins_contact_public extends plugins_contact_db
 			'type'      => $type,
 			'content'   => $message
 		);
-	}*/
+	}
 
 	/**
 	 * getNotify
@@ -196,11 +151,31 @@ class plugins_contact_public extends plugins_contact_db
 			}
 		}
 		else {
-			$this->message->json_post_response($type === 'send',$type);
-			//$this->template->assign('message',$this->setNotify($type,$subContent));
-			//$this->template->display('contact/notify/message.tpl');
+			$this->template->assign('message',$this->setNotify($type,$subContent));
+			$this->template->display('contact/notify/message.tpl');
 		}
 	}
+
+	/**
+	 * @access private
+	 * setBodyMail
+	 */
+	/*private function setBodyMail($debug) {
+        if($debug) {
+            $data = array(
+                'lastname' => "My Name",
+                'firstname' => "My Firstname",
+                'email' => $this->testmail,
+                'phone' => "+32 08080808",
+                'title' => "Test Mail",
+                'content' => "My test mail"
+            );
+        }
+        else {
+			$data = $this->msg;
+        }
+		return $data;
+    }*/
 
 	/**
 	 * @param bool $error
@@ -227,6 +202,30 @@ class plugins_contact_public extends plugins_contact_db
 	}
 
 	/**
+	 * @param string $tpl
+	 * @param bool $debug
+	 * @return string
+	 * @throws Exception
+	 */
+	/*private function getBodyMail($tpl = 'admin', $debug = false){
+		$cssInliner = $this->settings->getSetting('css_inliner');
+		$this->template->assign('getDataCSSIColor',$this->settings->fetchCSSIColor());
+		$this->template->assign('data',$this->setBodyMail($debug));
+
+		$bodyMail = $this->template->fetch('contact/mail/'.$tpl.'.tpl');
+		if ($cssInliner['value']) {
+			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->themeSelected().'/contact/css' => 'foundation-emails.css'));
+		}
+
+		if($debug) {
+			print $bodyMail;
+		}
+		else {
+			return $bodyMail;
+		}
+	}*/
+
+	/**
 	 * @return array
 	 */
 	public function getContact(){
@@ -235,19 +234,21 @@ class plugins_contact_public extends plugins_contact_db
 	}
 
 	/**
-	 * Send mail to the list of contacts
+	 * Envoi du mail
+	 * Si return true retourne success.tpl
+	 * sinon retourne empty.tpl
 	 */
 	protected function send_email() {
 		if(!empty($this->msg['email'])) {
 			$this->template->configLoad();
 			if((empty($this->msg['lastname']) || empty($this->msg['firstname']) || empty($this->msg['email'])) && $this->msg['email'] !== 'error-mail') {
-				$this->getNotify('empty');
+				$this->getNotify('warning','empty');
 			}
 			elseif(!$this->sanitize->mail($this->msg['email']) && $this->msg['email'] !== 'error-mail') {
-				$this->getNotify('email');
+				$this->getNotify('warning','mail');
 			}
 			elseif(!empty($this->msg['moreinfo'])) {
-				$this->getNotify('error_plugin_configured');
+				$this->getNotify('error','configured');
 			}
 			else {
 				if($this->getlang) {
@@ -264,16 +265,24 @@ class plugins_contact_public extends plugins_contact_db
 							$sender = '';
 						}
 						foreach ($contacts as $recipient) {
-							$isSend = $this->mail->send_email($recipient['email_contact'],$tpl,$this->msg,$this->setTitleMail($error),$sender);
+							/*$message = $this->mail->body_mail(
+								self::setTitleMail($error),
+								array($this->msg['email']),
+								array($recipient['mail_contact']),
+								self::getBodyMail($tpl),
+								false
+							);
+							$isSend = $this->mail->batch_send_mail($message);*/
+							$isSend = $this->mail->send_email($recipient['mail_contact'],$tpl,$this->msg,$this->setTitleMail($error),$sender);
 							if(!$send) $send = $isSend;
 						}
 						if($send)
-							$this->getNotify('send');
+							$this->getNotify('success');
 						else
-							$this->getNotify('error_plugin');
+							$this->getNotify('error');
 					}
 					else {
-						$this->getNotify('error_plugin_configured');
+						$this->getNotify('error','configured');
 					}
 				}
 			}

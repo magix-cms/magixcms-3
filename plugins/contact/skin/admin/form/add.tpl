@@ -3,8 +3,8 @@
     <div class="row">
         <div class="col-xs-12 col-md-6">
             <div class="form-group">
-                <label for="email_contact">{#email_contact#|ucfirst}&nbsp;</label>
-                <input type="text" name="email_contact" id="email_contact" class="form-control" placeholder="{#email_contact#}" value="" />
+                <label for="mail_contact">{#mail_contact#|ucfirst}&nbsp;</label>
+                <input type="text" name="mail_contact" id="mail_contact" class="form-control" placeholder="{#mail_contact#}" value="" />
             </div>
         </div>
     </div>
@@ -18,12 +18,12 @@
                                 <div class="form-group">
                                     <label>{#active#|ucfirst}&nbsp;*</label>
                                     <div class="radio">
-                                        <label for="content[{$id}][active_contact]_1">
-                                            <input type="radio" name="content[{$id}][active_contact]" id="content[{$id}][active_contact]_1" value="1">
+                                        <label for="content[{$id}][published_contact]_1">
+                                            <input type="radio" name="content[{$id}][published_contact]" id="content[{$id}][published_contact]_1" value="1">
                                             {#bin_1#}
                                         </label>
-                                        <label for="content[{$id}][active_contact]_0">
-                                            <input type="radio" name="content[{$id}][active_contact]" id="content[{$id}][active_contact]_0" value="0" checked>
+                                        <label for="content[{$id}][published_contact]_0">
+                                            <input type="radio" name="content[{$id}][published_contact]" id="content[{$id}][published_contact]_0" value="0" checked>
                                             {#bin_0#}
                                         </label>
                                     </div>

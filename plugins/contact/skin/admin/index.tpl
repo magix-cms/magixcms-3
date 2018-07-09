@@ -1,5 +1,5 @@
 {extends file="layout.tpl"}
-{block name='head:title'}{#contact_plugin#}{/block}
+{block name='head:title'}contact{/block}
 {block name='body:id'}contact{/block}
 {block name='article:header'}
     {if {employee_access type="append" class_name=$cClass} eq 1}
@@ -11,7 +11,7 @@
             </p>
         </div>
     {/if}
-    <h1 class="h2">{#contact_plugin#}</h1>
+    <h1 class="h2">contact</h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="view" class_name=$cClass} eq 1}
@@ -29,7 +29,7 @@
                 </header>
                 <div class="panel-body panel-body-form">
                     <div class="mc-message-container clearfix">
-                        <div class="mc-message mc-message-contact"></div>
+                        <div class="mc-message"></div>
                     </div>
                     {*<pre>{$pages|print_r}</pre>*}
                     <div class="tab-content">

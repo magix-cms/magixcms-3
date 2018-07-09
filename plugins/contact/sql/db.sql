@@ -1,16 +1,16 @@
 CREATE TABLE IF NOT EXISTS `mc_contact` (
   `id_contact` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `email_contact` varchar(45) NOT NULL,
+  `mail_contact` varchar(45) NOT NULL,
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_contact`),
-  KEY `id_lang` (`email_contact`)
+  KEY `id_lang` (`mail_contact`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `mc_contact_content` (
   `id_content` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `id_contact` smallint(5) unsigned NOT NULL,
   `id_lang` smallint(3) unsigned NOT NULL,
-  `active_contact` smallint(1) NOT NULL DEFAULT '0',
+  `published_contact` smallint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`),
   KEY `id_contact` (`id_contact`,`id_lang`),
   KEY `id_lang` (`id_lang`)
