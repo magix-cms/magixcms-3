@@ -255,6 +255,15 @@ class backend_controller_employee extends backend_db_employee
 						'active_admin'		=> $this->active_admin
 					)
 				);
+				parent::update(
+					array(
+						'type' => 'role'
+					),
+					array(
+						'id_admin' => $this->id_admin,
+						'id_role' => $this->id_role
+					)
+				);
 				$this->message->json_post_response(true,'update',$this->id_admin);
 				break;
 			case 'employeePwd':

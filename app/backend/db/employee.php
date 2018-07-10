@@ -205,6 +205,11 @@ class backend_db_employee
 								last_change_admin = NOW()
  						  	WHERE id_admin = :id_admin';
 				break;
+			case 'role':
+				$sql = 'UPDATE mc_admin_access_rel SET
+							id_role = :id_role
+ 						  	WHERE id_admin = :id_admin';
+				break;
 			case 'employeePwd':
 				$sql = 'UPDATE mc_admin_employee SET passwd_admin = :passwd_admin WHERE id_admin = :id_admin';
 				break;
