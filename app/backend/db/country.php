@@ -11,7 +11,7 @@ class backend_db_country{
                     //Listing employee
                     $cond = '';
                     if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
-                    	$params = array();
+                    	//$params = array();
                         $nbc = 0;
                         foreach ($config['search'] as $key => $q) {
                             if($q != '') {
@@ -23,11 +23,11 @@ class backend_db_country{
 								$params[$key] = $q;
                                 switch ($key) {
                                     case 'id_country':
-                                        $cond .= 'country.'.$key.' = :'.$key.' ';
+                                        $cond .= 'country.'.$key.' = '.$q.' ';
                                         break;
                                     case 'name_country':
                                     case 'iso_country':
-                                        $cond .= "country.".$key." LIKE '%:".$key."%' ";
+                                        $cond .= "country.".$key." LIKE '%".$q."%' ";
                                         break;
                                 }
                                 $nbc++;

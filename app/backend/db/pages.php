@@ -29,29 +29,29 @@ class backend_db_pages
 						$config['search'] = array_filter($config['search']);
                     	if(is_array($config['search']) && !empty($config['search'])) {
 							$nbc = 0;
-							$params = array();
+							//$params = array();
 							foreach ($config['search'] as $key => $q) {
 								if($q != '') {
 									$cond .= 'AND ';
-									$params[$key] = $q;
+									//$params[$key] = $q;
 									switch ($key) {
 										case 'id_pages':
 										case 'published_pages':
-											$cond .= 'c.'.$key.' = :'.$key.' ';
+											$cond .= 'c.'.$key.' = '.$q.' ';
 											break;
 										case 'name_pages':
-											$cond .= "c.".$key." LIKE '%:".$key."%' ";
+											$cond .= "c.".$key." LIKE '%".$q."%' ";
 											break;
 										case 'parent_pages':
-											$cond .= "ca.name_pages"." LIKE '%:".$key."%' ";
+											$cond .= "ca.name_pages"." LIKE '%".$q."%' ";
 											break;
 										case 'menu_pages':
-											$cond .= 'p.'.$key.' = :'.$key.' ';
+											$cond .= 'p.'.$key.' = '.$q.' ';
 											break;
 										case 'date_register':
 											$q = $dateFormat->date_to_db_format($q);
-											$cond .= "p.".$key." LIKE '%:".$key."%' ";
-											$params[$key] = $q;
+											$cond .= "p.".$key." LIKE '%".$q."%' ";
+											//$params[$key] = $q;
 											break;
 									}
 									$nbc++;
@@ -78,21 +78,21 @@ class backend_db_pages
                         foreach ($config['search'] as $key => $q) {
                             if($q != '') {
                                 $cond .= 'AND ';
-                                $params[$key] = $q;
+                                //$params[$key] = $q;
                                 switch ($key) {
                                     case 'id_pages':
-                                        $cond .= 'c.'.$key.' = :'.$key.' ';
+                                        $cond .= 'c.'.$key.' = '.$q.' ';
                                         break;
                                     case 'name_pages':
-                                        $cond .= "c.".$key." LIKE '%:".$key."%' ";
+                                        $cond .= "c.".$key." LIKE '%".$q."%' ";
                                         break;
                                     case 'menu_pages':
-                                        $cond .= 'p.'.$key.' = :'.$key.' ';
+                                        $cond .= 'p.'.$key.' = '.$q.' ';
                                         break;
                                     case 'date_register':
 										$q = $dateFormat->date_to_db_format($q);
-                                        $cond .= "p.".$key." LIKE '%:".$key."%' ";
-										$params[$key] = $q;
+                                        $cond .= "p.".$key." LIKE '%".$q."%' ";
+										//$params[$key] = $q;
                                         break;
                                 }
                                 $nbc++;

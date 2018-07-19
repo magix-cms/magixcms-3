@@ -46,20 +46,20 @@ class backend_db_news
 							foreach ($config['search'] as $key => $q) {
 								if($q != '') {
 									$cond .= 'AND ';
-									$params[$key] = $q;
+									//$params[$key] = $q;
 									switch ($key) {
 										case 'id_news':
 										case 'published_news':
-											$cond .= 'c.'.$key.' = :'.$key.' ';
+											$cond .= 'c.'.$key.' = '.$q.' ';
 											break;
 										case 'name_news':
-											$cond .= "c.".$key." LIKE '%:".$key."%' ";
+											$cond .= "c.".$key." LIKE '%".$q."%' ";
 											break;
 										case 'last_update':
 										case 'date_publish':
 											$q = $dateFormat->date_to_db_format($q);
-											$cond .= "c.".$key." LIKE '%:".$key."%' ";
-											$params[$key] = $q;
+											$cond .= "c.".$key." LIKE '%".$q."%' ";
+											//$params[$key] = $q;
 											break;
 									}
 									$nbc++;

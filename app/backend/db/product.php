@@ -24,22 +24,22 @@ class backend_db_product{
                             foreach ($config['search'] as $key => $q) {
                                 if ($q != '') {
                                     $cond .= 'AND ';
-									$params[$key] = $q;
+									//$params[$key] = $q;
                                     switch ($key) {
                                         case 'id_product':
                                         case 'published_p':
-                                            $cond .= 'c.' . $key . ' = :' . $key . ' ';
+                                            $cond .= 'c.' . $key . ' = ' . $q . ' ';
                                             break;
                                         case 'name_p':
-                                            $cond .= "c." . $key . " LIKE '%:" . $key . "%' ";
+                                            $cond .= "c." . $key . " LIKE '%" . $q . "%' ";
                                             break;
                                         case 'reference_p':
-                                            $cond .= "p." . $key . " LIKE '%:" . $key . "%' ";
+                                            $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
                                             break;
                                         case 'date_register':
                                             $q = $dateFormat->date_to_db_format($q);
-                                            $cond .= "p." . $key . " LIKE '%:" . $key . "%' ";
-											$params[$key] = $q;
+                                            $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
+											//$params[$key] = $q;
                                             break;
                                     }
                                     $nbc++;

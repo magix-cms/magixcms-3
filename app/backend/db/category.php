@@ -28,21 +28,21 @@ class backend_db_category
                                     switch ($key) {
                                         case 'id_cat':
                                         case 'published_cat':
-                                            $cond .= 'c.'.$key.' = :'.$key.' ';
+                                            $cond .= 'c.'.$key.' = '.$q.' ';
                                             break;
                                         case 'name_cat':
-                                            $cond .= "c.".$key." LIKE '%:".$key."%' ";
+                                            $cond .= "c.".$key." LIKE '%".$q."%' ";
                                             break;
                                         case 'parent_cat':
-                                            $cond .= "ca.name_cat"." LIKE '%:".$key."%' ";
+                                            $cond .= "ca.name_cat"." LIKE '%".$q."%' ";
                                             break;
                                         case 'date_register':
                                             $q = $dateFormat->date_to_db_format($q);
-                                            $cond .= "p.".$key." LIKE '%:".$key."%' ";
-											$params[$key] = $q;
+                                            $cond .= "p.".$key." LIKE '%".$q."%' ";
+											//$params[$key] = $q;
                                             break;
                                         case 'menu_cat':
-                                            $cond .= 'p.'.$key.' = :'.$key.' ';
+                                            $cond .= 'p.'.$key.' = '.$q.' ';
                                             break;
                                     }
                                     $nbc++;
@@ -69,21 +69,21 @@ class backend_db_category
                         foreach ($config['search'] as $key => $q) {
                             if($q != '') {
                                 $cond .= 'AND ';
-								$params[$key] = $q;
+								//$params[$key] = $q;
                                 switch ($key) {
                                     case 'id_cat':
-                                        $cond .= 'c.'.$key.' = :'.$key.' ';
+                                        $cond .= 'c.'.$key.' = '.$q.' ';
                                         break;
                                     case 'name_cat':
-                                        $cond .= "c.".$key." LIKE '%:".$key."%' ";
+                                        $cond .= "c.".$key." LIKE '%".$q."%' ";
                                         break;
                                     case 'date_register':
                                         $q = $dateFormat->date_to_db_format($q);
-                                        $cond .= "p.".$key." LIKE '%:".$key."%' ";
+                                        $cond .= "p.".$key." LIKE '%".$q."%' ";
                                         $params[$key] = $q;
                                         break;
                                     case 'menu_cat':
-                                        $cond .= 'p.'.$key.' = :'.$key.' ';
+                                        $cond .= 'p.'.$key.' = '.$q.' ';
                                         break;
                                 }
                                 $nbc++;

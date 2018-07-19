@@ -61,28 +61,25 @@ class backend_db_about
 										$cond = 'WHERE ';
 									}*/
 									$cond .= 'AND ';
-									switch ($key) {
-										case 'id_pages':
-										case 'published_pages':
-											$cond .= 'c.' . $key . ' = ' . $q . ' ';
-											break;
-										case 'name_pages':
-											$cond .= "c." . $key . " LIKE '%:" . $key . "%' ";
-											$params[$key] = $q;
-											break;
-										case 'parent_pages':
-											$cond .= "ca.name_pages" . " LIKE '%:" . $key . "%' ";
-											$params[$key] = $q;
-											break;
-										case 'menu_pages':
-											$cond .= 'p.' . $key . ' = ' . $q . ' ';
-											break;
-										case 'date_register':
-											$q = $dateFormat->date_to_db_format($q);
-											$cond .= "p." . $key . " LIKE '%:" . $key . "%' ";
-											$params[$key] = $q;
-											break;
-									}
+                                    switch ($key) {
+                                        case 'id_pages':
+                                        case 'published_pages':
+                                            $cond .= 'c.' . $key . ' = ' . $q . ' ';
+                                            break;
+                                        case 'name_pages':
+                                            $cond .= "c." . $key . " LIKE '%" . $q . "%' ";
+                                            break;
+                                        case 'parent_pages':
+                                            $cond .= "ca.name_pages" . " LIKE '%" . $q . "%' ";
+                                            break;
+                                        case 'menu_pages':
+                                            $cond .= 'p.' . $key . ' = ' . $q . ' ';
+                                            break;
+                                        case 'date_register':
+                                            $q = $dateFormat->date_to_db_format($q);
+                                            $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
+                                            break;
+                                    }
 									$nbc++;
 								}
 							}
@@ -116,29 +113,27 @@ class backend_db_about
 					$params = $data;
 					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
 						$nbc = 0;
-						foreach ($config['search'] as $key => $q) {
-							if($q != '') {
-								$cond .= 'AND ';
-								$params[$key] = $q;
-								switch ($key) {
-									case 'id_pages':
-										$cond .= 'c.'.$key.' = :'.$key.' ';
-										break;
-									case 'name_pages':
-										$cond .= "c.".$key." LIKE '%:".$key."%' ";
-										break;
-									case 'menu_pages':
-										$cond .= 'p.'.$key.' = :'.$key.' ';
-										break;
-									case 'date_register':
-										$q = $dateFormat->date_to_db_format($q);
-										$cond .= "p.".$key." LIKE '%:".$key."%' ";
-										$params[$key] = $q;
-										break;
-								}
-								$nbc++;
-							}
-						}
+                        foreach ($config['search'] as $key => $q) {
+                            if ($q != '') {
+                                $cond .= 'AND ';
+                                switch ($key) {
+                                    case 'id_pages':
+                                        $cond .= 'c.' . $key . ' = ' . $q . ' ';
+                                        break;
+                                    case 'name_pages':
+                                        $cond .= "c." . $key . " LIKE '%" . $q . "%' ";
+                                        break;
+                                    case 'menu_pages':
+                                        $cond .= 'p.' . $key . ' = ' . $q . ' ';
+                                        break;
+                                    case 'date_register':
+                                        $q = $dateFormat->date_to_db_format($q);
+                                        $cond .= "p." . $key . " LIKE '%" . $q . "%' ";
+                                        break;
+                                }
+                                $nbc++;
+                            }
+                        }
 					}
 					$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
                     FROM mc_about_page AS p
