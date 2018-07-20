@@ -193,7 +193,7 @@
         template_popup_width: 800,
         language : tinyLanguage,
         schema: "html5",
-        extended_valid_elements: "+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
+        extended_valid_elements: "span[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
         //end_container_on_empty_block: false,
         /*fix_list_elements : true*/
         content_css : content_css
