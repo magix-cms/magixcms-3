@@ -253,7 +253,7 @@
         </nav>
     </li>
     {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
-    <li class="has-submenu{if $smarty.get.controller == 'employee'} active{/if}">
+    <li class="has-submenu{if $smarty.get.controller == 'employee' || $smarty.get.controller == 'access'} active{/if}">
         <button type="button" class="navbar-toggle{if $smarty.get.controller == 'employee'} open{/if}" data-toggle="collapse" data-parent="#{$menuId}" data-target="#nav-employee">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>
@@ -282,7 +282,7 @@
     {/if}
     <li><hr></li>
     {if {employee_access type="view" class_name="backend_controller_plugins"} eq 1}
-    <li class="has-submenu {if $smarty.get.controller == 'plugins' || (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee')) && $smarty.get.controller)}active{/if}">
+    <li class="has-submenu {if $smarty.get.controller == 'plugins' || (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee','access')) && $smarty.get.controller)}active{/if}">
         <button type="button" class="navbar-toggle{if $smarty.get.controller == 'plugins'} open{/if}" data-toggle="collapse" data-parent="#{$menuId}" data-target="#nav-plugins">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>
