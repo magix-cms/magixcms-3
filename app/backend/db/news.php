@@ -131,6 +131,10 @@ class backend_db_news
                         WHERE tag.id_lang = :id_lang AND tag.name_tag LIKE :name_tag';
                     $params = $data;
                 }
+                elseif ($config['type'] === 'countTags') {
+                    $sql = 'SELECT count(id_tag) AS tags FROM mc_news_tag_rel WHERE id_tag = :id_tag';
+                    $params = $data;
+                }
 
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
             }
@@ -239,6 +243,10 @@ class backend_db_news
             elseif($config['type'] === 'tagRel'){
                 $sql = 'DELETE FROM mc_news_tag_rel WHERE id_rel = :id_rel';
                 component_routing_db::layer()->delete($sql,array(':id_rel'=>$data['id_rel']));
+            }
+            elseif($config['type'] === 'tags'){
+                $sql = 'DELETE FROM mc_news_tag WHERE id_tag = :id_tag';
+                component_routing_db::layer()->delete($sql,array(':id_tag'=>$data['id_tag']));
             }
         }
     }

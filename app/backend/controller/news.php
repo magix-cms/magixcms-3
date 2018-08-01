@@ -479,6 +479,16 @@ class backend_controller_news extends backend_db_news{
                             );
                             if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
                                 parent::delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
+
+                                // On compte le nombre de tags restant
+                                $countTags = parent::fetchData(
+                                    array('context' => 'one', 'type' => 'countTags'),
+                                    array(':id_tag' => $setTags['id_tag'])
+                                );
+                                //Si le nombre est égal 0 on supprime le tag définitivement.
+                                if($countTags['tags'] == '0'){
+                                    parent::delete(array('type' => 'tags'), array('id_tag' => $setTags['id_tag']));
+                                }
                             }
                         } elseif (isset($this->id_news)) {
                             $this->del(
