@@ -34,7 +34,7 @@
                             </div>
                             {/if}
                             <div class="panel-footer">
-                                <a class="btn btn-default" href="{geturl}/admin/" type="button">
+                                <a class="btn btn-default" href="{$url}/admin/" type="button">
                                     <i class="icon-caret-left"></i>
                                     Retour à la connexion
                                 </a>

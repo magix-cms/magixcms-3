@@ -32,7 +32,7 @@ if(http_request::isGet('controller')){
         $routes = 'backend';
         $plugins = null;
         if($_GET['controller'] != 'login'){
-            $members = new backend_controller_login();
+            $members = new backend_controller_login($template);
             $members->checkout();
             if (http_request::isSession('keyuniqid_admin')) {
             	$members->getAdminProfile();
@@ -46,7 +46,7 @@ if(http_request::isGet('controller')){
     }else{
         $routes = 'plugins';
         $plugins = 'admin';
-        $members = new backend_controller_login();
+        $members = new backend_controller_login($template);
         $members->checkout();
         if (http_request::isSession('keyuniqid_admin')) {
         	$members->getAdminProfile();
@@ -58,6 +58,6 @@ if(http_request::isGet('controller')){
         }
     }
 }else{
-    $members = new backend_controller_login();
+    $members = new backend_controller_login($template);
     $members->checkout();
 }

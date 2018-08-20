@@ -4,10 +4,10 @@
             <div role="button" aria-label="close sidebar" on="tap:sidebar1.toggle" tabindex="0" class="close-sidebar"><i class="material-icons">close</i></div>
             Navigation
         </header>
-        {widget_menu_data lang={getlang}}
+        {widget_menu_data lang={$lang}}
         <ul class="menu list-unstyled">
         {foreach $links as $link}
-            {if !{$link.url_link|strpos:'amp'}}{$link.url_link = {$link.url_link|replace:{'/'|cat:{getlang}|cat:'/'}:{'/'|cat:{getlang}|cat:'/amp/'}}}{/if}
+            {if !{$link.url_link|strpos:'amp'}}{$link.url_link = {$link.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
             <li>
                 {if $link.mode_link eq 'simple'}
                 <a href="{$link.url_link}"
@@ -39,7 +39,7 @@
                     {widget_about_data
                         conf = [
                             'context' => $context,
-                            'select' => [{getlang} => $link.id_page],
+                            'select' => [{$lang} => $link.id_page],
                             'type' => 'menu'
                             ]
                         assign="pages"
@@ -50,7 +50,7 @@
                     {widget_cms_data
                         conf = [
                             'context' => $context,
-                            'select' => [{getlang} => $link.id_page],
+                            'select' => [{$lang} => $link.id_page],
                             'type' => 'menu'
                             ]
                         assign="pages"

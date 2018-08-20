@@ -1,22 +1,19 @@
 {strip}
-{autoload_i18n}
-{widget_about_data}
-{widget_lang_data assign="dataLang"}
 {widget_share_data assign="shareData"}
 {/strip}<!doctype html>
-<html amp lang="{getlang}" dir="ltr">
+<html amp lang="{$lang}" dir="ltr">
 <head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
-    <title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>
+    <title itemprop="headline">{block name="title"}{/block}</title>
     <meta name="description" content="{capture name="description"}{block name="description"}{/block}{/capture}{$smarty.capture.description}">
-    <meta itemprop="description" content="{capture name="description"}{block name="description"}{/block}{/capture}{$smarty.capture.description}">
+    <meta itemprop="description" content="{$smarty.capture.description}">
     <meta name="robots" content="{google_tools tools='robots'}">
-    {strip}{include file="section/loop/lang.tpl" amp=true iso={getlang}}{/strip}
-    {if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{geturl}/news_{getlang}_rss.xml" title="RSS">{/if}
+    {strip}{include file="section/loop/lang.tpl" amp=true iso={$lang}}{/strip}
+    {if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
     {if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
-    <link rel="icon" type="image/png" href="{geturl}/skin/{template}/img/favicon.png" />
+    <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
     {include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,600,400italic','Raleway'=>'300,500']}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">

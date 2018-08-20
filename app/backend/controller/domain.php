@@ -5,9 +5,13 @@ class backend_controller_domain extends backend_db_domain
     protected $message, $template, $header, $data, $xml;
     public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang,$tracking_domain,$config;
 
-    public function __construct()
+	/**
+	 * backend_controller_domain constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

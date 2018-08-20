@@ -83,8 +83,8 @@
                                 <tr>
                                     <td align="center" valign="middle">
                                         <p class="text-center">
-                                            <a href="{geturl}" target="_blank" title="{$companyData.name}" style="text-decoration: none; font-size: 46px; padding: 15px;">
-                                                <img src="{geturl}/skin/{template}/img/logo/{#logo_img_mail#}" alt="{#logo_img_alt#|ucfirst}" width="229" height="50"/>
+                                            <a href="{$url}" target="_blank" title="{$companyData.name}" style="text-decoration: none; font-size: 46px; padding: 15px;">
+                                                <img src="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}" alt="{#logo_img_alt#|ucfirst}" width="229" height="50"/>
                                             </a>
                                         </p>
                                     </td>

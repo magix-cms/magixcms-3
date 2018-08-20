@@ -7,19 +7,19 @@ class backend_model_sitemap{
 
     /**
      * backend_model_sitemap constructor.
-     * @param $template
+     * @param stdClass $t
      */
-    public function __construct($template)
+    public function __construct($t)
     {
-        $this->xml = new xml_sitemap();
-        $this->setting = new backend_controller_setting();
-        $this->DBPages = new backend_db_pages();
-        $this->DBNews = new backend_db_news();
-        $this->DBCatalog = new backend_db_catalog();
-        $this->DBPlugins = new backend_db_plugins();
-        $this->collectionLanguage = new component_collections_language();
-        $this->modelPlugins = new backend_model_plugins();
-        $this->template = $template;
+		$this->template = $t;
+		$this->xml = new xml_sitemap();
+		$this->setting = new backend_controller_setting($t);
+		$this->DBPages = new backend_db_pages();
+		$this->DBNews = new backend_db_news();
+		$this->DBCatalog = new backend_db_catalog();
+		$this->DBPlugins = new backend_db_plugins();
+		$this->collectionLanguage = new component_collections_language();
+		$this->modelPlugins = new backend_model_plugins();
         $this->routingUrl = new component_routing_url();
         $this->configCollection = new component_collections_config();
     }

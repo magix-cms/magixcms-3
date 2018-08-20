@@ -47,14 +47,14 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 	/**
 	 * frontend_model_catalog constructor.
-	 * @param $template
+	 * @param stdClass $t
 	 */
-    public function __construct($template)
+    public function __construct($t = null)
     {
-        $this->routingUrl = new component_routing_url();
-        $this->imagesComponent = new component_files_images($template);
-        $this->modelPlugins = new frontend_model_plugins();
-        $this->coreTemplate = new frontend_model_template();
+		$this->coreTemplate = $t ? $t : new frontend_model_template();
+		$this->routingUrl = new component_routing_url();
+		$this->imagesComponent = new component_files_images($t);
+		$this->modelPlugins = new frontend_model_plugins();
 		$this->data = new frontend_model_data($this);
     }
 
@@ -89,12 +89,12 @@ class frontend_model_catalog extends frontend_db_catalog {
 
                 $data['url']  =
                     $this->routingUrl->getBuildUrl(array(
-                            'type'              =>  'product',
-                            'iso'               =>  $row['iso_lang'],
-                            'id'                =>  $row['id_product'],
-                            'url'               =>  $row['url_p'],
-                            'id_parent'         =>  $row['id_cat'],
-                            'url_parent'        =>  $row['url_cat']
+                            'type'       => 'product',
+                            'iso'        => $row['iso_lang'],
+                            'id'         => $row['id_product'],
+                            'url'        => $row['url_p'],
+                            'id_parent'  => $row['id_cat'],
+                            'url_parent' => $row['url_cat']
                         )
                     );
                 // Base url for product
@@ -108,21 +108,21 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['id']        = $row['id_product'];
                 $data['id_parent'] = $row['id_cat'];
                 $data['url_parent'] = $this->routingUrl->getBuildUrl(array(
-                        'type'      =>  'category',
-                        'iso'       =>  $row['iso_lang'],
-                        'id'        =>  $row['id_cat'],
-                        'url'       =>  $row['url_cat']
+                        'type' => 'category',
+                        'iso'  => $row['iso_lang'],
+                        'id'   => $row['id_cat'],
+                        'url'  => $row['url_cat']
                     )
                 );
 
-                $data['cat']    	= $row['name_cat'];
-                $data['id_lang']    = $row['id_lang'];
-                $data['iso']        = $row['iso_lang'];
-                $data['price']      = $row['price_p'];
-                $data['reference']  = $row['reference_p'];
-                $data['content']    = $row['content_p'];
-				$data['resume']     = ($row['resume_p'] != '') ? $row['resume_p'] : NULL;
-                $data['order']      = $row['order_p'];
+                $data['cat']       = $row['name_cat'];
+                $data['id_lang']   = $row['id_lang'];
+                $data['iso']       = $row['iso_lang'];
+                $data['price']     = $row['price_p'];
+                $data['reference'] = $row['reference_p'];
+                $data['content']   = $row['content_p'];
+				$data['resume']    = ($row['resume_p'] != '') ? $row['resume_p'] : NULL;
+                $data['order']     = $row['order_p'];
                 if (isset($row['img'])) {
                     if($row['img'] != NULL) {
                         $imgPrefix = $this->imagesComponent->prefix();
@@ -132,19 +132,21 @@ class frontend_model_catalog extends frontend_db_catalog {
                         ));
                         if(is_array($row['img'])) {
                             foreach ($row['img'] as $item => $val) {
-                                $data['img'][$item]['alt'] = $val['alt_img'];
-                                $data['img'][$item]['title'] = $val['title_img'];
+                                $data['imgs'][$item]['alt'] = $val['alt_img'];
+                                $data['imgs'][$item]['title'] = $val['title_img'];
                                 foreach ($fetchConfig as $key => $value) {
-                                    $data['img'][$item]['imgSrc'][$value['type_img']] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+                                    $data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+									$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
+									$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
+									$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
                                 }
-                                $data['img'][$item]['default'] = $val['default_img'];
+                                $data['imgs'][$item]['default'] = $val['default_img'];
                             }
                         }
-                    }else{
-                        $data['img']['imgSrc']['default']   =
-                            '/skin/'.$this->coreTemplate->themeSelected().'/img/catalog/p/default.png';
                     }
-                }else{
+                    $data['img_default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/p/default.png';
+                }
+                else {
                     if(isset($row['name_img'])){
                         $imgPrefix = $this->imagesComponent->prefix();
                         $fetchConfig = $this->imagesComponent->getConfigItems(array(
@@ -152,12 +154,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                             'attribute_img'=>'category'
                         ));
                         foreach ($fetchConfig as $key => $value) {
-                            $data['imgSrc'][$value['type_img']] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img'];
+                            $data['img'][$value['type_img']]['src'] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img'];
+							$data['img'][$value['type_img']]['w'] = $value['width_img'];
+							$data['img'][$value['type_img']]['h'] = $value['height_img'];
+							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                         }
-                    }else{
-                        $data['imgSrc']['default']   =
-                            '/skin/'.$this->coreTemplate->themeSelected().'/img/catalog/p/default.png';
                     }
+                    $data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/p/default.png';
 
                 }
                 // -- Similar / Associated product
@@ -167,12 +170,12 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['associated'][$key]['name'] = $value['name_p'];
                         $data['associated'][$key]['url']  =
                             $this->routingUrl->getBuildUrl(array(
-                                    'type'              =>  'product',
-                                    'iso'               =>  $value['iso_lang'],
-                                    'id'                =>  $value['id_product'],
-                                    'url'               =>  $value['url_p'],
-                                    'id_parent'         =>  $value['id_cat'],
-                                    'url_parent'        =>  $value['url_cat']
+                                    'type'       => 'product',
+                                    'iso'        => $value['iso_lang'],
+                                    'id'         => $value['id_product'],
+                                    'url'        => $value['url_p'],
+                                    'id_parent'  => $value['id_cat'],
+                                    'url_parent' => $value['url_cat']
                                 )
                             );
                         // Base url for product
@@ -185,10 +188,10 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['associated'][$key]['id']        = $value['id_product'];
                         $data['associated'][$key]['id_parent'] = $value['id_cat'];
                         $data['associated'][$key]['url_parent'] = $this->routingUrl->getBuildUrl(array(
-                                'type'      =>  'category',
-                                'iso'       =>  $value['iso_lang'],
-                                'id'        =>  $value['id_cat'],
-                                'url'       =>  $value['url_cat']
+                                'type' => 'category',
+                                'iso'  => $value['iso_lang'],
+                                'id'   => $value['id_cat'],
+                                'url'  => $value['url_cat']
                             )
                         );
 
@@ -205,12 +208,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                                 'attribute_img'=>'product'
                             ));
                             foreach ($fetchConfig as $keyConfig => $valueConfig) {
-                                $data['associated'][$key]['imgSrc'][$valueConfig['type_img']] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img'];
+                                $data['associated'][$key]['img'][$valueConfig['type_img']]['src'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $value['width_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $value['height_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $value['resize_img'];
                             }
-                        }else{
-                            $data['associated'][$key]['img']['imgSrc']['default']   =
-                                '/skin/'.$this->coreTemplate->themeSelected().'/img/catalog/p/default.png';
                         }
+                        $data['associated'][$key]['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/p/default.png';
                     }
                 }
                 // Plugin
@@ -241,12 +245,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                         'attribute_img'=>'category'
                     ));
                     foreach ($fetchConfig as $key => $value) {
-                        $data['imgSrc'][$value['type_img']] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat'];
+                        $data['img'][$value['type_img']]['src'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat'];
+                        $data['img'][$value['type_img']]['w'] = $value['width_img'];
+                        $data['img'][$value['type_img']]['h'] = $value['height_img'];
+                        $data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                     }
-                }else{
-                    $data['imgSrc']['default']  =
-                        '/skin/'.$this->coreTemplate->themeSelected().'/img/catalog/c/default.png';
                 }
+                $data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/c/default.png';
 
                 $data['url']  =
                     $this->routingUrl->getBuildUrl(array(
@@ -326,7 +331,17 @@ class frontend_model_catalog extends frontend_db_catalog {
         return $arr;
     }
 
-    /**
+	/**
+	 * @param $d
+	 * @param $c
+	 * @return mixed|null
+	 */
+	public function parseData($d,$c,$nr = false)
+	{
+		return $this->data->parseData($d,$this,$c,$nr);
+	}
+
+	/**
      * Retourne les données sql sur base des paramètres passés en paramète
      * @param array $custom
      * @param array $current

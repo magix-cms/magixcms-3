@@ -5,12 +5,14 @@ class backend_controller_translate extends backend_db_theme{
     public $theme, $content, $type, $id, $link, $order, $skin, $config;
 
     public $roots = array('home','about','catalog','news','contact');
+
     /**
      * backend_controller_theme constructor.
+	 * @param stdClass $t
      */
-    public function __construct()
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

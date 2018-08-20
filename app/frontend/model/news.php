@@ -44,12 +44,16 @@ class frontend_model_news extends frontend_db_news {
 
     protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$dateFormat;
 
-    public function __construct($template)
+	/**
+	 * frontend_model_news constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->routingUrl = new component_routing_url();
-        $this->imagesComponent = new component_files_images($template);
-        $this->modelPlugins = new frontend_model_plugins();
-        $this->coreTemplate = new frontend_model_template();
+		$this->coreTemplate = $t ? $t : new frontend_model_template();
+		$this->routingUrl = new component_routing_url();
+		$this->imagesComponent = new component_files_images($t);
+		$this->modelPlugins = new frontend_model_plugins();
         $this->dateFormat = new date_dateformat();
     }
 
@@ -66,15 +70,15 @@ class frontend_model_news extends frontend_db_news {
         $data = null;
 
         if (isset($row['id_news'])) {
-            $data['id']        = $row['id_news'];
-            $data['title']     = $row['name_news'];
+            $data['id']    = $row['id_news'];
+            $data['title'] = $row['name_news'];
             $data['url']  =
                 $this->routingUrl->getBuildUrl(array(
-                        'type'      =>  'news',
-                        'iso'       =>  $row['iso_lang'],
-                        'date'      =>  $row['date_publish'],
-                        'id'        =>  $row['id_news'],
-                        'url'       =>  $row['url_news']
+                        'type' => 'news',
+                        'iso'  => $row['iso_lang'],
+                        'date' => $row['date_publish'],
+                        'id'   => $row['id_news'],
+                        'url'  => $row['url_news']
                     )
                 );
 
@@ -86,12 +90,13 @@ class frontend_model_news extends frontend_db_news {
                     'attribute_img' =>'news'
                 ));
                 foreach ($fetchConfig as $key => $value) {
-                    $data['imgSrc'][$value['type_img']] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news'];
+                    $data['img'][$value['type_img']]['src'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news'];
+					$data['img'][$value['type_img']]['w'] = $value['width_img'];
+					$data['img'][$value['type_img']]['h'] = $value['height_img'];
+					$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                 }
-            }else{
-                $data['imgSrc']['default']  =
-                    '/skin/'.$this->coreTemplate->themeSelected().'/img/news/default.png';
             }
+            $data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/news/default.png';
 
             $data['active'] = false;
 
@@ -99,16 +104,16 @@ class frontend_model_news extends frontend_db_news {
                 $data['active'] = true;
             }
 
-            $data['date']['register']    = $this->dateFormat->SQLDate($row['date_register']);
-            $data['date']['update']      = $this->dateFormat->SQLDate($row['last_update']);
-            $data['date']['publish']     = $this->dateFormat->SQLDate($row['date_publish']);
+            $data['date']['register'] = $this->dateFormat->SQLDate($row['date_register']);
+            $data['date']['update']   = $this->dateFormat->SQLDate($row['last_update']);
+            $data['date']['publish']  = $this->dateFormat->SQLDate($row['date_publish']);
 
-            $data['date']['year']       = $this->dateFormat->dateDefine('Y',$row['date_publish']);
-            $data['date']['month']      = $this->dateFormat->dateDefine('m',$row['date_publish']);
-            $data['date']['day']        = $this->dateFormat->dateDefine('d',$row['date_publish']);
+            $data['date']['year']  = $this->dateFormat->dateDefine('Y',$row['date_publish']);
+            $data['date']['month'] = $this->dateFormat->dateDefine('m',$row['date_publish']);
+            $data['date']['day']   = $this->dateFormat->dateDefine('d',$row['date_publish']);
 
-            $data['resume']     = $row['resume_news'];
-            $data['content']    = $row['content_news'];
+            $data['resume']  = $row['resume_news'];
+            $data['content'] = $row['content_news'];
 
             $data['tags']    =   null;
             if(isset($row['tags'])) {
@@ -126,7 +131,6 @@ class frontend_model_news extends frontend_db_news {
                     }
                 }
             }
-
             // Plugin
             if($newRow != false){
                 if(is_array($newRow)){
@@ -135,9 +139,8 @@ class frontend_model_news extends frontend_db_news {
                     }
                 }
             }
-
-        }else if(isset($row['id_tag'])){
-
+        }
+        else if(isset($row['id_tag'])) {
             $data['id'] = $row['id_tag'];
             $data['name'] = $row['name_tag'];
             $data['url'] = $this->routingUrl->getBuildUrl(array(

@@ -7,12 +7,14 @@ class frontend_controller_webservice extends frontend_db_webservice{
     protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory,$DBProduct;
     protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage,$collectionDomain;
     public $collection, $retrieve, $id, $filter ,$sort, $url, $img, $imgData;
+
     /**
+	 * @param stdClass $t
      * frontend_controller_pages constructor.
      */
-    public function __construct(){
-        $formClean = new form_inputEscape();
-        $this->template = new frontend_model_template();
+    public function __construct($t = null){
+		$this->template = $t ? $t : new frontend_model_template();
+		$formClean = new form_inputEscape();
         $this->message = new component_core_message($this->template);
         $this->UtilsHeader = new component_httpUtils_header($this->template);
         $this->modelPages = new frontend_model_pages($this->template);

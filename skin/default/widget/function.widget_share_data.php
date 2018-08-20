@@ -103,7 +103,7 @@ function smarty_function_widget_share_data($params, $template)
 	$template->assign('shareConfig',$shareConfig);
 	$shareUrl = $shareModel->getShareUrl();
 
-    $url['root'] = http_url::getUrl();
+    $url['root'] = http_url::geturl();
     $url['relativ'] = $_SERVER["REQUEST_URI"];
     //strrpos récupère la dernière occurence de / et de .
     $url['share'] = $url['root'] . $url['relativ'];
@@ -191,4 +191,3 @@ function smarty_function_widget_share_data($params, $template)
     $assign = isset($params['assign']) ? $params['assign'] : 'data';
     $template->assign($assign,$data_default);
 }
-?>

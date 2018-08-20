@@ -1,17 +1,17 @@
 <div class="footer-colophon text-center" itemprop="isPartOf" itemscope itemtype="http://schema.org/WebSite">
     <div itemprop="copyrightHolder" itemscope itemtype="http://schema.org/{$companyData.type}"{if $smarty.get.magixmod == 'contact' && $companyData.openinghours} itemref="schedule"{/if}>
         <meta itemprop="name" content="{$companyData.name}"/>
-        <meta itemprop="url" content="{geturl}"/>
+        <meta itemprop="url" content="{$url}"/>
         <meta itemprop="brand" content="{$companyData.name}"/>
         {if $companyData.tva}<meta itemprop="vatID" content="{$companyData.tva}">{/if}
         {if $about != null}
-            <meta itemprop="sameAs" content="{geturl}/{getlang}/about/"/>
+            <meta itemprop="sameAs" content="{$url}/{$lang}/about/"/>
         {/if}
         {if $gmap}
-            <meta itemprop="hasMap" content="{geturl}/{getlang}/gmap/"/>
+            <meta itemprop="hasMap" content="{$url}/{$lang}/gmap/"/>
         {/if}
         <div itemprop="logo image" itemscope itemtype="https://schema.org/ImageObject">
-            <meta itemprop="url" content="{geturl}/skin/{template}/img/logo/{#logo_img#}">
+            <meta itemprop="url" content="{$url}/skin/{$theme}/img/logo/{#logo_img#}">
             <meta itemprop="width" content="269">
             <meta itemprop="height" content="50">
         </div>
@@ -50,7 +50,7 @@
             {if $companyData.contact.phone}
                 <meta itemprop="telephone" content="{$companyData.contact.phone}"/>
             {else}
-                <meta itemprop="url" content="{geturl}/{getlang}/contact/"/>
+                <meta itemprop="url" content="{$url}/{$lang}/contact/"/>
             {/if}
             {if $companyData.contact.fax}
                 <meta itemprop="faxNumber" content="{$companyData.contact.fax}"/>

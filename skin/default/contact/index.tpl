@@ -87,9 +87,9 @@
 
 {block name="foot"}
     {script src="/min/?g=form" concat=$concat type="javascript"}
-    {script src="/min/?f=skin/{template}/js/form.min.js" concat=$concat type="javascript"}
-    {if {getlang} !== "en"}
-        {script src="/min/?f=libjs/vendor/localization/messages_{getlang}.js" concat=$concat type="javascript"}
+    {script src="/min/?f=skin/{$theme}/js/form.min.js" concat=$concat type="javascript"}
+    {if {$lang} !== "en"}
+        {script src="/min/?f=libjs/vendor/localization/messages_{$lang}.js" concat=$concat type="javascript"}
     {/if}
     <script type="text/javascript">
 		$(function(){

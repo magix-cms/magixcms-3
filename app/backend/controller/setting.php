@@ -3,9 +3,14 @@ class backend_controller_setting extends backend_db_setting{
     public $edit, $action, $tabs;
     protected $message, $template, $header, $data, $settings, $setSkinPath;
     public $setting, $type, $color;
-    public function __construct()
+
+	/**
+	 * backend_controller_setting constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

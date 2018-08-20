@@ -43,4 +43,3 @@ function smarty_function_widget_domain_data($params, $template)
         $template->assign($assign,$currentDomain);
     }
 }
-?>

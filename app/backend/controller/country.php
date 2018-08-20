@@ -5,9 +5,13 @@ class backend_controller_country extends backend_db_country
     protected $message, $template, $header, $data, $arrayTools;
     public $id_country,$iso_country,$name_country, $order;
 
-    public function __construct()
+	/**
+	 * @param stdClass $t
+	 * backend_controller_country constructor.
+	 */
+    public function __construct($t)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

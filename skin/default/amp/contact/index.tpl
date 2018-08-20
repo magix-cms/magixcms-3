@@ -1,12 +1,12 @@
 {extends file="amp/layout.tpl"}
-{block name="stylesheet"}{fetch file="skin/{template}/amp/css/contact.min.css"}{/block}
+{block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/contact.min.css"}{/block}
 {block name='body:id'}contact{/block}
 {block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{#seo_title_contact#}]}{/block}
 {block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{#seo_desc_contact#}]}{/block}
 {block name="webType"}ContactPage{/block}
 {block name="amp-script"}
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
-    {*<script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>*}
+    {*<script async custom-theme="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>*}
 {/block}
 
 {block name='article'}
@@ -18,7 +18,7 @@
                 <p>{#pn_questions#|ucfirst}</p>
                 <p>{#pn_fill_form#|ucfirst}</p>
                 <p class="help-block">{#contact_fiels_resquest#|ucfirst}</p>
-                <form id="contact-form" method="post" action-xhr="{geturl|replace:'http://':'//'}{$smarty.server.REQUEST_URI}" target="_top" custom-validation-reporting="show-all-on-submit">
+                <form id="contact-form" method="post" action-xhr="{url|replace:'http://':'//'}{$smarty.server.REQUEST_URI}" target="_top" custom-validation-reporting="show-all-on-submit">
                     <div class="row">
                         <div class="col-ph-12 col-xs-6">
                             <div class="form-group">

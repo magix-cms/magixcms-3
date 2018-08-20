@@ -58,34 +58,16 @@ function smarty_function_widget_lang_data($params, $template)
     $currentDomain = $collectionDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST']));
 
     if($currentDomain['id_domain'] != null && isset($_SERVER['HTTP_HOST'])) {
-        $domain =  $collectionDomain->fetchData(array('context' => 'all', 'type' => 'languages'), array('id' => $currentDomain['id_domain']));
+		$template->assign('domain',$currentDomain);
+        $domain = $collectionDomain->fetchData(array('context' => 'all', 'type' => 'languages'), array('id' => $currentDomain['id_domain']));
 
         if($domain != null){
             $data = $domain;
-            // *** Load SQL DATA
-            if (!$iso_current) {
-                $default = $collectionDomain->fetchData(array('context'=>'one','type'=>'language'),array('id' => $currentDomain['id_domain']));
-                $template->assign('defaultLang',$default);
-            }
-        }else{
-            $data = $collectionsLang->fetchData(array('context'=>'all','type'=>'active'));
-            // *** Load SQL DATA
-            if (!$iso_current) {
-                $default = $collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
-                $template->assign('defaultLang',$default);
-            }
-        }
-    }else{
-        $data = $collectionsLang->fetchData(array('context'=>'all','type'=>'active'));
-        // *** Load SQL DATA
-        if (!$iso_current) {
-            $default = $collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
-            $template->assign('defaultLang',$default);
+            if (!$iso_current) $default = $collectionDomain->fetchData(array('context'=>'one','type'=>'language'),array('id' => $currentDomain['id_domain']));
         }
     }
 
-
     $assign = isset($params['assign']) ? $params['assign'] : 'data';
-    $template->assign($assign,$data);
+	$template->assign('defaultLang',$default ? $default : $collectionsLang->fetchData(array('context'=>'one','type'=>'default')));
+    $template->assign($assign,$data ? $data : $collectionsLang->fetchData(array('context'=>'all','type'=>'active')));
 }
-?>

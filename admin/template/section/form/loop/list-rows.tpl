@@ -13,7 +13,7 @@
         </a>
         {/if}
         {if $seeRecord}
-        <a class="btn btn-link action_on_record" href="{geturl}/{$recordController}.php?action=edit&edit={$id_record}">
+        <a class="btn btn-link action_on_record" href="{$url}/{$recordController}.php?action=edit&edit={$id_record}">
             <span class="fa fa-eye"></span>
         </a>
         {/if}

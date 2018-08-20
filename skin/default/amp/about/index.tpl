@@ -1,5 +1,5 @@
 {extends file="amp/layout.tpl"}
-{block name="stylesheet"}{fetch file="skin/{template}/amp/css/pages.min.css"}{/block}
+{block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/pages.min.css"}{/block}
 {block name='body:id'}about{/block}
 {block name="title"}{if $pages.name}{$pages.title = $pages.name}{/if}{if $pages.seoTitle}{$pages.seoTitle}{else}{$pages.title}{/if}{/block}
 {block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif isset($pages.resume) && !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|truncate:100:'...'}{/if}{/block}
@@ -26,7 +26,7 @@
                 {*<div class="col-ph-12 col-sm-3">
                     <nav class="child-nav">
                         <ul class="list-unstyled">
-                            <li{if !isset($smarty.get.id)} class="active"{/if}><a{if isset($smarty.get.id)} itemprop="relatedLink"{/if} href="{geturl}/{getlang}/about/" title="{#show_page#}: {$root.name}">{$root.name}</a></li>
+                            <li{if !isset($smarty.get.id)} class="active"{/if}><a{if isset($smarty.get.id)} itemprop="relatedLink"{/if} href="{$url}/{$lang}/about/" title="{#show_page#}: {$root.name}">{$root.name}</a></li>
                             {if isset($pagesTree) && $pagesTree != null && !empty($pagesTree)}
                                 {foreach $pagesTree as $child}
                                     <li{if $smarty.get.id == $child.id} class="active"{/if}><a{if $smarty.get.id != $child.id} itemprop="relatedLink"{/if} href="{$child.url}" title="{#show_page#}: {$child.title}">{$child.title}</a></li>

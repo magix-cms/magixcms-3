@@ -12,16 +12,16 @@
                 <h2 class="h5">Accès rapide</h2>
             </header>
             <div class="quick-links" role="group">
-                <a href="{geturl}/{baseadmin}/index.php?controller=news&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                <a href="{$url}/{baseadmin}/index.php?controller=news&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
                     <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter une </span><span class="add-type">actualité</span>
                 </a>
-                <a href="{geturl}/{baseadmin}/index.php?controller=pages&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                <a href="{$url}/{baseadmin}/index.php?controller=pages&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
                     <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter une </span><span class="add-type">page</span>
                 </a>
-                <a href="{geturl}/{baseadmin}/index.php?controller=category&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                <a href="{$url}/{baseadmin}/index.php?controller=category&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
                     <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter une </span><span class="add-type">catégorie</span>
                 </a>
-                <a href="{geturl}/{baseadmin}/index.php?controller=product&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
+                <a href="{$url}/{baseadmin}/index.php?controller=product&action=add" class="btn btn-default col-ph-6 col-xs-3 col-sm-6 col-md-3">
                     <span class="fa fa-plus"></span> <span class="hidden-ph hidden-xs">Ajouter un </span><span class="add-type">produit</span>
                 </a>
             </div>
@@ -32,7 +32,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-newspaper-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=news">{#last_news#|ucfirst}</a>
+                    <span class="fa fa-newspaper-o"></span> <a href="{$url}/{baseadmin}/index.php?controller=news">{#last_news#|ucfirst}</a>
                 </h2>
             </header>
             <div>
@@ -42,7 +42,7 @@
                         {foreach $lastNews as $item}
                             <tr>
                                 <td>
-                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=news&action=edit&edit={$item.id_news}">{$item.name_news}</a></p>
+                                    <p><a href="{$url}/{baseadmin}/index.php?controller=news&action=edit&edit={$item.id_news}">{$item.name_news}</a></p>
                                 </td>
                                 <td>
                                     <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
@@ -59,7 +59,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-file-text-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=pages">{#last_pages#|ucfirst}</a>
+                    <span class="fa fa-file-text-o"></span> <a href="{$url}/{baseadmin}/index.php?controller=pages">{#last_pages#|ucfirst}</a>
                 </h2>
             </header>
             <div>
@@ -69,7 +69,7 @@
                         {foreach $lastPages as $item}
                             <tr>
                                 <td>
-                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=pages&action=edit&edit={$item.id_pages}">{$item.name_pages}</a></p>
+                                    <p><a href="{$url}/{baseadmin}/index.php?controller=pages&action=edit&edit={$item.id_pages}">{$item.name_pages}</a></p>
                                 </td>
                                 <td>
                                     <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
@@ -86,7 +86,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-folder-open-o"></span> <a href="{geturl}/{baseadmin}/index.php?controller=category">{#last_categories#|ucfirst}</a>
+                    <span class="fa fa-folder-open-o"></span> <a href="{$url}/{baseadmin}/index.php?controller=category">{#last_categories#|ucfirst}</a>
                 </h2>
             </header>
             <div>
@@ -96,7 +96,7 @@
                         {foreach $lastCats as $item}
                             <tr>
                                 <td>
-                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=category&action=edit&edit={$item.id_cat}">{$item.name_cat}</a></p>
+                                    <p><a href="{$url}/{baseadmin}/index.php?controller=category&action=edit&edit={$item.id_cat}">{$item.name_cat}</a></p>
                                 </td>
                                 <td>
                                     <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
@@ -113,7 +113,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-tag"></span> <a href="{geturl}/{baseadmin}/index.php?controller=product">{#last_products#|ucfirst}</a>
+                    <span class="fa fa-tag"></span> <a href="{$url}/{baseadmin}/index.php?controller=product">{#last_products#|ucfirst}</a>
                 </h2>
             </header>
             <div>
@@ -123,7 +123,7 @@
                         {foreach $lastProducts as $item}
                             <tr>
                                 <td>
-                                    <p><a href="{geturl}/{baseadmin}/index.php?controller=product&action=edit&edit={$item.id_product}">{$item.name_p}</a></p>
+                                    <p><a href="{$url}/{baseadmin}/index.php?controller=product&action=edit&edit={$item.id_product}">{$item.name_p}</a></p>
                                 </td>
                                 <td>
                                     <p class="text-right">{$item.date_register|date_format:"%d/%m/%Y"}</p>
@@ -139,7 +139,7 @@
         {*{if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
             <section class="col-ph-12 col-xs-6 col-lg-3 pull-left">
                 <header>
-                    <h2 class="h5"><a href="{geturl}/{baseadmin}/index.php?controller=employee">
+                    <h2 class="h5"><a href="{$url}/{baseadmin}/index.php?controller=employee">
                             <span class="fa fa-user"></span> {#employees#|ucfirst}
                         </a>
                     </h2>

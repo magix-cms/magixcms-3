@@ -6,9 +6,14 @@ class backend_controller_access extends backend_db_access{
     public $id,$id_access;
 
     public $id_role,$role_name,$id_module,$view,$append,$edit_access,$del,$action_access;
-    public function __construct()
+
+	/**
+	 * @param stdClass $t
+	 * backend_controller_access constructor.
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

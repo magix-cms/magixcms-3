@@ -1,6 +1,10 @@
 <?php
 class backend_model_session{
     private $employee,$httpSession,$setting,$settings;
+
+	/**
+	 * backend_model_session constructor.
+	 */
     public function __construct()
     {
         $this->employee = new backend_db_employee();
@@ -22,6 +26,7 @@ class backend_model_session{
         $limit = $date->format('Y-m-d H:i:s');
         $this->employee->delete(array('context'=>'session','type'=>'lastSession'),array('limit'=>$limit,'id_admin'=>$data['id_admin']));
     }
+
     /**
      * Open session
      * @param $userid
@@ -64,6 +69,7 @@ class backend_model_session{
             }
         }
     }
+
     /**
      * close session
      * @return void
@@ -71,6 +77,7 @@ class backend_model_session{
     public function closeSession() {
         $this->employee->delete(array('context'=>'session','type'=>'sidSession'),array('id_admin_session'=>session_id()));
     }
+
     /**
      * Compare la session avec une entrée session mysql
      * @return void
@@ -84,4 +91,3 @@ class backend_model_session{
         );
     }
 }
-?>

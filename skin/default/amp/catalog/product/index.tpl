@@ -1,5 +1,5 @@
 {extends file="amp/catalog/index.tpl"}
-{block name="stylesheet"}{fetch file="skin/{template}/amp/css/product.min.css"}{/block}
+{block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/product.min.css"}{/block}
 {block name="amp-script"}
     {if count($product.img) > 1}
         <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
@@ -16,7 +16,7 @@
 {block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$product.resume}] parent={$parent.name} record={$product.name}}{/block}
 {block name='article'}
     {capture name="contact"}
-        {*<form action="/{getlang}/contact/" method="get" class="interested-form">
+        {*<form action="/{$lang}/contact/" method="get" class="interested-form">
             <fieldset class="text-center">
                 *}{*<p class="lead">{#interested_in#} {$product.name}&thinsp;?</p>*}{*
                 <p>
@@ -27,7 +27,7 @@
             </fieldset>
         </form>*}
         <p class="text-center interested-form">
-            <a href="{geturl}/{getlang}/amp/contact/?moreinfo={$product.name}" class="btn btn-box btn-invert btn-main-theme">{#interested_in#} {$product.name}&thinsp;?</a>
+            <a href="{$url}/{$lang}/amp/contact/?moreinfo={$product.name}" class="btn btn-box btn-invert btn-main-theme">{#interested_in#} {$product.name}&thinsp;?</a>
         </p>
     {/capture}
     <article class="catalog container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Series">
@@ -53,7 +53,7 @@
                     {foreach $product.img as $img}
                     <button on="tap:lightbox-gallery,carousel.goToSlide(index={$img@index})">
                         <i class="material-icons">fullscreen</i>
-                        <amp-img src="{geturl}{$img.imgSrc.large}"
+                        <amp-img src="{$url}{$img.imgSrc.large}"
                                  width="1000"
                                  height="618"
                                  layout="responsive"
@@ -68,7 +68,7 @@
                               type="carousel">
                     {foreach $product.img as $img}
                     <button on="tap:carousel-with-preview.goToSlide(index={$img@index})">
-                        <amp-img src="{geturl}{$img.imgSrc.small}"
+                        <amp-img src="{$url}{$img.imgSrc.small}"
                                  width="125"
                                  height="78"
                                  layout="fixed"
@@ -84,7 +84,7 @@
                                 <amp-img on="tap:lightbox-gallery.close"
                                          role="button"
                                          tabindex="0"
-                                         src="{geturl}{$img.imgSrc.large}"
+                                         src="{$url}{$img.imgSrc.large}"
                                          layout="responsive"
                                          height="618"
                                          width="1000"

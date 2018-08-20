@@ -3,9 +3,14 @@ class backend_controller_seo extends backend_db_seo {
     public $edit, $action, $tabs;
     protected $message, $template, $header, $data, $dbPlugins,$modelLanguage,$collectionLanguage;
     public $id_seo,$content,$attribute_seo,$level_seo,$type_seo;
-    public function __construct()
+
+	/**
+	 * backend_controller_seo constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

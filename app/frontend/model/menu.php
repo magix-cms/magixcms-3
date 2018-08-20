@@ -34,14 +34,22 @@
 */
 class frontend_model_menu extends frontend_db_menu {
 
-	protected $data, $routingUrl, $modelPlugins, $language, $languages, $collectionLanguage;
+	protected $template, $data, $routingUrl, $modelPlugins, $language, $languages, $collectionLanguage, $modelSystem;
 
-	public function __construct($template)
+	public $about, $pages, $catalog, $category, $plugin;
+
+	/**
+	 * frontend_model_menu constructor.
+	 * @param stdClass $t
+	 */
+	public function __construct($t = null)
 	{
+		$this->template = $t ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->modelPlugins = new frontend_model_plugins();
 		$this->data = new frontend_model_data($this);
 		$this->collectionLanguage = new component_collections_language();
+		$this->modelSystem = new frontend_model_core();
 	}
 
 	/**
@@ -73,6 +81,7 @@ class frontend_model_menu extends frontend_db_menu {
 	 * @return array
 	 */
 	public function setLinksData($iso) {
+		$current = $this->modelSystem->setCurrentId();
 		$links = $this->getItems('links',array('iso' => $iso),'all',false);
 
 		foreach ($links as &$link) {
@@ -80,20 +89,30 @@ class frontend_model_menu extends frontend_db_menu {
 				case 'pages':
 					$link['url_link']  =
 						$this->routingUrl->getBuildUrl(array(
-								'type' =>  'pages',
-								'iso'  =>  $link['iso_lang'],
-								'id'   =>  $link['id_page'],
-								'url'  =>  $link['url_link']
+								'type' => 'pages',
+								'iso'  => $link['iso_lang'],
+								'id'   => $link['id_page'],
+								'url'  => $link['url_link']
+							)
+						);
+					break;
+				case 'about_page':
+					$link['url_link']  =
+						$this->routingUrl->getBuildUrl(array(
+								'type' => 'about',
+								'iso'  => $link['iso_lang'],
+								'id'   => $link['id_page'],
+								'url'  => $link['url_link']
 							)
 						);
 					break;
 				case 'category':
 					$link['url_link']  =
 						$this->routingUrl->getBuildUrl(array(
-								'type' =>  'category',
-								'iso'  =>  $link['iso_lang'],
-								'id'   =>  $link['id_page'],
-								'url'  =>  $link['url_link']
+								'type' => 'category',
+								'iso'  => $link['iso_lang'],
+								'id'   => $link['id_page'],
+								'url'  => $link['url_link']
 							)
 						);
 					break;
@@ -105,8 +124,71 @@ class frontend_model_menu extends frontend_db_menu {
 				case 'plugin': $link['controller'] = $link['plugin_name']; break;
 				default: $link['controller'] = $link['type_link'];
 			}
+
+			if($link['mode_link'] !== 'simple') {
+				$data = null;
+				$model = null;
+
+				switch ($link['type_link']) {
+					case 'home':
+					case 'pages':
+						if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
+						$model = $this->pages;
+						$conf = array(
+							'context' => 'all',
+							'type' => 'menu'
+						);
+						if($link['type_link'] === 'pages') $conf['select'] = array($iso => $link['id_page']);
+						$data = $this->pages->getData(
+							$conf,
+							$current
+						);
+						if($link['type_link'] === 'pages') $data = $data[0]['subdata'];
+						break;
+					case 'about':
+					case 'about_page':
+						if(!$this->about) $this->about = new frontend_model_about($this->template);
+						$model = $this->about;
+						$conf = array(
+							'context' => $link['mode_link'] === 'dropdown' ? 'parent' : 'all',
+							'type' => 'menu'
+						);
+						if($link['type_link'] === 'about_page') $conf['select'] = array($iso => $link['id_page']);
+						$data = $this->about->getData(
+							$conf,
+							$current
+						);
+						if($link['type_link'] === 'about_page') $data = $data[0]['subdata'];
+						break;
+					case 'catalog':
+					case 'category':
+						if(!$this->catalog) $this->catalog = new frontend_model_catalog($this->template);
+						$model = $this->catalog;
+						$conf = array(
+							'context' => 'category'
+						);
+						if($link['type_link'] === 'category') $conf['select'] = array($iso => $link['id_page']);
+						$data = $this->catalog->getData(
+							$conf,
+							$current
+						);
+						if($link['type_link'] === 'category') $data = $data[0]['subdata'];
+						break;
+					case 'plugin':
+						$link['subdata'] = $this->getPluginPages(
+							array(
+								'type' => 'plugin',
+								'id' => $link['id_page'],
+								'lang' => $iso
+							)
+						);
+						break;
+				}
+
+				if($data) $link['subdata'] = $this->data->parseData($data,$model,$current);
+			}
 		}
 
-		return $links;
+		$this->template->assign('links',$links);
 	}
 }

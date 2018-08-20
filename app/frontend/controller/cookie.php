@@ -51,11 +51,12 @@ class frontend_controller_cookie {
 	public $cookie,$source;
 
 	/**
+	 * @param stdClass $t
 	 * frontend_controller_home constructor.
 	 */
-	public function __construct(){
+	public function __construct($t = null){
 		$formClean = new form_inputEscape();
-		$this->template = new frontend_model_template();
+		$this->template = $t ? $t : new frontend_model_template();
 		$this->header = new http_header();
 
 		if(http_request::isGet('__amp_source_origin')) {

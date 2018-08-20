@@ -3,7 +3,7 @@
 {block name='body:id'}access{/block}
 
 {block name='article:header'}
-    <h1 class="h2"><a href="{geturl}/{baseadmin}/index.php?controller=access" title="Afficher la liste des rôles">{#access#|ucfirst}</a></h1>
+    <h1 class="h2"><a href="{$url}/{baseadmin}/index.php?controller=access" title="Afficher la liste des rôles">{#access#|ucfirst}</a></h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="edit" class_name=$cClass} eq 1}

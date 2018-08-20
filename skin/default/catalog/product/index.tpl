@@ -5,7 +5,7 @@
 {block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$product.resume}] parent={$parent.name} record={$product.name}}{/block}
 {block name='article'}
     {capture name="contact"}
-        <form action="/{getlang}/contact/" method="get" class="interested-form">
+        <form action="/{$lang}/contact/" method="get" class="interested-form">
             <fieldset class="text-center">
                 {*<p class="lead">{#interested_in#} {$product.name}&thinsp;?</p>*}
                 <p>
@@ -29,22 +29,21 @@
                 <meta itemprop="name" content="{$parent.name}">
                 <meta itemprop="url" content="{$parent.url}">
             </div>
-            {if !$product.img.default}
-                {if count($product.img) > 1}
-                    {include file="catalog/loop/gallery.tpl"}
-                {elseif count($product.img) > 0}
-                    {$img = $product.img[0]}
-                    <figure{if $img.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
-                        {if $img.imgSrc.medium}
-                            <meta itemprop="contentUrl" content="{$img.imgSrc.large}" />
-                            <a href="{$img.imgSrc.large}" class="img-zoom" title="{$product.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                                <img src="{$img.imgSrc.medium}" alt="{$product.name}" class="img-responsive" itemprop="contentUrl"/>
-                            </a>
-                        {else}
-                            <img class="img-responsive" src="/skin/{template}/img/catalog/product-default.png" alt="{$product.name}" />
-                        {/if}
-                    </figure>
-                {/if}
+            {*{$product.imgs|var_dump}*}
+            {if count($product.imgs) > 1}
+                {include file="catalog/loop/gallery.tpl"}
+            {elseif count($product.imgs) > 0}
+                {$img = $product.imgs[0]}
+                <figure{if $img.img.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
+                    {if $img.img.medium}
+                        <meta itemprop="contentUrl" content="{$img.img.large}" />
+                        <a href="{$img.img.large.src}" class="img-zoom" title="{$product.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
+                            <img src="{$product.img_default}" data-src="{$img.img.medium.src}" alt="{$product.name}" class="img-responsive lazy" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
+                        </a>
+                    {else}
+                        <img class="img-responsive" src="{$product.img_default}" alt="{$product.name}" />
+                    {/if}
+                </figure>
             {/if}
             <div class="text" itemprop="description">
                 {$product.content}
@@ -68,7 +67,7 @@
 
 {block name="foot"}
     {strip}{capture name="scriptVendor"}
-        /min/?f=skin/{template}/js/vendor/smooth-gallery.min.js
+        /min/?f=skin/{$theme}/js/vendor/smooth-gallery.min.js
     {/capture}
         {script src=$smarty.capture.scriptVendor concat=$concat type="javascript"}{/strip}
 {/block}

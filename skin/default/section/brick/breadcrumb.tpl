@@ -8,7 +8,7 @@
     {$hname = {#home#}}
 {/if}
 {if isset($smarty.get.controller) && $smarty.get.controller != 'home'}
-    {$bread[] = ['name' => {$hname},'url' => "{geturl}/{getlang}/{if $amp}amp/{/if}",'title' => {#show_home#}]}
+    {$bread[] = ['name' => {$hname},'url' => "{$url}/{$lang}/{if $amp}amp/{/if}",'title' => {#show_home#}]}
 {else}
     {$bread[] = ['name' => {$hname}]}
 {/if}
@@ -20,7 +20,7 @@
 {if $root.name === ''}{$root.name = {#catalog#}}{/if}
 {* Root *}
 {if $smarty.get.id}
-    {$bread[] = ['name' => {$root.name},'url' => "{geturl}/{getlang}/{if $amp}amp/{/if}about/",'title' => {$root.name}]}
+    {$bread[] = ['name' => {$root.name},'url' => "{$url}/{$lang}/{if $amp}amp/{/if}about/",'title' => {$root.name}]}
 {else}
     {$bread[] = ['name' => {$root.name}]}
 {/if}
@@ -30,7 +30,7 @@
 {* Pages *}
 {* Parent *}
 {if $pages.id_parent}
-    {$bread[] = ['name' => {$parent.title},'url' => "{geturl}{$parent.url}",'title' => "{#show_page#}: {$parent.title}"]}
+    {$bread[] = ['name' => {$parent.title},'url' => "{$url}{$parent.url}",'title' => "{#show_page#}: {$parent.title}"]}
 {/if}
 {* /Parent *}
 {if $smarty.get.id}
@@ -43,7 +43,7 @@
 {if $root.name === ''}{$root.name = {#catalog#}}{/if}
 {* Root *}
 {if $cat || $product}
-    {$bread[] = ['name' => {$root.name},'url' => "{geturl}/{getlang}/{if $amp}amp/{/if}catalog/",'title' => {$root.name}]}
+    {$bread[] = ['name' => {$root.name},'url' => "{$url}/{$lang}/{if $amp}amp/{/if}catalog/",'title' => {$root.name}]}
 {else}
     {$bread[] = ['name' => {$root.name}]}
 {/if}
@@ -51,7 +51,7 @@
 
 {* Parent category *}
 {if !empty($parent)}
-    {$bread[] = ['name' => {$parent.name},'url' => "{geturl}{$parent.url}",'title' => "{#show_category#}: {$parent.name}"]}
+    {$bread[] = ['name' => {$parent.name},'url' => "{$url}{$parent.url}",'title' => "{#show_category#}: {$parent.name}"]}
 {/if}
 
 {* Categories *}
@@ -69,7 +69,7 @@
 {* News *}
 {* Root *}
 {if $smarty.get.id || $smarty.get.tag || $smarty.get.date || $smarty.get.year}
-    {$bread[] = ['name' => {#news#},'url' => "{geturl}/{getlang}/{if $amp}amp/{/if}news/",'title' => {#show_news#}]}
+    {$bread[] = ['name' => {#news#},'url' => "{$url}/{$lang}/{if $amp}amp/{/if}news/",'title' => {#show_news#}]}
 {else}
     {$bread[] = ['name' => {#news#}]}
 {/if}

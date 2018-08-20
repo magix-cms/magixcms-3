@@ -66,7 +66,6 @@ class backend_controller_login extends backend_db_employee{
 		$stay_logged,
 		$kpl,
 		$token,
-		$ticket_passwd,
 		$logout;
 
     public static $notify = '';
@@ -76,16 +75,17 @@ class backend_controller_login extends backend_db_employee{
      */
     private $employee, $session, $httpSession;
 
-    /**
-     * Constructor
-     */
-    public function __construct(){
-        $this->header = new http_header();
-        $this->template = new backend_model_template();
+	/**
+	 * backend_controller_login constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null){
+		$this->template = $t ? $t : new backend_model_template;
+		$this->header = new http_header();
 		$this->data = new backend_model_data($this);
         $this->message = new component_core_message($this->template);
 		$this->mail = new mail_swift('mail');
-		$this->modelDomain = new backend_controller_domain();
+		$this->modelDomain = new backend_controller_domain($t);
 		$this->setting = new backend_model_setting();
 		$this->settings = $this->setting->getSetting();
 		$formClean = new form_inputEscape();
@@ -110,9 +110,6 @@ class backend_controller_login extends backend_db_employee{
         }
 		if (http_request::isGet('k')) {
 			$this->key = $formClean->simpleClean($_GET['k']);
-		}
-		if (http_request::isGet('t')) {
-			$this->ticket_passwd = $formClean->simpleClean($_GET['t']);
 		}
 
         $this->httpSession = new http_session($this->settings['ssl']);
@@ -361,7 +358,7 @@ class backend_controller_login extends backend_db_employee{
 		$this->template->assign('data', $data);
 		$bodyMail = $this->template->fetch('login/mail/'.$type.'.tpl');
 
-		if ($cssInliner) {
+		if ($cssInliner['css_inliner']) {
 			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'/admin/template/login/css' => 'foundation-emails.css'));
 		}
 
@@ -373,10 +370,9 @@ class backend_controller_login extends backend_db_employee{
 	}
 
 	/**
-	 * @param array $data
-	 * @param string $mail
-	 * @param string $type
-	 * @param bool $json_response
+	 * @param $data
+	 * @param $mail
+	 * @param $type
 	 */
 	private function sendMail($data,$mail,$type,$json_response = false){
 		$noreply = false;
@@ -399,7 +395,7 @@ class backend_controller_login extends backend_db_employee{
 			$this->mail->batch_send_mail($message);
 
 			if($json_response){
-				$this->message->json_post_response(true,null,$this->template->getConfigVars('request_password_'.$type));
+				$this->message->json_post_response(true,'send');
 			}
 		}
 	}
@@ -414,20 +410,11 @@ class backend_controller_login extends backend_db_employee{
         	switch ($this->action) {
 				case 'rstpwd':
 					if(isset($this->email_forgot)){
-						$data = $this->getItems('key',array('email_forgot' => $this->email_forgot),'one',false);
+						$data = $this->getItems('key',array('email_forgot'=> $this->email_forgot),'one',false);
 						if($data) {
 							$pwdTicket = filter_rsa::randString(32);
 							$data['ticket'] = $pwdTicket;
-							parent::update(
-								array(
-									'context' => 'employee',
-									'type' => 'askPassword'
-								),
-								array(
-									'email_admin' => $this->email_forgot,
-									'change_passwd' => $pwdTicket
-								)
-							);
+							parent::update(array('context'=>'employee','type'=>'askPassword'),array('email_admin'=>$this->email_forgot,'token'=>$pwdTicket));
 							$this->sendMail($data,$this->email_forgot,$this->action,true);
 						} else {
 							$this->message->json_post_response(false,'error_mail_account');
@@ -441,15 +428,7 @@ class backend_controller_login extends backend_db_employee{
 						$data = $this->getItems('by_key',array('keyuniqid_admin'=>$this->key,'ticket'=>$this->ticket_passwd),'one',false);
 						if($data){
 							$cryptpass = filter_rsa::randMicroUI();
-							parent::update(
-								array(
-									'context' => 'employee',
-									'type' => 'newPassword'
-								),
-								array(
-									'passwd_admin' => password_hash($cryptpass, PASSWORD_DEFAULT),
-									'email_admin' => $data['email_admin'])
-							);
+							parent::update(array('context'=>'employee','type'=>'newPassword'),array('newPassword'=>password_hash($cryptpass, PASSWORD_DEFAULT)/*filter_rsa::hashEncode('sha1',$cryptpass)*/,'email_admin'=>$data['email_admin']));
 							$this->sendMail(array('newPassword'=>$cryptpass),$data['email_admin'],$this->action);
 						} else {
 							$this->template->assign('error_tikcet',true);

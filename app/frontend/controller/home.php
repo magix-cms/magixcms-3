@@ -50,10 +50,12 @@ class frontend_controller_home extends frontend_db_home{
     public $http_error,$getlang;
 
     /**
+	 * @param stdClass $t
      * frontend_controller_home constructor.
      */
-    public function __construct(){
-        $this->template = new frontend_model_template();
+    public function __construct($t = null){
+        //$this->template = new frontend_model_template();
+        $this->template = $t ? $t : new frontend_model_template();
         $this->header = new component_httpUtils_header($this->template);
         $this->data = new frontend_model_data($this);
         if(http_request::isGet('http_error')){

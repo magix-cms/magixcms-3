@@ -36,14 +36,15 @@ class frontend_model_share extends frontend_db_share {
 	/**
 	 * @var frontend_model_data
 	 */
-	protected $data, $routingUrl, $modelPlugins, $language, $languages;
+	protected $template, $data, $routingUrl, $modelPlugins, $language, $languages;
 
 	/**
 	 * frontend_model_about constructor.
-	 * @param $template
+	 * @param stdClass $t
 	 */
-	public function __construct($template)
+	public function __construct($t = null)
 	{
+		$this->template = $t ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->modelPlugins = new frontend_model_plugins();
 		$this->data = new frontend_model_data($this);

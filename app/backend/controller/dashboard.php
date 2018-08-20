@@ -42,13 +42,18 @@
 class backend_controller_dashboard{
     protected $router,$template,$employee,$news,$pages,$cats,$products;
     public $http_error;
-    public function __construct(){
-        $this->employee = new backend_controller_employee();
-		$this->news = new backend_controller_news();
-		$this->pages = new backend_controller_pages();
-		$this->cats = new backend_controller_category();
-		$this->products = new backend_controller_product();
-        $this->template = new backend_model_template();
+
+	/**
+	 * @param stdClass $t
+	 * backend_controller_dashboard constructor.
+	 */
+    public function __construct($t = null){
+		$this->template = $t ? $t : new backend_model_template;
+		$this->employee = new backend_controller_employee($t);
+		$this->news = new backend_controller_news($t);
+		$this->pages = new backend_controller_pages($t);
+		$this->cats = new backend_controller_category($t);
+		$this->products = new backend_controller_product($t);
         if(http_request::isGet('http_error')){
             $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
         }

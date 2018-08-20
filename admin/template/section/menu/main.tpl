@@ -1,5 +1,5 @@
 <li {if isset($class)} class="{$class}"{/if}>
-    <a href="{geturl}/{baseadmin}/index.php?controller=dashboard">
+    <a href="{$url}/{baseadmin}/index.php?controller=dashboard">
         <span class="fa fa-tachometer"></span> Tableau de bord
     </a>
 </li>

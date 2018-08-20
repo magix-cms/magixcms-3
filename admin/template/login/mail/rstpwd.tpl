@@ -44,7 +44,7 @@
                                 <td>
                                     <table>
                                         <tr>
-                                            <td><a href="{geturl}/admin/index.php?controller=login&amp;action=newpwd&amp;k={$data.keyuniqid_admin}&amp;t={$data.ticket}">Demander un nouveau mot de passe</a></td>
+                                            <td><a href="{$url}/admin/index.php?controller=login&amp;action=newpwd&amp;k={$data.keyuniqid_admin}&amp;t={$data.ticket}">Demander un nouveau mot de passe</a></td>
                                         </tr>
                                     </table>
                                 </td>

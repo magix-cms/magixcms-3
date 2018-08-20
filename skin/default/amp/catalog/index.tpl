@@ -1,5 +1,5 @@
 {extends file="amp/layout.tpl"}
-{block name="stylesheet"}{fetch file="skin/{template}/amp/css/catalog.min.css"}{/block}
+{block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/catalog.min.css"}{/block}
 {block name='body:id'}catalog{/block}
 {block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{$root.name}]}{/block}
 {block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{$root.content|truncate:100:'...'}]}{/block}

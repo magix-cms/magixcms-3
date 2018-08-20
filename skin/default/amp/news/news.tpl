@@ -1,5 +1,5 @@
 {extends file="amp/news/index.tpl"}
-{block name="stylesheet"}{fetch file="skin/{template}/amp/css/topicality.min.css"}{/block}
+{block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/topicality.min.css"}{/block}
 {block name='body:id'}topicality{/block}
 {block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$news.title}] record={$news.title}}{/block}
 {block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$news.resume}] record={$news.title}}{/block}
@@ -106,7 +106,7 @@
                     </div>
                 </div>
             </header>
-            <meta itemprop="mainEntityOfPage" content="{geturl}{$news.uri}"/>
+            <meta itemprop="mainEntityOfPage" content="{$url}{$news.uri}"/>
             <meta itemprop="wordCount" content="{$news.content|count_words}" />
             <meta itemprop="description" content="{$news.resume}"/>
             <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
@@ -114,7 +114,7 @@
                 <meta itemprop="name" content="{$companyData.name}">
                 <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
                 <div id="logo-org">
-                    <meta itemprop="url" content="{geturl}/skin/{template}/img/logo/{#logo_img#}">
+                    <meta itemprop="url" content="{$url}/skin/{$theme}/img/logo/{#logo_img#}">
                     <meta itemprop="width" content="269">
                     <meta itemprop="height" content="50">
                 </div>
@@ -127,18 +127,18 @@
                 {if $news.imgSrc.small}
                     {*<figure{if $news.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
                         {if $news.imgSrc.small}
-                            <meta itemprop="url" content="{geturl}{$news.imgSrc.medium}" />
+                            <meta itemprop="url" content="{$url}{$news.imgSrc.medium}" />
                             <meta itemprop="height" content="618" />
                             <meta itemprop="width" content="1000" />
                             <a href="{$news.imgSrc.medium}" class="img-zoom" title="{$news.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
                                 <img src="{$news.imgSrc.medium}" alt="{$news.name}" itemprop="contentUrl"/>
                             </a>
                         {else}
-                            <img src="/skin/{template}/img/catalog/news-default.png" alt="{$news.name}" />
+                            <img src="/skin/{$theme}/img/catalog/news-default.png" alt="{$news.name}" />
                         {/if}
                     </figure>*}
                     <figure itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
-                        <meta itemprop="url" content="{geturl}{$news.imgSrc.large}" />
+                        <meta itemprop="url" content="{$url}{$news.imgSrc.large}" />
                         <meta itemprop="height" content="618" />
                         <meta itemprop="width" content="1000" />
                         <amp-img on="tap:lightbox1"

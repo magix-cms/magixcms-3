@@ -93,45 +93,46 @@
  */
 function smarty_function_widget_news_data($params, $template)
 {
-    $ModelNews          =   new frontend_model_news($template);
-    $modelSystem        =   new frontend_model_core();
+	if(!empty($params)) {
+		$ModelNews = new frontend_model_news($template);
+		$modelSystem = new frontend_model_core();
 
-    // Set and load data
-    $current    =   $modelSystem->setCurrentId();
-    $conf       =   (is_array($params['conf'])) ? $params['conf'] : array();
-    $override   =   $params['conf']['plugins']['override'] ? $params['conf']['plugins']['override'] : '';
-    $data       =   $ModelNews->getData($conf,$current,$override);
-    $newRow     =   (is_array($params['conf']['plugins']['item'])) ? $params['conf']['plugins']['item'] : array();
-    $current    =   $current;
+		// Set and load data
+		$current  = $modelSystem->setCurrentId();
+		$conf     = (is_array($params['conf'])) ? $params['conf'] : array();
+		$override = $params['conf']['plugins']['override'] ? $params['conf']['plugins']['override'] : '';
+		$data     = $ModelNews->getData($conf,$current,$override);
+		$newRow   = (is_array($params['conf']['plugins']['item'])) ? $params['conf']['plugins']['item'] : array();
+		$current  = $current;
 
-    // Set Pagination
-    /*$pagination =   array();
-    if (isset($data['total']) AND isset($data['limit'])) {
-        $pagination  =
-            $ModelPager->setPaginationData(
-                $data['total'],
-                $data['limit'],
-                '/'.$current['lang']['iso'].$ModelRewrite->mod_news_lang($current['lang']['iso']),
-                $current['news']['pagination']['id'],
-                '/'
-            );
-        unset($data['total']);
-        unset($data['limit']);
-    }*/
-    // Format data
-    $items = array();
-    if ($data != null) {
-        foreach ($data as $row)
-        {
-            if (isset($row['id_news']) OR isset($row['id_tag'])) {
-                $items[]    =   $ModelNews->setItemData($row,$current,$newRow);
-            }
-        }
+		// Set Pagination
+		/*$pagination =   array();
+		if (isset($data['total']) AND isset($data['limit'])) {
+			$pagination  =
+				$ModelPager->setPaginationData(
+					$data['total'],
+					$data['limit'],
+					'/'.$current['lang']['iso'].$ModelRewrite->mod_news_lang($current['lang']['iso']),
+					$current['news']['pagination']['id'],
+					'/'
+				);
+			unset($data['total']);
+			unset($data['limit']);
+		}*/
+		// Format data
+		$items = array();
+		if ($data != null) {
+			foreach ($data as $row)
+			{
+				if (isset($row['id_news']) OR isset($row['id_tag'])) {
+					$items[] = $ModelNews->setItemData($row,$current,$newRow);
+				}
+			}
+		}
+		$assign = isset($params['assign']) ? $params['assign'] : 'data';
+		$template->assign($assign,$items);
 
-    }
-    $assign = isset($params['assign']) ? $params['assign'] : 'data';
-    $template->assign($assign,$items);
-
-    //$assignPager = isset($params['assignPagination']) ? $params['assignPagination'] : 'paginationData';
-    //$template->assign($assignPager,$pagination);
+		//$assignPager = isset($params['assignPagination']) ? $params['assignPagination'] : 'paginationData';
+		//$template->assign($assignPager,$pagination);
+	}
 }

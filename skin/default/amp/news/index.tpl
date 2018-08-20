@@ -1,5 +1,5 @@
 {extends file="amp/layout.tpl"}
-{block name="stylesheet"}{fetch file="skin/{template}/amp/css/news.min.css"}{/block}
+{block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/news.min.css"}{/block}
 {block name='body:id'}news{/block}
 {block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{#news#}]}{/block}
 {block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{#last_news#}]}{/block}

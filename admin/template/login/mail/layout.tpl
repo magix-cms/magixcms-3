@@ -89,8 +89,8 @@
                                                             </tbody>
                                                         </table>
                                                         <p class="text-right" style="text-align: right;">
-                                                            <a href="{geturl}" target ="_blank" title="Magix CMS" style="text-decoration: none;font-size: 46px;">
-                                                                <img src="{geturl}/admin/template/img/logo/logo-magix_cms@229.png" alt="Magix CMS" width="229" height="50"/>
+                                                            <a href="{$url}" target ="_blank" title="Magix CMS" style="text-decoration: none;font-size: 46px;">
+                                                                <img src="{$url}/admin/template/img/logo/logo-magix_cms@229.png" alt="Magix CMS" width="229" height="50"/>
                                                             </a>
                                                         </p>
                                                         <table class="spacer">

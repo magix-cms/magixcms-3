@@ -74,7 +74,7 @@ class backend_model_data extends backend_db_scheme{
 				$params = $id;
 			}
 			else {
-				$params = array(':id' => $id);
+				$params = array('id' => $id);
 			}
 			$context = $context ? $context : 'one';
 		} else {

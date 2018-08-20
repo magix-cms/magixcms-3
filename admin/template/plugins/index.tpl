@@ -21,11 +21,11 @@
                             <tr>
                                 <td>
                                 {if $item.translate eq '1'}
-                                    <p><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=translate"><span class="fa fa-language"></span> {#translate#}</a></p>
+                                    <p><a href="{$url}/{baseadmin}/index.php?controller={$item.name}&amp;action=translate"><span class="fa fa-language"></span> {#translate#}</a></p>
                                 {/if}
                                 </td>
                                 <td>
-                                    <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a></p>
+                                    <p class="text-right"><a href="{$url}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a></p>
                                 </td>
                             </tr>
                         </tbody>
@@ -36,11 +36,11 @@
                         <div class="col-xs-6">
                             *}{*<p><span class="fa fa-check"></span> Installé</p>*}{*
                             {if $item.translate eq '1'}
-                            <p><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=translate"><span class="fa fa-language"></span> {#translate#}</a></p>
+                            <p><a href="{$url}/{baseadmin}/index.php?controller={$item.name}&amp;action=translate"><span class="fa fa-language"></span> {#translate#}</a></p>
                             {/if}
                         </div>
                         <div class="col-xs-6">
-                            <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a></p>
+                            <p class="text-right"><a href="{$url}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a></p>
                         </div>
                     </div>
                 </div>*}
@@ -63,7 +63,7 @@
                             *}{*<p><span class="fa fa-check"></span> Installé</p>*}{*
                         </div>
                         <div class="col-xs-6">
-                            <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=setup">Installation</a></p>
+                            <p class="text-right"><a href="{$url}/{baseadmin}/index.php?controller={$item.name}&amp;action=setup">Installation</a></p>
                         </div>
                     </div>
                 </div>*}
@@ -75,7 +75,7 @@
                                 {*<p><span class="fa fa-check"></span> Installé</p>*}
                             </td>
                             <td>
-                                <p class="text-right"><a href="{geturl}/{baseadmin}/index.php?controller={$item.name}&amp;action=setup">Installation</a></p>
+                                <p class="text-right"><a href="{$url}/{baseadmin}/index.php?controller={$item.name}&amp;action=setup">Installation</a></p>
                             </td>
                         </tr>
                         </tbody>

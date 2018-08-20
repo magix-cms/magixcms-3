@@ -12,7 +12,7 @@
                 ]
                 assign="pagesTree"
                 }
-                {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{geturl}/{getlang}/","title" => {#home#}]}
+                {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{$url}/{$lang}/","title" => {#home#}]}
                 <h1 itemprop="name">{$pages.title}</h1>
             </header>
             <div class="text" itemprop="text">

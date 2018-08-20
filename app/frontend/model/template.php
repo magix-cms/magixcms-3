@@ -54,7 +54,7 @@ class frontend_model_template{
     /**
      * @var component_collections_setting
      */
-    public $collectionsSetting,$collectionsLang;
+    public $theme,$collectionsSetting,$collectionsLang;
 	/**
 	 *
 	 * Constructor
@@ -65,6 +65,7 @@ class frontend_model_template{
         $this->amp = http_request::isGet('amp') ? true : false;
         $this->ConfigFile = 'local_';
         $this->DBDomain = new frontend_db_domain();
+        $this->theme = $this->themeSelected();
     }
 	/**
 	 * 
@@ -157,7 +158,7 @@ class frontend_model_template{
 	public function configLoad($section = ''){
 	    try {
             frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad($this->ConfigFile), $section);
-            if (file_exists(component_core_system::basePath() . '/skin/' . $this->themeSelected() . '/i18n/')) {
+            if (file_exists(component_core_system::basePath() . '/skin/' . $this->theme . '/i18n/')) {
                 frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad('theme_'));
             }
         }catch(Exception $e) {
@@ -253,8 +254,8 @@ class frontend_model_template{
      * @param object $parent
      */
     public function display($template = null, $cache_id = null, $compile_id = null, $parent = null){
-    	$theme = $this->themeSelected();
-		if($this->amp) {
+    	if($this->amp) {
+			$theme = $this->theme;
 			if(file_exists(component_core_system::basePath().'/skin/'.$theme.'/amp/'.$template)){
 				$template = 'amp/'.$template;
 			}
@@ -362,7 +363,7 @@ class frontend_model_template{
     public function setDefaultConfigDir(){
         return array(
             component_core_system::basePath()."locali18n/",
-            component_core_system::basePath() . "skin/" . $this->themeSelected() . '/i18n/'
+            component_core_system::basePath() . "skin/" . $this->theme . '/i18n/'
         );
     }
 	/**

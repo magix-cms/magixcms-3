@@ -11,6 +11,6 @@
 {/block}
 
 {block name="main:after"}
-    {include file="home/brick/main-cat.tpl"}
-    {include file="news/brick/last-news.tpl"}
+    {*{include file="home/brick/main-cat.tpl"}*}
+    {*{include file="news/brick/last-news.tpl"}*}
 {/block}

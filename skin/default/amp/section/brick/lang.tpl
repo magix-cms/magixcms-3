@@ -28,12 +28,12 @@
                         <ul class="list-unstyled">
                             {foreach $dataLang as $k => $lang}
                                 {if isset($hreflang) && is_array($hreflang) && isset($hreflang[$lang.id_lang])}
-                                    {$dataLang[$k]['url'] = "{geturl}{$hreflang[$lang.id_lang]}"}
+                                    {$dataLang[$k]['url'] = "{$url}{$hreflang[$lang.id_lang]}"}
                                 {else}
                                     {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
-                                        {$dataLang[$k]['url'] = "{geturl}/{$lang.iso_lang}/amp/{$smarty.get.controller}/"}
+                                        {$dataLang[$k]['url'] = "{$url}/{$lang.iso_lang}/amp/{$smarty.get.controller}/"}
                                     {else}
-                                        {$dataLang[$k]['url'] = "{geturl}/{$lang.iso_lang}/amp/"}
+                                        {$dataLang[$k]['url'] = "{$url}/{$lang.iso_lang}/amp/"}
                                     {/if}
                                 {/if}
                                 <li>

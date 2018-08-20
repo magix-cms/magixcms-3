@@ -1,7 +1,7 @@
 {if {#block_cms_pages#}}
     {widget_cms_data
     conf = [
-    'select' => [{getlang} => {#block_cms_pages#}],
+    'select' => [{$lang} => {#block_cms_pages#}],
 'context' => 'all'
 ]
 assign="pages"

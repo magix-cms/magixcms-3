@@ -4,9 +4,13 @@ class backend_controller_news extends backend_db_news{
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$makeFiles,$finder;
     public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img;
 
-    public function __construct()
+	/**
+	 * backend_controller_news constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

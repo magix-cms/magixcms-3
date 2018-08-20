@@ -6,12 +6,14 @@ class frontend_controller_news extends frontend_db_news
      */
     protected $template, $header, $data, $modelNews, $modelCore, $dateFormat, $routingUrl;
     public $getlang, $id, $id_parent,$date,$year,$month,$tag;
+
     /**
+	 * @param stdClass $t
      * frontend_controller_pages constructor.
      */
-    public function __construct(){
-        $formClean = new form_inputEscape();
-        $this->template = new frontend_model_template();
+    public function __construct($t = null){
+		$this->template = $t ? $t : new frontend_model_template();
+		$formClean = new form_inputEscape();
         $this->header = new component_httpUtils_header($this->template);
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();

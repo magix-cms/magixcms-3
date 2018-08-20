@@ -1,6 +1,6 @@
 {extends file="layout.tpl"}
 {block name="styleSheet" append}
-    <script src="{if isset($smarty.server.HTTPS) eq 'on'}https{else}http{/if}://maps.google.com/maps/api/js?sensor=false&amp;language={getlang}{if $config.api_key != '' AND $config.api_key != NULL}&amp;key={$config.api_key}{/if}" type="text/javascript"></script>
+    <script src="{if isset($smarty.server.HTTPS) eq 'on'}https{else}http{/if}://maps.google.com/maps/api/js?sensor=false&amp;language={$lang}{if $config.api_key != '' AND $config.api_key != NULL}&amp;key={$config.api_key}{/if}" type="text/javascript"></script>
     {headlink rel="stylesheet" href="/min/?f=plugins/gmap/css/perfect-scrollbar.min.css" concat=$concat media="screen"}
 {/block}
 {block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{#seo_title_gmap#}]}{/block}
@@ -14,7 +14,7 @@
 {block name="foot" append}
     {script src="/min/?g=form" concat=$concat type="javascript"}
     {capture name="formjs"}{strip}
-        /min/?f=skin/{template}/js/form.min.js
+        /min/?f=skin/{$theme}/js/form.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.formjs concat=$concat type="javascript" load='async'}
     {script src="/min/?f=plugins/gmap/js/perfect-scrollbar.min.js,plugins/gmap/js/gmap3-7.2.min.js,plugins/gmap/js/gmap.min.js" concat=$concat type="javascript"}

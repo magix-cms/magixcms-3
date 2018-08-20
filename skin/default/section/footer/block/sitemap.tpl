@@ -1,12 +1,12 @@
 <div id="block-sitemap" class="col block">
-    <h4><a href="{geturl}/{getlang}/" title="">{#site_navigation#|ucfirst}</a></h4>
+    <h4><a href="{$url}/{$lang}/" title="">{#site_navigation#|ucfirst}</a></h4>
     <ul class="link-list list-unstyled">
         {*<li>
-            <a href="{geturl}/{getlang}/" title="">Accueil</a>
+            <a href="{$url}/{$lang}/" title="">Accueil</a>
         </li>
         {widget_cms_data
         conf = [
-        'select' => [{getlang} => {#menu_pages#}],
+        'select' => [{$lang} => {#menu_pages#}],
         'context' => 'parent'
         ]
         assign="pages"
@@ -17,11 +17,11 @@
             </li>
         {/foreach}
         <li>
-            <a href="{geturl}/{getlang}/{#nav_catalog_uri#}/" title="{#catalog#|ucfirst}">{#catalog#|ucfirst}</a>
+            <a href="{$url}/{$lang}/{#nav_catalog_uri#}/" title="{#catalog#|ucfirst}">{#catalog#|ucfirst}</a>
         </li>
         {widget_cms_data
         conf = [
-        'select' => [{getlang} => {#menu_pages_2#}],
+        'select' => [{$lang} => {#menu_pages_2#}],
         'context' => 'parent'
         ]
         assign="pages"
@@ -32,10 +32,10 @@
             </li>
         {/foreach}
         <li>
-            <a href="{geturl}/{getlang}/{#nav_news_uri#}/" title="{#show_news#|ucfirst}">{#news#|ucfirst}</a>
+            <a href="{$url}/{$lang}/{#nav_news_uri#}/" title="{#show_news#|ucfirst}">{#news#|ucfirst}</a>
         </li>
         <li>
-            <a href="{geturl}/{getlang}/contact/" title="{#show_contact_form#|ucfirst}">{#contact#|ucfirst}</a>
+            <a href="{$url}/{$lang}/contact/" title="{#show_contact_form#|ucfirst}">{#contact#|ucfirst}</a>
         </li>*}
         {foreach $links as $k => $link}
             <li>

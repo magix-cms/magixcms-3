@@ -7,13 +7,13 @@
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="item active">
-            <img src="/skin/{template}/img/carousel/carousel-urbex.jpg" width="1920" height="500" alt="">
+            <img src="/skin/{$theme}/img/carousel/carousel-urbex.jpg" width="1920" height="500" alt="">
         </div>
         <div class="item">
-            <img src="/skin/{template}/img/carousel/carousel-mountain-walker.jpg" width="1920" height="500" alt="">
+            <img src="/skin/{$theme}/img/carousel/carousel-mountain-walker.jpg" width="1920" height="500" alt="">
         </div>
         <div class="item">
-            <img src="/skin/{template}/img/carousel/carousel-skyscraper.jpg" width="1920" height="500" alt="">
+            <img src="/skin/{$theme}/img/carousel/carousel-skyscraper.jpg" width="1920" height="500" alt="">
         </div>
     </div>
     <a class="left carousel-control" href="#home-slidehow" role="button" data-slide="prev">

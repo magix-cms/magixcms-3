@@ -1,7 +1,7 @@
 {extends file="amp/layout.tpl"}
 {block name="title"}{if $home.seoTitle}{$home.seoTitle}{else}{$home.name}{/if}{/block}
 {block name="description"}{if $home.seoTitle}{$home.seoDescr}{elseif !empty($home.content)}{$home.content|truncate:100:'...'}{/if}{/block}
-{block name="stylesheet"}{fetch file="skin/{template}/amp/css/home.min.css"}{/block}
+{block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/home.min.css"}{/block}
 {block name='body:id'}home{/block}
 {block name="amp-script"}
     {amp_components content=$home.content}

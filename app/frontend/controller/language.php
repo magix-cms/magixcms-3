@@ -2,9 +2,13 @@
 class frontend_controller_language {
     protected $template, $arrayTools;
 
-    public function __construct()
+	/**
+	 * @param stdClass $t
+	 * frontend_controller_language constructor.
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new frontend_model_template();
+        $this->template = $t ? $t : new frontend_model_template();
         $this->arrayTools = new collections_ArrayTools();
     }
 

@@ -1,11 +1,11 @@
 <div id="gallery">
     <div class="image-gallery">
         <div class="big-image">
-            {foreach $product.img as $k => $item}
-                <a id="{if $item.default}default{else}img{$k}{/if}" class="img-gallery" href="{$item.imgSrc.large}" rel="productGallery" title="{$product.name}" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
-                    <meta itemprop="contentUrl" content="{$item.imgSrc.medium}" />
+            {foreach $product.imgs as $k => $item}
+                <a id="{if $item.default}default{else}img{$k}{/if}" class="img-gallery" href="{$item.img.large.src}" rel="productGallery" title="{$product.name}" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
+                    <meta itemprop="contentUrl" content="{$item.img.medium.src}" />
                     <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                        <img itemprop="image" class="img-responsive"  src="{$item.imgSrc.medium}" alt="{$product.name|ucfirst}" itemprop="contentUrl"/>
+                        <img itemprop="image" class="img-responsive" src="{$item.img.medium.src}" alt="{$product.name|ucfirst}" itemprop="contentUrl"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>
                     </span>
                 </a>
             {/foreach}
@@ -17,13 +17,13 @@
         </div>
 
         <div class="thumbs three-thumbs smooth-gallery">
-            {if {$product.img|count} > 3}
+            {if {$product.imgs|count} > 3}
                 <a class="button prev"><span class="fa fa-angle-left"></span></a>
                 <a class="button next"><span class="fa fa-angle-right"></span></a>
             {/if}
             {strip}<ul class="list-unstyled">
-                {foreach $product.img as $k => $item}
-                <li class="item{if $item@index < 3} active{/if}" aria-hidden="false"><a class="show-img" href="#" data-target="#{if $item.default}default{else}img{$k}{/if}" rel="productGallery"><img class="img-responsive" src="{$item.imgSrc.small}" alt="{$product.name|ucfirst}"/></a></li>
+                {foreach $product.imgs as $k => $item}
+                <li class="item{if $item@index < 3} active{/if}" aria-hidden="false"><a class="show-img" href="#" data-target="#{if $item.default}default{else}img{$k}{/if}" rel="productGallery"><img src="{$product.img_default}" class="img-responsive lazy" data-src="{$item.img.small.src}" alt="{$product.name|ucfirst}"{if $item.img.small.crop === 'adaptative'} width="{$item.img.small.w}" height="{$item.img.small.h}"{/if}/></a></li>
                 {/foreach}
             </ul>{/strip}
         </div>

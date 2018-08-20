@@ -2,12 +2,13 @@
 class backend_model_plugins{
     protected $template, $controller_name, $dbPlugins,$plugin ,$collectionLanguage;
 
-    /**
-     * backend_model_plugins constructor.
-     */
-    public function __construct()
+	/**
+	 * backend_model_plugins constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template();
         $formClean = new form_inputEscape();
         if(http_request::isGet('controller')){
             $this->controller_name = $formClean->simpleClean($_GET['controller']);

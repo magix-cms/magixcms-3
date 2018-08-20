@@ -47,11 +47,12 @@ class frontend_controller_about extends frontend_db_about {
     public $getlang,$id;
 
     /**
+	 * @param stdClass $t
      * frontend_controller_pages constructor.
      */
-    public function __construct(){
+    public function __construct($t = null){
         $formClean = new form_inputEscape();
-        $this->template = new frontend_model_template();
+        $this->template = $t ? $t : new frontend_model_template();
         $this->header = new component_httpUtils_header($this->template);
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();

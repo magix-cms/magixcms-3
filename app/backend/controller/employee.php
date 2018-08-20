@@ -26,12 +26,13 @@ class backend_controller_employee extends backend_db_employee
 	public $employee;
 	public $id_admin, $id_account_session;
 
-    /**
-     * Constructor
-     */
-    function __construct()
+	/**
+	 * backend_controller_employee constructor.
+	 * @param stdClass $t
+	 */
+    function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
 		$this->data = new backend_model_data($this);
         $this->header = new http_header();

@@ -6,9 +6,13 @@ class backend_controller_pages extends backend_db_pages
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl,$makeFiles,$finder;
     public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img;
 
-    public function __construct()
+	/**
+	 * backend_controller_pages constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
@@ -577,7 +581,7 @@ class backend_controller_pages extends backend_db_pages
             else {
                 $this->modelLanguage->getLanguage();
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-                $this->getItems('pages',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
+                $this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all');
                 $assign = array(
                     'id_pages',
                     'name_pages' => array('title' => 'name'),

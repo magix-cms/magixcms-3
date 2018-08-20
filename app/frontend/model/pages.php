@@ -42,12 +42,16 @@ class frontend_model_pages extends frontend_db_pages{
 
     protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$data;
 
-    public function __construct($template)
+	/**
+	 * frontend_model_pages constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
-        $this->routingUrl = new component_routing_url();
-        $this->imagesComponent = new component_files_images($template);
-        $this->modelPlugins = new frontend_model_plugins();
-        $this->coreTemplate = new frontend_model_template();
+		$this->coreTemplate = $t ? $t : new frontend_model_template();
+		$this->routingUrl = new component_routing_url();
+		$this->imagesComponent = new component_files_images($t);
+		$this->modelPlugins = new frontend_model_plugins();
         $this->data = new frontend_model_data($this);
     }
 
@@ -90,16 +94,18 @@ class frontend_model_pages extends frontend_db_pages{
 				if (isset($row['img_pages'])) {
 					$imgPrefix = $this->imagesComponent->prefix();
 					$fetchConfig = $this->imagesComponent->getConfigItems(array(
-						'module_img'    =>'pages',
-						'attribute_img' =>'page'
+						'module_img' => 'pages',
+						'attribute_img' => 'page'
 					));
 					foreach ($fetchConfig as $key => $value) {
-						$data['imgSrc'][$value['type_img']] = '/upload/pages/'.$row['id_pages'].'/'.$imgPrefix[$value['type_img']] . $row['img_pages'];
+						$data['img'][$value['type_img']]['src'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['img_pages'];
+						$data['img'][$value['type_img']]['w'] = $value['width_img'];
+						$data['img'][$value['type_img']]['h'] = $value['height_img'];
+						$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
 					}
-				}else{
-					$data['imgSrc']['default']  =
-						'/skin/'.$this->coreTemplate->themeSelected().'/img/pages/default.png';
 				}
+				$data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/pages/default.png';
+
 				$data['content'] = $row['content_pages'];
 				$data['menu'] = $row['menu_pages'];
 				$data['date']['update'] = $row['last_update'];
@@ -139,6 +145,16 @@ class frontend_model_pages extends frontend_db_pages{
         return $arr;
     }
 
+	/**
+	 * @param $d
+	 * @param $c
+	 * @return mixed|null
+	 */
+	public function parseData($d,$c,$nr = false)
+	{
+		return $this->data->parseData($d,$this,$c,$nr);
+	}
+
     /**
      * Retourne les données sql sur base des paramètres passés en paramète
      * @param $custom
@@ -148,78 +164,111 @@ class frontend_model_pages extends frontend_db_pages{
      */
     public function getData($custom,$current,$override = false)
     {
-        if (!(is_array($custom))) {
-            return null;
-        }
+		if (!(is_array($custom))) return null;
 
-        if (!(array_key_exists('controller', $current))) {
-            return null;
-        }
+		if (!(array_key_exists('controller', $current))) return null;
+
+		$lang = $current['lang']['iso'];
+		$current = $current['controller'];
+		$current['name'] = !empty($current['name']) ? $current['name'] : 'pages';
 
         $conf = array(
             'id' => null,
+			'id_parent' => ($current['id_parent'] ? $current['id_parent'] : null),
             'type' => 'data',
+			'lang' =>  $lang,
+			'context' => array(
+				1 => 'parent'
+			),
+			'sort' => array(
+				'type' => 'order',
+				'order' => 'ASC'
+			),
+			'exclude' => null,
             'limit' => null,
-            'lang' => $current['lang']['iso'],
-            'context' => array(1 => 'parent')
+			'deepness' => 0
         );
 
-        !empty($current['controller']['name']) || $current['controller']['name'] !='' ? $current['controller']['name'] : $current['controller']['name'] = 'pages';
-        $current = $current['controller'];
+		// Define context
+		if (isset($custom['context'])) {
+			if (is_array($custom['context'])) {
+				foreach ($custom['context'] as $k => $v) {
+					$conf['context'][1] = $k;
+					$conf['context'][2] = $v;
+				}
+			}
+			else {
+				$allowed = array(
+					'all',
+					'parent',
+					'child'
+				);
 
-        // custom values: select or exclude
-        if (isset($custom['select'])) {
-            if ($custom['select'] == 'current') {
-                $conf['id'] = $current['id'];
-            }
-            elseif (is_array($custom['select'])) {
-                if (array_key_exists($conf['lang'], $custom['select'])) {
-                    $conf['id'] = $custom['select'][$conf['lang']];
-                }
-            }
-        }
-        elseif (isset($custom['exclude'])) {
-            if (is_array($custom['exclude'])) {
-                if (array_key_exists($conf['lang'], $custom['exclude'])) {
-                    $conf['id'] = $custom['exclude'][$conf['lang']];
-                    //$conf['type'] = 'exclude';
-                }
-            }
-        }
+				if (in_array($custom['context'],$allowed)) $conf['context'][1] = $custom['context'];
+			}
+		}
 
-        // custom values: display
-        if (isset($custom['context'])) {
-            if (is_array($custom['context'])) {
-                foreach ($custom['context'] as $k => $v) {
-                    $conf['context'][1] = $k;
-                    $conf['context'][2] = $v;
-                }
-            }
-            else {
-                $allowed = array(
-                    '',
-                    'all',
-                    'parent',
-                    'child'
-                );
+		// Define select
+		if (isset($custom['select'])) {
+			if ($custom['select'] === 'current') {
+				$conf['type'] = 'collection';
+			}
+			elseif ($custom['select'] === 'all') {
+				$conf['id'] = null;
+				$conf['type'] = null;
+			}
+			elseif (is_array($custom['select'])) {
+				if (array_key_exists($conf['lang'],$custom['select'])) {
+					$conf['id'] = $custom['select'][$conf['lang']];
+					$conf['type'] = 'collection';
+				}
+			}
+		}
 
-                if (in_array($custom['context'], $allowed)) {
-                    $conf['context'][1] = $custom['context'];
-                }
-            }
-        }
+		// Define exclude
+		if (isset($custom['exclude'])) {
+			if (is_array($custom['exclude'])) {
+				if (array_key_exists($conf['lang'],$custom['exclude'])) {
+					$conf['exclude'] = $custom['exclude'][$conf['lang']];
+					$conf['type'] = 'collection';
+				}
+			}
+		}
 
-        if (isset($custom['limit'])) {
-            $conf['limit'] = $custom['limit'];
-        }
+		// Define limit
+		if (isset($custom['limit'])) $conf['limit'] = $custom['limit'];
 
-        // Override with plugin
-        if (isset($custom['plugins'])) {
-            $conf['plugins'] = $custom['plugins'];
-        }
+		// Define sort
+		if (isset($custom['sort'])) {
+			if (is_array($custom['sort'])) {
+				if(array_key_exists('type', $custom['sort'])) $conf['sort']['type'] =  $custom['sort']['type'];
+				if(array_key_exists('order', $custom['sort'])) $conf['sort']['order'] =  $custom['sort']['order'];
+			}
+		}
 
-        // *** Load SQL data
-        $conditions = '';
+		// deepness for element
+		if(isset($custom['deepness'])) {
+			$deepness_allowed = array('all','none');
+			if (in_array($custom['deepness'],$deepness_allowed)) {
+				if($custom['deepness'] == 'all'){
+					$conf['deepness'] = null;
+				}
+				elseif($custom['deepness'] == 'none') {
+					$conf['deepness'] = 0;
+				}
+			}
+			else {
+				$conf['deepness'] = 0;
+			}
+		}
+
+		// Override with plugin
+		if (isset($custom['plugins'])) $conf['plugins'] = $custom['plugins'];
+
+		// *** Load SQL data
+		$conditions = '';
+		$data = null;
+
         if ($conf['context'][1] == 'all') {
 			if ($override) {
 				$getCallClass = $this->modelPlugins->getCallClass($override);
@@ -248,24 +297,24 @@ class frontend_model_pages extends frontend_db_pages{
 				if ($custom['type'] == 'menu') {
 					$conditions .= ' AND p.menu_pages = 1';
 				}
-				// ORDER
-				$conditions .= ' ORDER BY p.order_pages ASC';
 
-				if ($conf['limit'] != null) {
-					$conditions .= ' LIMIT ' . $conf['limit'];
+				// Set order
+				switch ($conf['sort']['type']) {
+					case 'order':
+						$conditions .= ' ORDER BY p.id_pages, p.order_pages '.$conf['sort']['order'];
+						break;
 				}
+
+				if ($conf['limit'] !== null) $conditions .= ' LIMIT ' . $conf['limit'];
 
 				if ($conditions != '') {
 					$data = parent::fetchData(
 						array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
-						array(
-							':iso' => $conf['lang']
-						)
+						array('iso' => $conf['lang'])
 					);
 
-					if($data != null) {
-						$branch = isset($custom['select']) ? $conf['id'] : 'root';
-						//$data = $this->setPagesTree($data,$branch);
+					if(is_array($data) && !empty($data)) {
+						$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
 						$data = $this->data->setPagesTree($data,'pages',$branch);
 					}
 				}
@@ -288,35 +337,41 @@ class frontend_model_pages extends frontend_db_pages{
                         )
                     );
                 }
-            } else {
+            }
+            else {
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent IS NULL ';
 
                 if (isset($custom['select'])) {
-
                     $conditions .= ' AND p.id_pages IN (' . $conf['id'] . ') ';
                 }
-                if (isset($custom['exclude'])) {
 
+                if (isset($custom['exclude'])) {
                     $conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
                 }
 
                 if ($custom['type'] == 'menu') {
                     $conditions .= ' AND p.menu_pages = 1';
                 }
-                // ORDER
-                $conditions .= ' ORDER BY p.order_pages ASC';
 
-                if ($conf['limit'] != null) {
-                    $conditions .= ' LIMIT ' . $conf['limit'];
-                }
+				// Set order
+				switch ($conf['sort']['type']) {
+					case 'order':
+						$conditions .= ' ORDER BY p.id_pages, p.order_pages '.$conf['sort']['order'];
+						break;
+				}
+
+				if ($conf['limit'] !== null) $conditions .= ' LIMIT ' . $conf['limit'];
 
                 if ($conditions != '') {
                     $data = parent::fetchData(
                         array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
-                        array(
-                            ':iso' => $conf['lang']
-                        )
+                        array('iso' => $conf['lang'])
                     );
+
+					if(is_array($data) && !empty($data)) {
+						$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+						$data = $this->data->setPagesTree($data,'pages',$branch);
+					}
                 }
             }
             if($data != null AND ($conf['context'][2] == 'child'))

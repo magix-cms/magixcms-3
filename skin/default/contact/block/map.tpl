@@ -40,7 +40,7 @@
     </div>
     {/if}
     {*<h3 class="title-block">{#plan_acces#|ucfirst}</h3>
-    <a href="{geturl}/{getlang}/gmap/" title="{#plan_acces#|ucfirst}">
-        <img src="/skin/{template}/img/map.jpg" title="{#plan_acces#|ucfirst}" alt="{#plan_acces#|ucfirst}" class="img-responsive" width="480" height="360"/>
+    <a href="{$url}/{$lang}/gmap/" title="{#plan_acces#|ucfirst}">
+        <img src="/skin/{$theme}/img/map.jpg" title="{#plan_acces#|ucfirst}" alt="{#plan_acces#|ucfirst}" class="img-responsive" width="480" height="360"/>
     </a>*}
 </div>

@@ -15,10 +15,10 @@
         {$value.date_update_doc|date_format:"%d-%m-%Y"}
     </td>
     <td class="actions text-center">
-        <a href="{geturl}/upload/pdf/{$value.id_defunct}/{$value.name_doc}" class="btn btn-link targetblank">
+        <a href="{$url}/upload/pdf/{$value.id_defunct}/{$value.name_doc}" class="btn btn-link targetblank">
             <span class="fa fa-eye"></span><span class="sr-only"> Afficher</span>
         </a>
-        <a href="{geturl}/document.php?action=edit&tabs=document&edit={$value.id_defunct}&download={$value.name_doc}" class="btn btn-link targetblank">
+        <a href="{$url}/document.php?action=edit&tabs=document&edit={$value.id_defunct}&download={$value.name_doc}" class="btn btn-link targetblank">
             <span class="fa fa-download"></span><span class="sr-only"> download</span>
         </a>
         {if {employee_access type="delete_access" class_name=$cClass} eq 1}

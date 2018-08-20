@@ -135,11 +135,12 @@ class backend_controller_about extends backend_db_about{
     );
 
 	/**
+	 * @param stdClass $t
 	 * backend_controller_about constructor.
 	 */
-    public function __construct()
+    public function __construct($t = null)
     {
-        $this->template = new backend_model_template();
+        $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

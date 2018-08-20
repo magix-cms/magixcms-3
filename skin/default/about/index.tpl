@@ -29,7 +29,7 @@
                         ]
                     assign="aboutPages"
                 }
-                {include file="section/brick/toc.tpl" pages=$aboutPages root=['url' => "{geturl}/{getlang}/about/","title" => $root.name]}
+                {include file="section/brick/toc.tpl" pages=$aboutPages root=['url' => "{$url}/{$lang}/about/","title" => $root.name]}
                 <h1 itemprop="name">{$pages.title}</h1>
             </header>
             {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}

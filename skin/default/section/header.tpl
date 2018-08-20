@@ -7,7 +7,7 @@
     </button>
     {* Brand && Headline *}
     <div class="site-name">
-        <a href="{geturl}/{getlang}/" title="{#logo_link_title#|ucfirst}">
+        <a href="{$url}/{$lang}/" title="{#logo_link_title#|ucfirst}">
             {strip}{capture name="sizes"}
                 (min-width: 1200px) 10vw,
                 (min-width: 992px) 15vw,
@@ -19,16 +19,16 @@
             <!--[if IE 9]><video style="display: none;"><![endif]-->
             <source type="image/webp"
                     sizes="{$smarty.capture.sizes}"
-                    srcset="{geturl}/skin/{template}/img/logo/webp/{#logo_img#}@229.webp 229w,
-                            {geturl}/skin/{template}/img/logo/webp/{#logo_img#}@480.webp 480w">
+                    srcset="{$url}/skin/{$theme}/img/logo/webp/{#logo_img#}@229.webp 229w,
+                            {$url}/skin/{$theme}/img/logo/webp/{#logo_img#}@480.webp 480w">
             <source sizes="{$smarty.capture.sizes}"
-                    srcset="{geturl}/skin/{template}/img/logo/png/{#logo_img#}@229.png 229w,
-                            {geturl}/skin/{template}/img/logo/png/{#logo_img#}@480.png 480w">
+                    srcset="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png 229w,
+                            {$url}/skin/{$theme}/img/logo/png/{#logo_img#}@480.png 480w">
             <!--[if IE 9]></video><![endif]-->
-            <img src="{geturl}/skin/{template}/img/logo/png/{#logo_img#}@229.png"
+            <img src="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png"
                  sizes="{$smarty.capture.sizes}"
-                 srcset="{geturl}/skin/{template}/img/logo/png/{#logo_img#}@229.png 229w,
-                        {geturl}/skin/{template}/img/logo/png/{#logo_img#}@480.png 480w"
+                 srcset="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png 229w,
+                        {$url}/skin/{$theme}/img/logo/png/{#logo_img#}@480.png 480w"
                  alt="{#logo_img_alt#|ucfirst} {$companyData.name}" />
             </picture>{/strip}
         </a>

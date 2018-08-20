@@ -1,12 +1,17 @@
 <?php
 class frontend_model_collection{
 
-    protected $upload,$imagesComponent,$routingUrl,$DBNews,$DBCatalog;
+    protected $template,$upload,$imagesComponent,$routingUrl,$DBNews,$DBCatalog;
 
-    public function __construct($template)
+	/**
+	 * frontend_model_collection constructor.
+	 * @param stdClass $t
+	 */
+    public function __construct($t = null)
     {
+    	$this->template = $t ? $t : new frontend_model_template();
         $this->upload = new component_files_upload();
-        $this->imagesComponent = new component_files_images($this->template);
+        $this->imagesComponent = new component_files_images($t);
         $this->routingUrl = new component_routing_url();
         $this->DBNews = new frontend_db_news();
         $this->DBCatalog = new frontend_db_catalog();

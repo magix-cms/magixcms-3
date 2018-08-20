@@ -62,7 +62,7 @@ class frontend_model_mail {
 
 		$bodyMail = $this->template->fetch($this->tpl_dir.'/mail/'.$tpl.'.tpl');
 		if ($cssInliner['value']) {
-			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->themeSelected().'/mail/css' => 'mail.min.css'));
+			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->theme.'/mail/css' => 'mail.min.css'));
 		}
 
 		if($debug) {

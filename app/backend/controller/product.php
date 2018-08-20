@@ -8,10 +8,11 @@ class backend_controller_product extends backend_db_product
 
 	/**
 	 * backend_controller_catalog constructor.
+	 * @param stdClass $t
 	 */
-	public function __construct()
+	public function __construct($t = null)
 	{
-		$this->template = new backend_model_template();
+		$this->template = $t ? $t : new backend_model_template;
 		$this->message = new component_core_message($this->template);
 		$this->header = new http_header();
 		$this->data = new backend_model_data($this);

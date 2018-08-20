@@ -7,8 +7,8 @@
     {/if}
     {$meta["og:title"] = {$title}}
     {$meta["og:description"] = {$description}}
-    {$meta["og:url"] = {''|cat:{geturl}|cat:{$smarty.server.REQUEST_URI}}}
-    {$meta["og:image"] = {''|cat:{geturl}|cat:'/skin/'|cat:{template}|cat:'/img/logo/'|cat:{#logo_img#}}}
+    {$meta["og:url"] = {''|cat:{$url}|cat:{$smarty.server.REQUEST_URI}}}
+    {$meta["og:image"] = {''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/logo/'|cat:{#logo_img#}}}
     {$meta["og:type"] = 'website'}
     {$data = null}
 
@@ -16,7 +16,7 @@
     {* Pages *}
     {case 'pages' break}
     {if $pages.imgSrc.large}
-        {$meta["og:image"] = {''|cat:{geturl}|cat:{$pages.imgSrc.large}}}
+        {$meta["og:image"] = {''|cat:{$url}|cat:{$pages.imgSrc.large}}}
     {/if}
     {* /Pages *}
 
@@ -30,13 +30,13 @@
         {if !empty($product.img)}
             {foreach $product.img as $img}
                 {if $img.default}
-                    {$meta["og:image"] = {''|cat:{geturl}|cat:{$img.imgSrc.large}}}
+                    {$meta["og:image"] = {''|cat:{$url}|cat:{$img.imgSrc.large}}}
                 {/if}
             {/foreach}
         {/if}
     {elseif isset($cat)}
         {if $cat.imgSrc.large}
-            {$meta["og:image"] = {''|cat:{geturl}|cat:{$cat.imgSrc.large}}}
+            {$meta["og:image"] = {''|cat:{$url}|cat:{$cat.imgSrc.large}}}
         {/if}
     {/if}
     {* /Catalogue *}
@@ -45,7 +45,7 @@
     {case 'news' break}
     {if $news}
         {if $news.imgSrc.large}
-            {$meta["og:image"] = {''|cat:{geturl}|cat:{$news.imgSrc.large}}}
+            {$meta["og:image"] = {''|cat:{$url}|cat:{$news.imgSrc.large}}}
         {/if}
         {$meta["og:type"] = 'article'}
         {$meta["article:published_time"] = $news.date_publish}
