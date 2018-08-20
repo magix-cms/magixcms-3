@@ -23,4 +23,5 @@ plugins/slideshow/
 plugins/account/
 plugins/hipay/
 plugins/mollie/
+plugins/cartpay/
 /skin/wsw/*
