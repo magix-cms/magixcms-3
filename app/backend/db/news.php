@@ -36,7 +36,7 @@ class backend_db_news
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-							WHERE c.id_lang = :default_lang';
+							WHERE c.id_lang = :default_lang ORDER BY p.id_news DESC';
 
 					if(isset($config['search'])) {
 						$cond = '';
@@ -70,7 +70,7 @@ class backend_db_news
 									FROM mc_news AS p
 									JOIN mc_news_content AS c USING(id_news)
 									JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-									WHERE c.id_lang = :default_lang $cond";
+									WHERE c.id_lang = :default_lang $cond ORDER BY p.id_news DESC";
 						}
 					}
                 }
