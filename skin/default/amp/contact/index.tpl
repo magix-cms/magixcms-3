@@ -20,7 +20,7 @@
                 <p class="help-block">{#contact_fiels_resquest#|ucfirst}</p>
                 <form id="contact-form" method="post" action-xhr="{url|replace:'http://':'//'}{$smarty.server.REQUEST_URI}" target="_top" custom-validation-reporting="show-all-on-submit">
                     <div class="row">
-                        <div class="col-ph-12 col-xs-6">
+                        <div class="col-12 col-xs-6">
                             <div class="form-group">
                                 <input id="firstname" type="text" name="msg[firstname]" placeholder="{#ph_contact_firstname#|ucfirst}" class="form-control required" pattern="{literal}[0-9a-zA-ZÁÀÂÄÃáàâäãÓÒÔÖÕóòôöõÍÌÎÏíìîïÉÈÊËéèêëÚÙÛÜúùûüÆæŒœåÇßçñÑØøðýÿþÐŠŽšžŸÝ _\-']+{/literal}" required />
                                 <label for="firstname">{#pn_contact_firstname#|ucfirst}*&nbsp;:</label>
@@ -28,7 +28,7 @@
                                 {include file="amp/section/form/pattern-mismatch.tpl" msg="{#firstname_mismatch#}" input="firstname"}
                             </div>
                         </div>
-                        <div class="col-ph-12 col-xs-6">
+                        <div class="col-12 col-xs-6">
                             <div class="form-group">
                                 <input id="lastname" type="text" name="msg[lastname]" placeholder="{#ph_contact_lastname#|ucfirst}" class="form-control required" pattern="{literal}[0-9a-zA-ZÁÀÂÄÃáàâäãÓÒÔÖÕóòôöõÍÌÎÏíìîïÉÈÊËéèêëÚÙÛÜúùûüÆæŒœåÇßçñÑØøðýÿþÐŠŽšžŸÝ _\-']+{/literal}" required />
                                 <label for="lastname">{#pn_contact_lastname#|ucfirst}*&nbsp;:</label>
@@ -50,7 +50,7 @@
                     </div>
                     {if $address_enabled}
                         <div class="row">
-                            <div class="col-ph-12 col-md-6">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
                                     <input id="address" type="text" name="msg[address]" placeholder="{#ph_address#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" pattern="{literal}[0-9a-zA-ZÁÀÂÄÃáàâäãÓÒÔÖÕóòôöõÍÌÎÏíìîïÉÈÊËéèêëÚÙÛÜúùûüÆæŒœåÇßçñÑØøðýÿþÐŠŽšžŸÝ _\-']+{/literal}" {if $address_required}required {/if}/>
                                     <label for="address">{#pn_contact_address#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
@@ -58,7 +58,7 @@
                                     {include file="amp/section/form/pattern-mismatch.tpl" msg="{#address_mismatch#}" input="address"}
                                 </div>
                             </div>
-                            <div class="col-ph-6 col-md-3">
+                            <div class="col-6 col-md-3">
                                 <div class="form-group">
                                     <input id="postcode" type="text" name="msg[postcode]" placeholder="{#ph_postcode#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" pattern="[a-zA-Z0-9_\- ]+" maxlength="12" {if $address_required}required {/if}/>
                                     <label for="postcode">{#pn_contact_postcode#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
@@ -66,7 +66,7 @@
                                     {include file="amp/section/form/pattern-mismatch.tpl" msg="{#postcode_mismatch#}" input="postcode"}
                                 </div>
                             </div>
-                            <div class="col-ph-6 col-md-3">
+                            <div class="col-6 col-md-3">
                                 <div class="form-group">
                                     <input id="city" type="text" name="msg[city]" placeholder="{#ph_city#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" pattern="{literal}[0-9a-zA-ZÁÀÂÄÃáàâäãÓÒÔÖÕóòôöõÍÌÎÏíìîïÉÈÊËéèêëÚÙÛÜúùûüÆæŒœåÇßçñÑØøðýÿþÐŠŽšžŸÝ _\-']+{/literal}" {if $address_required}required {/if}/>
                                     <label for="city">{#pn_contact_city#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>

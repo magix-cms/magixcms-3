@@ -3,33 +3,33 @@ class frontend_db_share
 {
 	/**
 	 * @param $config
-	 * @param bool $data
+	 * @param bool $params
 	 * @return mixed|null
+	 * @throws Exception
 	 */
-	public function fetchData($config,$data = false)
+	public function fetchData($config, $params = false)
 	{
+		if (!is_array($config)) return '$config must be an array';
+
 		$sql = '';
-		$params = false;
-		$dateFormat = new component_format_date();
 
-		if(is_array($config)) {
-			if($config['context'] === 'all') {
-				if($config['type'] === 'shareUrl') {
-					$sql = 'SELECT * FROM mc_share_url';
-				}
-
-				return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+		if($config['context'] === 'all') {
+			switch ($config['type']) {
+			    case 'shareUrl':
+			    	$sql = 'SELECT * FROM mc_share_url';
+			    	break;
 			}
-			elseif($config['context'] === 'one') {
-				if($config['type'] === 'shareConfig') {
-					$sql = 'SELECT * FROM mc_share_config WHERE id_share = :id';
 
-					$params = $data;
-				}
-
-				return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+		}
+		elseif($config['context'] === 'one') {
+			switch ($config['type']) {
+			    case 'shareConfig':
+			    	$sql = 'SELECT * FROM mc_share_config WHERE id_share = :id';
+			    	break;
 			}
+
+			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
 		}
 	}
 }
-?>

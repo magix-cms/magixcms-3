@@ -60,6 +60,7 @@ class backend_model_template{
 	 * @var void
 	 */
 	static protected $frontendtheme;
+	public $lang;
 	/**
 	 * 
 	 * Constructor
@@ -68,6 +69,7 @@ class backend_model_template{
         self::$collectionsSetting = new component_collections_setting();
         //self::$collectionsLang = new component_collections_language();
 		self::getReleaseData();
+		$this->lang = $this->currentLanguage();
     }
 	/**
 	 * 

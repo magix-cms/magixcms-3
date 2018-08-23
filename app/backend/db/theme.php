@@ -239,90 +239,120 @@ class backend_db_theme{
 
 	/**
 	 * @param $config
-	 * @param bool $data
+	 * @param array $params
+	 * @return bool|string
 	 */
-	public function insert($config,$data = false)
+	public function insert($config, $params = array())
 	{
-		if (is_array($config)) {
-			$sql = '';
-			$params = $data;
+		if (!is_array($config)) return '$config must be an array';
 
-			if ($config['type'] === 'link') {
+		$sql = '';
+
+		switch ($config['type']) {
+			case 'link':
 				$sql = "INSERT INTO `mc_menu`(type_link, id_page, order_link)  
-						SELECT :type, :id_page, (MAX(order_link) + 1) FROM mc_menu";
-			}
-			elseif ($config['type'] === 'link_content') {
+					SELECT :type, :id_page, (MAX(order_link) + 1) FROM mc_menu";
+				break;
+			case 'link_content':
 				$sql = 'INSERT INTO `mc_menu_content`(id_link,id_lang,name_link,url_link) 
-						VALUES (:id,:id_lang,:name_link,:url_link)';
-			}
+					VALUES (:id,:id_lang,:name_link,:url_link)';
+				break;
+		}
 
-			if($sql && $params) component_routing_db::layer()->insert($sql,$params);
+		if($sql === '') return 'Unknown request asked';
+
+		try {
+			component_routing_db::layer()->insert($sql,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
 		}
 	}
 
-    /**
-     * @param $config
-     * @param bool $data
-     */
-    public function update($config,$data = false)
-    {
-        if (is_array($config)) {
-			$sql = '';
-			$params = $data;
+	/**
+	 * @param $config
+	 * @param array $params
+	 * @return bool|string
+	 */
+	public function update($config, $params = array())
+	{
+		if (!is_array($config)) return '$config must be an array';
 
-            if ($config['type'] === 'theme') {
-                $sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
-            }
-            elseif ($config['type'] === 'share') {
-                $sql = "UPDATE mc_share_config 
-						SET 
-							facebook = :facebook,
-							twitter = :twitter,
-							viadeo = :viadeo,
-							google = :google,
-							linkedin = :linkedin,
-							pinterest = :pinterest,
-							twitter_id = :twitter_id
-						WHERE id_share = 1";
-            }
-			elseif ($config['type'] === 'link') {
+		$sql = '';
+
+		switch ($config['type']) {
+			case 'theme':
+				$sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
+				break;
+			case 'share':
+				$sql = "UPDATE mc_share_config 
+					SET 
+						facebook = :facebook,
+						twitter = :twitter,
+						viadeo = :viadeo,
+						google = :google,
+						linkedin = :linkedin,
+						pinterest = :pinterest,
+						twitter_id = :twitter_id
+					WHERE id_share = 1";
+				break;
+			case 'link':
 				$sql = 'UPDATE mc_menu 
-						SET mode_link = :mode_link
-						WHERE id_link = :id';
-			}
-			elseif ($config['type'] === 'link_content') {
+					SET mode_link = :mode_link
+					WHERE id_link = :id';
+				break;
+			case 'link_content':
 				$sql = 'UPDATE mc_menu_content 
-						SET 
-							name_link = :name_link,
-							title_link = :title_link
-						WHERE id_link = :id
-						AND id_lang = :id_lang';
-			}
-			elseif ($config['type'] === 'order') {
+					SET 
+						name_link = :name_link,
+						title_link = :title_link
+					WHERE id_link = :id
+					AND id_lang = :id_lang';
+				break;
+			case 'order':
 				$sql = 'UPDATE mc_menu 
-						SET order_link = :order_link
-						WHERE id_link = :id';
-			}
+					SET order_link = :order_link
+					WHERE id_link = :id';
+				break;
+		}
 
-			if($sql && $params) component_routing_db::layer()->update($sql,$params);
-        }
+		if($sql === '') return 'Unknown request asked';
+
+		try {
+			component_routing_db::layer()->update($sql,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
+		}
     }
 
 	/**
 	 * @param $config
-	 * @param bool $data
+	 * @param array $params
+	 * @return bool|string
 	 */
-	public function delete($config,$data = false)
+	public function delete($config, $params = array())
 	{
-		if (is_array($config)) {
-			$sql = '';
+		if (!is_array($config)) return '$config must be an array';
+		$sql = '';
 
-			if($config['type'] === 'link'){
-				$sql = 'DELETE FROM mc_menu 
-						WHERE id_link IN ('.$data['id'].')';
-			}
+		switch ($config['type']) {
+			case 'page':
+				$sql = 'DELETE FROM `mc_menu` WHERE `id_link` IN ('.$params['id'].')';
+				$params = array();
+				break;
+		}
 
-			if($sql) component_routing_db::layer()->delete($sql,array());
+		if($sql === '') return 'Unknown request asked';
+
+		try {
+			component_routing_db::layer()->delete($sql,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
 		}
 	}
 }

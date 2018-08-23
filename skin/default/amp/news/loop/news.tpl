@@ -19,7 +19,7 @@
                 <p>{$item.date.publish|date_format:"%e&thinsp;/&thinsp;%y"}</p>
             </div>
             <div class="figure row">
-                <div class="time-figure col-ph-12 col-xs-6">
+                <div class="time-figure col-12 col-xs-6">
                     <div>
                         {if $item.imgSrc.medium}
                             <amp-img src="{$item.imgSrc.medium}"
@@ -38,7 +38,7 @@
                         {/if}
                     </div>
                 </div>
-                <div itemprop="description" class="desc col-ph-12 col-xs-6">
+                <div itemprop="description" class="desc col-12 col-xs-6">
                     <h2 itemprop="name" class="h3">{$item.title|ucfirst}</h2>
                     {if $item.resume}
                     <p>{$item.resume|truncate:$truncate:'...'}</p>

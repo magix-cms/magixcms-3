@@ -40,53 +40,56 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_collections_language{
-    public function fetchData($config,$data = false)
+	/**
+	 * @param $config
+	 * @param bool $params
+	 * @return mixed|null
+	 * @throws Exception
+	 */
+	public function fetchData($config, $params = false)
     {
-        $sql = '';
-        $params = false;
-        if (is_array($config)) {
-            if ($config['context'] === 'all') {
-                if ($config['type'] === 'active') {
-                    $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang
-                           FROM mc_lang AS l
-                           WHERE l.active_lang = 1
-                           ORDER BY l.id_lang';
-                    //$params = $data;
-                }elseif ($config['type'] === 'langs') {
-                    $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang, l.default_lang
-                           FROM mc_lang AS l
-                           WHERE l.active_lang = 1
-                           ORDER BY l.default_lang DESC,l.id_lang ASC';
-                }
-                elseif ($config['type'] === 'domain') {
-                    $sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
-                            FROM mc_domain_language AS dl
-                            JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
-                            WHERE dl.id_domain = :id';
-                    $params = $data;
-                }
-                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }elseif($config['context'] === 'one') {
-                if ($config['type'] === 'default') {
-                    $sql = 'SELECT id_lang,iso_lang 
-                    FROM mc_lang as lang
-		                    WHERE lang.default_lang = 1';
-                    //$params = $data;
-                }
-                elseif ($config['type'] === 'currentDomain') {
-                    $sql = 'SELECT d.*
-                            FROM mc_domain AS d
-                            WHERE d.url_domain = :url';
-                    $params = $data;
-                }
-                elseif ($config['type'] === 'isoFromId') {
-                    $sql = 'SELECT * 
-                    		FROM mc_lang as lang
-		                    WHERE id_lang = :id';
-                    $params = $data;
-                }
-                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
-            }
-        }
+		if (!is_array($config)) return '$config must be an array';
+
+		$sql = '';
+
+		if ($config['context'] === 'all') {
+			switch ($config['type']) {
+			    case 'active':
+					$sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang
+					   FROM mc_lang AS l
+					   WHERE l.active_lang = 1
+					   ORDER BY l.id_lang';
+			    	break;
+			    case 'langs':
+					$sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang, l.default_lang
+					   FROM mc_lang AS l
+					   WHERE l.active_lang = 1
+					   ORDER BY l.default_lang DESC,l.id_lang ASC';
+			    	break;
+			    case 'domain':
+					$sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
+						FROM mc_domain_language AS dl
+						JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
+						WHERE dl.id_domain = :id';
+			    	break;
+			}
+
+			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+		}
+		elseif($config['context'] === 'one') {
+			switch ($config['type']) {
+			    case 'default':
+			    	$sql = 'SELECT id_lang,iso_lang FROM mc_lang as lang WHERE lang.default_lang = 1';
+			    	break;
+			    case 'currentDomain':
+			    	$sql = 'SELECT d.* FROM mc_domain AS d WHERE d.url_domain = :url';
+			    	break;
+			    case 'isoFromId':
+			    	$sql = 'SELECT *  FROM mc_lang as lang WHERE id_lang = :id';
+			    	break;
+			}
+
+			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+		}
     }
 }

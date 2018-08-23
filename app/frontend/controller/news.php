@@ -58,11 +58,11 @@ class frontend_controller_news extends frontend_db_news
      */
     private function getBuildList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso';
-		if(isset($this->tag)) {
-			$conditions = ' JOIN mc_news_tag_rel AS ntr ON(c.id_news = ntr.id_news) WHERE lang.iso_lang = :iso';
-		}
+		$conditions = '';
 
+		if(isset($this->tag)) $conditions .= ' JOIN mc_news_tag_rel AS ntr ON(c.id_news = ntr.id_news)';
+
+		$conditions .= ' WHERE lang.iso_lang = :iso';
 		$params = array('iso' => $this->getlang);
 
 
@@ -82,12 +82,13 @@ class frontend_controller_news extends frontend_db_news
 		else {
 			$conditions .= ' AND c.date_publish <= :date';
 			$params['date'] = $this->dateFormat->SQLDate();
-
-			if(isset($this->tag)) {
-				$conditions .= ' AND ntr.id_tag = :tag';
-				$params['tag'] = $this->tag;
-			}
 		}
+
+		if(isset($this->tag)) {
+			$conditions .= ' AND ntr.id_tag = :tag';
+			$params['tag'] = $this->tag;
+		}
+
 		$conditions .= ' AND c.published_news = 1 ORDER BY c.date_publish DESC';
 
 		$collection = parent::fetchData(

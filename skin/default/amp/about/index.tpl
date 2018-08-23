@@ -13,7 +13,7 @@
             {*<meta itemprop="name" content="{$pages.name}" />
             <h1>
                 <span class="row">
-                    <span class="col-ph-12 col-xs-3">{#about#|ucfirst}</span><span class="col-ph-12 col-xs-9">{$pages.name}</span>
+                    <span class="col-12 col-xs-3">{#about#|ucfirst}</span><span class="col-12 col-xs-9">{$pages.name}</span>
                 </span>
             </h1>*}
             <h1 itemprop="name">{$pages.name}</h1>
@@ -23,7 +23,7 @@
                 <div itemprop="text">
                     {$pages.content}
                 </div>
-                {*<div class="col-ph-12 col-sm-3">
+                {*<div class="col-12 col-sm-3">
                     <nav class="child-nav">
                         <ul class="list-unstyled">
                             <li{if !isset($smarty.get.id)} class="active"{/if}><a{if isset($smarty.get.id)} itemprop="relatedLink"{/if} href="{$url}/{$lang}/about/" title="{#show_page#}: {$root.name}">{$root.name}</a></li>

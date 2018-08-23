@@ -14,159 +14,156 @@ class backend_db_about
         $sql = '';
 		$dateFormat = new component_format_date();
 
-            if($config['context'] === 'all') {
-				switch ($config['type']) {
-					case 'info':
-						$sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
-						break;
-					case 'content':
-						$sql = 'SELECT a.*
-                    		FROM mc_about_data AS a
-                    		JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
-						break;
-					case 'op':
-						$sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
-						break;
-					case 'languages':
-						$sql = "SELECT `name_lang` FROM `mc_lang`";
-						break;
-					case 'iso':
-						$sql = "SELECT `iso_lang` FROM `mc_lang`";
-						break;
-					case 'page':
-						$sql = 'SELECT p.*,c.*,lang.*
-								FROM mc_about_page AS p
-								JOIN mc_about_page_content AS c USING(id_pages)
-								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-								WHERE p.id_pages = :edit';
-						break;
-					case 'pages':
-						$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
-								FROM mc_about_page AS p
-									JOIN mc_about_page_content AS c USING ( id_pages )
-									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-									WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
-									GROUP BY p.id_pages 
-								ORDER BY p.order_pages";
+		if($config['context'] === 'all') {
+			switch ($config['type']) {
+				case 'info':
+					$sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
+					break;
+				case 'content':
+					$sql = 'SELECT a.*
+						FROM mc_about_data AS a
+						JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
+					break;
+				case 'op':
+					$sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
+					break;
+				case 'languages':
+					$sql = "SELECT `name_lang` FROM `mc_lang`";
+					break;
+				case 'iso':
+					$sql = "SELECT `iso_lang` FROM `mc_lang`";
+					break;
+				case 'page':
+					$sql = 'SELECT p.*,c.*,lang.*
+							FROM mc_about_page AS p
+							JOIN mc_about_page_content AS c USING(id_pages)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE p.id_pages = :edit';
+					break;
+				case 'pages':
+					$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
+							FROM mc_about_page AS p
+								JOIN mc_about_page_content AS c USING ( id_pages )
+								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+								WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
+								GROUP BY p.id_pages 
+							ORDER BY p.order_pages";
 
-						if(isset($config['search'])) {
-							$cond = '';
-							$config['search'] = array_filter($config['search']);
-							if (is_array($config['search']) && !empty($config['search'])) {
-								$nbc = 0;
-								foreach ($config['search'] as $key => $q) {
-									if ($q != '') {
-										$cond .= 'AND ';
-										$p = 'p'.$nbc;
-										switch ($key) {
-											case 'id_pages':
-											case 'menu_pages':
-												$cond .= 'p.'.$key.' = :'.$p.' ';
-												break;
-											case 'published_pages':
-												$cond .= 'c.'.$key.' = :'.$p.' ';
-												break;
-											case 'name_pages':
-												$cond .= "c.".$key." LIKE CONCAT('%', :".$p.", '%') ";
-												break;
-											case 'parent_pages':
-												$cond .= "ca.name_pages"." LIKE CONCAT('%', :".$p.", '%') ";
-												break;
-											case 'date_register':
-												$q = $dateFormat->date_to_db_format($q);
-												$cond .= "p.".$key." LIKE CONCAT('%', :".$p.", '%') ";
-												break;
-										}
-										$params[$p] = $q;
-										$nbc++;
-									}
-								}
-
-								$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
-										FROM mc_about_page AS p
-											JOIN mc_about_page_content AS c USING ( id_pages )
-											JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-											LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
-											LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-											WHERE c.id_lang = :default_lang $cond
-											GROUP BY p.id_pages 
-										ORDER BY p.order_pages";
-							}
-						}
-						break;
-					case 'pagesChild':
+					if(isset($config['search'])) {
 						$cond = '';
-						if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
+						$config['search'] = array_filter($config['search']);
+						if (is_array($config['search']) && !empty($config['search'])) {
 							$nbc = 0;
 							foreach ($config['search'] as $key => $q) {
-								if($q != '') {
+								if ($q != '') {
 									$cond .= 'AND ';
 									$p = 'p'.$nbc;
 									switch ($key) {
 										case 'id_pages':
-											$cond .= 'c.'.$key.' = '.$p.' ';
+										case 'menu_pages':
+											$cond .= 'p.'.$key.' = :'.$p.' ';
+											break;
+										case 'published_pages':
+											$cond .= 'c.'.$key.' = :'.$p.' ';
 											break;
 										case 'name_pages':
-											$cond .= "c.".$key." LIKE '%".$p."%' ";
+											$cond .= "c.".$key." LIKE CONCAT('%', :".$p.", '%') ";
 											break;
-										case 'menu_pages':
-											$cond .= 'p.'.$key.' = '.$p.' ';
+										case 'parent_pages':
+											$cond .= "ca.name_pages"." LIKE CONCAT('%', :".$p.", '%') ";
 											break;
 										case 'date_register':
 											$q = $dateFormat->date_to_db_format($q);
 											$cond .= "p.".$key." LIKE CONCAT('%', :".$p.", '%') ";
-											//$params[$key] = $q;
 											break;
 									}
 									$params[$p] = $q;
 									$nbc++;
 								}
 							}
-						}
 
-						$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
-								FROM mc_about_page AS p
-									JOIN mc_about_page_content AS c USING ( id_pages )
-									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-									LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
-									LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-									WHERE p.id_parent = :id $cond
-									GROUP BY p.id_pages 
-								ORDER BY p.order_pages";
-						break;
-					case 'pagesSelect':
-						$sql = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
+							$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
+									FROM mc_about_page AS p
+										JOIN mc_about_page_content AS c USING ( id_pages )
+										JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+										LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
+										LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+										WHERE c.id_lang = :default_lang $cond
+										GROUP BY p.id_pages 
+									ORDER BY p.order_pages";
+						}
+					}
+					break;
+				case 'pagesChild':
+					$cond = '';
+					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
+						$nbc = 0;
+						foreach ($config['search'] as $key => $q) {
+							if($q != '') {
+								$cond .= 'AND ';
+								$p = 'p'.$nbc;
+								switch ($key) {
+									case 'id_pages':
+									case 'menu_pages':
+										$cond .= 'p.'.$key.' = '.$p.' ';
+										break;
+									case 'name_pages':
+										$cond .= "c.".$key." LIKE CONCAT('%', :".$p.", '%') ";
+										break;
+									case 'date_register':
+										$q = $dateFormat->date_to_db_format($q);
+										$cond .= "p.".$key." LIKE CONCAT('%', :".$p.", '%') ";
+										break;
+								}
+								$params[$p] = $q;
+								$nbc++;
+							}
+						}
+					}
+
+					$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
 							FROM mc_about_page AS p
 								JOIN mc_about_page_content AS c USING ( id_pages )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
 								LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-								WHERE c.id_lang = :default_lang
+								WHERE p.id_parent = :id $cond
 								GROUP BY p.id_pages 
-							ORDER BY p.id_pages DESC";
-						break;
-				}
+							ORDER BY p.order_pages";
+					break;
+				case 'pagesSelect':
+					$sql = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
+						FROM mc_about_page AS p
+							JOIN mc_about_page_content AS c USING ( id_pages )
+							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+							LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
+							LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+							WHERE c.id_lang = :default_lang
+							GROUP BY p.id_pages 
+						ORDER BY p.id_pages DESC";
+					break;
+			}
 
-                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }
-            elseif($config['context'] === 'one') {
-				switch ($config['type']) {
-					case 'info':
-						$sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
-						break;
-					case 'content':
-						$sql = 'SELECT * FROM `mc_about_data` WHERE `id_lang` = :id_lang';
-						break;
-					case 'contentPage':
-						$sql = 'SELECT * FROM `mc_about_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
-						break;
-					case 'root':
-						$sql = 'SELECT * FROM mc_about_page ORDER BY id_pages DESC LIMIT 0,1';
-						break;
-				}
+			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+		}
+		elseif($config['context'] === 'one') {
+			switch ($config['type']) {
+				case 'info':
+					$sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
+					break;
+				case 'content':
+					$sql = 'SELECT * FROM `mc_about_data` WHERE `id_lang` = :id_lang';
+					break;
+				case 'contentPage':
+					$sql = 'SELECT * FROM `mc_about_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
+					break;
+				case 'root':
+					$sql = 'SELECT * FROM mc_about_page ORDER BY id_pages DESC LIMIT 0,1';
+					break;
+			}
 
-                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
-            }
+			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+		}
     }
 
 	/**
@@ -217,7 +214,7 @@ class backend_db_about
 				case 'content':
 					$sql = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
 						VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
-
+					break;
 			}
 		}
 
@@ -441,8 +438,7 @@ class backend_db_about
 
 		switch ($config['type']) {
 			case 'page':
-				$sql = 'DELETE FROM `mc_about_page` 
-						WHERE `id_pages` IN ('.$params['id'].')';
+				$sql = 'DELETE FROM `mc_about_page` WHERE `id_pages` IN ('.$params['id'].')';
 				$params = array();
 				break;
 		}

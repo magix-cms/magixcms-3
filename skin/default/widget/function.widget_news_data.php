@@ -94,7 +94,7 @@
 function smarty_function_widget_news_data($params, $template)
 {
 	if(!empty($params)) {
-		$ModelNews = new frontend_model_news($template);
+		$ModelNews = new frontend_model_news();
 		$modelSystem = new frontend_model_core();
 
 		// Set and load data

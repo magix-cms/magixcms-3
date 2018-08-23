@@ -38,39 +38,45 @@ class component_core_language{
      * lang setting conf
      * @var bool
      */
-    public static $setLanguage,
+    protected $template,
+		$setLanguage,
         $getLanguage,
         $setParams;
-	/**
-	 * function construct class
-	 *
-	 */
-	public function __construct($setParams){
-        if(!empty($setParams)){
-            self::$setParams = $setParams;
-            if (http_request::isGet($setParams)){
-                self::$getLanguage = $_GET[$setParams];//form_inputFilter::isAlpha($_GET[$setParams]);
-            }
-        }
 
+	/**
+	 * component_core_language constructor.
+	 * @param $setParams
+	 */
+	public function __construct($t,$setParams){
+		$this->template = $t;
+        /*if(!empty($setParams)){
+            $this->setParams = $setParams;
+            if (http_request::isGet($setParams)){
+                $this->getLanguage = $_GET[$setParams];
+            }
+        }*/
 	}
 
     /**
      * Return language elseif default
      * @return bool|string
      */
-    public static function setLanguage(){
-        if(isset(self::$getLanguage)){
-            if(!empty(self::$getLanguage)){
-                $lang = $_SESSION[self::$setParams];//form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],5);
-            }else{
+    public function setLanguage(){
+        if(isset($this->getLanguage)){
+            if(!empty($this->getLanguage)){
+                $lang = $_SESSION[$this->setParams];//form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],5);
+            }
+            else {
                 $lang = 'fr';
             }
 
-        }else{
-            if(http_request::isSession(self::$setParams)){
-                $lang = $_SESSION[self::$setParams];//form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],5);
-            } else {
+        }
+        else
+        	{
+            if(http_request::isSession($this->setParams)){
+                $lang = $_SESSION[$this->setParams];//form_inputFilter::isAlphaNumericMax($_SESSION[self::$setParams],5);
+            }
+            else {
                 $lang = 'fr';
             }
         }
@@ -116,37 +122,32 @@ class component_core_language{
 
         return $languages;
     }
+
     /**
      * @return array|int|string
      */
     private function initLang(){
-        $CollectionTools = new collections_ArrayTools();
-        $langCollection = $CollectionTools->defaultLanguage();
-		$language = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        $language = strtolower(substr(chop($language[0]),0,2));
-        foreach($langCollection as $key => $value){
-            if(array_key_exists($key,$langCollection)){
-                    switch ($language) {
-                        case $key:
-                            $language = $key;
-                            break;
-                        default:
-                            $language = 'fr';
-                            break;
-                    }
-            }else{
-                $language = 'fr';
-            }
-        }
+        /*$language = $this->template->lang;
+		$user_langs = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
-		if(empty($_SESSION[self::$setParams]) || !empty(self::$getLanguage)) {
-            return $_SESSION[self::$setParams] = empty(self::$getLanguage) ? $language : self::$getLanguage;
-		}else{
-            if (http_request::isGet(self::$setParams)) {
-				return self::$getLanguage  = $language;
+		foreach($user_langs as $ul) {
+			$iso = strtolower(substr(chop($ul),0,2));
+
+			if(array_key_exists($iso,$this->template->langs)) {
+				$language = $iso;
+				break;
 			}
+		}*/
+
+		/*if(empty($_SESSION[$this->setParams]) || !empty($this->getLanguage)) {
+            return $_SESSION[$this->setParams] = empty($this->getLanguage) ? $language : $this->getLanguage;
 		}
+		else {
+			return $this->getLanguage = $language;
+		}*/
+		if(empty($_SESSION[$this->setParams])) $_SESSION[$this->setParams] = $this->template->lang;
 	}
+
     /**
      * Retourne l'OS courant si windows
      */
@@ -155,19 +156,20 @@ class component_core_language{
             return 'windows';
         }
     }
+
     /**
      * Modification du setlocale suivant la langue courante pour les dates
      */
     private function setTimeLocal(){
-        if(self::setLanguage() == 'nl'){
+        if($this->template->lang == 'nl'){
             setlocale(LC_TIME, 'nl_NL.UTF8','nl');
-        }elseif(self::setLanguage() == 'fr' || self::setLanguage() == 'fr-ca'){
+        }elseif($this->template->lang == 'fr' || $this->template->lang == 'fr-ca'){
             setlocale(LC_TIME, 'fr_FR.UTF8', 'fra');
-        }elseif(self::setLanguage() == 'de'){
+        }elseif($this->template->lang == 'de'){
             setlocale(LC_TIME, 'de_DE.UTF8', 'de');
-        }elseif(self::setLanguage() == 'es'){
+        }elseif($this->template->lang == 'es'){
             setlocale(LC_TIME, 'es_ES.UTF8', 'es');
-        }elseif(self::setLanguage() == 'it'){
+        }elseif($this->template->lang == 'it'){
             setlocale(LC_TIME, 'it_IT.UTF8', 'it');
         }else{
             setlocale(LC_TIME, 'en_US.UTF8', 'en');
@@ -184,7 +186,7 @@ class component_core_language{
         if($debug){
             $session->debug();
         }
-        self::initLang();
-        self::setTimeLocal();
+        $this->initLang();
+        $this->setTimeLocal();
 	}
 }

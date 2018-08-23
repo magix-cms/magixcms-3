@@ -109,7 +109,7 @@ function smarty_function_widget_share_data($params, $template)
     $url['share'] = $url['root'] . $url['relativ'];
 
     // ** Catch module's page name
-    $smarty = frontend_model_smarty::getInstance();
+    //$smarty = frontend_model_smarty::getInstance();
 
     // ** find active module
     $script['fileName'] = substr($_SERVER['SCRIPT_NAME'], 1);
@@ -119,39 +119,39 @@ function smarty_function_widget_share_data($params, $template)
     $name = null;
     switch ($active_mod) {
         case 'index':
-            $name = $smarty->getTemplateVars('title');
+            $name = $template->getTemplateVars('title');
             break;
         case 'catalog':
             if (isset($_GET['idproduct'])) {
-                $productData = $smarty->getTemplateVars('product');
+                $productData = $template->getTemplateVars('product');
                 $name = $productData['name'];
             } elseif (isset($_GET['idcls'])) {
-                $subcatData = $smarty->getTemplateVars('subcat');
+                $subcatData = $template->getTemplateVars('subcat');
                 $name = $subcatData['name'];
             } elseif (isset($_GET['idclc'])) {
-                $catData = $smarty->getTemplateVars('cat');
+                $catData = $template->getTemplateVars('cat');
                 $name = $catData['name'];
             } else {
-                $name = $smarty->getConfigVars('catalog_root_h1');
+                $name = $template->getConfigVars('catalog_root_h1');
             }
             break;
         case 'cms':
-            $name = $smarty->getTemplateVars('name_page');
+            $name = $template->getTemplateVars('name_page');
             break;
         case 'news':
             if (isset($_GET['getnews'])) {
-                $name = $smarty->getTemplateVars('name_news');
+                $name = $template->getTemplateVars('name_news');
             } elseif (isset($_GET['tag'])) {
-                $name = $smarty->getConfigVars('news_root_h1') . ': ' . $_GET['tag'];
+                $name = $template->getConfigVars('news_root_h1') . ': ' . $_GET['tag'];
             } else {
-                $name = $smarty->getConfigVars('news_root_h1');
+                $name = $template->getConfigVars('news_root_h1');
             }
             break;
         case 'plugin':
             $active_plugin = $_GET['magixmod'];
             switch ($active_plugin) {
                 case 'contact':
-                    $name = $smarty->getConfigVars('contact_root_h1');
+                    $name = $template->getConfigVars('contact_root_h1');
                     break;
                 default:
                     if (isset($_GET['pstring3']))
@@ -161,7 +161,7 @@ function smarty_function_widget_share_data($params, $template)
                     elseif (isset($_GET['pstring1']))
                         $name = ucfirst(str_replace('-', ' ', 'pstring1'));
                     else
-                        $name = $smarty->getConfigVars($active_mod . '_root_h1');
+                        $name = $template->getConfigVars($active_mod . '_root_h1');
             }
     }
 

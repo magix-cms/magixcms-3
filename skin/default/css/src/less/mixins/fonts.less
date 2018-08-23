@@ -13,8 +13,8 @@
 @font-size-h5: extract(@font-size, 5);
 @font-size-h6: extract(@font-size, 6);*/
 
-@font-family-sans-serif: "Roboto", Arial, sans-serif;
-@headings-font-family: "Roboto", "Helvetica", Arial, sans-serif;
+@font-family-sans-serif: "Heebo", Arial, sans-serif;
+@headings-font-family: @font-family-sans-serif;
 @headings-font-weight: 300;
 
 @font-size-base:  16px;
@@ -35,5 +35,5 @@
 
 @font-weight: 300;
 @lead-font-size: floor((@font-size-base * 1.15));
-@lead-font: "Raleway", "Helvetica", Arial, sans-serif;
+@lead-font: @font-family-sans-serif;
 @quote-font: Georgia, serif;

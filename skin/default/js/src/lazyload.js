@@ -1,7 +1,6 @@
 $(function() {
     'use strict';
     var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
-    console.log(lazyImages);
 
     if ("IntersectionObserver" in window) {
         let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
@@ -19,8 +18,8 @@ $(function() {
         lazyImages.forEach(function(lazyImage) {
             lazyImageObserver.observe(lazyImage);
         });
-    } else {
-        // Possibly fall back to a more compatible method here
-
+    }
+    else {
+        console.log('No observer found');
     }
 });

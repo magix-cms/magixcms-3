@@ -12,5 +12,6 @@
             {$family = $family|cat:'|'}
         {/if}
     {/foreach}
-    <link href="https://fonts.googleapis.com/css?family={$family}" rel="stylesheet" type="text/css">
+    {if $browser !== 'IE'}<link rel="preload" href="https://fonts.googleapis.com/css?family={$family}" as="style">{/if}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family={$family}">
 {/if}{/strip}

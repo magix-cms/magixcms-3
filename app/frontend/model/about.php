@@ -173,8 +173,8 @@ class frontend_model_about extends frontend_db_about {
 		$this->template = $t ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->modelPlugins = new frontend_model_plugins();
-		$this->data = new frontend_model_data($this);
-		$this->language = new frontend_controller_language($t);
+		$this->data = new frontend_model_data($this,$this->template);
+		$this->language = new frontend_controller_language($this->template);
 		$this->languages = $this->language->setCollection();
 
 		$detect = new Mobile_Detect;

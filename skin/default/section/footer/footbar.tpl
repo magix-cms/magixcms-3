@@ -6,7 +6,7 @@
             </button>
         </div>
         <ul class="list-unstyled share-nav" aria-labelledby="menu-share">
-            {include file="section/loop/share.tpl" data=$shareData}
+            {include file="section/loop/share.tpl" data=$shareUrls config=$shareConfig}
         </ul>
         <div class="align-right toTop affix-top float-btn">
             <a class="btn btn-flat btn-box btn-main-theme" href="#" title="{#back_to_top#|ucfirst}">

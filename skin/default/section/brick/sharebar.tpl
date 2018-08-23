@@ -1,4 +1,4 @@
-<div id="sharebar">
+<div class="sharebar">
     {if $adjust == 'clip'}
     <div class="container">
         {/if}

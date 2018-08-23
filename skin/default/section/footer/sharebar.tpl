@@ -1,4 +1,4 @@
-<div id="sharebar" class="visible-lg">
+<div class="visible-lg sharebar">
     {if $adjust == 'clip'}
     <div class="container">
         {/if}
@@ -6,7 +6,7 @@
             {*<span class="label">{#share#|ucfirst}&nbsp;:</span>*}
             <i class="material-icons">share</i>
             <ul class="list-unstyled list-inline share-nav">
-                {include file="section/loop/share.tpl" data=$shareData}
+                {include file="section/loop/share.tpl" data=$shareUrls config=$shareConfig}
             </ul>
         </div>
         <div class="followbox pull-right">

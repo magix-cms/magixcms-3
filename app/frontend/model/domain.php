@@ -34,7 +34,7 @@
 */
 class frontend_model_domain extends frontend_db_domain {
 
-	protected $template, $data, $routingUrl, $modelPlugins, $language, $languages, $collectionLanguage;
+	protected $template, $data;
 
 	/**
 	 * frontend_model_domain constructor.
@@ -43,10 +43,7 @@ class frontend_model_domain extends frontend_db_domain {
 	public function __construct($t = null)
 	{
 		$this->template = $t ? $t : new frontend_model_template();
-		$this->routingUrl = new component_routing_url();
-		$this->modelPlugins = new frontend_model_plugins();
-		$this->data = new frontend_model_data($this);
-		$this->collectionLanguage = new component_collections_language();
+		$this->data = new frontend_model_data($this,$this->template);
 	}
 
 	/**
@@ -69,4 +66,3 @@ class frontend_model_domain extends frontend_db_domain {
 		return $this->getItems('domain',null,'all',false);
 	}
 }
-?>

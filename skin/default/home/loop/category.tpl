@@ -2,7 +2,7 @@
     {$data = [$data]}
 {/if}
 {if !$classCol}
-    {$classCol = 'col-ph-6 col-sm-6 col-md-4'}
+    {$classCol = 'col-6 col-sm-6 col-md-4'}
 {/if}
 {if is_array($data) && !empty($data)}
     {foreach $data as $item}

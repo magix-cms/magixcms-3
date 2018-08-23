@@ -10,7 +10,7 @@
                 <header>
                     <div class="row">
                         {strip}
-                            <div class="col-ph-12 col-md-6">
+                            <div class="col-12 col-md-6">
                                 <h1 itemprop="name">
                                     {#news#|ucfirst}
                                     {if isset($tag)}<small> - <span itemprop="about">{$tag.name|ucfirst}</span></small>{/if}
@@ -18,7 +18,7 @@
                                 </h1>
                             </div>
                         {/strip}
-                        <div class="col-ph-6 col-md-3">
+                        <div class="col-6 col-md-3">
                             <p class="label">{#news_by_theme#|ucfirst}</p>
                             <div class="dropdown">
                                 <button class="btn btn-block btn-box btn-default dropdown-toggle" type="button" data-toggle="dropdown">
@@ -39,7 +39,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-ph-6 col-md-3">
+                        <div class="col-6 col-md-3">
                             <p class="label">{#news_by_date#|ucfirst}</p>
                             <div class="dropdown">
                                 <button class="btn btn-block btn-box btn-default dropdown-toggle" type="button" data-toggle="dropdown">

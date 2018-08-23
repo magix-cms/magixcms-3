@@ -8,11 +8,13 @@
     {foreach $data as $row}
     <tr id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}_{$row[$idcolumn]}">
         <td class="text-center">
+            {if $checkbox}
             <div class="checkbox">
                 <label for="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$row[$idcolumn]}">
                     <input type="checkbox" id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$row[$idcolumn]}" name="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}[]" value="{$row[$idcolumn]}"{if $row[$idcolumn]|in_array:$readonly} readonly disabled{/if}/>
                 </label>
             </div>
+            {/if}
         </td>
         {foreach $scheme as $name => $col}
             <td class="{$col.class}">
@@ -35,6 +37,7 @@
                 {/if}
             </td>
         {/foreach}
+        {if $edit && $dlt}
         <td class="actions text-center">
             {if {employee_access type="edit" class_name=$cClass} eq 1}
             {if $edit}
@@ -43,11 +46,12 @@
             {/if}
             {/if}
             {if {employee_access type="del" class_name=$cClass} eq 1}
-            {if !$row[$idcolumn]|in_array:$readonly}
-                <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$row[$idcolumn]}" data-controller="{$controller}" {if $subcontroller} data-sub="{$subcontroller}"{/if} data-target="#delete_modal"><span class="fa fa-trash"></span></a>
+            {if !$row[$idcolumn]|in_array:$readonly && $dlt}
+            <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$row[$idcolumn]}" data-controller="{$controller}" {if $subcontroller} data-sub="{$subcontroller}"{/if} data-target="#delete_modal"><span class="fa fa-trash"></span></a>
             {/if}
             {/if}
         </td>
+        {/if}
     </tr>
     {/foreach}
 {else}

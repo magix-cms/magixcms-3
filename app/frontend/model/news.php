@@ -42,7 +42,7 @@
  */
 class frontend_model_news extends frontend_db_news {
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$dateFormat;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$dateFormat;
 
 	/**
 	 * frontend_model_news constructor.
@@ -50,9 +50,9 @@ class frontend_model_news extends frontend_db_news {
 	 */
     public function __construct($t = null)
     {
-		$this->coreTemplate = $t ? $t : new frontend_model_template();
+		$this->template = $t ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
-		$this->imagesComponent = new component_files_images($t);
+		$this->imagesComponent = new component_files_images($this->template);
 		$this->modelPlugins = new frontend_model_plugins();
         $this->dateFormat = new date_dateformat();
     }
@@ -96,7 +96,7 @@ class frontend_model_news extends frontend_db_news {
 					$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                 }
             }
-            $data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/news/default.png';
+            $data['img']['default'] = '/skin/'.$this->template->theme.'/img/news/default.png';
 
             $data['active'] = false;
 

@@ -13,6 +13,12 @@
 {if !isset($edit)}
     {$edit = true}
 {/if}
+{if !isset($dlt)}
+    {$dlt = true}
+{/if}
+{if !isset($checkbox)}
+    {$checkbox = true}
+{/if}
 {if isset($data) && is_array($data)}
     {if $debug}{foreach $scheme as $sch}
         {$sch.input|var_dump}
@@ -28,7 +34,9 @@
                     {foreach $scheme as $name => $col}
                         <th{if $col.class && !empty($col.class)} class="{$col.class}"{/if}>{if $debug}{$col['title']} | {/if}{#$col['title']#|ucfirst}</th>
                     {/foreach}
+                    {if $edit && $dlt}
                     <th class="fixed-td-lg text-center">{#actions#|ucfirst}</th>
+                    {/if}
                 </tr>
                 {if $search}
                 <tr class="search-bar">
@@ -77,6 +85,7 @@
             </table>
             <div class="hidden-ph hidden-xs">
                 <p>
+                    {if $checkbox}
                     <span class="fa fa-reply fa-rotate-180"></span>
                     <button class="btn btn-link update-checkbox" id="check-all" value="check-all" data-table="{$controller}">
                         <span class="fa fa-check-square"></span> <span class="hidden-sm hidden-md">{#check_all#|ucfirst}</span>
@@ -84,6 +93,7 @@
                     <button class="btn btn-link update-checkbox" id="uncheck-all" value="uncheck-all" data-table="{$controller}">
                         <span class="fa fa-square-o"></span> <span class="hidden-sm hidden-md">{#uncheck_all#|ucfirst}</span>
                     </button>
+                    {/if}
                     {if $activation}
                         &mdash;
                     <button class="btn btn-link" type="submit" name="action" value="active-selected">
@@ -94,10 +104,12 @@
                     </button>
                     {/if}
                     {if {employee_access type="del" class_name=$cClass} eq 1}
+                    {if $dlt}
                         &mdash;
                     <button class="btn btn-link modal_action" data-target="#delete_modal" data-controller="{$controller}"{if $subcontroller} data-sub="{$subcontroller}"{/if}>
                         <span class="fa fa-trash"></span> <span class="hidden-sm hidden-md">{#delete_selected#|ucfirst}</span>
                     </button>
+                    {/if}
                     {/if}
                 </p>
             </div>
@@ -107,6 +119,7 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    {if $checkbox}
                     <li>
                         <button class="btn btn-link update-checkbox" type="submit" value="check-all" data-table="{$controller}">
                             <span class="fa fa-check-square"></span> <span>{#check_all#|ucfirst}</span>
@@ -118,6 +131,7 @@
                         </button>
                     </li>
                     <li role="separator" class="divider"></li>
+                    {/if}
                     {if $activation}
                     <li>
                         <button class="btn btn-link" type="submit" name="action" value="active-selected">
@@ -132,11 +146,13 @@
                     <li role="separator" class="divider"></li>
                     {/if}
                     {if {employee_access type="del" class_name=$cClass} eq 1}
+                    {if $dlt}
                     <li>
                         <button class="btn btn-link modal_action" data-target="#delete_modal" data-controller="{$controller}"{if $subcontroller} data-sub="{$subcontroller}"{/if}>
                             <span class="fa fa-trash"></span> <span>{#delete_selected#|ucfirst}</span>
                         </button>
                     </li>
+                    {/if}
                     {/if}
                 </ul>
             </div>

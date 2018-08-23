@@ -45,31 +45,33 @@
 class frontend_db_setting {
 	/**
 	 * @param $config
-	 * @param bool $data
+	 * @param bool $params
 	 * @return mixed|null
+	 * @throws Exception
 	 */
-	public function fetchData($config, $data = false)
+	public function fetchData($config, $params = false)
 	{
+		if (!is_array($config)) return '$config must be an array';
+
 		$sql = '';
-		$params = false;
 
-		if (is_array($config)) {
-			if ($config['context'] === 'all') {
-				if ($config['type'] === 'color') {
-					$sql = 'SELECT color.* FROM mc_css_inliner as color';
-				}
-
-				return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+		if ($config['context'] === 'all') {
+			switch ($config['type']) {
+			    case 'color':
+			    	$sql = 'SELECT color.* FROM mc_css_inliner as color';
+			    	break;
 			}
-			elseif ($config['context'] === 'one') {
-				if ($config['type'] === 'setting') {
-					//Return current skin
-					$sql = 'SELECT value FROM mc_setting WHERE name = :setting';
-					$params = $data;
-				}
 
-				return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+		}
+		elseif ($config['context'] === 'one') {
+			switch ($config['type']) {
+			    case 'setting':
+			    	$sql = 'SELECT value FROM mc_setting WHERE name = :setting';
+			    	break;
 			}
+
+			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
 		}
 	}
 }

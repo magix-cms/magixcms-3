@@ -1,5 +1,5 @@
 {if $companyData.socials.facebook != ''}
-    <div id="block-facebook" class="col-ph-12 col-sm-3 col-lg-4 block">
+    <div id="block-facebook" class="col-12 col-sm-3 col-lg-4 block">
         <div id="fb-root"></div>
         <script>(function(d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0];

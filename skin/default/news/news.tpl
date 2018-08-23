@@ -22,7 +22,7 @@
                     </h1>
                 {/strip}
                 <div class="row">
-                    <div class="col-ph-6">
+                    <div class="col-6">
                         <p class="label">{#news_by_theme#|ucfirst}</p>
                         <div class="dropdown">
                             <button class="btn btn-block btn-box btn-default dropdown-toggle" type="button" data-toggle="dropdown">
@@ -43,7 +43,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-ph-6">
+                    <div class="col-6">
                         <p class="label">{#news_by_date#|ucfirst}</p>
                         <div class="dropdown">
                             <button class="btn btn-block btn-box btn-default dropdown-toggle" type="button" data-toggle="dropdown">

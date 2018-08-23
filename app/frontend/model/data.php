@@ -5,15 +5,17 @@ class frontend_model_data{
 	/**
 	 * backend_model_data constructor.
 	 * @param object $caller - object class of the class that called the model
+	 * @param object $t - object class of the template class from the caller
 	 */
-	public function __construct($caller)
+	public function __construct($caller, $t = null)
 	{
 		$this->caller = $caller;
-		$this->template = new frontend_model_template();
+		$this->template = $t ? $t : new frontend_model_template();
 
 		try {
 			$this->db = (new ReflectionClass(get_parent_class($caller)))->newInstance();
-		} catch(Exception $e) {
+		}
+		catch(Exception $e) {
 			$logger = new debug_logger(MP_LOG_DIR);
 			$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
 		}
@@ -96,7 +98,7 @@ class frontend_model_data{
 
 					// Construit doonées de l'item en array avec clée nominative unifiée ('name' => 'monname,'descr' => '<p>ma descr</p>,...)
 
-					$itemData  = $model->setItemData($row[$deep],$current,$newRow);
+					$itemData = method_exists($model, 'setItemData') ? $model->setItemData($row[$deep],$current,$newRow) : null;
 
 					// Récupération des sous-données (enfants)
 					if(isset($items[$deep_plus]) != null) {

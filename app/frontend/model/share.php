@@ -36,7 +36,7 @@ class frontend_model_share extends frontend_db_share {
 	/**
 	 * @var frontend_model_data
 	 */
-	protected $template, $data, $routingUrl, $modelPlugins, $language, $languages;
+	protected $template, $data;
 
 	/**
 	 * frontend_model_about constructor.
@@ -45,8 +45,6 @@ class frontend_model_share extends frontend_db_share {
 	public function __construct($t = null)
 	{
 		$this->template = $t ? $t : new frontend_model_template();
-		$this->routingUrl = new component_routing_url();
-		$this->modelPlugins = new frontend_model_plugins();
 		$this->data = new frontend_model_data($this);
 	}
 
@@ -78,4 +76,3 @@ class frontend_model_share extends frontend_db_share {
 		return $this->getItems('shareUrl',null,'all',false);
 	}
 }
-?>

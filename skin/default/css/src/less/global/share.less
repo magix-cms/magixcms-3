@@ -3,7 +3,12 @@
 //
 .share-nav {
 	a {
-		display: block;
+		//display: block;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 32px;
+		width: 32px;
 
 		&:focus, &:active {
 			text-decoration: none;
@@ -11,11 +16,11 @@
 	}
 
 	.fa {
-		.square(20px);
+		//.square(20px);
 		font-size: 18px;
 		color: #fff;
-		text-align: center;
-		padding: 8px;
+		//text-align: center;
+		//padding: 8px;
 
 		&:before {
 			vertical-align: middle;
@@ -35,7 +40,8 @@
 	.share-buttons(flat,dark);
 }
 
-#sharebar {
+.sharebar {
+	background-color: @white;
 
 	.label {
 		color: @light-grey;

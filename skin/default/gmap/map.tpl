@@ -71,7 +71,7 @@
                 {if ($addr@index)%2 == 0}
                     <div class="row">
                 {/if}
-                <div class="col-ph-12 col-sm-6 col-md-4 col-lg-6">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-6">
                     {capture name="content"}
                         <h3>{$addr.company_address}</h3>
                         <p>{$addr.address_address}, {$addr.postcode_address} {$addr.city_address}, {$addr.country_address}</p>
@@ -83,10 +83,10 @@
                     {/capture}
                     {if !empty($addr.img_address)}
                         <div class="row">
-                            <div class="col-ph-12 col-xs-6 col-sm-12 col-lg-6">
+                            <div class="col-12 col-xs-6 col-sm-12 col-lg-6">
                                 <img class="img-responsive" src="{$url}/upload/gmap/{$addr.id_address}/{$addr.img_address}" alt="{$addr.company}">
                             </div>
-                            <div class="col-ph-12 col-xs-6 col-sm-12 col-lg-6">
+                            <div class="col-12 col-xs-6 col-sm-12 col-lg-6">
                                 {$smarty.capture.content}
                             </div>
                         </div>

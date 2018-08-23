@@ -33,16 +33,17 @@ class plugins_contact_public extends plugins_contact_db
 
     /**
      * frontend_controller_home constructor.
+	 * @param stdClass $t
      */
-    public function __construct()
+    public function __construct($t = null)
     {
-        $this->template = new frontend_model_template();
+        $this->template = $t ? $t : new frontend_model_template();
         $formClean = new form_inputEscape();
         $this->sanitize = new filter_sanitize();
         //$this->header = new component_httpUtils_header($this->template);
 		$this->header = new http_header();
-        $this->data = new frontend_model_data($this);
-        $this->getlang = $this->template->currentLanguage();
+        $this->data = new frontend_model_data($this,$this->template);
+        $this->getlang = $this->template->lang;
         //$this->mail = new mail_swift('mail');
         $this->mail = new frontend_model_mail('contact');
         $this->modelDomain = new frontend_model_domain($this->template);
@@ -229,8 +230,8 @@ class plugins_contact_public extends plugins_contact_db
 	 * @return array
 	 */
 	public function getContact(){
-		$lang = $this->template->getLanguage();
-		return $this->getItems('contacts',array('lang' => $lang),'all',false);
+		//$lang = $this->template->getLanguage();
+		return $this->getItems('contacts',array('lang' => $this->getlang),'all',false);
 	}
 
 	/**

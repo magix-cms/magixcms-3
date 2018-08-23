@@ -267,4 +267,3 @@ class backend_controller_plugins extends backend_db_plugins{
         $this->template->display('plugins/index.tpl');
     }
 }
-?>

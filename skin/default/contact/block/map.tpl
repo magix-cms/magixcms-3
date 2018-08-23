@@ -2,7 +2,7 @@
     {$classCol = "col-xs-12 col-sm-4 col-md-4 col-lg-4 pull-right"}
 {/if}
 <div id="map" class="row">
-    <div class="contact-infos col-ph-12 col-sm-6 col-md-12">
+    <div class="contact-infos col-12 col-sm-6 col-md-12">
         <p class="lead">{#info_contact#|ucfirst}</p>
         {if $companyData.contact.mail}
             <p class="email">
@@ -35,7 +35,7 @@
         {/if}
     </div>
     {if $companyData.openinghours}
-    <div class="schedule col-ph-12 col-sm-6 col-md-12">
+    <div class="schedule col-12 col-sm-6 col-md-12">
         {include file="about/brick/openinghours.tpl"}
     </div>
     {/if}

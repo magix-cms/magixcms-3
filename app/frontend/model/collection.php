@@ -415,4 +415,3 @@ class frontend_model_collection{
         return $arr;
     }
 }
-?>

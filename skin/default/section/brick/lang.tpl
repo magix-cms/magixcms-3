@@ -5,7 +5,7 @@
         {if $smarty.get.strLangue}
             {$smarty.get.strLangue|upper}
         {else}
-            {$defaultLang.iso_lang|upper}
+            {$defaultLang|upper}
         {/if}
     </a>
     <ul class="dropdown-menu" aria-labelledby="menu-language">

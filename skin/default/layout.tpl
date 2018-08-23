@@ -1,15 +1,15 @@
-{strip}{widget_share_data assign="shareData"}{/strip}<!DOCTYPE html>
+<!DOCTYPE html>
 <!--[if lt IE 7]><html lang="{$lang}" class="lt-ie9 lt-ie8 lt-ie7" dir="ltr"><![endif]-->
 <!--[if IE 7]><html lang="{$lang}" class="lt-ie9 lt-ie8" dir="ltr"><![endif]-->
 <!--[if IE 8]><html lang="{$lang}" class="lt-ie9" dir="ltr"><![endif]-->
 <!--[if gt IE 8]><!--><html lang="{$lang}" dir="ltr"><!--<![endif]-->
 <head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
-    <title itemprop="headline">{block name="title"}{/block}</title>
+    <title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>
     <meta name="description" content="{capture name="description"}{block name="description"}{/block}{/capture}{$smarty.capture.description}">
     <meta itemprop="description" content="{$smarty.capture.description}">
     <meta name="robots" content="{$setting['robots']['value']}">
-    {strip}{include file="section/loop/lang.tpl" amp=true iso={$lang}}{/strip}
+    {strip}{include file="section/loop/lang.tpl" amp=false iso={$lang}}{/strip}
     {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,20 +17,23 @@
     {if $domainData != null && $domainData.tracking_domain != ''}{$domainData.tracking_domain}{else}{if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}{/if}
     <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
-    {include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,600,400italic','Raleway'=>'300,500']}
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
+    {include file="section/brick/google-font.tpl" fonts=['Heebo'=>'300,500,700']}
+    {if $browser !== 'IE'}<link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style">{/if}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    {if $browser !== 'IE'}<link rel="preload" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" as="style">{/if}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     {capture name="stylesheet"}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/capture}
-    {strip}<link rel="preload" href="{$smarty.capture.stylesheet}" as="style">{/strip}
-    {strip}<link rel="stylesheet" href="{$smarty.capture.stylesheet}">{/strip}
+    {if $browser !== 'IE'}<link rel="preload" href="{if $setting.concat.value}{$smarty.capture.stylesheet|concat_url}{else}{$smarty.capture.stylesheet}{/if}" as="style">{/if}
+    <link rel="stylesheet" href="{if $setting.concat.value}{$smarty.capture.stylesheet|concat_url}{else}{$smarty.capture.stylesheet}{/if}">
     {capture name="scriptHtml5"}{strip}
         /min/?f=
         skin/{$theme}/js/vendor/html5shiv.min.js,
         skin/{$theme}/js/vendor/respond.min.js
     {/strip}{/capture}
-    {strip}<!--[if lt IE 9]>{script src=$smarty.capture.scriptHtml5 concat=$setting.concat.value type="javascript"}<![endif]-->{/strip}
+    <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url}{else}{$smarty.capture.scriptHtml5}{/if}" type="text/javascript"></script><![endif]-->
     {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-obeserver.min.js{/capture}
-    {strip}{script src=$smarty.capture.picturefill concat=$setting.concat.value type="javascript" load="async"}{/strip}
+    <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url}{else}{$smarty.capture.picturefill}{/if}" type="text/javascript" async></script>
     {block name="styleSheet"}{/block}
     {if $setting['analytics']['value']}<script type="text/javascript">
         //<![CDATA[
@@ -48,7 +51,7 @@
         //]]>
     </script>{/if}
 </head>
-<body id="{block name='body:id'}layout{/block}" class="{$viewport}{if $touch} touchscreen{/if}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
+<body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
     {include file="section/brick/cookie-consent.tpl"}
     {include file="section/header.tpl"}
     {block name="breadcrumb"}
@@ -80,7 +83,7 @@
         skin/{$theme}/js/global-{$viewport}.min.js,
         skin/{$theme}/js/lazyload.min.js
     {/capture}
-        {script src=$smarty.capture.vendors concat=$setting.concat.value type="javascript" load='async'}{/strip}
+    <script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url}{else}{$smarty.capture.vendors}{/if}" type="text/javascript" async></script>
     {block name="foot"}{/block}
 </body>
 </html>

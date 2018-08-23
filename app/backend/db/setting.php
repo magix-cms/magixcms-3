@@ -45,125 +45,124 @@
 class backend_db_setting{
     /**
      * @param $config
-     * @param bool $data
+     * @param bool $params
      * @return mixed
      * @throws Exception
      */
-    public function fetchData($config,$params = array()){
+    public function fetchData($config, $params = false)
+	{
+		if (!is_array($config)) return '$config must be an array';
+
         $sql = '';
 
-        if(is_array($config)) {
-            if($config['context'] === 'all') {
-                if ($config['type'] === 'settings') {
-                    $sql = 'SELECT * FROM mc_setting';
-                }
-                elseif ($config['type'] === 'cssinliner') {
-                    $sql = 'SELECT * FROM mc_cssinliner';
-                }
+		if($config['context'] === 'all') {
+			switch ($config['type']) {
+				case 'settings':
+					$sql = 'SELECT * FROM mc_setting';
+					break;
+				case 'cssinliner':
+					$sql = 'SELECT * FROM mc_cssinliner';
+					break;
+			}
 
-				return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }
-            elseif($config['context'] === 'one') {
-                if ($config['type'] === 'skin') {
-                    //Return current skin
-                    $sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
-                    //$params = $data;
-                }
-				elseif ($config['type'] === 'setting') {
+			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+		}
+		elseif($config['context'] === 'one') {
+			switch ($config['type']) {
+				case 'skin':
+					$sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
+					break;
+				case 'setting':
 					$sql = 'SELECT * FROM mc_setting WHERE name = :setting';
-				}
+					break;
+			}
 
-                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
-            }
-        }
+			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+		}
     }
 
-    /**
-     * @param $config
-     * @param bool $data
-     */
-    public function update($config,$data = false)
+	/**
+	 * @param $config
+	 * @param array $params
+	 * @return bool|string
+	 */
+	public function update($config, $params = array())
     {
-        if (is_array($config)) {
-            if ($config['type'] === 'general') {
+		if (!is_array($config)) return '$config must be an array';
 
-                $query = "UPDATE `mc_setting`
-					SET `value` = CASE `name`
-						WHEN 'content_css' THEN :content_css
-						WHEN 'concat' THEN :concat
-						WHEN 'ssl' THEN :ssl
-						WHEN 'cache' THEN :cache
-						WHEN 'mode' THEN :mode
-					END
-					WHERE `name` IN ('content_css','concat','ssl','cache','mode')";
+		$sql = '';
 
-                component_routing_db::layer()->update($query,
-                    array(
-                        ':content_css'	=> $data['content_css'],
-                        ':concat'	    => $data['concat'],
-                        ':ssl'	        => $data['ssl'],
-                        ':cache'	    => $data['cache'],
-                        ':mode'	        => $data['mode']
-                    )
-                );
+		switch ($config['type']) {
+			case 'general':
+				$sql = "UPDATE `mc_setting`
+						SET `value` = CASE `name`
+							WHEN 'content_css' THEN :content_css
+							WHEN 'concat' THEN :concat
+							WHEN 'ssl' THEN :ssl
+							WHEN 'cache' THEN :cache
+							WHEN 'mode' THEN :mode
+						END
+						WHERE `name` IN ('content_css','concat','ssl','cache','mode')";
+				break;
+			case 'css_inliner':
+				if($params['css_inliner'] != '0') {
+					$queries = array(
+						array(
+							'request'=>"UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'",
+							'params'=>array(':css_inliner' => $params['css_inliner'])
+						),
+						array(
+							'request'=>"UPDATE mc_css_inliner SET color_cssi = :header_bg WHERE property_cssi = 'header_bg'",
+							'params'=>array(':header_bg' => $params['header_bg'])
+						),
+						array(
+							'request'=>"UPDATE mc_css_inliner SET color_cssi = :header_c WHERE property_cssi = 'header_c'",
+							'params'=>array(':header_c' => $params['header_c'])
+						),
+						array(
+							'request'=>"UPDATE mc_css_inliner SET color_cssi = :footer_bg WHERE property_cssi = 'footer_bg'",
+							'params'=>array(':footer_bg' => $params['footer_bg'])
+						),
+						array(
+							'request'=>"UPDATE mc_css_inliner SET color_cssi = :footer_c WHERE property_cssi = 'footer_c'",
+							'params'=>array(':footer_c' => $params['footer_c'])
+						)
+					);
 
-            }elseif ($config['type'] === 'css_inliner') {
-                if($data['css_inliner'] != '0'){
-                    $queries = array(
-                        array(
-                            'request'=>"UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'",
-                            'params'=>array(':css_inliner' => $data['css_inliner'])
-                        ),
-                        array(
-                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :header_bg WHERE property_cssi = 'header_bg'",
-                            'params'=>array(':header_bg' => $data['header_bg'])
-                        ),
-                        array(
-                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :header_c WHERE property_cssi = 'header_c'",
-                            'params'=>array(':header_c' => $data['header_c'])
-                        ),
-                        array(
-                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :footer_bg WHERE property_cssi = 'footer_bg'",
-                            'params'=>array(':footer_bg' => $data['footer_bg'])
-                        ),
-                        array(
-                            'request'=>"UPDATE mc_css_inliner SET color_cssi = :footer_c WHERE property_cssi = 'footer_c'",
-                            'params'=>array(':footer_c' => $data['footer_c'])
-                        )
-                    );
-                    component_routing_db::layer()->transaction($queries);
-                }else{
-                    $sql = "UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'";
-                    component_routing_db::layer()->update($sql,
-                        array(
-                            ':css_inliner'	    => $data['css_inliner']
-                        )
-                    );
-                }
-            }elseif ($config['type'] === 'theme') {
-                $sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
-                component_routing_db::layer()->update($sql,
-                    array(
-                        ':theme'	    => $data['theme']
-                    )
-                );
-            }elseif ($config['type'] === 'google') {
+					try {
+						component_routing_db::layer()->transaction($queries);
+						return true;
+					}
+					catch (Exception $e) {
+						return 'Exception reçue : '.$e->getMessage();
+					}
+				}
+				else {
+					$sql = "UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'";
+				}
+				break;
+			case 'theme':
+				$sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
+				break;
+			case 'google':
+				$sql = "UPDATE `mc_setting`
+						SET `value` = CASE `name`
+							WHEN 'analytics' THEN :analytics
+							WHEN 'robots' THEN :robots
+						END
+						WHERE `name` IN ('analytics','robots')";
+				break;
+		}
 
-                $query = "UPDATE `mc_setting`
-					SET `value` = CASE `name`
-						WHEN 'analytics' THEN :analytics
-						WHEN 'robots' THEN :robots
-					END
-					WHERE `name` IN ('analytics','robots')";
+		if($sql === '') return 'Unknown request asked';
 
-                component_routing_db::layer()->update($query,
-                    array(
-                        ':analytics'	=> $data['analytics'],
-                        ':robots'	    => $data['robots']
-                    )
-                );
-            }
-        }
+		try {
+			component_routing_db::layer()->update($sql,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
+		}
     }
 
 	/**

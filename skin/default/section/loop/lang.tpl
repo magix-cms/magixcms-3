@@ -5,7 +5,7 @@
         <link rel="amphtml" href="{$url}{$smarty.server.REQUEST_URI|replace:{$iso|cat:'/'}:{$iso|cat:'/amp/'}}">
     {/if}
     {if is_null($smarty.get.controller)}
-        <link rel="alternate" href="{$url}{if $amp}amp/{/if}" hreflang="x-default" />
+        <link rel="alternate" href="{$url}{if $amp}/amp/{/if}" hreflang="x-default" />
     {/if}
     {foreach $dataLang as $k => $lang}
         {if isset($hreflang) && is_array($hreflang)}

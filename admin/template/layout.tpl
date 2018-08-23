@@ -14,6 +14,7 @@
     <!--[if IE]>
     <link rel="shortcut icon" type="image/x-icon" href="{$url}/{baseadmin}/template/img/favicon.ico" />
     <![endif]-->
+    <link rel="manifest" href="{$url}/{baseadmin}/template/manifest.json">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {headlink rel="stylesheet" href="/{baseadmin}/min/?g=publiccss" media="screen"}
     {block name="stylesheets"}{/block}

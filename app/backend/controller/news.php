@@ -179,6 +179,23 @@ class backend_controller_news extends backend_db_news{
         return $arr;
     }
 
+	/**
+	 * @param $id
+	 * @throws Exception
+	 */
+	private function checkTag($id)
+	{
+		// On compte le nombre de tags restant
+		$countTags = parent::fetchData(
+			array('context' => 'one', 'type' => 'countTags'),
+			array('id_tag' => $id)
+		);
+		//Si le nombre est égal 0 on supprime le tag définitivement.
+		if($countTags['tags'] == '0'){
+			parent::delete(array('type' => 'tags'), array('id_tag' => $id));
+		}
+	}
+
     /**
      * Mise a jour des données
      * @param $data
@@ -404,15 +421,21 @@ class backend_controller_news extends backend_db_news{
      */
     private function del($data){
         switch($data['type']){
-            case 'delPages':
-                parent::delete(
-                    array(
-                        'type'      =>    $data['type']
-                    ),
-                    $data['data']
-                );
-                $this->message->json_post_response(true,'delete',$data['data']);
-                break;
+			case 'delPages':
+				$ids = explode(',',$this->id_news);
+				foreach ($ids as $id) {
+					$tags = $this->getItems('tags_rel',$id,'all',false);
+					parent::delete(
+						array('type' => $data['type']),
+						array('id' => $id)
+					);
+					foreach ($tags as $tag) {
+						$this->checkTag($tag['id_tag']);
+					}
+				}
+
+				$this->message->json_post_response(true,'delete',$data['data']);
+				break;
         }
     }
     /**
@@ -443,7 +466,8 @@ class backend_controller_news extends backend_db_news{
                         break;
                 }
             }
-        }else {
+        }
+        else {
             if (isset($this->action)) {
                 switch ($this->action) {
                     case 'add':
@@ -484,17 +508,10 @@ class backend_controller_news extends backend_db_news{
                             if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
                                 parent::delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
 
-                                // On compte le nombre de tags restant
-                                $countTags = parent::fetchData(
-                                    array('context' => 'one', 'type' => 'countTags'),
-                                    array(':id_tag' => $setTags['id_tag'])
-                                );
-                                //Si le nombre est égal 0 on supprime le tag définitivement.
-                                if($countTags['tags'] == '0'){
-                                    parent::delete(array('type' => 'tags'), array('id_tag' => $setTags['id_tag']));
-                                }
+								$this->checkTag($setTags['id_tag']);
                             }
-                        } elseif (isset($this->id_news)) {
+                        }
+                        elseif (isset($this->id_news)) {
                             $this->del(
                                 array(
                                     'type' => 'delPages',
@@ -503,7 +520,8 @@ class backend_controller_news extends backend_db_news{
                                     )
                                 )
                             );
-                        } elseif(isset($this->del_img)) {
+                        }
+                        elseif(isset($this->del_img)) {
 
                             $this->upd(array(
                                 'type'             => 'img',
@@ -541,7 +559,8 @@ class backend_controller_news extends backend_db_news{
                         }
                         break;
                 }
-            } else {
+            }
+            else {
                 $this->modelLanguage->getLanguage();
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                 $this->getItems('news', array(':default_lang' => $defaultLanguage['id_lang']), 'all');

@@ -19,7 +19,7 @@
                 <p>{$item.date.publish|date_format:"%e&thinsp;/&thinsp;%y"}</p>
             </div>
             <div class="figure row">
-                <div class="time-figure col-ph-12 col-xs-6 col-sm-12 col-md-6">
+                <div class="time-figure col-12 col-xs-6 col-sm-12 col-md-6">
                     <div>
                         {if count($item.img) > 1}
                             <img {if $item@first}src="{$item.img.medium.src}"{else}src="{$item.img.default}" data-src="{$item.img.medium.src}" class="lazy"{/if} alt="{$item.title}" title="{$item.title}" itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}>
@@ -28,7 +28,7 @@
                         {/if}
                     </div>
                 </div>
-                <div itemprop="description" class="desc col-ph-12 col-xs-6 col-sm-12 col-md-6">
+                <div itemprop="description" class="desc col-12 col-xs-6 col-sm-12 col-md-6">
                     <h2 itemprop="name" class="h3">{$item.title|ucfirst}</h2>
                     {if $item.resume}
                         <p>{$item.resume|truncate:$truncate:'...'}</p>

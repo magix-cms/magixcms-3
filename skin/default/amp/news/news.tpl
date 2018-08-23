@@ -31,7 +31,7 @@
                     </h1>
                 {/strip}
                 <div class="row">
-                    <div class="col-ph-6">
+                    <div class="col-6">
                         <p class="label">Par thème</p>
                         <div class="dropdown-select">
                             <div class="dropdown">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-ph-6">
+                    <div class="col-6">
                         <p class="label">Par date</p>
                         <div class="dropdown-select">
                             <div class="dropdown">

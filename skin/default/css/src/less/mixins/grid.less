@@ -19,6 +19,9 @@
 	@media (min-width: @screen-lg-min) {
 		max-width: @container-lg;
 	}
+	@media (min-width: @screen-xl-min) {
+		max-width: @container-xl;
+	}
 }
 
 
@@ -121,6 +124,20 @@
 	.make-grid(lg);
 	.make-rows(lg);
 	.col-lg {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
+}
+
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+@media (min-width: @screen-xl-min) {
+	.make-grid(xl);
+	.make-rows(xl);
+	.col-xl {
 		flex: 1 0 0;
 		max-width: 100%;
 	}

@@ -1,4 +1,4 @@
-<div id="block-newsletter" class="col-ph-12 col-sm-4 block">
+<div id="block-newsletter" class="col-12 col-sm-4 block">
     <h4>{#mailchimp_title#}</h4>
     <form id="maillingchimp-form" method="post" action="{$smarty.server.REQUEST_URI}">
         <div class="form-group">

@@ -7,8 +7,8 @@ if(file_exists($baseadmin)){
     }
 }
 require('../lib/backend.inc.php');
-
-$language = new component_core_language('strLanguage');
+$template = new backend_model_template();
+$language = new component_core_language($template,'strLanguage');
 $language->run();
 /*$members = new backend_controller_login();
 $members->checkout();
@@ -23,7 +23,6 @@ $controllerFinder = $file_finder->scanDir(component_core_system::basePath().DIRE
 $funcBasenameFinder = function($value) {
     return basename($value,'.php');
 };
-$template = new backend_model_template();
 $controllerCollection = array_map($funcBasenameFinder,$controllerFinder);//array('dashboard','login','employee','access','language','country','domain','setting','files','testupload','about','home','pages','news','category','catalog','product','webservice','plugins');
 $formClean = new form_inputEscape();
 if(http_request::isGet('controller')){

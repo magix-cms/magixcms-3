@@ -47,7 +47,7 @@ class frontend_model_menu extends frontend_db_menu {
 		$this->template = $t ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->modelPlugins = new frontend_model_plugins();
-		$this->data = new frontend_model_data($this);
+		$this->data = new frontend_model_data($this,$this->template);
 		$this->collectionLanguage = new component_collections_language();
 		$this->modelSystem = new frontend_model_core();
 	}
@@ -72,7 +72,7 @@ class frontend_model_menu extends frontend_db_menu {
 	{
 		$plugin = $this->getItems('plugin',array('id' => $params['id']),'one',false);
 		$plugin_class = 'plugins_'.$plugin['name'].'_public';
-		$plugin = new $plugin_class;
+		$plugin = new $plugin_class($this->template);
 		return $plugin->submenu($params['lang']);
 	}
 

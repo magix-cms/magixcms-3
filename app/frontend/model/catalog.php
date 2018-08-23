@@ -43,7 +43,7 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @var component_routing_url
      */
-    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$data;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data;
 
 	/**
 	 * frontend_model_catalog constructor.
@@ -51,11 +51,11 @@ class frontend_model_catalog extends frontend_db_catalog {
 	 */
     public function __construct($t = null)
     {
-		$this->coreTemplate = $t ? $t : new frontend_model_template();
+		$this->template = $t ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->imagesComponent = new component_files_images($t);
 		$this->modelPlugins = new frontend_model_plugins();
-		$this->data = new frontend_model_data($this);
+		$this->data = new frontend_model_data($this,$this->template);
     }
 
     /**
@@ -144,7 +144,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                             }
                         }
                     }
-                    $data['img_default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/p/default.png';
+                    $data['img_default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
                 }
                 else {
                     if(isset($row['name_img'])){
@@ -160,7 +160,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                         }
                     }
-                    $data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/p/default.png';
+                    $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
 
                 }
                 // -- Similar / Associated product
@@ -214,7 +214,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $value['resize_img'];
                             }
                         }
-                        $data['associated'][$key]['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/p/default.png';
+                        $data['associated'][$key]['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
                     }
                 }
                 // Plugin
@@ -251,7 +251,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                     }
                 }
-                $data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/catalog/c/default.png';
+                $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
 
                 $data['url']  =
                     $this->routingUrl->getBuildUrl(array(

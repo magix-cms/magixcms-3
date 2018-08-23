@@ -56,7 +56,6 @@ class backend_db_scheme {
         if(is_array($config)) {
             if($config['context'] === 'all') {
 				if ($config['type'] === 'scheme') {
-					//Return current row
 					$sql = "SELECT COLUMN_NAME as `column`, COLUMN_TYPE as `type`
 							FROM INFORMATION_SCHEMA.COLUMNS
 							WHERE TABLE_SCHEMA = :dbname
@@ -64,7 +63,7 @@ class backend_db_scheme {
 							AND COLUMN_NAME IN(".$data['columns'].")";
 					$params = array(':dbname' => $data[':dbname']);
 				}
-				//print $sql;
+
                 return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
             }
         }

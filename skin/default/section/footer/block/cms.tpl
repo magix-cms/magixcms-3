@@ -7,7 +7,7 @@
 assign="pages"
 }
     {foreach $pages as $page}
-        <div class="col-ph-12 col-sm-6 col-md-3 col-lg-2 block">
+        <div class="col-12 col-sm-6 col-md-3 col-lg-2 block">
             <h4><a href="{$page.url}/" title="{$page.name}">{$page.name}</a></h4>
             <ul class="link-list list-unstyled">
                 {foreach $page.subdata as $subp}

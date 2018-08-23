@@ -54,55 +54,75 @@ class frontend_model_template{
     /**
      * @var component_collections_setting
      */
-    public $theme,$collectionsSetting,$collectionsLang;
+    public
+		$theme,
+		$defaultLang,
+		$lang,
+		$langs,
+		$domain,
+		$collectionsSetting,
+		$cLangs;
 	/**
 	 *
 	 * Constructor
 	 */
     public function __construct(){
         $this->collectionsSetting = new component_collections_setting();
-        $this->collectionsLang = new component_collections_language();
+        $this->cLangs = new component_collections_language();
         $this->amp = http_request::isGet('amp') ? true : false;
         $this->ConfigFile = 'local_';
         $this->DBDomain = new frontend_db_domain();
         $this->theme = $this->themeSelected();
+		$this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST'])) : null;
+		$this->langs = $this->langsAvailable();
+		$this->lang = $this->currentLanguage();
     }
+
 	/**
-	 * 
+	 * Get the available languages
 	 */
+	public function langsAvailable()
+	{
+		$langs = null;
+		if($this->domain != null) {
+			$data = $this->DBDomain->fetchData(array('context' => 'all', 'type' => 'languages'), array('id' => $this->domain['id_domain']));
+			if($data != null) $langs = $data;
+		}
+		if(!$langs) $langs = $this->cLangs->fetchData(array('context'=>'all','type'=>'active'));
+
+		$arr = array();
+		foreach ($langs as $lang) {
+			$arr[$lang['iso_lang']] = $lang;
+		}
+		return $arr;
+    }
+
     /**
-     * @return mixed|null
+     * Return the default language
      */
     public function setDefaultLanguage(){
-        if(isset($_SERVER['HTTP_HOST'])){
-            $currentDomain = $this->DBDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST']));
-            if($currentDomain['id_domain'] != null) {
-                $data =  $this->DBDomain->fetchData(array('context' => 'one', 'type' => 'language'), array('id' => $currentDomain['id_domain']));
-                if($data != null){
-                    $lang = $data['iso_lang'];
-                }else{
-                    $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
-                    $lang = $data['iso_lang'];
-                }
-            }else{
-                $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
-                $lang = $data['iso_lang'];
-            }
-        }else{
-            $data = $this->collectionsLang->fetchData(array('context'=>'one','type'=>'default'));
-            $lang = $data['iso_lang'];
-        }
+    	$lang = null;
+        if($this->domain['id_domain'] != null) {
+			$data = $this->DBDomain->fetchData(array('context' => 'one', 'type' => 'language'), array('id' => $this->domain['id_domain']));
+			if($data != null) $lang = $data['iso_lang'];
+		}
+
+        if(!$lang) {
+			$data = $this->cLangs->fetchData(array('context'=>'one','type'=>'default'));
+			$lang = $data['iso_lang'];
+		}
         return $lang;
     }
+
     /**
      * @access public static
      * Paramètre de langue get
      */
-	public function getLanguage(){
+	/*public function getLanguage(){
         if(http_request::isGet('strLangue')){
             return $_GET['strLangue'];//form_inputFilter::isAlphaNumericMax($_GET['strLangue'],3);
         }
-	}
+	}*/
 
 	/**
 	 * Retourne la langue en cours de session sinon retourne fr par défaut
@@ -111,23 +131,36 @@ class frontend_model_template{
 	 * @static
 	 */
 	public function currentLanguage(){
-        if(http_request::isGet('strLangue')){
-            $lang = self::getLanguage();
-        }
-        else {
-            $data = $this->setDefaultLanguage();
-            if($data != null){
-                $lang = $data;
-            }
-            else {
-                if(http_request::isSession('strLangue')){
-                    $lang = $_SESSION['strLangue'];//form_inputFilter::isAlphaNumericMax($_SESSION['strLangue'],3);
-                }
-            }
-        }
+		$lang = null;
+		$user_langs = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+
+		foreach($user_langs as $ul) {
+			$iso = strtolower(substr(chop($ul),0,2));
+
+			if(array_key_exists($iso,$this->langs)) {
+				$lang = $iso;
+				break;
+			}
+		}
+
+		if(!$lang) {
+			$default = $this->setDefaultLanguage();
+			$default = $default ? $default : (http_request::isSession('strLangue') ? $_SESSION['strLangue'] : null);
+
+			if($default) {
+				$this->defaultLang = $default;
+				$lang = $default;
+			}
+		}
+		else {
+			$this->defaultLang = $lang;
+		}
+
+        if(http_request::isGet('strLangue')) $lang = $_GET['strLangue'];
 
 		return $lang;
 	}
+
 	/**
 	 * @access private
 	 * return void
@@ -421,4 +454,3 @@ class frontend_model_template{
 		}
 	}
 }
-?>

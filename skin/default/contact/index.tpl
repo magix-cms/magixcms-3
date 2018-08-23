@@ -11,20 +11,20 @@
         {block name='article:content'}
             <h1 itemprop="name">{#contact_root_h1#}</h1>
             <div class="row">
-                <section id="form" class="col-ph-12 col-md-8 col-lg-7" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
+                <section id="form" class="col-12 col-md-8 col-lg-7" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
                     <h2>{#pn_contact_forms#|ucfirst}</h2>
                     <p>{#pn_questions#|ucfirst}</p>
                     <p>{#pn_fill_form#|ucfirst}</p>
                     <p class="help-block">{#contact_fiels_resquest#|ucfirst}</p>
                     <form id="contact-form" class="validate_form nice-form" method="post" action="{$smarty.server.REQUEST_URI}">
                         <div class="row">
-                            <div class="col-ph-12 col-sm-6">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <input id="firstname" type="text" name="msg[firstname]" placeholder="{#ph_contact_firstname#|ucfirst}" class="form-control required" required/>
                                     <label for="firstname">{#pn_contact_firstname#|ucfirst}*&nbsp;:</label>
                                 </div>
                             </div>
-                            <div class="col-ph-12 col-sm-6">
+                            <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <input id="lastname" type="text" name="msg[lastname]" placeholder="{#ph_contact_lastname#|ucfirst}" class="form-control required" required/>
                                     <label for="lastname">{#pn_contact_lastname#|ucfirst}*&nbsp;:</label>
@@ -41,19 +41,19 @@
                         </div>
                         {if $address_enabled}
                             <div class="row">
-                                <div class="col-ph-12 col-md-6">
+                                <div class="col-12 col-md-6">
                                     <div class="form-group">
                                         <input id="address" type="text" name="msg[address]" placeholder="{#ph_address#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
                                         <label for="address">{#pn_contact_address#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                     </div>
                                 </div>
-                                <div class="col-ph-6 col-md-3">
+                                <div class="col-6 col-md-3">
                                     <div class="form-group">
                                         <input id="postcode" type="text" name="msg[postcode]" placeholder="{#ph_postcode#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
                                         <label for="postcode">{#pn_contact_postcode#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
                                     </div>
                                 </div>
-                                <div class="col-ph-6 col-md-3">
+                                <div class="col-6 col-md-3">
                                     <div class="form-group">
                                         <input id="city" type="text" name="msg[city]" placeholder="{#ph_city#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
                                         <label for="city">{#pn_contact_city#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
@@ -77,7 +77,7 @@
                         </p>
                     </form>
                 </section>
-                <section id="aside" class="col-ph-12 col-md-4 col-lg-5">
+                <section id="aside" class="col-12 col-md-4 col-lg-5">
                     {include file="contact/block/map.tpl"}
                 </section>
             </div>

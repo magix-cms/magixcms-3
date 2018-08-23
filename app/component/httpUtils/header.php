@@ -40,20 +40,20 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_httpUtils_header{
-    protected $template,$header;
+    protected $template, $header;
     /**
      * @var bool
      */
     public $getHeader;
-    /**
-     * Constructor
-     */
-    public function __construct($template){
-        $this->template = $template;
-        $this->header =  new http_header();
-        if(http_request::isGet('getHeader')){
-            $this->getHeader = form_inputFilter::isNumeric($_GET['getHeader']);
-        }
+
+	/**
+	 * component_httpUtils_header constructor.
+	 * @param $t
+	 */
+    public function __construct($t){
+        $this->template = $t;
+        $this->header = new http_header();
+        if(http_request::isGet('getHeader')) $this->getHeader = form_inputFilter::isNumeric($_GET['getHeader']);
     }
 
     /**
@@ -124,6 +124,18 @@ class component_httpUtils_header{
         return $this->setTxtHeader($http_error);
     }
 
+	function get_browser_name($user_agent)
+	{
+		if (strpos($user_agent, 'Opera') || strpos($user_agent, 'OPR/')) return 'Opera';
+		elseif (strpos($user_agent, 'Edge')) return 'Edge';
+		elseif (strpos($user_agent, 'Chrome')) return 'Chrome';
+		elseif (strpos($user_agent, 'Safari')) return 'Safari';
+		elseif (strpos($user_agent, 'Firefox')) return 'Firefox';
+		elseif (strpos($user_agent, 'MSIE') || strpos($user_agent, 'Trident/7')) return 'IE';
+
+		return 'Other';
+	}
+
     /**
      *
      */
@@ -134,39 +146,45 @@ class component_httpUtils_header{
 		$device = '';
 		$touch = false;
 		$mOS = false;
-		$bodyClass = '';
+		$mobile = $detect->isMobile();
+		$tablet = $detect->isTablet();
 
-		if( $detect->isMobile() ){
-			$viewport = 'mobile';
+		if($mobile || $tablet) {
+			$viewport = $mobile ? 'mobile' : 'tablet';
 			$touch = true;
 
-			if($detect->is('iphone')) {
-				$device = ' iphone';
+			if( $detect->isiOS() ){
+				$mOS = ' IOS';
+
+				if($mobile) {
+					if($detect->is('iphone')) {
+						$device = ' iphone';
+					}
+				}
+				else {
+					if($detect->is('ipad')) {
+						$device = ' ipad';
+					}
+				}
 			}
-		}
-		if( $detect->isTablet() ){
-			$viewport = 'tablet';
-			$touch = true;
-
-			if($detect->is('ipad')) {
-				$device = ' ipad';
+			elseif( $detect->isAndroidOS() ){
+				$mOS = ' Android';
 			}
+
+			if($detect->is('IE')) $browser = 'IE';
+			if($detect->is('Edge')) $browser = 'Edge';
+			if($detect->is('Chrome')) $browser = 'Chrome';
+			if($detect->is('Safari')) $browser = 'Safari';
+			if($detect->is('UCBrowser')) $browser = 'UCBrowser';
+			if($detect->is('Opera')) $browser = 'Opera';
 		}
-		if( $detect->isiOS() ){
-			$mOS = ' IOS';
-		}elseif( $detect->isAndroidOS() ){
-			$mOS = ' Android';
+		else {
+			//@Todo The best would be to use the get_browser function of php, need browscap set in the php.ini
+			$browser = $this->get_browser_name($_SERVER['HTTP_USER_AGENT']);
 		}
 
-		if($detect->is('IE')) $browser = ' IE';
-		if($detect->is('Edge')) $browser = ' Edge';
-		if($detect->is('Chrome')) $browser = ' Chrome';
-		if($detect->is('Safari')) $browser = ' Safari';
-		if($detect->is('UCBrowser')) $browser = ' UCBrowser';
-		if($detect->is('Opera')) $browser = ' Opera';
-
-		$bodyClass = $viewport.$browser.$mOS.$device;
-		$this->template->assign('bodyClass', $bodyClass);
+		$this->template->assign('bodyClass', $viewport.($browser ? ' '.$browser : '').$mOS.$device);
+		$this->template->assign('browser', $browser);
 		$this->template->assign('viewport', $viewport);
 		$this->template->assign('touch', $touch);
 		$this->template->assign('mOS', $mOS);

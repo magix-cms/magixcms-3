@@ -39,30 +39,27 @@
  * Time: 00:19
  * License: Dual licensed under the MIT or GPL Version
  */
-class frontend_controller_home extends frontend_db_home{
+class frontend_controller_home extends frontend_db_home
+{
     /**
      * @var
      */
-    protected $template,$header,$data;
+    protected $template,$data;
     /**
      * @var bool
      */
-    public $http_error,$getlang;
+    public $lang;
 
     /**
 	 * @param stdClass $t
      * frontend_controller_home constructor.
      */
     public function __construct($t = null){
-        //$this->template = new frontend_model_template();
         $this->template = $t ? $t : new frontend_model_template();
-        $this->header = new component_httpUtils_header($this->template);
-        $this->data = new frontend_model_data($this);
-        if(http_request::isGet('http_error')){
-            $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
-        }
-        $this->getlang = $this->template->currentLanguage();
+        $this->data = new frontend_model_data($this, $this->template);
+		$this->lang = $this->template->lang;
     }
+
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
@@ -74,18 +71,21 @@ class frontend_controller_home extends frontend_db_home{
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
     /**
      * set Data from database
      * @access private
      */
     private function getBuildItems()
     {
-        $collection = $this->getItems('page',array(':iso'=>$this->getlang),'one',false);
+        $collection = $this->getItems('page',array('iso'=>$this->lang),'one',false);
         return array(
-            'name'      =>  $collection['title_page'],
-            'content'   =>  $collection['content_page'],
-            'seoTitle'  =>  $collection['seo_title_page'],
-            'seoDescr'  =>  $collection['seo_desc_page']
+            'name' => $collection['title_page'],
+            'content' => $collection['content_page'],
+			'seo' => array(
+				'title' => $collection['seo_title_page'],
+				'description' => $collection['seo_desc_page']
+			)
         );
     }
 
@@ -93,30 +93,7 @@ class frontend_controller_home extends frontend_db_home{
      *
      */
     public function run(){
-        /**
-         * Initalisation du système d'entête
-         */
-
-        if(isset($this->http_error)){
-            $this->template->assign(
-                'getTitleHeader',
-                $this->header->getTitleHeader(
-                    $this->http_error
-                ),
-                true
-            );
-            $this->template->assign(
-                'getTxtHeader',
-                $this->header->getTxtHeader(
-                    $this->http_error
-                ),
-                true
-            );
-
-            $this->template->display('error/index.tpl');
-        }else{
-            $this->template->assign('home',$this->getBuildItems());
-            $this->template->display('home/index.tpl');
-        }
+		$this->template->assign('home',$this->getBuildItems());
+		$this->template->display('home/index.tpl');
     }
 }

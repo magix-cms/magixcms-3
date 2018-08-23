@@ -54,14 +54,15 @@ class frontend_controller_about extends frontend_db_about {
         $formClean = new form_inputEscape();
         $this->template = $t ? $t : new frontend_model_template();
         $this->header = new component_httpUtils_header($this->template);
-        $this->data = new frontend_model_data($this);
-        $this->getlang = $this->template->currentLanguage();
-        $this->modelPages = new frontend_model_about($this->template);
+        $this->data = new frontend_model_data($this,$this->template);
+		$this->modelPages = new frontend_model_about($this->template);
+		$this->getlang = $this->template->lang;
 
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
         }
     }
+
     /**
      * Assign data to the defined variable or return the data
      * @param string $type

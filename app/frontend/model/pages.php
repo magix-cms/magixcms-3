@@ -40,7 +40,7 @@
  */
 class frontend_model_pages extends frontend_db_pages{
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$coreTemplate,$data;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data;
 
 	/**
 	 * frontend_model_pages constructor.
@@ -48,11 +48,11 @@ class frontend_model_pages extends frontend_db_pages{
 	 */
     public function __construct($t = null)
     {
-		$this->coreTemplate = $t ? $t : new frontend_model_template();
+		$this->template = $t ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->imagesComponent = new component_files_images($t);
 		$this->modelPlugins = new frontend_model_plugins();
-        $this->data = new frontend_model_data($this);
+        $this->data = new frontend_model_data($this,$this->template);
     }
 
     /**
@@ -104,7 +104,7 @@ class frontend_model_pages extends frontend_db_pages{
 						$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
 					}
 				}
-				$data['img']['default'] = '/skin/'.$this->coreTemplate->theme.'/img/pages/default.png';
+				$data['img']['default'] = '/skin/'.$this->template->theme.'/img/pages/default.png';
 
 				$data['content'] = $row['content_pages'];
 				$data['menu'] = $row['menu_pages'];

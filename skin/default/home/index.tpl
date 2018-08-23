@@ -1,6 +1,6 @@
 {extends file="layout.tpl"}
-{block name="title"}{if $home.seoTitle}{$home.seoTitle}{else}{$home.name}{/if}{/block}
-{block name="description"}{if $home.seoTitle}{$home.seoDescr}{elseif !empty($home.content)}{$home.content|strip_tags|truncate:100:'...'}{/if}{/block}
+{block name="title"}{if $home.seo.title}{$home.seo.title}{else}{$home.name}{/if}{/block}
+{block name="description"}{if $home.seo.description}{$home.seo.description}{elseif !empty($home.content)}{$home.content|strip_tags|truncate:100:'...'}{/if}{/block}
 {block name='body:id'}home{/block}
 
 {block name='article:content'}

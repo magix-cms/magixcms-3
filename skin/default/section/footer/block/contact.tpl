@@ -1,4 +1,4 @@
-{*<div id="block-contact" class="col-ph-12 col-sm-5 col-md-4 block">
+{*<div id="block-contact" class="col-12 col-sm-5 col-md-4 block">
     <h4>{#contact_label_title#|ucfirst}</h4>
     <ul class="list-unstyled">
         {if !empty($companyData.contact.adress)}
@@ -31,7 +31,7 @@
         {/if}
     </ul>
 </div>*}
-<div id="block-contact" class="col-ph-12 col-sm-6 col-md block">
+<div id="block-contact" class="col-12 col-sm-6 col-md block">
     <div class="visible-ph visible-xs">
         <h4 class="sr-only">{#contact_label_title#|ucfirst}</h4>
         <div class="text-center">

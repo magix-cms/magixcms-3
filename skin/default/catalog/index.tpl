@@ -14,7 +14,7 @@
                 <div class="vignette-list">
                     <div class="section-block">
                         <div class="row row-center">
-                            {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-ph-12 col-xs-8 col-sm-6 col-md-4'}
+                            {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4'}
                         </div>
                     </div>
                 </div>
