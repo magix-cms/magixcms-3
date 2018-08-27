@@ -30,7 +30,7 @@
                 </div>
                 {*{if isset($scheme)}{$scheme|var_dump}{/if}*}
                 {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                {include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="pages"}
+                {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="pages"}
             </div>
         </section>
     </div>
@@ -52,19 +52,19 @@
 
     <script type="text/javascript">
         $(function(){
+            var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
             if (typeof tableForm == "undefined")
             {
                 console.log("tableForm is not defined");
             }else{
-                tableForm.run();
+                tableForm.run(controller);
             }
-            if (typeof pages == "undefined")
+            /*if (typeof pages == "undefined")
             {
                 console.log("pages is not defined");
             }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 pages.run(controller);
-            }
+            }*/
         });
     </script>
 {/block}

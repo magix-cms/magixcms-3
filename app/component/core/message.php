@@ -112,4 +112,3 @@ class component_core_message{
         print '{"status":'.json_encode($status).',"notify":'.json_encode($notify).',"result":'.json_encode($output).$extend.'}';
     }
 }
-?>

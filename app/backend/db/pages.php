@@ -83,7 +83,7 @@ class backend_db_pages
 										$cond .= 'c.'.$key.' = '.$p.' ';
 										break;
 									case 'name_pages':
-										$cond .= "c.".$key." LIKE '%".$p."%' ";
+										$cond .= "c.".$key." LIKE CONCAT('%', :".$p.", '%') ";
 										break;
 									case 'menu_pages':
 										$cond .= 'p.'.$key.' = '.$p.' ';
@@ -102,12 +102,12 @@ class backend_db_pages
 
 					$sql = "SELECT p.id_pages, c.name_pages, p.menu_pages, p.date_register
 							FROM mc_cms_page AS p
-								JOIN mc_cms_page_content AS c USING ( id_pages )
-								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-								LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
-								LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-								WHERE p.id_parent = :id $cond
-								GROUP BY p.id_pages 
+							JOIN mc_cms_page_content AS c USING ( id_pages )
+							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+							LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
+							LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+							WHERE p.id_parent = :id $cond
+							GROUP BY p.id_pages 
 							ORDER BY p.order_pages";
 					break;
 				case 'pagesSelect':

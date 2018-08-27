@@ -301,7 +301,7 @@ class frontend_model_pages extends frontend_db_pages{
 				// Set order
 				switch ($conf['sort']['type']) {
 					case 'order':
-						$conditions .= ' ORDER BY p.id_pages, p.order_pages '.$conf['sort']['order'];
+						$conditions .= ' ORDER BY p.id_parent, p.order_pages '.$conf['sort']['order'];
 						break;
 				}
 

@@ -45,10 +45,10 @@
                             </a>
                         </p>
                         {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                        {include file="section/form/table-form-2.tpl" ajax_form=true idcolumn='id_cat' data=$pagesChild activation=true sortable=$sortable controller="category"}
+                        {include file="section/form/table-form-3.tpl" ajax_form=true idcolumn='id_cat' data=$pagesChild activation=true sortable=$sortable controller="category"}
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="products">
-                        {include file="section/form/table-form-2.tpl" data=$catalog idcolumn='id_catalog' activation=false sortable=$sortable controller="category" subcontroller="product" scheme=$schemeCatalog search=false editColumn='id_product' editController='product'}
+                        {include file="section/form/table-form-3.tpl" data=$catalog idcolumn='id_catalog' activation=false sortable=$sortable controller="category" subcontroller="product" scheme=$schemeCatalog search=false editColumn='id_product' editController='product'}
                         {*<pre>{$catalog|print_r}</pre>*}
                     </div>
                 </div>
@@ -75,12 +75,17 @@
     {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
+            var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+            if (typeof tableForm == "undefined")
+            {
+                console.log("tableForm is not defined");
+            }else{
+                tableForm.run(controller);
+            }
             if (typeof category == "undefined")
             {
                 console.log("category is not defined");
             }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                category.run(controller);
                 category.runAdd(controller);
             }
         });

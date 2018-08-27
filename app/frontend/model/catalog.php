@@ -495,6 +495,10 @@ class frontend_model_catalog extends frontend_db_catalog {
 					}
 				}
 
+				if ($custom['type'] == 'menu') {
+					$conditions .= ' AND p.menu_cat = 1';
+				}
+
                 // Set order
 				switch ($conf['sort']['type']) {
 					case 'order':

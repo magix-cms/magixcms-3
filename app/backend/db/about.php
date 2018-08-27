@@ -412,6 +412,12 @@ class backend_db_about
 						SET order_pages = :order_pages
 						WHERE id_pages = :id_pages';
 					break;
+				case 'pageActiveMenu':
+					$sql = 'UPDATE mc_about_page 
+						SET menu_pages = :menu_pages 
+						WHERE id_pages IN ('.$params['id_pages'].')';
+					$params = array('menu_pages' => $params['menu_pages']);
+					break;
 			}
 		}
 

@@ -4,7 +4,30 @@ class backend_controller_about extends backend_db_about{
     public $edit, $action, $tabs, $search;
 
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $country, $language, $languages, $id_pages ,$parent_id, $order;
-    public $content, $dataType, $enable_op, $send = array('openinghours' => '');
+    public $content, $dataType, $enable_op, $send = array('openinghours' => ''),$ajax,$tableaction,$tableform;
+	public $tableconfig = array(
+		'all' => array(
+			'id_pages',
+			'name_pages' => array('title' => 'name'),
+			'parent_pages' => array('col' => 'name_pages', 'title' => 'name'),
+			'resume_pages' => array('type' => 'bin', 'input' => null),
+			'content_pages' => array('type' => 'bin', 'input' => null),
+			'seo_title_pages' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
+			'seo_desc_pages' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
+			'menu_pages',
+			'date_register'
+		),
+		'parent' => array(
+			'id_pages',
+			'name_pages' => array('title' => 'name'),
+			'resume_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+			'content_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+			'seo_title_pages' => array('title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+			'seo_desc_pages' => array('title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+			'menu_pages',
+			'date_register'
+		)
+	);
 
     /**
      * @var array, type of website allowed
@@ -135,8 +158,8 @@ class backend_controller_about extends backend_db_about{
     );
 
 	/**
-	 * @param stdClass $t
 	 * backend_controller_about constructor.
+	 * @param null|object $t
 	 */
     public function __construct($t = null)
     {
@@ -149,83 +172,48 @@ class backend_controller_about extends backend_db_about{
         $this->collectionLanguage = new component_collections_language();
         $this->language = new backend_controller_language();
         $this->languages = $this->language->setCollection();
-        //var_dump($this->languages);
 
         // --- GET
-        if (http_request::isGet('edit')) {
-            $this->edit = $formClean->numeric($_GET['edit']);
-        }
-        if (http_request::isGet('action')) {
-            $this->action = $formClean->simpleClean($_GET['action']);
-        } elseif (http_request::isPost('action')) {
-            $this->action = $formClean->simpleClean($_POST['action']);
-        }
-        if (http_request::isGet('tabs')) {
-            $this->tabs = $formClean->simpleClean($_GET['tabs']);
-        }
+        if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
+        if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
+        elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
+        if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
+
+		if (http_request::isGet('tableaction')) {
+			$this->tableaction = $formClean->simpleClean($_GET['tableaction']);
+			$this->tableform = new backend_controller_tableform($this,$this->template);
+		}
+
+		// --- Search
+		if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
+
         /* Global about edition */
-        if(http_request::isPost('data_type')){
-            $this->dataType = $formClean->simpleClean($_POST['data_type']);
-        }
-        if(http_request::isPost('company_name')){
-            $this->company['name'] = $formClean->simpleClean($_POST['company_name']);
-        }
-        /*
-        if(http_request::isPost('company_slogan')){
-            $this->company['slogan'] = $formClean->simpleClean($_POST['company_slogan']);
-        }*/
-        if(http_request::isPost('company_type')){
-            $this->company['type'] = $formClean->simpleClean($_POST['company_type']);
-        }
-        if(http_request::isPost('company_tva')){
-            $this->company['tva'] = $formClean->simpleClean($_POST['company_tva']);
-        }
-        if(http_request::isPost('company_eshop')){
-            $this->company['eshop'] = '1';
-        }else{
-            $this->company['eshop'] = '0';
-        }
+        if (http_request::isPost('data_type')) $this->dataType = $formClean->simpleClean($_POST['data_type']);
+        if (http_request::isPost('company_name')) $this->company['name'] = $formClean->simpleClean($_POST['company_name']);
+        /* if (http_request::isPost('company_slogan')) $this->company['slogan'] = $formClean->simpleClean($_POST['company_slogan']);*/
+        if (http_request::isPost('company_type')) $this->company['type'] = $formClean->simpleClean($_POST['company_type']);
+        if (http_request::isPost('company_tva')) $this->company['tva'] = $formClean->simpleClean($_POST['company_tva']);
+
+        $this->company['eshop'] = http_request::isPost('company_eshop') ? '1' : '0';
+		$this->company['contact']['click_to_mail'] = http_request::isPost('click_to_mail') ? '1' : '0';
+		$this->company['contact']['click_to_call'] = http_request::isPost('click_to_call') ? '1' : '0';
+		$this->company['contact']['crypt_mail'] = http_request::isPost('crypt_mail') ? '1' : '0';
+		$this->enable_op = http_request::isPost('enable_op') ? '1' : '0';
+
         /* Contact about edition */
-        if(http_request::isPost('company_mail')){
-            $this->company['contact']['mail'] = $formClean->simpleClean($_POST['company_mail']);
-        }
-        if(http_request::isPost('company_phone')){
-            $this->company['contact']['phone'] = $formClean->simpleClean($_POST['company_phone']);
-        }
-        if(http_request::isPost('company_mobile')){
-            $this->company['contact']['mobile'] = $formClean->simpleClean($_POST['company_mobile']);
-        }
-        if(http_request::isPost('company_mail')){
-            $this->company['contact']['fax'] = $formClean->simpleClean($_POST['company_fax']);
-        }
+        if (http_request::isPost('company_mail')) $this->company['contact']['mail'] = $formClean->simpleClean($_POST['company_mail']);
+        if (http_request::isPost('company_phone')) $this->company['contact']['phone'] = $formClean->simpleClean($_POST['company_phone']);
+        if (http_request::isPost('company_mobile')) $this->company['contact']['mobile'] = $formClean->simpleClean($_POST['company_mobile']);
+        if (http_request::isPost('company_mail')) $this->company['contact']['fax'] = $formClean->simpleClean($_POST['company_fax']);
         if(http_request::isPost('company_adress')){
             $this->company['contact']['adress'] = $formClean->arrayClean($_POST['company_adress']);
 			$this->company['contact']['adress']['adress'] = $this->company['contact']['adress']['street'].', '.$this->company['contact']['adress']['postcode'].' '.$this->company['contact']['adress']['city'];
         }
-        if(http_request::isPost('click_to_mail')){
-            $this->company['contact']['click_to_mail'] = '1';
-        }else{
-            $this->company['contact']['click_to_mail'] = '0';
-        }
-        if(http_request::isPost('click_to_call')){
-            $this->company['contact']['click_to_call'] = '1';
-        }else{
-            $this->company['contact']['click_to_call'] = '0';
-        }
-        if(http_request::isPost('crypt_mail')){
-            $this->company['contact']['crypt_mail'] = '1';
-        }else{
-            $this->company['contact']['crypt_mail'] = '0';
-        }
 
 		// --- ADD or EDIT
-		if (http_request::isPost('id')) {
-			$this->id_pages = $formClean->simpleClean($_POST['id']);
-		}
-		if (http_request::isPost('parent_id')) {
-			$this->parent_id = $formClean->simpleClean($_POST['parent_id']);
-		}
-        
+		if (http_request::isPost('id')) $this->id_pages = $formClean->simpleClean($_POST['id']);
+		if (http_request::isPost('parent_id')) $this->parent_id = $formClean->simpleClean($_POST['parent_id']);
+
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
             foreach($array as $key => $arr) {
@@ -237,25 +225,13 @@ class backend_controller_about extends backend_db_about{
         }
 
 		/* Socials links edition */
-        if(http_request::isPost('company_socials')){
-            $this->company['socials'] = $formClean->arrayClean($_POST['company_socials']);
-        }
+        if (http_request::isPost('company_socials')) $this->company['socials'] = $formClean->arrayClean($_POST['company_socials']);
 
 		# ORDER PAGE
-		if(http_request::isPost('pages')){
-			$this->order = $formClean->arrayClean($_POST['pages']);
-		}
+		if (http_request::isPost('pages')) $this->order = $formClean->arrayClean($_POST['pages']);
 
         /* Opening Hours links edition */
-        if(http_request::isPost('enable_op')){
-            $this->enable_op = '1';
-        }else{
-            $this->enable_op = '0';
-        }
-
-        if(http_request::isPost('openinghours')){
-            $this->send['openinghours'] = $formClean->arrayClean($_POST['openinghours']);
-        }
+        if (http_request::isPost('openinghours')) $this->send['openinghours'] = $formClean->arrayClean($_POST['openinghours']);
     }
 
     /**
@@ -269,6 +245,69 @@ class backend_controller_about extends backend_db_about{
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
+	/**
+	 * @param $ajax
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function tableSearch($ajax = false)
+	{
+		$this->modelLanguage->getLanguage();
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+		$params = array();
+
+		if($this->edit) {
+			$results = $this->getItems('pagesChild',$this->edit,'all',false);
+		}
+		else {
+			$results = $this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',false);
+		}
+
+		$assign = $this->tableconfig[(($ajax || $this->edit) ? 'parent' : 'all')];
+
+		if($ajax) {
+			$params['section'] = 'pages';
+			$params['idcolumn'] = 'id_pages';
+			$params['activation'] = true;
+			$params['sortable'] = true;
+			$params['checkbox'] = true;
+			$params['edit'] = true;
+			$params['dlt'] = true;
+			$params['readonly'] = array();
+			$params['cClass'] = 'backend_controller_about';
+		}
+
+		$this->data->getScheme(
+			array('mc_about_page','mc_about_page_content'),
+			array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
+			$assign);
+
+		return array(
+			'data' => $results,
+			'var' => 'pages',
+			'tpl' => 'about/index.tpl',
+			'params' => $params
+		);
+	}
+
+	/**
+	 * Active / Unactive page(s)
+	 * @param $params
+	 * @throws Exception
+	 */
+	public function tableActive($params)
+	{
+		$this->upd(array(
+			'context' => 'page',
+			'type' => 'pageActiveMenu',
+			'data' => array(
+				'menu_pages' => $params['active'],
+				'id_pages' => $params['ids']
+			)
+		));
+		$this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
+	}
 
     /**
      * getTypes
@@ -313,6 +352,7 @@ class backend_controller_about extends backend_db_about{
 			case 'enable_op':
 			case 'socials':
 			case 'openinghours':
+			case 'pageActiveMenu':
 				parent::update(
 					array(
 						'context' => $data['context'],
@@ -581,7 +621,10 @@ class backend_controller_about extends backend_db_about{
      *
      */
     public function run(){
-        if(isset($this->action)) {
+		if(isset($this->tableaction)) {
+			$this->tableform->run();
+		}
+		elseif(isset($this->action)) {
             switch ($this->action) {
                 case 'addpage':
 					if(isset($this->content)) {
@@ -624,7 +667,7 @@ class backend_controller_about extends backend_db_about{
 							$setEditData = $this->setItemData($setEditData);
 							$this->template->assign('page',$setEditData[$this->edit]);
 
-							$assign = array(
+							/*$assign = array(
 								'id_pages',
 								'name_pages' => ['title' => 'name'],
 								'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
@@ -632,26 +675,16 @@ class backend_controller_about extends backend_db_about{
 								'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
 								'menu_pages',
 								'date_register'
-							);
-							$this->data->getScheme(array('mc_about_page','mc_about_page_content'),array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+							);*/
+							$this->data->getScheme(
+								array('mc_about_page','mc_about_page_content'),
+								array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
+								$this->tableconfig['parent']);
 							$pageChild = $this->getItems('pagesChild',$this->edit,'all');
 
-							if(isset($this->search)) {
-								$this->template->assign('ajax_form',true);
-								$this->template->assign('data',$pageChild);
-								$this->template->assign('section','pages');
-								$this->template->assign('idcolumn','id_pages');
-								$this->template->assign('controller','pages');
-								$this->template->assign('readonly',array());
-								$this->template->assign('cClass','backend_controller_pages');
-								$display = $this->template->fetch('section/form/loop/rows-2.tpl');
-								$this->message->json_post_response(true,'',$display);
-							}
-							else {
-								$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-								$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
-								$this->template->display('about/pages/edit.tpl');
-							}
+							$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+							$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
+							$this->template->display('about/pages/edit.tpl');
 						}
 					}
 					else {
@@ -739,16 +772,10 @@ class backend_controller_about extends backend_db_about{
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 
 			$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all');
-			$assign = array(
-				'id_pages',
-				'name_pages' => ['title' => 'name'],
-				'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'menu_pages',
-				'date_register'
-			);
-			$this->data->getScheme(array('mc_about_page','mc_about_page_content'),array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+			$this->data->getScheme(
+				array('mc_about_page','mc_about_page_content'),
+				array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
+				$this->tableconfig['parent']);
 
             $this->getTypes();
             $this->template->assign('contentData',$this->getContentData());

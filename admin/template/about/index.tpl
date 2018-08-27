@@ -53,7 +53,7 @@
                     </p>
                     {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
                     {*{include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="pages"}*}
-                    {include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=false sortable=$sortable controller="about" subcontroller="pages"}
+                    {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_pages' ajax_form=true activation=true sortable=$sortable controller="about" subcontroller="pages"}
                 </div>
             </div>
         </div>
@@ -76,12 +76,18 @@
 
     <script type="text/javascript">
         $(function(){
+            var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
+            if (typeof tableForm == "undefined")
+            {
+                console.log("tableForm is not defined");
+            }else{
+                tableForm.run(controller);
+            }
             if (typeof about == "undefined")
             {
                 console.log("about is not defined");
             }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                about.run(controller);
+                about.run();
             }
         });
     </script>

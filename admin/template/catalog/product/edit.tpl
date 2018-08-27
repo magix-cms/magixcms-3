@@ -93,17 +93,17 @@
 
     <script type="text/javascript">
         $(function(){
+            var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
             if (typeof tableForm == "undefined")
             {
                 console.log("tableForm is not defined");
             }else{
-                tableForm.run();
+                tableForm.run(controller);
             }
             if (typeof product == "undefined")
             {
                 console.log("product is not defined");
             }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 var edit = "{$smarty.get.edit}";
                 product.run(globalForm,tableForm,edit);
                 product.runAdd();

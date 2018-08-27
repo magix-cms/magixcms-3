@@ -1,30 +1,24 @@
 var tableForm = (function ($, undefined) {
+    'use strict';
     /**
      * Initializes the multi-select checkboxes
      */
     function initCheckboxSelect() {
+        let table = $(this).data('table');
+
         $('.check-all').off().on('change',function(){
-            var table = $(this).data('table'),
-                chb = $('#'+table+' input[type="checkbox"]:enabled');
-            if($(this).prop('checked')) {
-                chb.prop('checked',true);
-            } else {
-                chb.prop('checked',false);
-            }
+            let chb = $('#table-'+table+' input[type="checkbox"]:enabled');
+
+            chb.prop('checked',$(this).prop('checked'));
         });
 
         $('.update-checkbox').off().on('click',function(e){
             e.preventDefault();
-            var table = $(this).data('table'),
-                chb = $('#'+table+' input[type="checkbox"]:enabled');
+            let chb = $('#table-'+table+' input[type="checkbox"]:enabled'),
+                checked = ($(this).val() === 'check-all');
 
-            if($(this).val() == 'check-all') {
-                $('#'+table+' .check-all').prop('checked',true);
-                chb.prop('checked',true);
-            } else {
-                $('#'+table+' .check-all').prop('checked',false);
-                chb.prop('checked',false);
-            }
+            $('#'+table+' .check-all').prop('checked',checked);
+            chb.prop('checked',checked);
             return false;
         });
     }
@@ -34,9 +28,33 @@ var tableForm = (function ($, undefined) {
      */
     return {
         // Public Functions
-        run: function () {
+        run: function (controller) {
             // Initialization of the multi-select checkboxes
             initCheckboxSelect();
+
+            $.each($( ".ui-sortable" ), function() {
+                $( this ).sortable({
+                    items: "> tr",
+                    cursor: "move",
+                    axis: "y",
+                    update: function(){
+                        let serial = $( this ).sortable('serialize');
+                        $.jmRequest({
+                            handler: "ajax",
+                            url: controller+'&action=order',
+                            method: 'POST',
+                            data : serial,
+                            success:function(e){
+                                $.jmRequest.initbox(e,{
+                                        display: false
+                                    }
+                                );
+                            }
+                        });
+                    }
+                });
+                $( this ).disableSelection();
+            });
         }
-    }
+    };
 })(jQuery);

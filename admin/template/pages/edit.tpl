@@ -47,7 +47,7 @@
                             </a>
                         </p>
                         {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                        {include file="section/form/table-form-2.tpl" ajax_form=true idcolumn='id_pages' data=$pagesChild activation=true sortable=$sortable controller="pages"}
+                        {include file="section/form/table-form-3.tpl" ajax_form=true idcolumn='id_pages' data=$pagesChild activation=true sortable=$sortable controller="pages"}
                     </div>
                     {foreach $setTabsPlugins as $key => $value}
                         <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
@@ -78,18 +78,18 @@
     {script src=$smarty.capture.scriptForm type="javascript"}
     <script type="text/javascript">
         $(function(){
+            var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
             if (typeof tableForm == "undefined")
             {
                 console.log("tableForm is not defined");
             }else{
-                tableForm.run();
+                tableForm.run(controller);
             }
             if (typeof pages === "undefined")
             {
                 console.log("pages is not defined");
             }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
-                pages.run(controller);
+                //pages.run(controller);
                 pages.runAdd(controller);
             }
         });

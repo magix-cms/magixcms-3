@@ -165,7 +165,8 @@ class frontend_model_menu extends frontend_db_menu {
 						if(!$this->catalog) $this->catalog = new frontend_model_catalog($this->template);
 						$model = $this->catalog;
 						$conf = array(
-							'context' => 'category'
+							'context' => 'category',
+							'type' => 'menu'
 						);
 						if($link['type_link'] === 'category') $conf['select'] = array($iso => $link['id_page']);
 						$data = $this->catalog->getData(

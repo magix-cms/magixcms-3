@@ -2,11 +2,20 @@
 class backend_controller_news extends backend_db_news{
     public $edit, $action, $tabs, $search, $plugin, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$makeFiles,$finder;
-    public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img;
+    public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img,$ajax,$tableaction,$tableform;
+	public $tableconfig = array(
+		'id_news',
+		'name_news',
+		'content_news' => ['type' => 'bin', 'input' => null],
+		'img_news' => ['type' => 'bin', 'input' => null, 'class' => ''],
+		'last_update' => ['title' => 'last_update', 'input' => ['type' => 'text', 'class' => 'date-input']],
+		'date_publish',
+		'published_news'
+	);
 
 	/**
 	 * backend_controller_news constructor.
-	 * @param stdClass $t
+	 * @param null|object $t
 	 */
     public function __construct($t = null)
     {
@@ -25,35 +34,23 @@ class backend_controller_news extends backend_db_news{
         $this->finder = new file_finder();
 
         // --- GET
-        if(http_request::isGet('controller')) {
-            $this->controller = $formClean->simpleClean($_GET['controller']);
-        }
-        if (http_request::isGet('edit')) {
-            $this->edit = $formClean->numeric($_GET['edit']);
-        }
-        if (http_request::isGet('action')) {
-            $this->action = $formClean->simpleClean($_GET['action']);
-        } elseif (http_request::isPost('action')) {
-            $this->action = $formClean->simpleClean($_POST['action']);
-        }
-        if (http_request::isGet('tabs')) {
-            $this->tabs = $formClean->simpleClean($_GET['tabs']);
-        }
+        if (http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
+        if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
+        if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
+        elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
+        if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
+
+		if (http_request::isGet('tableaction')) {
+			$this->tableaction = $formClean->simpleClean($_GET['tableaction']);
+			$this->tableform = new backend_controller_tableform($this,$this->template);
+		}
 
         // --- Search
-        if (http_request::isGet('search')) {
-            $this->search = $formClean->arrayClean($_GET['search']);
-        }
+        if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
 
         // --- ADD or EDIT
-        if (http_request::isPost('id')) {
-            $this->id_news = $formClean->simpleClean($_POST['id']);
-        }
-
-        if (http_request::isPost('del_img')) {
-            $this->del_img = $formClean->simpleClean($_POST['del_img']);
-        }
-
+        if (http_request::isPost('id')) $this->id_news = $formClean->simpleClean($_POST['id']);
+        if (http_request::isPost('del_img')) $this->del_img = $formClean->simpleClean($_POST['del_img']);
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
             foreach($array as $key => $arr) {
@@ -64,30 +61,18 @@ class backend_controller_news extends backend_db_news{
             $this->content = $array;
         }
         // --- Image Upload
-        if(isset($_FILES['img']["name"])){
-            $this->img = http_url::clean($_FILES['img']["name"]);
-        }
+        if (isset($_FILES['img']["name"])) $this->img = http_url::clean($_FILES['img']["name"]);
         // --- Recursive Actions
-        if (http_request::isGet('news')) {
-            $this->news = $formClean->arrayClean($_GET['news']);
-        }
+        if (http_request::isGet('news')) $this->news = $formClean->arrayClean($_GET['news']);
 
         # ORDER PAGE
-        if(http_request::isPost('news')){
-            $this->order = $formClean->arrayClean($_POST['news']);
-        }
+        if (http_request::isPost('news')) $this->order = $formClean->arrayClean($_POST['news']);
 
         # REMOVE TAG
-        if (http_request::isPost('id_lang')) {
-            $this->id_lang = $formClean->simpleClean($_POST['id_lang']);
-        }
-        if (http_request::isPost('name_tag')) {
-            $this->name_tag = $formClean->simpleClean($_POST['name_tag']);
-        }
+        if (http_request::isPost('id_lang')) $this->id_lang = $formClean->simpleClean($_POST['id_lang']);
+        if (http_request::isPost('name_tag')) $this->name_tag = $formClean->simpleClean($_POST['name_tag']);
         # plugin
-        if(http_request::isGet('plugin')){
-            $this->plugin = $formClean->simpleClean($_GET['plugin']);
-        }
+        if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
     }
 
 	/**
@@ -100,6 +85,43 @@ class backend_controller_news extends backend_db_news{
 	 */
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
+	/**
+	 * @param $ajax
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function tableSearch($ajax = false)
+	{
+		$this->modelLanguage->getLanguage();
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+		$results = $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all',false);
+		$params = array();
+
+		if($ajax) {
+			$params['section'] = 'news';
+			$params['idcolumn'] = 'id_news';
+			$params['activation'] = true;
+			$params['sortable'] = true;
+			$params['checkbox'] = true;
+			$params['edit'] = true;
+			$params['dlt'] = true;
+			$params['readonly'] = array();
+			$params['cClass'] = 'backend_controller_news';
+		}
+
+		$this->data->getScheme(
+			array('mc_news', 'mc_news_content'),
+			array('id_news', 'name_news', 'content_news', 'img_news', 'last_update', 'date_publish', 'published_news'),
+			$this->tableconfig);
+
+		return array(
+			'data' => $results,
+			'var' => 'news',
+			'tpl' => 'news/index.tpl',
+			'params' => $params
+		);
 	}
 
     /**
@@ -468,7 +490,10 @@ class backend_controller_news extends backend_db_news{
             }
         }
         else {
-            if (isset($this->action)) {
+			if(isset($this->tableaction)) {
+				$this->tableform->run();
+			}
+			elseif (isset($this->action)) {
                 switch ($this->action) {
                     case 'add':
                         if (isset($this->content)) {
@@ -563,20 +588,13 @@ class backend_controller_news extends backend_db_news{
             else {
                 $this->modelLanguage->getLanguage();
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                $this->getItems('news', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
-                $assign = array(
-                    'id_news',
-                    'name_news',
-                    'content_news' => ['type' => 'bin', 'input' => null],
-                    'img_news' => ['type' => 'bin', 'input' => null, 'class' => ''],
-                    'last_update' => ['title' => 'last_update', 'input' => ['type' => 'text', 'class' => 'date-input']],
-                    'date_publish',
-                    'published_news'
-                );
-                $this->data->getScheme(array('mc_news', 'mc_news_content'), array('id_news', 'name_news', 'content_news', 'img_news', 'last_update', 'date_publish', 'published_news'), $assign);
+                $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all');
+                $this->data->getScheme(
+                	array('mc_news', 'mc_news_content'),
+					array('id_news', 'name_news', 'content_news', 'img_news', 'last_update', 'date_publish', 'published_news'),
+					$this->tableconfig);
                 $this->template->display('news/index.tpl');
             }
         }
     }
 }
-?>

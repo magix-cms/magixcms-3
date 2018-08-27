@@ -28,7 +28,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-news">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form-2.tpl" data=$news idcolumn='id_news' activation=true controller="news"}
+                {include file="section/form/table-form-3.tpl" data=$news idcolumn='id_news' activation=false controller="news"}
             </div>
         </section>
     </div>
@@ -50,17 +50,17 @@
 
     <script type="text/javascript">
         $(function(){
+            var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
             if (typeof tableForm == "undefined")
             {
                 console.log("tableForm is not defined");
             }else{
-                tableForm.run();
+                tableForm.run(controller);
             }
             if (typeof news == "undefined")
             {
                 console.log("news is not defined");
             }else{
-                var controller = "{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}";
                 news.run(controller);
             }
         });

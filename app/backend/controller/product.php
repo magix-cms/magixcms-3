@@ -3,8 +3,16 @@ class backend_controller_product extends backend_db_product
 {
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory;
-
-	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2;
+	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform;
+	public $tableconfig = array(
+		'id_product',
+		'name_p' => ['title' => 'name'],
+		'price_p' => ['type' => 'price','input' => null],
+		'reference_p' => ['title' => 'reference'],
+		'resume_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+		'content_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+		'date_register'
+	);
 
 	/**
 	 * backend_controller_catalog constructor.
@@ -22,41 +30,29 @@ class backend_controller_product extends backend_db_product
 		$this->upload = new component_files_upload();
 		$this->imagesComponent = new component_files_images($this->template);
 		$this->dbCategory = new backend_db_category();
+
 		// --- GET
-		if (http_request::isGet('edit')) {
-			$this->edit = $formClean->numeric($_GET['edit']);
+		if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
+		if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
+		elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
+        if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
+		if (http_request::isGet('editimg')) $this->editimg = $formClean->numeric($_GET['editimg']);
+		if (http_request::isGet('parentid')) $this->parent_id = $formClean->numeric($_GET['parentid']);
+        if (http_request::isGet('product_id')) $this->product_id = $formClean->numeric($_GET['product_id']);
+
+		if (http_request::isGet('tableaction')) {
+			$this->tableaction = $formClean->simpleClean($_GET['tableaction']);
+			$this->tableform = new backend_controller_tableform($this,$this->template);
 		}
-		if (http_request::isGet('action')) {
-			$this->action = $formClean->simpleClean($_GET['action']);
-		} elseif (http_request::isPost('action')) {
-			$this->action = $formClean->simpleClean($_POST['action']);
-		}
-        if (http_request::isGet('tabs')) {
-            $this->tabs = $formClean->simpleClean($_GET['tabs']);
-        }
-		if (http_request::isGet('editimg')) {
-			$this->editimg = $formClean->numeric($_GET['editimg']);
-		}
-		if (http_request::isGet('parentid')) {
-			$this->parent_id = $formClean->numeric($_GET['parentid']);
-		}
-        if (http_request::isGet('product_id')) {
-            $this->product_id = $formClean->numeric($_GET['product_id']);
-        }
+
+		// --- Search
+		if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
         #similar
-        if (http_request::isPost('product_id')) {
-            $this->id_product_2 = $formClean->numeric($_POST['product_id']);
-        }
+        if (http_request::isPost('product_id')) $this->id_product_2 = $formClean->numeric($_POST['product_id']);
 		// --- ADD or EDIT
-		if (http_request::isPost('id')) {
-			$this->id_product = $formClean->simpleClean($_POST['id']);
-		}
-		if (http_request::isPost('id_img')) {
-			$this->id_img = $formClean->simpleClean($_POST['id_img']);
-		}
-		if (http_request::isPost('productData')) {
-			$this->productData = $formClean->arrayClean($_POST['productData']);
-		}
+		if (http_request::isPost('id')) $this->id_product = $formClean->simpleClean($_POST['id']);
+		if (http_request::isPost('id_img')) $this->id_img = $formClean->simpleClean($_POST['id_img']);
+		if (http_request::isPost('productData')) $this->productData = $formClean->arrayClean($_POST['productData']);
 		if (http_request::isPost('content')) {
 			$array = $_POST['content'];
 			foreach ($array as $key => $arr) {
@@ -66,9 +62,7 @@ class backend_controller_product extends backend_db_product
 			}
 			$this->content = $array;
 		}
-		if (isset($_FILES['img_multiple']["name"])) {
-			$this->img_multiple = ($_FILES['img_multiple']["name"]);
-		}
+		if (isset($_FILES['img_multiple']["name"])) $this->img_multiple = ($_FILES['img_multiple']["name"]);
 		if (http_request::isPost('imgData')) {
             $array = $_POST['imgData'];
             foreach ($array as $key => $arr) {
@@ -78,20 +72,12 @@ class backend_controller_product extends backend_db_product
             }
             $this->imgData = $array;
 		}
-		if (http_request::isPost('product_cat')) {
-			$this->product_cat = $formClean->simpleClean($_POST['product_cat']);
-		}
-		if (http_request::isPost('parent')) {
-			$this->parent = $formClean->arrayClean($_POST['parent']);
-		}
-		if (http_request::isPost('default_cat')) {
-			$this->default_cat = $formClean->numeric($_POST['default_cat']);
-		}
+		if (http_request::isPost('product_cat')) $this->product_cat = $formClean->simpleClean($_POST['product_cat']);
+		if (http_request::isPost('parent')) $this->parent = $formClean->arrayClean($_POST['parent']);
+		if (http_request::isPost('default_cat')) $this->default_cat = $formClean->numeric($_POST['default_cat']);
 
 		# ORDER PAGE
-		if(http_request::isPost('image')){
-			$this->order = $formClean->arrayClean($_POST['image']);
-		}
+		if (http_request::isPost('image')) $this->order = $formClean->arrayClean($_POST['image']);
 
 	}
 
@@ -105,6 +91,40 @@ class backend_controller_product extends backend_db_product
 	 */
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
+	/**
+	 * @param $ajax
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function tableSearch($ajax = false)
+	{
+		$this->modelLanguage->getLanguage();
+		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+		$results = $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',false);
+		$params = array();
+
+		if($ajax) {
+			$params['section'] = 'pages';
+			$params['idcolumn'] = 'id_pages';
+			$params['activation'] = true;
+			$params['sortable'] = true;
+			$params['checkbox'] = true;
+			$params['edit'] = true;
+			$params['dlt'] = true;
+			$params['readonly'] = array();
+			$params['cClass'] = 'backend_controller_product';
+		}
+
+		$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content'), array('id_product', 'name_p', 'price_p', 'reference_p', 'resume_p', 'content_p', 'date_register'), $this->tableconfig);
+
+		return array(
+			'data' => $results,
+			'var' => 'pages',
+			'tpl' => 'catalog/product/index.tpl',
+			'params' => $params
+		);
 	}
 
 	/**
@@ -195,6 +215,7 @@ class backend_controller_product extends backend_db_product
         }
         return $arr;
     }
+
 	/**
 	 * @return array
 	 */
@@ -464,7 +485,10 @@ class backend_controller_product extends backend_db_product
 	 */
 	public function run()
 	{
-		if (isset($this->action)) {
+		if(isset($this->tableaction)) {
+			$this->tableform->run();
+		}
+		elseif (isset($this->action)) {
 			switch ($this->action) {
 				case 'add':
 					if (isset($this->content)) {
@@ -615,12 +639,12 @@ class backend_controller_product extends backend_db_product
 										$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent));
 
 										$this->add(array(
-												'type' => 'newImg',
-												'data' => array(
-													'id_product' => $this->id_product,
-													'name_img' => $value['file']
-												)
-											));
+											'type' => 'newImg',
+											'data' => array(
+												'id_product' => $this->id_product,
+												'name_img' => $value['file']
+											)
+										));
 									}
 								}
 
@@ -825,32 +849,8 @@ class backend_controller_product extends backend_db_product
 		else {
 			$this->modelLanguage->getLanguage();
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-			$this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
-			$assign = array(
-				'id_product',
-				'name_p' => ['title' => 'name'],
-                'price_p' => ['type' => 'price','input' => null],
-                'reference_p' => ['title' => 'reference'],
-				'resume_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'content_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-				'date_register'
-			);
-			if (isset($this->search)) {
-				$search = $this->search;
-				$search = array_filter($search);
-
-				if (is_array($search) && !empty($search)) {
-					$assign = array(
-						'id_product',
-						'name_p' => ['title' => 'name'],
-                        'price_p' => ['type' => 'price','input' => null],
-                        'reference_p' => ['title' => 'reference'],
-						'content_p' => ['type' => 'bin', 'input' => null],
-						'date_register'
-					);
-				}
-			}
-			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content'), array('id_product', 'name_p', 'price_p', 'reference_p', 'resume_p', 'content_p', 'date_register'), $assign);
+			$this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all');
+			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content'), array('id_product', 'name_p', 'price_p', 'reference_p', 'resume_p', 'content_p', 'date_register'), $this->tableconfig);
 			$this->template->display('catalog/product/index.tpl');
 		}
 	}

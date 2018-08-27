@@ -155,10 +155,10 @@ var globalForm = (function ($, undefined) {
             form: $(f),
             resetForm: false,
             success: function (d) {
-                if(d.debug != undefined && d.debug != '') {
+                if(d.debug !== undefined && d.debug !== '') {
                     initAlert(d.debug);
                 }
-                else if(d.notify != undefined && d.notify != '') {
+                else if(d.notify !== undefined && d.notify !== '') {
                     initAlert(d.notify,4000);
                 }
             }
@@ -177,6 +177,7 @@ var globalForm = (function ($, undefined) {
         // --- Rules form search form
         else if($(f).hasClass('search_form')) {
             options.method = 'get';
+            options.data = {ajax: true};
             options.success = function (d) {
                 if(d.status && d.result) {
                     $(f).find('tbody').empty().append(d.result);
@@ -193,7 +194,7 @@ var globalForm = (function ($, undefined) {
                 $.jmRequest.initbox(d.notify,{ display:true });
                 initAlert(d.notify,4000);
                 $.each(d.extend[0], function(i,item) {
-                    if($('#lang-'+i).length != 0){
+                    if($('#lang-'+i).length !== 0){
                         $('#lang-'+i+' #public_url'+i).val(item);
                     }
                 });
@@ -478,13 +479,13 @@ var globalForm = (function ($, undefined) {
      * @param $boxes
      */
     function displayContent(content,contc,$boxes) {
-        if (content != null && content.length > 0) {
+        if (content !== null && content.length > 0) {
             // *** Adding content to the dedicated container(s)
             if(contc.indexOf('|') === -1 && !Array.isArray(content)) {
                 var targ = $(contc),
                     $def = targ.find('.default');
                 targ.empty();
-                if($def != null && $def != undefined) {
+                if($def !== null && $def !== undefined) {
                     var dflt = $def.clone();
                     targ.append(dflt);
                 }
@@ -498,7 +499,7 @@ var globalForm = (function ($, undefined) {
                     if(targ.hasClass('selectpicker')) {
                         var list = targ.find('.list-to-filter ul');
                         list.empty();
-                        if($def != null && $def != undefined) {
+                        if($def !== null && $def !== undefined) {
                             var dflt = $def.clone();
                             list.append(dflt);
                         }
@@ -513,7 +514,7 @@ var globalForm = (function ($, undefined) {
                     }
                     else {
                         targ.empty();
-                        if($def != null && $def != undefined) {
+                        if($def !== null && $def !== undefined) {
                             var dflt = $def.clone();
                             targ.append(dflt);
                         }
@@ -569,7 +570,7 @@ var globalForm = (function ($, undefined) {
 
             $(this).off('change');
             $(this).on('change',function(){
-                var change = $slct != select.find(':selected');
+                var change = $slct !== select.find(':selected');
                 $slct = select.find(':selected');
 
                 if($slct.length && change) {
@@ -587,7 +588,7 @@ var globalForm = (function ($, undefined) {
                         var getc = $slct.data('get'); // get content to retrieve
 
                         // *** Retrieving content(s)
-                        if(getc != undefined && getc != null) {
+                        if(getc !== undefined && getc !== null) {
                             getc = getc.split('|');
 
                             var contc = $slct.data('appendto'), // get container which receive content
