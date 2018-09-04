@@ -34,7 +34,7 @@
                     {foreach $scheme as $name => $col}
                         <th{if $col.class && !empty($col.class)} class="{$col.class}"{/if}>{if $debug}{$col['title']} | {/if}{#$col['title']#|ucfirst}</th>
                     {/foreach}
-                    {if $edit && $dlt}
+                    {if $edit OR $dlt}
                     <th class="fixed-td-lg text-center">{#actions#|ucfirst}</th>
                     {/if}
                 </tr>

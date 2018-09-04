@@ -150,7 +150,7 @@ class component_httpUtils_header{
 		$tablet = $detect->isTablet();
 
 		if($mobile || $tablet) {
-			$viewport = $mobile ? 'mobile' : 'tablet';
+			$viewport = $tablet ? 'tablet' : 'mobile';
 			$touch = true;
 
 			if( $detect->isiOS() ){

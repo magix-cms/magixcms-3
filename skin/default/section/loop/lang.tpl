@@ -2,7 +2,7 @@
     {if $amp}
         <link rel="canonical" href="{$url}{$smarty.server.REQUEST_URI|replace:'amp/':''}">
     {else}
-        <link rel="amphtml" href="{$url}{$smarty.server.REQUEST_URI|replace:{$iso|cat:'/'}:{$iso|cat:'/amp/'}}">
+        <link rel="amphtml" href="{$url}{if $smarty.server.REQUEST_URI}{$smarty.server.REQUEST_URI|replace:{$iso|cat:'/'}:{$iso|cat:'/amp/'}}{else}/amp/{/if}">
     {/if}
     {if is_null($smarty.get.controller)}
         <link rel="alternate" href="{$url}{if $amp}/amp/{/if}" hreflang="x-default" />
