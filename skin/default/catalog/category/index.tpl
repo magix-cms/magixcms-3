@@ -8,7 +8,7 @@
         {block name='article:content'}
             <h1 itemprop="name">{$cat.name}</h1>
             <div class="text" itemprop="text">
-                {if count($item.img) > 1}
+                {if count($cat.img) > 1}
                     <figure>
                         <a href="{$cat.img.large.src}" class="img-zoom">
                             <img class="img-responsive lazy" src="{$cat.img.default}" data-src="{$cat.img.medium.src}" alt="{$cat.title}" title="{$cat.title}" {if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>

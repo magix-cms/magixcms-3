@@ -33,7 +33,7 @@
             </picture>{/strip}
         </a>
     </div>
-    {include file="section/menu/primary.tpl" type="dropdown" root=['home'=>false,'about'=>true,'catalog'=>true,'news'=>false,'contact'=>true] menu="main" main=true submenu=true gmap=true mobile=false}
+    {include file="section/menu/primary.tpl" menu="main" main=true mobile=false deepness=1}
     {if $dataLang != null && count($dataLang) > 1}
         <div class="select-lang">
             {include file="section/brick/lang.tpl" display='menu'}
@@ -41,4 +41,4 @@
     {/if}
     </div>
 </header>
-{include file="section/menu/primary.tpl" type="dropdown" root=['home'=>true,'about'=>true,'catalog'=>true,'news'=>true,'contact'=>true] menu="side" main=false submenu=true gmap=true mobile=true}
+{include file="section/menu/primary.tpl" menu="side" main=false mobile=true deepness=2}
