@@ -166,7 +166,8 @@ class frontend_model_menu extends frontend_db_menu {
 						$model = $this->catalog;
 						$conf = array(
 							'context' => 'category',
-							'type' => 'menu'
+							'type' => 'menu',
+							'select' => 'all'
 						);
 						if($link['type_link'] === 'category') $conf['select'] = array($iso => $link['id_page']);
 						$data = $this->catalog->getData(

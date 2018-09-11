@@ -22,7 +22,9 @@ class component_routing_dispatcher{
 		$this->header = new component_httpUtils_header($template);
 		$this->pluginsCollection = new component_collections_plugins();
         $this->settingCollection = new component_collections_setting();
-        $this->pathadmin = component_core_system::basePath().PATHADMIN.DIRECTORY_SEPARATOR;
+        if(defined('PATHADMIN')) {
+            $this->pathadmin = component_core_system::basePath() . PATHADMIN . DIRECTORY_SEPARATOR;
+        }
     }
 
     /**

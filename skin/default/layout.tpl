@@ -21,8 +21,10 @@
     {include file="section/brick/google-font.tpl" fonts=['Heebo'=>'300,500,700']}
     {if $browser !== 'IE'}<link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style">{/if}
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    {if $browser !== 'IE'}<link rel="preload" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" as="style">{/if}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {*{if $browser !== 'IE'}<link rel="preload" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" as="style">{/if}*}
+    {*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">*}
+    {if $browser !== 'IE'}<link rel="preload" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" as="style">{/if}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     {capture name="stylesheet"}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/capture}
     {if $browser !== 'IE'}<link rel="preload" href="{if $setting.concat.value}{$smarty.capture.stylesheet|concat_url}{else}{$smarty.capture.stylesheet}{/if}" as="style">{/if}
     <link rel="stylesheet" href="{if $setting.concat.value}{$smarty.capture.stylesheet|concat_url}{else}{$smarty.capture.stylesheet}{/if}">

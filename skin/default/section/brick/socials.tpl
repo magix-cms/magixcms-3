@@ -27,8 +27,8 @@
         {$meta["product:price:amount"] = {$product.price|round:2|number_format:2:',':' '|decimal_trim:','}}
         {$meta["product:price:currency"] = "EUR"}
         {$meta["og:availability"] = "instock"}
-        {if !empty($product.img)}
-            {foreach $product.img as $img}
+        {if !empty($product.imgs)}
+            {foreach $product.imgs as $img}
                 {if $img.default}
                     {$meta["og:image"] = {''|cat:{$url}|cat:{$img.imgSrc.large}}}
                 {/if}

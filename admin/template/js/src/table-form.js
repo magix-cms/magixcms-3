@@ -4,16 +4,17 @@ var tableForm = (function ($, undefined) {
      * Initializes the multi-select checkboxes
      */
     function initCheckboxSelect() {
-        let table = $(this).data('table');
-
         $('.check-all').off().on('change',function(){
+            let table = $(this).data('table');
             let chb = $('#table-'+table+' input[type="checkbox"]:enabled');
-
+            console.log(table);
+            console.log(chb);
             chb.prop('checked',$(this).prop('checked'));
         });
 
         $('.update-checkbox').off().on('click',function(e){
             e.preventDefault();
+            let table = $(this).data('table');
             let chb = $('#table-'+table+' input[type="checkbox"]:enabled'),
                 checked = ($(this).val() === 'check-all');
 
