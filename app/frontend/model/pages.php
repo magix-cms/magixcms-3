@@ -217,19 +217,23 @@ class frontend_model_pages extends frontend_db_pages{
 				$conf['id'] = null;
 				$conf['type'] = null;
 			}
-            elseif (is_array($custom['select'])) {
-                $conf['id'] = $custom['select'];
-                $conf['type'] = 'collection';
-            }
-        }
+			elseif (is_array($custom['select'])) {
+				if (array_key_exists($conf['lang'],$custom['select'])) {
+					$conf['id'] = $custom['select'][$conf['lang']];
+					$conf['type'] = 'collection';
+				}
+			}
+		}
 
-        // Define exclude
-        if (isset($custom['exclude'])) {
-            if (is_array($custom['exclude'])) {
-                $conf['exclude'] = $custom['exclude'];
-                $conf['type'] = 'collection';
-            }
-        }
+		// Define exclude
+		if (isset($custom['exclude'])) {
+			if (is_array($custom['exclude'])) {
+				if (array_key_exists($conf['lang'],$custom['exclude'])) {
+					$conf['exclude'] = $custom['exclude'][$conf['lang']];
+					$conf['type'] = 'collection';
+				}
+			}
+		}
 
 		// Define limit
 		if (isset($custom['limit'])) $conf['limit'] = $custom['limit'];

@@ -483,7 +483,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 
                 if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
 					if (isset($custom['select'])) {
-						$conditions .= ' AND p.id_cat IN (' . $conf['id'] . ') AND p.id_parent IN (' . $conf['id'] . ')';
+						$conditions .= ' AND (p.id_cat IN (' . implode(',',$conf['id']) . ') OR p.id_parent IN (' . implode(',',$conf['id']) . '))';
 					}
 
 					if (isset($custom['exclude'])) {
