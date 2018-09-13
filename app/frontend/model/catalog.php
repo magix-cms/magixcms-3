@@ -413,20 +413,16 @@ class frontend_model_catalog extends frontend_db_catalog {
 				$conf['type'] = null;
 			}
             elseif (is_array($custom['select'])) {
-                if (array_key_exists($conf['lang'],$custom['select'])) {
-                    $conf['id'] = $custom['select'][$conf['lang']];
-                    $conf['type'] = 'collection';
-                }
+				$conf['id'] = $custom['select'];
+				$conf['type'] = 'collection';
             }
         }
 
 		// Define exclude
         if (isset($custom['exclude'])) {
             if (is_array($custom['exclude'])) {
-                if (array_key_exists($conf['lang'],$custom['exclude'])) {
-                    $conf['exclude'] = $custom['exclude'][$conf['lang']];
-                    $conf['type'] = 'collection';
-                }
+				$conf['exclude'] = $custom['exclude'];
+				$conf['type'] = 'collection';
             }
         }
 

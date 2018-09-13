@@ -60,7 +60,7 @@
  {widget_cms_data
     conf = [
         'context' => 'all',
-        select' => ["fr" => "31"]
+        select' => ["31"]
     ]
     assign="pages"
   }
