@@ -421,6 +421,7 @@ class backend_controller_about extends backend_db_about{
 				'id_lang'           => $page['id_lang'],
 				'iso_lang'          => $page['iso_lang'],
 				'name_pages'        => $page['name_pages'],
+                'resume_pages'      => $page['resume_pages'],
 				'url_pages'         => $page['url_pages'],
 				'content_pages'     => $page['content_pages'],
 				'seo_title_pages'   => $page['seo_title_pages'],
@@ -678,7 +679,7 @@ class backend_controller_about extends backend_db_about{
 							);*/
 							$this->data->getScheme(
 								array('mc_about_page','mc_about_page_content'),
-								array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
+								array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
 								$this->tableconfig['parent']);
 							$pageChild = $this->getItems('pagesChild',$this->edit,'all');
 
@@ -774,7 +775,7 @@ class backend_controller_about extends backend_db_about{
 			$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all');
 			$this->data->getScheme(
 				array('mc_about_page','mc_about_page_content'),
-				array('id_pages','name_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
+				array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
 				$this->tableconfig['parent']);
 
             $this->getTypes();
