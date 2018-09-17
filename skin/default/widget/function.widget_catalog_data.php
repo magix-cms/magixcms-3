@@ -62,7 +62,7 @@
     {widget_catalog_data
         conf =[
         'context' =>  'category',
-        select' => ["31"],
+        select' => ["fr" => "31"],
         'limit'=>5
         ]
         assign='productData'

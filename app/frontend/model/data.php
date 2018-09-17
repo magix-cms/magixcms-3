@@ -159,10 +159,21 @@ class frontend_model_data{
 			}
 		}
 
-		if($branch === 'root')
+		if($branch === 'root') {
 			return $childs[$branch];
-		else
-			return array($childs[$branch]);
+		}
+		else {
+			if(is_array($branch)) {
+				$d = array();
+				foreach ($branch as $k) {
+					$d[] = $childs[$k];
+				}
+				return $d;
+			}
+			else {
+				return array($childs[$branch]);
+			}
+		}
 	}
 
 	/**

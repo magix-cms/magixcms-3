@@ -12,7 +12,7 @@
                 {else}
                     {if $companyData.contact.crypt_mail}
                         {*{$companyData.contact.mail|replace:'@':'[at]'}*}
-                        {$companyData.contact.mail|replace:'@':'<span class="fa fa-at"></span>'}
+                        {$companyData.contact.mail|replace:'@':'<span class="fas fa-at"></span>'}
                     {else}
                         {$companyData.contact.mail}
                     {/if}

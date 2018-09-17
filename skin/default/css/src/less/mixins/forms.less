@@ -126,8 +126,11 @@ textarea.form-control {
 		padding: 20px 0 @padb;
 	}
 
-	.error + label,
-	input + label {
+	.error ~ label,
+	input ~ label,
+	select ~ label,
+	textarea ~ label,
+	div ~label {
 		bottom: 0;
 		color: rgba(0,0,0,.26);
 		font-size: 16px;
@@ -176,6 +179,7 @@ textarea.form-control {
 	input[type="tel"],
 	input[type="number"],
 	input[type="password"],
+	select,
 	textarea {
 		border: none;
 		border-bottom: 1px solid rgba(0,0,0,.12);
@@ -187,6 +191,11 @@ textarea.form-control {
 		background: 0 0;
 		text-align: left;
 		color: inherit;
+
+		&.hint {
+			border-bottom: none;
+			color: #cccccc;
+		}
 
 		&:focus {
 			~ label {
@@ -205,7 +214,8 @@ textarea.form-control {
 	}
 
 	input,
-	textarea {
+	textarea,
+	select {
 		&::-webkit-input-placeholder{
 			.nice-placeholder();
 		}

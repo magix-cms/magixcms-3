@@ -339,7 +339,7 @@ class backend_db_theme{
 		$sql = '';
 
 		switch ($config['type']) {
-			case 'page':
+			case 'link':
 				$sql = 'DELETE FROM `mc_menu` WHERE `id_link` IN ('.$params['id'].')';
 				$params = array();
 				break;
