@@ -394,6 +394,84 @@ class http_curl{
     }
 
     /**
+     * Send Copy file on remote url
+     * @param $data
+     * @return mixed
+     */
+    public function setSendCopyFiles($data){
+        try {
+            if ($this->curl_exist()) {
+                if (isset($data['file'])) {
+                    $encodedAuth = $data['wsAuthKey'];
+                    $img = array(
+                        /*'img' =>
+                            '@' . $data['file']
+                            . ';filename=' . $data['filename'],*/
+                        //. ';type=image/jpeg'
+                        'data'  =>  $data['data']
+                    );
+
+
+                    if ((version_compare(PHP_VERSION, '5.5') >= 0)) {
+                        //$img['img'] = new CURLFile($data['file']. ';filename=' . $data['filename']);
+                        $img['file'] = new CURLFile($data['file']);
+                        $options = array(
+                            CURLOPT_HEADER          => 0,
+                            CURLOPT_RETURNTRANSFER  => true,
+                            CURLINFO_HEADER_OUT     => true,
+                            CURLOPT_URL             => $data['url'],
+                            CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                            CURLOPT_USERPWD         => $encodedAuth,
+                            CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
+                            //CURLOPT_CUSTOMREQUEST   => "POST",
+                            CURLOPT_POST            => true,
+                            CURLOPT_POSTFIELDS      => $img,
+                            CURLOPT_SSL_VERIFYPEER => false
+                            //CURLOPT_VERBOSE         => true,
+                            //CURLOPT_SAFE_UPLOAD     => false
+                        );
+                        //curl_setopt($ch, CURLOPT_SAFE_UPLOAD, true);
+                    } else {
+                        $img['file'] = '@' . $data['file']
+                            . ';filename=' . $data['filename'];
+                        $options = array(
+                            CURLOPT_HEADER          => 0,
+                            CURLOPT_RETURNTRANSFER  => true,
+                            CURLINFO_HEADER_OUT     => true,
+                            CURLOPT_URL             => $data['url'],
+                            CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                            CURLOPT_USERPWD         => $encodedAuth,
+                            CURLOPT_HTTPHEADER      => array("Authorization : Basic " . $encodedAuth/*,"Content-Type: image/jpeg"*//*,"Content-Type: multipart/form-data"*/),
+                            //CURLOPT_CUSTOMREQUEST   => "POST",
+                            CURLOPT_POST            => true,
+                            CURLOPT_POSTFIELDS      => $img,
+                            CURLOPT_SSL_VERIFYPEER => false
+                        );
+                    }
+                    $ch = curl_init();
+                    curl_setopt_array($ch, $options);
+                    $response = curl_exec($ch);
+                    $curlInfo = curl_getinfo($ch);
+                    curl_close($ch);
+                    if(array_key_exists('debug',$data) && $data['debug']){
+                        var_dump($curlInfo);
+                        var_dump($response);
+                    }
+
+                    if ($curlInfo['http_code'] == '200') {
+                        if ($response) {
+                            return $response;
+                        }
+                    }
+                }
+            }
+        }catch (Exception $e){
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('error', 'php Curl', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+    }
+
+    /**
      * @param $data
      * @return mixed
      */

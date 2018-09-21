@@ -13,8 +13,8 @@
     {$data = null}
 
     {switch $smarty.get.controller}
-    {* Pages *}
     {case 'pages' break}
+        {* Pages *}
     {if $pages.imgSrc.large}
         {$meta["og:image"] = {''|cat:{$url}|cat:{$pages.imgSrc.large}}}
     {/if}
