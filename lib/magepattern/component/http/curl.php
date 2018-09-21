@@ -37,10 +37,11 @@
 #
 # -- END LICENSE BLOCK -----------------------------------
 /**
- * Created by SC BOX.
+ * Created by Gerits Aurelien.
  * User: aureliengerits
  * Date: 25/07/12
  * Time: 22:57
+ * Update: 21/09/2018
  *
  */
 class http_curl{
@@ -193,12 +194,13 @@ class http_curl{
                 $curl_params = array();
                 $encodedAuth = $data['wsAuthKey'];
                 $generatedData = urlencode($data['data']);
-                switch ($data['method']) {
-                    case 'json';
-                        $headers = array("Authorization : Basic " . $encodedAuth, 'Content-type: application/json', 'Accept: application/json');
-                        break;
+                switch($data['method']){
                     case 'xml';
-                        $headers = array("Authorization : Basic " . $encodedAuth, 'Content-type: text/xml', 'Accept: text/xml');
+                        $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: text/xml','Accept: text/xml','charset=utf-8');
+                        break;
+                    case 'json';
+                    default:
+                        $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: application/json','Accept: application/json','charset=utf-8');
                         break;
                 }
 
@@ -480,16 +482,28 @@ class http_curl{
             if ($this->curl_exist()) {
                 $curl_params = array();
                 $encodedAuth = $data['wsAuthKey'];
+                switch($data['method']){
+                    case 'xml';
+                        $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: text/xml','Accept: text/xml','charset=utf-8');
+                        break;
+                    case 'json';
+                    default:
+                        $headers = array("Authorization : Basic " . $encodedAuth,'Content-type: application/json','Accept: application/json','charset=utf-8');
+                        break;
+                }
+
                 $options = array(
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLINFO_HEADER_OUT => true,
-                    CURLOPT_URL => $data['url'],
-                    CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-                    CURLOPT_USERPWD => $encodedAuth,
-                    CURLOPT_HTTPHEADER => array("Content-Type: text/xml; charset=utf-8"),
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_VERBOSE => true,
-                    CURLOPT_CUSTOMREQUEST => "GET"
+                    CURLOPT_RETURNTRANSFER  => true,
+                    CURLINFO_HEADER_OUT     => true,
+                    CURLOPT_URL             => $data['url'],
+                    CURLOPT_HTTPAUTH        => CURLAUTH_BASIC,
+                    CURLOPT_USERPWD         => $encodedAuth,
+                    CURLOPT_HTTPHEADER      => $headers,
+                    CURLOPT_TIMEOUT         => 300,
+                    CURLOPT_CONNECTTIMEOUT  => 300,
+                    CURLOPT_CUSTOMREQUEST   => "GET",
+                    CURLOPT_SSL_VERIFYPEER  => false/*,
+                    CURLOPT_VERBOSE => true*/
                 );
 
                 $ch = curl_init();
@@ -498,6 +512,7 @@ class http_curl{
                 $response = curl_exec($ch);
                 $curlInfo = curl_getinfo($ch);
                 curl_close($ch);
+
                 if (array_key_exists('debug', $data) && $data['debug']) {
                     var_dump($curlInfo);
                     var_dump($response);
@@ -506,6 +521,9 @@ class http_curl{
                     if ($response) {
                         return $response;
                     }
+                }elseif($curlInfo['http_code'] == '0'){
+                    print 'Error HTTP: code 0';
+                    return;
                 }
 
             }
