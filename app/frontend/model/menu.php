@@ -138,7 +138,7 @@ class frontend_model_menu extends frontend_db_menu {
 							'context' => 'all',
 							'type' => 'menu'
 						);
-						if($link['type_link'] === 'pages') $conf['select'] = array($iso => $link['id_page']);
+						if($link['type_link'] === 'pages') $conf['select'] = $link['id_page'];
 						$data = $this->pages->getData(
 							$conf,
 							$current
@@ -150,10 +150,10 @@ class frontend_model_menu extends frontend_db_menu {
 						if(!$this->about) $this->about = new frontend_model_about($this->template);
 						$model = $this->about;
 						$conf = array(
-							'context' => $link['mode_link'] === 'dropdown' ? 'parent' : 'all',
+							'context' => 'all',
 							'type' => 'menu'
 						);
-						if($link['type_link'] === 'about_page') $conf['select'] = array($iso => $link['id_page']);
+						if($link['type_link'] === 'about_page') $conf['select'] = $link['id_page'];
 						$data = $this->about->getData(
 							$conf,
 							$current
@@ -169,7 +169,7 @@ class frontend_model_menu extends frontend_db_menu {
 							'type' => 'menu',
 							'select' => 'all'
 						);
-						if($link['type_link'] === 'category') $conf['select'] = array($iso => $link['id_page']);
+						if($link['type_link'] === 'category') $conf['select'] = $link['id_page'];
 						$data = $this->catalog->getData(
 							$conf,
 							$current

@@ -291,7 +291,7 @@ class backend_controller_theme extends backend_db_theme{
 			case 'link':
 				parent::delete(
 					array(
-						'type'      =>    $data['type']
+						'type' => $data['type']
 					),
 					$data['data']
 				);
@@ -478,4 +478,3 @@ class backend_controller_theme extends backend_db_theme{
         }
     }
 }
-?>

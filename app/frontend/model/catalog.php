@@ -487,7 +487,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 					}
 
 					if (isset($custom['exclude'])) {
-						$conditions .= ' AND p.id_cat NOT IN (' . $conf['id'] . ') AND p.id_parent NOT IN (' . $conf['id'] . ')';
+						$conditions .= ' AND p.id_cat NOT IN (' . implode(',',$conf['id']) . ') AND p.id_parent NOT IN (' . implode(',',$conf['id']) . ')';
 					}
 				}
 
@@ -551,11 +551,11 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
 
                 if (isset($custom['exclude'])) {
-                    $conditions .= ' AND catalog.id_product NOT IN (' . $conf['id'] . ')';
+                    $conditions .= ' AND catalog.id_product NOT IN (' . implode(',',$conf['id']) . ')';
                 }
 
                 if (isset($custom['select'])) {
-                    $conditions .= ' AND catalog.id_product IN (' . $conf['id'] . ')';
+                    $conditions .= ' AND catalog.id_product IN (' . implode(',',$conf['id']) . ')';
                 }
 
                 $conditions .= ' GROUP BY catalog.id_product';

@@ -626,7 +626,7 @@ class frontend_model_about extends frontend_db_about {
 				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
 
 				if (isset($custom['exclude'])) {
-					$conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
+					$conditions .= ' AND p.id_pages NOT IN (' . implode(',',$conf['id']) . ') ';
 				}
 
 				if ($conf['type'] == 'menu') {

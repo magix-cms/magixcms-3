@@ -33,7 +33,7 @@
             </picture>{/strip}
         </a>
     </div>
-    {include file="section/menu/primary.tpl" menu="main" main=true mobile=false deepness=1}
+    {include file="section/menu/primary.tpl" menu="main" main=true mobile=false deepness=2}
     {if $dataLang != null && count($dataLang) > 1}
         <div class="select-lang">
             {include file="section/brick/lang.tpl" display='menu'}
