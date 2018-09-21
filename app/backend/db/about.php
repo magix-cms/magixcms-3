@@ -186,11 +186,13 @@ class backend_db_about
 					),
 					array(
 						'request' => "INSERT INTO `mc_about_data` (`id_lang`,`name_info`,`value_info`) VALUES
-							(@lang,'desc',:dsc),(@lang,'slogan',:slogan),(@lang,'content',:content)",
+							(@lang,'desc',:dsc),(@lang,'slogan',:slogan),(@lang,'content',:content),(@lang,'seo_desc',:seo_desc),(@lang,'seo_title',:seo_title)",
 						'params' => array(
 							'dsc' => $params['desc'],
 							'slogan' => $params['slogan'],
-							'content' => $params['content']
+							'content' => $params['content'],
+							'seo_desc' => $params['seo_desc'],
+							'seo_title' => $params['seo_title']
 						)
 					),
 				);
@@ -317,8 +319,10 @@ class backend_db_about
 						WHEN 'desc' THEN :dsc
 						WHEN 'slogan' THEN :slogan
 						WHEN 'content' THEN :content
+						WHEN 'seo_desc' THEN :seo_desc
+						WHEN 'seo_title' THEN :seo_title
 					END
-					WHERE `name_info` IN ('desc','slogan','content') AND id_lang = :id_lang";
+					WHERE `name_info` IN ('desc','slogan','content','seo_desc','seo_title') AND id_lang = :id_lang";
 
 					$params = array(
 						'dsc' => $params['desc'],

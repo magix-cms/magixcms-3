@@ -122,6 +122,7 @@ session_start();
 		<script src="js/mc_pages.js"></script>
 	</head>
 	<body>
+	<main>
 	<?php function makeTree($data) {
 		foreach ($data as $link) { ?>
 		<li class="filter-item items" data-filter="<?php echo $link['name_pages']; ?>" data-value="<?php echo $link['id_pages']; ?>" data-id="<?php echo $link['id_pages']; ?>">
@@ -220,5 +221,6 @@ session_start();
 				</form>
 			</div>
 		</div>
+	</main>
 	</body>
 </html>

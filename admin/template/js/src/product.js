@@ -161,7 +161,7 @@ var product = (function ($, undefined) {
 
         }, true);
 
-        if (buttonId != "") {
+        if (buttonId !== "") {
             var clickZone = $("#" + buttonId);
 
             var oleft = clickZone.offset().left;
@@ -210,7 +210,7 @@ var product = (function ($, undefined) {
                 data: {id_img: id},
                 method: 'post',
                 success: function (d) {
-                    if(!d.statut) {
+                    if(!d.status) {
                         $(self).parent().removeClass('hide').prev().removeClass('in');
                         dflt.addClass('in').next().addClass('hide');
                     }
@@ -303,7 +303,7 @@ var product = (function ($, undefined) {
             });
         },
         runAdd: function(){
-            if($('#product_id').val() != ''){
+            if($('#product_id').val() !== ''){
                 var id = $('#product_id').val();
                 var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
                 //console.log(cus);
@@ -316,7 +316,7 @@ var product = (function ($, undefined) {
             }
             $('#product_id').on('focusout',function(){
                 var id = $(this).val();
-                if(id != '') {
+                if(id !== '') {
                     var cus = $('#filter-pages').find('li[data-value="'+id+'"]');
                     //console.log(cus);
                     if(!cus.length) {
