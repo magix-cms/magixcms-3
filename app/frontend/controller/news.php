@@ -5,7 +5,7 @@ class frontend_controller_news extends frontend_db_news
      * @var
      */
     protected $template, $header, $data, $modelNews, $modelCore, $dateFormat, $routingUrl;
-    public $getlang, $id, $id_parent,$date,$year,$month,$tag;
+    public $getlang, $id, $id_parent, $date, $year, $month, $tag, $offset, $page = 0;
 
     /**
 	 * @param stdClass $t
@@ -20,6 +20,7 @@ class frontend_controller_news extends frontend_db_news
         $this->modelNews = new frontend_model_news($this->template);
         $this->dateFormat = new date_dateformat();
 		$this->routingUrl = new component_routing_url();
+		$this->offset = 5;
 
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
@@ -35,6 +36,9 @@ class frontend_controller_news extends frontend_db_news
         }
         if (http_request::isGet('tag')) {
             $this->tag = $formClean->simpleClean($_GET['tag']);
+        }
+        if (http_request::isGet('page')) {
+            $this->page = $formClean->simpleClean($_GET['page']) - 1;
         }
         /*if (http_request::isGet('id_parent')) {
             $this->id_parent = $formClean->numeric($_GET['id_parent']);
@@ -52,11 +56,11 @@ class frontend_controller_news extends frontend_db_news
         return $this->data->getItems($type, $id, $context, $assign);
     }
 
-    /**
-     * set Data from database
-     * @access private
-     */
-    private function getBuildList()
+	/**
+	 * @param bool $count
+	 * @return array|float|null
+	 */
+    private function getBuildList($count = false)
     {
 		$conditions = '';
 
@@ -89,28 +93,36 @@ class frontend_controller_news extends frontend_db_news
 			$params['tag'] = $this->tag;
 		}
 
-		$conditions .= ' AND c.published_news = 1 ORDER BY c.date_publish DESC';
+		$conditions .= ' AND c.published_news = 1 ORDER BY c.date_publish DESC, p.id_news DESC'.(!$count ? ' LIMIT '.($this->page * $this->offset).', '.$this->offset : '');
 
 		$collection = parent::fetchData(
-			array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+			array('context' => ($count ? 'one':'all'), 'type' => ($count ? 'count_news':'pages'), 'conditions' => $conditions),
 			$params
 		);
 
-		$newarr = array();
-		foreach ($collection as $k => &$item) {
-			$tags = parent::fetchData(
-				array('context' => 'all', 'type' => 'tagsRel'),
-				array(
-					':iso' => $item['iso_lang'],
-					':id'  => $item['id_news']
-				)
-			);
-			if($tags != null) {
-				$item['tags'] = $tags;
+		if($collection) {
+			if(!$count) {
+				$newarr = array();
+				foreach ($collection as $k => &$item) {
+					$tags = parent::fetchData(
+						array('context' => 'all', 'type' => 'tagsRel'),
+						array(
+							':iso' => $item['iso_lang'],
+							':id'  => $item['id_news']
+						)
+					);
+					if($tags != null) {
+						$item['tags'] = $tags;
+					}
+					$newarr[] = $this->modelNews->setItemData($item,null);
+				}
+				return $newarr;
 			}
-			$newarr[] = $this->modelNews->setItemData($item,null);
+			else {
+				return ceil(($collection['nbp']/ $this->offset));
+			}
 		}
-		return $newarr;
+		return null;
     }
 
     /**
@@ -138,11 +150,38 @@ class frontend_controller_news extends frontend_db_news
      */
     private function getBuildItems()
     {
-        $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
-        $tagsCollection = $this->getItems('tagsRel',array(':id'=>$this->id,':iso'=>$this->getlang),'all',false);
+        $collection = $this->getItems('page',array('id'=>$this->id,'iso'=>$this->getlang),'one',false);
+        $tagsCollection = $this->getItems('tagsRel',array('id'=>$this->id,'iso'=>$this->getlang),'all',false);
         if($tagsCollection != null){
             $collection['tags'] = $tagsCollection;
         }
+
+		$collection['prev'] = null;
+		$prev = $this->getItems('prev_page',array('id'=>$this->id,'iso'=>$this->getlang,'date_publish'=>$collection['date_publish']),'one',false);
+        if($prev) {
+        	$collection['prev']['title'] = $prev['name_news'];
+			$collection['prev']['url'] = $this->routingUrl->getBuildUrl(array(
+				'type' => 'news',
+				'iso'  => $prev['iso_lang'],
+				'date' => $prev['date_publish'],
+				'id'   => $prev['id_news'],
+				'url'  => $prev['url_news']
+			));
+		}
+
+		$collection['next'] = null;
+		$next = $this->getItems('next_page',array('id'=>$this->id,'iso'=>$this->getlang,'date_publish'=>$collection['date_publish']),'one',false);
+        if($next) {
+        	$collection['next']['title'] = $next['name_news'];
+			$collection['next']['url'] = $this->routingUrl->getBuildUrl(array(
+				'type' => 'news',
+				'iso'  => $next['iso_lang'],
+				'date' => $next['date_publish'],
+				'id'   => $next['id_news'],
+				'url'  => $next['url_news']
+			));
+		}
+
         return $this->modelNews->setItemData($collection,null);
     }
     
@@ -230,6 +269,7 @@ class frontend_controller_news extends frontend_db_news
         }
         else {
 			$this->template->assign('news',$this->getBuildList());
+			$this->template->assign('nbp',$this->getBuildList(true));
 
 			if(isset($this->year) OR isset($this->month) OR isset($this->date)) {
 				if(isset($this->month)) {

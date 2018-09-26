@@ -139,6 +139,9 @@ class frontend_model_news extends frontend_db_news {
                     }
                 }
             }
+
+            if(isset($row['prev'])) $data['prev'] = $row['prev'];
+            if(isset($row['next'])) $data['next'] = $row['next'];
         }
         else if(isset($row['id_tag'])) {
             $data['id'] = $row['id_tag'];

@@ -18,7 +18,7 @@
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
         <a href="{$url}/{baseadmin}/index.php?controller=pages">
-            <span class="fa fa-file-text-o"></span> {#root_pages#}
+            <span class="fa fa-file-alt"></span> {#root_pages#}
         </a>
         <nav id="nav-pages" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'pages'} in{/if}">
             <ul class="nav list-unstyled">
@@ -41,7 +41,7 @@
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
         <a href="{$url}/{baseadmin}/index.php?controller=news">
-            <span class="fa fa-newspaper-o"></span> {#root_news#}
+            <span class="fa fa-newspaper"></span> {#root_news#}
         </a>
         <nav id="nav-news" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'news'} in{/if}">
             <ul class="nav list-unstyled">
@@ -118,12 +118,12 @@
                 </li>
                 <li>
                     <a href="{$url}/{baseadmin}/index.php?controller=about&tab=socials">
-                        <span class="fa fa-facebook"></span> {#info_socials#}
+                        <span class="fab fa-facebook-f"></span> {#info_socials#}
                     </a>
                 </li>
                 <li>
                     <a href="{$url}/{baseadmin}/index.php?controller=about&tab=opening">
-                        <span class="fa fa-clock-o"></span> {#info_opening#}
+                        <span class="far fa-clock"></span> {#info_opening#}
                     </a>
                 </li>
                 <li>
@@ -211,7 +211,7 @@
                 {if {employee_access type="view" class_name="backend_controller_seo"} eq 1}
                     <li{if $smarty.get.controller == 'seo'} class="active"{/if}>
                         <a href="{$url}/{baseadmin}/index.php?controller=seo">
-                            <span class="fa fa-file-text-o"></span> {#seo#}
+                            <span class="far fa-file-alt"></span> {#seo#}
                         </a>
                     </li>
                 {/if}

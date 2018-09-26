@@ -2,8 +2,8 @@
 class backend_controller_product extends backend_db_product
 {
 	public $edit, $action, $tabs, $search;
-	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory;
-	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform;
+	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory,$routingUrl;
+	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso;
 	public $tableconfig = array(
 		'id_product',
 		'name_p' => ['title' => 'name'],
@@ -30,6 +30,7 @@ class backend_controller_product extends backend_db_product
 		$this->upload = new component_files_upload();
 		$this->imagesComponent = new component_files_images($this->template);
 		$this->dbCategory = new backend_db_category();
+		$this->routingUrl = new component_routing_url();
 
 		// --- GET
 		if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
@@ -50,7 +51,8 @@ class backend_controller_product extends backend_db_product
         #similar
         if (http_request::isPost('product_id')) $this->id_product_2 = $formClean->numeric($_POST['product_id']);
 		// --- ADD or EDIT
-		if (http_request::isPost('id')) $this->id_product = $formClean->simpleClean($_POST['id']);
+		if (http_request::isGet('id')) $this->id_product = $formClean->simpleClean($_GET['id']);
+		elseif (http_request::isPost('id')) $this->id_product = $formClean->simpleClean($_POST['id']);
 		if (http_request::isPost('id_img')) $this->id_img = $formClean->simpleClean($_POST['id_img']);
 		if (http_request::isPost('productData')) $this->productData = $formClean->arrayClean($_POST['productData']);
 		if (http_request::isPost('content')) {
@@ -78,6 +80,9 @@ class backend_controller_product extends backend_db_product
 
 		# ORDER PAGE
 		if (http_request::isPost('image')) $this->order = $formClean->arrayClean($_POST['image']);
+
+		# JSON LINK (TinyMCE)
+		if (http_request::isGet('iso')) $this->iso = $formClean->simpleClean($_GET['iso']);
 
 	}
 
@@ -125,6 +130,21 @@ class backend_controller_product extends backend_db_product
 			'tpl' => 'catalog/product/index.tpl',
 			'params' => $params
 		);
+	}
+
+	public function tinymce()
+	{
+		$langs = $this->modelLanguage->setLanguage();
+		foreach($langs as $k => $iso) {
+			$list = $this->getItems('pagesPublishedSelect',array('default_lang'=> $k),'all',false);
+			//var_dump($list);
+			//$list = $this->data->setPagesTree($list,'product');
+			//var_dump($list);
+			$lists[$k] = $list;
+		}
+		$this->template->assign('langs',$langs);
+		$this->template->assign('products',$lists);
+		$this->template->display('tinymce/product/mc_product.tpl');
 	}
 
 	/**
@@ -841,6 +861,27 @@ class backend_controller_product extends backend_db_product
 									)
 								)
 							);
+						}
+					}
+					break;
+				case 'getLink':
+					if(isset($this->id_product) && isset($this->iso)) {
+						$product = $this->getItems('pageLang',array('id' => $this->id_product,'iso' => $this->iso),'one',false);
+						if($product) {
+							$product['url'] = $this->routingUrl->getBuildUrl(array(
+								'type' => 'product',
+								'iso'  => $product['iso_lang'],
+								'id'   => $product['id_product'],
+								'url'  => $product['name_p'],
+								'id_parent'   => $product['id_parent'],
+								'url_parent'  => $product['name_parent']
+							));
+							//$link = '<a title="'.$cat['url'].'" href="'.$cat['name_cat'].'">'.$cat['name_cat'].'</a>';
+							$this->header->set_json_headers();
+							print '{"name":'.json_encode($product['name_p']).',"url":'.json_encode($product['url']).'}';
+						}
+						else {
+							print false;
 						}
 					}
 					break;

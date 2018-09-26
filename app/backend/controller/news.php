@@ -1,8 +1,8 @@
 <?php
 class backend_controller_news extends backend_db_news{
-    public $edit, $action, $tabs, $search, $plugin, $controller;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$makeFiles,$finder;
-    public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img,$ajax,$tableaction,$tableform;
+    public $edit, $action, $tabs, $search, $plugin, $controller, $lang;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$makeFiles,$finder,$routingUrl;
+    public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img,$ajax,$tableaction,$tableform,$iso;
 	public $tableconfig = array(
 		'id_news',
 		'name_news',
@@ -20,6 +20,7 @@ class backend_controller_news extends backend_db_news{
     public function __construct($t = null)
     {
         $this->template = $t ? $t : new backend_model_template;
+        $this->lang = $this->template->lang;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
@@ -29,6 +30,7 @@ class backend_controller_news extends backend_db_news{
         $this->upload = new component_files_upload();
         $this->imagesComponent = new component_files_images($this->template);
         $this->modelPlugins = new backend_model_plugins();
+		$this->routingUrl = new component_routing_url();
 
         $this->makeFiles = new filesystem_makefile();
         $this->finder = new file_finder();
@@ -49,7 +51,8 @@ class backend_controller_news extends backend_db_news{
         if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
 
         // --- ADD or EDIT
-        if (http_request::isPost('id')) $this->id_news = $formClean->simpleClean($_POST['id']);
+        if (http_request::isGet('id')) $this->id_news = $formClean->simpleClean($_GET['id']);
+        elseif (http_request::isPost('id')) $this->id_news = $formClean->simpleClean($_POST['id']);
         if (http_request::isPost('del_img')) $this->del_img = $formClean->simpleClean($_POST['del_img']);
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
@@ -73,6 +76,9 @@ class backend_controller_news extends backend_db_news{
         if (http_request::isPost('name_tag')) $this->name_tag = $formClean->simpleClean($_POST['name_tag']);
         # plugin
         if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
+
+		# JSON LINK (TinyMCE)
+		if (http_request::isGet('iso')) $this->iso = $formClean->simpleClean($_GET['iso']);
     }
 
 	/**
@@ -85,6 +91,19 @@ class backend_controller_news extends backend_db_news{
 	 */
 	private function getItems($type, $id = null, $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
+	}
+
+	public function tinymce()
+	{
+		$langs = $this->modelLanguage->setLanguage();
+		foreach($langs as $k => $iso) {
+			$list = $this->getItems('pagesPublishedSelect',array('lang'=> $k),'all',false);
+
+			$lists[$k] = $this->data->setPagesTree($list,'news');
+		}
+		$this->template->assign('langs',$langs);
+		$this->template->assign('news',$lists);
+		$this->template->display('tinymce/news/mc_news.tpl');
 	}
 
 	/**
@@ -583,6 +602,25 @@ class backend_controller_news extends backend_db_news{
                             $this->message->json_post_response(true, 'update',$display);
                         }
                         break;
+					case 'getLink':
+						if(isset($this->id_news) && isset($this->iso)) {
+							$news = $this->getItems('pageLang',array('id' => $this->id_news,'iso' => $this->iso),'one',false);
+							if($news) {
+								$news['url'] = $this->routingUrl->getBuildUrl(array(
+									'type' => 'news',
+									'iso'  => $news['iso_lang'],
+									'id'   => $news['id_news'],
+									'date' => $news['date_publish'],
+									'url'  => $news['url_news']
+								));
+								$this->header->set_json_headers();
+								print '{"name":'.json_encode($news['name_news']).',"url":'.json_encode($news['url']).'}';
+							}
+							else {
+								print false;
+							}
+						}
+						break;
                 }
             }
             else {

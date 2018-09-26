@@ -16,7 +16,7 @@
                 {*<p>{$item.date.publish|date_format:"%A"}</p>*}
                 {*<p class="tday">{$item.date.publish|date_format:"%e"}</p>*}
                 {*<p>{$item.date.publish|date_format:"%m/%y"}</p>*}
-                <p>{$item.date.publish|date_format:"%e&thinsp;/&thinsp;%y"}</p>
+                <p>{$item.date.publish|date_format:"%e&thinsp;/&thinsp;%m"}</p>
             </div>
             <div class="figure row">
                 <div class="time-figure col-12 col-xs-6 col-sm-12 col-md-6">

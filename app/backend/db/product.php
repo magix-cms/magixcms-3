@@ -106,6 +106,23 @@ class backend_db_product{
 						ORDER BY p.id_product DESC
 						LIMIT 5";
 					break;
+				case 'pagesPublishedSelect':
+					$sql = "SELECT 
+								p.id_product,
+								pc.name_p as name_product,
+								cc.id_cat as id_parent,
+								ccc.name_cat as name_parent,
+								lang.iso_lang
+							FROM mc_catalog_product AS p
+							JOIN mc_catalog_product_content AS pc USING ( id_product )
+							JOIN mc_catalog AS c ON ( p.id_product = c.id_product AND c.default_c = 1 )
+							JOIN mc_catalog_cat AS cc ON c.id_cat = cc.id_cat
+							JOIN mc_catalog_cat_content AS ccc ON (cc.id_cat = ccc.id_cat AND pc.id_lang = ccc.id_lang)
+							JOIN mc_lang AS lang ON(pc.id_lang = lang.id_lang)
+							WHERE pc.id_lang = :default_lang
+							AND pc.published_p = 1
+							ORDER BY cc.id_cat ASC, p.id_product ASC";
+					break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
@@ -143,6 +160,22 @@ class backend_db_product{
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 						WHERE rel.id_product = :id AND c.id_lang = :default_lang
 						ORDER BY rel.id_rel DESC LIMIT 0,1';
+					break;
+				case 'pageLang':
+					$sql = 'SELECT 
+								p.id_product,
+								pc.name_p,
+								cc.id_cat as id_parent,
+								ccc.name_cat as name_parent,
+								lang.iso_lang
+							FROM mc_catalog_product AS p
+							JOIN mc_catalog_product_content AS pc USING ( id_product )
+							JOIN mc_catalog AS c ON ( p.id_product = c.id_product AND c.default_c = 1 )
+							JOIN mc_catalog_cat AS cc ON c.id_cat = cc.id_cat
+							JOIN mc_catalog_cat_content AS ccc ON (cc.id_cat = ccc.id_cat AND pc.id_lang = ccc.id_lang)
+							JOIN mc_lang AS lang ON(pc.id_lang = lang.id_lang)
+							WHERE p.id_product = :id
+							AND lang.iso_lang = :iso';
 					break;
 			}
 

@@ -165,17 +165,17 @@ class backend_controller_pages extends backend_db_pages
 		$this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
 	}
 
-	/**
-	 * @param $id_lang
-	 * @return array|mixed
-	 * @throws Exception
-	 */
-	public function getListPages($id_lang)
+	public function tinymce()
 	{
-		//$this->modelLanguage->getLanguage();
-		//$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-		$list = $this->getItems('pagesPublishedSelect',array(':default_lang'=>$id_lang),'all',false);
-		return $this->data->setPagesTree($list,'pages');
+		$langs = $this->modelLanguage->setLanguage();
+		foreach($langs as $k => $iso) {
+			$list = $this->getItems('pagesPublishedSelect',array('default_lang'=> $k),'all',false);
+
+			$lists[$k] = $this->data->setPagesTree($list,'pages');
+		}
+		$this->template->assign('langs',$langs);
+		$this->template->assign('pages',$lists);
+		$this->template->display('tinymce/pages/mc_pages.tpl');
 	}
 
     /**

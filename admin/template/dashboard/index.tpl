@@ -32,7 +32,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-newspaper-o"></span> <a href="{$url}/{baseadmin}/index.php?controller=news">{#last_news#|ucfirst}</a>
+                    <span class="fa fa-newspaper"></span> <a href="{$url}/{baseadmin}/index.php?controller=news">{#last_news#|ucfirst}</a>
                 </h2>
             </header>
             <div>
@@ -59,7 +59,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-file-text-o"></span> <a href="{$url}/{baseadmin}/index.php?controller=pages">{#last_pages#|ucfirst}</a>
+                    <span class="fa fa-file-alt"></span> <a href="{$url}/{baseadmin}/index.php?controller=pages">{#last_pages#|ucfirst}</a>
                 </h2>
             </header>
             <div>
@@ -86,7 +86,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-folder-open-o"></span> <a href="{$url}/{baseadmin}/index.php?controller=category">{#last_categories#|ucfirst}</a>
+                    <span class="fa fa-folder-open"></span> <a href="{$url}/{baseadmin}/index.php?controller=category">{#last_categories#|ucfirst}</a>
                 </h2>
             </header>
             <div>
@@ -113,7 +113,7 @@
         <section class="col-ph-12 col-xs-6 col-lg-3">
             <header>
                 <h2 class="h5">
-                    <span class="fa fa-tag"></span> <a href="{$url}/{baseadmin}/index.php?controller=product">{#last_products#|ucfirst}</a>
+                    <span class="fa fa-box"></span> <a href="{$url}/{baseadmin}/index.php?controller=product">{#last_products#|ucfirst}</a>
                 </h2>
             </header>
             <div>

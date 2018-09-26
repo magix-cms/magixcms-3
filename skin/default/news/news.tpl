@@ -135,5 +135,19 @@
             {/if}
             {/strip}
         {/block}
+        <nav>
+            <ul class="pager">
+                {if $news.next}
+                <li class="previous">
+                    <a href="{$news.next.url}" class="pull-left btn btn-link" rel="next" title="{$news.next.title}">{#next_topic#}</a>
+                </li>
+                {/if}
+                {if $news.prev}
+                <li class="next">
+                    <a href="{$news.prev.url}" class="pull-right btn btn-link" rel="prev" title="{$news.prev.title}">{#previous_topic#}</a>
+                </li>
+                {/if}
+            </ul>
+        </nav>
     </article>
 {/block}

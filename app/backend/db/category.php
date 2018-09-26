@@ -116,6 +116,18 @@ class backend_db_category
 							GROUP BY p.id_cat 
 						ORDER BY p.id_cat DESC";
 					break;
+				case 'pagesPublishedSelect':
+					$sql = "SELECT p.id_parent,p.id_cat, c.name_cat , ca.name_cat AS parent_cat
+							FROM mc_catalog_cat AS p
+								JOIN mc_catalog_cat_content AS c USING ( id_cat )
+								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
+								LEFT JOIN mc_catalog_cat AS pa ON ( p.id_parent = pa.id_cat )
+								LEFT JOIN mc_catalog_cat_content AS ca ON ( pa.id_cat = ca.id_cat ) 
+								WHERE c.id_lang = :default_lang
+								AND c.published_cat = 1
+								GROUP BY p.id_cat 
+							ORDER BY p.id_cat DESC";
+					break;
 				case 'page':
 					$sql = 'SELECT p.*,c.*,lang.*
 						FROM mc_catalog_cat AS p
@@ -183,6 +195,14 @@ class backend_db_category
 					break;
 				case 'page':
 					$sql = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
+					break;
+				case 'pageLang':
+					$sql = 'SELECT p.*,c.*,lang.*
+							FROM mc_catalog_cat AS p
+							JOIN mc_catalog_cat_content AS c USING(id_cat)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE p.id_cat = :id
+							AND lang.iso_lang = :iso';
 					break;
 			}
 

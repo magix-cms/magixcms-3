@@ -3,7 +3,7 @@ class backend_controller_category extends backend_db_category
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder;
-    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform;
+    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso;
 	public $tableconfig = array(
 		'all' => array(
 			'id_cat',
@@ -57,7 +57,8 @@ class backend_controller_category extends backend_db_category
         // --- Search
         if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
         // --- ADD or EDIT
-        if (http_request::isPost('id')) $this->id_cat = $formClean->simpleClean($_POST['id']);
+        if (http_request::isGet('id')) $this->id_cat = $formClean->simpleClean($_GET['id']);
+		elseif (http_request::isPost('id')) $this->id_cat = $formClean->simpleClean($_POST['id']);
         if (http_request::isPost('parent_id')) $this->parent_id = $formClean->simpleClean($_POST['parent_id']);
         if (http_request::isPost('del_img')) $this->del_img = $formClean->simpleClean($_POST['del_img']);
 
@@ -79,6 +80,9 @@ class backend_controller_category extends backend_db_category
         # ORDER PAGE
         if (http_request::isPost('category')) $this->order = $formClean->arrayClean($_POST['category']);
         elseif (http_request::isPost('product')) $this->order = $formClean->arrayClean($_POST['product']);
+
+		# JSON LINK (TinyMCE)
+		if (http_request::isGet('iso')) $this->iso = $formClean->simpleClean($_GET['iso']);
     }
 
 	/**
@@ -153,6 +157,19 @@ class backend_controller_category extends backend_db_category
 			)
 		));
 		$this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
+	}
+
+	public function tinymce()
+	{
+		$langs = $this->modelLanguage->setLanguage();
+		foreach($langs as $k => $iso) {
+			$list = $this->getItems('pagesPublishedSelect',array('default_lang'=> $k),'all',false);
+
+			$lists[$k] = $this->data->setPagesTree($list,'cat');
+		}
+		$this->template->assign('langs',$langs);
+		$this->template->assign('cats',$lists);
+		$this->template->display('tinymce/category/mc_cat.tpl');
 	}
 
 	/**
@@ -577,6 +594,25 @@ class backend_controller_category extends backend_db_category
                         $this->message->json_post_response(true, 'update',$display);
                     }
                     break;
+				case 'getLink':
+					if(isset($this->id_cat) && isset($this->iso)) {
+						$cat = $this->getItems('pageLang',array('id' => $this->id_cat,'iso' => $this->iso),'one',false);
+						if($cat) {
+							$cat['url'] = $this->routingUrl->getBuildUrl(array(
+								'type' => 'category',
+								'iso'  => $cat['iso_lang'],
+								'id'   => $cat['id_cat'],
+								'url'  => $cat['url_cat']
+							));
+							//$link = '<a title="'.$cat['url'].'" href="'.$cat['name_cat'].'">'.$cat['name_cat'].'</a>';
+							$this->header->set_json_headers();
+							print '{"name":'.json_encode($cat['name_cat']).',"url":'.json_encode($cat['url']).'}';
+						}
+						else {
+							print false;
+						}
+					}
+					break;
                 /*case 'active-selected':
                 case 'unactive-selected':
 					if(isset($this->category) && is_array($this->category) && !empty($this->category)) {

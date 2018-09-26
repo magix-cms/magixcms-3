@@ -106,6 +106,33 @@ class frontend_db_news
 							FROM mc_news_tag AS tag
 							WHERE tag.id_lang = :id_lang AND tag.name_tag LIKE :name_tag';
 			    	break;
+			    case 'prev_page':
+					$sql = "SELECT c.*,lang.iso_lang
+							FROM mc_news AS p
+							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
+							WHERE lang.iso_lang = :iso AND c.published_news = 1
+							AND (c.date_publish < :date_publish OR (c.date_publish = '".$params['date_publish']."' AND p.id_news < :id))
+							ORDER BY c.date_publish DESC LIMIT 1";
+			    	break;
+			    case 'next_page':
+					$sql = "SELECT c.*,lang.iso_lang
+							FROM mc_news AS p
+							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
+							WHERE lang.iso_lang = :iso AND c.published_news = 1
+							AND (c.date_publish > :date_publish OR (c.date_publish = '".$params['date_publish']."' AND p.id_news > :id))
+							ORDER BY c.date_publish ASC LIMIT 1";
+			    	break;
+				case 'count_news':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+
+					$sql = "SELECT COUNT(p.id_news) as nbp
+						FROM mc_news AS p
+						JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+						$conditions";
+					break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;

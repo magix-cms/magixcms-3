@@ -30,6 +30,14 @@ class backend_db_news
 								)rel ON ( rel.id_news = p.id_news AND rel.id_lang = c.id_lang)
 							WHERE p.id_news = :edit";
 					break;
+				case 'pagesPublishedSelect':
+					$sql = "SELECT p.id_news, c.name_news
+							FROM mc_news AS p
+							JOIN mc_news_content AS c USING ( id_news )
+							WHERE c.id_lang = :lang
+							AND c.published_news = 1
+							ORDER BY p.id_news DESC";
+					break;
 				case 'news':
 					$cond = '';
 					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
@@ -117,6 +125,14 @@ class backend_db_news
 					break;
 				case 'countTags':
 					$sql = 'SELECT count(id_tag) AS tags FROM mc_news_tag_rel WHERE id_tag = :id_tag';
+					break;
+				case 'pageLang':
+					$sql = 'SELECT p.*,c.*,lang.*
+							FROM mc_news AS p
+							JOIN mc_news_content AS c USING(id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE p.id_news = :id
+							AND lang.iso_lang = :iso';
 					break;
 			}
 

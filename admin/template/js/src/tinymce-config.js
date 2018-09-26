@@ -15,16 +15,19 @@
         // Location of TinyMCE script
         script_url : '/'+baseadmin+'/template/js/vendor/tiny_mce.'+editor_version+'/tinymce.min.js',
         theme: "modern",
+        mobile: {
+            theme: "mobile"
+        },
         relative_urls : false,
         entity_encoding : "raw",
         plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen colorpicker textpattern wordcount directionality',
-            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager mc_pages'
+            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager mc_pages mc_cat mc_product mc_news'
         ],
         toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | fontsizeselect | forecolor backcolor',
         toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media | link unlink anchor',
-        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample | code preview | mc_pages',
+        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample | code preview | mc_pages mc_cat mc_product mc_news',
         imagetools_toolbar: "imageoptions",
         menubar: false,
         toolbar_items_size: 'small',

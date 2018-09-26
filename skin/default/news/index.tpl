@@ -91,4 +91,10 @@
             {/if}
         {/block}
     </article>
+    {if $nbp > 1}
+        <section class="container">
+            {include file="section/brick/pagination/number.tpl" nbp=$nbp}
+            {*{include file="section/brick/pagination/pager.tpl" nbp=$nbp}*}
+        </section>
+    {/if}
 {/block}
