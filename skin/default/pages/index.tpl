@@ -6,12 +6,6 @@
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}
             <header>
-                {widget_cms_data
-                conf = [
-                'context' => 'all'
-                ]
-                assign="pagesTree"
-                }
                 {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{$url}/{$lang}/","title" => {#home#}]}
                 <h1 itemprop="name">{$pages.title}</h1>
             </header>
@@ -25,6 +19,16 @@
                 {/if}*}
                 {$pages.content}
             </div>
+            {if $childs}
+                {*<h3>{#subcategories#|ucfirst}</h3>*}
+                <div class="vignette-list">
+                    <div class="section-block">
+                        <div class="row row-center">
+                            {include file="pages/loop/pages.tpl" data=$childs classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4 col-xl-3'}
+                        </div>
+                    </div>
+                </div>
+            {/if}
         {/block}
     </article>
 {/block}

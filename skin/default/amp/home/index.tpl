@@ -4,26 +4,26 @@
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/home.min.css"}{/block}
 {block name='body:id'}home{/block}
 {block name="amp-script"}
-    {amp_components content=$home.content}
+    {*{amp_components content=$home.content}*}
 {/block}
 {block name='article'}
     <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}
             <h1 itemprop="name">{$home.name}</h1>
             <div class="text" itemprop="text">
-                {amp_content content=$home.content}
+                {*{amp_content content=$home.content}*}
             </div>
         {/block}
     </article>
 {/block}
 {block name="main:after"}
-    {widget_news_data
+    {*{widget_news_data
         conf = [
             'context' => 'all',
             'limit' => 3
             ]
         assign="news"
-    }
+    }*}
     {if $news}
     <section id="last-news" class="container">
         <h3>{#last_news#|ucfirst}</h3>

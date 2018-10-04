@@ -552,21 +552,17 @@ class frontend_model_about extends frontend_db_about {
 				$conf['id'] = null;
 				$conf['type'] = null;
 			}
-			elseif (is_array($custom['select'])) {
-				if (array_key_exists($conf['lang'],$custom['select'])) {
-					$conf['id'] = $custom['select'][$conf['lang']];
-					$conf['type'] = 'collection';
-				}
+			else {
+				$conf['id'] = $custom['select'];
+				$conf['type'] = 'collection';
 			}
 		}
 
 		// Define exclude
 		if (isset($custom['exclude'])) {
 			if (is_array($custom['exclude'])) {
-				if (array_key_exists($conf['lang'],$custom['exclude'])) {
-					$conf['exclude'] = $custom['exclude'][$conf['lang']];
-					$conf['type'] = 'collection';
-				}
+				$conf['exclude'] = $custom['exclude'];
+				$conf['type'] = 'collection';
 			}
 		}
 
@@ -677,11 +673,11 @@ class frontend_model_about extends frontend_db_about {
 				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent IS NULL ';
 
 				if (isset($custom['select'])) {
-					$conditions .= ' AND p.id_pages IN (' . $conf['id'] . ') ';
+					$conditions .= ' AND p.id_pages IN (' . implode(',',$conf['id']) . ') ';
 				}
 
 				if (isset($custom['exclude'])) {
-					$conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
+					$conditions .= ' AND p.id_pages NOT IN (' . implode(',',$conf['id']) . ') ';
 				}
 
 				if ($conf['type'] == 'menu') {

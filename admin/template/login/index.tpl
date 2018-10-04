@@ -23,12 +23,12 @@
                         <form id="login_form" method="post" action="{$url}/admin/index.php?controller=login">
                             <div class="form-group">
                                 <label class="control-label" for="email_admin">{#email#}</label>
-                                <input type="text" class="form-control" placeholder=" {#placeholder_login#}" id="email_admin" name="employee[email_admin]" value="" />
+                                <input type="text" class="form-control" placeholder="{#placeholder_login#}" id="email_admin" name="employee[email_admin]" value="" />
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label" for="passwd_admin">{#passwd#}</label>
-                                <input type="password" class="form-control" placeholder=" {#placeholder_password#}" id="passwd_admin" name="employee[passwd_admin]" value="" />
+                                <input type="password" class="form-control" placeholder="{#placeholder_password#}" id="passwd_admin" name="employee[passwd_admin]" value="" />
                             </div>
 
                             <div class="form-group submit-group">
@@ -55,7 +55,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="email_forgot"> E-mail </label>
-                                <input id="email_forgot" class="form-control" type="text" placeholder=" {#placeholder_login#}" name="email_forgot">
+                                <input id="email_forgot" class="form-control" type="text" placeholder="{#placeholder_login#}" name="email_forgot">
                             </div>
                             <div class="panel-footer">
                                 <button class="btn btn-default login-form" href="#" type="button">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <p><i class="fa fa-copyright"></i> 2016 Magix CMS &mdash; {#all_right_reserved#}</p>
+            <p><i class="far fa-copyright"></i> 2008{if 'Y'|date !== '2008'} - {'Y'|date}{/if} <a href="http://www.magix-cms.com/" class="targetblank">Magix CMS</a> &mdash; {#all_right_reserved#}</p>
         </div>
     </main>
 {/block}

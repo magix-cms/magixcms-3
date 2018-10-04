@@ -30,7 +30,7 @@ var theme = (function ($, undefined) {
     function initSortable() {
         $( ".sortable" ).sortable({
             items: "> li",
-            handle: "header .fa-arrows",
+            handle: "header .fa-arrows-alt",
             cursor: "move",
             placeholder: "list-group-item list-group-item-default",
             update: function(){

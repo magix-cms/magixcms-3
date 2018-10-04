@@ -40,7 +40,7 @@
          *
          */
         function insertLink() {
-            $('#link-data').validate({
+            $('#pages-link').validate({
                 ignore: [],
                 onsubmit: true,
                 event: 'submit',

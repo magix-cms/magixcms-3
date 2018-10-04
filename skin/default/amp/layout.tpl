@@ -1,6 +1,4 @@
-{strip}
-{widget_share_data assign="shareData"}
-{/strip}<!doctype html>
+<!doctype html>
 <html amp lang="{$lang}" dir="ltr">
 <head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
@@ -9,7 +7,7 @@
     <meta itemprop="description" content="{$smarty.capture.description}">
     <meta name="robots" content="{google_tools tools='robots'}">
     {strip}{include file="section/loop/lang.tpl" amp=true iso={$lang}}{/strip}
-    {if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}
+    {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
     {if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}

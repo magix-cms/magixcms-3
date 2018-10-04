@@ -99,7 +99,7 @@ class backend_db_files
 		$sql = '';
 
 		switch ($config['type']) {
-			case '':
+			case 'resize':
 				$sql = 'UPDATE mc_config_img 
 						SET 
 							module_img = :module_img,

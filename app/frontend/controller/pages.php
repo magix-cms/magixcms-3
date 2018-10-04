@@ -61,6 +61,7 @@ class frontend_controller_pages extends frontend_db_pages {
             $this->id = $formClean->numeric($_GET['id']);
         }
     }
+
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
@@ -79,8 +80,26 @@ class frontend_controller_pages extends frontend_db_pages {
      */
     private function getBuildItems()
     {
-        $collection = $this->getItems('page',array('id'=>$this->id,'iso'=>$this->getlang),'one',false);
-        return $this->modelPages->setItemData($collection,null);
+		$collection = $this->getItems('page',array('id'=>$this->id,'iso'=>$this->getlang),'one',false);
+		return $this->modelPages->setItemData($collection,null);
+    }
+
+    /**
+     * set Data from database
+     * @access private
+     */
+    private function getBuildChildItems()
+    {
+		$modelSystem = new frontend_model_core();
+		$current = $modelSystem->setCurrentId();
+		$data = $this->modelPages->getData(
+			array(
+				'context' => 'all',
+				'select' => $this->id
+			),
+			$current
+		);
+		return $this->data->parseData($data,$this->modelPages,$current);
     }
 
     /**
@@ -91,6 +110,21 @@ class frontend_controller_pages extends frontend_db_pages {
     {
         $collection = $this->getItems('page',array('id'=>$page['id_parent'],'iso'=>$this->getlang),'one',false);
         return $this->modelPages->setItemData($collection,null);
+    }
+
+    /**
+     * @return array
+     */
+    private function getBuildItemsTree(){
+        $modelSystem = new frontend_model_core();
+		$current = $modelSystem->setCurrentId();
+		$data = $this->modelPages->getData(
+			array(
+				'context' => 'all',
+			),
+			$current
+		);
+		return $this->data->parseData($data,$this->modelPages,$current);
     }
 
     /**
@@ -108,9 +142,13 @@ class frontend_controller_pages extends frontend_db_pages {
     {
         $data = $this->getBuildItems();
         $parent = $data['id_parent'] !== null ? $this->getBuildParent($data) : null;
+        $childs = $this->getBuildChildItems();
         $hreflang = $this->getBuildLangItems();
+        $pagesTree = $this->getBuildItemsTree();
         $this->template->assign('pages',$data,true);
         $this->template->assign('parent',$parent,true);
+        $this->template->assign('childs',$childs[0]['subdata'],true);
+        $this->template->assign('pagesTree',$pagesTree,true);
         $this->template->assign('hreflang',$hreflang,true);
     }
 
@@ -119,10 +157,11 @@ class frontend_controller_pages extends frontend_db_pages {
      * run app
      */
     public function run(){
-        if(isset($this->id)){
+        if(isset($this->id)) {
             $this->getData();
             $this->template->display('pages/index.tpl');
-        }else{
+        }
+        else {
             $this->template->assign(
                 'getTitleHeader',
                 $this->header->getTitleHeader(

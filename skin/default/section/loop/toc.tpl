@@ -9,8 +9,8 @@
             <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#s-{$s}-{$child@index}">
                 <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
                 <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
-                <a href="{$child.url}" title="{$child.title}">{$child.title}</a>
             </button>
+            <a href="{$child.url}" title="{$child.title}">{$child.title}</a>
             <ul id="s-{$s}-{$child@index}" class="collapse dropdown-menu">
                 {include file="section/loop/toc.tpl" pages=$child.subdata s=$s}
             </ul>

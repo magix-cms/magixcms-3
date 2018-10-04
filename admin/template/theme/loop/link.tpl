@@ -1,12 +1,12 @@
 <li id="link_{$link.id_link}" class="panel list-group-item">
     <header role="tab">
-        <span class="fa fa-arrows"></span> {$link.name_link|ucfirst}
+        <span class="fas fa-arrows-alt"></span> {$link.name_link|ucfirst}
         <div class="actions">
             <a href="#link{$link.id_link}" class="btn btn-link" role="button" data-toggle="collapse" data-parent="#table-link" aria-expanded="false" aria-controls="link{$link.id_link}">
-                <span class="fa fa-pencil-square-o"></span>
+                <span class="fas fa-pen"></span>
             </a>
             <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$link.id_link}" data-target="#delete_modal" data-controller="theme" data-sub="link">
-                <span class="fa fa-trash"></span>
+                <span class="fas fa-trash"></span>
             </a>
         </div>
     </header>

@@ -412,7 +412,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 				$conf['id'] = null;
 				$conf['type'] = null;
 			}
-            elseif (is_array($custom['select'])) {
+            else {
 				$conf['id'] = $custom['select'];
 				$conf['type'] = 'collection';
             }
@@ -483,11 +483,11 @@ class frontend_model_catalog extends frontend_db_catalog {
 
                 if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
 					if (isset($custom['select'])) {
-						$conditions .= ' AND (p.id_cat IN (' . implode(',',$conf['id']) . ') OR p.id_parent IN (' . implode(',',$conf['id']) . '))';
+						$conditions .= ' AND (p.id_cat IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
 					}
 
 					if (isset($custom['exclude'])) {
-						$conditions .= ' AND p.id_cat NOT IN (' . implode(',',$conf['id']) . ') AND p.id_parent NOT IN (' . implode(',',$conf['id']) . ')';
+						$conditions .= ' AND p.id_cat NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
 					}
 				}
 

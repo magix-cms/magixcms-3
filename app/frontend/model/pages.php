@@ -107,6 +107,7 @@ class frontend_model_pages extends frontend_db_pages{
 				$data['img']['default'] = '/skin/'.$this->template->theme.'/img/pages/default.png';
 
 				$data['content'] = $row['content_pages'];
+				$data['resume'] = $row['resume_pages'];
 				$data['menu'] = $row['menu_pages'];
 				$data['date']['update'] = $row['last_update'];
 				$data['date']['register'] = $row['date_register'];
@@ -217,21 +218,17 @@ class frontend_model_pages extends frontend_db_pages{
 				$conf['id'] = null;
 				$conf['type'] = null;
 			}
-			elseif (is_array($custom['select'])) {
-				if (array_key_exists($conf['lang'],$custom['select'])) {
-					$conf['id'] = $custom['select'][$conf['lang']];
-					$conf['type'] = 'collection';
-				}
+			else {
+				$conf['id'] = $custom['select'];
+				$conf['type'] = 'collection';
 			}
 		}
 
 		// Define exclude
 		if (isset($custom['exclude'])) {
 			if (is_array($custom['exclude'])) {
-				if (array_key_exists($conf['lang'],$custom['exclude'])) {
-					$conf['exclude'] = $custom['exclude'][$conf['lang']];
-					$conf['type'] = 'collection';
-				}
+				$conf['exclude'] = $custom['exclude'];
+				$conf['type'] = 'collection';
 			}
 		}
 
@@ -290,8 +287,12 @@ class frontend_model_pages extends frontend_db_pages{
 			else {
 				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
 
+				/*if (isset($custom['select'])) {
+					$conditions .= ' AND (p.id_pages IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
+				}*/
+
 				if (isset($custom['exclude'])) {
-					$conditions .= ' AND p.id_pages NOT IN (' . implode(',',$conf['id']) . ') ';
+					$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
 				}
 
 				if ($custom['type'] == 'menu') {
@@ -342,11 +343,11 @@ class frontend_model_pages extends frontend_db_pages{
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent IS NULL ';
 
                 if (isset($custom['select'])) {
-                    $conditions .= ' AND p.id_pages IN (' . $conf['id'] . ') ';
+                    $conditions .= ' AND p.id_pages IN (' . implode(',',$conf['id']) . ') ';
                 }
 
                 if (isset($custom['exclude'])) {
-                    $conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
+                    $conditions .= ' AND p.id_pages NOT IN (' . implode(',',$conf['id']) . ') ';
                 }
 
                 if ($custom['type'] == 'menu') {
