@@ -10,13 +10,13 @@
                 <h1 itemprop="name">{$pages.title}</h1>
             </header>
             <div class="text" itemprop="text">
-                {*{if !empty($pages.imgSrc.medium)}
-                    <figure>
-                        <a href="{$pages.imgSrc.large}" class="img-zoom" title="{$pages.title}">
-                            <img class="img-responsive" src="{$pages.imgSrc.medium}" alt="{$pages.title}" title="{$pages.title}" />
+                {if !empty($pages.img.medium.src)}
+                    <figure class="img-float pull-right">
+                        <a href="{$pages.img.large.src}" class="img-zoom" title="{$pages.title}">
+                            <img class="img-responsive" src="{$pages.img.medium.src}" alt="{$pages.title}" title="{$pages.title}" />
                         </a>
                     </figure>
-                {/if}*}
+                {/if}
                 {$pages.content}
             </div>
             {if $childs}

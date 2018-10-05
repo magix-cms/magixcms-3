@@ -93,29 +93,29 @@
             </div>
             <div itemprop="author" itemscope itemtype="https://schema.org/{$companyData.type}" itemref="publisher"></div>
             <div itemprop="articleBody">
-                {if $news.imgSrc.small}
-                    {*<figure{if $news.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
-                        {if $news.imgSrc.small}
-                            <meta itemprop="url" content="{$url}{$news.imgSrc.medium}" />
-                            <meta itemprop="height" content="618" />
-                            <meta itemprop="width" content="1000" />
-                            <a href="{$news.imgSrc.medium}" class="img-zoom" title="{$news.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                                <img src="{$news.imgSrc.medium}" alt="{$news.name}" itemprop="contentUrl"/>
-                            </a>
-                        {else}
-                            <img src="/skin/{$theme}/img/catalog/news-default.png" alt="{$news.name}" />
-                        {/if}
-                    </figure>*}
-                    <figure itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
-                        <meta itemprop="url" content="{$url}{$news.imgSrc.large}" />
-                        <meta itemprop="height" content="618" />
-                        <meta itemprop="width" content="1000" />
-                        <a href="{$news.imgSrc.large}" class="img-zoom" title="{$news.title}">
-                            <img class="img-responsive" src="{$news.imgSrc.medium}" alt="{$news.title}" title="{$news.title}" />
-                        </a>
-                    </figure>
-                {/if}
                 <div class="desc">
+                    {if $news.img.small.src}
+                        {*<figure{if $news.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
+                            {if $news.imgSrc.small}
+                                <meta itemprop="url" content="{$url}{$news.imgSrc.medium}" />
+                                <meta itemprop="height" content="618" />
+                                <meta itemprop="width" content="1000" />
+                                <a href="{$news.imgSrc.medium}" class="img-zoom" title="{$news.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
+                                    <img src="{$news.imgSrc.medium}" alt="{$news.name}" itemprop="contentUrl"/>
+                                </a>
+                            {else}
+                                <img src="/skin/{$theme}/img/catalog/news-default.png" alt="{$news.name}" />
+                            {/if}
+                        </figure>*}
+                        <figure class="img-float pull-right" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
+                            <meta itemprop="url" content="{$url}{$news.img.large.src}" />
+                            <meta itemprop="height" content="{$news.img.large.h}" />
+                            <meta itemprop="width" content="{$news.img.large.w}" />
+                            <a href="{$news.img.large.src}" class="img-zoom" title="{$news.title}">
+                                <img class="img-responsive" src="{$news.img.medium.src}" alt="{$news.title}" title="{$news.title}" />
+                            </a>
+                        </figure>
+                    {/if}
                     {$news.content}
                 </div>
             </div>
