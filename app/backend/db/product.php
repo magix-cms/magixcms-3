@@ -213,7 +213,7 @@ class backend_db_product{
 				break;
 			case 'catRel':
 				$sql = 'INSERT INTO `mc_catalog` (id_product,id_cat,default_c,order_p)
-						SELECT :id,:id_cat,:default_c,COUNT(id_catalog) FROM mc_catalog WHERE id_cat IN ('.$params[':id_cat'].')';
+						SELECT :id,:id_cat,:default_c,COUNT(id_catalog) FROM mc_catalog WHERE id_cat IN ('.$params['id_cat'].')';
 				break;
 			case 'productRel':
 				$sql = 'INSERT INTO `mc_catalog_product_rel` (id_product,id_product_2)
@@ -326,7 +326,7 @@ class backend_db_product{
 				$sql = 'DELETE FROM mc_catalog WHERE id_product = :id';
 				break;
 			case 'oldCatRel':
-				$sql = 'DELETE FROM mc_catalog WHERE id_product = '.$params[':id'].' AND id_cat NOT IN ('.$params[':id_cat'].')';
+				$sql = 'DELETE FROM mc_catalog WHERE id_product = '.$params['id'].' AND id_cat NOT IN ('.$params['id_cat'].')';
 				$params = array();
 				break;
 			case 'productRel':

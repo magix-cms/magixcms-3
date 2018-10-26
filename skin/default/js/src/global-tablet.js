@@ -102,13 +102,6 @@ const C = {
             $($(this).data("target")).collapse('toggle');
         });
 
-        // *** for gallery pictures
-        $(".show-img").off('click').click(function(){
-            $(".big-image a").animate({ opacity: 0, 'z-index': -1 }, 200);
-            $($(this).data('target')).animate({ opacity: 1, 'z-index': 1 }, 200);
-            return false;
-        });
-
         // *** featherlight lightbox init
         if($.featherlight !== undefined) {
             let afterContent = function () {

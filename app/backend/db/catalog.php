@@ -113,7 +113,7 @@ class backend_db_catalog{
 		$sql = '';
 
 		switch ($config['type']) {
-			case 'page':
+			case 'content':
 				$sql = "UPDATE `mc_catalog_data`
                         SET `value_info` = CASE `name_info`
                             WHEN 'name' THEN :nm

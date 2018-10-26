@@ -65,7 +65,13 @@
 			margin: 0;
 
 			&:after {
-				.fa;
+				font-weight: 400;
+				-moz-osx-font-smoothing: grayscale;
+				-webkit-font-smoothing: antialiased;
+				font-style: normal;
+				font-variant: normal;
+				text-rendering: auto;
+				line-height: 1;
 				color: #eee;
 				content: '@{fa-var-square}';
 				font-size: 40px;
@@ -79,6 +85,7 @@
 				justify-content: center;
 				align-items: center;
 				opacity: 0;
+				font-family: 'Font Awesome 5 Free';
 				.auto-transition(.4s);
 			}
 
@@ -251,8 +258,16 @@ form > .actions {
 				position: relative;
 
 				&:before {
+					font-family: 'Font Awesome 5 Free';
+					font-weight: 400;
 					left: 0;
-					.fa;
+					-moz-osx-font-smoothing: grayscale;
+					-webkit-font-smoothing: antialiased;
+					display: inline-block;
+					font-style: normal;
+					font-variant: normal;
+					text-rendering: auto;
+					line-height: 1;
 					color: #555;
 					padding: 3px;
 				}
@@ -287,6 +302,7 @@ form > .actions {
 					&:before {
 						content: "@{fa-var-check}";
 						padding: 2px;
+						font-weight: 900;
 					}
 				}
 			}

@@ -138,6 +138,7 @@ class plugins_contact_db
 			switch ($config['type']) {
 				case 'delMail':
 					$sql = 'DELETE FROM mc_contact WHERE id_contact IN ('.$params['id'].')';
+					$params = array();
 					break;
 			}
 

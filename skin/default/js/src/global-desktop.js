@@ -47,7 +47,6 @@ const C = {
 
     $(window).on('load', function () {
         C.init(); // Cookie EU Law
-        $('[data-toggle="popover"]').popover();
 
         // *** target_blank
         $('a.targetblank').click( function() {
