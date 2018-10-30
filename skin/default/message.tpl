@@ -32,6 +32,10 @@
 {capture name="alert_type"}success{/capture}
 {capture name="icon"}check{/capture}
 {capture name="alert_message"}{#request_success_send#}{/capture}
+{case 'request' break}
+{capture name="alert_type"}success{/capture}
+{capture name="icon"}check{/capture}
+{capture name="alert_message"}{#request_success_request#}{/capture}
     {** Delete **}
 {case 'delete' break}
 {capture name="alert_type"}success{/capture}

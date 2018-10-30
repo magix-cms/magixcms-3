@@ -328,6 +328,8 @@ class backend_db_about
 						'dsc' => $params['desc'],
 						'slogan' => $params['slogan'],
 						'content' => $params['content'],
+						'seo_title' => $params['seo_title'],
+						'seo_desc' => $params['seo_desc'],
 						'id_lang' => $params['id_lang']
 					);
 					break;
