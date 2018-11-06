@@ -17,8 +17,13 @@
 	}
 }
 
-.calc-grid-column(@class, @index, @type) when (@index > 0) {
+.calc-grid-column(@class, @index, @type) when (@index > 0) and not(@class = ph) {
 	.@{type}-@{class}-@{index} {
+		.make-column(@index, @type);
+	}
+}
+.calc-grid-column(@class, @index, @type) when (@index > 0) and (@class = ph) {
+	.@{type}-@{index} {
 		.make-column(@index, @type);
 	}
 }

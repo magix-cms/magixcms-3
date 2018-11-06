@@ -22,14 +22,14 @@
                 <div class="time-figure col-12 col-xs-6">
                     <div>
                         {if $item.imgSrc.medium}
-                            <amp-img src="{$item.imgSrc.medium}"
+                            <amp-img src="{$item.img.medium.src}"
                                      alt="{$item.title}"
                                      title="{$item.title}"
                                      layout="responsive"
                                      width="500"
                                      height="309" itemprop="image"></amp-img>
                         {else}
-                            <amp-img src="{$item.imgSrc.default}"
+                            <amp-img src="{$item.img.default}"
                                      alt="{$item.title}"
                                      title="{$item.title}"
                                      layout="responsive"

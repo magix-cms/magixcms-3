@@ -31,7 +31,7 @@
         {/if}
     </ul>
 </div>*}
-<div id="block-contact" class="block">
+<div id="block-contact" class="col-12 block">
     <h4 class="sr-only">{#contact_label_title#|ucfirst}</h4>
     <div class="text-center">
         {*<i class="material-icons">place</i>*}

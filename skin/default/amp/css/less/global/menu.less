@@ -34,6 +34,47 @@ amp-sidebar {
 		list-style: none;
 		margin-bottom:10px;
 	}
+
+	footer {
+		.followbox {
+			display: flex;
+			flex-flow: column;
+			align-items: center;
+			justify-content: center;
+
+			ul {
+				margin: 0 0 10px;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+
+			li {
+				margin-bottom: 5px;
+
+				a {
+					display: flex;
+					width: 35px;
+					height: 35px;
+					justify-content: center;
+					align-items: center;
+					border-radius: 50%;
+					color: #fff;
+					font-size: 16px;
+
+					&:hover {
+						text-decoration: none;
+					}
+				}
+			}
+
+			/*ul {
+				margin: 0 0 10px;
+			}*/
+
+			.share-buttons();
+		}
+	}
 }
 
 .close-sidebar {

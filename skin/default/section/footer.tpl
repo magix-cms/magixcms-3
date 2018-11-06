@@ -3,7 +3,7 @@
     {if !isset($blocks)}
         {assign var="blocks" value=['news','contact']}
     {/if}
-    {widget_share_data assign="shareData"}
+    {*{widget_share_data assign="shareData"}*}
 {/strip}
 <footer id="footer"{if $touch} class="mobile-footer"{/if}>
     {if !$touch}{include file="section/footer/sharebar.tpl"}{/if}

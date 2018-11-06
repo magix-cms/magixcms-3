@@ -19,7 +19,7 @@
 
 // --- Theme Colors
 @main-color: #3b61a9;
-@sd-color: #148ecf;
+@sd-color: #808284;
 @dark-color: #222;
 
 //// --- Theme Colors Variant
@@ -79,8 +79,8 @@
 
 @menu-color: 		#444;
 @menu-bg: 			@white;
-@menu-active-color: @white;
-@menu-active-bg:	@main-color;
+@menu-active-color: @text-color;
+@menu-active-bg:	@sd-color;
 
 // --- Sub-menu
 @submenu-color: 		#444;
@@ -140,3 +140,42 @@
 @google:    #c8311b, #e24b35;
 @linkedin:  #2f6296, #497cb0;
 @pinterest: #bd081c, #d62035;
+@soundcloud: #f50, #ff621a;
+@github: #111111, #222222;
+@instagram: #913AC5, #D82F81;
+
+//== Pagination
+//
+//##
+
+@pagination-color:                     @link-color;
+@pagination-bg:                        #fff;
+@pagination-border:                    #ddd;
+
+@pagination-hover-color:               @link-hover-color;
+@pagination-hover-bg:                  @gray-lighter;
+@pagination-hover-border:              #ddd;
+
+@pagination-active-color:              #fff;
+@pagination-active-bg:                 @brand-primary;
+@pagination-active-border:             @brand-primary;
+
+@pagination-disabled-color:            @gray-light;
+@pagination-disabled-bg:               #fff;
+@pagination-disabled-border:           #ddd;
+
+
+//== Pager
+//
+//##
+
+@pager-bg:                             @pagination-bg;
+@pager-border:                         @pagination-border;
+@pager-border-radius:                  15px;
+
+@pager-hover-bg:                       @pagination-hover-bg;
+
+@pager-active-bg:                      @pagination-active-bg;
+@pager-active-color:                   @pagination-active-color;
+
+@pager-disabled-color:                 @pagination-disabled-color;

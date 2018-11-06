@@ -1,5 +1,6 @@
 {if is_array($data) && !empty($data)}
     {foreach $data as $item}
+        {*{$item|var_dump}*}
         {if $config[$item.name_share]}
             {$icon = {$item.name_share}}
             {switch $item.name_share}{case 'facebook' break}{$icon = 'facebook-f'}{case 'google' break}{$icon = 'google-plus-g'}{case 'linkedin' break}{$icon = 'linkedin-in'}{case 'pinterest' break}{$icon = 'pinterest-p'}{case 'google' break}{$icon = 'google-plus-g'}{/switch}

@@ -3,31 +3,34 @@
 //
 .share-nav {
 	a {
-		display: block;
-		/*&:hover {
-			text-decoration: none;
-		}*/
+		//display: block;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 32px;
+		width: 32px;
+
 		&:focus, &:active {
 			text-decoration: none;
 		}
 	}
 
-	.fa {
-		.square(20px);
-		font-size: 18px;
+	.fab {
+		//.square(20px);
+		//font-size: 18px;
 		color: #fff;
-		text-align: center;
-		padding: 8px;
+		//text-align: center;
+		//padding: 8px;
 
 		&:before {
 			vertical-align: middle;
 		}
-		&-google-plus:before {
+		.fa-google-plus-g:before {
 			font-size: 14px;
 			margin-top: 3px;
 			display: block;
 		}
-		&-viadeo:before {
+		.fa-viadeo:before {
 			position: relative;
 			top: -2px;
 		}
@@ -37,33 +40,18 @@
 	.share-buttons(flat,dark);
 }
 
-#sharebar {
-	/*background: @sharebar-bg;
-	padding: 18px 0;*/
+.sharebar {
+	background-color: @white;
 
 	.label {
 		color: @light-grey;
 		font-size: 21px;
 	}
 
-	/*ul {
-		display: inline-block;
-		li {
-			float: left;
-			& + li {
-				margin-left: 10px;
-			}
-		}
-	}*/
-
-	.followbox {
+	/*.followbox {
 		display: flex;
 		flex-flow: column;
 		align-items: center;
-
-		ul {
-			margin: 0 0 18px;
-		}
 
 		li {
 			a {
@@ -77,21 +65,10 @@
 			}
 		}
 
+		ul {
+			margin: 0 0 18px;
+		}
+
 		.share-buttons();
-
-		/*ul {
-			margin: 0 0 -6px;
-			li {
-				font-size: 20px;
-
-				a {
-					color: #555;
-
-					&:focus,&:active {
-						color: @main-color;
-					}
-				}
-			}
-		}*/
-	}
+	}*/
 }

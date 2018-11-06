@@ -45,10 +45,10 @@ class backend_controller_tableform
 		if($this->ajax) {
 			$this->template->assign('ajax_form',true);
 			$this->template->assign('controller',$this->controller);
+			$this->template->assign('subcontroller',$results['params']['tab'] ? $results['params']['tab'] : false);
 			$this->template->assign('data',$results['data']);
 			$this->template->assign('section',$results['params']['section']);
 			$this->template->assign('idcolumn',$results['params']['idcolumn']);
-			$this->template->assign('controller','pages');
 			$this->template->assign('activation',$results['params']['activation']);
 			$this->template->assign('sortable',$results['params']['sortable']);
 			$this->template->assign('checkbox',$results['params']['checkbox']);
