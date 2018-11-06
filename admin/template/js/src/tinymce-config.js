@@ -88,7 +88,11 @@
             {text: 'Sass (Scss)', value: 'sass'}
         ],
         formats: {
-            strikethrough: {inline: 'del'}
+            strikethrough: {inline: 'del'},
+            alignleft: {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'text-left'},
+            aligncenter: {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'text-center'},
+            alignright: {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'text-right'},
+            alignjustify: {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'text-justify'}
         },
         style_formats: [
             {title: 'Link', items: [
@@ -166,6 +170,9 @@
                     {title: "Bg Info", block: "p", classes: 'bg-info'},
                     {title: "Bg Warning", block: "p", classes: 'bg-warning'},
                     {title: "Bg Danger", block: "p", classes: 'bg-danger'}
+                ]},
+                {title: "List", items: [
+                    {title: "Bullet list", block: "ul", classes: 'bullet-list'}
                 ]}
             ]},
             {title: 'Alert', items: [
@@ -196,7 +203,7 @@
         template_popup_width: 800,
         language : tinyLanguage,
         schema: "html5",
-        extended_valid_elements: "span[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
+        extended_valid_elements: "+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
         //end_container_on_empty_block: false,
         /*fix_list_elements : true*/
         content_css : content_css
