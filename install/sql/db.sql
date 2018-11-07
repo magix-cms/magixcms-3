@@ -249,7 +249,7 @@ CREATE TABLE IF NOT EXISTS `mc_home_page_content` (
   `title_page` varchar(150) NOT NULL,
   `content_page` text,
   `seo_title_page` varchar(180) DEFAULT NULL,
-  `seo_desc_page` varchar(180) DEFAULT NULL,
+  `seo_desc_page` text,
   `published` smallint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -277,7 +277,7 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
   `resume_pages` text,
   `content_pages` text,
   `seo_title_pages` varchar(180) DEFAULT NULL,
-  `seo_desc_pages` varchar(180) DEFAULT NULL,
+  `seo_desc_pages` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published_pages` smallint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`),
@@ -371,7 +371,7 @@ CREATE TABLE IF NOT EXISTS `mc_about_page_content` (
   `resume_pages` text,
   `content_pages` text,
   `seo_title_pages` varchar(180) DEFAULT NULL,
-  `seo_desc_pages` varchar(180) DEFAULT NULL,
+  `seo_desc_pages` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `published_pages` smallint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_content`),
