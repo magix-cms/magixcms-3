@@ -3,6 +3,7 @@ class backend_controller_domain extends backend_db_domain
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $xml;
+    protected $collectionLanguage;
     public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang,$tracking_domain,$config;
 
 	/**
@@ -17,6 +18,7 @@ class backend_controller_domain extends backend_db_domain
         $this->data = new backend_model_data($this);
         $formClean = new form_inputEscape();
         $this->xml = new backend_model_sitemap($this->template);
+        $this->collectionLanguage = new component_collections_language();
 
         // --- GET
         if (http_request::isGet('edit')) {
@@ -86,7 +88,34 @@ class backend_controller_domain extends backend_db_domain
 		return $this->getItems('domain',null,'all',false);
 	}
 
+    private function getBuildXmlItems($config){
+        $langDomain = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$config['url_domain']));
+        $setLang = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'domain'),array('id'=>$langDomain['id_domain']));
+        if($setLang != null){
+            $lang = $setLang;
+        }else{
+            $lang = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
+        }
 
+        $basePath = component_core_system::basePath();
+
+        $newData = array();
+        $newBaseXml = array();
+        $newImgXml = array();
+        $parentXML = $this->xml->url(array($config['url_domain'], 'domain' => $config['url_domain'], 'url' => '/'. 'sitemap-' . $config['url_domain'] . '.xml'));
+
+        if($lang != null) {
+            foreach ($lang as $key => $value) {
+                $newBaseXml[$key] = $this->xml->url(array('domain' => $config['url_domain'], 'url' => '/'.$value['iso_lang'] . '-sitemap-' . $config['url_domain'] . '.xml'));
+                $newImgXml[$key] = $this->xml->url(array('domain' => $config['url_domain'], 'url' => '/'.$value['iso_lang'] . '-sitemap-image-' . $config['url_domain'] . '.xml'));
+            }
+            $newData = array_merge($newBaseXml,$newImgXml);
+            array_unshift($newData,$parentXML);
+        }
+        if(file_exists($basePath . 'sitemap-' . $config['url_domain'] . '.xml')) {
+            $this->template->assign('xmlItems', $newData);
+        }
+    }
     /**
      * Insertion de données
      * @param $data
@@ -268,9 +297,12 @@ class backend_controller_domain extends backend_db_domain
                         $collectionLanguage = new component_collections_language();
                         $language = $collectionLanguage->fetchData(array('context'=>'all','type'=>'active'));
                         $this->template->assign('language',$language);
-                        $this->getItems('domain',$this->edit);
+                        $domain = $this->getItems('domain',$this->edit,null,false);
+                        $this->template->assign('domain',$domain);
                         // ---- languages
                         $this->getItems('langs',array(':id'=>$this->edit),'all');
+
+                        $this->getBuildXmlItems($domain);
 
                         $this->template->display('domain/edit.tpl');
                     }

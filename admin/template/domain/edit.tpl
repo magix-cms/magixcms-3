@@ -30,6 +30,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="sitemap">
                     {include file="domain/form/sitemap.tpl"}
+                    <div id="sitemap-url">{include file="domain/loop/sitemap.tpl" data=$xmlItems}</div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="langs">
                     {include file="section/form/list-form.tpl" controller="domain" sub="langs" dir_controller="domain" data=$langs id=$domain.id_domain class_form="col-ph-12 col-lg-5" class_table="col-ph-12 col-lg-7"}

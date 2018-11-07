@@ -44,6 +44,7 @@ var domain = (function ($, undefined) {
                 if(d.status == 'success') {
                     progressBar.updateState('success');
                     progressBar.update({state: d.message+' <span class="fa fa-check"></span>',loader: false});
+                    $("#sitemap-url").html(d.result);
                 }
                 else {
                     switch (d.error_code) {

@@ -60,21 +60,22 @@ class backend_model_sitemap{
      * Call a callback method for create sitemap with plugins
      * Example :
      *
-    public function setSitemap($config){
-    $dateFormat = new date_dateformat();
-    $url = '/' . $config['iso_lang']. '/'.$config['name'].'/';
-    $this->xml->writeNode(
-        array(
-            'type'      =>  'child',
-            'loc'       =>  $this->sitemap->url(array('domain' => $config['domain'], 'url' => $url)),
-            'image'     =>  false,
-            'lastmod'   =>  $dateFormat->dateDefine(),
-            'changefreq'=>  'always',
-            'priority'  =>  '0.7'
-        )
-    );
-    }
+     * public function setSitemap($config){
+     * $dateFormat = new date_dateformat();
+     * $url = '/' . $config['iso_lang']. '/'.$config['name'].'/';
+     * $this->xml->writeNode(
+     * array(
+     * 'type'      =>  'child',
+     * 'loc'       =>  $this->sitemap->url(array('domain' => $config['domain'], 'url' => $url)),
+     * 'image'     =>  false,
+     * 'lastmod'   =>  $dateFormat->dateDefine(),
+     * 'changefreq'=>  'always',
+     * 'priority'  =>  '0.7'
+     * )
+     * );
+     * }
      * @param $config
+     * @throws Exception
      */
     private function setPluginsItems($config){
         $data =  $this->DBPlugins->fetchData(array('context'=>'all','type'=>'list'));
@@ -119,6 +120,8 @@ class backend_model_sitemap{
             $lang = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
         }
         $newData = array();
+        $newBaseXml = array();
+        $newImgXml = array();
         // Basepath
         $basePath = component_core_system::basePath();
 
@@ -164,6 +167,19 @@ class backend_model_sitemap{
                 );
             }
             $this->xml->endElement();
+            /* ------ Retourne les URLS des sitemaps dans le résultat ######*/
+            $parentXML = $this->url(array($config['domain'], 'domain' => $config['domain'], 'url' => '/'. 'sitemap-' . $config['domain'] . '.xml'));
+
+            if($lang != null) {
+                foreach ($lang as $key => $value) {
+                    $newBaseXml[$key] = $this->url(array('domain' => $config['domain'], 'url' => '/'.$value['iso_lang'] . '-sitemap-' . $config['domain'] . '.xml'));
+                    $newImgXml[$key] = $this->url(array('domain' => $config['domain'], 'url' => '/'.$value['iso_lang'] . '-sitemap-image-' . $config['domain'] . '.xml'));
+                }
+                $newData = array_merge($newBaseXml,$newImgXml);
+                array_unshift($newData,$parentXML);
+            }
+
+            // ---- ####### --
 
             $i = 0;
             // ---- Sitemap Image
@@ -451,9 +467,11 @@ class backend_model_sitemap{
 
                 $this->xml->endElement();
             }
+            $this->template->assign('xmlItems', $newData);
+            $display = $this->template->fetch('domain/loop/sitemap.tpl');
 
             usleep(200000);
-            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_sitemap_success'), 'progress' => 100, 'status' => 'success'));
+            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_sitemap_success'), 'progress' => 100, 'status' => 'success','result'=>$display));
 
         }else{
             usleep(200000);
