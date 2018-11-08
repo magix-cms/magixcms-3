@@ -151,6 +151,7 @@ class component_routing_dispatcher{
 										$pluginsController->translate($this->controller_name);
 										break;
 								}
+								return;
 							}
 						}
 
