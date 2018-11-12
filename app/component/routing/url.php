@@ -34,7 +34,7 @@
  */
 class component_routing_url{
 
-    protected $dateFormat,$setBuildUrl;
+    protected $dateFormat,$setBuildUrl,$amp;
 
     public function __construct(){
         $this->dateFormat = new date_dateformat();
@@ -45,6 +45,7 @@ class component_routing_url{
     /**
      * @param $data
      * @return string
+     * @throws Exception
      */
 	public function getBuildUrl($data){
         if(is_array($data)) {

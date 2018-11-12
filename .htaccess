@@ -268,7 +268,7 @@ RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWR
 RewriteRule (.*)/page/(\d*)/{0,1}$ /$1?page=$2 [QSA,L]
 RewriteCond %{QUERY_STRING} !(tag)+
 RewriteRule (.*)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?tag=$2 [QSA,L]
-RewriteCond %{QUERY_STRING} ([&\?]id=)+
+RewriteCond %{QUERY_STRING} ^(id=)|(&id=)+
 RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id_parent=$2&url_parent=$3 [QSA,L]
 RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id=$2&url=$3 [QSA,L]
 RewriteRule (.*)/(\d{4}/\d{2}/\d{2})/{0,1}$ /$1?date=$2 [QSA,L]
