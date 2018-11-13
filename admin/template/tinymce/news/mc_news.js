@@ -40,7 +40,7 @@
          *
          */
         function insertLink() {
-            $('#link-data').validate({
+            $('#news-link').validate({
                 ignore: [],
                 onsubmit: true,
                 event: 'submit',
