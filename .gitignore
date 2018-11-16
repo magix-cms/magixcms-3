@@ -24,4 +24,5 @@ plugins/account/
 plugins/hipay/
 plugins/mollie/
 plugins/cartpay/
+plugins/recaptcha/
 /skin/wsw/*

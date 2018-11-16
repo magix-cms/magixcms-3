@@ -159,6 +159,7 @@ class component_routing_dispatcher{
 							$controller_class = $this->router . '_' . $this->controller_name . '_' . $this->plugins;
 						}
 						else {
+                            $this->preloadComponents($this->template->lang);
 							$this->getError(404);
 						}
 					}
