@@ -143,8 +143,7 @@
             ]},
             {title: 'Helper classes', items: [
                 {title: "Blocks", items: [
-                    {title: "Div center", block: "div", classes: 'center-block'},
-                    {title: "Div clearfix", block: "div", classes: 'clearfix'}
+                    {title: "Div center", block: "div", classes: 'center-block'}
                 ]},
                 {title: "Header", items: [
                     {title: "Title 1", selector: "h1,h2,h3,h4,h5,h6,p", classes: 'h1'},
@@ -155,7 +154,8 @@
                     {title: "Title 6", selector: "h6,h1,h2,h3,h4,h5,p", classes: 'h6'}
                 ]},
                 {title: "Alignment", items: [
-                    {title: "Text Center", selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table", classes: 'text-center'}
+                    {title: "Text Center", selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table", classes: 'text-center'},
+                    {title: "Clearfix", selector: "p,h1,h2,h3,h4,h5,h6,div,ul,ol,table", classes: 'clearfix'}
                 ]},
                 {title: "Paragraph", items: [
                     {title: "Text Center", block: "p", classes: 'text-center'},
@@ -204,6 +204,7 @@
         language : tinyLanguage,
         schema: "html5",
         extended_valid_elements: "+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
+        //verify_html: false,
         //end_container_on_empty_block: false,
         /*fix_list_elements : true*/
         content_css : content_css
