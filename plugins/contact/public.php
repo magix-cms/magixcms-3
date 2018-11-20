@@ -29,7 +29,7 @@ class plugins_contact_public extends plugins_contact_db
 	/**
 	 * @var string
 	 */
-    public $type;
+    public $type,$amp;
 
     /**
      * frontend_controller_home constructor.
@@ -47,6 +47,7 @@ class plugins_contact_public extends plugins_contact_db
         $this->modelDomain = new frontend_model_domain($this->template);
 		$this->config = $this->getItems('config',null,'one',false);
 		$this->settings = new frontend_model_setting();
+        $this->amp = http_request::isGet('amp') ? true : false;
 
 		if (http_request::isPost('msg')) {
 			$this->msg = $formClean->arrayClean($_POST['msg']);
@@ -256,7 +257,7 @@ class plugins_contact_public extends plugins_contact_db
      *
      */
     public function run(){
-        if(class_exists('plugins_recaptcha_public')){
+        if(class_exists('plugins_recaptcha_public') && $this->amp == false){
             $recaptcha = new plugins_recaptcha_public();
             $recaptchaData = $recaptcha->setItemData();
             if($recaptchaData['published'] == 1) {
@@ -265,7 +266,7 @@ class plugins_contact_public extends plugins_contact_db
         }
         if(isset($this->msg)) {
 
-            if(class_exists('plugins_recaptcha_public')){
+            if(class_exists('plugins_recaptcha_public') && $this->amp == false){
                 if($recaptchaData['published'] == 1) {
                     if ($recaptcha->getRecaptcha() == true) {
                         $this->send_email();

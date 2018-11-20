@@ -220,6 +220,44 @@ const globalForm = (function ($, undefined) {
                     return false;
                 }
             });
+
+            var onloadCallback = function() {
+                console.log("grecaptcha is ready!");
+                let recaptcha = $(this).find(".hiddenRecaptcha");
+                //console.log($(recaptcha[0]));
+                if ( recaptcha.length && typeof grecaptcha !== "undefined") {
+                    $(recaptcha[0]).rules('add',{
+                        required: function() {
+                            if(grecaptcha.getResponse() == '') {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    });
+                }
+            };
+        });
+    }
+
+    /**
+     * Initialise the rules of validation for the Google Recaptcha
+     */
+    function initRecaptcha() {
+        // --- Global validation rules
+        $('.validate_form').each(function(){
+            let recaptcha = $(this).find(".hiddenRecaptcha");
+            if ( recaptcha.length && typeof grecaptcha !== "undefined") {
+                $(recaptcha[0]).rules('add',{
+                    required: function() {
+                        if(grecaptcha.getResponse() == '') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+            }
         });
     }
 
@@ -231,11 +269,15 @@ const globalForm = (function ($, undefined) {
             $.gForms = globalForm;
             // --- Launch forms validators initialisation
             initValidation();
+        },
+        onloadRecaptcha: function() {
+            //console.log("grecaptcha is ready!");
+            initRecaptcha();
         }
     };
 })(jQuery);
 
-$(document).ready(function(){
+// $(document).ready(function(){
     // *** Set default values for forms validation
 	/*jQuery.validator.addClassRules("phone", {
 		pattern: '((?=[0-9\+\-\ \(\)]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})'
@@ -302,4 +344,7 @@ $(document).ready(function(){
 
 	niceForms.init();
 	globalForm.run();
-});
+	var onloadCallback = function () {
+	    globalForm.onloadRecaptcha();
+    };
+// });
