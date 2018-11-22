@@ -164,6 +164,8 @@ class frontend_model_about extends frontend_db_about {
 		)
 	);
 
+	public $amp = false;
+
 	/**
 	 * frontend_model_about constructor.
 	 * @param stdClass $t
@@ -176,6 +178,7 @@ class frontend_model_about extends frontend_db_about {
 		$this->data = new frontend_model_data($this,$this->template);
 		$this->language = new frontend_controller_language($this->template);
 		$this->languages = $this->language->setCollection();
+		$this->amp = http_request::isGet('amp') ? true : false;
 
 		$detect = new Mobile_Detect;
 		$this->touch = false;
@@ -378,7 +381,7 @@ class frontend_model_about extends frontend_db_about {
 						if($about[$social_name] !== null) {
 							switch ($social_name) {
 								case 'facebook':
-									$link = (($this->touch) ? 'fb://facewebmodal/f?href=' : '') . 'https://www.facebook.com/'.$about[$social_name].'/';
+									$link = (($this->touch && !$this->amp) ? 'fb://facewebmodal/f?href=' : '') . 'https://www.facebook.com/'.$about[$social_name].'/';
 									//$link = 'https://www.facebook.com/'.$about[$social_name].'/';
 									break;
 								case 'twitter':
