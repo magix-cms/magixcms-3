@@ -34,7 +34,7 @@
         skin/{$theme}/js/vendor/respond.min.js
     {/strip}{/capture}
     <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url}{else}{$smarty.capture.scriptHtml5}{/if}" type="text/javascript"></script><![endif]-->
-    {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-obeserver.min.js{/capture}
+    {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js{/capture}
     <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url}{else}{$smarty.capture.picturefill}{/if}" type="text/javascript" async></script>
     {block name="styleSheet"}{/block}
     {if $setting['analytics']['value']}<script type="text/javascript">
