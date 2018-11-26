@@ -44,9 +44,13 @@ class frontend_model_about extends frontend_db_about {
 			'schema' => 'Organization',
 			'label' => 'Organisation'
 		),
-		'corp' 		=> array(
+		'locb' 		=> array(
 			'schema' => 'LocalBusiness',
 			'label' => 'Entreprise locale'
+		),
+		'corp' 		=> array(
+			'schema' => 'Corporation',
+			'label' => 'Société'
 		),
 		'store' 	=> array(
 			'schema' => 'Store',

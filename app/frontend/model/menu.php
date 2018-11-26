@@ -77,6 +77,18 @@ class frontend_model_menu extends frontend_db_menu {
 	}
 
 	/**
+	 * @param $params
+	 * @return bool
+	 */
+	public function getPluginMenuConf($params)
+	{
+		$plugin = $this->getItems('plugin',array('id' => $params['id']),'one',false);
+		$plugin_class = 'plugins_'.$plugin['name'].'_public';
+		$plugin = new $plugin_class($this->template);
+		return (method_exists($plugin,'is_amp')) ? $plugin->is_amp() : false;
+	}
+
+	/**
 	 * @param $iso
 	 * @return array
 	 */
@@ -87,7 +99,7 @@ class frontend_model_menu extends frontend_db_menu {
 		foreach ($links as &$link) {
 			switch ($link['type_link']) {
 				case 'pages':
-					$link['url_link']  =
+					$link['url_link'] =
 						$this->routingUrl->getBuildUrl(array(
 								'type' => 'pages',
 								'iso'  => $link['iso_lang'],
@@ -97,7 +109,7 @@ class frontend_model_menu extends frontend_db_menu {
 						);
 					break;
 				case 'about_page':
-					$link['url_link']  =
+					$link['url_link'] =
 						$this->routingUrl->getBuildUrl(array(
 								'type' => 'about',
 								'iso'  => $link['iso_lang'],
@@ -107,7 +119,7 @@ class frontend_model_menu extends frontend_db_menu {
 						);
 					break;
 				case 'category':
-					$link['url_link']  =
+					$link['url_link'] =
 						$this->routingUrl->getBuildUrl(array(
 								'type' => 'category',
 								'iso'  => $link['iso_lang'],
@@ -131,6 +143,7 @@ class frontend_model_menu extends frontend_db_menu {
 
 				switch ($link['type_link']) {
 					case 'home':
+						$link['amp_avaiable'] = true;
 					case 'pages':
 						if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
 						$model = $this->pages;
@@ -146,6 +159,7 @@ class frontend_model_menu extends frontend_db_menu {
 						if($link['type_link'] === 'pages') $data = $data[0]['subdata'];
 						break;
 					case 'about':
+						$link['amp_avaiable'] = true;
 					case 'about_page':
 						if(!$this->about) $this->about = new frontend_model_about($this->template);
 						$model = $this->about;
@@ -161,6 +175,7 @@ class frontend_model_menu extends frontend_db_menu {
 						if($link['type_link'] === 'about_page') $data = $data[0]['subdata'];
 						break;
 					case 'catalog':
+						$link['amp_avaiable'] = true;
 					case 'category':
 						if(!$this->catalog) $this->catalog = new frontend_model_catalog($this->template);
 						$model = $this->catalog;
@@ -177,6 +192,7 @@ class frontend_model_menu extends frontend_db_menu {
 						if($link['type_link'] === 'category') $data = $data[0]['subdata'];
 						break;
 					case 'plugin':
+						$link['amp_avaiable'] = $this->getPluginMenuConf(array('id' => $link['id_page']));
 						$link['subdata'] = $this->getPluginPages(
 							array(
 								'type' => 'plugin',

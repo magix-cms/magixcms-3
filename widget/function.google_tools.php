@@ -102,11 +102,14 @@ EOT;
 			if($analytics != null){
 				print '<script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>';
 				$script = '
-				<amp-analytics type="googleanalytics">
+				<amp-analytics type="gtag" data-credentials="include">
 				<script type="application/json">
 				{
-				  "vars": {
-					"account": '.$analytics.'
+				  "vars" : {
+					"gtag_id": "'.$analytics.'",
+					"config" : {
+					  "'.$analytics.'": { "groups": "default" }
+					}
 				  },
 				  "triggers": {
 					"trackPageview": {
@@ -117,6 +120,7 @@ EOT;
 				}
 				</script>
 				</amp-analytics>';
+
 				$template->assign('analytics',$script);
 			}else{
 				$tools = '';

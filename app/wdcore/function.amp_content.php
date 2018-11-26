@@ -131,14 +131,16 @@ function smarty_function_amp_content($params)
 	}
 
 	// --- Search for img to convert them into apm-img components
-	$pattern = '/<img(.(?!<))*\/>/i';
+	$pattern = '/<img(.(?!<))*(\/)?>/i';
 	if(preg_match_all($pattern,$content,$matches)) {
 		$rpl = array();
 		$imgs = $DOM->getElementsByTagName('img');
 
 		for ($k = 0;$k < $imgs->length; $k ++) {
 			$src = $imgs->item($k)->getAttribute('src');
+			if(!$src) $src = $imgs->item($k)->getAttribute('data-src');
 			list($width, $height, $type, $attr) = getimagesize('.'.$src);
+
 			$title = $imgs->item($k)->getAttribute('title');
 			$alt = $imgs->item($k)->getAttribute('alt');
 			$rpl[$k] = '<amp-img src="'. $src .'" title="'. $title .'" alt="'. $alt .'" layout="responsive" height="'. $height .'" width="'. $width .'"></amp-img>';

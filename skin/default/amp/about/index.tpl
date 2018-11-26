@@ -21,7 +21,7 @@
             {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
             <div class="content">
                 <div itemprop="text">
-                    {$pages.content}
+                    {amp_content content=$pages.content}
                 </div>
                 {*<div class="col-12 col-sm-3">
                     <nav class="child-nav">
