@@ -141,6 +141,11 @@ function smarty_function_amp_content($params,$template)
 			if(!$src) $src = $imgs->item($k)->getAttribute('data-src');
 			list($width, $height, $type, $attr) = getimagesize('.'.$src);
 
+            if($width == '' && $height == ''){
+                $width = $imgs->item($k)->getAttribute('width');
+                $height = $imgs->item($k)->getAttribute('height');
+            }
+
 			$title = $imgs->item($k)->getAttribute('title');
 			$alt = $imgs->item($k)->getAttribute('alt');
 			$rpl[$k] = '<amp-img src="'. $src .'" title="'. $title .'" alt="'. $alt .'" layout="responsive" height="'. $height .'" width="'. $width .'"></amp-img>';
