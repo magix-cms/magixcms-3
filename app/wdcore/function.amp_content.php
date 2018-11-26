@@ -23,7 +23,7 @@
  *
  * @return string
  */
-function smarty_function_amp_content($params)
+function smarty_function_amp_content($params,$template)
 {
 	$content = $params['content'];
 //	var_dump($content);
@@ -153,5 +153,35 @@ function smarty_function_amp_content($params)
 		}
 	}
 
-	echo $content;
+    // --- Search for youtube anchor to convert them into apm-youtube
+    $pattern = '/<iframe(.(?!<\/iframe>))*(?:youtube\.com|youtu\.be)(?:\/watch\?v=|\/)(.+)(.(?!<iframe))*<\/iframe>/i';
+
+    if(preg_match_all($pattern,$content,$matches)) {
+        $rpl = array();
+        $youtube = $DOM->getElementsByTagName('iframe');
+
+        for ($k = 0;$k < $youtube->length; $k ++) {
+            $src = $youtube->item($k)->getAttribute('src');
+
+            $width = $youtube->item($k)->getAttribute('width');
+            $height = $youtube->item($k)->getAttribute('height');
+
+            $embedVideo = explode("/embed/", $src)[1];
+            $videoId = explode("?",$embedVideo);
+
+            $rpl[$k] = '<amp-youtube data-videoid="'. $videoId[0] .'" layout="responsive" height="'. $height .'" width="'. $width .'"></amp-youtube>';
+        }
+
+        if(count($matches[0]) === count($rpl)) {
+            $content = preg_replace_callback($pattern, function($match) use (&$rpl) {
+                return array_shift($rpl);
+            }, $content);
+        }
+    }
+
+    if(isset($params['assign']) && $params['assign']){
+        $template->assign($params['assign'],$content);
+    }else{
+        echo $content;
+    }
 }

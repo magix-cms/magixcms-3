@@ -2,7 +2,7 @@
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/pages.min.css"}{/block}
 {block name='body:id'}pages{/block}
 {block name="title"}{if $pages.seoTitle}{$pages.seoTitle}{else}{$pages.title}{/if}{/block}
-{block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|truncate:100:'...'}{/if}{/block}
+{block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|strip_tags|truncate:100:'...'}{/if}{/block}
 {block name="amp-script"}
     {if $pages.imgSrc.large}
         <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
