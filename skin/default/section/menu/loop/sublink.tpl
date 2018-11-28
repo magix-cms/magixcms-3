@@ -1,6 +1,7 @@
 {foreach $childs as $child}
 {if $child.name}{$child.title = $child.name}{/if}
-{if $child.url === $smarty.server.REQUEST_URI}{$child.active = true}{/if}
+{if isset($child.controller)}{$chc = $child.controller}{/if}
+{if $chc === $active_link.controller && (in_array($child.id,$active_link.ids) || !isset($child.id) && empty($active_link.ids))}{$child.active = true}{/if}
 {if $mobile}
 <li class="panel{if $child.active} active{/if}">
     {if $mega && $child.subdata}
@@ -23,7 +24,7 @@
     {/if}
 </li>
 {else}
-<li{if $child.url === $smarty.server.REQUEST_URI} class="active"{/if} itemprop="name">
+<li{if $child.active} class="active"{/if} itemprop="name">
     <a itemprop="url_link" href="{$child.url}" title="{$child.title}"{if $child.subdata} class="has-dropdown"{/if}><span>{$child.title}</span></a>
     {if $mega && $child.subdata && $dp < $deepness}
         {$sn = $sn + 1}

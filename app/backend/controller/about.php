@@ -37,9 +37,13 @@ class backend_controller_about extends backend_db_about{
             'schema' => 'Organization',
             'label' => 'Organisation'
         ),
-        'corp' 		=> array(
+        'locb' 		=> array(
             'schema' => 'LocalBusiness',
             'label' => 'Entreprise locale'
+        ),
+        'corp' 		=> array(
+            'schema' => 'Corporation',
+            'label' => 'Société'
         ),
         'store' 	=> array(
             'schema' => 'Store',
@@ -267,7 +271,6 @@ class backend_controller_about extends backend_db_about{
 		$assign = $this->tableconfig[(($ajax || $this->edit) ? 'parent' : 'all')];
 
 		if($ajax) {
-			$params['tab'] = 'pages';
 			$params['section'] = 'pages';
 			$params['idcolumn'] = 'id_pages';
 			$params['activation'] = true;

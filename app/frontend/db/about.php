@@ -31,6 +31,12 @@ class frontend_db_about
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
 							$conditions";
 					break;
+				case 'parents':
+					$sql = "SELECT t.id_pages AS parent, GROUP_CONCAT(f.id_pages) AS children
+								FROM mc_about_page t
+								JOIN mc_about_page f ON t.id_pages=f.id_parent
+								GROUP BY t.id_pages";
+					break;
 				case 'child':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT p.id_pages,p.id_parent,p.img_pages,p.menu_pages, p.date_register, c.*,lang.iso_lang

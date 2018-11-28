@@ -495,4 +495,14 @@ class frontend_model_pages extends frontend_db_pages{
 
         return $data;
     }
+
+	/**
+	 * @param $id
+	 * @return array
+	 * @throws Exception
+	 */
+	public function getParents($id)
+	{
+		return $this->data->getParents($id);
+    }
 }

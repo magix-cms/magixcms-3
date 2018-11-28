@@ -45,6 +45,12 @@ class frontend_db_pages
 								LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
 								$conditions";
             	    	break;
+					case 'parents':
+						$sql = "SELECT t.id_pages AS parent, GROUP_CONCAT(f.id_pages) AS children
+								FROM mc_cms_page t
+								JOIN mc_cms_page f ON t.id_pages=f.id_parent
+								GROUP BY t.id_pages";
+						break;
             	    case 'ws':
 						$sql = 'SELECT
 								h.*,c.*,lang.iso_lang,lang.default_lang

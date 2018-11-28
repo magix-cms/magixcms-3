@@ -21,12 +21,12 @@
         relative_urls : false,
         entity_encoding : "raw",
         plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
+            'advlist autolink lists link image lazyloadimage charmap print preview anchor',
             'searchreplace visualblocks code fullscreen colorpicker textpattern wordcount directionality',
             'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager mc_pages mc_cat mc_product mc_news'
         ],
         toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | fontsizeselect | forecolor backcolor',
-        toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media | link unlink anchor',
+        toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media lazyloadimage | link unlink anchor',
         toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample | code preview | mc_pages mc_cat mc_product mc_news',
         imagetools_toolbar: "imageoptions",
         menubar: false,
@@ -51,7 +51,7 @@
             });
         },
         min_height: 250,
-        image_dimensions: false,
+        image_dimensions: true,
         image_class_list: [
             {title: 'None', value: ''},
             {title: 'Image Responsive', value: 'img-responsive'},

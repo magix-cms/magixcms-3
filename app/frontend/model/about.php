@@ -833,4 +833,14 @@ class frontend_model_about extends frontend_db_about {
 
 		return $data;
 	}
+
+	/**
+	 * @param $id
+	 * @return array
+	 * @throws Exception
+	 */
+	public function getParents($id)
+	{
+		return $this->data->getParents($id);
+	}
 }

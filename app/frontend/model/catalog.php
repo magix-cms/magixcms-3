@@ -655,4 +655,14 @@ class frontend_model_catalog extends frontend_db_catalog {
 
         return $data;
     }
+
+	/**
+	 * @param $id
+	 * @return array
+	 * @throws Exception
+	 */
+	public function getParents($id)
+	{
+		return $this->data->getParents($id);
+	}
 }

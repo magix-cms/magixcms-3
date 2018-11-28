@@ -19,7 +19,8 @@ class plugins_contact_public extends plugins_contact_db
 		$origin,
 		$modelDomain,
 		$config,
-		$settings;
+		$settings,
+		$amp_avaiable = true;
 
 	/**
 	 * @var array
@@ -301,10 +302,19 @@ class plugins_contact_public extends plugins_contact_db
             $this->template->configLoad();
 
 			return array(array(
+				'controller' => 'gmap',
 				'name' => $this->template->getConfigVars('gmap'),
 				'title' => $this->template->getConfigVars('gmap'),
 				'url' => '/'.$iso.'/gmap/'
 			));
 		}
+    }
+
+	/**
+	 * @return object
+	 */
+	public function is_amp()
+	{
+		return $this->amp_avaiable;
     }
 }

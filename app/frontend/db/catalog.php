@@ -99,6 +99,12 @@ class frontend_db_catalog
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
 					break;
+				case 'parents':
+					$sql = "SELECT t.id_cat AS parent, GROUP_CONCAT(f.id_cat) AS children
+								FROM mc_catalog_cat t
+								JOIN mc_catalog_cat f ON t.id_cat=f.id_parent
+								GROUP BY t.id_cat";
+					break;
 				case 'product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT catalog.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img

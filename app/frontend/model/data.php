@@ -177,6 +177,32 @@ class frontend_model_data{
 	}
 
 	/**
+	 * @param $id
+	 * @throws Exception
+	 */
+	public function getParents($id)
+	{
+		$data = $this->db->fetchData(array('context' => 'all', 'type' => 'parents'));
+		$p = array((int)$id);
+		$parent = $id;
+
+		do {
+			$s = $parent;
+			foreach ($data as $k => $row) {
+				if(in_array($parent,explode(',',$row['children']))) {
+					$parent = $row['parent'];
+					$p[] = $row['parent'];
+					unset($data[$k]);
+				}
+			}
+			if($s === $parent) $parent = null;
+
+		} while ($parent !== null);
+
+		return $p;
+	}
+
+	/**
 	 * Retrieve data
 	 * @param string $context
 	 * @param string $type
