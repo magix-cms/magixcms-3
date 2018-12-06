@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Mail" pattern="file:skin/*/mail/css/*.scss" />
+</component>

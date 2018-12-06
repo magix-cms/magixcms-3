@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Script Vendors" pattern="file:skin/*/js/vendor/src/*.js" />
+</component>

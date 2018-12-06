@@ -726,10 +726,10 @@ class backend_controller_product extends backend_db_product
 
 							foreach ($this->parent as $id => $val) {
 								$ids[] = $id;
-								$link = parent::fetchData( array('context' => 'one', 'type' => 'catRel'), array(':id' => $this->edit, ':id_cat' => $id) );
+								$link = parent::fetchData( array('context' => 'one', 'type' => 'catRel'), array('id' => $this->edit, 'id_cat' => $id) );
 
 								if($link == null) {
-									$data = array(':id' => $this->edit, ':id_cat' => $id, ':default_c' => 0);
+									$data = array('id' => $this->edit, 'id_cat' => $id, 'default_c' => 0);
 
 									$this->add(array(
 										'type' => 'newCatRel',
@@ -740,20 +740,20 @@ class backend_controller_product extends backend_db_product
 								if($this->default_cat == $id) {
 									$this->upd(array(
 										'type' => 'catRel',
-										'data' => array(':id' => $this->edit, ':id_cat' => $id)
+										'data' => array('id' => $this->edit, 'id_cat' => $id)
 									));
 								}
 							}
 
 							$this->del(array(
 								'type' => 'oldCatRel',
-								'data' => array(':id' => $this->edit, ':id_cat' => implode(',',$ids))
+								'data' => array('id' => $this->edit, 'id_cat' => implode(',',$ids))
 							));
 						}
 						else {
 							$this->del(array(
 								'type' => 'catRel',
-								'data' => array(':id' => $this->edit)
+								'data' => array('id' => $this->edit)
 							));
 						}
 						$this->message->json_post_response(true,'update');

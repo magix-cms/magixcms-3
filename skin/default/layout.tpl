@@ -23,11 +23,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     {*{if $browser !== 'IE'}<link rel="preload" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" as="style">{/if}*}
     {*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">*}
-    {if $browser !== 'IE'}<link rel="preload" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" as="style">{/if}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-    {capture name="stylesheet"}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/capture}
-    {if $browser !== 'IE'}<link rel="preload" href="{if $setting.concat.value}{$smarty.capture.stylesheet|concat_url}{else}{$smarty.capture.stylesheet}{/if}" as="style">{/if}
-    <link rel="stylesheet" href="{if $setting.concat.value}{$smarty.capture.stylesheet|concat_url}{else}{$smarty.capture.stylesheet}{/if}">
+    {*{if $browser !== 'IE'}<link rel="preload" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" as="style">{/if}*}
+    {*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">*}
+    {capture name="stylesheet"}{if $setting.concat.value}{"/min/?f=skin/{$theme}/css/{$viewport}.min.css"|concat_url}{else}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/if}{/capture}
+    {if $browser !== 'IE'}<link rel="preload" href="{$smarty.capture.stylesheet}" as="style">{/if}
+    <link rel="stylesheet" href="{$smarty.capture.stylesheet}">
     {capture name="scriptHtml5"}{strip}
         /min/?f=
         skin/{$theme}/js/vendor/html5shiv.min.js,
@@ -54,38 +54,39 @@
     </script>{/if}
 </head>
 <body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
-    {include file="section/brick/cookie-consent.tpl"}
-    {include file="section/header.tpl"}
-    {block name="breadcrumb"}
-        {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
-            {include file="section/brick/breadcrumb.tpl" icon='home' amp=false}
-        {/if}
-    {/block}
-    {block name="main:before"}{/block}
-    {block name="main"}
+{include file="section/brick/cookie-consent.tpl"}
+{include file="section/header.tpl"}
+{block name="breadcrumb"}
+    {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
+        {include file="section/brick/breadcrumb.tpl" icon='home' amp=false}
+    {/if}
+{/block}
+{block name="main:before"}{/block}
+{block name="main"}
     <main id="content">
         {block name="article:before"}{/block}
         {block name='article'}
-        <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
-            {block name='article:content'}{/block}
-        </article>
+            <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
+                {block name='article:content'}{/block}
+            </article>
         {/block}
         {block name="aside"}{/block}
         {block name="article:after"}{/block}
     </main>
-    {/block}
-    {block name="main:after"}{/block}
-    {include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','contact']}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    {strip}{capture name="vendors"}
-        /min/?f=skin/{$theme}/js/vendor/bootstrap-{$viewport}.min.js,
-        {if $touch}skin/{$theme}/js/vendor/jquery.detect_swipe.min.js,{/if}
-        skin/{$theme}/js/vendor/featherlight.min.js,
-        skin/{$theme}/js/vendor/featherlight.gallery.min.js,
-        skin/{$theme}/js/global-{$viewport}.min.js,
-        skin/{$theme}/js/lazyload.min.js
-    {/capture}
-    <script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url}{else}{$smarty.capture.vendors}{/if}" type="text/javascript" async></script>
-    {block name="foot"}{/block}
+{/block}
+{block name="main:after"}{/block}
+{include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','contact']}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{strip}{capture name="vendors"}
+    /min/?f=skin/{$theme}/js/vendor/bootstrap.min.js,
+    {if $touch}skin/{$theme}/js/vendor/jquery.detect_swipe.min.js,{/if}
+    skin/{$theme}/js/vendor/featherlight.min.js,
+    skin/{$theme}/js/vendor/featherlight.gallery.min.js,
+    {if $viewport !== 'mobile'}skin/{$theme}/js/affixhead.min.js,{/if}
+    skin/{$theme}/js/global.min.js,
+    skin/{$theme}/js/lazyload.min.js
+{/capture}{/strip}
+<script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url}{else}{$smarty.capture.vendors}{/if}" type="text/javascript" defer></script>
+{block name="foot"}{/block}
 </body>
 </html>

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Plugins Script" pattern="file:plugins/*/js/src/*.js" />
+</component>

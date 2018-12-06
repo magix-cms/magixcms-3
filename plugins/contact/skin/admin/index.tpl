@@ -11,7 +11,7 @@
             </p>
         </div>
     {/if}
-    <h1 class="h2">contact</h1>
+    <h1 class="h2">Contact</h1>
 {/block}
 {block name='article:content'}
     {if {employee_access type="view" class_name=$cClass} eq 1}

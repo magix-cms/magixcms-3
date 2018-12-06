@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Libjs" pattern="file:libjs/vendor/src/*.js" />
+</component>

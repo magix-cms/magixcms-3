@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Admin Desktop" pattern="file:admin/template/css/fancybox//*||file:admin/template/css/font-awesome/less//*||file:admin/template/css/bootstrap/less//*||file:admin/template/css/src/less//*" />
+</component>
