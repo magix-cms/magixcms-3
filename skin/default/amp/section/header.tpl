@@ -3,7 +3,7 @@
         <div role="button" on="tap:sidebar1.toggle" tabindex="0" class="hamburger"><i class="material-icons">menu</i></div>
         <div class="site-name">
             <a href="{$url}/{$lang}/amp/" title="{#logo_link_title#|ucfirst}">
-                <amp-img src="/skin/{$theme}/img/logo/{#logo_amp#}" alt="Logo de Magix CMS" height="44" width="200"></amp-img>
+                <amp-img src="{$url}/skin/{$theme}/img/logo/{#logo_amp#}" alt="Logo de Magix CMS" height="50" width="229"></amp-img>
             </a>
         </div>
         {if $dataLang != null && count($dataLang) > 1}

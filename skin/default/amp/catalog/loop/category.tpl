@@ -10,15 +10,15 @@
     {foreach $data as $item}
         <div{if $classCol} class="{$classCol}{/if}" itemprop="hasPart" itemscope itemtype="http://schema.org/Series">
             <div class="figure">
-                {if $item.imgSrc.medium}
-                    <amp-img src="{$item.imgSrc.large}"
+                {if $item.img.medium.src}
+                    <amp-img src="{$item.img.large.src}"
                              alt="{$item.name}"
                              title="{$item.name}"
                              layout="responsive"
                              width="500"
                              height="309" itemprop="image"></amp-img>
                 {else}
-                    <amp-img src="{$item.imgSrc.default}"
+                    <amp-img src="{$item.img.default}"
                              alt="{$item.name}"
                              title="{$item.name}"
                              layout="responsive"
