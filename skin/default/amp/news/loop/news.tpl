@@ -21,13 +21,13 @@
             <div class="figure row">
                 <div class="time-figure col-12 col-xs-6">
                     <div>
-                        {if $item.imgSrc.medium}
+                        {if $item.img.medium.src}
                             <amp-img src="{$item.img.medium.src}"
                                      alt="{$item.title}"
                                      title="{$item.title}"
                                      layout="responsive"
-                                     width="500"
-                                     height="309" itemprop="image"></amp-img>
+                                     width="{$item.img.medium['w']}"
+                                     height="{$item.img.medium['h']}" itemprop="image"></amp-img>
                         {else}
                             <amp-img src="{$item.img.default}"
                                      alt="{$item.title}"

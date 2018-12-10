@@ -1,11 +1,11 @@
 {extends file="amp/catalog/index.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/product.min.css"}{/block}
 {block name="amp-script"}
-    {if count($product.img) > 1}
+    {if count($product.imgs) > 1}
         <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
         <script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"></script>
         {amp_components content=$product.content galery=false}
-    {elseif count($product.img) > 0}
+    {elseif count($product.imgs) > 0}
         <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
         {amp_components content=$product.content image=false}
     {/if}
@@ -43,17 +43,17 @@
                 <meta itemprop="name" content="{$parent.name}">
                 <meta itemprop="url" content="{$parent.url}">
             </div>
-            {if count($product.img) > 1}
+            {if count($product.imgs) > 1}
             <div id="gallery">
                 <amp-carousel id="carousel-with-preview"
                               width="1000"
                               height="618"
                               layout="responsive"
                               type="slides">
-                    {foreach $product.img as $img}
+                    {foreach $product.imgs as $img}
                     <button on="tap:lightbox-gallery,carousel.goToSlide(index={$img@index})">
                         <i class="material-icons">fullscreen</i>
-                        <amp-img src="{$url}{$img.imgSrc.large}"
+                        <amp-img src="{$url}{$img.img.large.src}"
                                  width="1000"
                                  height="618"
                                  layout="responsive"
@@ -66,9 +66,9 @@
                               height="78"
                               layout="fixed-height"
                               type="carousel">
-                    {foreach $product.img as $img}
+                    {foreach $product.imgs as $img}
                     <button on="tap:carousel-with-preview.goToSlide(index={$img@index})">
-                        <amp-img src="{$url}{$img.imgSrc.small}"
+                        <amp-img src="{$url}{$img.img.small.src}"
                                  width="125"
                                  height="78"
                                  layout="fixed"
@@ -79,12 +79,12 @@
                 <amp-lightbox id="lightbox-gallery" layout="nodisplay">
                     <div class="lightbox">
                         <amp-carousel id="carousel" layout="fill" type="slides">
-                            {foreach $product.img as $img}
+                            {foreach $product.imgs as $img}
                             <figure class="amp-carousel-slide">
                                 <amp-img on="tap:lightbox-gallery.close"
                                          role="button"
                                          tabindex="0"
-                                         src="{$url}{$img.imgSrc.large}"
+                                         src="{$url}{$img.img.large.src}"
                                          layout="responsive"
                                          height="618"
                                          width="1000"
@@ -97,20 +97,20 @@
                     </div>
                 </amp-lightbox>
             </div>
-            {elseif count($product.img) > 0}
-            {$img = $product.img[0]}
+            {elseif count($product.imgs) > 0}
+            {$img = $product.imgs[0]}
             <figure>
                 <amp-img on="tap:lightbox1"
                          role="button"
                          tabindex="0"
-                         src="{$img.imgSrc.large}"
+                         src="{$img.img.large.src}"
                          alt="{$product.name}"
                          title="{$product.name}"
                          layout="responsive"
                          width="1000"
                          height="618"
                          itemprop="image"></amp-img>
-                <figcaption class="hidden">{$pages.name}</figcaption>
+                <figcaption class="hidden">{$product.name}</figcaption>
             </figure>
             <amp-image-lightbox id="lightbox1" layout="nodisplay"></amp-image-lightbox>
             {/if}

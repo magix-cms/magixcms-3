@@ -16,17 +16,17 @@
         {block name='article:content'}
             <h1 itemprop="name">{$cat.name}</h1>
             <div class="text" itemprop="text">
-                {if !empty($cat.imgSrc)}
+                {if !empty($cat.img)}
                 <figure>
                     <amp-img on="tap:lightbox1"
                              role="button"
                              tabindex="0"
-                             src="{$cat.imgSrc.large}"
+                             src="{$cat.img.large.src}"
                              alt="{$cat.title}"
                              title="{$cat.title}"
                              layout="responsive"
-                             width="1000"
-                             height="618"></amp-img>
+                             width="{$cat.img.large['w']}"
+                             height="{$cat.img.large['h']}"></amp-img>
                     <figcaption class="hidden">{$cat.title}</figcaption>
                 </figure>
                 <amp-image-lightbox id="lightbox1" layout="nodisplay"></amp-image-lightbox>

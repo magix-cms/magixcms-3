@@ -11,12 +11,12 @@
         <div{if $classCol} class="{$classCol}{/if}" itemprop="hasPart" itemscope itemtype="http://schema.org/Series">
             <div class="figure">
                 {if $item.img.medium.src}
-                    <amp-img src="{$item.img.large.src}"
+                    <amp-img src="{$item.img.medium.src}"
                              alt="{$item.name}"
                              title="{$item.name}"
                              layout="responsive"
-                             width="500"
-                             height="309" itemprop="image"></amp-img>
+                             width="{$item.img.medium['w']}"
+                             height="{$item.img.medium['h']}" itemprop="image"></amp-img>
                 {else}
                     <amp-img src="{$item.img.default}"
                              alt="{$item.name}"
