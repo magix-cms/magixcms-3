@@ -1,5 +1,5 @@
 <div id="block-sitemap" class="col block">
-    <h4><a href="{$url}/{$lang}/" title="">{#site_navigation#|ucfirst}</a></h4>
+    <h4><a href="{$url}/{$lang}/amp/" title="">{#site_navigation#|ucfirst}</a></h4>
     <ul class="link-list list-unstyled">
         {*<li>
             <a href="{$url}/{$lang}/" title="">Accueil</a>

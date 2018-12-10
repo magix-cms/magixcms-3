@@ -7,7 +7,7 @@
         ]
         assign="pages"
         }
-        <h4><a href="{$url}/{$lang}/about/" title="{#about#} {#website_name#}">{#about#|ucfirst}</a></h4>
+        <h4><a href="{$url}/{$lang}/amp/about/" title="{#about#} {#website_name#}">{#about#|ucfirst}</a></h4>
         <ul class="link-list list-unstyled">
             {foreach $pages as $child}
                 <li>

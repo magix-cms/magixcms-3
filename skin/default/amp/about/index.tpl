@@ -16,7 +16,7 @@
                     <span class="col-12 col-xs-3">{#about#|ucfirst}</span><span class="col-12 col-xs-9">{$pages.name}</span>
                 </span>
             </h1>*}
-            <h1 itemprop="name">{$pages.name}</h1>
+            <h1 itemprop="name">{$pages.title}</h1>
             {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
             {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
             <div class="content">
