@@ -209,9 +209,9 @@ class frontend_model_catalog extends frontend_db_catalog {
                             ));
                             foreach ($fetchConfig as $keyConfig => $valueConfig) {
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['src'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img'];
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $value['width_img'];
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $value['height_img'];
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $value['resize_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $valueConfig['width_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $valueConfig['height_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $valueConfig['resize_img'];
                             }
                         }
                         $data['associated'][$key]['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
