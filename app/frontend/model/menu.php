@@ -221,7 +221,7 @@ class frontend_model_menu extends frontend_db_menu {
 
 		switch ($this->controller) {
 			case 'about':
-				if(!$this->pages) $this->about = new frontend_model_about($this->template);
+				if(!$this->about) $this->about = new frontend_model_about($this->template);
 				if($this->id || $this->id_parent) $active['ids'] = $this->about->getParents($this->id_parent ? $this->id_parent : $this->id);
 				break;
 			case 'pages':
