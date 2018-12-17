@@ -18,7 +18,7 @@
                 <p>{#pn_questions#|ucfirst}</p>
                 <p>{#pn_fill_form#|ucfirst}</p>
                 <p class="help-block">{#contact_fiels_resquest#|ucfirst}</p>
-                <form id="contact-form" method="post" action-xhr="{url|replace:'http://':'//'}{$smarty.server.REQUEST_URI}" target="_top" custom-validation-reporting="show-all-on-submit">
+                <form id="contact-form" method="post" action-xhr="{$url|replace:'http://':'//'}{$smarty.server.REQUEST_URI}" target="_top" custom-validation-reporting="show-all-on-submit">
                     <div class="row">
                         <div class="col-12 col-xs-6">
                             <div class="form-group">
