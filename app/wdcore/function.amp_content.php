@@ -37,25 +37,36 @@ function smarty_function_amp_content($params,$template)
             $classes = $links->item($k)->getAttribute('class');
             if(strpos($classes, 'img-zoom') !== false) {
                 $src = $links->item($k)->getAttribute('href');
-                list($width, $height, $type, $attr) = getimagesize('.'.$src);
-                $title = $links->item($k)->getAttribute('title');
-                $imgs = $links->item($k)->getElementsByTagName('img');
-                $alt = $imgs->item(0)->getAttribute('alt');
+                $parseUrl = parse_url($src);
+                if(!isset($parseUrl['scheme'])) {
+                    if(file_exists(component_core_system::basePath().$src)) {
+                        list($width, $height, $type, $attr) = getimagesize('.' . $src);
+                        $title = $links->item($k)->getAttribute('title');
+                        $imgs = $links->item($k)->getElementsByTagName('img');
+                        $alt = $imgs->item(0)->getAttribute('alt');
 
-                $rpl[$i] = '<figure>
-							<amp-img on="tap:img-zoom'.($i + 1).'"
+                        $rpl[$i] = '<figure>
+							<amp-img on="tap:img-zoom' . ($i + 1) . '"
 									role="button"
-									tabindex="'. $i .'" 
-									src="'. $src .'" 
-									title="'. $title .'" 
-									alt="'. $alt .'" 
+									tabindex="' . $i . '" 
+									src="' . $src . '" 
+									title="' . $title . '" 
+									alt="' . $alt . '" 
 									layout="responsive" 
-									height="'. $height .'" 
-									width="'. $width .'"></amp-img>
-									<figcaption class="hidden">'. $title .'</figcaption>
+									height="' . $height . '" 
+									width="' . $width . '"></amp-img>
+									<figcaption class="hidden">' . $title . '</figcaption>
 						</figure>
-    					<amp-image-lightbox id="img-zoom'.($i + 1).'" layout="nodisplay"></amp-image-lightbox>';
-                $i++;
+    					<amp-image-lightbox id="img-zoom' . ($i + 1) . '" layout="nodisplay"></amp-image-lightbox>';
+
+                        $i++;
+
+                    }else{
+                        $rpl[$i] = '';
+                    }
+                }else{
+                    $rpl[$i] = '';
+                }
             }
         }
 
@@ -85,35 +96,48 @@ function smarty_function_amp_content($params,$template)
             if(strpos($classes, 'img-gallery') !== false)
             {
                 $src = $links->item($k)->getAttribute('href');
-                list($width, $height, $type, $attr) = getimagesize('.' . $src);
-                $title = $links->item($k)->getAttribute('title');
-                $imgs = $links->item($k)->getElementsByTagName('img');
-                $alt = $imgs->item(0)->getAttribute('alt');
 
-                $rpl[$i] = '<figure>
-								<amp-img on="tap:lightbox-gallery,carousel.goToSlide(index=' . $i . ')"
-									role="button"
-									tabindex="'. $i .'" 
-									src="' . $src . '" 
-									title="' . $title . '" 
-									alt="' . $alt . '" 
-									layout="responsive" 
-									height="' . $height . '" 
-									width="' . $width . '"></amp-img>
-								<figcaption class="hidden">'. $title .'</figcaption>
-							</figure>';
+                $parseUrl = parse_url($src);
+                if(!isset($parseUrl['scheme'])) {
+                    if(file_exists(component_core_system::basePath().$src)) {
+                        list($width, $height, $type, $attr) = getimagesize('.' . $src);
+                        $title = $links->item($k)->getAttribute('title');
+                        $imgs = $links->item($k)->getElementsByTagName('img');
+                        $alt = $imgs->item(0)->getAttribute('alt');
 
-                $slides[$i] = '<figure>
-								<amp-img on="tap:lightbox-gallery.close"
-										role="button"
-										tabindex="'. $i .'"
-										src="' . $src . '"
-										layout="responsive" 
-										height="' . $height . '" 
-										width="' . $width . '"></amp-img>
-								<figcaption>'. $title .'</figcaption>
-							</figure>';
-                $i++;
+                        $rpl[$i] = '<figure>
+                                        <amp-img on="tap:lightbox-gallery,carousel.goToSlide(index=' . $i . ')"
+                                            role="button"
+                                            tabindex="'. $i .'" 
+                                            src="' . $src . '" 
+                                            title="' . $title . '" 
+                                            alt="' . $alt . '" 
+                                            layout="responsive" 
+                                            height="' . $height . '" 
+                                            width="' . $width . '"></amp-img>
+                                        <figcaption class="hidden">'. $title .'</figcaption>
+                                    </figure>';
+
+                        $slides[$i] = '<figure>
+                                        <amp-img on="tap:lightbox-gallery.close"
+                                                role="button"
+                                                tabindex="'. $i .'"
+                                                src="' . $src . '"
+                                                layout="responsive" 
+                                                height="' . $height . '" 
+                                                width="' . $width . '"></amp-img>
+                                        <figcaption>'. $title .'</figcaption>
+                                    </figure>';
+                        $i++;
+
+                    }else{
+                        $rpl[$i] = '';
+                        $slides[$i]= '';
+                    }
+                }else{
+                    $rpl[$i] = '';
+                    $slides[$i]= '';
+                }
             }
         }
 
@@ -142,12 +166,25 @@ function smarty_function_amp_content($params,$template)
         for ($k = 0;$k < $imgs->length; $k ++) {
 
             $src = $imgs->item($k)->getAttribute('src');
-            if (!$src) $src = $imgs->item($k)->getAttribute('data-src');
-            list($width, $height, $type, $attr) = getimagesize('.' . $src);
+            /*print '<pre>';
+            print_r(parse_url($src));
+            print '</pre>';*/
+            $parseUrl = parse_url($src);
+            if(!isset($parseUrl['scheme'])){
+                if(file_exists(component_core_system::basePath().$src)) {
+                    if (!$src) $src = $imgs->item($k)->getAttribute('data-src');
+                    list($width, $height, $type, $attr) = getimagesize('.' . $src);
 
-            $title = $imgs->item($k)->getAttribute('title');
-            $alt = $imgs->item($k)->getAttribute('alt');
-            $rpl[$k] = '<amp-img src="' . $src . '" title="' . $title . '" alt="' . $alt . '" layout="responsive" height="' . $height . '" width="' . $width . '"></amp-img>';
+                    $title = $imgs->item($k)->getAttribute('title');
+                    $alt = $imgs->item($k)->getAttribute('alt');
+                    $rpl[$k] = '<amp-img src="' . $src . '" title="' . $title . '" alt="' . $alt . '" layout="responsive" height="' . $height . '" width="' . $width . '"></amp-img>';
+                }else{
+                    $rpl[$k] = '';
+                }
+            }else{
+                $rpl[$k] = '';
+            }
+
 
         }
         if(count($matches[0]) === count($rpl)) {

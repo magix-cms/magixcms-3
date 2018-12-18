@@ -4,7 +4,7 @@
 {block name="title"}{if $pages.seoTitle}{$pages.seoTitle}{else}{$pages.title}{/if}{/block}
 {block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|strip_tags|truncate:100:'...'}{/if}{/block}
 {block name="amp-script"}
-    {if $pages.imgSrc.large}
+    {if $pages.img.large.src}
         <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
         {amp_components content=$pages.content image=false}
     {else}
@@ -14,7 +14,7 @@
 {block name='article:content'}
     <h1 itemprop="name">{$pages.title}</h1>
     <div class="text" itemprop="text">
-        {if !empty($pages.img)}
+        {if !empty($pages.img.large.src)}
             <figure>
                 <amp-img on="tap:lightbox1"
                          role="button"
