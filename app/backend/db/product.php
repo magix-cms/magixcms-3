@@ -16,16 +16,9 @@ class backend_db_product{
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'pages':
-					$sql = "SELECT p.id_product, c.name_p, p.reference_p, p.price_p, c.resume_p, c.content_p, p.date_register
-							FROM mc_catalog_product AS p
-								JOIN mc_catalog_product_content AS c USING ( id_product )
-								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-								WHERE c.id_lang = :default_lang
-								GROUP BY p.id_product 
-							ORDER BY p.id_product";
+					$cond = '';
 
 					if (isset($config['search'])) {
-						$cond = '';
 						$config['search'] = array_filter($config['search']);
 						if (is_array($config['search']) && !empty($config['search'])) {
 							$nbc = 0;
@@ -38,10 +31,13 @@ class backend_db_product{
 											$cond .= 'p.'.$key.' = :'.$p.' ';
 											break;
 										case 'published_p':
-											$cond .= 'c.'.$key.' = :'.$p.' ';
+											$cond .= 'p.'.$key.' = :'.$p.' ';
 											break;
 										case 'name_p':
-											$cond .= "c.".$key." LIKE CONCAT('%', :".$p.", '%') ";
+											$cond .= "pc.".$key." LIKE CONCAT('%', :".$p.", '%') ";
+											break;
+										case 'name_cat':
+											$cond .= "cc.".$key." LIKE CONCAT('%', :".$p.", '%') ";
 											break;
 										case 'date_register':
 											$q = $dateFormat->date_to_db_format($q);
@@ -53,16 +49,28 @@ class backend_db_product{
 									$nbc++;
 								}
 							}
-
-							$sql = "SELECT p.id_product, c.name_p, p.reference_p, p.price_p ,c.content_p, p.date_register
-									FROM mc_catalog_product AS p
-										JOIN mc_catalog_product_content AS c USING ( id_product )
-										JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
-										WHERE c.id_lang = :default_lang $cond
-										GROUP BY p.id_product 
-									ORDER BY p.id_product";
 						}
 					}
+
+					$sql = "SELECT 
+								p.id_product, 
+								pc.name_p, 
+								cc.name_cat, 
+								p.reference_p,
+								p.price_p, 
+								pc.resume_p , 
+								pc.content_p, 
+								IFNULL(pi.default_img,0) as img_p,
+								p.date_register
+							FROM mc_catalog_product AS p
+							JOIN mc_catalog_product_content AS pc USING ( id_product )
+							LEFT JOIN mc_catalog AS c ON ( p.id_product = c.id_product AND c.default_c = 1 )
+							LEFT JOIN mc_catalog_cat_content AS cc ON ( c.id_cat = cc.id_cat )
+							LEFT JOIN mc_catalog_product_img AS pi ON ( p.id_product = pi.id_product AND pi.default_img = 1 )
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
+							WHERE pc.id_lang = :default_lang $cond
+							GROUP BY p.id_product 
+							ORDER BY p.id_product DESC";
 					break;
 				case 'page':
 					$sql = 'SELECT p.*,c.*,lang.*

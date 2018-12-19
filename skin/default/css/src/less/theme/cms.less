@@ -17,7 +17,7 @@
 
 .toc-drop {
 	.btn-link {
-		color: @text-color;
+		color: @sd-color;
 	}
 
 	> .dropdown-menu {
@@ -31,7 +31,16 @@
 
 		.dropdown-header {
 			color: @text-color;
-			font-size: 14px;
+			flex-direction: row;
+			align-items: center;
+
+			&.active {
+				> a {
+					font-weight: bold;
+					color: @main-color;
+					background-color: transparent;
+				}
+			}
 		}
 
 		> .dropdown-header {
@@ -42,11 +51,22 @@
 
 		li {
 			padding: 3px 6px;
+
+			&.submenu {
+				padding: 0;
+
+				> ul {
+					padding: 3px 6px;
+				}
+			}
+
 			display: flex;
-			align-items: center;
-			flex-wrap: wrap;
+			//align-items: center;
+			//flex-wrap: wrap;
+			flex-direction: column;
 
 			a {
+				font-size: 16px;
 				padding: 0;
 			}
 
@@ -56,6 +76,16 @@
 					width: 24px;
 					margin-right: 5px;
 					text-align: center;
+				}
+			}
+
+			&.active {
+				&:not(.submenu) { padding: 3px 6px; }
+				> .btn-link a,
+				> a {
+					font-weight: bold;
+					color: @main-color;
+					background-color: transparent;
 				}
 			}
 		}

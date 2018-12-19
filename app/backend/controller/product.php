@@ -7,10 +7,12 @@ class backend_controller_product extends backend_db_product
 	public $tableconfig = array(
 		'id_product',
 		'name_p' => ['title' => 'name'],
+		'name_cat' => ['title' => 'main_cat'],
 		'price_p' => ['type' => 'price','input' => null],
 		'reference_p' => ['title' => 'reference'],
-		'resume_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-		'content_p' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+		'resume_p' => ['class' => 'fixed-td-lg text-center', 'type' => 'bin', 'input' => null],
+		'content_p' => ['class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
+		'img_p' => ['title' => 'img', 'class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
 		'date_register'
 	);
 
@@ -122,7 +124,7 @@ class backend_controller_product extends backend_db_product
 			$params['cClass'] = 'backend_controller_product';
 		}
 
-		$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content'), array('id_product', 'name_p', 'price_p', 'reference_p', 'resume_p', 'content_p', 'date_register'), $this->tableconfig);
+		$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'default_img', 'date_register'), $this->tableconfig);
 
 		return array(
 			'data' => $results,
@@ -891,7 +893,7 @@ class backend_controller_product extends backend_db_product
 			$this->modelLanguage->getLanguage();
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 			$this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all');
-			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content'), array('id_product', 'name_p', 'price_p', 'reference_p', 'resume_p', 'content_p', 'date_register'), $this->tableconfig);
+			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'default_img', 'date_register'), $this->tableconfig);
 			$this->template->display('catalog/product/index.tpl');
 		}
 	}
