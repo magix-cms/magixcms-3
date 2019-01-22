@@ -18,9 +18,9 @@
     <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
     <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
-    {include file="section/brick/google-font.tpl" fonts=['Heebo'=>'300,500,700']}
-    {if $browser !== 'IE'}<link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style">{/if}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
+    {*{if $browser !== 'IE'}<link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style">{/if}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">*}
     {*{if $browser !== 'IE'}<link rel="preload" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" as="style">{/if}*}
     {*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">*}
     {*{if $browser !== 'IE'}<link rel="preload" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" as="style">{/if}*}

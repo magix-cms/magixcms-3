@@ -89,6 +89,7 @@ const C = {
         if($.featherlight !== undefined) {
             let afterContent = function () {
                 let caption = this.$currentTarget.find('img').attr('alt');
+                let closebtn = this.$instance.find('button');
                 this.$instance.find('.caption').remove();
                 this.$instance.find('figure').remove();
                 this.$content
@@ -98,6 +99,7 @@ const C = {
                     .text(caption)
                     .appendTo(this.$instance.find('.featherlight-content figure'))
                     .wrapAll('<figcaption class="caption">');
+                $(closebtn[0]).prependTo(this.$instance.find('.featherlight-content .caption'));
             };
             $.featherlight.prototype.afterContent = afterContent;
 
