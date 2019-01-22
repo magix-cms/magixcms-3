@@ -54,8 +54,12 @@ class backend_controller_category extends backend_db_category
 			$this->tableform = new backend_controller_tableform($this,$this->template);
 		}
 
-        // --- Search
-        if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
+		// --- Search
+		if (http_request::isGet('search')) {
+			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
+		}
+
         // --- ADD or EDIT
         if (http_request::isGet('id')) $this->id_cat = $formClean->simpleClean($_GET['id']);
 		elseif (http_request::isPost('id')) $this->id_cat = $formClean->simpleClean($_POST['id']);

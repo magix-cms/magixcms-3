@@ -1,7 +1,6 @@
 {if is_array($dataLang) && !empty($dataLang)}
-    {if $amp}
-        <link rel="canonical" href="{$url}{$smarty.server.REQUEST_URI|replace:'amp/':''}">
-    {else}
+    <link rel="canonical" href="{$url}{$smarty.server.REQUEST_URI|replace:'amp/':''}">
+    {if !$amp & $amp_active}
         <link rel="amphtml" href="{$url}{if $smarty.server.REQUEST_URI}{$smarty.server.REQUEST_URI|replace:{$iso|cat:'/'}:{$iso|cat:'/amp/'}}{else}/amp/{/if}">
     {/if}
     {if is_null($smarty.get.controller)}

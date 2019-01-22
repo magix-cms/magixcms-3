@@ -47,8 +47,11 @@ class backend_controller_news extends backend_db_news{
 			$this->tableform = new backend_controller_tableform($this,$this->template);
 		}
 
-        // --- Search
-        if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
+		// --- Search
+		if (http_request::isGet('search')) {
+			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
+		}
 
         // --- ADD or EDIT
         if (http_request::isGet('id')) $this->id_news = $formClean->simpleClean($_GET['id']);
@@ -208,6 +211,7 @@ class backend_controller_news extends backend_db_news{
                 'iso_lang'          => $page['iso_lang'],
                 'name_news'         => $page['name_news'],
                 'url_news'          => $page['url_news'],
+                'resume_news'       => $page['resume_news'],
                 'content_news'      => $page['content_news'],
                 'date_publish'      => $datePublish,
                 'published_news'    => $page['published_news'],

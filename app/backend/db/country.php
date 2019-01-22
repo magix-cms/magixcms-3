@@ -20,7 +20,7 @@ class backend_db_country{
 						$nbc = 0;
 
 						foreach ($config['search'] as $key => $q) {
-							if($q != '') {
+							if($q !== '') {
 								$cond .= $nbc ? 'AND ' : 'WHERE ';
 								$p = 'p'.$nbc;
 								switch ($key) {

@@ -27,11 +27,10 @@ class backend_db_pages
 
 					if(isset($config['search'])) {
 						$cond = '';
-						$config['search'] = array_filter($config['search']);
 						if(is_array($config['search']) && !empty($config['search'])) {
 							$nbc = 1;
 							foreach ($config['search'] as $key => $q) {
-								if($q != '') {
+								if($q !== '') {
 									$cond .= 'AND ';
 									$p = 'p'.$nbc;
 									switch ($key) {
@@ -75,7 +74,7 @@ class backend_db_pages
 					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
 						$nbc = 0;
 						foreach ($config['search'] as $key => $q) {
-							if($q != '') {
+							if($q !== '') {
 								$cond .= 'AND ';
 								$p = 'p'.$nbc;
 								switch ($key) {

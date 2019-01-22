@@ -19,11 +19,10 @@ class backend_db_product{
 					$cond = '';
 
 					if (isset($config['search'])) {
-						$config['search'] = array_filter($config['search']);
 						if (is_array($config['search']) && !empty($config['search'])) {
 							$nbc = 0;
 							foreach ($config['search'] as $key => $q) {
-								if ($q != '') {
+								if ($q !== '') {
 									$cond .= 'AND ';
 									$p = 'p'.$nbc;
 									switch ($key) {

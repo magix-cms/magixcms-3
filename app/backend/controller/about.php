@@ -189,7 +189,10 @@ class backend_controller_about extends backend_db_about{
 		}
 
 		// --- Search
-		if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
+		if (http_request::isGet('search')) {
+			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
+		}
 
         /* Global about edition */
         if (http_request::isPost('data_type')) $this->dataType = $formClean->simpleClean($_POST['data_type']);

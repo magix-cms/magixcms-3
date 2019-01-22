@@ -27,7 +27,7 @@ class backend_db_employee
 						$nbc = 0;
 						$params = array();
 						foreach ($config['search'] as $key => $q) {
-							if($q != '') {
+							if($q !== '') {
 								if($nbc > 0) {
 									$cond .= 'AND ';
 								} else {

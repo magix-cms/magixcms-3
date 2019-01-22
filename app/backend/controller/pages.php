@@ -64,7 +64,10 @@ class backend_controller_pages extends backend_db_pages
 		}
 
         // --- Search
-        if (http_request::isGet('search')) $this->search = $formClean->arrayClean($_GET['search']);
+        if (http_request::isGet('search')) {
+			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
+		}
 
         // --- ADD or EDIT
         if (http_request::isGet('id')) $this->id_pages = $formClean->simpleClean($_GET['id']);

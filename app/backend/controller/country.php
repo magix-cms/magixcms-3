@@ -43,10 +43,11 @@ class backend_controller_country extends backend_db_country
             $this->name_country = $formClean->simpleClean($_POST['name_country']);
         }
 
-        // --- Search
-        if (http_request::isGet('search')) {
-            $this->search = $formClean->arrayClean($_GET['search']);
-        }
+		// --- Search
+		if (http_request::isGet('search')) {
+			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
+		}
 
         # ORDER PAGE
         if(http_request::isPost('country')){

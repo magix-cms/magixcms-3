@@ -94,9 +94,10 @@ class backend_controller_employee extends backend_db_employee
 			$this->id_account_session = (int)$formClean->simpleClean($_SESSION['id_account']);
 		}
 
-        // --- Search
+		// --- Search
 		if (http_request::isGet('search')) {
 			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
 		}
 
 		// --- Recursive Actions

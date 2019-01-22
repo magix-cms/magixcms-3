@@ -21,7 +21,7 @@ class backend_db_files
 						$nbc = 0;
 						$params = array();
 						foreach ($config['search'] as $key => $q) {
-							if ($q != '') {
+							if ($q !== '') {
 								$cond .= $nbc ? 'AND ' : 'WHERE ';
 								$p = 'p'.$nbc;
 								switch ($key) {

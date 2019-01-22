@@ -61,11 +61,12 @@ class backend_controller_domain extends backend_db_domain
         }else{
             $this->config = array();
         }
-        // --- Search
-        if (http_request::isGet('search')) {
-            $this->search = $formClean->arrayClean($_GET['search']);
-        }
 
+		// --- Search
+		if (http_request::isGet('search')) {
+			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
+		}
     }
 
 	/**

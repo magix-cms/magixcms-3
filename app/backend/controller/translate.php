@@ -39,7 +39,14 @@ class backend_controller_translate extends backend_db_theme{
             $array = $_POST['config'];
             foreach($array as $key => $arr) {
                 foreach($arr as $k => $v) {
-                    $array[$key][$k] = html_entity_decode($v);
+                	if(is_array($v)) {
+						foreach($v as $sk => $sv) {
+							$array[$key][$k][$sk] = html_entity_decode($sv);
+						}
+					}
+                	else {
+						$array[$key][$k] = html_entity_decode($v);
+					}
                 }
             }
             $this->config = $array;
@@ -76,6 +83,29 @@ class backend_controller_translate extends backend_db_theme{
         return $arr;
     }
 
+	/**
+	 * @param $fh
+	 * @param $data
+	 */
+	private function writeConfig($fh, $data)
+	{
+		foreach ($data as $key => $value) {
+			if(is_array($value)) {
+				$sec = '###';
+				fwrite($fh, "{$sec} {$key}" . PHP_EOL);
+
+				foreach ($value as $k => $v) {
+					// Write to the file.
+					fwrite($fh, "{$k} = {$v}" . PHP_EOL);
+				}
+			}
+			else {
+				// Write to the file.
+				fwrite($fh, "{$key} = {$value}" . PHP_EOL);
+			}
+		}
+    }
+
     /**
      * save config files
      */
@@ -94,38 +124,17 @@ class backend_controller_translate extends backend_db_theme{
                 $fh = fopen($baseConfigPath, 'w');
                 // Loop through the data.
                 if(isset($this->config[$lang['iso_lang']])) {
-                    foreach ($this->config[$lang['iso_lang']] as $key => $value) {
-                        // If a value exists that should replace the current one, use it.
-                        //if ( ! empty($replace_with[$key]) )
-                        //$value = $replace_with[$key];
-
-                        // Write to the file.
-                        fwrite($fh, "{$key} = {$value}" . PHP_EOL);
-                    }
-
-                }else{
-                    foreach ( $newData as $key => $value ){
-                        // If a value exists that should replace the current one, use it.
-                        //if ( ! empty($replace_with[$key]) )
-                        //$value = $replace_with[$key];
-
-                        // Write to the file.
-                        fwrite($fh, "{$key} = {$value}" . PHP_EOL);
-                    }
+					$this->writeConfig($fh, $this->config[$lang['iso_lang']]);
+                }
+                else {
+					$this->writeConfig($fh, $newData);
                 }
                 // Close the file handle.
                 fclose($fh);
             }else{
                 $fh = fopen($baseConfigPath, 'w');
                 // Loop through the data.
-                foreach ( $newData as $key => $value ){
-                    // If a value exists that should replace the current one, use it.
-                    //if ( ! empty($replace_with[$key]) )
-                    //$value = $replace_with[$key];
-
-                    // Write to the file.
-                    fwrite($fh, "{$key} = {$value}" . PHP_EOL);
-                }
+				$this->writeConfig($fh, $newData);
                 // Close the file handle.
                 fclose($fh);
             }

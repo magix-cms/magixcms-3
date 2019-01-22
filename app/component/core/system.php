@@ -136,15 +136,20 @@ class component_core_system{
      */
     public function parseIni($file){
         $result = array();
+        $section = '';
         if ($lines = file($file)) {
             foreach ($lines as $line){
-                if (!preg_match('/[0-9a-z]/i', $line) or preg_match('/^#/', $line)){
+                if (preg_match('/^###/', $line)){
+                	if($line == '###') $section = '';
+                    else $section = trim(substr($line,3));
+                }
+                elseif (!preg_match('/[0-9a-z]/i', $line) or preg_match('/^#/', $line)){
                     continue;
                 }
                 //if (preg_match('/(.*)=(.*)/', $line, $match)){
                 if (preg_match('/^([^=]+)=(.*)$/', $line, $match)){
-
-                    $result[trim($match[1])] = trim($match[2]);
+					if($section !== '') $result[$section][trim($match[1])] = trim($match[2]);
+                    else $result[trim($match[1])] = trim($match[2]);
                 }
             }
         } else {

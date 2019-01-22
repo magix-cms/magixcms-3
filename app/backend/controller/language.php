@@ -47,10 +47,11 @@ class backend_controller_language extends backend_db_language{
             $this->name_lang = $formClean->simpleClean($_POST['name_lang']);
         }
 
-        // --- Search
-        if (http_request::isGet('search')) {
-            $this->search = $formClean->arrayClean($_GET['search']);
-        }
+		// --- Search
+		if (http_request::isGet('search')) {
+			$this->search = $formClean->arrayClean($_GET['search']);
+			$this->search = array_filter($this->search, function ($value) { return $value !== ''; });
+		}
         // --- Recursive Actions
         if (http_request::isGet('language')) {
             $this->language = $formClean->arrayClean($_GET['language']);

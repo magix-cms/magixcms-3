@@ -6,12 +6,37 @@
                 <div class="tab-content">
                     {foreach $langs as $id => $iso}
                     <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
+                        <ul class="list-group">
                         {foreach $translate.content[$id] as $key => $value nocache}
-                            <div class="form-group">
-                                <label for="config[{$iso}][{$key}]">{$key}</label>
-                                <input type="text" class="form-control" name="config[{$iso}][{$key}]" value="{$value|escape:'html'}" />
-                            </div>
+                            <li class="panel list-group-item">
+                            {if is_array($value)}
+                                <header>
+                                    <span class="lead">{$key}</span>
+                                    <div class="actions">
+                                        <a href="#collapse{$value@index}" data-toggle="collapse" class="btn btn-link collapsed">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                    </div>
+                                </header>
+                                <div class="collapse" id="collapse{$value@index}">
+                                    <div class="subform">
+                                    {foreach $value as $k => $v nocache}
+                                        <div class="form-group">
+                                            <label for="config[{$iso}][{$key}][{$k}]">{$k}</label>
+                                            <input type="text" class="form-control" name="config[{$iso}][{$key}][{$k}]" value="{$v|escape:'html'}" />
+                                        </div>
+                                    {/foreach}
+                                    </div>
+                                </div>
+                            {else}
+                                <div class="form-group">
+                                    <label for="config[{$iso}][{$key}]">{$key}</label>
+                                    <input type="text" class="form-control" name="config[{$iso}][{$key}]" value="{$value|escape:'html'}" />
+                                </div>
+                            {/if}
+                            </li>
                         {/foreach}
+                        </ul>
                     </fieldset>
                     {/foreach}
                 </div>

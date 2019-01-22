@@ -21,9 +21,9 @@
                 </a>
             </div>
             <div class="btn-group actions btn-group-justified" role="group">
-                <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$value.id_product}&editimg={$value.id_img}" type="button" class="btn btn-default"><span class="fa fa-pencil-square-o"></span></a>
-                <a type="button" class="btn btn-default img-zoom" href="/upload/{if isset($uploadDir)}{$uploadDir}{else}{$smarty.get.controller}{/if}/{$value.id_product}/l_{$value.name_img}"><span class="fa fa-search-plus"></span></a>
-                <a href="#" type="button" class="btn btn-default action_on_record modal_action" data-id="{$value.id_img}" data-controller="product" data-sub="image" data-target="#delete_modal"><span class="fa fa-trash"></span></a>
+                <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$value.id_product}&editimg={$value.id_img}" type="button" class="btn btn-default"><i class="material-icons">edit</i></a>
+                <a type="button" class="btn btn-default img-zoom" href="/upload/{if isset($uploadDir)}{$uploadDir}{else}{$smarty.get.controller}{/if}/{$value.id_product}/l_{$value.name_img}"><i class="material-icons">zoom_in</i></a>
+                <a href="#" type="button" class="btn btn-default action_on_record modal_action" data-id="{$value.id_img}" data-controller="product" data-sub="image" data-target="#delete_modal"><i class="material-icons">delete</i></a>
             </div>
         </div>
     {/foreach}

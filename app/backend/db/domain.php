@@ -20,7 +20,7 @@ class backend_db_domain
 					if (isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
 						$nbc = 0;
 						foreach ($config['search'] as $key => $q) {
-							if ($q != '') {
+							if ($q !== '') {
 								$cond .= $nbc ? 'AND ' : 'WHERE ';
 								$p = 'p'.$nbc;
 								switch ($key) {
