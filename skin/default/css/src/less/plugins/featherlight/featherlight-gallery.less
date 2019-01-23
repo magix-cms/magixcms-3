@@ -5,27 +5,27 @@
  * Copyright 2016, Noël Raoul Bossart (http://www.noelboss.com)
  * MIT Licensed.
 **/
-@media all {
-	.featherlight {
+/*@media all {*/
+	/*.featherlight {
 		&-next,
 		&-previous {
 			display: block;
 			position: absolute;
-			/*top: 25px;*/
-			/*right: 25px;*/
-			/*bottom: 0;*/
-			/*left: 80%;*/
+			!*top: 25px;*!
+			!*right: 25px;*!
+			!*bottom: 0;*!
+			!*left: 80%;*!
 			height: 30px;
 			width: 30px;
 			cursor: pointer;
-			/* preventing text selection */
+			!* preventing text selection *!
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
 			-khtml-user-select: none;
 			-moz-user-select: none;
 			-ms-user-select: none;
 			user-select: none;
-			/* IE9 hack, otherwise navigation doesn't appear */
+			!* IE9 hack, otherwise navigation doesn't appear *!
 			background: rgba(0,0,0,0);
 			color: #ccc;
 			font-size: 30px;
@@ -50,7 +50,7 @@
 		&-previous {
 			right: 60px;
 		}
-	}
+	}*/
 
 	/*.featherlight-previous {
 		left: 25px;
@@ -106,23 +106,23 @@
 	.featherlight-loading .featherlight-previous, .featherlight-loading .featherlight-next {
 		display:none;
 	}*/
-}
+/*}*/
 
 /* Always display arrows on touch devices */
-@media only screen and (max-device-width: 1024px){
-	/*.featherlight-next:hover,
+/*@media only screen and (max-device-width: 1024px){
+	.featherlight-next:hover,
 	.featherlight-previous:hover {
 		background: none;
 	}
 	.featherlight-next span,
 	.featherlight-previous span {
 		display: block;
-	}*/
-}
+	}
+}*/
 
 /* handling phones and small screens */
-@media only screen and (max-width: 1024px) {
-	/*.featherlight-next,
+/*@media only screen and (max-width: 1024px) {
+	.featherlight-next,
 	.featherlight-previous {
 		top: 10px;
 		right: 10px;
@@ -138,5 +138,5 @@
 	.featherlight-previous span {
 		margin-top: -30px;
 		font-size: 40px;
-	}*/
-}
+	}
+}*/

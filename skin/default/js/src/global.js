@@ -88,27 +88,34 @@ const C = {
         // *** featherlight lightbox init
         if($.featherlight !== undefined) {
             let afterContent = function () {
+                let g = $.featherlightGallery !== undefined;
                 let caption = this.$currentTarget.find('img').attr('alt');
                 let closebtn = this.$instance.find('button');
                 this.$instance.find('.caption').remove();
-                this.$instance.find('figure').remove();
+                this.$instance.find('.figure').remove();
+                if(g) {
+                    this.$instance.find('.featherlight-previous').remove();
+                    this.$instance.find('.featherlight-next').remove();
+                }
                 this.$content
                     .appendTo(this.$instance.find('.featherlight-content'))
-                    .wrapAll('<figure />');
+                    .wrapAll('<div class="figure" />');
                 $('<p />')
                     .text(caption)
-                    .appendTo(this.$instance.find('.featherlight-content figure'))
-                    .wrapAll('<figcaption class="caption">');
+                    .appendTo(this.$instance.find('.featherlight-content .figure'))
+                    .wrapAll('<div class="caption">');
                 $(closebtn[0]).prependTo(this.$instance.find('.featherlight-content .caption'));
+                if(g) {
+                    $(closebtn[0]).after(this.createNavigation('previous')).after(this.createNavigation('next'));
+                }
             };
+
             $.featherlight.prototype.afterContent = afterContent;
-
             $('.img-zoom').featherlight();
-
             if($.featherlightGallery !== undefined) {
-                $.featherlightGallery.prototype.afterContent = afterContent;
                 $.featherlightGallery.prototype.previousIcon = '<span class="fa fa-angle-left"></span>';
                 $.featherlightGallery.prototype.nextIcon = '<span class="fa fa-angle-right"></span>';
+                $.featherlightGallery.prototype.afterContent = afterContent
                 $('.img-gallery').featherlightGallery();
             }
             else {
