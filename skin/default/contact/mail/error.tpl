@@ -1,4 +1,4 @@
-{extends file="contact/mail/layout.tpl"}
+{extends file="mail/layout.tpl"}
 <!-- Wrapper/Container Table: Use a wrapper table to control the width and the background color consistently of your email. Use this approach instead of setting attributes on the body tag. -->
 {block name='body:content'}
     <!-- move the above styles into your custom stylesheet -->

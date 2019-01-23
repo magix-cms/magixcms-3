@@ -809,7 +809,7 @@ p,
 td,
 th,
 a {
-  color: #0a0a0a;
+  color: #333333;
   font-family: Helvetica, Arial, sans-serif;
   font-weight: normal;
   padding: 0;
@@ -914,17 +914,14 @@ pre {
       color: #ff6908;
       font-weight: bold; }
 
-table.hr {
+table.spacer-hr {
   width: 100%; }
-  table.hr th {
-    height: 0;
+  table.spacer-hr .hr {
+    height: 2px;
     max-width: 580px;
-    border-top: 0;
-    border-right: 0;
-    border-bottom: 1px solid #0a0a0a;
-    border-left: 0;
-    margin: 20px auto;
-    Margin: 20px auto;
+    margin: 0 0 20px;
+    Margin: 0 0 20px;
+    background-color: #3b61a9;
     clear: both; }
 
 .stat {
@@ -1095,27 +1092,27 @@ th.callout-inner {
   th.callout-inner.primary {
     background: #def0fc;
     border: 1px solid #444444;
-    color: #0a0a0a; }
+    color: #333333; }
   th.callout-inner.secondary {
     background: #ebebeb;
     border: 1px solid #444444;
-    color: #0a0a0a; }
+    color: #333333; }
   th.callout-inner.success {
     background: #e1faea;
     border: 1px solid #1b9448;
-    color: #0a0a0a; }
+    color: #333333; }
   th.callout-inner.warning {
     background: #fff3d9;
     border: 1px solid #996800;
-    color: #0a0a0a; }
+    color: #333333; }
   th.callout-inner.alert {
     background: #fce6e2;
     border: 1px solid #b42912;
-    color: #0a0a0a; }
+    color: #333333; }
 
 .thumbnail {
   border: solid 4px #fefefe;
-  box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.2);
+  box-shadow: 0 0 0 1px rgba(51, 51, 51, 0.2);
   display: inline-block;
   line-height: 0;
   max-width: 100%;
@@ -1370,9 +1367,11 @@ body.outlook p {
 .footer .container td {
   padding: 15px; }
 
+/*
 .vignette {
-  -moz-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2); }
+    -moz-box-shadow: 0 0 4px 0 rgba(0,0,0,.14),0 3px 4px 0 rgba(0,0,0,.12),0 1px 5px 0 rgba(0,0,0,.2);
+    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+    box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+}*/
 
 /*# sourceMappingURL=mail.css.map */

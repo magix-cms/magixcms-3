@@ -28,7 +28,8 @@ class backend_db_news
 								JOIN mc_lang AS lang ON ( tag.id_lang = lang.id_lang )
 								GROUP BY tagrel.id_news, lang.id_lang
 								)rel ON ( rel.id_news = p.id_news AND rel.id_lang = c.id_lang)
-							WHERE p.id_news = :edit";
+							WHERE p.id_news = :edit
+							ORDER BY p.id_news DESC";
 					break;
 				case 'pagesPublishedSelect':
 					$sql = "SELECT p.id_news, c.name_news

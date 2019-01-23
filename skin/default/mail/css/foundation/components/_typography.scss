@@ -297,18 +297,20 @@ pre {
 }
 
 // Horizontal rule
-table.hr {
+table.spacer-hr {
   width: 100%;
   
-  th {
-    height: 0;
+  .hr {
+    height: $hr-height;
     max-width: $hr-width;
-    border-top: 0;
-    border-right: 0;
-    border-bottom: $hr-border;
-    border-left: 0;
+    //border-top: 0;
+    //border-right: 0;
+    //border-bottom: $hr-border;
+    //border-left: 0;
     margin: $hr-margin;
     Margin: $hr-margin;
+    //padding: $hr-padding;
+    background-color: $hr-color;
     clear: both;
   }
 }

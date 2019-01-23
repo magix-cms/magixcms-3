@@ -238,6 +238,14 @@ const globalForm = (function ($, undefined) {
                 }
             };
         });
+
+        $('.validate').each(function(){
+            $(this).removeData();
+            $(this).off();
+            $(this).validate({
+                ignore: []
+            });
+        });
     }
 
     /**

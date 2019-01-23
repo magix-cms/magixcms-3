@@ -18,9 +18,9 @@
     <span class="preheader"></span>
     <table class="body">
     <tr>
-        <td class="center" align="center" valign="top">
+        <td class="float-center" align="center" valign="top">
             <center data-parsed="">
-                <table align="center" class="container float-center">
+                <table align="center" class="container">
                     <tbody>
                     <tr>
                         <td>
@@ -40,7 +40,7 @@
                                                     </table>
                                                     <p class="text-center">
                                                         <a href="{$url}" target="_blank" title="{$companyData.name}" style="text-decoration: none; font-size: 46px; padding: 15px;">
-                                                            <img src="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}" alt="Logo {$companyData.name}" width="250" height="250"/>
+                                                            <img src="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}" alt="Logo {$companyData.name}" width="130" height="89"/>
                                                         </a>
                                                     </p>
                                                     <table class="spacer">

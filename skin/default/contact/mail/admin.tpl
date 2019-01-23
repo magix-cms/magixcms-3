@@ -1,4 +1,4 @@
-{extends file="contact/mail/layout.tpl"}
+{extends file="mail/layout.tpl"}
 <!-- Wrapper/Container Table: Use a wrapper table to control the width and the background color consistently of your email. Use this approach instead of setting attributes on the body tag. -->
 {block name='body:content'}
     <!-- move the above styles into your custom stylesheet -->
@@ -6,7 +6,7 @@
         <tbody>
         <tr>
             <td>
-                <table class="spacer {*spacer-hr*}">
+                <table class="spacer spacer-hr">
                     <tbody>
                     <tr>
                         <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
@@ -30,15 +30,30 @@
                     </tr>
                     <tr>
                         <td class="small-12 large-12 first last">
-                            <table class="spacer spacer-hr">
+                            {*<table class="spacer hr">
                                 <tbody>
                                 <tr>
                                     <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
                                 </tr>
                                 </tbody>
+                            </table>*}
+                            <table class="spacer-hr">
+                                <tr>
+                                    <th class="hr" height="2px"></th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <table>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                </tr>
                             </table>
                         </td>
                     </tr>
+
                     <tr>
                         <td class="small-12 large-6 columns first last">
                             <table>
