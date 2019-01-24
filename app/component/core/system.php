@@ -120,8 +120,33 @@ class component_core_system{
         if(file_exists($min_cachePath) AND is_writable($min_cachePath)){
             $filepath = realpath(".") . "/" . $min_cachePath . "/" . $sha1name;
             if (!file_exists($filepath)){
-                $content = file_get_contents(http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection));
-                file_put_contents($filepath, $content);
+				try {
+					$stream = stream_context_create(
+						array(
+							"ssl"=>array(
+								"verify_peer"=>false,
+								"verify_peer_name"=>false,
+							)
+						)
+					);
+					$content = file_get_contents(http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection),false,$stream);
+
+					if ($content === false) {
+						$logger = new debug_logger(MP_LOG_DIR);
+						$logger->log('minify', 'concat', "Concat : Test\r\n
+                                    file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection)."\r\n
+                                    error = no content\r\n
+                                    content = $content\r\n", debug_logger::LOG_MONTH);
+					}
+					else {
+						file_put_contents($filepath, $content);
+					}
+				} catch (Exception $e) {
+					$logger = new debug_logger(MP_LOG_DIR);
+					$logger->log('minify', 'concat', "Concat : Test\n
+                                    file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection)."\n
+                                    error=$e\n", debug_logger::LOG_MONTH);
+				}
             }
             return $callback."/" . $min_cachePath . "/" . $sha1name;
         }else{

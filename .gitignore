@@ -25,4 +25,4 @@ plugins/hipay/
 plugins/mollie/
 plugins/cartpay/
 plugins/recaptcha/
-/skin/wsw/*
+plugins/homecatalog/

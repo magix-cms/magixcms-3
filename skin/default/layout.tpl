@@ -25,7 +25,7 @@
     {*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">*}
     {*{if $browser !== 'IE'}<link rel="preload" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" as="style">{/if}*}
     {*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">*}
-    {capture name="stylesheet"}{if $setting.concat.value}{"/min/?f=skin/{$theme}/css/{$viewport}.min.css"|concat_url}{else}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/if}{/capture}
+    {capture name="stylesheet"}{if $setting.concat.value}{"/min/?f=skin/{$theme}/css/{$viewport}.min.css"|concat_url:'css'}{else}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/if}{/capture}
     {if $browser !== 'IE'}<link rel="preload" href="{$smarty.capture.stylesheet}" as="style">{/if}
     <link rel="stylesheet" href="{$smarty.capture.stylesheet}">
     {capture name="scriptHtml5"}{strip}
@@ -33,9 +33,9 @@
         skin/{$theme}/js/vendor/html5shiv.min.js,
         skin/{$theme}/js/vendor/respond.min.js
     {/strip}{/capture}
-    <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url}{else}{$smarty.capture.scriptHtml5}{/if}" type="text/javascript"></script><![endif]-->
+    <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url:'js'}{else}{$smarty.capture.scriptHtml5}{/if}" type="text/javascript"></script><![endif]-->
     {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js{/capture}
-    <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url}{else}{$smarty.capture.picturefill}{/if}" type="text/javascript" async></script>
+    <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" type="text/javascript" async></script>
     {block name="styleSheet"}{/block}
     {if $setting['analytics']['value']}<script type="text/javascript">
         //<![CDATA[
@@ -86,7 +86,7 @@
     skin/{$theme}/js/global.min.js,
     skin/{$theme}/js/lazyload.min.js
 {/capture}{/strip}
-<script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url}{else}{$smarty.capture.vendors}{/if}" type="text/javascript" defer></script>
+<script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url:'js'}{else}{$smarty.capture.vendors}{/if}" type="text/javascript" defer></script>
 {block name="foot"}{/block}
 </body>
 </html>
