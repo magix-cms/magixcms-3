@@ -25,7 +25,7 @@
 </li>
 {else}
 <li{if $child.active} class="active"{/if} itemprop="name">
-    <a itemprop="url_link" href="{$child.url}" title="{$child.title}"{if $child.subdata} class="has-dropdown"{/if}><span>{$child.title}</span></a>
+    <a itemprop="url" href="{$child.url}" title="{$child.title}"{if $child.subdata} class="has-dropdown"{/if}><span>{$child.title}</span></a>
     {if $mega && $child.subdata && $dp < $deepness}
         {$sn = $sn + 1}
         {if $dp < $deepness}

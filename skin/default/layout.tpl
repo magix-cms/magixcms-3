@@ -19,12 +19,7 @@
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
     <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
     {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
-    {*{if $browser !== 'IE'}<link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style">{/if}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">*}
-    {*{if $browser !== 'IE'}<link rel="preload" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" as="style">{/if}*}
-    {*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">*}
-    {*{if $browser !== 'IE'}<link rel="preload" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" as="style">{/if}*}
-    {*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">*}
+    {* Please try to use icomoon to create a small iconfont and reduce load work *}
     {capture name="stylesheet"}{if $setting.concat.value}{"/min/?f=skin/{$theme}/css/{$viewport}.min.css"|concat_url:'css'}{else}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/if}{/capture}
     {if $browser !== 'IE'}<link rel="preload" href="{$smarty.capture.stylesheet}" as="style">{/if}
     <link rel="stylesheet" href="{$smarty.capture.stylesheet}">
@@ -34,7 +29,7 @@
         skin/{$theme}/js/vendor/respond.min.js
     {/strip}{/capture}
     <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url:'js'}{else}{$smarty.capture.scriptHtml5}{/if}" type="text/javascript"></script><![endif]-->
-    {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js{/capture}
+    {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/modernizr.min.js,skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js{/capture}
     <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" type="text/javascript" async></script>
     {block name="styleSheet"}{/block}
     {if $setting['analytics']['value']}<script type="text/javascript">
@@ -82,9 +77,9 @@
     {if $touch}skin/{$theme}/js/vendor/jquery.detect_swipe.min.js,{/if}
     skin/{$theme}/js/vendor/featherlight.min.js,
     skin/{$theme}/js/vendor/featherlight.gallery.min.js,
+    skin/{$theme}/js/vendor/lazysizes.min.js,
     {if $viewport !== 'mobile'}skin/{$theme}/js/affixhead.min.js,{/if}
-    skin/{$theme}/js/global.min.js,
-    skin/{$theme}/js/lazyload.min.js
+    skin/{$theme}/js/global.min.js
 {/capture}{/strip}
 <script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url:'js'}{else}{$smarty.capture.vendors}{/if}" type="text/javascript" defer></script>
 {block name="foot"}{/block}

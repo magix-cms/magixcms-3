@@ -11,7 +11,7 @@
         <div{if $classCol} class="{$classCol}{/if}">
             <figure class="effect-steve thumbnail">
                 {if count($item.img) > 1}
-                    <img class="img-responsive lazy" src="{$item.img.default}" data-src="{$item.img.medium.src}" alt="{$item.title}" title="{$item.title}"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>
+                    <img class="img-responsive lazyload" src="{$item.img.default}" data-src="{$item.img.medium.src}" alt="{$item.title}" title="{$item.title}"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>
                 {else}
                     <img class="img-responsive" src="{$item.img.default}" alt="{$item.title}" title="{$item.title}" />
                 {/if}

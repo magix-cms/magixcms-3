@@ -8,20 +8,24 @@
     {$meta["og:title"] = {$title}}
     {$meta["og:description"] = {$description}}
     {$meta["og:url"] = {''|cat:{$url}|cat:{$smarty.server.REQUEST_URI}}}
-    {$meta["og:image"] = {''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/logo/'|cat:{#logo_img#}}}
+    {$meta["og:image"] = {''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/logo/logo.png'}}
+    {$meta["og:image:width"] = '250'}
+    {$meta["og:image:height"] = '250'}
     {$meta["og:type"] = 'website'}
     {$data = null}
 
     {switch $smarty.get.controller}
     {case 'pages' break}
         {* Pages *}
-    {if $pages.imgSrc.large}
-        {$meta["og:image"] = {''|cat:{$url}|cat:{$pages.imgSrc.large}}}
+    {if $pages.img.medium}
+        {$meta["og:image"] = {''|cat:{$url}|cat:{$pages.img.medium.src}}}
+        {$meta["og:image:width"] = {$pages.img.medium.w}}
+        {$meta["og:image:height"] = {$pages.img.medium.h}}
     {/if}
-    {* /Pages *}
+        {* /Pages *}
 
-    {* Catalogue *}
     {case 'catalog' break}
+        {* Catalogue *}
     {if isset($product)}
         {$meta["og:type"] = 'product'}
         {$meta["product:price:amount"] = {$product.price|round:2|number_format:2:',':' '|decimal_trim:','}}
@@ -30,34 +34,40 @@
         {if !empty($product.imgs)}
             {foreach $product.imgs as $img}
                 {if $img.default}
-                    {$meta["og:image"] = {''|cat:{$url}|cat:{$img.imgSrc.large}}}
+                    {$meta["og:image"] = {''|cat:{$url}|cat:{$img.img.medium}}}
+                    {$meta["og:image:width"] = {$img.img.medium.w}}
+                    {$meta["og:image:height"] = {$img.img.medium.h}}
                 {/if}
             {/foreach}
         {/if}
     {elseif isset($cat)}
-        {if $cat.imgSrc.large}
-            {$meta["og:image"] = {''|cat:{$url}|cat:{$cat.imgSrc.large}}}
+        {if $cat.img.medium}
+            {$meta["og:image"] = {''|cat:{$url}|cat:{$cat.img.medium}}}
+            {$meta["og:image:width"] = {$cat.img.medium.w}}
+            {$meta["og:image:height"] = {$cat.img.medium.h}}
         {/if}
     {/if}
-    {* /Catalogue *}
+        {* /Catalogue *}
 
-    {* Actualités *}
     {case 'news' break}
+        {* Actualités *}
     {if $news}
-        {if $news.imgSrc.large}
-            {$meta["og:image"] = {''|cat:{$url}|cat:{$news.imgSrc.large}}}
+        {if $news.img.medium}
+            {$meta["og:image"] = {''|cat:{$url}|cat:{$news.img.medium.src}}}
+            {$meta["og:image:width"] = {$news.img.medium.w}}
+            {$meta["og:image:height"] = {$news.img.medium.h}}
         {/if}
         {$meta["og:type"] = 'article'}
         {$meta["article:published_time"] = $news.date_publish}
         {$meta["article:author"] = $companyData.name}
     {/if}
-    {* /Actualités *}
+        {* /Actualités *}
     {/switch}
 {/strip}
 {foreach $meta as $k => $v}
-{if in_array($k,['twitter:site','twitter:card'])}
-<meta name="{$k}" content="{$v}" />
-{else}
-<meta property="{$k}" content="{$v}" />
-{/if}
+    {if in_array($k,['twitter:site','twitter:card'])}
+        <meta name="{$k}" content="{$v}" />
+    {else}
+        <meta property="{$k}" content="{$v}" />
+    {/if}
 {/foreach}

@@ -11,7 +11,7 @@
         <div{if $classCol} class="{$classCol}{/if}" itemprop="hasPart" itemscope itemtype="http://schema.org/Series">
             <div class="figure">
                 {if count($item.img) > 1}
-                    <img class="img-responsive lazy" src="{$item.img.default}" data-src="{$item.img.medium.src}" alt="{$item.name}" title="{$item.name}" itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>
+                    <img class="img-responsive lazyload" src="{$item.img.default}" data-src="{$item.img.medium.src}" alt="{$item.name}" title="{$item.name}" itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>
                 {else}
                     <img class="img-responsive" src="{$item.img.default}" alt="{$item.name}" title="{$item.name}" />
                 {/if}

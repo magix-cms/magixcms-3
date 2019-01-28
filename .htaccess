@@ -246,6 +246,8 @@ ErrorDocument 500 /index.php?http_error=500
 # Redirect Rewrite
 # ----------------------------------------------------------------------
 # RewriteRule ^fr/catalog/$ http://www.magixcms3.test/fr/news/ [R=301,L]
+# Redirect a plus sign
+# RewriteRule	^fr/actualites/tag/magix[\s+]cms[\s+]3	http://www.magixcms3.test/fr/news/tag/39-magix-cms-3/	[R=301,L]
 # ----------------------------------------------------------------------
 # Language
 RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload|amp)

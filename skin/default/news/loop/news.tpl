@@ -22,7 +22,7 @@
                 <div class="time-figure col-12 col-xs-6 col-sm-12 col-md-6">
                     <div>
                         {if count($item.img) > 1}
-                            <img {if $item@first}src="{$item.img.medium.src}"{else}src="{$item.img.default}" data-src="{$item.img.medium.src}" class="lazy"{/if} alt="{$item.title}" title="{$item.title}" itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}>
+                            <img {if $item@first}src="{$item.img.medium.src}"{else}src="{$item.img.default}" data-src="{$item.img.medium.src}" class="lazyload"{/if} alt="{$item.title}" title="{$item.title}" itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}>
                         {else}
                             <img src="{$item.img.default}" alt="{$item.title}" title="{$item.title}">
                         {/if}

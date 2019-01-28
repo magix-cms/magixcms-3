@@ -38,7 +38,7 @@
                     {if $img.img.medium}
                         <meta itemprop="contentUrl" content="{$img.img.large}" />
                         <a href="{$img.img.large.src}" class="img-zoom" title="{$product.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                            <img src="{$product.img_default}" data-src="{$img.img.medium.src}" alt="{$product.name}" class="img-responsive lazy" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
+                            <img src="{$product.img_default}" data-src="{$img.img.medium.src}" alt="{$product.name}" class="img-responsive lazyload" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
                         </a>
                     {else}
                         <img class="img-responsive" src="{$product.img_default}" alt="{$product.name}" />
