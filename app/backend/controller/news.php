@@ -90,10 +90,11 @@ class backend_controller_news extends backend_db_news{
 	 * @param string|int|null $id
 	 * @param string $context
 	 * @param boolean $assign
+	 * @param boolean $pagination
 	 * @return mixed
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true) {
-		return $this->data->getItems($type, $id, $context, $assign);
+	private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
+		return $this->data->getItems($type, $id, $context, $assign, $pagination);
 	}
 
 	public function tinymce()
@@ -118,7 +119,7 @@ class backend_controller_news extends backend_db_news{
 	{
 		$this->modelLanguage->getLanguage();
 		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-		$results = $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all',false);
+		$results = $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all',false,true);
 		$params = array();
 
 		if($ajax) {
@@ -630,7 +631,7 @@ class backend_controller_news extends backend_db_news{
             else {
                 $this->modelLanguage->getLanguage();
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all');
+                $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
                 $this->data->getScheme(
                 	array('mc_news', 'mc_news_content'),
 					array('id_news', 'name_news', 'content_news', 'img_news', 'last_update', 'date_publish', 'published_news'),

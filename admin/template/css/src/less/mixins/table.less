@@ -151,6 +151,35 @@ form {
 	}
 }
 
+.filter_offset {
+	padding: 5px 5px 15px;
+	display: flex;
+	justify-content: center;
+
+	ul {
+		margin-bottom: 0;
+	}
+
+	li {
+		padding: 0;
+
+		a.btn {
+			padding: 0 10px;
+
+			&.active {
+				font-weight: bold;
+			}
+		}
+
+		&:nth-child(n+2) {
+			border-right: 1px solid #959595;
+		}
+		&:last-child {
+			border-right: none;
+		}
+	}
+}
+
 .direct-edit-table {
 	border-bottom: 1px solid #ddd;
 	tr {

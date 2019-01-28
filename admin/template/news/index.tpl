@@ -28,7 +28,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-news">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form-3.tpl" data=$news idcolumn='id_news' activation=false controller="news"}
+                {include file="section/form/table-form-3.tpl" data=$news idcolumn='id_news' activation=false controller="news" change_offset=true}
             </div>
         </section>
     </div>

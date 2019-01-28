@@ -1,7 +1,7 @@
 <?php
 class backend_model_data extends backend_db_scheme{
 	protected $template, $db, $caller;
-	public $search;
+	public $search, $page, $offset;
 
 	/**
 	 * backend_model_data constructor.
@@ -18,6 +18,10 @@ class backend_model_data extends backend_db_scheme{
 		if (http_request::isGet('search')) {
 			$this->search = $formClean->arrayClean($_GET['search']);
 		}
+		if (http_request::isGet('page')) {
+			$this->page = intval($formClean->simpleClean($_GET['page']));
+		}
+		$this->offset = (http_request::isGet('offset')) ? intval($formClean->simpleClean($_GET['offset'])) : 25;
 	}
 
 	/**
@@ -68,7 +72,7 @@ class backend_model_data extends backend_db_scheme{
 	 * @param string|int|null $id
 	 * @return mixed
 	 */
-	private function setItems(&$context, $type, $id = null) {
+	private function setItems(&$context, $type, $id = null, $page = null, $offset = null) {
 		if($id) {
 			if(is_array($id)) {
 				$params = $id;
@@ -81,7 +85,7 @@ class backend_model_data extends backend_db_scheme{
 			$params = null;
 			$context = $context ? $context : 'all';
 		}
-		return $this->db->fetchData(array('context'=>$context,'type'=>$type,'search'=>$this->search),$params);
+		return $this->db->fetchData(array('context'=>$context,'type'=>$type,'search'=>$this->search,'page'=>$page,'offset'=>$offset),$params);
 	}
 
 	/**
@@ -90,13 +94,18 @@ class backend_model_data extends backend_db_scheme{
 	 * @param string|int|null $id
 	 * @param string|null $context
 	 * @param string|boolean $assign
+	 * @param string|boolean $pagination
 	 * @return mixed
 	 */
-	public function getItems($type, $id = null, $context = null, $assign = true) {
-		$data = $this->setItems($context, $type, $id);
+	public function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
+		$data = $this->setItems($context, $type, $id, ($pagination || $this->page) ? $this->page : null, ($pagination || $this->page) ? $this->offset : null);
 		if($assign) {
 			$varName = gettype($assign) == 'string' ? $assign : $type;
 			$this->template->assign($varName,$data);
+		}
+		if(isset($this->page) || $pagination) {
+			$data = $this->setItems($context, $type, $id);
+			$this->template->assign('nbp',ceil(count($data) / $this->offset));
 		}
 		return $data;
 	}

@@ -17,13 +17,21 @@ class backend_db_pages
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'pages':
+					$limit = '';
+					if($config['offset']) {
+						$limit = ' LIMIT 0, '.$config['offset'];
+						if(isset($config['page']) && $config['page'] > 1) {
+							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+						}
+					}
+
 					$sql = "SELECT p.id_pages, c.name_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
 						FROM mc_cms_page AS p
 							JOIN mc_cms_page_content AS c USING ( id_pages )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
 							GROUP BY p.id_pages 
-						ORDER BY p.order_pages";
+						ORDER BY p.order_pages".$limit;
 
 					if(isset($config['search'])) {
 						$cond = '';
@@ -65,7 +73,7 @@ class backend_db_pages
 									LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
 									WHERE c.id_lang = :default_lang $cond
 									GROUP BY p.id_pages 
-								ORDER BY p.order_pages";
+								ORDER BY p.order_pages".$limit;
 						}
 					}
 					break;

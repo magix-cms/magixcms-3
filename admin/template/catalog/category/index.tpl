@@ -30,7 +30,7 @@
                 </div>
                 {*{if isset($scheme)}{$scheme|var_dump}{/if}*}
                 {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_cat' activation=true sortable=$sortable controller="category"}
+                {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_cat' activation=true sortable=$sortable controller="category" change_offset=true}
             </div>
         </section>
     </div>

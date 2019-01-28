@@ -95,10 +95,11 @@ class backend_controller_category extends backend_db_category
 	 * @param string|int|null $id
 	 * @param string $context
 	 * @param boolean $assign
+	 * @param boolean $pagination
 	 * @return mixed
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true) {
-		return $this->data->getItems($type, $id, $context, $assign);
+	private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
+		return $this->data->getItems($type, $id, $context, $assign, $pagination);
 	}
 
 	/**
@@ -116,7 +117,7 @@ class backend_controller_category extends backend_db_category
 			$results = $this->getItems('pagesChild',$this->edit,'all',false);
 		}
 		else {
-			$results = $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',false);
+			$results = $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',false,true);
 		}
 
 		$assign = $this->tableconfig[(($ajax || $this->edit) ? 'parent' : 'all')];
@@ -650,7 +651,7 @@ class backend_controller_category extends backend_db_category
         else {
             $this->modelLanguage->getLanguage();
             $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-            $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all');
+            $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
             $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
             $this->template->display('catalog/category/index.tpl');
         }

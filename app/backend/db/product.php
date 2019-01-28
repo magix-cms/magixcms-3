@@ -17,6 +17,13 @@ class backend_db_product{
 			switch ($config['type']) {
 				case 'pages':
 					$cond = '';
+					$limit = '';
+					if($config['offset']) {
+						$limit = ' LIMIT 0, '.$config['offset'];
+						if(isset($config['page']) && $config['page'] > 1) {
+							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+						}
+					}
 
 					if (isset($config['search'])) {
 						if (is_array($config['search']) && !empty($config['search'])) {
@@ -69,7 +76,7 @@ class backend_db_product{
 							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
 							WHERE pc.id_lang = :default_lang $cond
 							GROUP BY p.id_product 
-							ORDER BY p.id_product DESC";
+							ORDER BY p.id_product DESC".$limit;
 					break;
 				case 'page':
 					$sql = 'SELECT p.*,c.*,lang.*

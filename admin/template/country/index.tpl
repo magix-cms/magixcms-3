@@ -28,7 +28,7 @@
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-country">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form-2.tpl" idcolumn='id_country' data=$countries activation=false sortable=true controller="country"}
+                {include file="section/form/table-form-2.tpl" idcolumn='id_country' data=$countries activation=false sortable=true controller="country" change_offset=true}
             </div>
         </section>
     </div>

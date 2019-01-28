@@ -12,6 +12,8 @@ $(function()
 		return false;
 	});
 
+	$('[data-toggle="popover"]').popover();
+
 	$('.navbar-toggle').click(function(){
 		var target = $(this).data('target');
 		if($(this).hasClass('open') || $(target).hasClass('collapse in')){

@@ -53,7 +53,7 @@
                     </p>
                     {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
                     {*{include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="pages"}*}
-                    {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_pages' ajax_form=true activation=true sortable=$sortable controller="about" subcontroller="pages"}
+                    {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_pages' ajax_form=true activation=true sortable=$sortable controller="about" subcontroller="pages" change_offset=true}
                 </div>
             </div>
         </div>

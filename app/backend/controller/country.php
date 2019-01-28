@@ -61,13 +61,14 @@ class backend_controller_country extends backend_db_country
 	 * @param string|int|null $id
 	 * @param string $context
 	 * @param boolean $assign
+	 * @param boolean $pagination
 	 * @return mixed
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true) {
-		return $this->data->getItems($type, $id, $context, $assign);
+	private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
+		return $this->data->getItems($type, $id, $context, $assign, $pagination);
 	}
 
-    /**
+	/**
      * @return array
      */
     private function setCollection(){
@@ -181,7 +182,6 @@ class backend_controller_country extends backend_db_country
                         $this->template->display('country/add.tpl');
                     }
                     break;
-
                 case 'edit':
                     if (isset($this->iso_country)) {
                         $this->upd(
@@ -220,7 +220,7 @@ class backend_controller_country extends backend_db_country
                     break;
             }
         }else{
-			$this->getItems('countries');
+			$this->getItems('countries',null,'all',true,true);
 			$assign = array(
 				'id_country',
 				'iso_country' => ['title' => 'iso_country'],

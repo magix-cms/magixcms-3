@@ -98,10 +98,11 @@ class backend_controller_product extends backend_db_product
 	 * @param string|int|null $id
 	 * @param string $context
 	 * @param boolean $assign
+	 * @param boolean $pagination
 	 * @return mixed
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true) {
-		return $this->data->getItems($type, $id, $context, $assign);
+	private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
+		return $this->data->getItems($type, $id, $context, $assign, $pagination);
 	}
 
 	/**
@@ -113,7 +114,7 @@ class backend_controller_product extends backend_db_product
 	{
 		$this->modelLanguage->getLanguage();
 		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-		$results = $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',false);
+		$results = $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',false,true);
 		$params = array();
 
 		if($ajax) {
@@ -896,7 +897,7 @@ class backend_controller_product extends backend_db_product
 		else {
 			$this->modelLanguage->getLanguage();
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-			$this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all');
+			$this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
 			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'default_img', 'date_register'), $this->tableconfig);
 			$this->template->display('catalog/product/index.tpl');
 		}

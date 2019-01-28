@@ -16,13 +16,21 @@ class backend_db_category
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'pages':
+					$limit = '';
+					if($config['offset']) {
+						$limit = ' LIMIT 0, '.$config['offset'];
+						if(isset($config['page']) && $config['page'] > 1) {
+							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+						}
+					}
+
 					$sql = "SELECT p.id_cat, c.name_cat, c.content_cat, p.menu_cat, p.date_register, p.img_cat
 							FROM mc_catalog_cat AS p
 								JOIN mc_catalog_cat_content AS c USING ( id_cat )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
 								GROUP BY p.id_cat 
-							ORDER BY p.order_cat";
+							ORDER BY p.order_cat".$limit;
 
 					if(isset($config['search'])) {
 						$cond = '';
@@ -64,7 +72,7 @@ class backend_db_category
 										LEFT JOIN mc_catalog_cat_content AS ca ON ( pa.id_cat = ca.id_cat ) 
 										WHERE c.id_lang = :default_lang $cond
 										GROUP BY p.id_cat 
-									ORDER BY p.order_cat";
+									ORDER BY p.order_cat".$limit;
 						}
 					}
 					break;

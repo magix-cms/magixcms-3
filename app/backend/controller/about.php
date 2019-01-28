@@ -241,17 +241,19 @@ class backend_controller_about extends backend_db_about{
         if (http_request::isPost('openinghours')) $this->send['openinghours'] = $formClean->arrayClean($_POST['openinghours']);
     }
 
-    /**
-     * Assign data to the defined variable or return the data
+	/**
+	 * Assign data to the defined variable or return the data
 	 * @param string $type
 	 * @param string|int|null $id
-     * @param string $context
+	 * @param string $context
 	 * @param boolean $assign
-     * @return mixed
-     */
-    private function getItems($type, $id = null, $context = null, $assign = true) {
-        return $this->data->getItems($type, $id, $context, $assign);
-    }
+	 * @param boolean $pagination
+	 * @return mixed
+	 * @throws Exception
+	 */
+	private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
+		return $this->data->getItems($type, $id, $context, $assign, $pagination);
+	}
 
 	/**
 	 * @param $ajax
@@ -268,7 +270,7 @@ class backend_controller_about extends backend_db_about{
 			$results = $this->getItems('pagesChild',$this->edit,'all',false);
 		}
 		else {
-			$results = $this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',false);
+			$results = $this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',false,true);
 		}
 
 		$assign = $this->tableconfig[(($ajax || $this->edit) ? 'parent' : 'all')];
@@ -779,7 +781,7 @@ class backend_controller_about extends backend_db_about{
 			$this->modelLanguage->getLanguage();
 			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 
-			$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all');
+			$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',true,true);
 			$this->data->getScheme(
 				array('mc_about_page','mc_about_page_content'),
 				array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),

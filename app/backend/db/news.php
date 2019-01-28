@@ -41,6 +41,13 @@ class backend_db_news
 					break;
 				case 'news':
 					$cond = '';
+					$limit = '';
+					if($config['offset']) {
+						$limit = ' LIMIT 0, '.$config['offset'];
+						if(isset($config['page']) && $config['page'] > 1) {
+							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+						}
+					}
 					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
 						$nbc = 0;
 						foreach ($config['search'] as $key => $q) {
@@ -71,7 +78,7 @@ class backend_db_news
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE c.id_lang = :default_lang $cond
-							ORDER BY id_news DESC";
+							ORDER BY id_news DESC".$limit;
 					break;
 				case 'img':
 					$sql = 'SELECT p.id_news, p.img_news FROM mc_news AS p WHERE p.img_news IS NOT NULL';

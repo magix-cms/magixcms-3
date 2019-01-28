@@ -48,6 +48,11 @@
                 </header>
                 {block name='article:content'}
                 {/block}
+                {if isset($nbp) && $nbp > 1}
+                    <section class="container">
+                        {include file="section/brick/pagination/number.tpl" nbp=$nbp}
+                    </section>
+                {/if}
             </div>
         {/block}
 

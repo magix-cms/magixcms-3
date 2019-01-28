@@ -16,6 +16,14 @@ class backend_db_country{
 			switch ($config['type']) {
 				case 'countries':
 					$cond = '';
+					$limit = '';
+					if($config['offset']) {
+						$limit = ' LIMIT 0, '.$config['offset'];
+						if(isset($config['page']) && $config['page'] > 1) {
+							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+						}
+					}
+
 					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
 						$nbc = 0;
 
@@ -38,7 +46,7 @@ class backend_db_country{
 						}
 					}
 					$sql = "SELECT country.id_country,country.iso_country,country.name_country 
-							FROM mc_country AS country $cond ORDER BY order_country ASC";
+							FROM mc_country AS country $cond ORDER BY order_country ASC".$limit;
 					break;
 			}
 
