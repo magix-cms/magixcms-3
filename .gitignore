@@ -26,3 +26,4 @@ plugins/mollie/
 plugins/cartpay/
 plugins/recaptcha/
 plugins/homecatalog/
+plugins/mainsectors/

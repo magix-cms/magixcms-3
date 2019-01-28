@@ -14,6 +14,9 @@
     .soc-bg (@style, @colors) when (@style = color) {
         background: @color;
     }
+    .soc-bg (@style, @colors) when (@style = pastel) {
+        background-color: lighten(desaturate(extract(@colors,2),5%),10%);
+    }
     .soc-bg (@style, @colors) when (@style = flat) {
         background-color: extract(@colors,2);
     }

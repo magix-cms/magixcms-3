@@ -201,8 +201,7 @@ class frontend_model_pages extends frontend_db_pages{
 			else {
 				$allowed = array(
 					'all',
-					'parent',
-					'child'
+					'one'
 				);
 
 				if (in_array($custom['context'],$allowed)) $conf['context'][1] = $custom['context'];
@@ -321,11 +320,11 @@ class frontend_model_pages extends frontend_db_pages{
 				}
 			}
 		}
-        elseif ($conf['context'][1] == 'parent') {
+        elseif ($conf['context'][1] == 'one') {
             if ($override) {
                 $getCallClass = $this->modelPlugins->getCallClass($override);
                 if(method_exists($getCallClass,'override')){
-                    $conf['data'] = 'parent';
+                    $conf['data'] = 'one';
                     $conf['controller'] = $current;
                     $data = call_user_func_array(
                         array(
@@ -340,156 +339,35 @@ class frontend_model_pages extends frontend_db_pages{
                 }
             }
             else {
-                $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent IS NULL ';
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
 
-                if (isset($custom['select'])) {
-                    $conditions .= ' AND p.id_pages IN (' . implode(',',$conf['id']) . ') ';
-                }
+				if (isset($custom['select'])) {
+					$conditions .= ' AND p.id_pages IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+				}
 
-                if (isset($custom['exclude'])) {
-                    $conditions .= ' AND p.id_pages NOT IN (' . implode(',',$conf['id']) . ') ';
-                }
+				if (isset($custom['exclude'])) {
+					$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+				}
 
-                if ($custom['type'] == 'menu') {
-                    $conditions .= ' AND p.menu_pages = 1';
-                }
+				if ($custom['type'] == 'menu') {
+					$conditions .= ' AND p.menu_pages = 1';
+				}
 
 				// Set order
 				switch ($conf['sort']['type']) {
 					case 'order':
-						$conditions .= ' ORDER BY p.id_pages, p.order_pages '.$conf['sort']['order'];
+						$conditions .= ' ORDER BY p.id_parent, p.order_pages '.$conf['sort']['order'];
 						break;
 				}
 
 				if ($conf['limit'] !== null) $conditions .= ' LIMIT ' . $conf['limit'];
 
-                if ($conditions != '') {
-                    $data = parent::fetchData(
-                        array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
-                        array('iso' => $conf['lang'])
-                    );
-
-					if(is_array($data) && !empty($data)) {
-						$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
-						$data = $this->data->setPagesTree($data,'pages',$branch);
-					}
-                }
-            }
-            if($data != null AND ($conf['context'][2] == 'child'))
-            {
-                if ($override) {
-                    $getCallClass = $this->modelPlugins->getCallClass($override);
-                    if(method_exists($getCallClass,'override')){
-                        foreach ($data as $k1 => $v1) {
-                            $conf['data'] = 'child';
-                            $conf['controller'] = $current;
-                            $conf['id_pages'] = $v1['id_pages'];
-                            $data_2 = call_user_func_array(
-                                array(
-                                    $getCallClass,
-                                    'override'
-                                ),
-                                array(
-                                    $conf,
-                                    $custom
-                                )
-                            );
-                            if ($data_2 != null) {
-                                $data[$k1]['subdata'] = $data_2;
-                            }
-                        }
-                        $data_2 = null;
-                    }
-                } else {
-
-                    foreach ($data as $k1 => $v1) {
-
-                        $conditions = '';
-                        $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1
-                    AND p.id_parent = :id';
-
-                        /*if (isset($custom['select'])) {
-
-                            $conditions .= ' AND p.id_pages IN (' . $conf['id'] . ') ';
-                        }*/
-                        if (isset($custom['exclude'])) {
-
-                            $conditions .= ' AND p.id_pages NOT IN (' . $conf['id'] . ') ';
-                        }
-
-                        if ($conf['type'] == 'menu') {
-                            $conditions .= ' AND p.menu_pages = 1';
-                        }
-
-                        $conditions .= ' GROUP BY p.id_pages ORDER BY p.order_pages ASC';
-
-                        if ($conf['limit'] != null) {
-                            $conditions .= ' LIMIT ' . $conf['limit'];
-                        }
-
-
-                        if ($conditions != '') {
-                            $data_2 = parent::fetchData(
-                                array('context' => 'all', 'type' => 'child', 'conditions' => $conditions),
-                                array(
-                                    ':iso' => $conf['lang'],
-                                    ':id' => $v1['id_pages']
-                                )
-                            );
-                        }
-
-                        if ($data_2 != null) {
-                            $data[$k1]['subdata'] = $data_2;
-                        }
-                    }
-                    $data_2 = null;
-                }
-            }
-        }
-        elseif ($conf['context'][1] == 'child') {
-            if ($override) {
-                $getCallClass = $this->modelPlugins->getCallClass($override);
-                if(method_exists($getCallClass,'override')){
-                    $conf['data'] = 'child';
-                    $conf['controller'] = $current;
-                    $data = call_user_func_array(
-                        array(
-                            $getCallClass,
-                            'override'
-                        ),
-                        array(
-                            $conf,
-                            $custom
-                        )
-                    );
-                }
-            } else {
-
-                $conditions = '';
-                $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent = :id';
-
-                if ($custom['type'] == 'menu') {
-                    $conditions .= ' AND p.menu_pages = 1';
-                }
-
-                $conditions .= ' GROUP BY p.id_pages';
-                if ($conf['sort'] != null) {
-                    $conditions .= ' ORDER BY p.order_pages';
-                }
-                if ($conf['limit'] != null) {
-                    $conditions .= ' LIMIT ' . $conf['limit'];
-                }
-
-                $data = parent::fetchData(
-                    array(
-                        'context' => 'all',
-                        'type' => 'child',
-                        'conditions' => $conditions
-                    ),
-                    array(
-                        ':iso' => $conf['lang'],
-                        ':id' => $conf['id'])
-                );
+				if ($conditions != '') {
+					$data = parent::fetchData(
+						array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+						array('iso' => $conf['lang'])
+					);
+				}
             }
         }
 

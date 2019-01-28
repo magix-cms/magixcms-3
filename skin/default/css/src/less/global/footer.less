@@ -59,6 +59,35 @@
 			font-size: 20px;
 		}
 	}
+	// --- Block last news
+	&-last-news {
+		.news-list-last {
+			h5 {
+				font-weight: 600;
+				line-height: 1.428;
+				.text-overflow();
+			}
+			.date{
+				color: @main-color;
+			}
+			a {
+				text-decoration: none;
+				p{
+					color: #959595;
+					text-decoration: none;
+				}
+			}
+
+			.media-footer {
+				border-bottom: 1px dotted @text-color;
+				padding-bottom: 10px;
+				p {
+					font-size: 13px;
+					margin-bottom: 5px;
+				}
+			}
+		}
+	}
 }
 
 #colophon {

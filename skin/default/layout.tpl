@@ -70,7 +70,7 @@
     </main>
 {/block}
 {block name="main:after"}{/block}
-{include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','contact']}
+{include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','news','contact']}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 {strip}{capture name="vendors"}
     /min/?f=skin/{$theme}/js/vendor/bootstrap.min.js,
