@@ -24,7 +24,7 @@
         {$sch.input|var_dump}
     {/foreach}{/if}
     {if $debug}{$data|var_dump}{/if}
-    {if $change_offset}
+    {if $change_offset && !isset($smarty.get.search)}
         {$request = $smarty.server.REQUEST_URI}
         {$offset = strpos($request,'&offset=')}
         {if $offset}

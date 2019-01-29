@@ -8,14 +8,34 @@
                         <div class="row">
                             <div class="col-ph-12 col-sm-8">
                                 <div class="form-group">
-                                    <label for="content[{$id}][name_p]">{#title#|ucfirst} *</label>
-                                    <input type="text" class="form-control" id="content[{$id}][name_p]" name="content[{$id}][name_p]" value="" size="50" />
+                                    <label for="content[{$id}][name_p]">{#name_p#|ucfirst} *</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="content[{$id}][name_p]" name="content[{$id}][name_p]" value="" size="50" />
+                                        <span class="input-group-addon">
+                                            <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Max. 50 caractères. Nom utilisé pour l'url du produit et l'affichage dans les catégories">
+                                                <span class="fa fa-question-circle"></span>
+                                            </a>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-ph-12 col-sm-4">
                                 <div class="form-group">
                                     <label for="content[{$id}][published_p]">Statut</label>
                                     <input id="content[{$id}][published_p]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_p]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger">
+                                </div>
+                            </div>
+                            <div class="col-ph-12 col-sm-8">
+                                <div class="form-group">
+                                    <label for="content[{$id}][longname_p]">{#longname_p#|ucfirst}</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="content[{$id}][longname_p]" name="content[{$id}][longname_p]" value="" />
+                                        <span class="input-group-addon">
+                                            <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Si remplis, sera utilisé dans la fiche produit à la place du nom court et sera également utilisé pour le référencement">
+                                                <span class="fa fa-question-circle"></span>
+                                            </a>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -26,10 +46,10 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="content[{$id}][url_p]" name="content[{$id}][url_p]" readonly="readonly" size="30" value="" />
                                         <span class="input-group-addon">
-                                    <a class="unlocked" href="#">
-                                        <span class="fa fa-lock"></span>
-                                    </a>
-                                </span>
+                                            <a class="unlocked" href="#">
+                                                <span class="fa fa-lock"></span>
+                                            </a>
+                                        </span>
                                     </div>
                                 </div>
                             </div>

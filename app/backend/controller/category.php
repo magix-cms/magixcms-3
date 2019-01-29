@@ -3,7 +3,7 @@ class backend_controller_category extends backend_db_category
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder;
-    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso;
+    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset;
 	public $tableconfig = array(
 		'all' => array(
 			'id_cat',
@@ -48,6 +48,7 @@ class backend_controller_category extends backend_db_category
         if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
         elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
         if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
+		if (http_request::isGet('offset')) $this->offset = intval($formClean->simpleClean($_GET['offset']));
 
 		if (http_request::isGet('tableaction')) {
 			$this->tableaction = $formClean->simpleClean($_GET['tableaction']);
@@ -301,7 +302,7 @@ class backend_controller_category extends backend_db_category
                                 'type'=>'order'
                             ),array(
                                 'id_cat'       => $p[$i],
-                                'order_cat'    => $i
+                                'order_cat'    => $i + (isset($this->offset) ? ($this->offset + 1) : 0)
                             )
                         );
                     }elseif(isset($_POST['product'])){

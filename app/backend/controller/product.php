@@ -206,6 +206,7 @@ class backend_controller_product extends backend_db_product
 				'id_lang' => $page['id_lang'],
 				'iso_lang' => $page['iso_lang'],
 				'name_p' => $page['name_p'],
+				'longname_p' => $page['longname_p'],
 				'url_p' => $page['url_p'],
 				'resume_p' => $page['resume_p'],
 				'content_p' => $page['content_p'],

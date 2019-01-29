@@ -45,7 +45,7 @@ class backend_db_news
 					if($config['offset']) {
 						$limit = ' LIMIT 0, '.$config['offset'];
 						if(isset($config['page']) && $config['page'] > 1) {
-							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+							$limit = ' LIMIT '.(($config['page'] - 1) * $config['offset']).', '.$config['offset'];
 						}
 					}
 					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {

@@ -20,7 +20,7 @@ class backend_db_country{
 					if($config['offset']) {
 						$limit = ' LIMIT 0, '.$config['offset'];
 						if(isset($config['page']) && $config['page'] > 1) {
-							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+							$limit = ' LIMIT '.(($config['page'] - 1) * $config['offset']).', '.$config['offset'];
 						}
 					}
 

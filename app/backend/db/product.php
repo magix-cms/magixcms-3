@@ -21,7 +21,7 @@ class backend_db_product{
 					if($config['offset']) {
 						$limit = ' LIMIT 0, '.$config['offset'];
 						if(isset($config['page']) && $config['page'] > 1) {
-							$limit = ' LIMIT '.((($config['page'] - 1) * 30) + 1).', '.$config['offset'];
+							$limit = ' LIMIT '.(($config['page'] - 1) * $config['offset']).', '.$config['offset'];
 						}
 					}
 
@@ -214,8 +214,8 @@ class backend_db_product{
 						VALUES (:price_p,:reference_p,NOW())';
 				break;
 			case 'newContent':
-				$sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_p,resume_p,content_p,published_p) 
-			  			VALUES (:id_product,:id_lang,:name_p,:url_p,:resume_p,:content_p,:published_p)';
+				$sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,published_p) 
+			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:published_p)';
 				break;
 			case 'newImg':
 				$sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img,order_img,default_img) 
@@ -266,6 +266,7 @@ class backend_db_product{
 				$sql = 'UPDATE mc_catalog_product_content 
 						SET 
 							name_p = :name_p,
+							longname_p = :longname_p,
 							url_p = :url_p,
 							resume_p = :resume_p,
 							content_p = :content_p,

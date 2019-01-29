@@ -43,7 +43,7 @@ class plugins_contact_public extends plugins_contact_db
         $this->sanitize = new filter_sanitize();
 		$this->header = new http_header();
         $this->data = new frontend_model_data($this,$this->template);
-        $this->getlang = $this->template->lang;
+		$this->getlang = $this->template->lang;
         $this->mail = new frontend_model_mail('contact');
         $this->modelDomain = new frontend_model_domain($this->template);
 		$this->config = $this->getItems('config',null,'one',false);

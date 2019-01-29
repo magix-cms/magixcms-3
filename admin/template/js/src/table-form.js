@@ -29,7 +29,8 @@ var tableForm = (function ($, undefined) {
      */
     return {
         // Public Functions
-        run: function (controller) {
+        run: function (controller,offset) {
+            if(typeof offset === 'undefined') offset = null;
             // Initialization of the multi-select checkboxes
             initCheckboxSelect();
 
@@ -42,7 +43,7 @@ var tableForm = (function ($, undefined) {
                         let serial = $( this ).sortable('serialize');
                         $.jmRequest({
                             handler: "ajax",
-                            url: controller+'&action=order',
+                            url: controller+'&action=order'+(offset !== null ? '&offset='+offset : ''),
                             method: 'POST',
                             data : serial,
                             success:function(e){
