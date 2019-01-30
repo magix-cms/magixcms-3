@@ -1,4 +1,5 @@
 {extends file="catalog/index.tpl"}
+{if $product.long_name !== ''}{$product.name = $product.long_name}{/if}
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
 {block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$product.name}] parent={$parent.name} record={$product.name}}{/block}
@@ -16,11 +17,12 @@
             </fieldset>
         </form>
     {/capture}
-    <article class="catalog container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Series">
+    <article class="catalog container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Product">
         {block name='article:content'}
+            {if $product.long_name !== ''}<meta itemprop="name" content="{$product.short_name}">{/if}
             <header>
-                <h1 itemprop="name">{$product.name}</h1>
-                <span class="ref">{$product.reference}</span>
+                <h1 itemprop="{if $product.long_name !== ''}alternateName{else}name{/if}">{$product.name}</h1>
+                {if $product.reference}<span class="ref">{#product_ref#}&nbsp;{$product.reference}</span>{/if}
                 <span class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <span itemprop="price">{$product.price|round:2|number_format:2:',':' '|decimal_trim:','}</span> <span itemprop="priceCurrency" content="EUR">€</span> TTC
                 </span>
@@ -29,27 +31,32 @@
                 <meta itemprop="name" content="{$parent.name}">
                 <meta itemprop="url" content="{$parent.url}">
             </div>
-            {*{$product.imgs|var_dump}*}
-            {if count($product.imgs) > 1}
-                {include file="catalog/loop/gallery.tpl"}
-            {elseif count($product.imgs) > 0}
-                {$img = $product.imgs[0]}
-                <figure{if $img.img.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
-                    {if $img.img.medium}
-                        <meta itemprop="contentUrl" content="{$img.img.large}" />
-                        <a href="{$img.img.large.src}" class="img-zoom" title="{$product.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                            <img src="{$product.img_default}" data-src="{$img.img.medium.src}" alt="{$product.name}" class="img-responsive lazyload" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
-                        </a>
-                    {else}
-                        <img class="img-responsive" src="{$product.img_default}" alt="{$product.name}" />
+            <div class="row">
+                <div class="col-12 col-sm-6 col-xl-4">
+                    {if count($product.imgs) > 1}
+                        {include file="catalog/loop/gallery.tpl"}
+                    {elseif count($product.imgs) > 0}
+                        {$img = $product.imgs[0]}
+                        <figure{if $img.img.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
+                            {if $img.img.medium}
+                                <meta itemprop="contentUrl" content="{$img.img.large}" />
+                                <a href="{$img.img.large.src}" class="img-zoom" title="{$product.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
+                                    <img{* src="{$product.img_default}"*} data-src="{$img.img.medium.src}" alt="{$product.name}{if $product.resume} | {$product.resume}{/if}" class="img-responsive lazyload" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
+                                </a>
+                            {else}
+                                <img class="img-responsive" src="{$product.img_default}" alt="{$product.name}" />
+                            {/if}
+                        </figure>
                     {/if}
-                </figure>
-            {/if}
-            <div class="text" itemprop="description">
-                {$product.content}
-            </div>
-            <div class="row-center">
-                {$smarty.capture.contact}
+                </div>
+                <div class="col-12 col-sm-6 col-xl-8">
+                    <div class="text" itemprop="description">
+                        {$product.content}
+                    </div>
+                    <div class="row-center">
+                        {$smarty.capture.contact}
+                    </div>
+                </div>
             </div>
             {if $product.associated}
                 <h3>{#similar_products#|ucfirst}</h3>
@@ -65,9 +72,9 @@
     </article>
 {/block}
 
-{block name="foot"}
+{*{block name="foot"}
     {strip}{capture name="scriptVendor"}
         /min/?f=skin/{$theme}/js/vendor/smooth-gallery.min.js
     {/capture}
         {script src=$smarty.capture.scriptVendor concat=$concat type="javascript"}{/strip}
-{/block}
+{/block}*}

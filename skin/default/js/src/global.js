@@ -113,8 +113,8 @@ const C = {
             $.featherlight.prototype.afterContent = afterContent;
             $('.img-zoom').featherlight();
             if($.featherlightGallery !== undefined) {
-                $.featherlightGallery.prototype.previousIcon = '<span class="fa fa-angle-left"></span>';
-                $.featherlightGallery.prototype.nextIcon = '<span class="fa fa-angle-right"></span>';
+                $.featherlightGallery.prototype.previousIcon = '<i class="material-icons">keyboard_arrow_left</i>';
+                $.featherlightGallery.prototype.nextIcon = '<i class="material-icons">keyboard_arrow_right</i>';
                 $.featherlightGallery.prototype.afterContent = afterContent
                 $('.img-gallery').featherlightGallery();
             }
@@ -122,5 +122,127 @@ const C = {
                 $('.img-gallery').featherlight();
             }
         }
+
+        // *** Owl Carousel init
+        let owlOptions = {
+            loop: true,
+            margin: 30,
+            responsiveClass: true,
+            nav: true,
+            dots: false,
+            lazyLoad:true,
+            navElement: 'a',
+            navText: [
+                '<i class="material-icons ico ico-keyboard_arrow_left" aria-hidden="true">keyboard_arrow_left</i>',
+                '<i class="material-icons ico ico-keyboard_arrow_right" aria-hidden="true">keyboard_arrow_right</i>'
+            ]
+        };
+        if($(".owl-slideshow").length > 0 && $.fn.owlCarousel !== undefined) {
+            $(".owl-slideshow > .owl-carousel").owlCarousel(Object.assign({},owlOptions,{
+                items: 1,
+                margin: 0,
+                dots: true,
+                animateOut: 'fadeOut',
+                dotsContainer: '.owl-slideshow-dots',
+                navContainer: '.owl-slideshow-nav'
+            }));
+        }
+        if($(".thumbs").length > 0 && $.fn.owlCarousel !== undefined) {
+            $(".thumbs").owlCarousel(Object.assign({},owlOptions,{
+                margin: 5,
+                items:3
+            }));
+            // *** for gallery pictures
+            $(".show-img").off('click').click(function(){
+                $(".big-image a").animate({ opacity: 0, 'z-index': -1 }, 200);
+                $($(this).data('target')).animate({ opacity: 1, 'z-index': 1 }, 200);
+                return false;
+            });
+        }
+        // *** Owl Carousel in plugins
+        // *** Uncomment this block if you're using the mainsectors plugin
+        /*if($(".owl-cat").length > 0 && $.fn.owlCarousel !== undefined) {
+            $(".owl-cat").owlCarousel(Object.assign({},owlOptions,{
+                responsive:{
+                    0:{
+                        items:1,
+                        margin: 0
+                    },
+                    480:{
+                        items:2,
+                        margin: 0
+                    },
+                    768:{
+                        items:2,
+                        margin: 30
+                    },
+                    992:{
+                        items:3,
+                        margin: 30
+                    }
+                }
+            }));
+        }*/
+        // *** Uncomment this block if you're using the homecatalog plugin
+        /*if($(".owl-products").length > 0 && $.fn.owlCarousel !== undefined) {
+            $(".owl-products").owlCarousel(Object.assign({},owlOptions,{
+                responsive:{
+                    0:{
+                        items:1,
+                        margin: 0
+                    },
+                    480:{
+                        items:2,
+                        margin: 0
+                    },
+                    768:{
+                        items:2,
+                        margin: 30
+                    },
+                    992:{
+                        items:3,
+                        margin: 30
+                    },
+                    1200:{
+                        items:4,
+                        // slideBy:2,
+                        margin: 30
+                    }
+                }
+            }));
+        }*/
+        // *** Uncomment this block if you're using the homebrands plugin
+        /*if($(".owl-brands").length > 0 && $.fn.owlCarousel !== undefined) {
+            $(".owl-brands").owlCarousel(Object.assign({},owlOptions,{
+                margin: 0,
+                dots: true,
+                nav: false,
+                autoplay: true,
+                autoplayHoverPause: true,
+                autoplayTimeout: 5000,
+                responsive:{
+                    0:{
+                        items:1,
+                        margin: 0
+                    },
+                    480:{
+                        items:2,
+                        margin: 0
+                    },
+                    768:{
+                        items:3,
+                        margin: 30
+                    },
+                    992:{
+                        items:5,
+                        margin: 30
+                    },
+                    1200:{
+                        items:6,
+                        margin: 30
+                    }
+                }
+            }));
+        }*/
     });
 }(jQuery);

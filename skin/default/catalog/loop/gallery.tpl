@@ -16,16 +16,22 @@
             {/if}*}
         </div>
 
-        <div class="thumbs three-thumbs smooth-gallery">
+        {*<div class="thumbs three-thumbs smooth-gallery">
             {if {$product.imgs|count} > 3}
                 <a class="button prev"><span class="fa fa-angle-left"></span></a>
                 <a class="button next"><span class="fa fa-angle-right"></span></a>
             {/if}
             {strip}<ul class="list-unstyled">
                 {foreach $product.imgs as $k => $item}
-                <li class="item{if $item@index < 3} active{/if}" aria-hidden="false"><a class="show-img" href="#" data-target="#{if $item.default}default{else}img{$k}{/if}" rel="productGallery"><img src="{$product.img_default}" class="img-responsive lazyload" data-src="{$item.img.small.src}" alt="{$product.name|ucfirst}"{if $item.img.small.crop === 'adaptative'} width="{$item.img.small.w}" height="{$item.img.small.h}"{/if}/></a></li>
+                <li class="item{if $item@index < 3} active{/if}" aria-hidden="false"><a class="show-img" href="#" data-target="#{if $item.default}default{else}img{$k}{/if}" rel="productGallery"><img src="{$product.img_default}" class="img-responsive lazy" data-src="{$item.img.small.src}" alt="{$product.name|ucfirst}"{if $item.img.small.crop === 'adaptative'} width="{$item.img.small.w}" height="{$item.img.small.h}"{/if}/></a></li>
                 {/foreach}
             </ul>{/strip}
+        </div>*}
+
+        <div class="owl-carousel owl-theme-square thumbs">
+            {foreach $product.imgs as $k => $item}
+                <a class="show-img" href="#" data-target="#{if $item.default}default{else}img{$k}{/if}" rel="productGallery"><img {*src="{$product.img_default}"*} class="img-responsive owl-lazy" data-src="{$item.img.small.src}" alt="{$product.name|ucfirst}"{if $item.img.small.crop === 'adaptative'} width="{$item.img.small.w}" height="{$item.img.small.h}"{/if}/></a>
+            {/foreach}
         </div>
     </div>
 </div>

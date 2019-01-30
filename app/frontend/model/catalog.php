@@ -85,7 +85,9 @@ class frontend_model_catalog extends frontend_db_catalog {
             elseif (isset($row['name_p'])) {
                 //$subcat['id']   = (isset($row['idcls'])) ? $row['idcls'] : null;
                 //$subcat['name'] = (isset($row['pathslibelle'])) ? $row['pathslibelle'] : null;
+                $data['short_name']= $row['name_p'];
                 $data['name']      = $row['name_p'];
+                $data['long_name'] = $row['longname_p'];
 
                 $data['url']  =
                     $this->routingUrl->getBuildUrl(array(

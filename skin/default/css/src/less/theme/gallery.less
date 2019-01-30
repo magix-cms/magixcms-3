@@ -9,7 +9,7 @@
 	float: left;
 }
 
-.thumbs-size(@nb; @gutter: 6px; @ratio: @img-ratio){
+/*.thumbs-size(@nb; @gutter: 6px; @ratio: @img-ratio){
 	padding-top: ~"calc((100% - (@{gutter} * (@{nb} - 1)))/(@{ratio} * @{nb}))";
 
 	ul {
@@ -24,7 +24,7 @@
 		&.active.left { margin-left: ~"calc((100%/@{nb})* -1)"; }
 		&.active.right { margin-right: ~"calc((100%/@{nb})* -1)"; }
 	}
-}
+}*/
 
 .image-gallery {
 	/*** Big image ***/
@@ -56,7 +56,7 @@
 	}
 
 	/*** Button ***/
-	.button {
+	/*.button {
 		font-size: 30px;
 		display: table;
 		padding: 0 10px;
@@ -92,10 +92,10 @@
 			}
 			text-decoration: none;
 		}
-	}
+	}*/
 
 	/*** thumbs ***/
-	.thumbs {
+	/*.thumbs {
 		overflow: hidden;
 		white-space: nowrap;
 		position: relative;
@@ -132,7 +132,7 @@
 				}
 			}
 		}
-	}
+	}*/
 
 	//.one-thumb {.thumbs-size(1, 30px)}
 	/*@media (max-width: @screen-ph-max) {
@@ -141,6 +141,6 @@
 	@media (min-width: @screen-xs-min) {
 		.two-thumbs {.thumbs-size(2, 30px)}
 	}*/
-	.three-thumbs {.thumbs-size(3)}
+	//.three-thumbs {.thumbs-size(3)}
 	//.four-thumbs {.thumbs-size(4)}
 }

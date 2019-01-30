@@ -7,7 +7,7 @@
  * @author      Salvatore Di Salvo <disalvo.infographiste@gmail.com>
  */
 
-function getPosition(element) {
+/*function getPosition(element) {
     var xPosition = 0;
     var yPosition = 0;
 
@@ -17,7 +17,7 @@ function getPosition(element) {
         element = element.offsetParent;
     }
     return { x: xPosition, y: yPosition };
-}
+}*/
 
 +function ($) {
     'use strict';
@@ -25,11 +25,12 @@ function getPosition(element) {
     $(window).on('load', function () {
         // *** Auto-position of the affix header
         //let tar = document.documentElement.clientHeight * (1/3);
-        let hH = $('#header').height();
+        //let hH = $('#header').height();
         //tar = (hH - 92);
-        let tar = (hH - 150);
+        //let tar = (hH - 150);
+        let tar = window.innerHeight/2;
 
-        let toptar = document.documentElement.clientHeight * (1/3);
+        //let toptar = document.documentElement.clientHeight * (1/3);
         function affixHead() {
             let pos = window.pageYOffset,
                 atTop = $('#header').hasClass('at-top');
@@ -43,6 +44,7 @@ function getPosition(element) {
             }
         }
         $(window).scroll(affixHead);
+        $(window).resize(affixHead);
         affixHead();
     });
 }(jQuery);

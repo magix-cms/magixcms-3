@@ -10,9 +10,9 @@
                                 <div class="form-group">
                                     <label for="content[{$id}][name_p]">{#name_p#|ucfirst} *</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="content[{$id}][name_p]" name="content[{$id}][name_p]" value="" size="50" />
+                                        <input type="text" class="form-control" id="content[{$id}][name_p]" name="content[{$id}][name_p]" value="" maxlength="65" />
                                         <span class="input-group-addon">
-                                            <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Max. 50 caractères. Nom utilisé pour l'url du produit et l'affichage dans les catégories">
+                                            <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="{#name_p_info#}">
                                                 <span class="fa fa-question-circle"></span>
                                             </a>
                                         </span>
@@ -29,9 +29,9 @@
                                 <div class="form-group">
                                     <label for="content[{$id}][longname_p]">{#longname_p#|ucfirst}</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="content[{$id}][longname_p]" name="content[{$id}][longname_p]" value="" />
+                                        <input type="text" class="form-control" id="content[{$id}][longname_p]" name="content[{$id}][longname_p]" value="" maxlength="125" />
                                         <span class="input-group-addon">
-                                            <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Si remplis, sera utilisé dans la fiche produit à la place du nom court et sera également utilisé pour le référencement">
+                                            <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="{#longname_p_info#}">
                                                 <span class="fa fa-question-circle"></span>
                                             </a>
                                         </span>

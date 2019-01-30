@@ -485,6 +485,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_content` (
   `id_product` int(11) unsigned NOT NULL,
   `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
   `name_p` varchar(125) DEFAULT NULL,
+  `longname_p` varchar(125) DEFAULT NULL,
   `url_p` varchar(125) DEFAULT NULL,
   `resume_p` text,
   `content_p` text,

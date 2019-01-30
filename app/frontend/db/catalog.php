@@ -107,7 +107,7 @@ class frontend_db_catalog
 					break;
 				case 'product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT catalog.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img
+					$sql = "SELECT catalog.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.longname_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img
 						FROM mc_catalog AS catalog 
 						JOIN mc_catalog AS c2 ON ( catalog.id_product = c2.id_product )
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
@@ -151,7 +151,7 @@ class frontend_db_catalog
 						WHERE p.id_cat = :id AND lang.iso_lang = :iso AND c.published_cat = 1';
 					break;
 				case 'product':
-					$sql = 'SELECT c.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update
+					$sql = 'SELECT c.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.longname_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update
 						FROM mc_catalog AS c
 						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
 						JOIN mc_catalog_product AS p ON ( c.id_product = p.id_product )

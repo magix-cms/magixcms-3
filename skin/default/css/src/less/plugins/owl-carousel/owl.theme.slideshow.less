@@ -1,0 +1,81 @@
+.owl-slideshow {
+	position: relative;
+	// Styling Next and Prev buttons
+	.owl-slideshow-nav {
+		-webkit-tap-highlight-color: transparent;
+		position: absolute;
+		bottom: 25px;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		display: flex;
+		padding: 5px 0;
+
+		[class*='owl-'] {
+			color: #fff;
+			margin: 0;
+			padding: 0;
+			background: transparent;
+			display: inline-block;
+			cursor: pointer;
+			opacity: .5;
+			z-index: 100;
+
+			&:hover {
+				background: transparent;
+				color:#fff;
+				text-decoration: none;
+				opacity: 1;
+			}
+		}
+		.disabled {
+			opacity: .5;
+			cursor: default;
+		}
+		.owl-slideshow-dots {
+			display: flex;
+			justify-content: center;
+			-webkit-tap-highlight-color: transparent;
+			align-items: center;
+			margin: 0 1.5em;
+
+			.owl-dot {
+				zoom: 1;
+				border-radius: 100%;
+				border: 1px solid #fff;
+				background: transparent;
+				opacity: .5;
+				padding: 2px;
+				width: 12px;
+				height: 12px;
+				margin: 0 3px;
+				z-index: 100;
+				.auto-transition(.2s);
+
+				span {
+					width: 6px;
+					height: 6px;
+					background: transparent;
+					display: block;
+					-webkit-backface-visibility: visible;
+					border-radius: 100%;
+				}
+
+				&.active,
+				&:hover {
+					opacity: 1;
+
+					span {
+						background: #fff;
+					}
+				}
+			}
+		}
+
+		&:hover {
+			[class*='owl-'] {
+				opacity: 1;
+			}
+		}
+	}
+}

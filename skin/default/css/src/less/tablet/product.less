@@ -10,13 +10,6 @@
 	.text {
 		overflow: hidden;
 	}
-
-	.text figure,
-	#gallery {
-		float: left;
-		max-width: 50%;
-		margin-right: 20px;
-	}
 }
 .product-list {
 	> .row > div {
@@ -28,6 +21,33 @@
 /* --------------------------------------------------------
                         Category
 ---------------------------------------------------------- */
+
+#category {
+	.text figure,
+	#gallery {
+		float: left;
+		max-width: 50%;
+		margin-right: 20px;
+	}
+}
+
+@media (min-width: @screen-lg-min) {
+	#category {
+		.text figure,
+		#gallery {
+			max-width: 33.3333333333333%;
+		}
+	}
+}
+
+@media (min-width: @screen-xl-min) {
+	#category {
+		.text figure,
+		#gallery {
+			max-width: 25%;
+		}
+	}
+}
 
 /* --------------------------------------------------------
                        Subcategory

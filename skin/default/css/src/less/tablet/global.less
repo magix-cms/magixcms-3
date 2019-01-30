@@ -2,10 +2,21 @@
 // Remove default margin.
 //
 body {
-	> main {
-		padding-top: @headerH-sm+20;
+	#home-slideshow {
+		padding-top: @headerH-sm;
 		@media (min-width: @screen-md-min) {
-			padding-top: @headerH-md+20;
+			padding-top: @headerH-md;
+		}
+
+		+ main {
+			padding-top: 20px;
+		}
+	}
+
+	> main {
+		padding-top: @headerH-sm;
+		@media (min-width: @screen-md-min) {
+			padding-top: @headerH-md;
 		}
 	}
 }

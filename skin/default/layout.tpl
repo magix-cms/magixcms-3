@@ -73,10 +73,11 @@
 {include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','news','contact']}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 {strip}{capture name="vendors"}
-    /min/?f=skin/{$theme}/js/vendor/bootstrap.min.js,
+    /min/?f=skin/{$theme}/js/vendor/bootstrap-custom.min.js,
     {if $touch}skin/{$theme}/js/vendor/jquery.detect_swipe.min.js,{/if}
     skin/{$theme}/js/vendor/featherlight.min.js,
     skin/{$theme}/js/vendor/featherlight.gallery.min.js,
+    skin/{$theme}/js/vendor/owl.carousel.min.js,
     skin/{$theme}/js/vendor/lazysizes.min.js,
     {if $viewport !== 'mobile'}skin/{$theme}/js/affixhead.min.js,{/if}
     skin/{$theme}/js/global.min.js

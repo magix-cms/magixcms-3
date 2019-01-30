@@ -1,0 +1,93 @@
+
+.owl-theme-square {
+	&.owl-loaded {
+		display: flex;
+		flex-direction: column-reverse;
+		//margin: 0 -15px;
+		padding: 0 15px;
+		width: auto;
+	}
+
+	// Styling Next and Prev buttons
+	.owl-nav {
+		//margin-bottom: 10px;
+		text-align: right;
+		-webkit-tap-highlight-color: transparent;
+		//padding: 0 15px;
+
+		.owl-prev,
+		.owl-next {
+			color: #fff;
+			font-size: 14px;
+			line-height: 1;
+			margin: 0;
+			padding: 10px;
+			background: #ddd;
+			display: inline-block;
+			cursor: pointer;
+			border-radius: 0;
+			background: extract(@main-colors, 4);
+
+			.material-icons {
+				font-size: 14px;
+				//vertical-align: middle;
+			}
+
+			&:hover {
+				background: @main-color;
+				color: #fff;
+				text-decoration: none;
+			}
+		}
+		.disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+	}
+
+	.owl-stage-outer {
+		//padding: 15px;
+		padding-top: 10px;
+		margin: 0 -15px;
+	}
+
+	@media (min-width: @screen-sm-min) {
+		.owl-nav {
+			margin: 0 -15px;
+		}
+	}
+
+	/*// Styling dots
+	.owl-nav.disabled + .owl-dots {
+		margin-top: 10px;
+	}
+
+	.owl-dots {
+		text-align: center;
+		-webkit-tap-highlight-color: transparent;
+
+		.owl-dot {
+			display: inline-block;
+			zoom: 1;
+			*display: inline;
+
+			span {
+				width: @dot-width;
+				height: @dot-height;
+				margin: @dot-margin;
+				background: @dot-background;
+				display: block;
+				-webkit-backface-visibility: visible;
+				transition: opacity 200ms ease;
+				border-radius: @dot-rounded;
+			}
+
+			&.active,
+			&:hover {
+				span {
+					background: @dot-background-active;
+				}
+			}
+		}
+	}*/
+}
