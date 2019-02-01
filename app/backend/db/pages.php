@@ -267,6 +267,15 @@ class backend_db_pages
 						SET img_pages = :img_pages
                 		WHERE id_pages = :id_pages';
 				break;
+			case 'imgContent':
+				$sql = 'UPDATE mc_cms_page_content 
+						SET 
+							alt_img = :alt_img,
+							title_img = :title_img,
+							caption_img = :caption_img
+                		WHERE id_pages = :id_pages 
+                		AND id_lang = :id_lang';
+				break;
 			case 'pageActiveMenu':
 				$sql = 'UPDATE mc_cms_page 
 						SET menu_pages = :menu_pages 

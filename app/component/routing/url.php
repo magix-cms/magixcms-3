@@ -52,6 +52,9 @@ class component_routing_url{
             $iso = $data['iso'];
             $type = $data['type'];
             switch($type){
+                case 'home':
+					$url = '/'.$iso.($this->amp ? '/amp' : '').'/';
+					break;
                 case 'pages':
                 case 'about':
 					$url = '/'.$iso.($this->amp ? '/amp' : '').'/'.$type.'/'.$data['id'].'-'.$data['url'].'/';

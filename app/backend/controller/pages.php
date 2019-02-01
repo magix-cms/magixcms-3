@@ -3,7 +3,7 @@ class backend_controller_pages extends backend_db_pages
 {
     public $edit, $action, $tabs, $search, $plugin, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl,$makeFiles,$finder;
-    public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset;
+    public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset,$name_img;
 	public $tableconfig = array(
 		'all' => array(
 			'id_pages',
@@ -86,6 +86,8 @@ class backend_controller_pages extends backend_db_pages
         }
         // --- Image Upload
         if (isset($_FILES['img']["name"])) $this->img = http_url::clean($_FILES['img']["name"]);
+		if (http_request::isPost('name_img')) $this->name_img = http_url::clean($_POST['name_img']);
+
         // --- Recursive Actions
         if (http_request::isGet('pages'))  $this->pages = $formClean->arrayClean($_GET['pages']);
 
@@ -217,6 +219,8 @@ class backend_controller_pages extends backend_db_pages
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
                 $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
+				$img_pages = pathinfo($page['img_pages']);
+                $arr[$page['id_pages']]['img_pages'] = $img_pages['filename'];
                 if($page['img_pages'] != null) {
                     if(file_exists($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages'])){
                         $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages']);
@@ -241,6 +245,9 @@ class backend_controller_pages extends backend_db_pages
                 'url_pages'         => $page['url_pages'],
                 'resume_pages'      => $page['resume_pages'],
                 'content_pages'     => $page['content_pages'],
+                'alt_img'     		=> $page['alt_img'],
+                'title_img'     	=> $page['title_img'],
+                'caption_img'       => $page['caption_img'],
                 'seo_title_pages'   => $page['seo_title_pages'],
                 'seo_desc_pages'    => $page['seo_desc_pages'],
                 'published_pages'   => $page['published_pages'],
@@ -278,7 +285,6 @@ class backend_controller_pages extends backend_db_pages
 			if($contentPage != null) {
 				$this->upd(
 					array(
-						'context' => 'page',
 						'type' => 'page',
 						'data' => array(
 							'id_pages' => $id,
@@ -288,7 +294,6 @@ class backend_controller_pages extends backend_db_pages
 				);
 				$this->upd(
 					array(
-						'context' => 'page',
 						'type' => 'content',
 						'data' => $content
 					)
@@ -297,7 +302,6 @@ class backend_controller_pages extends backend_db_pages
 			else {
 				$this->add(
 					array(
-						'context' => 'page',
 						'type' => 'content',
 						'data' => $content
 					)
@@ -305,10 +309,7 @@ class backend_controller_pages extends backend_db_pages
 			}
 
 			if(isset($this->id_pages)) {
-				$setEditData = parent::fetchData(
-					array('context'=>'all','type'=>'page'),
-					array('edit'=>$this->id_pages)
-				);
+				$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
 				$setEditData = $this->setItemData($setEditData);
 				$extendData[$lang] = $setEditData[$this->id_pages]['content'][$lang]['public_url'];
 			}
@@ -362,6 +363,7 @@ class backend_controller_pages extends backend_db_pages
 			case 'page':
 			case 'content':
 			case 'img':
+			case 'imgContent':
 			case 'pageActiveMenu':
 				parent::update(
 					array(
@@ -439,7 +441,6 @@ class backend_controller_pages extends backend_db_pages
                         if(isset($this->content)) {
 							$this->add(
 								array(
-									'context' => 'page',
 									'type' => 'page',
 									'data' => array(
 										'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
@@ -462,32 +463,58 @@ class backend_controller_pages extends backend_db_pages
                         }
                         break;
                     case 'edit':
-                        if(isset($this->img)){
-							$data = $this->getItems('page',array('id_pages'=>$this->id_pages),'one');
-							$resultUpload = $this->upload->setImageUpload(
-								'img',
-								array(
-									'name'              => filter_rsa::randMicroUI(),
-									'edit'              => $data['img_pages'],
-									'prefix'            => array('s_','m_','l_'),
-									'module_img'        => 'pages',
-									'attribute_img'     => 'page',
-									'original_remove'   => false
-								),
-								array(
-									'upload_root_dir'      => 'upload/pages', //string
-									'upload_dir'           => $this->id_pages //string ou array
-								),
-								false
+                        if(isset($this->img) || isset($this->name_img)){
+							$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+							$page = $this->getItems('pageLang', array('id' => $this->id_pages, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
+							$settings = array(
+								'name' => $this->name_img !== '' ? $this->name_img : $page['url_pages'],
+								'edit' => $page['img_pages'],
+								'prefix' => array('s_', 'm_', 'l_'),
+								'module_img' => 'pages',
+								'attribute_img' => 'page',
+								'original_remove' => false
 							);
+							$dirs = array(
+								'upload_root_dir' => 'upload/pages', //string
+								'upload_dir' => $this->id_pages //string ou array
+							);
+							$filename = '';
+							$update = false;
 
-							$this->upd(array(
-								'type' => 'img',
-								'data' => array(
-									'id_pages' => $this->id_pages,
-									'img_pages' => $resultUpload['file']
-								)
-							));
+							if(isset($this->img)) {
+								$resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
+								$filename = $resultUpload['file'];
+								$update = true;
+							}
+							elseif(isset($this->name_img)) {
+								$img_pages = pathinfo($page['img_pages']);
+								$img_name = $img_pages['filename'];
+
+								if($this->name_img !== $img_name && $this->name_img !== '') {
+									$result = $this->upload->renameImages($settings,$dirs);
+									$filename = $result;
+									$update = true;
+								}
+							}
+
+							if($filename !== '' && $update) {
+								$this->upd(array(
+									'type' => 'img',
+									'data' => array(
+										'id_pages' => $this->id_pages,
+										'img_pages' => $filename
+									)
+								));
+							}
+
+							foreach ($this->content as $lang => $content) {
+								$content['id_lang'] = $lang;
+								$content['id_pages'] = $this->id_pages;
+								$this->upd(array(
+									'type' => 'imgContent',
+									'data' => $content
+								));
+							}
 
 							$setEditData = $this->getItems('page',array('edit'=>$this->id_pages),'all',false);
 							$setEditData = $this->setItemData($setEditData);
@@ -508,7 +535,7 @@ class backend_controller_pages extends backend_db_pages
                                 )
                             );
                             $this->modelLanguage->getLanguage();
-                            $setEditData = parent::fetchData(array('context'=>'all','type'=>'page'), array('edit'=>$this->edit));
+							$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
                             $setEditData = $this->setItemData($setEditData);
                             $this->template->assign('page',$setEditData[$this->edit]);
 							$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);

@@ -32,11 +32,11 @@
                     <div role="tabpanel" class="tab-pane" id="image">
                         {include file="catalog/category/form/img.tpl" controller="category"}
                         {*<pre>{$page|print_r}</pre>*}
-                        <div class="block-img">
+                        {*<div class="block-img">
                             {if $page.imgSrc != null}
                                 {include file="catalog/category/brick/img.tpl"}
                             {/if}
-                        </div>
+                        </div>*}
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">
                         <p class="text-right">
@@ -70,6 +70,7 @@
         libjs/vendor/src/bootstrap-select.js,
         libjs/vendor/filterlist.min.js,
         {baseadmin}/template/js/table-form.min.js,
+        {baseadmin}/template/js/img-drop.min.js,
         {baseadmin}/template/js/category.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}

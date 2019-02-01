@@ -5,28 +5,26 @@
     {if !isset($truncate)}
         {$truncate = 150}
     {/if}
+    {if !isset($lazy)}
+        {$lazy = true}
+    {/if}
 {/strip}
 {if is_array($data) && !empty($data)}
     {foreach $data as $item}
-        <div{if $classCol} class="{$classCol}{/if}">
-            <figure class="effect-steve thumbnail">
-                {if count($item.img) > 1}
-                    <img class="img-responsive lazyload" src="{$item.img.default}" data-src="{$item.img.medium.src}" alt="{$item.title}" title="{$item.title}"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>
-                {else}
-                    <img class="img-responsive" src="{$item.img.default}" alt="{$item.title}" title="{$item.title}" />
-                {/if}
-                <figcaption>
-                    <h2>{$item.title|ucfirst}</h2>
-                    <div class="desc">
-                        {if $item.resume}
-                            <p>{$item.resume|truncate:$truncate:'...'}</p>
-                        {elseif $item.content}
-                            <p>{$item.content|strip_tags|truncate:$truncate:'...'}</p>
-                        {/if}
-                    </div>
-                    <a class="all-hover" href="{$item.url}" title="{$item.title|ucfirst}" itemprop="url" itemprop="relatedLink">{$item.title|ucfirst}</a>
-                </figcaption>
-            </figure>
+        <div{if $classCol} class="{$classCol}{/if}" itemprop="hasPart" itemscope itemtype="http://schema.org/Series">
+            <div class="figure">
+                {if isset($item.img.name)}{$src = $item.img.medium.src}{else}{$src = $item.img.default}{/if}
+                <img class="img-responsive{if $lazy} lazyload{/if}" {if $lazy}data-{/if}src="{$src}" alt="{$item.img.alt}" title="{$item.img.title}"{if count($item.img) > 1} itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}{/if}/>
+                <div itemprop="description" class="desc">
+                    <h2 itemprop="name">{$item.name}</h2>
+                    <p>{if $truncate}
+                            {$item.resume|truncate:$truncate:'&hellip;'}
+                        {else}
+                            {$item.resume}
+                        {/if}</p>
+                </div>
+                <a class="all-hover" href="{$item.url}" title="{$pages.seo.description}" itemprop="url">{$pages.seo.title}</a>
+            </div>
         </div>
     {/foreach}
 {/if}

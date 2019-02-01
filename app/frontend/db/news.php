@@ -16,20 +16,44 @@ class frontend_db_news
 		if($config['context'] === 'all') {
 			switch ($config['type']) {
 			    case 'langs':
-					$sql = 'SELECT p.*,c.*,lang.iso_lang,lang.default_lang
-						FROM mc_news AS p
-						JOIN mc_news_content AS c ON(c.id_news = p.id_news)
-						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-						WHERE p.id_news = :id AND c.published_news = 1';
+					$sql = 'SELECT 
+								p.*,
+								c.name_news,
+								c.url_news,
+								c.resume_news,
+								c.content_news,
+								c.published_news,
+								c.date_publish,
+								COALESCE(c.alt_img, c.name_news) as alt_img,
+								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
+								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
+								lang.iso_lang,
+								lang.default_lang
+							FROM mc_news AS p
+							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE p.id_news = :id AND c.published_news = 1';
 			    	break;
 			    case 'pages':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 
-					$sql = "SELECT p.*,c.*,lang.iso_lang,lang.default_lang
-						FROM mc_news AS p
-						JOIN mc_news_content AS c ON(c.id_news = p.id_news)
-						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-						$conditions";
+					$sql = "SELECT 
+								p.*,
+								c.name_news,
+								c.url_news,
+								c.resume_news,
+								c.content_news,
+								c.published_news,
+								c.date_publish,
+								COALESCE(c.alt_img, c.name_news) as alt_img,
+								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
+								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
+								lang.iso_lang,
+								lang.default_lang
+							FROM mc_news AS p
+							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							$conditions";
 			    	break;
 			    case 'tagsRel':
 					$sql = 'SELECT tag.id_tag,tag.name_tag,lang.iso_lang
@@ -69,11 +93,22 @@ class frontend_db_news
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 			    case 'page':
-					$sql = 'SELECT p.img_news,c.*,lang.iso_lang
-						FROM mc_news AS p
-						JOIN mc_news_content AS c ON(c.id_news = p.id_news)
-						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
-						WHERE p.id_news = :id AND lang.iso_lang = :iso AND c.published_news = 1';
+					$sql = 'SELECT 
+								p.img_news,
+								c.name_news,
+								c.url_news,
+								c.resume_news,
+								c.content_news,
+								c.published_news,
+								c.date_publish,
+								COALESCE(c.alt_img, c.name_news) as alt_img,
+								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
+								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
+								lang.iso_lang
+							FROM mc_news AS p
+							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
+							WHERE p.id_news = :id AND lang.iso_lang = :iso AND c.published_news = 1';
 			    	break;
 			    case 'nb_archives':
 					$sql = "SELECT COUNT(`id_news`) AS nbr
@@ -107,7 +142,16 @@ class frontend_db_news
 							WHERE tag.id_lang = :id_lang AND tag.name_tag LIKE :name_tag';
 			    	break;
 			    case 'prev_page':
-					$sql = "SELECT c.*,lang.iso_lang
+					$sql = "SELECT c.name_news,
+								c.url_news,
+								c.resume_news,
+								c.content_news,
+								c.published_news,
+								c.date_publish,
+								COALESCE(c.alt_img, c.name_news) as alt_img,
+								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
+								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
+								lang.iso_lang
 							FROM mc_news AS p
 							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
@@ -116,7 +160,16 @@ class frontend_db_news
 							ORDER BY c.date_publish DESC LIMIT 1";
 			    	break;
 			    case 'next_page':
-					$sql = "SELECT c.*,lang.iso_lang
+					$sql = "SELECT c.name_news,
+								c.url_news,
+								c.resume_news,
+								c.content_news,
+								c.published_news,
+								c.date_publish,
+								COALESCE(c.alt_img, c.name_news) as alt_img,
+								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
+								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
+								lang.iso_lang
 							FROM mc_news AS p
 							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  

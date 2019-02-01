@@ -1,20 +1,23 @@
 {extends file="layout.tpl"}
 {block name='body:id'}pages{/block}
-{block name="title"}{if $pages.seo.title}{$pages.seo.title}{else}{$pages.title}{/if}{/block}
-{block name="description"}{if $pages.seo.description}{$pages.seo.description}{elseif !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|strip_tags|truncate:100:'...'}{/if}{/block}
+{block name="title"}{$pages.seo.title}{/block}
+{block name="description"}{$pages.seo.description}{/block}
 {block name='article'}
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}
             <header>
                 {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{$url}/{$lang}/","title" => {#home#}]}
-                <h1 itemprop="name">{$pages.title}</h1>
+                <h1 itemprop="name">{$pages.name}</h1>
             </header>
             <div class="text" itemprop="text">
                 {if !empty($pages.img.medium.src)}
                     <figure class="img-float pull-right">
-                        <a href="{$pages.img.large.src}" class="img-zoom" title="{$pages.title}">
-                            <img class="img-responsive" src="{$pages.img.medium.src}" alt="{$pages.title}" title="{$pages.title}" />
+                        <a href="{$pages.img.large.src}" class="img-zoom" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
+                            <img class="img-responsive" src="{$pages.img.medium.src}" alt="{$pages.img.alt}" title="{$pages.img.title}" />
                         </a>
+                        {if $pages.img.caption}
+                            <figcaption>{$pages.img.caption}</figcaption>
+                        {/if}
                     </figure>
                 {/if}
                 {$pages.content}

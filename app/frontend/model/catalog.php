@@ -43,7 +43,7 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @var component_routing_url
      */
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$seo;
 
 	/**
 	 * frontend_model_catalog constructor.
@@ -56,6 +56,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 		$this->imagesComponent = new component_files_images($t);
 		$this->modelPlugins = new frontend_model_plugins();
 		$this->data = new frontend_model_data($this,$this->template);
+		$this->seo = new frontend_model_seo('catalog', '', '');
     }
 
     /**
@@ -67,19 +68,20 @@ class frontend_model_catalog extends frontend_db_catalog {
      *
      * @todo revoir le nommage de 'current', lui préférant 'active'
      */
-
     public function setItemData ($row,$current,$newRow = false)
     {
-        /*$ModelImagepath     =   new magixglobal_model_imagepath();
-        $ModelTemplate      =   new frontend_model_template();
-        $ModelRewrite       =   new magixglobal_model_rewrite();*/
-
+		$string_format = new component_format_string();
         $data = null;
 
         if ($row != null) {
             if (isset($row['name'])) {
-                $data['name']       = $row['name'];
-                $data['content']    = $row['content'];
+                $data['name']    = $row['name'];
+                $data['content'] = $row['content'];
+				$this->seo->level = 'root';
+				$seoTitle = $this->seo->replace_var_rewrite('','','title');
+				$data['title'] = $seoTitle ? $seoTitle : $data['name'];
+				$seoDesc = $this->seo->replace_var_rewrite('','','description');
+				$data['description'] = $seoDesc ? $seoDesc : $string_format->truncate(strip_tags($data['content']));
             }
             // *** Product
             elseif (isset($row['name_p'])) {
@@ -88,42 +90,35 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['short_name']= $row['name_p'];
                 $data['name']      = $row['name_p'];
                 $data['long_name'] = $row['longname_p'];
-
-                $data['url']  =
-                    $this->routingUrl->getBuildUrl(array(
-                            'type'       => 'product',
-                            'iso'        => $row['iso_lang'],
-                            'id'         => $row['id_product'],
-                            'url'        => $row['url_p'],
-                            'id_parent'  => $row['id_cat'],
-                            'url_parent' => $row['url_cat']
-                        )
-                    );
+                $data['url'] = $this->routingUrl->getBuildUrl(array(
+					'type'       => 'product',
+					'iso'        => $row['iso_lang'],
+					'id'         => $row['id_product'],
+					'url'        => $row['url_p'],
+					'id_parent'  => $row['id_cat'],
+					'url_parent' => $row['url_cat']
+				));
                 // Base url for product
                 $data['baseUrl']       = $row['url_p'];
-
                 $data['active'] = false;
                 if ($row['id_product'] == $current['controller']['id']) {
                     $data['active'] = true;
                 }
-
                 $data['id']        = $row['id_product'];
                 $data['id_parent'] = $row['id_cat'];
                 $data['url_parent'] = $this->routingUrl->getBuildUrl(array(
-                        'type' => 'category',
-                        'iso'  => $row['iso_lang'],
-                        'id'   => $row['id_cat'],
-                        'url'  => $row['url_cat']
-                    )
-                );
-
+					'type' => 'category',
+					'iso'  => $row['iso_lang'],
+					'id'   => $row['id_cat'],
+					'url'  => $row['url_cat']
+				));
                 $data['cat']       = $row['name_cat'];
                 $data['id_lang']   = $row['id_lang'];
                 $data['iso']       = $row['iso_lang'];
                 $data['price']     = $row['price_p'];
                 $data['reference'] = $row['reference_p'];
-                $data['content']   = $row['content_p'];
-				$data['resume']    = ($row['resume_p'] != '') ? $row['resume_p'] : NULL;
+				$data['content']   = $row['content_p'];
+				$data['resume']    = $row['resume_p'] ? $row['resume_p'] : ($row['content_p'] ? $string_format->truncate(strip_tags($row['content_p'])) : '');
                 $data['order']     = $row['order_p'];
                 if (isset($row['img'])) {
                     if($row['img'] != NULL) {
@@ -136,6 +131,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                             foreach ($row['img'] as $item => $val) {
                                 $data['imgs'][$item]['alt'] = $val['alt_img'];
                                 $data['imgs'][$item]['title'] = $val['title_img'];
+                                $data['imgs'][$item]['caption'] = $val['caption_img'];
                                 foreach ($fetchConfig as $key => $value) {
                                     $data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
 									$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
@@ -161,28 +157,27 @@ class frontend_model_catalog extends frontend_db_catalog {
 							$data['img'][$value['type_img']]['h'] = $value['height_img'];
 							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                         }
+						$data['img']['alt'] = $row['alt_img'];
+						$data['img']['title'] = $row['title_img'];
+						$data['img']['caption'] = $row['caption_img'];
                     }
                     $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
 
                 }
                 // -- Similar / Associated product
                 if(isset($row['associated'])){
-
                     foreach($row['associated'] as $key => $value){
                         $data['associated'][$key]['name'] = $value['name_p'];
-                        $data['associated'][$key]['url']  =
-                            $this->routingUrl->getBuildUrl(array(
-                                    'type'       => 'product',
-                                    'iso'        => $value['iso_lang'],
-                                    'id'         => $value['id_product'],
-                                    'url'        => $value['url_p'],
-                                    'id_parent'  => $value['id_cat'],
-                                    'url_parent' => $value['url_cat']
-                                )
-                            );
+                        $data['associated'][$key]['url'] = $this->routingUrl->getBuildUrl(array(
+							'type'       => 'product',
+							'iso'        => $value['iso_lang'],
+							'id'         => $value['id_product'],
+							'url'        => $value['url_p'],
+							'id_parent'  => $value['id_cat'],
+							'url_parent' => $value['url_cat']
+						));
                         // Base url for product
                         $data['associated'][$key]['baseUrl']       = $value['url_p'];
-
                         $data['associated'][$key]['active'] = false;
                         if ($value['id_product'] == $current['controller']['id']) {
                             $data['associated'][$key]['active'] = true;
@@ -190,13 +185,11 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['associated'][$key]['id']        = $value['id_product'];
                         $data['associated'][$key]['id_parent'] = $value['id_cat'];
                         $data['associated'][$key]['url_parent'] = $this->routingUrl->getBuildUrl(array(
-                                'type' => 'category',
-                                'iso'  => $value['iso_lang'],
-                                'id'   => $value['id_cat'],
-                                'url'  => $value['url_cat']
-                            )
-                        );
-
+							'type' => 'category',
+							'iso'  => $value['iso_lang'],
+							'id'   => $value['id_cat'],
+							'url'  => $value['url_cat']
+						));
                         $data['associated'][$key]['id_lang']    = $value['id_lang'];
                         $data['associated'][$key]['iso']        = $value['iso_lang'];
                         $data['associated'][$key]['price']      = $value['price_p'];
@@ -228,14 +221,15 @@ class frontend_model_catalog extends frontend_db_catalog {
                     }
                 }
 
-            // *** Category
-            }
-            elseif(isset($row['name_cat'])) {
+				$this->seo->level = 'record';
+				$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
+				$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
 
-                /*$data['active']   =    false;
-                if (is_array($current) AND isset($current['category']['id'])) {
-                    $data['active']   = ($current['category']['id'] == $row['idclc']) ? true : false;
-                }*/
+				$seoDesc = $this->seo->replace_var_rewrite('',$data['name'],'description');
+				$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+			}
+			// *** Category
+			elseif(isset($row['name_cat'])) {
                 $data['active'] = false;
                 if ($row['id_cat'] == $current['controller']['id'] OR $row['id_cat'] == $current['controller']['id_parent'] ) {
                     $data['active'] = true;
@@ -252,29 +246,29 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['img'][$value['type_img']]['h'] = $value['height_img'];
                         $data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                     }
+					$data['img']['name'] = $row['img_cat'];
                 }
                 $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
-
-                $data['url']  =
-                    $this->routingUrl->getBuildUrl(array(
-                            'type'      =>  'category',
-                            'iso'       =>  $row['iso_lang'],
-                            'id'        =>  $row['id_cat'],
-                            'url'       =>  $row['url_cat']
-                        )
-                    );
+				$data['img']['alt'] = $row['alt_img'];
+				$data['img']['title'] = $row['title_img'];
+				$data['img']['caption'] = $row['caption_img'];
+                $data['url'] = $this->routingUrl->getBuildUrl(array(
+					'type' => 'category',
+					'iso'  => $row['iso_lang'],
+					'id'   => $row['id_cat'],
+					'url'  => $row['url_cat']
+				));
                 // Base url for category
-                $data['baseUrl']       = $row['url_cat'];
-
-                $data['id']         =    $row['id_cat'];
-                $data['id_parent']  =    !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
-                $data['id_lang']    =    $row['id_lang'];
-                $data['iso']        =    $row['iso_lang'];
-                $data['name']       =    $row['name_cat'];
-                $data['content']    =    ($row['content_cat'] != '') ? $row['content_cat'] : NULL;
-                $data['resume']     =    ($row['resume_cat'] != '') ? $row['resume_cat'] : NULL;
-                $data['menu']       =    $row['menu_cat'];
-                $data['order']      =    $row['order_cat'];
+                $data['baseUrl']   = $row['url_cat'];
+                $data['id']        = $row['id_cat'];
+                $data['id_parent'] = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
+                $data['id_lang']   = $row['id_lang'];
+                $data['iso']       = $row['iso_lang'];
+                $data['name']      = $row['name_cat'];
+                $data['content']   = $row['content_cat'];
+				$data['resume']    = $row['resume_cat'] ? $row['resume_cat'] : ($row['content_cat'] ? $string_format->truncate(strip_tags($row['content_cat'])) : '');
+                $data['menu']      = $row['menu_cat'];
+                $data['order']     = $row['order_cat'];
                 // Plugin
                 if($newRow != false){
                     if(is_array($newRow)){
@@ -284,6 +278,12 @@ class frontend_model_catalog extends frontend_db_catalog {
                     }
                 }
 
+				$this->seo->level = 'parent';
+				$seoTitle = $this->seo->replace_var_rewrite($data['name'],'','title');
+				$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+
+				$seoDesc = $this->seo->replace_var_rewrite($data['name'],'','description');
+				$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
             }
             return $data;
         }

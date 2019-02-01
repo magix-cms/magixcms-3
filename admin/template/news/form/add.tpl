@@ -24,7 +24,7 @@
                             <div class="input-group date date-input-picker">
                                 <input type="text" class="form-control" id="content[{$id}][date_publish]" name="content[{$id}][date_publish]" value="" size="50" />
                                 <span class="input-group-addon">
-                                        <span class="fa fa-calendar-plus-o"></span>
+                                        <span class="far fa-calendar-plus"></span>
                                     </span>
                             </div>
                         </div>

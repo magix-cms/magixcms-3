@@ -31,8 +31,9 @@ class frontend_db_catalog
 							img.id_img,
 							img.id_product,
 							img.name_img,
-							COALESCE(c.alt_img, pc.name_p) as alt_img,
-							COALESCE(c.title_img, pc.name_p) as title_img,
+							COALESCE(c.alt_img, pc.longname_p, pc.name_p) as alt_img,
+							COALESCE(c.title_img, c.alt_img, pc.longname_p, pc.name_p) as title_img,
+							COALESCE(c.caption_img, c.title_img, c.alt_img, pc.longname_p, pc.name_p) as caption_img,
 							img.default_img,
 							img.order_img,
 							c.id_lang,
@@ -94,7 +95,16 @@ class frontend_db_catalog
 					break;
 				case 'category':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT p.*,c.*,lang.iso_lang
+					$sql = "SELECT p.*,
+								   c.name_cat,
+								   c.url_cat,
+								   c.resume_cat,
+								   c.content_cat,
+								   c.published_cat,
+       								COALESCE(c.alt_img, c.name_cat) as alt_img,
+									COALESCE(c.title_img, c.alt_img, c.name_cat) as title_img,
+									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_cat) as caption_img,
+								   lang.iso_lang
 							FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
@@ -107,7 +117,10 @@ class frontend_db_catalog
 					break;
 				case 'product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT catalog.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.longname_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img
+					$sql = "SELECT catalog.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.longname_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img,
+       						COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
+							COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
+							COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img
 						FROM mc_catalog AS catalog 
 						JOIN mc_catalog AS c2 ON ( catalog.id_product = c2.id_product )
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
@@ -115,10 +128,14 @@ class frontend_db_catalog
 						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
 						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
 						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
+						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang) $conditions";
 					break;
 				case 'similar':
-					$sql = 'SELECT cat.name_cat, cat.url_cat, catalog.id_cat, p.*, pc.name_p, pc.resume_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img
+					$sql = 'SELECT cat.name_cat, cat.url_cat, catalog.id_cat, p.*, pc.name_p, pc.resume_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img,
+       						COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
+							COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
+							COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img
 						FROM mc_catalog_product_rel AS rel
 						JOIN mc_catalog AS catalog ON (rel.id_product_2 = catalog.id_product)
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
@@ -126,6 +143,7 @@ class frontend_db_catalog
 						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
 						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
 						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
+						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang)
 						WHERE rel.id_product = :id AND lang.iso_lang = :iso AND catalog.default_c = 1 AND img.default_img = 1';
 					break;
@@ -144,7 +162,16 @@ class frontend_db_catalog
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'cat':
-					$sql = 'SELECT p.*,c.*,lang.*
+					$sql = 'SELECT p.*,
+       							   c.name_cat,
+								   c.url_cat,
+								   c.resume_cat,
+								   c.content_cat,
+								   c.published_cat,
+       								COALESCE(c.alt_img, c.name_cat) as alt_img,
+									COALESCE(c.title_img, c.alt_img, c.name_cat) as title_img,
+									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_cat) as caption_img,
+       							   lang.*
 						FROM mc_catalog_cat AS p
 						JOIN mc_catalog_cat_content AS c USING(id_cat)
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)

@@ -3,7 +3,7 @@ class backend_controller_product extends backend_db_product
 {
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory,$routingUrl;
-	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso;
+	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img;
 	public $tableconfig = array(
 		'id_product',
 		'name_p' => ['title' => 'name'],
@@ -80,6 +80,7 @@ class backend_controller_product extends backend_db_product
             }
             $this->imgData = $array;
 		}
+		if (http_request::isPost('name_img')) $this->name_img = http_url::clean($_POST['name_img']);
 		if (http_request::isPost('product_cat')) $this->product_cat = $formClean->simpleClean($_POST['product_cat']);
 		if (http_request::isPost('parent')) $this->parent = $formClean->arrayClean($_POST['parent']);
 		if (http_request::isPost('default_cat')) $this->default_cat = $formClean->numeric($_POST['default_cat']);
@@ -231,13 +232,16 @@ class backend_controller_product extends backend_db_product
                 $arr[$page['id_img']]['id_img'] = $page['id_img'];
                 $arr[$page['id_img']]['id_product'] = $page['id_product'];
                 $arr[$page['id_img']]['name_img'] = $page['name_img'];
+				$img_pages = pathinfo($page['name_img']);
+				$arr[$page['id_img']]['name_img_we'] = $img_pages['filename'];
             }
             if($page['id_lang'] != null) {
                 $arr[$page['id_img']]['content'][$page['id_lang']] = array(
                     'id_lang' => $page['id_lang'],
                     'iso_lang' => $page['iso_lang'],
                     'alt_img' => $page['alt_img'],
-                    'title_img' => $page['title_img']
+                    'title_img' => $page['title_img'],
+                    'caption_img' => $page['caption_img']
                 );
             }
         }
@@ -333,6 +337,7 @@ class backend_controller_product extends backend_db_product
 		switch ($data['type']) {
 			case 'product':
 			case 'content':
+			case 'img':
             case 'imgContent':
 			//case 'img':
 			case 'firstImageDefault':
@@ -639,10 +644,16 @@ class backend_controller_product extends backend_db_product
 							usleep(200000);
 							$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 10));
 
+							$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+							$product = $this->getItems('content', array('id_product' => $this->id_product, 'id_lang' => $defaultLanguage['id_lang']), 'one', false);
+							$newimg = $this->getItems('lastImgId',null,'one',false);
+
 							$resultUpload = $this->upload->setMultipleImageUpload(
 								'img_multiple',
 								array(
-									'prefix_name' => '',
+									'name' => $product['url_p'],
+									'prefix_name' => $newimg['id_img'],
+									'prefix_increment' => true,
 									'prefix' => array('s_', 'm_', 'l_'),
 									'module_img' => 'catalog',
 									'attribute_img' => 'product',
@@ -691,7 +702,6 @@ class backend_controller_product extends backend_db_product
 					elseif (isset($this->editimg)) {
 						if (isset($this->id_img)) {
                             foreach ($this->imgData as $lang => $content) {
-
                                 $content['id_img'] = $this->id_img;
                                 $content['id_lang'] = $lang;
 
@@ -714,8 +724,39 @@ class backend_controller_product extends backend_db_product
                                     ));
                                 }
                             }
-							$this->message->json_post_response(true, 'add_redirect');
 
+							if(isset($this->name_img)) {
+								$page = $this->getItems('img', array('id' => $this->id_img), 'one', false);
+								$img_pages = pathinfo($page['name_img']);
+								$img_name = $img_pages['filename'];
+
+								if($this->name_img !== $img_name && $this->name_img !== '') {
+									$result = $this->upload->renameImages(
+										array(
+											'name' => $this->name_img,
+											'edit' => $page['name_img'],
+											'prefix' => array('s_', 'm_', 'l_'),
+											'module_img' => 'catalog',
+											'attribute_img' => 'product',
+											'original_remove' => false
+										),
+										array(
+											'upload_root_dir' => 'upload/catalog/p', //string
+											'upload_dir' => $page['id_product'] //string ou array
+										)
+									);
+
+									$this->upd(array(
+										'type' => 'img',
+										'data' => array(
+											'id_img' => $this->id_img,
+											'name_img' => $result
+										)
+									));
+								}
+							}
+
+							$this->message->json_post_response(true, 'add_redirect');
 						}
 						else {
                             $this->modelLanguage->getLanguage();

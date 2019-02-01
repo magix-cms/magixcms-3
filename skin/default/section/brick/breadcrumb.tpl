@@ -30,11 +30,11 @@
 {* Pages *}
 {* Parent *}
 {if $pages.id_parent}
-    {$bread[] = ['name' => {$parent.title},'url' => "{$url}{$parent.url}",'title' => "{#show_page#}: {$parent.title}"]}
+    {$bread[] = ['name' => {$parent.name},'url' => "{$url}{$parent.url}",'title' => "{#show_page#}: {$parent.name}"]}
 {/if}
 {* /Parent *}
 {if $smarty.get.id}
-    {$bread[] = ['name' => {$pages.title}]}
+    {$bread[] = ['name' => {$pages.name}]}
 {/if}
 {* /Pages *}
 
@@ -95,7 +95,7 @@
 
 {* Topicality *}
 {if $smarty.get.id}
-    {$bread[] = ['name' => {$news.title}]}
+    {$bread[] = ['name' => {$news.name}]}
 {/if}
 {* /Topicality *}
 {* /News *}

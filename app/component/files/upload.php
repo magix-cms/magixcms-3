@@ -263,6 +263,73 @@ class component_files_upload{
             }
         }
     }
+
+	/**
+	 * Renomme une image
+	 * @param $data
+	 * @param $imgCollection
+	 */
+	public function renameImages($data, $imgCollection)
+	{
+		try {
+			$makeFiles = new filesystem_makefile();
+			$fetchConfig = $this->config->fetchData(
+				array('context'=>'all','type'=>'imgSize'),
+				array('module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img'])
+			);
+			$img = pathinfo($data['edit']);
+			$ext = $img['extension'];
+
+			// Rename the image
+			if (!empty($data['edit'] && !empty($data['name']))) {
+				if (is_array($imgCollection)) {
+					$dirImgArray = $this->dirImgUploadCollection($imgCollection);
+					foreach ($fetchConfig as $key => $value) {
+						$filesPath = is_array($dirImgArray) ? $dirImgArray[$key] : $dirImgArray;
+						$prefix = (array_key_exists('prefix', $data) && is_array($data['prefix'])) ? $data['prefix'][$key] : '';
+
+						// Check if the image to rename exists and if there is not already an image with this name and extension
+						if(!file_exists($filesPath.$data['name'].'.'.$ext)
+							&& file_exists($filesPath.$data['edit'])) {
+							$makeFiles->rename(
+								array(
+									'origin' => $filesPath.$data['edit'],
+									'target' => $filesPath.$data['name'].'.'.$ext
+								)
+							);
+						}
+						else {
+							return false;
+						}
+
+						// Check if the original image still exists:
+						// - if it is, the renaming has failed, the process should not continue
+						// - if not, the image has been correctly renamed or the image has never exist, the process can continue
+						if(!file_exists($filesPath.$data['edit'])) {
+							// Check if the image to rename exists and if there is not already an image with this name and extension
+							if (file_exists($filesPath.$prefix.$data['edit'])
+								&& !file_exists($filesPath.$prefix.$data['name'].'.'.$ext)) {
+								$makeFiles->rename(
+									array(
+										'origin' => $filesPath.$prefix.$data['edit'],
+										'target' => $filesPath.$prefix.$data['name'].'.'.$ext
+									)
+								);
+							}
+						}
+						else {
+							return false;
+						}
+					}
+					return $data['name'].'.'.$ext;
+				}
+			}
+		}
+		catch (Exception $e){
+			$logger = new debug_logger(MP_LOG_DIR);
+			$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+		}
+    }
     /**
      * Vérifie si le type est bien une image
      * @param $filename
@@ -388,10 +455,11 @@ class component_files_upload{
      * Upload multiple image
      * @param $imgCollection
      * @param $path
+     * @param $name
      * @param bool $debug
      * @return array
      */
-    public function multiUploadImg($imgCollection,$path,$debug=false){
+    public function multiUploadImg($imgCollection,$path,$data=false,$debug=false){
         $msg = null;
         $response = null;
         //print_r($imgCollection);
@@ -420,30 +488,50 @@ class component_files_upload{
                                         $msg .= 'Temporary File Error';
                                     }
                                 }
+
+                                $prefix = '';
+                                $name = filter_rsa::randMicroUI();
+                                if(is_array($data)){
+                                	if(isset($data['prefix_name'])) {
+                                		if(isset($data['prefix_increment']) && $data['prefix_increment']) {
+                                			$data['prefix_name']++;
+											$prefix = $data['prefix_name'].'_';
+										}
+                                		else {
+											$prefix = $data['prefix_name'];
+										}
+									}
+
+                                	if(isset($data['name'])) {
+										$name = $data['name'];
+									}
+								}
+								$name = $prefix.$name;
+
                                 if($debug){
                                     $result[] = array(
-                                        'statut'=>true,
-                                        'notify'=>'upload',
-                                        'name'=>$item["name"],
-                                        'tmp_name'=>$item["tmp_name"],
-                                        'new_name'=> filter_rsa::randMicroUI(),
+                                        'statut'=> true,
+                                        'notify'=> 'upload',
+                                        'name'=> $item["name"],
+                                        'tmp_name'=> $item["tmp_name"],
+                                        'new_name'=> $name,
                                         'mimecontent'=>
                                             array(
-                                                'type'=>$mimeContent['type'],
-                                                'mime'=>$mimeContent['mime']
+                                                'type'=> $mimeContent['type'],
+                                                'mime'=> $mimeContent['mime']
                                             )
                                     );
                                 }else{
                                     $result[] = array(
-                                        'statut'=>true,
-                                        'notify'=>'upload',
-                                        'name'=>$item["name"],
-                                        'tmp_name'=>$item["tmp_name"],
-                                        'new_name'=> filter_rsa::randMicroUI(),
+                                        'statut'=> true,
+                                        'notify'=> 'upload',
+                                        'name'=> $item["name"],
+                                        'tmp_name'=> $item["tmp_name"],
+                                        'new_name'=> $name,
                                         'mimecontent'=>
                                             array(
-                                                'type'=>$mimeContent['type'],
-                                                'mime'=>$mimeContent['mime']
+                                                'type'=> $mimeContent['type'],
+                                                'mime'=> $mimeContent['mime']
                                             )
                                     );
                                 }
@@ -564,7 +652,7 @@ class component_files_upload{
                 $resultUpload = null;
                 $debugResult = null;
                 $dirImg = $this->dirImgUpload(array_merge(array('upload_root_dir'=>$imgCollection['upload_root_dir']),array('imgBasePath'=>true)));
-                $fetchConfig = $this->config->fetchData(array('context'=>'all','type'=>'imgSize'),array('module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img']));
+				$fetchConfig = $this->config->fetchData(array('context'=>'all','type'=>'imgSize'),array('module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img']));
                 //print_r($fetchConfig);
                 if(!empty($this->$img)){
                     /**
@@ -589,6 +677,37 @@ class component_files_upload{
                                     $makeFiles->remove(array($dirImg.$data['prefix'][$key].$data['edit']));
                                 }
                             }*/
+
+
+							// Supprime l'ancienne image
+							if (!empty($data['edit'])) {
+								if (is_array($imgCollection)) {
+									$dirImgArray = $this->dirImgUploadCollection($imgCollection);
+									foreach ($fetchConfig as $key => $value) {
+										if (is_array($dirImgArray)) {
+											$filesPath = $dirImgArray[$key];
+										} else {
+											$filesPath = $dirImgArray;
+										}
+										if (array_key_exists('prefix', $data)) {
+											if (is_array($data['prefix'])) {
+												$prefix = $data['prefix'][$key];
+											} else {
+												$prefix = '';
+											}
+										} else {
+											$prefix = '';
+										}
+										if (file_exists($filesPath . $prefix . $data['edit'])) {
+											$makeFiles->remove(array($filesPath . $prefix . $data['edit']));
+										}
+										if (file_exists($filesPath . $data['edit'])) {
+											$makeFiles->remove(array($filesPath . $data['edit']));
+										}
+									}
+								}
+							}
+
                             // Renomme le fichier
                             $makeFiles->rename(
                                 array(
@@ -597,11 +716,11 @@ class component_files_upload{
                                 )
                             );
                             //print $dirImg.$data['name'].$fileExtends;
+
                             /**
                              *
                              * Charge la taille des images des sous catégories du catalogue
                              */
-
                             if ($fetchConfig != null) {
                                 if (is_array($imgCollection)) {
                                     // return array collection
@@ -652,35 +771,6 @@ class component_files_upload{
                                         )
                                     );
 
-                                }
-                            }
-
-                            // Supprime l'ancienne image
-                            if (!empty($data['edit'])) {
-                                if (is_array($imgCollection)) {
-                                    $dirImgArray = $this->dirImgUploadCollection($imgCollection);
-                                    foreach ($fetchConfig as $key => $value) {
-                                        if (is_array($dirImgArray)) {
-                                            $filesPath = $dirImgArray[$key];
-                                        } else {
-                                            $filesPath = $dirImgArray;
-                                        }
-                                        if (array_key_exists('prefix', $data)) {
-                                            if (is_array($data['prefix'])) {
-                                                $prefix = $data['prefix'][$key];
-                                            } else {
-                                                $prefix = '';
-                                            }
-                                        } else {
-                                            $prefix = '';
-                                        }
-                                        if (file_exists($filesPath . $prefix . $data['edit'])) {
-                                            $makeFiles->remove(array($filesPath . $prefix . $data['edit']));
-                                        }
-                                        if (file_exists($filesPath . $data['edit'])) {
-                                            $makeFiles->remove(array($filesPath . $data['edit']));
-                                        }
-                                    }
                                 }
                             }
 
@@ -788,6 +878,7 @@ class component_files_upload{
                     $resultUpload = $this->multiUploadImg(
                         $img_multiple,
                         $this->dirImgUpload(array_merge(array('upload_root_dir'=>$imgCollection['upload_root_dir']),array('imgBasePath'=>false))),
+                        $data,
                         $debug
                     );
 

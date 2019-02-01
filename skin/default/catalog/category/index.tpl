@@ -1,7 +1,7 @@
 {extends file="catalog/index.tpl"}
 {block name='body:id'}category{/block}
-{block name="title"}{seo_rewrite conf=['level'=>'parent','type'=>'title','default'=>{$cat.name}] parent={$cat.name}}{/block}
-{block name="description"}{seo_rewrite conf=['level'=>'parent','type'=>'description','default'=>{$cat.resume}] parent={$cat.name}}{/block}
+{block name="title"}{$cat.seo.title}{/block}
+{block name="description"}{$cat.seo.description}{/block}
 
 {block name='article'}
     <article class="catalog container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Series">
@@ -10,9 +10,12 @@
             <div class="text" itemprop="text">
                 {if count($cat.img) > 1}
                     <figure>
-                        <a href="{$cat.img.large.src}" class="img-zoom">
-                            <img class="img-responsive lazyload" src="{$cat.img.default}" data-src="{$cat.img.medium.src}" alt="{$cat.title}" title="{$cat.title}" {if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>
+                        <a href="{$cat.img.large.src}" class="img-zoom" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
+                            <img class="img-responsive lazyload" src="{$cat.img.medium.src}" alt="{$cat.img.alt}" title="{$cat.img.title}}" />
                         </a>
+                        {if $cat.img.caption}
+                            <figcaption>{$cat.img.caption}</figcaption>
+                        {/if}
                     </figure>
                 {/if}
                 {$cat.content}

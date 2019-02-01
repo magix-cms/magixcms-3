@@ -89,10 +89,12 @@ class frontend_model_seo extends frontend_db_seo {
 	 * Remplace les données en tre crochet pour construire la réécriture
 	 * @param string $parent
 	 * @param string $record
+	 * @param string $type
 	 * @return mixed
 	 */
-	public function replace_var_rewrite($parent='', $record=''){
-		$db = $this->getItems('replace',array('attribute' => $this->attribute, 'lvl' => $this->level, 'type' => $this->type, 'iso' => $this->iso),'one',false);
+	public function replace_var_rewrite($parent='', $record='', $type =''){
+		if($type === '') $type = $this->type;
+		$db = $this->getItems('replace',array('attribute' => $this->attribute, 'lvl' => $this->level, 'type' => $type, 'iso' => $this->iso),'one',false);
 
 		if($db != null){
 			//Tableau des variables à rechercher

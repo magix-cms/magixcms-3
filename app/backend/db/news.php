@@ -177,10 +177,10 @@ class backend_db_news
 					return 'Exception reçue : '.$e->getMessage();
 				}
 				break;
-			case 'newPages':
+			case 'page':
 				$sql = 'INSERT INTO `mc_news`(date_register) VALUE (NOW())';
 				break;
-			case 'newContent':
+			case 'content':
 				$sql = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,date_publish,published_news) 
 				  		VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:date_publish,:published_news)';
 				break;
@@ -228,6 +228,15 @@ class backend_db_news
 				break;
 			case 'img':
 				$sql = 'UPDATE mc_news SET img_news = :img_news WHERE id_news = :id_news';
+				break;
+			case 'imgContent':
+				$sql = 'UPDATE mc_news_content 
+						SET 
+							alt_img = :alt_img,
+							title_img = :title_img,
+							caption_img = :caption_img
+                		WHERE id_news = :id_news 
+                		AND id_lang = :id_lang';
 				break;
 			case 'order':
 				$sql = 'UPDATE mc_news SET order_news = :order_news WHERE id_news = :id_news';

@@ -89,7 +89,7 @@ const C = {
         if($.featherlight !== undefined) {
             let afterContent = function () {
                 let g = $.featherlightGallery !== undefined;
-                let caption = this.$currentTarget.find('img').attr('alt');
+                let caption = this.$currentTarget.data('caption') ? this.$currentTarget.data('caption') : this.$currentTarget.attr('title');
                 let closebtn = this.$instance.find('button');
                 this.$instance.find('.caption').remove();
                 this.$instance.find('.figure').remove();

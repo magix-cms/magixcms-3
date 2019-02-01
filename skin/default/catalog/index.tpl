@@ -1,7 +1,7 @@
 {extends file="layout.tpl"}
 {block name='body:id'}catalog{/block}
-{block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{$root.name}]}{/block}
-{block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{$root.content|strip_tags|truncate:100:'...'}]}{/block}
+{block name="title"}{$root.title}{/block}
+{block name="description"}{$root.description}{/block}
 {block name="webType"}CollectionPage{/block}
 {block name='article'}
     <article class="catalog container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Series">

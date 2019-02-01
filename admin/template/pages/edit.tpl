@@ -16,8 +16,8 @@
                 <h2 class="panel-heading h5">{#edit_pages#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" {if !$smarty.get.plugin}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{if !$smarty.get.plugin}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
-                    <li role="presentation"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{if !$smarty.get.plugin}#image{/if}" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#}</a></li>
-                    <li role="presentation"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{if !$smarty.get.plugin}#child{/if}" aria-controls="child" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#child_page#}</a></li>
+                    <li role="presentation"><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{/if}#image" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#}</a></li>
+                    <li role="presentation"><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{/if}#child" aria-controls="child" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#child_page#}</a></li>
                     {foreach $setTabsPlugins as $key => $value}
                         <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.name}</a></li>
                     {/foreach}
@@ -34,11 +34,11 @@
                     <div role="tabpanel" class="tab-pane" id="image">
                         {include file="pages/form/img.tpl" controller="pages"}
                         {*<pre>{$page|print_r}</pre>*}
-                        <div class="block-img">
+                        {*<div class="block-img">
                             {if $page.imgSrc != null}
                                 {include file="pages/brick/img.tpl"}
                             {/if}
-                        </div>
+                        </div>*}
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table" id="child">
                         <p class="text-right">
@@ -73,6 +73,7 @@
         libjs/vendor/src/bootstrap-select.js,
         libjs/vendor/filterlist.min.js,
         {baseadmin}/template/js/table-form.min.js,
+        {baseadmin}/template/js/img-drop.min.js,
         {baseadmin}/template/js/pages.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}

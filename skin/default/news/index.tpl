@@ -1,7 +1,7 @@
 {extends file="layout.tpl"}
 {block name='body:id'}news{/block}
-{block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{#news#}]}{/block}
-{block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{#last_news#}]}{/block}
+{block name="title"}{$rootSeo['title']}{/block}
+{block name="description"}{$rootSeo['description']}{/block}
 {block name="webType"}CollectionPage{/block}
 {block name='article'}
     <article id="article" itemprop="mainEntity" itemscope itemtype="http://schema.org/Periodical">

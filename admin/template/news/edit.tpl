@@ -22,8 +22,8 @@
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_news#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" {if !$smarty.get.plugin}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}{if !$smarty.get.plugin}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
-                    <li role="presentation"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}{if !$smarty.get.plugin}#image{/if}" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}{/if}#general" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
+                    <li role="presentation"><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}{/if}#image" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#}</a></li>
                     {foreach $setTabsPlugins as $key => $value}
                         <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.name}</a></li>
                     {/foreach}
@@ -40,11 +40,11 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="image">
                         {include file="news/form/img.tpl" controller="news"}
-                        <div class="block-img">
+                        {*<div class="block-img">
                             {if $page.imgSrc != null}
                                 {include file="news/brick/img.tpl"}
                             {/if}
-                        </div>
+                        </div>*}
                     </div>
                     {foreach $setTabsPlugins as $key => $value}
                         <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
@@ -66,6 +66,7 @@
         libjs/vendor/moment.min.js,
         libjs/vendor/datetimepicker/{iso}.js,
         libjs/vendor/bootstrap-datetimepicker.min.js,
+        {baseadmin}/template/js/img-drop.min.js,
         {baseadmin}/template/js/news.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}

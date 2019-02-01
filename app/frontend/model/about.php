@@ -221,6 +221,7 @@ class frontend_model_about extends frontend_db_about {
 	 */
 	public function setItemData($row,$current,$newRow = false)
 	{
+		$string_format = new component_format_string();
 		$data = null;
 
 		if ($row != null) {
@@ -228,12 +229,12 @@ class frontend_model_about extends frontend_db_about {
 				$data['name'] = $row['name'];
 				$data['content'] = $row['content'];
 				$data['seo']['title'] = $row['seo_title'];
-				$data['seo']['description'] = $row['seo_desc'];
+				$data['seo']['description'] = $row['seo_desc'] ? $row['seo_desc'] : ($row['content'] ? substr(strip_tags($row['content']),300) : $row['seo_title']);
 			}
 			elseif (isset($row['name_pages'])) {
 				$data['id'] = $row['id_pages'];
 				$data['id_parent'] = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
-				$data['title'] = $row['name_pages'];
+				$data['name'] = $row['name_pages'];
 				$data['iso'] = $row['iso_lang'];
 				$data['url']  =
 					$this->routingUrl->getBuildUrl(array(
@@ -248,12 +249,13 @@ class frontend_model_about extends frontend_db_about {
 				if ($row['id_pages'] == $current['controller']['id']) {
 					$data['active'] = true;
 				}
+				$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
 				$data['content'] = $row['content_pages'];
 				$data['menu'] = $row['menu_pages'];
 				$data['date']['update'] = $row['last_update'];
 				$data['date']['register'] = $row['date_register'];
 				$data['seo']['title'] = $row['seo_title_pages'];
-				$data['seo']['description'] = $row['seo_desc_pages'];
+				$data['seo']['description'] = $row['seo_desc_pages'] ? $row['seo_desc_pages'] : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
 				// Plugin
 				if($newRow != false){
 					if(is_array($newRow)){

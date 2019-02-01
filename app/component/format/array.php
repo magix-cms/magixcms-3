@@ -45,19 +45,45 @@
 *
 */
 class component_format_array {
-	public function array_sortBy($field, &$array, $direction = 'asc')
-	{
-		usort($array, create_function('$a, $b', '
-        $a = $a["' . $field . '"];
-        $b = $b["' . $field . '"];
+    /**
+     * Sort an array by values
+     * @param $field
+     * @param $array
+     * @param string $direction
+     * @return bool
+     */
+	public function array_sortBy($field, &$array, $direction = 'asc'){
+        if (version_compare(phpversion(), '7.0.0', '>')) {
+            usort($array,function ($a, $b) use ($field,$direction) {
+                $at = $a[$field];
+                $bt = $b[$field];
 
-        if ($a == $b)
-        {
-            return 0;
+                if ($at == $bt)
+                {
+                    return 0;
+                }
+
+                if($direction === 'desc') {
+                    return ($at > $bt ? -1 : 1);
+                }
+                else {
+                    return ($at < $bt ? -1 : 1);
+                }
+            });
+            return true;
+        }else{
+            usort($array, create_function('$a, $b', '
+                $a = $a["' . $field . '"];
+                $b = $b["' . $field . '"];
+        
+                if ($a == $b)
+                {
+                    return 0;
+                }
+        
+                return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
+                '));
+            return true;
         }
-
-        return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
-    	'));
-		return true;
-	}
+    }
 }

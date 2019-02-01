@@ -5,6 +5,9 @@
     {if !isset($truncate)}
         {$truncate = 150}
     {/if}
+    {if !isset($lazy)}
+        {$lazy = true}
+    {/if}
 {/strip}
 {if is_array($data) && !empty($data)}
     {foreach $data as $item}
@@ -21,20 +24,17 @@
             <div class="figure row">
                 <div class="time-figure col-12 col-xs-6 col-sm-12 col-md-6">
                     <div>
-                        {if count($item.img) > 1}
-                            <img {if $item@first}src="{$item.img.medium.src}"{else}src="{$item.img.default}" data-src="{$item.img.medium.src}" class="lazyload"{/if} alt="{$item.title}" title="{$item.title}" itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}>
-                        {else}
-                            <img src="{$item.img.default}" alt="{$item.title}" title="{$item.title}">
-                        {/if}
+                        {if isset($item.img.name)}{$src = $item.img.medium.src}{else}{$src = $item.img.default}{/if}
+                        <img class="img-responsive{if $lazy} lazyload{/if}" {if $lazy}data-{/if}src="{$src}" alt="{$item.img.alt}" title="{$item.img.title}"{if count($item.img) > 1} itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}{/if}/>
                     </div>
                 </div>
                 <div itemprop="description" class="desc col-12 col-xs-6 col-sm-12 col-md-6">
-                    <h2 itemprop="name" class="h3">{$item.title|ucfirst}</h2>
-                    {if $item.resume}
-                        <p>{$item.resume|truncate:$truncate:'...'}</p>
-                    {elseif $item.content}
-                        <p>{$item.content|strip_tags|truncate:$truncate:'...'}</p>
-                    {/if}
+                    <h2 itemprop="name" class="h3">{$item.name}</h2>
+                    <p>{if $truncate}
+                        {$item.resume|truncate:$truncate:'&hellip;'}
+                    {else}
+                        {$item.resume}
+                    {/if}</p>
                     {strip}
                         {if !empty($item.tags)}
                             <p class="tag-list">
@@ -48,7 +48,7 @@
                         {/if}
                     {/strip}
                 </div>
-                <a class="all-hover" href="{$item.url}" title="{$item.title|ucfirst}" itemprop="url">{$item.title|ucfirst}</a>
+                <a class="all-hover" href="{$item.url}" title="{$pages.seo.description}" itemprop="url">{$pages.seo.title}</a>
             </div>
         </div>
     {/foreach}

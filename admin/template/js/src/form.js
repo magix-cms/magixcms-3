@@ -202,7 +202,7 @@ var globalForm = (function ($, undefined) {
         }
         else if($(f).hasClass('edit_form_img')) {
             options.success = function (d) {
-                $.jmRequest.initbox(d.notify,{ display:false });
+                $.jmRequest.initbox(d.notify,{ display:true });
                 //initAlert(d.notify,4000);
                 if(d.status && d.result) {
                     $('.block-img').empty();
@@ -212,10 +212,13 @@ var globalForm = (function ($, undefined) {
         }
         else if($(f).hasClass('delete_form_img')) {
             options.success = function (d) {
-                $.jmRequest.initbox(d.notify,{ display:false });
+                $.jmRequest.initbox(d.notify,{ display:true });
                 if(d.status && d.result) {
                     $('.block-img').empty();
                     $('.block-img').html(d.result);
+
+                    if(typeof imgdrop !== 'undefined') imgdrop.reset();
+                    if(typeof $('.img-drop') !== 'undefined') $('.img-drop').addClass('no-img');
                 }
             };
         }

@@ -42,7 +42,7 @@
  */
 class frontend_model_news extends frontend_db_news {
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$dateFormat;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$dateFormat,$seo;
 
 	/**
 	 * frontend_model_news constructor.
@@ -55,6 +55,21 @@ class frontend_model_news extends frontend_db_news {
 		$this->imagesComponent = new component_files_images($this->template);
 		$this->modelPlugins = new frontend_model_plugins();
         $this->dateFormat = new date_dateformat();
+        $this->seo = new frontend_model_seo('news', '', '');
+    }
+
+	/**
+	 *
+	 */
+	public function rootSeo()
+	{
+		$rootSeo = array();
+		$this->seo->level = 'root';
+		$seoTitle = $this->seo->replace_var_rewrite('','','title');
+		$rootSeo['title'] = $seoTitle ? $seoTitle : $this->template->getConfigVars('news');
+		$seoDesc = $this->seo->replace_var_rewrite('','','description');
+		$rootSeo['description'] = $seoDesc ? $seoDesc : $this->template->getConfigVars('last_news');
+		return $rootSeo;
     }
 
     /**
@@ -66,13 +81,13 @@ class frontend_model_news extends frontend_db_news {
      */
     public function setItemData($row,$current,$newRow = false)
     {
-
+		$string_format = new component_format_string();
         $data = null;
 
         if (isset($row['id_news'])) {
-            $data['id']    = $row['id_news'];
-            $data['title'] = $row['name_news'];
-            $data['url']  =
+            $data['id'] = $row['id_news'];
+            $data['name'] = $row['name_news'];
+            $data['url'] =
                 $this->routingUrl->getBuildUrl(array(
                         'type' => 'news',
                         'iso'  => $row['iso_lang'],
@@ -81,7 +96,6 @@ class frontend_model_news extends frontend_db_news {
                         'url'  => $row['url_news']
                     )
                 );
-
 
             if (isset($row['img_news'])) {
                 $imgPrefix = $this->imagesComponent->prefix();
@@ -95,8 +109,12 @@ class frontend_model_news extends frontend_db_news {
 					$data['img'][$value['type_img']]['h'] = $value['height_img'];
 					$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                 }
+				$data['img']['name'] = $row['img_news'];
             }
             $data['img']['default'] = '/skin/'.$this->template->theme.'/img/news/default.png';
+			$data['img']['alt'] = $row['alt_img'];
+			$data['img']['title'] = $row['title_img'];
+			$data['img']['caption'] = $row['caption_img'];
 
             $data['active'] = false;
 
@@ -112,10 +130,10 @@ class frontend_model_news extends frontend_db_news {
             $data['date']['month'] = $this->dateFormat->dateDefine('m',$row['date_publish']);
             $data['date']['day']   = $this->dateFormat->dateDefine('d',$row['date_publish']);
 
-            $data['resume']  = $row['resume_news'];
             $data['content'] = $row['content_news'];
+			$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_news'] ? $string_format->truncate(strip_tags($row['content_news'])) : '');
 
-            $data['tags']    =   null;
+            $data['tags'] = null;
             if(isset($row['tags'])) {
                 if (is_array($row['tags'])) {
                     foreach ($row['tags'] as $key => $value) {
@@ -139,6 +157,13 @@ class frontend_model_news extends frontend_db_news {
                     }
                 }
             }
+
+			$this->seo->level = 'record';
+			$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
+            $data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+
+            $seoDesc = $this->seo->replace_var_rewrite('',$data['name'],'description');
+            $data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
 
             if(isset($row['prev'])) $data['prev'] = $row['prev'];
             if(isset($row['next'])) $data['next'] = $row['next'];
@@ -422,4 +447,3 @@ class frontend_model_news extends frontend_db_news {
         return $data;
     }
 }
-?>

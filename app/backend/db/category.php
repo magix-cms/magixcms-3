@@ -229,12 +229,12 @@ class backend_db_category
 		$sql = '';
 
 		switch ($config['type']) {
-			case 'newPages':
+			case 'page':
 				$cond = $params['id_parent'] != NULL ? 'IN ('.$params['id_parent'].')' : 'IS NULL' ;
 				$sql = "INSERT INTO `mc_catalog_cat`(id_parent,order_cat,date_register) 
 						SELECT :id_parent,COUNT(id_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond";
 				break;
-			case 'newContent':
+			case 'content':
 				$sql = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,published_cat) 
 				  		VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:published_cat)';
 				break;
@@ -276,6 +276,15 @@ class backend_db_category
 			case 'img':
 				$sql = 'UPDATE mc_catalog_cat SET img_cat = :img_cat
                 		WHERE id_cat = :id_cat';
+				break;
+			case 'imgContent':
+				$sql = 'UPDATE mc_catalog_cat_content 
+						SET 
+							alt_img = :alt_img,
+							title_img = :title_img,
+							caption_img = :caption_img
+                		WHERE id_cat = :id_cat 
+                		AND id_lang = :id_lang';
 				break;
 			case 'order':
 				$sql = 'UPDATE mc_catalog_cat SET order_cat = :order_cat

@@ -104,7 +104,7 @@ class backend_db_product{
 							WHERE rel.id_product = :id AND c.id_lang = :default_lang';
 					break;
 				case 'imgData':
-					$sql = 'SELECT img.id_img,img.id_product, img.name_img,c.id_lang,c.alt_img,c.title_img,lang.iso_lang
+					$sql = 'SELECT img.id_img,img.id_product, img.name_img,c.id_lang,c.alt_img,c.title_img,c.caption_img,lang.iso_lang
 							FROM mc_catalog_product_img AS img
 							LEFT JOIN mc_catalog_product_img_content AS c USING(id_img)
 							LEFT JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -160,6 +160,9 @@ class backend_db_product{
 					break;
 				case 'img':
 					$sql = 'SELECT * FROM mc_catalog_product_img WHERE `id_img` = :id';
+					break;
+				case 'lastImgId':
+					$sql = 'SELECT id_img FROM mc_catalog_product_img ORDER BY id_img DESC LIMIT 0,1';
 					break;
 				case 'imgDefault':
 					$sql = 'SELECT id_img FROM mc_catalog_product_img WHERE id_product = :id AND default_img = 1';
@@ -275,8 +278,18 @@ class backend_db_product{
                 		AND id_lang = :id_lang';
 				break;
 			case 'imgContent':
-				$sql = 'UPDATE mc_catalog_product_img_content SET alt_img = :alt_img, title_img = :title_img
-                WHERE id_img = :id_img AND id_lang = :id_lang';
+				$sql = 'UPDATE mc_catalog_product_img_content 
+						SET 
+							alt_img = :alt_img, 
+							title_img = :title_img,
+							caption_img = :caption_img
+                		WHERE id_img = :id_img AND id_lang = :id_lang';
+				break;
+			case 'img':
+				$sql = 'UPDATE mc_catalog_product_img 
+						SET 
+							name_img = :name_img
+                		WHERE id_img = :id_img';
 				break;
 			case 'catRel':
 				$sql = 'UPDATE mc_catalog

@@ -3,7 +3,7 @@ class backend_controller_category extends backend_db_category
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder;
-    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset;
+    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset,$name_img;
 	public $tableconfig = array(
 		'all' => array(
 			'id_cat',
@@ -79,7 +79,9 @@ class backend_controller_category extends backend_db_category
 
         // --- Image Upload
         if (isset($_FILES['img']["name"])) $this->img = http_url::clean($_FILES['img']["name"]);
-        // --- Recursive Actions
+		if (http_request::isPost('name_img')) $this->name_img = http_url::clean($_POST['name_img']);
+
+		// --- Recursive Actions
         if (http_request::isGet('category')) $this->category = $formClean->arrayClean($_GET['category']);
 
         # ORDER PAGE
@@ -236,6 +238,8 @@ class backend_controller_category extends backend_db_category
                 $arr[$page['id_cat']]['id_cat'] = $page['id_cat'];
                 $arr[$page['id_cat']]['id_parent'] = $page['id_parent'];
                 $arr[$page['id_cat']]['menu_cat'] = $page['menu_cat'];
+				$img_pages = pathinfo($page['img_cat']);
+				$arr[$page['id_cat']]['img_cat'] = $img_pages['filename'];
                 if($page['img_cat'] != null) {
                     if(file_exists($imgPath.DIRECTORY_SEPARATOR.$page['id_cat'].DIRECTORY_SEPARATOR.$page['img_cat'])) {
                         $originalSize = getimagesize($imgPath . DIRECTORY_SEPARATOR . $page['id_cat'] . DIRECTORY_SEPARATOR . $page['img_cat']);
@@ -259,12 +263,97 @@ class backend_controller_category extends backend_db_category
                 'url_cat'           => $page['url_cat'],
                 'resume_cat'        => $page['resume_cat'],
                 'content_cat'       => $page['content_cat'],
+				'alt_img'     		=> $page['alt_img'],
+				'title_img'     	=> $page['title_img'],
+				'caption_img'       => $page['caption_img'],
                 'published_cat'     => $page['published_cat'],
                 'public_url'        => $publicUrl
             );
         }
         return $arr;
     }
+
+	/**
+	 * @param $id
+	 * @return array
+	 * @throws Exception
+	 */
+	private function saveContent($id)
+	{
+		$extendData = array();
+
+		foreach ($this->content as $lang => $content) {
+			$content['id_lang'] = $lang;
+			$content['id_cat'] = $id;
+			$content['published_cat'] = (!isset($content['published_cat']) ? 0 : 1);
+			if (empty($content['url_cat'])) {
+				$content['url_cat'] = http_url::clean($content['name_cat'],
+					array(
+						'dot' => false,
+						'ampersand' => 'strict',
+						'cspec' => '', 'rspec' => ''
+					)
+				);
+			}
+
+			$contentPage = $this->getItems('content',array('id_cat'=>$id, 'id_lang'=>$lang),'one',false);
+
+			if($contentPage != null) {
+				$this->upd(
+					array(
+						'type' => 'page',
+						'data' => array(
+							'id_cat' => $id,
+							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+						)
+					)
+				);
+				$this->upd(
+					array(
+						'type' => 'content',
+						'data' => $content
+					)
+				);
+			}
+			else {
+				$this->add(
+					array(
+						'type' => 'content',
+						'data' => $content
+					)
+				);
+			}
+
+			if(isset($this->id_cat)) {
+				$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
+				$setEditData = $this->setItemData($setEditData);
+				$extendData[$lang] = $setEditData[$this->id_cat]['content'][$lang]['public_url'];
+			}
+		}
+
+		if(!empty($extendData)) return $extendData;
+	}
+
+	/**
+	 * Update data
+	 * @param $data
+	 * @throws Exception
+	 */
+	private function add($data)
+	{
+		switch ($data['type']) {
+			case 'page':
+			case 'content':
+				parent::insert(
+					array(
+						'context' => $data['context'],
+						'type' => $data['type']
+					),
+					$data['data']
+				);
+				break;
+		}
+	}
 
     /**
      * Mise a jour des données
@@ -275,7 +364,10 @@ class backend_controller_category extends backend_db_category
     {
         switch ($data['type']) {
             case 'page':
+			case 'pageActiveMenu':
             case 'content':
+			case 'img':
+			case 'imgContent':
                 parent::update(
                     array(
                         'type'=>$data['type']
@@ -283,15 +375,6 @@ class backend_controller_category extends backend_db_category
 					$data['data']
                 );
                 break;
-            case 'img':
-                parent::update(
-                    array(
-                        'type'=>$data['type']
-                    ),array(
-                        'id_cat'	       => $data['id_cat'],
-                        'img_cat'          => $data['img_cat']
-                    )
-                );
                 break;
             case 'order':
                 $p = $this->order;
@@ -317,153 +400,6 @@ class backend_controller_category extends backend_db_category
                     }
                 }
                 break;
-            case 'pageActiveMenu':
-                parent::update(
-                    array(
-                        'context' => $data['context'],
-                        'type' => $data['type']
-                    ),
-                    $data['data']
-                );
-                break;
-        }
-    }
-    private function save(){
-        if (isset($this->content) && isset($this->id_cat)) {
-			$this->upd(array(
-				'type' => 'page',
-				'data' => array(
-					'id_cat' => $this->id_cat,
-					'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
-				)
-			));
-
-            foreach ($this->content as $lang => $content) {
-            	$content['id_lang'] = $lang;
-            	$content['id_cat'] = $this->id_cat;
-                $content['published_cat'] = (!isset($content['published_cat']) ? 0 : 1);
-                if (empty($content['url_cat'])) {
-                    $content['url_cat'] = http_url::clean($content['name_cat'],
-                        array(
-                            'dot' => false,
-                            'ampersand' => 'strict',
-                            'cspec' => '', 'rspec' => ''
-                        )
-                    );
-                }
-                $checkLangData = parent::fetchData(
-                    array('context'=>'one','type'=>'content'),
-                    array('id_cat'=>$this->id_cat,'id_lang'=>$lang)
-                );
-
-                // Check language page content
-                if($checkLangData!= null){
-                    $this->upd(array(
-                        'type' => 'content',
-                        'data' => $content
-                    ));
-                }else{
-                    parent::insert(
-                        array(
-                            'type' => 'newContent',
-                        ),
-                        $content
-                    );
-                }
-
-                $setEditData = parent::fetchData(
-                    array('context'=>'all','type'=>'page'),
-                    array('edit'=>$this->id_cat)
-                );
-                $setEditData = $this->setItemData($setEditData);
-                $extendData[$lang] = $setEditData[$this->id_cat]['content'][$lang]['public_url'];
-            }
-            $this->message->json_post_response(true, 'update', array('result'=>$this->id_cat,'extend'=>$extendData));
-
-        }
-        else if (isset($this->content) && !isset($this->id_cat)) {
-            if(empty($this->parent_id)){
-                $parentId = NULL;
-            }else{
-                $parentId = $this->parent_id;
-            }
-
-            parent::insert(
-                array(
-                    'type'=>'newPages'
-                ),array(
-                    'id_parent'     =>  $parentId
-                )
-            );
-
-            $setNewData = parent::fetchData(
-                array('context' => 'one', 'type' => 'root')
-            );
-
-            if ($setNewData['id_cat']) {
-                foreach ($this->content as $lang => $content) {
-
-                    $content['published_cat'] = (!isset($content['published_cat']) ? 0 : 1);
-                    $url_cat = http_url::clean($content['name_cat'],
-                        array(
-                            'dot' => false,
-                            'ampersand' => 'strict',
-                            'cspec' => '', 'rspec' => ''
-                        )
-                    );
-
-                    parent::insert(
-                        array(
-                            'type' => 'newContent',
-                        ),
-                        array(
-                            'id_lang'           => $lang,
-                            'id_cat'          => $setNewData['id_cat'],
-                            'name_cat'        => $content['name_cat'],
-                            'url_cat'         => $url_cat,
-                            'resume_cat'      => $content['resume_cat'],
-                            'content_cat'     => $content['content_cat'],
-                            'published_cat'   => $content['published_cat']
-                        )
-                    );
-                }
-                $this->message->json_post_response(true,'add_redirect');
-            }
-        }
-        else if(isset($this->img)){
-            $data = parent::fetchData(array('context'=>'one','type'=>'page'),array('id_cat'=>$this->id_cat));
-            $resultUpload = $this->upload->setImageUpload(
-                'img',
-                array(
-                    'name'              => filter_rsa::randMicroUI(),
-                    'edit'              => $data['img_cat'],
-                    'prefix'            => array('s_','m_','l_'),
-                    'module_img'        => 'catalog',
-                    'attribute_img'     => 'category',
-                    'original_remove'   => false
-                ),
-                array(
-                    'upload_root_dir'      => 'upload/catalog/c', //string
-                    'upload_dir'           => $this->id_cat //string ou array
-                ),
-                false
-            );
-
-            $this->upd(array(
-                'type'           => 'img',
-                'id_cat'         => $this->id_cat,
-                'img_cat'        => $resultUpload['file']
-            ));
-
-            $setEditData = parent::fetchData(
-                array('context'=>'all','type'=>'page'),
-                array('edit'=>$this->id_cat)
-            );
-            $setEditData = $this->setItemData($setEditData);
-            $this->template->assign('page',$setEditData[$this->id_cat]);
-            $display = $this->template->fetch('catalog/category/brick/img.tpl');
-
-            $this->message->json_post_response(true, 'update',$display);
         }
     }
 
@@ -504,49 +440,117 @@ class backend_controller_category extends backend_db_category
 		elseif(isset($this->action)) {
             switch ($this->action) {
                 case 'add':
-                    if(isset($this->content)){
-                        $this->save();
-                    }
-                    else{
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-                        $data = parent::fetchData(
-                            array('context'=>'all','type'=>'pagesSelect'),
-                            array(':default_lang'=>$defaultLanguage['id_lang'])
-                        );
-                        $this->template->assign('pagesSelect',$data);
-                        $this->modelLanguage->getLanguage();
-                        $this->template->display('catalog/category/add.tpl');
-                    }
-                    break;
-                case 'edit':
-                    if (isset($this->id_cat)) {
-                        $this->save();
-                    }
-                    else {
-                        $this->modelLanguage->getLanguage();
-                        $setEditData = parent::fetchData(
-                            array('context' => 'all', 'type' => 'page'),
-                            array('edit' => $this->edit)
-                        );
-                        $setEditData = $this->setItemData($setEditData);
-                        $this->template->assign('page', $setEditData[$this->edit]);
-                        //$pages = $this->setItemsData();
-                        //$this->template->assign('pages', $pages);
+                    if(isset($this->content)) {
+						$this->add(
+							array(
+								'type' => 'page',
+								'data' => array(
+									'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+								)
+							)
+						);
 
-                        $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
-                        $this->getItems('pagesChild', $this->edit, 'all');
-                        // catalog (category => product)
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                        $this->getItems('catalog', array('default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
-                        $assignCatalog = array(
-                            'id_catalog',
-                            'name_p' => ['title' => 'name']
-                        );
-                        $this->data->getScheme(array('mc_catalog', 'mc_catalog_product_content'), array('id_catalog', 'name_p'), $assignCatalog, 'schemeCatalog');
+						$page = $this->getItems('root',null,'one',false);
+
+						if ($page['id_cat']) {
+							$this->saveContent($page['id_cat']);
+							$this->message->json_post_response(true,'add_redirect');
+						}
+					}
+					else {
+						$this->modelLanguage->getLanguage();
 						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 						$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
+						$this->template->display('catalog/category/add.tpl');
+					}
+                    break;
+                case 'edit':
+					if(isset($this->img) || isset($this->name_img)){
+						$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+						$page = $this->getItems('pageLang', array('id' => $this->id_cat, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
+						$settings = array(
+							'name' => $this->name_img !== '' ? $this->name_img : $page['url_cat'],
+							'edit' => $page['img_cat'],
+							'prefix' => array('s_', 'm_', 'l_'),
+							'module_img' => 'catalog',
+							'attribute_img' => 'category',
+							'original_remove' => false
+						);
+						$dirs = array(
+							'upload_root_dir' => 'upload/catalog/c', //string
+							'upload_dir' => $this->id_cat //string ou array
+						);
+						$filename = '';
+						$update = false;
+
+						if(isset($this->img)) {
+							$resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
+							$filename = $resultUpload['file'];
+							$update = true;
+						}
+						elseif(isset($this->name_img)) {
+							$img_pages = pathinfo($page['img_cat']);
+							$img_name = $img_pages['filename'];
+
+							if($this->name_img !== $img_name && $this->name_img !== '') {
+								$result = $this->upload->renameImages($settings,$dirs);
+								$filename = $result;
+								$update = true;
+							}
+						}
+
+						if($filename !== '' && $update) {
+							$this->upd(array(
+								'type' => 'img',
+								'data' => array(
+									'id_cat' => $this->id_cat,
+									'img_cat' => $filename
+								)
+							));
+						}
+
+						foreach ($this->content as $lang => $content) {
+							$content['id_lang'] = $lang;
+							$content['id_cat'] = $this->id_cat;
+							$this->upd(array(
+								'type' => 'imgContent',
+								'data' => $content
+							));
+						}
+
+						$setEditData = $this->getItems('page',array('edit'=>$this->id_cat),'all',false);
+						$setEditData = $this->setItemData($setEditData);
+						$this->template->assign('page',$setEditData[$this->id_cat]);
+						$display = $this->template->fetch('catalog/category/brick/img.tpl');
+						$this->message->json_post_response(true, 'update',$display);
+					}
+					elseif (isset($this->id_cat)) {
+						$extendData = $this->saveContent($this->id_pages);
+						$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
+					}
+					else {
+						// Initialise l'API menu des plugins core
+						/*$this->modelPlugins->getItems(
+							array(
+								'type'      =>  'tabs',
+								'controller'=>  $this->controller
+							)
+						);*/
+						$this->modelLanguage->getLanguage();
+						$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
+						$setEditData = $this->setItemData($setEditData);
+						$this->template->assign('page',$setEditData[$this->edit]);
+						$this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
+						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+						$this->getItems('catalog', array('default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
+						$assignCatalog = array(
+							'id_catalog',
+							'name_p' => ['title' => 'name']
+						);
+						$this->data->getScheme(array('mc_catalog', 'mc_catalog_product_content'), array('id_catalog', 'name_p'), $assignCatalog, 'schemeCatalog');
+						$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
 						$this->template->display('catalog/category/edit.tpl');
-                    }
+					}
                     break;
                 case 'order':
                     if (isset($this->order)) {
@@ -584,19 +588,34 @@ class backend_controller_category extends backend_db_category
                     }
                     elseif(isset($this->del_img)) {
                         $this->upd(array(
-                            'type'           => 'img',
-                            'id_cat'         => $this->del_img,
-                            'img_cat'        => NULL
+                            'type'    => 'img',
+							'data' => array(
+								'id_cat' => $this->del_img,
+								'img_cat' => NULL
+							)
                         ));
 
-                        $setEditData = parent::fetchData(
-                            array('context'=>'all','type'=>'page'),
-                            array('edit'=>$this->del_img)
-                        );
+						$setEditData = $this->getItems('page',array('edit'=>$this->del_img),'all',false);
                         $setEditData = $this->setItemData($setEditData);
+
+						$setImgDirectory = $this->upload->dirImgUpload(
+							array_merge(
+								array('upload_root_dir'=>'upload/catalog/c/'.$this->del_img),
+								array('imgBasePath'=>true)
+							)
+						);
+
+						if(file_exists($setImgDirectory)){
+							$setFiles = $this->finder->scanDir($setImgDirectory);
+							$clean = '';
+							if($setFiles != null){
+								foreach($setFiles as $file){
+									$clean .= $this->makeFiles->remove($setImgDirectory.$file);
+								}
+							}
+						}
                         $this->template->assign('page',$setEditData[$this->del_img]);
                         $display = $this->template->fetch('catalog/category/brick/img.tpl');
-
                         $this->message->json_post_response(true, 'update',$display);
                     }
                     break;
@@ -619,34 +638,6 @@ class backend_controller_category extends backend_db_category
 						}
 					}
 					break;
-                /*case 'active-selected':
-                case 'unactive-selected':
-					if(isset($this->category) && is_array($this->category) && !empty($this->category)) {
-						$this->upd(
-							array(
-								'type'=>'pageActiveMenu',
-								'data'=>array(
-									'menu_cat' => ($this->action == 'active-selected'?1:0),
-									'id_cat' => implode($this->category, ',')
-								)
-							)
-						);
-					}
-					$this->message->getNotify('update',array('method'=>'fetch','assignFetch'=>'message'));
-
-					$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-					$this->getItems('pages', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
-					$assign = array(
-						'id_cat',
-						'name_cat' => ['title' => 'name'],
-						'img_cat' => ['type' => 'bin', 'input' => null, 'class' => ''],
-						'content_cat' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-						'menu_cat',
-						'date_register'
-					);
-					$this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','menu_cat', 'date_register'), $assign);
-					$this->template->display('catalog/category/index.tpl');
-					break;*/
             }
         }
         else {

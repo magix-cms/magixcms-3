@@ -107,6 +107,17 @@ class filter_rsa{
     }
 
     /**
+     * Génération de micro id
+     * @return string
+     */
+    public static function randTinyUI() {
+        return sprintf('%04x',
+            // 32 bits for "time_low"
+            mt_rand(0, 0xffff)
+        );
+    }
+
+    /**
      * Génération de pseudo ID aléatoire
      * @return string
      */

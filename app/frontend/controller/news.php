@@ -270,6 +270,7 @@ class frontend_controller_news extends frontend_db_news
         else {
 			$this->template->assign('news',$this->getBuildList());
 			$this->template->assign('nbp',$this->getBuildList(true));
+			$this->template->assign('rootSeo',$this->modelNews->rootSeo());
 
 			if(isset($this->year) OR isset($this->month) OR isset($this->date)) {
 				if(isset($this->month)) {

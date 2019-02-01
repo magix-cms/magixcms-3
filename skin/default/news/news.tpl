@@ -1,7 +1,7 @@
 {extends file="news/index.tpl"}
 {block name='body:id'}topicality{/block}
-{block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$news.title}] record={$news.title}}{/block}
-{block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$news.resume}] record={$news.title}}{/block}
+{block name="title"}{$news.seo.title}{/block}
+{block name="description"}{$news.seo.description}{/block}
 {block name="webType"}WebPage{/block}
 {block name='article'}
     <article id="article" class="container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Article">
@@ -9,7 +9,7 @@
             <header>
                 {strip}
                     <h1 itemprop="headline">
-                        {$news.title}
+                        {$news.name}
                         <small>
                             {*<span itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 {#news_by#|ucfirst} <span itemprop="name">{$news.author}</span>
@@ -111,9 +111,12 @@
                             <meta itemprop="url" content="{$url}{$news.img.large.src}" />
                             <meta itemprop="height" content="{$news.img.large.h}" />
                             <meta itemprop="width" content="{$news.img.large.w}" />
-                            <a href="{$news.img.large.src}" class="img-zoom" title="{$news.title}">
-                                <img class="img-responsive" src="{$news.img.medium.src}" alt="{$news.title}" title="{$news.title}" />
+                            <a href="{$news.img.large.src}" class="img-zoom" title="{$news.img.title}" data-caption="{$news.img.caption}">
+                                <img class="img-responsive" src="{$news.img.medium.src}" alt="{$news.img.alt}" title="{$news.img.title}" />
                             </a>
+                            {if $news.img.caption}
+                                <figcaption>{$news.img.caption}</figcaption>
+                            {/if}
                         </figure>
                     {/if}
                     {$news.content}
