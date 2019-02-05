@@ -94,7 +94,7 @@ class backend_controller_seo extends backend_db_seo {
         $arr = array();
 
         foreach ($data as $page) {
-            if (!array_key_exists($page['id_pages'], $arr)) {
+            if (!array_key_exists($page['id_seo'], $arr)) {
                 $arr[$page['id_seo']] = array();
                 $arr[$page['id_seo']]['id_seo'] = $page['id_seo'];
                 $arr[$page['id_seo']]['level_seo'] = $page['level_seo'];

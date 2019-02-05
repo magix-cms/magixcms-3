@@ -77,7 +77,7 @@ class frontend_model_news extends frontend_db_news {
      * @param $row
      * @param $current
      * @param bool $newRow
-     * @return null
+     * @return null|array
      */
     public function setItemData($row,$current,$newRow = false)
     {

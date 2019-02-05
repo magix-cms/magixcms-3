@@ -277,6 +277,7 @@ class backend_controller_about extends backend_db_about{
 
 		if($ajax) {
 			$params['section'] = 'pages';
+			$params['tab'] = 'pages';
 			$params['idcolumn'] = 'id_pages';
 			$params['activation'] = true;
 			$params['sortable'] = true;

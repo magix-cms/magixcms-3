@@ -94,6 +94,7 @@ class frontend_db_news
 			switch ($config['type']) {
 			    case 'page':
 					$sql = 'SELECT 
+								p.id_news,
 								p.img_news,
 								c.name_news,
 								c.url_news,
