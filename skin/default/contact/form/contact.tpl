@@ -21,24 +21,24 @@
         <input id="phone" type="tel" name="msg[phone]" placeholder="{#ph_contact_phone#|ucfirst}" class="form-control phone" pattern="{literal}^((?=[0-9\+ \(\)-]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})${/literal}" maxlength="20" />
         <label for="phone">{#pn_contact_phone#|ucfirst}&nbsp;:</label>
     </div>
-    {if $address_enabled}
+    {if $contact.address_enabled}
         <div class="row">
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <input id="address" type="text" name="msg[address]" placeholder="{#ph_address#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
-                    <label for="address">{#pn_contact_address#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
+                    <input id="address" type="text" name="msg[address]" placeholder="{#ph_address#|ucfirst}" value="" class="form-control{if $contact.address_required} required{/if}" {if $contact.address_required}required{/if}/>
+                    <label for="address">{#pn_contact_address#|ucfirst}{if $contact.address_required}*{/if}&nbsp;:</label>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="form-group">
-                    <input id="postcode" type="text" name="msg[postcode]" placeholder="{#ph_postcode#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
-                    <label for="postcode">{#pn_contact_postcode#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
+                    <input id="postcode" type="text" name="msg[postcode]" placeholder="{#ph_postcode#|ucfirst}" value="" class="form-control{if $contact.address_required} required{/if}" {if $contact.address_required}required{/if}/>
+                    <label for="postcode">{#pn_contact_postcode#|ucfirst}{if $contact.address_required}*{/if}&nbsp;:</label>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="form-group">
-                    <input id="city" type="text" name="msg[city]" placeholder="{#ph_city#|ucfirst}" value="" class="form-control{if $address_required} required{/if}" {if $address_required}required{/if}/>
-                    <label for="city">{#pn_contact_city#|ucfirst}{if $address_required}*{/if}&nbsp;:</label>
+                    <input id="city" type="text" name="msg[city]" placeholder="{#ph_city#|ucfirst}" value="" class="form-control{if $contact.address_required} required{/if}" {if $contact.address_required}required{/if}/>
+                    <label for="city">{#pn_contact_city#|ucfirst}{if $contact.address_required}*{/if}&nbsp;:</label>
                 </div>
             </div>
         </div>

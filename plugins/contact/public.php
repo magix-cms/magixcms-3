@@ -243,7 +243,7 @@ class plugins_contact_public extends plugins_contact_db
 		$config['address_enabled'] = $this->config['address_enabled'];
 		$config['address_required'] = $this->config['address_required'];
 
-        if(class_exists('plugins_recaptcha_public')){
+        if(class_exists('plugins_recaptcha_public') && $this->amp == false){
             $recaptcha = new plugins_recaptcha_public();
             $recaptchaData = $recaptcha->setItemData();
             if($recaptchaData['published'] == 1) {
@@ -281,7 +281,7 @@ class plugins_contact_public extends plugins_contact_db
 		}
 		else {
         	if(isset($this->moreinfo)) $this->template->assign('title',$this->moreinfo);
-        	$this->getContactConf();
+            $this->template->assign('contact',$this->getContactConf());
 			$this->template->display('contact/index.tpl');
 		}
     }
