@@ -8,10 +8,10 @@
         {block name='article:content'}
             <h1 itemprop="name">{$cat.name}</h1>
             <div class="text" itemprop="text">
-                {if count($cat.img) > 1}
+                {if !empty($cat.img.medium.src)}
                     <figure>
                         <a href="{$cat.img.large.src}" class="img-zoom" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
-                            <img class="img-responsive lazyload" src="{$cat.img.medium.src}" alt="{$cat.img.alt}" title="{$cat.img.title}}" />
+                            <img class="img-responsive lazyload" src="{$cat.img.medium.src}" alt="{$cat.img.alt}" title="{$cat.img.title}" />
                         </a>
                         {if $cat.img.caption}
                             <figcaption>{$cat.img.caption}</figcaption>
