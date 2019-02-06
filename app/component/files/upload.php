@@ -212,19 +212,21 @@ class component_files_upload{
      * Return path string for upload
      * @param $data
      * @return string
+     * @throws Exception
      */
     public function dirImgUpload($data){
         $makeFiles = new filesystem_makefile();
         if(is_array($data)){
             if(array_key_exists('upload_root_dir',$data)){
+
+                if(!file_exists($this->imgBasePath($data['upload_root_dir'].DIRECTORY_SEPARATOR))){
+                    $makeFiles->mkdir($this->imgBasePath($data['upload_root_dir'].DIRECTORY_SEPARATOR));
+                }
                 if(array_key_exists('imgBasePath',$data)){
                     if($data['imgBasePath']){
                         $url = $this->imgBasePath($data['upload_root_dir'].DIRECTORY_SEPARATOR);
                     }else{
                         $url = $data['upload_root_dir'].DIRECTORY_SEPARATOR;
-                    }
-                    if(!file_exists($url)){
-                        $makeFiles->mkdir($url);
                     }
                 }
                 return $url;
@@ -235,7 +237,9 @@ class component_files_upload{
     /**
      * Return path collection for upload
      * @param $data
+     * @param bool $debug
      * @return array
+     * @throws Exception
      */
     public function dirImgUploadCollection($data,$debug = false){
         $makeFiles = new filesystem_makefile();
@@ -264,11 +268,12 @@ class component_files_upload{
         }
     }
 
-	/**
-	 * Renomme une image
-	 * @param $data
-	 * @param $imgCollection
-	 */
+    /**
+     * Renomme une image
+     * @param $data
+     * @param $imgCollection
+     * @return bool|string
+     */
 	public function renameImages($data, $imgCollection)
 	{
 		try {
@@ -455,9 +460,10 @@ class component_files_upload{
      * Upload multiple image
      * @param $imgCollection
      * @param $path
-     * @param $name
+     * @param bool $data
      * @param bool $debug
      * @return array
+     * @throws Exception
      */
     public function multiUploadImg($imgCollection,$path,$data=false,$debug=false){
         $msg = null;
@@ -651,7 +657,12 @@ class component_files_upload{
                 $makeFiles = new filesystem_makefile();
                 $resultUpload = null;
                 $debugResult = null;
-                $dirImg = $this->dirImgUpload(array_merge(array('upload_root_dir'=>$imgCollection['upload_root_dir']),array('imgBasePath'=>true)));
+                $dirImg = $this->dirImgUpload(
+                    array_merge(
+                        array('upload_root_dir'=>$imgCollection['upload_root_dir']),
+                        array('imgBasePath'=>true)
+                    )
+                );
 				$fetchConfig = $this->config->fetchData(array('context'=>'all','type'=>'imgSize'),array('module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img']));
                 //print_r($fetchConfig);
                 if(!empty($this->$img)){
@@ -660,7 +671,12 @@ class component_files_upload{
                      */
                     $resultUpload = $this->uploadImg(
                         $img,
-                        $this->dirImgUpload(array_merge(array('upload_root_dir'=>$imgCollection['upload_root_dir']),array('imgBasePath'=>false))),
+                        $this->dirImgUpload(
+                            array_merge(
+                                array('upload_root_dir'=>$imgCollection['upload_root_dir']),
+                                array('imgBasePath'=>false)
+                            )
+                        ),
                         $debug
                     );
 
@@ -877,7 +893,12 @@ class component_files_upload{
                      */
                     $resultUpload = $this->multiUploadImg(
                         $img_multiple,
-                        $this->dirImgUpload(array_merge(array('upload_root_dir'=>$imgCollection['upload_root_dir']),array('imgBasePath'=>false))),
+                        $this->dirImgUpload(
+                            array_merge(
+                                array('upload_root_dir'=>$imgCollection['upload_root_dir']),
+                                array('imgBasePath'=>false)
+                            )
+                        ),
                         $data,
                         $debug
                     );
@@ -989,10 +1010,12 @@ class component_files_upload{
         }
     }
     ################# Upload Files ##############
+
     /**
      * Return path string for upload
      * @param $data
      * @return string
+     * @throws Exception
      */
     public function dirFileUpload($data){
         if(is_array($data)){
@@ -1035,12 +1058,14 @@ class component_files_upload{
             }
         }
     }
+
     /**
      * Upload un fichier
      * @param files $file
      * @param dir $path
      * @param bool $debug
-     * @return null|string
+     * @return array
+     * @throws Exception
      */
     public function uploadFiles($file,$path,$debug=false){
         $msg = null;
@@ -1106,7 +1131,12 @@ class component_files_upload{
 
                     $resultUpload = $this->uploadFiles(
                         $file,
-                        $this->dirFileUpload(array_merge(array('upload_root_dir'=>$filesCollection['upload_root_dir'],'upload_dir'=>$filesCollection['upload_dir']),array('fileBasePath'=>false))),
+                        $this->dirFileUpload(
+                            array_merge(
+                                array('upload_root_dir'=>$filesCollection['upload_root_dir'],'upload_dir'=>$filesCollection['upload_dir']),
+                                array('fileBasePath'=>false)
+                            )
+                        ),
                         $debug
                     );
 
