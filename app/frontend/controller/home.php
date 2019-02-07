@@ -78,13 +78,14 @@ class frontend_controller_home extends frontend_db_home
      */
     private function getBuildItems()
     {
+		$string_format = new component_format_string();
         $collection = $this->getItems('page',array('iso'=>$this->lang),'one',false);
         return array(
             'name' => $collection['title_page'],
             'content' => $collection['content_page'],
 			'seo' => array(
-				'title' => $collection['seo_title_page'],
-				'description' => $collection['seo_desc_page']
+				'title' => $collection['seo_title_page'] ? $collection['seo_title_page'] : ($collection['title_page'] ? $collection['title_page'] : $this->template->getConfigVars('home')),
+				'description' => $collection['seo_desc_page'] ? $collection['seo_desc_page'] : ($collection['content_page'] ? $string_format->truncate(strip_tags($collection['content_page'])) : ($collection['title_page'] ? $collection['title_page'] : $this->template->getConfigVars('home')))
 			)
         );
     }

@@ -270,6 +270,13 @@ class backend_controller_pages extends backend_db_pages
 			$content['id_lang'] = $lang;
 			$content['id_pages'] = $id;
 			$content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
+			$content['resume_pages'] = (!empty($content['resume_pages']) ? $content['resume_pages'] : NULL);
+			$content['content_pages'] = (!empty($content['content_pages']) ? $content['content_pages'] : NULL);
+			$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
+			$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
+			$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
+			$content['seo_title_pages'] = (!empty($content['seo_title_pages']) ? $content['seo_title_pages'] : NULL);
+			$content['seo_desc_pages'] = (!empty($content['seo_desc_pages']) ? $content['seo_desc_pages'] : NULL);
 			if (empty($content['url_pages'])) {
 				$content['url_pages'] = http_url::clean($content['name_pages'],
 					array(

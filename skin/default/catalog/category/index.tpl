@@ -8,7 +8,7 @@
         {block name='article:content'}
             <h1 itemprop="name">{$cat.name}</h1>
             <div class="text" itemprop="text">
-                {if isset($item.img.name)}
+                {if isset($cat.img.name)}
                     <figure>
                         <a href="{$cat.img.large.src}" class="img-zoom" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
                             <img class="img-responsive lazyload" src="{$cat.img.medium.src}" alt="{$cat.img.alt}" title="{$cat.img.title}" />

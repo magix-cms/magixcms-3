@@ -76,19 +76,19 @@ class backend_controller_catalog extends backend_db_catalog {
             foreach ($this->content as $lang => $content) {
                 if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang)) != null) {
                     parent::update(array('type' => 'content'), array(
-                            'name' => $content['catalog_name'],
-                            'content' => $content['catalog_content'],
-                            'seo_title' => $content['seo_title'],
-                            'seo_desc'  => $content['seo_desc'],
+                            'name' => !empty($content['catalog_name']) ? $content['catalog_name'] : NULL,
+                            'content' => !empty($content['catalog_content']) ? $content['catalog_content'] : NULL,
+                            'seo_title' => !empty($content['seo_title']) ? $content['seo_title'] : NULL,
+                            'seo_desc'  => !empty($content['seo_desc']) ? $content['seo_desc'] : NULL,
                             'id_lang' => $lang
                         )
                     );
                 } else {
                     parent::insert(array('type' => 'newContent'), array(
-                            'name' => $content['catalog_name'],
-                            'content' => $content['catalog_content'],
-                            'seo_title' => $content['seo_title'],
-                            'seo_desc'  => $content['seo_desc'],
+                            'name' => !empty($content['catalog_name']) ? $content['catalog_name'] : NULL,
+                            'content' => !empty($content['catalog_content']) ? $content['catalog_content'] : NULL,
+                            'seo_title' => !empty($content['seo_title']) ? $content['seo_title'] : NULL,
+                            'seo_desc'  => !empty($content['seo_desc']) ? $content['seo_desc'] : NULL,
                             'id_lang' => $lang
                         )
                     );

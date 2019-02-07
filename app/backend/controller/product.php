@@ -530,6 +530,11 @@ class backend_controller_product extends backend_db_product
 							$content['id_product'] = $product['id_product'];
 							$content['id_lang'] = $lang;
 							$content['published_p'] = (!isset($content['published_p']) ? 0 : 1);
+							$content['longname_p'] = (!empty($content['longname_p']) ? $content['longname_p'] : NULL);
+							$content['resume_p'] = (!empty($content['resume_p']) ? $content['resume_p'] : NULL);
+							$content['content_p'] = (!empty($content['content_p']) ? $content['content_p'] : NULL);
+							$content['seo_title_p'] = (!empty($content['seo_title_p']) ? $content['seo_title_p'] : NULL);
+							$content['seo_desc_p'] = (!empty($content['seo_desc_p']) ? $content['seo_desc_p'] : NULL);
 
 							if (empty($content['url_p'])) {
 								$content['url_p'] = http_url::clean($content['name_p'],
@@ -589,6 +594,11 @@ class backend_controller_product extends backend_db_product
 								$content['id_product'] = $this->id_product;
 								$content['id_lang'] = $lang;
 								$content['published_p'] = (!isset($content['published_p']) ? 0 : 1);
+								$content['longname_p'] = (!empty($content['longname_p']) ? $content['longname_p'] : NULL);
+								$content['resume_p'] = (!empty($content['resume_p']) ? $content['resume_p'] : NULL);
+								$content['content_p'] = (!empty($content['content_p']) ? $content['content_p'] : NULL);
+								$content['seo_title_p'] = (!empty($content['seo_title_p']) ? $content['seo_title_p'] : NULL);
+								$content['seo_desc_p'] = (!empty($content['seo_desc_p']) ? $content['seo_desc_p'] : NULL);
 
 								if (empty($content['url_p'])) {
 									$content['url_p'] = http_url::clean($content['name_p'],
@@ -695,6 +705,9 @@ class backend_controller_product extends backend_db_product
                             foreach ($this->imgData as $lang => $content) {
                                 $content['id_img'] = $this->id_img;
                                 $content['id_lang'] = $lang;
+								$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
+								$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
+								$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
 
                                 $checkLangData = parent::fetchData(
                                     array('context' => 'one', 'type' => 'imgContent'),

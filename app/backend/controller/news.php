@@ -270,6 +270,13 @@ class backend_controller_news extends backend_db_news
 			$data['id_lang'] = $lang;
 			$data['id_news'] = $id;
 			$data['published_news'] = (!isset($content['published_news']) ? 0 : 1);
+			$content['resume_news'] = (!empty($content['resume_news']) ? $content['resume_news'] : NULL);
+			$content['content_news'] = (!empty($content['content_news']) ? $content['content_news'] : NULL);
+			$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
+			$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
+			$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
+			$content['seo_title_news'] = (!empty($content['seo_title_news']) ? $content['seo_title_news'] : NULL);
+			$content['seo_desc_news'] = (!empty($content['seo_desc_news']) ? $content['seo_desc_news'] : NULL);
 			if (empty($content['url_news'])) {
 				$data['url_news'] = http_url::clean($content['name_news'],
 					array(

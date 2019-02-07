@@ -40,11 +40,11 @@
                         <figure{if $img.img.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
                             {if $img.img.medium}
                                 <meta itemprop="contentUrl" content="{$img.img.large}" />
-                                <a href="{$img.img.large.src}" class="img-zoom" title="{$img.title}" data-caption="{$img.caption}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                                    <img{* src="{$product.img_default}"*} data-src="{$img.img.medium.src}" alt="{$img.alt}" class="img-responsive lazyload" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
+                                <a href="{$img.img.large.src}" class="img-zoom" title="{$img.img.title}" data-caption="{$img.img.caption}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
+                                    <img{* src="{$product.img_default}"*} data-src="{$img.img.medium.src}" alt="{$img.img.alt}" class="img-responsive lazyload" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
                                 </a>
                             {else}
-                                <img class="img-responsive" src="{$product.img_default}" alt="{$product.name}" />
+                                <img class="img-responsive" src="{$product.img_default}" alt="{$product.seo.title}" />
                             {/if}
                             {if $img.caption}
                                 <figcaption>{$img.caption}</figcaption>

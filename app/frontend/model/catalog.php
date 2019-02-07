@@ -273,10 +273,10 @@ class frontend_model_catalog extends frontend_db_catalog {
                     }
 					$data['img']['name'] = $row['img_cat'];
                 }
-                $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
 				$data['img']['alt'] = $row['alt_img'];
 				$data['img']['title'] = $row['title_img'];
 				$data['img']['caption'] = $row['caption_img'];
+                $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
 					'type' => 'category',
 					'iso'  => $row['iso_lang'],
