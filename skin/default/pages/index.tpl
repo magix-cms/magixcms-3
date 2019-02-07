@@ -10,7 +10,7 @@
                 <h1 itemprop="name">{$pages.name}</h1>
             </header>
             <div class="text" itemprop="text">
-                {if !empty($pages.img.medium.src)}
+                {if isset($item.img.name)}
                     <figure class="img-float pull-right">
                         <a href="{$pages.img.large.src}" class="img-zoom" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
                             <img class="img-responsive" src="{$pages.img.medium.src}" alt="{$pages.img.alt}" title="{$pages.img.title}" />

@@ -87,15 +87,13 @@ class frontend_model_news extends frontend_db_news {
         if (isset($row['id_news'])) {
             $data['id'] = $row['id_news'];
             $data['name'] = $row['name_news'];
-            $data['url'] =
-                $this->routingUrl->getBuildUrl(array(
-                        'type' => 'news',
-                        'iso'  => $row['iso_lang'],
-                        'date' => $row['date_publish'],
-                        'id'   => $row['id_news'],
-                        'url'  => $row['url_news']
-                    )
-                );
+            $data['url'] = $this->routingUrl->getBuildUrl(array(
+				'type' => 'news',
+				'iso'  => $row['iso_lang'],
+				'date' => $row['date_publish'],
+				'id'   => $row['id_news'],
+				'url'  => $row['url_news']
+			));
 
             if (isset($row['img_news'])) {
                 $imgPrefix = $this->imagesComponent->prefix();
@@ -115,12 +113,7 @@ class frontend_model_news extends frontend_db_news {
 			$data['img']['alt'] = $row['alt_img'];
 			$data['img']['title'] = $row['title_img'];
 			$data['img']['caption'] = $row['caption_img'];
-
-            $data['active'] = false;
-
-            if ($row['id_news'] == $current['controller']['id']) {
-                $data['active'] = true;
-            }
+            $data['active'] = ($row['id_news'] == $current['controller']['id']) ? true : false;
 
             $data['date']['register'] = $this->dateFormat->SQLDate($row['date_register']);
             $data['date']['update']   = $this->dateFormat->SQLDate($row['last_update']);
@@ -159,11 +152,20 @@ class frontend_model_news extends frontend_db_news {
             }
 
 			$this->seo->level = 'record';
-			$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
-            $data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
-
-            $seoDesc = $this->seo->replace_var_rewrite('',$data['name'],'description');
-            $data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+			if (!isset($row['seo_title_news']) || empty($row['seo_title_news'])) {
+				$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
+				$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+			}
+			else {
+				$data['seo']['title'] = $row['seo_title_news'];
+			}
+			if (!isset($row['seo_desc_news']) || empty($row['seo_desc_news'])) {
+				$seoDesc = $this->seo->replace_var_rewrite('',$data['name'],'description');
+				$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+			}
+			else {
+				$data['seo']['description'] = $row['seo_desc_news'];
+			}
 
             if(isset($row['prev'])) $data['prev'] = $row['prev'];
             if(isset($row['next'])) $data['next'] = $row['next'];

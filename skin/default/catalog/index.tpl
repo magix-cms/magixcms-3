@@ -1,7 +1,7 @@
 {extends file="layout.tpl"}
 {block name='body:id'}catalog{/block}
-{block name="title"}{$root.title}{/block}
-{block name="description"}{$root.description}{/block}
+{block name="title"}{$root.seo.title}{/block}
+{block name="description"}{$root.seo.description}{/block}
 {block name="webType"}CollectionPage{/block}
 {block name='article'}
     <article class="catalog container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Series">

@@ -23,7 +23,7 @@
                             {$item.resume}
                         {/if}</p>
                 </div>
-                <a class="all-hover" href="{$item.url}" title="{$item.name}" itemprop="url">{$item.name}</a>
+                <a class="all-hover" href="{$item.url}" title="{$item.seo.description}" itemprop="url">{$item.seo.title}</a>
             </div>
         </div>
     {/foreach}

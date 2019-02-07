@@ -65,7 +65,9 @@ class backend_db_product{
 								p.reference_p,
 								p.price_p, 
 								pc.resume_p , 
-								pc.content_p, 
+								pc.content_p,
+								pc.seo_title_p, 
+								pc.seo_desc_p,
 								IFNULL(pi.default_img,0) as img_p,
 								p.date_register
 							FROM mc_catalog_product AS p
@@ -217,8 +219,8 @@ class backend_db_product{
 						VALUES (:price_p,:reference_p,NOW())';
 				break;
 			case 'newContent':
-				$sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,published_p) 
-			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:published_p)';
+				$sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,seo_title_p,seo_desc_p,published_p) 
+			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:seo_title_p,:seo_desc_p,:published_p)';
 				break;
 			case 'newImg':
 				$sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img,order_img,default_img) 
@@ -273,6 +275,8 @@ class backend_db_product{
 							url_p = :url_p,
 							resume_p = :resume_p,
 							content_p = :content_p,
+							seo_title_p = :seo_title_p, 
+                            seo_desc_p = :seo_desc_p,
 							published_p = :published_p
 							WHERE id_product = :id_product 
                 		AND id_lang = :id_lang';

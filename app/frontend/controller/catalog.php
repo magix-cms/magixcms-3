@@ -24,6 +24,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
             $this->id_parent = $formClean->numeric($_GET['id_parent']);
         }
     }
+
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
@@ -151,6 +152,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
      * @param $type
      * @return array
      */
+
     private function getBuildLangItems($type){
 
         switch($type){
@@ -164,6 +166,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
                 break;
         }
     }
+
     /**
      * Assign page's data to smarty
      * @access private
@@ -209,17 +212,17 @@ class frontend_controller_catalog extends frontend_db_catalog {
      * run app
      */
     public function run(){
-
-        if(isset($this->id) && !isset($this->id_parent)){
+        if(isset($this->id) && !isset($this->id_parent)) {
             $this->getData('cat');
             $this->template->display('catalog/category/index.tpl');
-        }elseif(isset($this->id) && isset($this->id_parent)){
+        }
+        elseif(isset($this->id) && isset($this->id_parent)) {
             $this->getData('product');
             $this->template->display('catalog/product/index.tpl');
-        }else{
+        }
+        else {
             $this->getData('root');
             $this->template->display('catalog/index.tpl');
         }
     }
 }
-?>

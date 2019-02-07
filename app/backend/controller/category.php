@@ -11,6 +11,8 @@ class backend_controller_category extends backend_db_category
 			'parent_cat' => ['col' => 'name_cat', 'title' => 'name'],
 			'img_cat' => ['type' => 'bin', 'input' => null, 'class' => ''],
 			'content_cat' => ['type' => 'bin', 'input' => null],
+            'seo_title_cat' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
+            'seo_desc_cat' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
 			'menu_cat',
 			'date_register'
 		),
@@ -19,6 +21,8 @@ class backend_controller_category extends backend_db_category
 			'name_cat' => ['title' => 'name'],
 			'img_cat' => ['type' => 'bin', 'input' => null, 'class' => ''],
 			'content_cat' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+            'seo_title_cat' => array('title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
+            'seo_desc_cat' => array('title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
 			'menu_cat',
 			'date_register'
 		)
@@ -266,6 +270,8 @@ class backend_controller_category extends backend_db_category
 				'alt_img'     		=> $page['alt_img'],
 				'title_img'     	=> $page['title_img'],
 				'caption_img'       => $page['caption_img'],
+                'seo_title_cat'     => $page['seo_title_cat'],
+                'seo_desc_cat'      => $page['seo_desc_cat'],
                 'published_cat'     => $page['published_cat'],
                 'public_url'        => $publicUrl
             );
@@ -525,8 +531,8 @@ class backend_controller_category extends backend_db_category
 						$this->message->json_post_response(true, 'update',$display);
 					}
 					elseif (isset($this->id_cat)) {
-						$extendData = $this->saveContent($this->id_pages);
-						$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
+						$extendData = $this->saveContent($this->id_cat);
+						$this->message->json_post_response(true, 'update', array('result'=>$this->id_cat,'extend'=>$extendData));
 					}
 					else {
 						// Initialise l'API menu des plugins core
@@ -540,7 +546,7 @@ class backend_controller_category extends backend_db_category
 						$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
 						$setEditData = $this->setItemData($setEditData);
 						$this->template->assign('page',$setEditData[$this->edit]);
-						$this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
+						$this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
 						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 						$this->getItems('catalog', array('default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
 						$assignCatalog = array(
@@ -644,7 +650,7 @@ class backend_controller_category extends backend_db_category
             $this->modelLanguage->getLanguage();
             $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
             $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
-            $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
+            $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
             $this->template->display('catalog/category/index.tpl');
         }
     }

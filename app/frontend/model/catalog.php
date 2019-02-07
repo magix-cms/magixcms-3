@@ -72,16 +72,27 @@ class frontend_model_catalog extends frontend_db_catalog {
     {
 		$string_format = new component_format_string();
         $data = null;
-
         if ($row != null) {
             if (isset($row['name'])) {
-                $data['name']    = $row['name'];
+                $data['name'] = $row['name'] ? $row['name'] : $this->template->getConfigVars('catalog');
                 $data['content'] = $row['content'];
 				$this->seo->level = 'root';
-				$seoTitle = $this->seo->replace_var_rewrite('','','title');
-				$data['title'] = $seoTitle ? $seoTitle : $data['name'];
-				$seoDesc = $this->seo->replace_var_rewrite('','','description');
-				$data['description'] = $seoDesc ? $seoDesc : $string_format->truncate(strip_tags($data['content']));
+
+				if (!isset($row['seo_title']) || empty($row['seo_title'])) {
+					$seoTitle = $this->seo->replace_var_rewrite('','','title');
+					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+				}
+				else {
+					$data['seo']['title'] = $row['seo_title'];
+				}
+
+				if (!isset($row['seo_desc']) || empty($row['seo_desc'])) {
+					$seoDesc = $this->seo->replace_var_rewrite('','','description');
+					$data['seo']['description'] = $seoDesc ? $seoDesc : ( $row['content'] ? $string_format->truncate(strip_tags($data['content'])) : $data['name'] );
+				}
+				else {
+					$data['seo']['description'] = $row['seo_desc'];
+				}
             }
             // *** Product
             elseif (isset($row['name_p'])) {
@@ -142,7 +153,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                             }
                         }
                     }
-                    $data['img_default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+                    //$data['img_default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
                 }
                 else {
                     if(isset($row['name_img'])){
@@ -160,11 +171,12 @@ class frontend_model_catalog extends frontend_db_catalog {
 						$data['img']['alt'] = $row['alt_img'];
 						$data['img']['title'] = $row['title_img'];
 						$data['img']['caption'] = $row['caption_img'];
+						$data['img']['name'] = $row['name_img'];
                     }
-                    $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+					$data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+				}
 
-                }
-                // -- Similar / Associated product
+				// -- Similar / Associated product
                 if(isset($row['associated'])){
                     foreach($row['associated'] as $key => $value){
                         $data['associated'][$key]['name'] = $value['name_p'];
@@ -208,6 +220,10 @@ class frontend_model_catalog extends frontend_db_catalog {
 								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $valueConfig['height_img'];
 								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $valueConfig['resize_img'];
                             }
+							$data['associated'][$key]['img']['alt'] = $value['alt_img'];
+							$data['associated'][$key]['img']['title'] = $value['title_img'];
+							$data['associated'][$key]['img']['caption'] = $value['caption_img'];
+							$data['associated'][$key]['img']['name'] = $value['name_img'];
                         }
                         $data['associated'][$key]['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
                     }
@@ -222,11 +238,20 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
 
 				$this->seo->level = 'record';
-				$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
-				$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
-
-				$seoDesc = $this->seo->replace_var_rewrite('',$data['name'],'description');
-				$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+				if (!isset($row['seo_title_p']) || empty($row['seo_title_p'])) {
+					$seoTitle = $this->seo->replace_var_rewrite($data['name'],'','title');
+					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+				}
+				else {
+					$data['seo']['title'] = $row['seo_title_p'];
+				}
+				if (!isset($row['seo_desc_p']) || empty($row['seo_desc_p'])) {
+					$seoDesc = $this->seo->replace_var_rewrite($data['name'],'','description');
+					$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+				}
+				else {
+					$data['seo']['description'] = $row['seo_desc_p'];
+				}
 			}
 			// *** Category
 			elseif(isset($row['name_cat'])) {
@@ -279,14 +304,23 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
 
 				$this->seo->level = 'parent';
-				$seoTitle = $this->seo->replace_var_rewrite($data['name'],'','title');
-				$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
-
-				$seoDesc = $this->seo->replace_var_rewrite($data['name'],'','description');
-				$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+				if (!isset($row['seo_title_cat']) || empty($row['seo_title_cat'])) {
+					$seoTitle = $this->seo->replace_var_rewrite($data['name'],'','title');
+					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+				}
+				else {
+					$data['seo']['title'] = $row['seo_title_cat'];
+				}
+				if (!isset($row['seo_desc_cat']) || empty($row['seo_desc_cat'])) {
+					$seoDesc = $this->seo->replace_var_rewrite($data['name'],'','description');
+					$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+				}
+				else {
+					$data['seo']['description'] = $row['seo_desc_cat'];
+				}
             }
-            return $data;
         }
+		return $data;
     }
 
     /**

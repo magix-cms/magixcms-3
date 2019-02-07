@@ -94,7 +94,7 @@
             <div itemprop="author" itemscope itemtype="https://schema.org/{$companyData.type}" itemref="publisher"></div>
             <div itemprop="articleBody">
                 <div class="desc">
-                    {if $news.img.small.src}
+                    {if isset($news.img.name)}
                         {*<figure{if $news.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
                             {if $news.imgSrc.small}
                                 <meta itemprop="url" content="{$url}{$news.imgSrc.medium}" />

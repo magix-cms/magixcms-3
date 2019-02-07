@@ -44,6 +44,7 @@ class frontend_controller_news extends frontend_db_news
             $this->id_parent = $formClean->numeric($_GET['id_parent']);
         }*/
     }
+
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
@@ -211,6 +212,7 @@ class frontend_controller_news extends frontend_db_news
                 break;
         }
     }
+
 	/**
 	 * @return array
 	 */

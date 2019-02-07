@@ -67,18 +67,22 @@ class backend_db_catalog{
 
 
 		if ($config['type'] === 'newContent') {
-			$queries = array(
-				array(
-					'request'=>"INSERT INTO `mc_catalog_data` (`id_lang`,`name_info`,`value_info`)
-								VALUE(:id_lang,'name',:nm)",
-					'params'=>array(':id_lang' => $params['id_lang'],':nm' => $params['name'])
-				),
-				array(
-					'request'=>"INSERT INTO `mc_catalog_data` (`id_lang`,`name_info`,`value_info`)
-								VALUE(:id_lang,'content',:content)",
-					'params'=>array(':id_lang' => $params['id_lang'],':content' => $params['content'])
-				)
-			);
+            $queries = array(
+                array(
+                    'request' => "SET @lang = :id_lang",
+                    'params' => array('id_lang' => $params['id_lang'])
+                ),
+                array(
+                    'request' => "INSERT INTO `mc_catalog_data` (`id_lang`,`name_info`,`value_info`) VALUES
+							(@lang,'name',:nm),(@lang,'content',:content),(@lang,'seo_desc',:seo_desc),(@lang,'seo_title',:seo_title)",
+                    'params' => array(
+                        'nm'        => $params['name'],
+                        'content'   => $params['content'],
+                        'seo_desc'  => $params['seo_desc'],
+                        'seo_title' => $params['seo_title']
+                    )
+                ),
+            );
 
 			try {
 				component_routing_db::layer()->transaction($queries);
@@ -118,12 +122,16 @@ class backend_db_catalog{
                         SET `value_info` = CASE `name_info`
                             WHEN 'name' THEN :nm
                             WHEN 'content' THEN :content
+                            WHEN 'seo_desc' THEN :seo_desc
+						    WHEN 'seo_title' THEN :seo_title
                         END
-                        WHERE `name_info` IN ('name','content') AND id_lang = :id_lang";
+                        WHERE `name_info` IN ('name','content','seo_desc','seo_title') AND id_lang = :id_lang";
 				$params = array(
-					'nm' => $params['name'],
-					'content' => $params['content'],
-					'id_lang' => $params['id_lang']
+					'nm'        => $params['name'],
+					'content'   => $params['content'],
+                    'seo_title' => $params['seo_title'],
+                    'seo_desc'  => $params['seo_desc'],
+					'id_lang'   => $params['id_lang']
 				);
 				break;
 		}

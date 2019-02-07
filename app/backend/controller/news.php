@@ -9,15 +9,18 @@ class backend_controller_news extends backend_db_news
 		'name_news',
 		'content_news' => ['type' => 'bin', 'input' => null],
 		'img_news' => ['type' => 'bin', 'input' => null, 'class' => ''],
+        'seo_title_news' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
+        'seo_desc_news' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
 		'last_update' => ['title' => 'last_update', 'input' => ['type' => 'text', 'class' => 'date-input']],
 		'date_publish',
 		'published_news'
 	);
 
-	/**
-	 * backend_controller_news constructor.
-	 * @param null|object $t
-	 */
+    /**
+     * backend_controller_news constructor.
+     * @param null|object $t
+     * @throws Exception
+     */
     public function __construct($t = null)
     {
         $this->template = $t ? $t : new backend_model_template;
@@ -162,6 +165,7 @@ class backend_controller_news extends backend_db_news
     /**
      * @param $data
      * @return array
+     * @throws Exception
      */
     private function setItemData($data){
         $imgPath = $this->upload->imgBasePath('upload/news');
@@ -221,6 +225,8 @@ class backend_controller_news extends backend_db_news
 				'alt_img'     		=> $page['alt_img'],
 				'title_img'     	=> $page['title_img'],
 				'caption_img'       => $page['caption_img'],
+                'seo_title_news'    => $page['seo_title_news'],
+                'seo_desc_news'     => $page['seo_desc_news'],
                 'date_publish'      => $datePublish,
                 'published_news'    => $page['published_news'],
                 'public_url'        => $publicUrl,
@@ -249,20 +255,23 @@ class backend_controller_news extends backend_db_news
 		}
 	}
 
-	/**
-	 * @param $id
-	 * @return array
-	 */
+    /**
+     * @param $id
+     * @return array
+     * @throws Exception
+     */
 	private function saveContent($id)
 	{
 		$extendData = array();
 
 		foreach ($this->content as $lang => $content) {
-			$content['id_lang'] = $lang;
-			$content['id_news'] = $id;
-			$content['published_news'] = (!isset($content['published_news']) ? 0 : 1);
+			$data = $content;
+			unset($data['tag_news']);
+			$data['id_lang'] = $lang;
+			$data['id_news'] = $id;
+			$data['published_news'] = (!isset($content['published_news']) ? 0 : 1);
 			if (empty($content['url_news'])) {
-				$content['url_news'] = http_url::clean($content['name_news'],
+				$data['url_news'] = http_url::clean($content['name_news'],
 					array(
 						'dot' => false,
 						'ampersand' => 'strict',
@@ -273,14 +282,14 @@ class backend_controller_news extends backend_db_news
 
 			$dateFormat = new date_dateformat();
 			$datePublish = !empty($content['date_publish']) ? $dateFormat->SQLDateTime($content['date_publish']) : $dateFormat->SQLDateTime($dateFormat->dateToDefaultFormat());
-			$content['date_publish'] = $datePublish;
+			$data['date_publish'] = $datePublish;
 			$contentPage = $this->getItems('content',array('id_news'=>$id, 'id_lang'=>$lang),'one',false);
 
 			if($contentPage != null) {
 				$this->upd(
 					array(
 						'type' => 'content',
-						'data' => $content
+						'data' => $data
 					)
 				);
 			}
@@ -288,7 +297,7 @@ class backend_controller_news extends backend_db_news
 				$this->add(
 					array(
 						'type' => 'content',
-						'data' => $content
+						'data' => $data
 					)
 				);
 			}
@@ -384,6 +393,7 @@ class backend_controller_news extends backend_db_news
     /**
      * Insertion de données
      * @param $data
+     * @throws Exception
      */
     private function del($data){
         switch($data['type']){
@@ -622,7 +632,7 @@ class backend_controller_news extends backend_db_news
                 $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
                 $this->data->getScheme(
                 	array('mc_news', 'mc_news_content'),
-					array('id_news', 'name_news', 'content_news', 'img_news', 'last_update', 'date_publish', 'published_news'),
+					array('id_news', 'name_news', 'content_news', 'img_news','seo_title_news','seo_desc_news', 'last_update', 'date_publish', 'published_news'),
 					$this->tableconfig);
                 $this->template->display('news/index.tpl');
             }

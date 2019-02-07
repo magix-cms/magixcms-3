@@ -38,6 +38,29 @@
                     <label for="content[{$id}][content_news]">{#content#|ucfirst} :</label>
                     <textarea name="content[{$id}][content_news]" id="content[{$id}][content_news]" class="form-control mceEditor"></textarea>
                 </div>
+                <div class="form-group">
+                    <button class="btn collapsed btn-collapse" role="button" data-toggle="collapse" data-parent="#accordion" href="#metas-{$id}" aria-expanded="true" aria-controls="metas-{$id}">
+                        <span class="fa"></span> {#display_metas#|ucfirst}
+                    </button>
+                </div>
+                <div id="metas-{$id}" class="collapse" role="tabpanel" aria-labelledby="heading{$id}">
+                    <div class="row">
+                        <div class="col-ph-12 col-sm-8">
+                            <div class="form-group">
+                                <label for="content[{$id}][seo_title_news]">{#title#|ucfirst} :</label>
+                                <textarea class="form-control" id="content[{$id}][seo_title_news]" name="content[{$id}][seo_title_news]" cols="70" rows="3">{$page.content[{$id}].seo_title_news}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-ph-12 col-sm-8">
+                            <div class="form-group">
+                                <label for="content[{$id}][seo_desc_news]">Description :</label>
+                                <textarea class="form-control" id="content[{$id}][seo_desc_news]" name="content[{$id}][seo_desc_news]" cols="70" rows="3">{$page.content[{$id}].seo_desc_news}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </fieldset>
         {/foreach}
     </div>

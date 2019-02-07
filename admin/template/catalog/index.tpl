@@ -37,6 +37,30 @@
                                             <label for="content[{$id}][catalog_content]">{#content#|ucfirst} :</label>
                                             <textarea name="content[{$id}][catalog_content]" id="content[{$id}][catalog_content]" class="form-control mceEditor">{call name=cleantextarea field=$contentData.{$id}.content}</textarea>
                                         </div>
+                                        <div class="form-group">
+                                            <button class="btn collapsed btn-collapse" role="button" data-toggle="collapse" data-parent="#accordion" href="#metas-{$id}" aria-expanded="true" aria-controls="metas-{$id}">
+                                                <span class="fa"></span> {#display_metas#|ucfirst}
+                                            </button>
+                                        </div>
+
+                                        <div id="metas-{$id}" class="collapse" role="tabpanel" aria-labelledby="heading{$id}">
+                                            <div class="row">
+                                                <div class="col-ph-12 col-sm-8">
+                                                    <div class="form-group">
+                                                        <label for="content[{$id}][seo_title]">{#title#|ucfirst} :</label>
+                                                        <textarea class="form-control" id="content[{$id}][seo_title]" name="content[{$id}][seo_title]" cols="70" rows="3">{$contentData[{$id}].seo_title}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-ph-12 col-sm-8">
+                                                    <div class="form-group">
+                                                        <label for="content[{$id}][seo_desc]">Description :</label>
+                                                        <textarea class="form-control" id="content[{$id}][seo_desc]" name="content[{$id}][seo_desc]" cols="70" rows="3">{$contentData[{$id}].seo_desc}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </fieldset>
                                 {/foreach}
                             </div>

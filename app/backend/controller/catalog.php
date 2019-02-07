@@ -57,6 +57,7 @@ class backend_controller_catalog extends backend_db_catalog {
 
     /**
      * @return array
+     * @throws Exception
      */
     private function setItemsData(){
         $data = parent::fetchData(array('context'=>'all','type'=>'content'));
@@ -77,6 +78,8 @@ class backend_controller_catalog extends backend_db_catalog {
                     parent::update(array('type' => 'content'), array(
                             'name' => $content['catalog_name'],
                             'content' => $content['catalog_content'],
+                            'seo_title' => $content['seo_title'],
+                            'seo_desc'  => $content['seo_desc'],
                             'id_lang' => $lang
                         )
                     );
@@ -84,6 +87,8 @@ class backend_controller_catalog extends backend_db_catalog {
                     parent::insert(array('type' => 'newContent'), array(
                             'name' => $content['catalog_name'],
                             'content' => $content['catalog_content'],
+                            'seo_title' => $content['seo_title'],
+                            'seo_desc'  => $content['seo_desc'],
                             'id_lang' => $lang
                         )
                     );

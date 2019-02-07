@@ -17,7 +17,7 @@
 {switch $smarty.get.controller}
 {case 'about'}
 {* About *}
-{if $root.name === ''}{$root.name = {#catalog#}}{/if}
+{if $root.name === ''}{$root.name = {#about#}}{/if}
 {* Root *}
 {if $smarty.get.id}
     {$bread[] = ['name' => {$root.name},'url' => "{$url}/{$lang}/{if $amp}amp/{/if}about/",'title' => {$root.name}]}

@@ -104,6 +104,8 @@ class frontend_db_catalog
        								COALESCE(c.alt_img, c.name_cat) as alt_img,
 									COALESCE(c.title_img, c.alt_img, c.name_cat) as title_img,
 									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_cat) as caption_img,
+								   c.seo_title_cat,
+								   c.seo_desc_cat,
 								   lang.iso_lang
 							FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
@@ -117,10 +119,25 @@ class frontend_db_catalog
 					break;
 				case 'product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT catalog.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.longname_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img,
-       						COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
-							COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
-							COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img
+					$sql = "SELECT 
+								catalog.* ,
+								cat.name_cat, 
+								cat.url_cat, 
+								p.*, 
+								pc.name_p, 
+								pc.longname_p, 
+								pc.resume_p, 
+								pc.content_p, 
+								pc.url_p, 
+								pc.id_lang,
+								lang.iso_lang, 
+								pc.last_update, 
+								img.name_img,
+								COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
+								COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
+								COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img,
+								pc.seo_title_p,
+								pc.seo_desc_p
 						FROM mc_catalog AS catalog 
 						JOIN mc_catalog AS c2 ON ( catalog.id_product = c2.id_product )
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
@@ -135,7 +152,9 @@ class frontend_db_catalog
 					$sql = 'SELECT cat.name_cat, cat.url_cat, catalog.id_cat, p.*, pc.name_p, pc.resume_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img,
        						COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
 							COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
-							COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img
+							COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img,
+						   	pc.seo_title_p,
+						   	pc.seo_desc_p
 						FROM mc_catalog_product_rel AS rel
 						JOIN mc_catalog AS catalog ON (rel.id_product_2 = catalog.id_product)
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
@@ -171,6 +190,8 @@ class frontend_db_catalog
        								COALESCE(c.alt_img, c.name_cat) as alt_img,
 									COALESCE(c.title_img, c.alt_img, c.name_cat) as title_img,
 									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_cat) as caption_img,
+								   c.seo_title_cat,
+								   c.seo_desc_cat,
        							   lang.*
 						FROM mc_catalog_cat AS p
 						JOIN mc_catalog_cat_content AS c USING(id_cat)
@@ -178,13 +199,27 @@ class frontend_db_catalog
 						WHERE p.id_cat = :id AND lang.iso_lang = :iso AND c.published_cat = 1';
 					break;
 				case 'product':
-					$sql = 'SELECT c.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.longname_p, pc.resume_p, pc.content_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update
-						FROM mc_catalog AS c
-						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
-						JOIN mc_catalog_product AS p ON ( c.id_product = p.id_product )
-						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
-						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
-						WHERE p.id_product = :id AND c.default_c =1 AND cat.published_cat =1 AND pc.published_p =1 AND lang.iso_lang = :iso';
+					$sql = 'SELECT 
+							   c.* ,
+							   cat.name_cat, 
+							   cat.url_cat, 
+							   p.*, 
+							   pc.name_p, 
+							   pc.longname_p, 
+							   pc.resume_p, 
+							   pc.content_p, 
+							   pc.url_p, 
+							   pc.id_lang,
+							   pc.seo_title_p,
+							   pc.seo_desc_p,
+							   lang.iso_lang, 
+							   pc.last_update
+							FROM mc_catalog AS c
+							JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
+							JOIN mc_catalog_product AS p ON ( c.id_product = p.id_product )
+							JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
+							WHERE p.id_product = :id AND c.default_c =1 AND cat.published_cat =1 AND pc.published_p =1 AND lang.iso_lang = :iso';
 					break;
 				case 'root':
 					$sql = 'SELECT * FROM `mc_catalog_data` WHERE `id_lang` = :id_lang';

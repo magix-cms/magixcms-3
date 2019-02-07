@@ -21,7 +21,7 @@
     {else}
         <li{if $current_page} class="active"{/if}>
             {*<i class="material-icons">lens</i>*}
-            <a href="{$child.url}" title="{$child.title}">{$child.title}</a>
+            <a href="{$child.url}" title="{$child.seo.description}">{$child.name}</a>
         </li>
     {/if}
 {/foreach}
