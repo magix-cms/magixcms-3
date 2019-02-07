@@ -48,12 +48,16 @@
  *
  * @return string
  */
-function smarty_modifier_concat_url($str)
+function smarty_modifier_concat_url($str,$type)
 {
 	$system = new component_core_system();
+	switch ($type) {
+		case 'js': $url = 'src'; break;
+		case 'css': $url = 'href'; break;
+	}
 	if(defined('PATHADMIN')){
 		$url = $system->getUrlConcat(array(
-			'href'=>$str,
+			$url=>$str,
 			'caches'=>'caching/caches',
 			'filesgroups'=> 'min/groupsConfig.php',
 			'minDir'=>'/'.PATHADMIN.'/min/',
@@ -61,7 +65,7 @@ function smarty_modifier_concat_url($str)
 		));
 	}else{
 		$url = $system->getUrlConcat(array(
-			'href'=>$str,
+			$url=>$str,
 			'caches'=>'var/caches',
 			'filesgroups'=> 'min/groupsConfig.php',
 			'minDir'=>'/min/',
