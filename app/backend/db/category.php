@@ -108,7 +108,7 @@ class backend_db_category
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_catalog_cat AS pa ON ( p.id_parent = pa.id_cat )
 							LEFT JOIN mc_catalog_cat_content AS ca ON ( pa.id_cat = ca.id_cat ) 
-							WHERE p.id_parent = :id $cond
+							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond
 							GROUP BY p.id_cat 
 						ORDER BY p.order_cat";
 					break;

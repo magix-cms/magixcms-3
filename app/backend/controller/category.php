@@ -553,8 +553,9 @@ class backend_controller_category extends backend_db_category
 						$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
 						$setEditData = $this->setItemData($setEditData);
 						$this->template->assign('page',$setEditData[$this->edit]);
-						$this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
 						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+						$this->getItems('pagesChild', array('default_lang' => $defaultLanguage['id_lang'],'id' => $this->edit), 'all');
+						$this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','content_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
 						$this->getItems('catalog', array('default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
 						$assignCatalog = array(
 							'id_catalog',
