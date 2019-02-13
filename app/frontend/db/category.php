@@ -57,6 +57,14 @@ class frontend_db_category
 				case 'page':
 					$sql = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
 					break;
+                case 'pageLang':
+                    $sql = 'SELECT p.*,c.*,lang.*
+							FROM mc_catalog_cat AS p
+							JOIN mc_catalog_cat_content AS c USING(id_cat)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE p.id_cat = :id
+							AND lang.iso_lang = :iso';
+                    break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;

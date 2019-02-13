@@ -2459,7 +2459,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                             if (isset($this->id)) {
 
-                                $fetchRootData = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
+                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                                $page = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
+
+                                /*$fetchRootData = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
 
                                 $resultUpload = $this->upload->setImageUpload(
                                     'img',
@@ -2476,7 +2479,21 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                         'upload_dir' => $this->id //string ou array
                                     ),
                                     false
+                                );*/
+                                $settings = array(
+                                    'name' => $page['url_pages'],
+                                    'edit' => $page['img_pages'],
+                                    'prefix' => array('s_', 'm_', 'l_'),
+                                    'module_img' => 'pages',
+                                    'attribute_img' => 'page',
+                                    'original_remove' => false
                                 );
+                                $dirs = array(
+                                    'upload_root_dir' => 'upload/pages', //string
+                                    'upload_dir' => $this->id //string ou array
+                                );
+
+                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
 
                                 $this->DBPages->update(
                                     array(
@@ -2611,7 +2628,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                             if (isset($this->id)) {
 
-                                $fetchRootData = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
+                                /*$fetchRootData = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
 
                                 $resultUpload = $this->upload->setImageUpload(
                                     'img',
@@ -2628,7 +2645,24 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                         'upload_dir' => $this->id //string ou array
                                     ),
                                     false
+                                );*/
+                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                                $page = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
+
+                                $settings = array(
+                                    'name'              => $page['url_cat'],
+                                    'edit'              => $page['img_cat'],
+                                    'prefix'            => array('s_', 'm_', 'l_'),
+                                    'module_img'        => 'catalog',
+                                    'attribute_img'     => 'category',
+                                    'original_remove'   => false
                                 );
+                                $dirs = array(
+                                    'upload_root_dir'   => 'upload/catalog/c', //string
+                                    'upload_dir'        => $this->id //string ou array
+                                );
+
+                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
 
                                 $this->DBCategory->update(
                                     array(

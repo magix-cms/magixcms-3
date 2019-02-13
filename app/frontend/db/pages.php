@@ -136,6 +136,14 @@ class frontend_db_pages
             	    case 'content':
 						$sql = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
             	    	break;
+                    case 'pageLang':
+                        $sql = 'SELECT p.*,c.*,lang.*
+							FROM mc_cms_page AS p
+							JOIN mc_cms_page_content AS c USING(id_pages)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE p.id_pages = :id
+							AND lang.iso_lang = :iso';
+                        break;
             	}
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
