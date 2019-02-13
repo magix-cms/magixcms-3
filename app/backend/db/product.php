@@ -227,8 +227,8 @@ class backend_db_product{
 						SELECT :id_product,:name_img,COUNT(id_img),IF(COUNT(id_img) = 0,1,0) FROM mc_catalog_product_img WHERE id_product IN ('.$params['id_product'].')';
 				break;
 			case 'newImgContent':
-				$sql = 'INSERT INTO `mc_catalog_product_img_content`(id_img,id_lang,alt_img,title_img) 
-			  			VALUES (:id_img,:id_lang,:alt_img,:title_img)';
+				$sql = 'INSERT INTO `mc_catalog_product_img_content`(id_img,id_lang,alt_img,title_img,caption_img) 
+			  			VALUES (:id_img,:id_lang,:alt_img,:title_img,:caption_img)';
 				break;
 			case 'catRel':
 				$sql = 'INSERT INTO `mc_catalog` (id_product,id_cat,default_c,order_p)

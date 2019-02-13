@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <price>500.00000</price>
+    <reference></reference>
+    <language>
+        <id_lang>6</id_lang>
+        <name>mon produit à vendre</name>
+        <longname></longname>
+        <url>mon-produit-a-vendre</url>
+        <resume>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui</resume>
+        <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]></content>
+        <seo>
+            <title>mon seo title</title>
+            <description>mon seo description</description>
+        </seo>
+        <published>1</published>
+    </language>
+</magixcms>

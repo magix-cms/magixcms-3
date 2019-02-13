@@ -29,6 +29,7 @@ class frontend_db_pages
 									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_pages) as caption_img,
        								COALESCE(c.seo_title_pages, c.name_pages) as seo_title_pages,
        								COALESCE(c.seo_desc_pages, c.resume_pages) as seo_desc_pages,
+       								lang.id_lang,
 									lang.iso_lang
 								FROM mc_cms_page AS h
 								JOIN mc_cms_page_content AS c ON(h.id_pages = c.id_pages) 
@@ -49,6 +50,7 @@ class frontend_db_pages
 									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_pages) as caption_img,
        								COALESCE(c.seo_title_pages, c.name_pages) as seo_title_pages,
        								COALESCE(c.seo_desc_pages, c.resume_pages) as seo_desc_pages,
+       								lang.id_lang,
 									lang.iso_lang,
 									lang.default_lang
 								FROM mc_cms_page AS p

@@ -63,7 +63,7 @@ class frontend_db_catalog
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
 						WHERE p.id_product = :id AND cat.published_cat =1 AND pc.published_p =1';
 					break;
-				case 'product_ws':
+				/*case 'product_ws':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT p.*,c.*,lang.*
 						FROM mc_catalog_product AS p
@@ -80,11 +80,7 @@ class frontend_db_catalog
 					break;
 				case 'images_ws':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					/*$sql = 'SELECT img.*,c.alt_img,c.title_img,c.id_lang,lang.iso_lang
-						FROM mc_catalog_product_img AS img
-						LEFT JOIN mc_catalog_product_img_content AS c ON (img.id_img = c.id_img)
-						LEFT JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-						WHERE img.id_product = :id';*/
+
 					$sql = "SELECT img.* FROM mc_catalog_product_img AS img $conditions";
 					break;
 				case 'images_content_ws':
@@ -92,7 +88,7 @@ class frontend_db_catalog
 					$sql = "SELECT c.*,lang.iso_lang
 						FROM mc_catalog_product_img_content AS c
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
-					break;
+					break;*/
 				case 'category':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT p.*,
@@ -106,6 +102,7 @@ class frontend_db_catalog
 									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_cat) as caption_img,
 								   c.seo_title_cat,
 								   c.seo_desc_cat,
+								   lang.id_lang,
 								   lang.iso_lang
 							FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
@@ -166,14 +163,6 @@ class frontend_db_catalog
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang)
 						WHERE rel.id_product = :id AND lang.iso_lang = :iso AND catalog.default_c = 1 AND img.default_img = 1';
 					break;
-				/*case 'ws_cat':
-					$sql = "SELECT
-							p.*,c.*,lang.iso_lang
-							FROM mc_catalog_cat AS p
-							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat)
-							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)";
-					$params = $data;
-					break;*/
 			}
 
 			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
@@ -243,16 +232,22 @@ class frontend_db_catalog
 
 		switch ($config['type']) {
 			case 'newContent':
-				$queries = array(
-					array(
-						'request'=>"INSERT INTO `mc_catalog_data` (`id_lang`,`name_info`,`value_info`) VALUE(:id_lang,'name',:nm)",
-						'params'=>array(':id_lang' => $params['id_lang'],':nm' => $params['name'])
-					),
-					array(
-						'request'=>"INSERT INTO `mc_catalog_data` (`id_lang`,`name_info`,`value_info`) VALUE(:id_lang,'content',:content)",
-						'params'=>array(':id_lang' => $params['id_lang'],':content' => $params['content'])
-					)
-				);
+                $queries = array(
+                    array(
+                        'request' => "SET @lang = :id_lang",
+                        'params' => array('id_lang' => $params['id_lang'])
+                    ),
+                    array(
+                        'request' => "INSERT INTO `mc_catalog_data` (`id_lang`,`name_info`,`value_info`) VALUES
+							(@lang,'name',:nm),(@lang,'content',:content),(@lang,'seo_desc',:seo_desc),(@lang,'seo_title',:seo_title)",
+                        'params' => array(
+                            'nm'        => $params['name'],
+                            'content'   => $params['content'],
+                            'seo_desc'  => $params['seo_desc'],
+                            'seo_title' => $params['seo_title']
+                        )
+                    ),
+                );
 
 				try {
 					component_routing_db::layer()->transaction($queries);
@@ -292,12 +287,16 @@ class frontend_db_catalog
                         SET `value_info` = CASE `name_info`
                             WHEN 'name' THEN :nm
                             WHEN 'content' THEN :content
+                            WHEN 'seo_desc' THEN :seo_desc
+						    WHEN 'seo_title' THEN :seo_title
                         END
-                        WHERE `name_info` IN ('name','content') AND id_lang = :id_lang";
+                        WHERE `name_info` IN ('name','content','seo_desc','seo_title') AND id_lang = :id_lang";
 				$params = array(
-					'nm' => $params['name'],
-					'content' => $params['content'],
-					'id_lang' => $params['id_lang']
+					'nm'        => $params['name'],
+					'content'   => $params['content'],
+                    'seo_title' => $params['seo_title'],
+                    'seo_desc'  => $params['seo_desc'],
+					'id_lang'   => $params['id_lang']
 				);
 				break;
 		}

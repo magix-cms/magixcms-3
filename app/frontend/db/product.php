@@ -15,7 +15,33 @@ class frontend_db_product
 
         if (is_array($config)) {
             if ($config['context'] === 'all') {
-            	//switch ($config['type']) {}
+            	switch ($config['type']) {
+                    case 'pages':
+                        $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                        $sql = "SELECT p.*,c.*,lang.*
+						FROM mc_catalog_product AS p
+						JOIN mc_catalog_product_content AS c USING(id_product)
+						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
+                        break;
+                    case 'similar':
+                        $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                        $sql = "SELECT rel.*,p.*,c.name_p, c.resume_p, c.content_p, c.url_p,lang.id_lang,lang.iso_lang,default_lang
+							FROM mc_catalog_product_rel AS rel
+							JOIN mc_catalog_product AS p ON ( rel.id_product_2 = p.id_product )
+							JOIN mc_catalog_product_content AS c ON(p.id_product = c.id_product)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
+                        break;
+                    case 'images':
+                        $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                        $sql = "SELECT img.* FROM mc_catalog_product_img AS img $conditions";
+                        break;
+                    case 'images_content':
+                        $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                        $sql = "SELECT c.*,lang.iso_lang
+						FROM mc_catalog_product_img_content AS c
+						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
+                        break;
+                }
 
 				return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
             }
@@ -60,16 +86,20 @@ class frontend_db_product
 			VALUES (:price_p,:reference_p,NOW())';
 				break;
 			case 'newContent':
-				$sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,url_p,resume_p,content_p,published_p) 
-			  VALUES (:id_product,:id_lang,:name_p,:url_p,:resume_p,:content_p,:published_p)';
-				break;
+                $sql = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,seo_title_p,seo_desc_p,published_p) 
+			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:seo_title_p,:seo_desc_p,:published_p)';
+                break;
 			case 'catRel':
 				$sql = 'INSERT INTO `mc_catalog` (id_product,id_cat,default_c,order_p)
 					SELECT :id,:id_cat,:default_c,COUNT(id_catalog) FROM mc_catalog WHERE id_cat IN ('.$params['id_cat'].')';
 				break;
-			case 'newImg':
-				$sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img,order_img,default_img) 
-					SELECT :id_product,:name_img,COUNT(id_img),IF(COUNT(id_img) = 0,1,0) FROM mc_catalog_product_img WHERE id_product IN ('.$params['id_product'].')';
+            case 'newImg':
+                $sql = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img,order_img,default_img) 
+						SELECT :id_product,:name_img,COUNT(id_img),IF(COUNT(id_img) = 0,1,0) FROM mc_catalog_product_img WHERE id_product IN ('.$params['id_product'].')';
+                break;
+            case 'newImgContent':
+                $sql = 'INSERT INTO `mc_catalog_product_img_content`(id_img,id_lang,alt_img,title_img) 
+			  			VALUES (:id_img,:id_lang,:alt_img,:title_img)';
 				break;
 		}
 
@@ -103,11 +133,14 @@ class frontend_db_product
 				$sql = 'UPDATE mc_catalog_product_content 
 					SET 
 						name_p = :name_p,
-						url_p = :url_p,
-						resume_p = :resume_p,
-						content_p = :content_p,
-						published_p = :published_p
-						WHERE id_product = :id_product 
+                        longname_p = :longname_p,
+                        url_p = :url_p,
+                        resume_p = :resume_p,
+                        content_p = :content_p,
+                        seo_title_p = :seo_title_p, 
+                        seo_desc_p = :seo_desc_p,
+                        published_p = :published_p
+					WHERE id_product = :id_product 
 					AND id_lang = :id_lang';
 		    	break;
 		}

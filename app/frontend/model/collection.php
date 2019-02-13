@@ -1,7 +1,7 @@
 <?php
 class frontend_model_collection{
 
-    protected $template,$upload,$imagesComponent,$routingUrl,$DBNews,$DBCatalog;
+    protected $template,$upload,$imagesComponent,$routingUrl,$DBNews,$DBCatalog,$DBproduct;
 
 	/**
 	 * frontend_model_collection constructor.
@@ -15,6 +15,7 @@ class frontend_model_collection{
         $this->routingUrl = new component_routing_url();
         $this->DBNews = new frontend_db_news();
         $this->DBCatalog = new frontend_db_catalog();
+        $this->DBproduct = new frontend_db_product();
     }
 
     /**
@@ -104,9 +105,16 @@ class frontend_model_collection{
                 //$arr[$page['id_news']]['menu_news'] = $page['menu_news'];
                 $arr[$page['id_news']]['date_register'] = $page['date_register'];
             }
-            $tagData = $this->DBNews->fetchData(
+            /*$tagData = $this->DBNews->fetchData(
                 array('context'=>'all','type'=>'tags','conditions'=>' WHERE tag.id_lang = :id_lang'),
                 array('id_lang'=>$page['id_lang'])
+            );*/
+            $tagData = $this->DBNews->fetchData(
+                array('context' => 'all', 'type' => 'tagsRel'),
+                array(
+                    ':iso' => $page['iso_lang'],
+                    ':id'  => $page['id_news']
+                )
             );
 
             if($tagData != null){
@@ -118,7 +126,7 @@ class frontend_model_collection{
                 //$tags = implode(',',$newArrayTags);
                 $tags = $newArrayTags;
             }else{
-                //$tags = '';
+                $tags = null;
             }
 
             $arr[$page['id_news']]['content'][$page['id_lang']] = array(
@@ -132,6 +140,8 @@ class frontend_model_collection{
                 'date_publish'      => $datePublish,
                 'published_news'    => $page['published_news'],
                 'public_url'        => $publicUrl,
+                'seo_title_news'    => $page['seo_title_news'],
+                'seo_desc_news'     => $page['seo_desc_news'],
                 //'tags_news'         => $page['tags_news'],
                 'tags'              => $tags
             );
@@ -176,9 +186,12 @@ class frontend_model_collection{
             $arr[$page['id_cat']]['content'][$page['id_lang']] = array(
                 'id_lang'           => $page['id_lang'],
                 'iso_lang'          => $page['iso_lang'],
+                'default_lang'      => $page['default_lang'],
                 'name_cat'          => $page['name_cat'],
                 'url_cat'           => $page['url_cat'],
                 'content_cat'       => $page['content_cat'],
+                'seo_title_cat'     => $page['seo_title_cat'],
+                'seo_desc_cat'      => $page['seo_desc_cat'],
                 'resume_cat'        => $page['resume_cat'],
                 'published_cat'     => $page['published_cat'],
                 'public_url'        => $publicUrl
@@ -211,8 +224,8 @@ class frontend_model_collection{
                 $arr[$page['id_product']]['date_register'] = $page['date_register'];
 
                 // Images collection
-                $imgCollection = $this->DBCatalog->fetchData(
-                    array('context' => 'all', 'type' => 'images_ws','conditions'=>'WHERE img.id_product = :id AND img.default_img = 1'),
+                $imgCollection = $this->DBproduct->fetchData(
+                    array('context' => 'all', 'type' => 'images','conditions'=>'WHERE img.id_product = :id AND img.default_img = 1'),
                     array('id'=>$page['id_product']/*,'iso'=>$page['iso_lang']*/)
                 );
 
@@ -232,8 +245,8 @@ class frontend_model_collection{
                             }
                         }
 
-                        $imgContent = $this->DBCatalog->fetchData(
-                            array('context' => 'all', 'type' => 'images_content_ws','conditions'=>'WHERE c.id_img = :id'),
+                        $imgContent = $this->DBproduct->fetchData(
+                            array('context' => 'all', 'type' => 'images_content','conditions'=>'WHERE c.id_img = :id'),
                             array('id'=>$img['id_img'])
                         );
 
@@ -254,6 +267,7 @@ class frontend_model_collection{
             $arr[$page['id_product']]['content'][$page['id_lang']] = array(
                 'id_lang' => $page['id_lang'],
                 'iso_lang' => $page['iso_lang'],
+                'default_lang' => $page['default_lang'],
                 'name_p' => $page['name_p'],
                 'url_p' => $page['url_p'],
                 'resume_p' => $page['resume_p'],
@@ -268,6 +282,7 @@ class frontend_model_collection{
     /**
      * @param $data
      * @return array
+     * @throws Exception
      */
     public function getBuildProduct($data){
         $arr = array();
@@ -289,8 +304,8 @@ class frontend_model_collection{
                 $arr[$page['id_product']]['date_register'] = $page['date_register'];
 
                 // Images collection
-                $imgCollection = $this->DBCatalog->fetchData(
-                    array('context' => 'all', 'type' => 'images_ws','conditions'=>'WHERE img.id_product = :id'),
+                $imgCollection = $this->DBproduct->fetchData(
+                    array('context' => 'all', 'type' => 'images','conditions'=>'WHERE img.id_product = :id'),
                     array('id'=>$page['id_product']/*,'iso'=>$page['iso_lang']*/)
                 );
 
@@ -310,8 +325,8 @@ class frontend_model_collection{
                             }
                         }
 
-                        $imgContent = $this->DBCatalog->fetchData(
-                            array('context' => 'all', 'type' => 'images_content_ws','conditions'=>'WHERE c.id_img = :id'),
+                        $imgContent = $this->DBproduct->fetchData(
+                            array('context' => 'all', 'type' => 'images_content','conditions'=>'WHERE c.id_img = :id'),
                             array('id'=>$img['id_img'])
                         );
 
@@ -322,28 +337,30 @@ class frontend_model_collection{
                                     'id_lang' => $content['id_lang'],
                                     'iso_lang' => $content['iso_lang'],
                                     'alt_img' => $content['alt_img'],
-                                    'title_img' => $content['title_img']
+                                    'title_img' => $content['title_img'],
+                                    'caption_img' => $content['caption_img']
                                 );
                             }
                         }
                     }
                 }
                 // Associated / Similar product
-                $associatedCollection = $this->DBCatalog->fetchData(
-                    array('context' => 'all', 'type' => 'product_similar_ws','conditions'=>'WHERE rel.id_product = :id'),
+                $associatedCollection = $this->DBproduct->fetchData(
+                    array('context' => 'all', 'type' => 'similar','conditions'=>'WHERE rel.id_product = :id'),
                     array('id'=>$page['id_product'])
                 );
 
                 // Loop associated / similar product
                 foreach ($associatedCollection as $associated) {
                     // associated Collection
-                    $imgCollection = $this->DBCatalog->fetchData(
-                        array('context' => 'all', 'type' => 'images_ws','conditions'=>'WHERE img.id_product = :id AND img.default_img = 1'),
+                    $imgCollection = $this->DBproduct->fetchData(
+                        array('context' => 'all', 'type' => 'images','conditions'=>'WHERE img.id_product = :id AND img.default_img = 1'),
                         array('id'=>$associated['id_product']/*,'iso'=>$page['iso_lang']*/)
                     );
                     // images collection
+                    $imgRel = array();
                     if($imgCollection != null) {
-                        $imgRel = array();
+
                         foreach ($imgCollection as $img) {
                             // images collection each
                             if (!array_key_exists($page['id_img'], $arr)) {
@@ -358,8 +375,8 @@ class frontend_model_collection{
                                 }
                             }
                             // Image content by languages
-                            $imgContent = $this->DBCatalog->fetchData(
-                                array('context' => 'all', 'type' => 'images_content_ws','conditions'=>'WHERE c.id_img = :id'),
+                            $imgContent = $this->DBproduct->fetchData(
+                                array('context' => 'all', 'type' => 'images_content','conditions'=>'WHERE c.id_img = :id'),
                                 array('id'=>$img['id_img'])
                             );
 
@@ -406,8 +423,11 @@ class frontend_model_collection{
                 'default_lang'  => $page['default_lang'],
                 'name_p'        => $page['name_p'],
                 'url_p'         => $page['url_p'],
+                'longname_p'    => $page['longname_p'],
                 'resume_p'      => $page['resume_p'],
                 'content_p'     => $page['content_p'],
+                'seo_title_p'   => $page['seo_title_p'],
+                'seo_desc_p'    => $page['seo_desc_p'],
                 'published_p'   => $page['published_p']/*,
 				'public_url' => $publicUrl*/
             );

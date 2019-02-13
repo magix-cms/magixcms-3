@@ -294,9 +294,6 @@ class backend_controller_category extends backend_db_category
 			$content['published_cat'] = (!isset($content['published_cat']) ? 0 : 1);
 			$content['resume_cat'] = (!empty($content['resume_cat']) ? $content['resume_cat'] : NULL);
 			$content['content_cat'] = (!empty($content['content_cat']) ? $content['content_cat'] : NULL);
-			$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
-			$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
-			$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
 			$content['seo_title_cat'] = (!empty($content['seo_title_cat']) ? $content['seo_title_cat'] : NULL);
 			$content['seo_desc_cat'] = (!empty($content['seo_desc_cat']) ? $content['seo_desc_cat'] : NULL);
 			if (empty($content['url_cat'])) {
@@ -525,6 +522,9 @@ class backend_controller_category extends backend_db_category
 						foreach ($this->content as $lang => $content) {
 							$content['id_lang'] = $lang;
 							$content['id_cat'] = $this->id_cat;
+							$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
+							$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
+							$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
 							$this->upd(array(
 								'type' => 'imgContent',
 								'data' => $content

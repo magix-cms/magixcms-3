@@ -3,34 +3,30 @@
     <language>
         <id_lang>6</id_lang>
         <name>ma page</name>
-        <url>ma-page</url>
-        <date>2017/11/20</date>
-        <resume>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
-        </resume>
         <content>
             <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
         </content>
         <seo>
-            <title>le test de canadien</title>
-            <description></description>
+            <title>mon seo title</title>
+            <description>mon seo description</description>
         </seo>
-        <tag>test</tag>
-        <tag>ma cocote</tag>
-        <tag>mon bizard</tag>
-        <published>1</published>
     </language>
     <language>
         <id_lang>2</id_lang>
         <name>My new record</name>
-        <url>my-new-record</url>
-        <date>2017/11/22</date>
-        <resume>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui
-        </resume>
+        <content>
+            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
+        </content>
+        <seo>
+            <title>my test update</title>
+            <description>my test update description</description>
+        </seo>
+    </language>
+    <language>
+        <id_lang>7</id_lang>
+        <name>canadien</name>
         <content>
             <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Nam felis ex, blandit accumsan risus quis, eleifend mollis nisi. Mauris in augue dui.</p>]]>
@@ -39,7 +35,5 @@
             <title>le test de canadien</title>
             <description></description>
         </seo>
-        <tag>tatata</tag>
-        <published>0</published>
     </language>
 </magixcms>

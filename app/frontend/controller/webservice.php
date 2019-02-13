@@ -9,8 +9,9 @@ class frontend_controller_webservice extends frontend_db_webservice{
     public $collection, $retrieve, $id, $filter ,$sort, $url, $img, $imgData;
 
     /**
-	 * @param stdClass $t
-     * frontend_controller_pages constructor.
+     * frontend_controller_webservice constructor.
+     * @param null $t
+     * @throws Exception
      */
     public function __construct($t = null){
 		$this->template = $t ? $t : new frontend_model_template();
@@ -100,7 +101,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
      * Global Root
      */
     private function getBuildRootData(){
-        $data = array('languages','home','pages','news','catalog');
+        $data = array('domain','languages','home','pages','news','catalog');
         $this->xml->newStartElement('modules');
         foreach($data as $key) {
             $this->xml->setElement(
@@ -245,7 +246,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
             );
             $this->xml->setElement(
                 array(
-                    'start' => 'description',
+                    'start' => 'content',
                     'cData' => $key['content_page']
                 )
             );
@@ -523,7 +524,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
         $arr = $this->buildCollection->getBuildNews($collection);
         //
-       /* print '<pre>';
+       /*print '<pre>';
         print_r($arr);
         print '</pre>';*/
 
@@ -616,19 +617,21 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 );
                 // Start tags
                 $this->xml->newStartElement('tags');
-                foreach($item['tags'] as $tags => $tag) {
-                    $this->xml->setElement(
-                        array(
-                            'start' => 'tag',
-                            'text' => $tag['name'],
-                            'attr' => array(
-                                array(
-                                    'name' => 'id',
-                                    'content' => $tag['id']
+                if(is_array($item['tags'])) {
+                    foreach ($item['tags'] as $tags => $tag) {
+                        $this->xml->setElement(
+                            array(
+                                'start' => 'tag',
+                                'text' => $tag['name'],
+                                'attr' => array(
+                                    array(
+                                        'name' => 'id',
+                                        'content' => $tag['id']
+                                    )
                                 )
                             )
-                        )
-                    );
+                        );
+                    }
                 }
                 // END tags
                 $this->xml->newEndElement();
@@ -737,6 +740,22 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         'cData' => $item['content_news']
                     )
                 );
+                // Start SEO
+                $this->xml->newStartElement('seo');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'title',
+                        'text' => $item['seo_title_news']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'description',
+                        'text' => $item['seo_desc_news']
+                    )
+                );
+                //End SEO
+                $this->xml->newEndElement();
                 $this->xml->setElement(
                     array(
                         'start' => 'date_publish',
@@ -749,24 +768,26 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         'text' => $item['published_news']
                     )
                 );
-                // Start tags
-                $this->xml->newStartElement('tags');
-                foreach($item['tags'] as $tags => $tag) {
-                    $this->xml->setElement(
-                        array(
-                            'start' => 'tag',
-                            'text' => $tag['name'],
-                            'attr' => array(
-                                array(
-                                    'name' => 'id',
-                                    'content' => $tag['id']
+                if(is_array($item['tags'])) {
+                    // Start tags
+                    $this->xml->newStartElement('tags');
+                    foreach ($item['tags'] as $tags => $tag) {
+                        $this->xml->setElement(
+                            array(
+                                'start' => 'tag',
+                                'text' => $tag['name'],
+                                'attr' => array(
+                                    array(
+                                        'name' => 'id',
+                                        'content' => $tag['id']
+                                    )
                                 )
                             )
-                        )
-                    );
+                        );
+                    }
+                    // END tags
+                    $this->xml->newEndElement();
                 }
-                // END tags
-                $this->xml->newEndElement();
                 //End Language
                 $this->xml->newEndElement();
             }
@@ -796,6 +817,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 $collection[$item['id_lang']]['default_lang'] = $item['default_lang'];
             }
         }
+
         $this->xml->newStartElement('pages');
         if($collectionData != null) {
             foreach ($collection as $key) {
@@ -831,6 +853,22 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         'cData' => $key['content']
                     )
                 );
+                // Start SEO
+                $this->xml->newStartElement('seo');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'title',
+                        'text' => $key['seo_title']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'description',
+                        'text' => $key['seo_desc']
+                    )
+                );
+                //End SEO
+                $this->xml->newEndElement();
                 $this->xml->newEndElement();
             }
         }
@@ -843,8 +881,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
      */
     private function getBuildCategoryItems()
     {
-        $collection = $this->DBCatalog->fetchData(
-            array('context' => 'all', 'type' => 'category', 'conditions' => null)
+        $collection = $this->DBCategory->fetchData(
+            array('context' => 'all', 'type' => 'pages', 'conditions' => null)
         );
 
         $arr = $this->buildCollection->getBuildCategory($collection);
@@ -1054,6 +1092,22 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         'cData' => $item['content_cat']
                     )
                 );
+                // Start SEO
+                $this->xml->newStartElement('seo');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'title',
+                        'text' => $item['seo_title_cat']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'description',
+                        'text' => $item['seo_desc_cat']
+                    )
+                );
+                //End SEO
+                $this->xml->newEndElement();
                 // End language loop
                 $this->xml->newEndElement();
             }
@@ -1066,8 +1120,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
     }
     public function getBuildProductItems(){
-        $collection = $this->DBCatalog->fetchData(
-            array('context' => 'all', 'type' => 'product_ws','conditions'=>null)
+        $collection = $this->DBProduct->fetchData(
+            array('context' => 'all', 'type' => 'pages','conditions'=>null)
         );
 
         $arr = $this->buildCollection->getBuildProductItems($collection);
@@ -1256,8 +1310,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
      *
      */
     public function getBuildProductData(){
-        $collection = $this->DBCatalog->fetchData(
-            array('context' => 'all', 'type' => 'product_ws','conditions'=>'WHERE p.id_product = :id'),
+        $collection = $this->DBProduct->fetchData(
+            array('context' => 'all', 'type' => 'pages','conditions'=>'WHERE p.id_product = :id'),
             array('id'=>$this->id)
         );
 
@@ -1377,6 +1431,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                     'text' => $imgData['title_img']
                                 )
                             );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'caption',
+                                    'text' => $imgData['caption_img']
+                                )
+                            );
                             //End language img
                             $this->xml->newEndElement();
                         }
@@ -1420,6 +1480,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 );
                 $this->xml->setElement(
                     array(
+                        'start' => 'longname',
+                        'text' => $item['longname_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
                         'start' => 'url',
                         'text' => $item['url_p']
                     )
@@ -1437,6 +1503,22 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         'cData' => $item['content_p']
                     )
                 );
+                // Start SEO
+                $this->xml->newStartElement('seo');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'title',
+                        'text' => $item['seo_title_p']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'description',
+                        'text' => $item['seo_desc_p']
+                    )
+                );
+                //End SEO
+                $this->xml->newEndElement();
                 // End language loop
                 $this->xml->newEndElement();
             }
@@ -1842,16 +1924,20 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                     if ($this->DBCatalog->fetchData(array('context' => 'one', 'type' => 'root'), array('id_lang' => $content['id_lang'])) != null) {
                         $this->DBCatalog->update(array('type' => 'content'), array(
-                                'name' => !is_array($content['name']) ? $content['name'] : '',
-                                'content' => !is_array($content['content']) ? $content['content'] : '',
-                                'id_lang' => $content['id_lang']
+                                'name'          => !is_array($content['name']) ? $content['name'] : '',
+                                'content'       => !is_array($content['content']) ? $content['content'] : '',
+                                'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'id_lang'       => $content['id_lang']
                             )
                         );
                     } else {
                         $this->DBCatalog->insert(array('type' => 'newContent'), array(
-                                'name' => !is_array($content['name']) ? $content['name'] : '',
-                                'content' => !is_array($content['content']) ? $content['content'] : '',
-                                'id_lang' => $content['id_lang']
+                                'name'          => !is_array($content['name']) ? $content['name'] : '',
+                                'content'       => !is_array($content['content']) ? $content['content'] : '',
+                                'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'id_lang'       => $content['id_lang']
                             )
                         );
                     }
@@ -1860,16 +1946,20 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     foreach ($arrData['language'] as $lang => $content) {
                         if ($this->DBCatalog->fetchData(array('context' => 'one', 'type' => 'root'), array('id_lang' => $content['id_lang'])) != null) {
                             $this->DBCatalog->update(array('type' => 'content'), array(
-                                    'name' => !is_array($content['name']) ? $content['name'] : '',
-                                    'content' => !is_array($content['content']) ? $content['content'] : '',
-                                    'id_lang' => $content['id_lang']
+                                    'name'          => !is_array($content['name']) ? $content['name'] : '',
+                                    'content'       => !is_array($content['content']) ? $content['content'] : '',
+                                    'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                    'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                    'id_lang'       => $content['id_lang']
                                 )
                             );
                         } else {
                             $this->DBCatalog->insert(array('type' => 'newContent'), array(
-                                    'name' => !is_array($content['name']) ? $content['name'] : '',
-                                    'content' => !is_array($content['content']) ? $content['content'] : '',
-                                    'id_lang' => $content['id_lang']
+                                    'name'      => !is_array($content['name']) ? $content['name'] : '',
+                                    'content'   => !is_array($content['content']) ? $content['content'] : '',
+                                    'seo_title' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                    'seo_desc'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                    'id_lang'   => $content['id_lang']
                                 )
                             );
                         }
@@ -1915,6 +2005,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             ) : '',
                             'resume_cat'    => !is_array($content['resume']) ? trim($content['resume']) : '',
                             'content_cat'   => !is_array($content['content']) ? $content['content'] : '',
+                            'seo_title_cat' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                            'seo_desc_cat'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
                             'published_cat' => $content['published'],
                             'id_cat'        => $id_cat,
                             'id_lang'       => $content['id_lang']
@@ -1943,6 +2035,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 ) : '',
                                 'resume_cat' => !is_array($content['resume']) ? trim($content['resume']) : '',
                                 'content_cat' => !is_array($content['content']) ? $content['content'] : '',
+                                'seo_title_cat' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                'seo_desc_cat'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
                                 'published_cat' => $content['published'],
                                 'id_cat' => $id_cat,
                                 'id_lang' => $content['id_lang']
@@ -1963,7 +2057,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 }
                 break;
             case 'product':
-
+                // ######### ---- Add product in category
                 if(isset($arrData['category'])){
                     if (isset($this->id)) {
                         $content = $arrData['category'];
@@ -1986,6 +2080,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         $this->message->json_post_response(true, null);
                     }
                 }else {
+                    // ######### ---- Add Or Update product
                     if (isset($this->id)) {
                         // Regarder pour voir si l'édition et ajout fonctionne correctement, sinon ajouté paramètre id (get)
                         $fetchRootData = $this->DBProduct->fetchData(array('context'=>'one','type'=>'page'),array('id'=>$this->id));
@@ -2015,8 +2110,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                         'cspec' => '', 'rspec' => ''
                                     )
                                 ) : '',
+                                'longname_p'    => !is_array($content['longname']) ? $content['longname'] : '',
                                 'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : '',
                                 'content_p'     => !is_array($content['content']) ? $content['content'] : '',
+                                'seo_title_p'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                'seo_desc_p'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
                                 'published_p'   => $content['published'],
                                 'id_product'    => $id_product,
                                 'id_lang'       => $content['id_lang']
@@ -2042,8 +2140,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                             'cspec' => '', 'rspec' => ''
                                         )
                                     ) : '',
+                                    'longname_p'    => !is_array($content['longname']) ? $content['longname'] : '',
                                     'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : '',
                                     'content_p'     => !is_array($content['content']) ? $content['content'] : '',
+                                    'seo_title_p' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                    'seo_desc_p'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
                                     'published_p'   => $content['published'],
                                     'id_product'    => $id_product,
                                     'id_lang'       => $content['id_lang']

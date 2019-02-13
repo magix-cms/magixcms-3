@@ -14,7 +14,29 @@ class frontend_db_category
 		$sql = '';
 
 		if ($config['context'] === 'all') {
-			//switch ($config['type']) {}
+
+            switch ($config['type']) {
+                case 'pages':
+                    $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                    $sql = "SELECT p.*,
+								   c.name_cat,
+								   c.url_cat,
+								   c.resume_cat,
+								   c.content_cat,
+								   c.published_cat,
+       								COALESCE(c.alt_img, c.name_cat) as alt_img,
+									COALESCE(c.title_img, c.alt_img, c.name_cat) as title_img,
+									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_cat) as caption_img,
+								   c.seo_title_cat,
+								   c.seo_desc_cat,
+								   lang.id_lang,
+								   lang.iso_lang,
+								   lang.default_lang
+							FROM mc_catalog_cat AS p
+							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
+                    break;
+            }
 
 			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
 		}
@@ -59,8 +81,8 @@ class frontend_db_category
 						SELECT :id_parent,COUNT(id_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond";
 				break;
 			case 'content':
-				$sql = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,published_cat) 
-			  			VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:published_cat)';
+				$sql = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 
+			  			VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:seo_title_cat,:seo_desc_cat,:published_cat)';
 				break;
 		}
 

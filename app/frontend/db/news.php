@@ -29,6 +29,7 @@ class frontend_db_news
 								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
 								c.seo_title_news,
 								c.seo_desc_news,
+								lang.id_lang,
 								lang.iso_lang,
 								lang.default_lang
 							FROM mc_news AS p
@@ -52,6 +53,7 @@ class frontend_db_news
 								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
 								c.seo_title_news,
 								c.seo_desc_news,
+								lang.id_lang,
 								lang.iso_lang,
 								lang.default_lang
 							FROM mc_news AS p

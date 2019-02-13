@@ -228,7 +228,7 @@ class frontend_model_about extends frontend_db_about {
 			if (isset($row['name'])) {
 				$data['name'] = $row['name'];
 				$data['content'] = $row['content'];
-				$data['seo']['title'] = $row['seo_title'];
+				$data['seo']['title'] = $row['seo_title'] ? $row['seo_title'] : ($row['name'] ? $row['name'] : $this->template->getConfigVars('about'));
 				$data['seo']['description'] = $row['seo_desc'] ? $row['seo_desc'] : ($row['content'] ? substr(strip_tags($row['content']),300) : $row['seo_title']);
 			}
 			elseif (isset($row['name_pages'])) {
