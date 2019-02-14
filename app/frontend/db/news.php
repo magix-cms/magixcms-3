@@ -199,6 +199,14 @@ class frontend_db_news
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 						$conditions";
 					break;
+                case 'pageLang':
+                    $sql = 'SELECT p.*,c.*,lang.*
+							FROM mc_news AS p
+							JOIN mc_news_content AS c USING(id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE p.id_news = :id
+							AND lang.iso_lang = :iso';
+                    break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
@@ -222,8 +230,8 @@ class frontend_db_news
 				$params = array();
 		    	break;
 		    case 'content':
-				$sql = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,date_publish,published_news) 
-						VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:date_publish,:published_news)';
+				$sql = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,seo_title_news,seo_desc_news,date_publish,published_news) 
+						VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:seo_title_news,:seo_desc_news,:date_publish,:published_news)';
 		    	break;
 		    case 'newTagComb':
 				$queries = array(
@@ -279,6 +287,8 @@ class frontend_db_news
 							url_news = :url_news,
 							resume_news = :resume_news,
 							content_news = :content_news,
+							seo_title_news=:seo_title_news,
+							seo_desc_news=:seo_desc_news,
 							date_publish = :date_publish, 
 							published_news = :published_news
                 		WHERE id_news = :id_news AND id_lang = :id_lang';

@@ -6,7 +6,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
     protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
     protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory,$DBProduct;
     protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage,$collectionDomain;
-    public $collection, $retrieve, $id, $filter ,$sort, $url, $img, $imgData;
+    public $collection, $retrieve, $id, $filter ,$sort, $url, $img, $img_multiple, $imgData;
 
     /**
      * frontend_controller_webservice constructor.
@@ -59,6 +59,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
         if(isset($_FILES['img']["name"])){
             $this->img = http_url::clean($_FILES['img']["name"]);
         }
+        // --- MultiImage Upload
+        if (isset($_FILES['img_multiple']["name"])) $this->img_multiple = ($_FILES['img_multiple']["name"]);
 
         if (http_request::isPost('data')) {
             $this->imgData = array();
@@ -1837,6 +1839,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             'url_news'          => !is_array($content['url']) ? $content['url'] : '',
                             'content_news'      => !is_array($content['content']) ? $content['content'] : '',
                             'resume_news'       => !is_array($content['resume']) ? $content['resume'] : '',
+                            'seo_title_news'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                            'seo_desc_news'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
                             'date_publish'      => $datePublish,
                             'published_news'    => $content['published']
                         );
@@ -2462,24 +2466,6 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $page = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
 
-                                /*$fetchRootData = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
-
-                                $resultUpload = $this->upload->setImageUpload(
-                                    'img',
-                                    array(
-                                        'name' => filter_rsa::randMicroUI(),
-                                        'edit' => $fetchRootData['img_pages'],
-                                        'prefix' => array('s_', 'm_', 'l_'),
-                                        'module_img' => 'pages',
-                                        'attribute_img' => 'page',
-                                        'original_remove' => false
-                                    ),
-                                    array(
-                                        'upload_root_dir' => 'upload/pages', //string
-                                        'upload_dir' => $this->id //string ou array
-                                    ),
-                                    false
-                                );*/
                                 $settings = array(
                                     'name' => $page['url_pages'],
                                     'edit' => $page['img_pages'],
@@ -2557,6 +2543,40 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             $arrData = json_decode(json_encode($this->parse()), true);
                             $this->getBuildSave($operations,$arrData);
                         }
+                        elseif($getContentType === 'files'){
+
+                            if (isset($this->id)) {
+
+                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                                $page = $this->DBNews->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
+
+                                $settings = array(
+                                    'name' => $page['url_news'],
+                                    'edit' => $page['img_news'],
+                                    'prefix' => array('s_', 'm_', 'l_'),
+                                    'module_img' => 'news',
+                                    'attribute_img' => 'news',
+                                    'original_remove' => false
+                                );
+                                $dirs = array(
+                                    'upload_root_dir' => 'upload/news', //string
+                                    'upload_dir' => $this->id //string ou array
+                                );
+
+                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
+
+                                $this->DBNews->update(
+                                    array(
+                                        'type' => 'img'
+                                    ),
+                                    array(
+                                        'id_news' => $this->id,
+                                        'img_news' => $resultUpload['file']
+                                    )
+                                );
+                            }
+                        }
+
                     }elseif($this->ws->setMethod() === 'DELETE'){
                         //print_r($this->parse());
 
@@ -2628,24 +2648,6 @@ class frontend_controller_webservice extends frontend_db_webservice{
 
                             if (isset($this->id)) {
 
-                                /*$fetchRootData = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'wsEdit'), array('id' => $this->id));
-
-                                $resultUpload = $this->upload->setImageUpload(
-                                    'img',
-                                    array(
-                                        'name' => filter_rsa::randMicroUI(),
-                                        'edit' => $fetchRootData['img_cat'],
-                                        'prefix' => array('s_', 'm_', 'l_'),
-                                        'module_img'        => 'catalog',
-                                        'attribute_img'     => 'category',
-                                        'original_remove' => false
-                                    ),
-                                    array(
-                                        'upload_root_dir' => 'upload/catalog/c', //string
-                                        'upload_dir' => $this->id //string ou array
-                                    ),
-                                    false
-                                );*/
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $page = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
 
@@ -2734,27 +2736,20 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }elseif($getContentType === 'files'){
 
                             if (isset($this->id)) {
-                                $fetchRootData = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'img'), array('name_img' => $this->img));
 
-                                $imgPath = component_core_system::basePath() . 'upload/catalog/p/' . $this->id;
-                                if (file_exists($imgPath.'/'.$this->img)) {
-                                    $makeFiles = new filesystem_makefile();
-                                    $makeFiles->remove(array(
-                                        $imgPath.'/'.$this->img,
-                                        $imgPath.'/s_'.$this->img,
-                                        $imgPath.'/m_'.$this->img,
-                                        $imgPath.'/l_'.$this->img
-                                    ));
-                                }
-                                //print_r($this->imgData);
-                                $resultUpload = $this->upload->setImageUpload(
-                                    'img',
+                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                                $product = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'content'), array('id_product' => $this->id, 'id_lang' => $defaultLanguage['id_lang']));
+                                $newimg = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'lastImgId'));
+
+                                $resultUpload = $this->upload->setMultipleImageUpload(
+                                    'img_multiple',
                                     array(
-                                        'name' => $this->imgData['img'],
-                                        'edit' => NULL,
+                                        'name' => $product['url_p'],
+                                        'prefix_name' => $newimg['id_img'],
+                                        'prefix_increment' => true,
                                         'prefix' => array('s_', 'm_', 'l_'),
-                                        'module_img'        => 'catalog',
-                                        'attribute_img'     => 'product',
+                                        'module_img' => 'catalog',
+                                        'attribute_img' => 'product',
                                         'original_remove' => false
                                     ),
                                     array(
@@ -2763,13 +2758,26 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                     ),
                                     false
                                 );
+                                if ($resultUpload != null) {
+                                    $preparePercent = 80 / count($resultUpload);
+                                    $percent = 10;
 
-                                if($fetchRootData['name_img'] == null){
-                                    $this->DBProduct->insert(array('type' => 'newImg'), array('id_product' => $this->id, 'name_img' => $this->img));
+                                    foreach ($resultUpload as $key => $value) {
+                                        if ($value['statut'] == '1') {
+                                            $percent = $percent + $preparePercent;
+
+                                            $this->DBProduct->insert(
+                                                array(
+                                                    'type' => 'newImg'
+                                                ),
+                                                array(
+                                                    'id_product' => $this->id,
+                                                    'name_img' => $value['file']
+                                                )
+                                            );
+                                        }
+                                    }
                                 }
-
-                                /*$this->header->set_json_headers();
-                                $this->message->json_post_response(true, null, array('id'=>$this->id));*/
                             }
                         }
 
