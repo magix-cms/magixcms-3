@@ -1838,7 +1838,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             'name_news'         => !is_array($content['name']) ? $content['name'] : '',
                             'url_news'          => !is_array($content['url']) ? $content['url'] : '',
                             'content_news'      => !is_array($content['content']) ? $content['content'] : '',
-                            'resume_news'       => !is_array($content['resume']) ? $content['resume'] : '',
+                            'resume_news'       => !is_array($content['resume']) ? trim($content['resume']) : '',
                             'seo_title_news'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
                             'seo_desc_news'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
                             'date_publish'      => $datePublish,
@@ -1919,6 +1919,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             }
                         }
                     }
+                    $this->header->set_json_headers();
+                    $this->message->json_post_response(true, null, array('id'=>$id_news));
                 }
                 break;
             case 'catalog':
