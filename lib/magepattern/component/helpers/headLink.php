@@ -89,26 +89,30 @@ class helpers_headLink extends link_rel{
 			return ' />'.PHP_EOL;
 		}
 	}
-	/**
-	 * 
-	 * helpers_headLink::linkStyleSheet()
-	 * <link rel="stylesheet" type="text/css" href="http://mydomaine.com/styles.css" media="screen" />
-	 * 
-	 * @param string $href
-	 * @param string media
-	 */
+
+    /**
+     *
+     * helpers_headLink::linkStyleSheet()
+     * <link rel="stylesheet" type="text/css" href="http://mydomaine.com/styles.css" media="screen" />
+     *
+     * @param string $href
+     * @param string media
+     * @return string
+     */
 	public static function linkStyleSheet($href,$media='screen'){
 		if(self::getInstance()){
 			return self::getInstance()->startLink().link_rel::stylesheet($href,$media).self::getInstance()->endLink();
 		}
 	}
-	/**
-	 * 
-	 * helpers_headLink::linkRss()
-	 * <link rel="alternate" type="application/rss+xml" href="http://mydomaine.com/rss.xml" />
-	 * 
-	 * @param string $href
-	 */
+
+    /**
+     *
+     * helpers_headLink::linkRss()
+     * <link rel="alternate" type="application/rss+xml" href="http://mydomaine.com/rss.xml" />
+     *
+     * @param string $href
+     * @return string
+     */
 	public static function linkRss($href){
 		if(self::getInstance()){
 			return self::getInstance()->startLink().link_rel::alternate(self::application.self::rss,$href).' title="RSS"'.self::getInstance()->endLink();
@@ -116,20 +120,23 @@ class helpers_headLink extends link_rel{
 	}
 }
 abstract class link_rel{
-	/**
-	 * Protected define alternate params
-	 * @param string $type
-	 * @param string $href
-	 */
-	protected function alternate($type,$href){
+    /**
+     * Protected define alternate params
+     * @param string $type
+     * @param string $href
+     * @return string
+     */
+	protected static function alternate($type,$href){
 		return 'rel="alternate" type="'.$type.'" href="'.$href.'"';
 	}
-	/**
-	 * Protected define alternate params
-	 * @param string $type
-	 * @param string $media
-	 */
-	protected function stylesheet($href,$media){
+
+    /**
+     * Protected define alternate params
+     * @param string $type
+     * @param string $media
+     * @return string
+     */
+	protected static function stylesheet($href,$media){
 		return 'rel="stylesheet" type="text/css" href="'.$href.'" media="'.$media.'"';
 	}
 }

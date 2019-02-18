@@ -17,8 +17,8 @@
  * @return string
  */
 function smarty_function_autoload_i18n($params, $template){
-	backend_model_template::configLoad(
+    $coreTemplate = new backend_model_template();
+    return $coreTemplate->configLoad(
         'local_fr.conf'
     );
-	//backend_model_language::current_Language()
 }

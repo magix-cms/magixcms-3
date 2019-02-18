@@ -88,8 +88,8 @@ class backend_model_plugins{
                     break;
             }
         }
-
-		component_format_array::array_sortBy('title', $newsItems);
+        $coreComponent = new component_format_array();
+        $coreComponent->array_sortBy('title', $newsItems);
 
         return $newsItems;
     }

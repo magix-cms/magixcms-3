@@ -151,7 +151,8 @@ class frontend_db_news
 							WHERE tag.id_lang = :id_lang AND tag.name_tag LIKE :name_tag';
 			    	break;
 			    case 'prev_page':
-					$sql = "SELECT c.name_news,
+					$sql = "SELECT c.id_news,
+       							c.name_news,
 								c.url_news,
 								c.resume_news,
 								c.content_news,
@@ -171,7 +172,8 @@ class frontend_db_news
 							ORDER BY c.date_publish DESC LIMIT 1";
 			    	break;
 			    case 'next_page':
-					$sql = "SELECT c.name_news,
+					$sql = "SELECT c.id_news,
+       							c.name_news,
 								c.url_news,
 								c.resume_news,
 								c.content_news,
