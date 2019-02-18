@@ -88,6 +88,7 @@
             {text: 'Sass (Scss)', value: 'sass'}
         ],
         formats: {
+            underline: {inline : 'u'},
             strikethrough: {inline: 'del'},
             alignleft: {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'text-left'},
             aligncenter: {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'text-center'},
