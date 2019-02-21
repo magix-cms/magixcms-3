@@ -289,23 +289,24 @@ class component_files_upload{
 			if (!empty($data['edit'] && !empty($data['name']))) {
 				if (is_array($imgCollection)) {
 					$dirImgArray = $this->dirImgUploadCollection($imgCollection);
+                    // Check if the image to rename exists and if there is not already an image with this name and extension
+                    $filesPath = (string) $dirImgArray;
+                    if(!file_exists($filesPath.$data['name'].'.'.$ext)
+                        && file_exists($filesPath.$data['edit'])) {
+                        $makeFiles->rename(
+                            array(
+                                'origin' => $filesPath.$data['edit'],
+                                'target' => $filesPath.$data['name'].'.'.$ext
+                            )
+                        );
+                    }
+                    else {
+                        return false;
+                    }
+
 					foreach ($fetchConfig as $key => $value) {
 						$filesPath = is_array($dirImgArray) ? $dirImgArray[$key] : $dirImgArray;
 						$prefix = (array_key_exists('prefix', $data) && is_array($data['prefix'])) ? $data['prefix'][$key] : '';
-
-						// Check if the image to rename exists and if there is not already an image with this name and extension
-						if(!file_exists($filesPath.$data['name'].'.'.$ext)
-							&& file_exists($filesPath.$data['edit'])) {
-							$makeFiles->rename(
-								array(
-									'origin' => $filesPath.$data['edit'],
-									'target' => $filesPath.$data['name'].'.'.$ext
-								)
-							);
-						}
-						else {
-							return false;
-						}
 
 						// Check if the original image still exists:
 						// - if it is, the renaming has failed, the process should not continue

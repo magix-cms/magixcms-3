@@ -1,5 +1,5 @@
 {extends file="catalog/index.tpl"}
-{if $product.long_name !== ''}{$product.name = $product.long_name}{/if}
+{if !empty($product.long_name)}{$product.name = $product.long_name}{/if}
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
 {block name="title"}{$product.seo.title}{/block}
