@@ -405,6 +405,7 @@ class backend_controller_product extends backend_db_product
                 $imgPrefix = $this->imagesComponent->prefix();
                 $defaultErased = false;
                 $id_product = false;
+                $extwebp = 'webp';
 
 			    foreach($imgArray as $key => $value){
                     $img = $this->getItems('img',$value,'one',false);
@@ -430,9 +431,18 @@ class backend_controller_product extends backend_db_product
                     }
                     foreach ($fetchConfig as $configKey => $confiValue) {
                         $newArr[$key]['img'][$confiValue['type_img']] = $imgPath.$imgPrefix[$confiValue['type_img']].$img['name_img'];
+                        $imgData = pathinfo($img['name_img']);
+                        $filename = $imgData['filename'];
+
                         if(file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
                             $makeFiles->remove(array(
                                 $newArr[$key]['img'][$confiValue['type_img']]
+                            ));
+                        }
+                        // Check if the image with webp extension exist
+                        if(file_exists($imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp)){
+                            $makeFiles->remove(array(
+                                $imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp
                             ));
                         }
                     }
@@ -648,6 +658,8 @@ class backend_controller_product extends backend_db_product
 							$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 							$product = $this->getItems('content', array('id_product' => $this->id_product, 'id_lang' => $defaultLanguage['id_lang']), 'one', false);
 							$newimg = $this->getItems('lastImgId',null,'one',false);
+							// If $newimg = NULL return 0
+							$newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
 
 							$resultUpload = $this->upload->setMultipleImageUpload(
 								'img_multiple',

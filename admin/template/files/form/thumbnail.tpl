@@ -15,7 +15,9 @@
             <select name="module_name" id="module_name" class="form-control has-optional-fields required" required>
                 <option value="">{#ph_config#|ucfirst}</option>
                 {foreach $setConfig as $key => $val}
+                    {if $val.attr_name != 'about'}
                     <option value="{$val.attr_name}" class="optional-field" data-target="{if $val.attr_name eq 'catalog'}#subcat{/if}">{#$val.attr_name#|ucfirst}</option>
+                    {/if}
                 {/foreach}
             </select>
         </div>

@@ -48,13 +48,14 @@ if (file_exists($magepattern)) {
     exit;
 }
 /**
- * Include phpThumb
+ * Include interventionImage
  */
-$phpthumb = dirname(__FILE__).'/phpthumb/ThumbLib.inc.php';
-if (file_exists($phpthumb)) {
-    require ($phpthumb);
+
+$interventionImage = __DIR__. '/interventionimage/vendor/autoload.php';
+if (file_exists($interventionImage)) {
+    require $interventionImage;
 }else{
-    print 'Error thumbnail Config';
+    throw new Exception('Error load library interventionimage');
     exit;
 }
 /**

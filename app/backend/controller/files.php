@@ -166,7 +166,8 @@ class backend_controller_files extends backend_db_files{
                                     'module_img'        => $this->module_name,
                                     'attribute_img'     => 'page',
                                     'id'                =>'id_pages',
-                                    'img'               =>'img_pages'
+                                    'img'               =>'img_pages',
+                                    'webp'              => true
                                 ),
                                     $fetchImg
                                 );
@@ -179,7 +180,8 @@ class backend_controller_files extends backend_db_files{
                                     'module_img'        => $this->module_name,
                                     'attribute_img'     => 'news',
                                     'id'                =>'id_news',
-                                    'img'               =>'img_news'
+                                    'img'               =>'img_news',
+                                    'webp'              => true
                                 ),
                                     $fetchImg
                                 );
@@ -195,7 +197,8 @@ class backend_controller_files extends backend_db_files{
                                                 'module_img'        => $this->module_name,
                                                 'attribute_img'     => 'category',
                                                 'id'                =>'id_cat',
-                                                'img'               =>'img_cat'
+                                                'img'               =>'img_cat',
+                                                'webp'              => true
                                             ),
                                                 $fetchImg
                                             );
@@ -208,7 +211,8 @@ class backend_controller_files extends backend_db_files{
                                                 'module_img'        => $this->module_name,
                                                 'attribute_img'     => 'product',
                                                 'id'                =>'id_product',
-                                                'img'               =>'name_img'
+                                                'img'               =>'name_img',
+                                                'webp'              => true
                                             ),
                                                 $fetchImg
                                             );

@@ -39,15 +39,19 @@
  * Time: 12:17
  * License: Dual licensed under the MIT or GPL Version
  */
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManager;
+
 class component_files_upload{
 
-    protected $config;
+    protected $config,$imageManager;
     public $img,$file,$img_multiple;
 
     public function __construct()
     {
         $formClean = new form_inputEscape();
         $this->config = new component_collections_config();
+        $this->imageManager = new ImageManager(array('driver' => 'gd'));
         if(isset($_FILES['img_multiple']["name"])){
             $this->img_multiple = $_FILES['img_multiple']["name"];
         }
@@ -284,6 +288,8 @@ class component_files_upload{
 			);
 			$img = pathinfo($data['edit']);
 			$ext = $img['extension'];
+			$filename = $img['filename'];
+            $extwebp = 'webp';
 
 			// Rename the image
 			if (!empty($data['edit'] && !empty($data['name']))) {
@@ -315,12 +321,27 @@ class component_files_upload{
 							// Check if the image to rename exists and if there is not already an image with this name and extension
 							if (file_exists($filesPath.$prefix.$data['edit'])
 								&& !file_exists($filesPath.$prefix.$data['name'].'.'.$ext)) {
-								$makeFiles->rename(
+
+							    $makeFiles->rename(
 									array(
 										'origin' => $filesPath.$prefix.$data['edit'],
 										'target' => $filesPath.$prefix.$data['name'].'.'.$ext
 									)
 								);
+
+                                // Check if webp is defined
+                                if(!isset($data['webp']) || $data['webp'] != false){
+                                    // Check if the image to rename exists and if there is not already an image with this name and webp extension
+                                    if(file_exists($filesPath.$prefix.$filename.'.'.$extwebp)
+                                        && !file_exists($filesPath.$prefix.$data['name'].'.'.$extwebp)){
+                                        $makeFiles->rename(
+                                            array(
+                                                'origin' => $filesPath.$prefix.$filename.'.'.$extwebp,
+                                                'target' => $filesPath.$prefix.$data['name'].'.'.$extwebp
+                                            )
+                                        );
+                                    }
+                                }
 							}
 						}
 						else {
@@ -636,7 +657,8 @@ class component_files_upload{
                 'prefix'            => array('l_','m_','s_'),
                 'module_img'        => 'pages',
                 'attribute_img'     => 'page',
-                'original_remove'   => false
+                'original_remove'   => false,
+                'webp'              => true
             ),
             array(
                 'upload_root_dir'   => 'upload/test', //string
@@ -658,6 +680,7 @@ class component_files_upload{
                 $makeFiles = new filesystem_makefile();
                 $resultUpload = null;
                 $debugResult = null;
+                $extwebp = 'webp';
                 $dirImg = $this->dirImgUpload(
                     array_merge(
                         array('upload_root_dir'=>$imgCollection['upload_root_dir']),
@@ -749,11 +772,11 @@ class component_files_upload{
                                             $filesPath = $dirImgArray;
                                         }
                                         /**
-                                         * Initialisation de la classe phpthumb
+                                         * Initialisation de la classe interventionImage
                                          * @var void
                                          */
                                         try {
-                                            $thumb = PhpThumbFactory::create($dirImg . $data['name'] . '.'.$resultUpload['mimecontent']['type'],array('jpegQuality'=>70));
+                                            $thumb = $this->imageManager->make($dirImg . $data['name'] . '.'.$resultUpload['mimecontent']['type']);
                                         } catch (Exception $e) {
                                             $logger = new debug_logger(MP_LOG_DIR);
                                             $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
@@ -770,12 +793,24 @@ class component_files_upload{
 
                                         switch ($value['resize_img']) {
                                             case 'basic':
-                                                $thumb->resize($value['width_img'], $value['height_img']);
-                                                $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type']);
+                                                $thumb->resize($value['width_img'], $value['height_img'], function ($constraint) {
+                                                    $constraint->aspectRatio();
+                                                    $constraint->upsize();
+                                                });
+                                                $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'],80);
+                                                // Check if webp is defined
+                                                if(!isset($data['webp']) || $data['webp'] != false){
+                                                    $thumb->save($filesPath . $prefix . $data['name'] .'.'.$extwebp);
+                                                }
                                                 break;
                                             case 'adaptive':
-                                                $thumb->adaptiveResize($value['width_img'], $value['height_img']);
-                                                $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type']);
+                                                //$thumb->adaptiveResize($value['width_img'], $value['height_img']);
+                                                $thumb->fit($value['width_img'], $value['height_img']);
+                                                $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'],80);
+                                                // Check if webp is defined
+                                                if(!isset($data['webp']) || $data['webp'] != false){
+                                                    $thumb->save($filesPath . $prefix . $data['name'] .'.'.$extwebp);
+                                                }
                                                 break;
                                         }
                                         $filesPathDebug[] = $filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'];
@@ -855,7 +890,8 @@ class component_files_upload{
             'prefix'            => array('s_'),
             'module_img'        => 'pages',
             'attribute_img'     => 'page',
-            'original_remove'   => false
+            'original_remove'   => false,
+            'webp'              => true
         ),
         array(
             'upload_root_dir'   => 'upload/pages', //string
@@ -876,6 +912,7 @@ class component_files_upload{
                 $makeFiles = new filesystem_makefile();
                 $resultUpload = null;
                 $debugResult = null;
+                $extwebp = 'webp';
                 $dirImg = $this->dirImgUpload(
                     array_merge(
                         array(
@@ -927,9 +964,11 @@ class component_files_upload{
                                             } else {
                                                 $filesPath = $dirImgArray;
                                             }
-
+                                            /**
+                                             * init interventionImage
+                                             */
                                             try {
-                                                $thumb = PhpThumbFactory::create($dirImg . $value['new_name'] . '.'.$value['mimecontent']['type'],array('jpegQuality'=>70));
+                                                $thumb = $this->imageManager->make($dirImg . $value['new_name'] . '.'.$value['mimecontent']['type']);
                                             } catch (Exception $e) {
                                                 $logger = new debug_logger(MP_LOG_DIR);
                                                 $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
@@ -947,12 +986,23 @@ class component_files_upload{
 
                                             switch ($valueConf['resize_img']) {
                                                 case 'basic':
-                                                    $thumb->resize($valueConf['width_img'], $valueConf['height_img']);
-                                                    $thumb->save($filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type']);
+                                                    $thumb->resize($valueConf['width_img'], $valueConf['height_img'], function ($constraint) {
+                                                        $constraint->aspectRatio();
+                                                        $constraint->upsize();
+                                                    });
+                                                    $thumb->save($filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type'],80);
+                                                    // Check if webp is defined
+                                                    if(!isset($data['webp']) || $data['webp'] != false){
+                                                        $thumb->save($filesPath . $prefix . $value['new_name'] .'.'.$extwebp);
+                                                    }
                                                     break;
                                                 case 'adaptive':
-                                                    $thumb->adaptiveResize($valueConf['width_img'], $valueConf['height_img']);
-                                                    $thumb->save($filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type']);
+                                                    $thumb->fit($valueConf['width_img'], $valueConf['height_img']);
+                                                    $thumb->save($filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type'],80);
+                                                    // Check if webp is defined
+                                                    if(!isset($data['webp']) || $data['webp'] != false){
+                                                        $thumb->save($filesPath . $prefix . $value['new_name'] .'.'.$extwebp);
+                                                    }
                                                     break;
                                             }
                                             $filesPathDebug[] = $filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type'];
