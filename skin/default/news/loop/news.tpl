@@ -48,7 +48,7 @@
                         {/if}
                     {/strip}
                 </div>
-                <a class="all-hover" href="{$item.url}" title="{$pages.seo.description}" itemprop="url">{$pages.seo.title}</a>
+                <a class="all-hover" href="{$item.url}" title="{$item.seo.description}" itemprop="url">{$item.seo.title}</a>
             </div>
         </div>
     {/foreach}
