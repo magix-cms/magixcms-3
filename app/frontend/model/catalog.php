@@ -63,15 +63,17 @@ class frontend_model_catalog extends frontend_db_catalog {
      * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
      * @param $row
      * @param $current
-     * @param $newRow
+     * @param bool $newRow
      * @return array|null
      *
+     * @throws Exception
      * @todo revoir le nommage de 'current', lui préférant 'active'
      */
     public function setItemData ($row,$current,$newRow = false)
     {
 		$string_format = new component_format_string();
         $data = null;
+        $extwebp = 'webp';
         if ($row != null) {
             if (isset($row['name'])) {
                 $data['name'] = $row['name'] ? $row['name'] : $this->template->getConfigVars('catalog');
@@ -138,13 +140,19 @@ class frontend_model_catalog extends frontend_db_catalog {
                             'module_img' => 'catalog',
                             'attribute_img' => 'product'
                         ));
+
                         if(is_array($row['img'])) {
                             foreach ($row['img'] as $item => $val) {
+                                // # return filename without extension
+                                $pathinfo = pathinfo($val['name_img']);
+                                $filename = $pathinfo['filename'];
+
                                 $data['imgs'][$item]['alt'] = $val['alt_img'];
                                 $data['imgs'][$item]['title'] = $val['title_img'];
                                 $data['imgs'][$item]['caption'] = $val['caption_img'];
                                 foreach ($fetchConfig as $key => $value) {
                                     $data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+                                    $data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
 									$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
 									$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
 									$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
@@ -162,8 +170,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                             'module_img'=>'catalog',
                             'attribute_img'=>'category'
                         ));
+                        // # return filename without extension
+                        $pathinfo = pathinfo($row['name_img']);
+                        $filename = $pathinfo['filename'];
+
                         foreach ($fetchConfig as $key => $value) {
                             $data['img'][$value['type_img']]['src'] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img'];
+                            $data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
 							$data['img'][$value['type_img']]['w'] = $value['width_img'];
 							$data['img'][$value['type_img']]['h'] = $value['height_img'];
 							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
@@ -214,8 +227,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                                 'module_img'=>'catalog',
                                 'attribute_img'=>'product'
                             ));
+                            // # return filename without extension
+                            $pathinfo = pathinfo($value['name_img']);
+                            $filename = $pathinfo['filename'];
+
                             foreach ($fetchConfig as $keyConfig => $valueConfig) {
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['src'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img'];
+                                $data['associated'][$key]['img'][$valueConfig['type_img']]['src_webp'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $filename. '.' .$extwebp;
 								$data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $valueConfig['width_img'];
 								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $valueConfig['height_img'];
 								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $valueConfig['resize_img'];
@@ -265,8 +283,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                         'module_img'=>'catalog',
                         'attribute_img'=>'category'
                     ));
+                    // # return filename without extension
+                    $pathinfo = pathinfo($row['img_cat']);
+                    $filename = $pathinfo['filename'];
+
                     foreach ($fetchConfig as $key => $value) {
                         $data['img'][$value['type_img']]['src'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat'];
+                        $data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
                         $data['img'][$value['type_img']]['w'] = $value['width_img'];
                         $data['img'][$value['type_img']]['h'] = $value['height_img'];
                         $data['img'][$value['type_img']]['crop'] = $value['resize_img'];
@@ -326,6 +349,7 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @param $row
      * @return array
+     * @throws Exception
      */
     public function setHrefLangCategoryData($row)
     {
@@ -347,6 +371,7 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @param $row
      * @return array
+     * @throws Exception
      */
     public function setHrefLangProductData($row)
     {
@@ -377,12 +402,13 @@ class frontend_model_catalog extends frontend_db_catalog {
 		return $this->data->parseData($d,$this,$c,$nr);
 	}
 
-	/**
+    /**
      * Retourne les données sql sur base des paramètres passés en paramète
      * @param array $custom
      * @param array $current
      * @param bool $override
      * @return array|null
+     * @throws Exception
      */
     public function getData($custom,$current,$override = false)
     {

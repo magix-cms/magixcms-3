@@ -78,11 +78,13 @@ class frontend_model_news extends frontend_db_news {
      * @param $current
      * @param bool $newRow
      * @return null|array
+     * @throws Exception
      */
     public function setItemData($row,$current,$newRow = false)
     {
 		$string_format = new component_format_string();
         $data = null;
+        $extwebp = 'webp';
 
         if (isset($row['id_news'])) {
             $data['id'] = $row['id_news'];
@@ -101,8 +103,14 @@ class frontend_model_news extends frontend_db_news {
                     'module_img'    =>'news',
                     'attribute_img' =>'news'
                 ));
+
+                // # return filename without extension
+                $pathinfo = pathinfo($row['img_news']);
+                $filename = $pathinfo['filename'];
+
                 foreach ($fetchConfig as $key => $value) {
                     $data['img'][$value['type_img']]['src'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news'];
+                    $data['img'][$value['type_img']]['src_webp'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
 					$data['img'][$value['type_img']]['w'] = $value['width_img'];
 					$data['img'][$value['type_img']]['h'] = $value['height_img'];
 					$data['img'][$value['type_img']]['crop'] = $value['resize_img'];

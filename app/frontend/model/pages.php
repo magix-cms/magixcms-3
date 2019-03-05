@@ -61,11 +61,13 @@ class frontend_model_pages extends frontend_db_pages{
      * @param $current
      * @param bool $newRow
      * @return array|null
+     * @throws Exception
      */
     public function setItemData($row,$current,$newRow = false)
     {
     	$string_format = new component_format_string();
         $data = null;
+        $extwebp = 'webp';
 
         if ($row != null) {
 			if (isset($row['name'])) {
@@ -98,8 +100,13 @@ class frontend_model_pages extends frontend_db_pages{
 						'module_img' => 'pages',
 						'attribute_img' => 'page'
 					));
+					// # return filename without extension
+                    $pathinfo = pathinfo($row['img_pages']);
+                    $filename = $pathinfo['filename'];
+
 					foreach ($fetchConfig as $key => $value) {
 						$data['img'][$value['type_img']]['src'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['img_pages'];
+                        $data['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
 						$data['img'][$value['type_img']]['w'] = $value['width_img'];
 						$data['img'][$value['type_img']]['h'] = $value['height_img'];
 						$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
