@@ -147,9 +147,10 @@ class frontend_model_catalog extends frontend_db_catalog {
                                 $pathinfo = pathinfo($val['name_img']);
                                 $filename = $pathinfo['filename'];
 
-                                $data['imgs'][$item]['alt'] = $val['alt_img'];
-                                $data['imgs'][$item]['title'] = $val['title_img'];
-                                $data['imgs'][$item]['caption'] = $val['caption_img'];
+                                $data['imgs'][$item]['img']['alt'] = $val['alt_img'];
+                                $data['imgs'][$item]['img']['title'] = $val['title_img'];
+                                $data['imgs'][$item]['img']['caption'] = $val['caption_img'];
+                                $data['imgs'][$item]['img']['name'] = $val['name_img'];
                                 foreach ($fetchConfig as $key => $value) {
                                     $data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
                                     $data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;

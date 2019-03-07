@@ -3,9 +3,9 @@
 {/if}
 {if is_array($data) && !empty($data)}
     {foreach $data as $item}
-        <a href="{$item.url}" title="{$item.title|ucfirst}">
+        <a href="{$item.url}" title="{$item.name|ucfirst}">
         <div class="media-footer">
-            <h5>{$item.title|ucfirst}</h5>
+            <h5>{$item.name|ucfirst}</h5>
             {if $item.resume || $item.content}
             <p>{if $item.resume}{$item.resume|truncate:100:'...'}{elseif $item.content}{$item.content|strip_tags|truncate:100:"..."}{/if}</p>
             {/if}
