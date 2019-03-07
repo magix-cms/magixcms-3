@@ -110,6 +110,7 @@ class frontend_model_pages extends frontend_db_pages{
 						$data['img'][$value['type_img']]['w'] = $value['width_img'];
 						$data['img'][$value['type_img']]['h'] = $value['height_img'];
 						$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
+                        $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['img_pages']);
 					}
 					$data['img']['name'] = $row['img_pages'];
 				}

@@ -7,16 +7,30 @@
     <article class="catalog container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/Series">
         {block name='article:content'}
             <h1 itemprop="name">{$cat.name}</h1>
-            <div class="text" itemprop="text">
+            <div class="text clearfix" itemprop="text">
                 {if isset($cat.img.name)}
-                    <figure>
+                    {*<figure>
                         <a href="{$cat.img.large.src}" class="img-zoom" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
                             <img class="img-responsive lazyload" src="{$cat.img.medium.src}" alt="{$cat.img.alt}" title="{$cat.img.title}" />
                         </a>
                         {if $cat.img.caption}
                             <figcaption>{$cat.img.caption}</figcaption>
                         {/if}
-                    </figure>
+                    </figure>*}
+                    <a href="{$cat.img.large.src}" class="img-zoom img-float pull-right" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
+                        <figure>
+                            {strip}<picture>
+                                <!--[if IE 9]><video style="display: none;"><![endif]-->
+                                <source type="image/webp" sizes="{$cat.img.medium['w']}px" srcset="{$cat.img.medium['src_webp']} {$cat.img.medium['w']}w">
+                                <source type="{$cat.img.medium.ext}" sizes="{$cat.img.medium['w']}px" srcset="{$cat.img.medium['src']} {$cat.img.medium['w']}w">
+                                <!--[if IE 9]></video><![endif]-->
+                                <img data-src="{$cat.img.medium['src']}" width="{$cat.img.medium['w']}" height="{$cat.img.medium['h']}" alt="{$cat.img.alt}" title="{$cat.img.title}" class="img-responsive lazyload" />
+                                </picture>{/strip}
+                            {if $cat.img.caption}
+                                <figcaption>{$cat.img.caption}</figcaption>
+                            {/if}
+                        </figure>
+                    </a>
                 {/if}
                 {$cat.content}
             </div>

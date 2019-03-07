@@ -4,7 +4,7 @@
 {block name="description"}{$news.seo.description}{/block}
 {block name="webType"}WebPage{/block}
 {block name='article'}
-    <article id="article" class="container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Article">
+    <article id="article" class="container clearfix" itemprop="mainEntity" itemscope itemtype="http://schema.org/Article">
         {block name='article:content'}
             <header>
                 {strip}
@@ -95,29 +95,23 @@
             <div itemprop="articleBody">
                 <div class="desc">
                     {if isset($news.img.name)}
-                        {*<figure{if $news.imgSrc.medium} itemprop="image" itemscope itemtype="http://schema.org/ImageObject"{/if}>
-                            {if $news.imgSrc.small}
-                                <meta itemprop="url" content="{$url}{$news.imgSrc.medium}" />
-                                <meta itemprop="height" content="618" />
-                                <meta itemprop="width" content="1000" />
-                                <a href="{$news.imgSrc.medium}" class="img-zoom" title="{$news.name}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
-                                    <img src="{$news.imgSrc.medium}" alt="{$news.name}" itemprop="contentUrl"/>
-                                </a>
-                            {else}
-                                <img src="/skin/{$theme}/img/catalog/news-default.png" alt="{$news.name}" />
-                            {/if}
-                        </figure>*}
-                        <figure class="img-float pull-right" itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
+                    <a href="{$news.img.large.src}" class="img-zoom pull-right img-float" title="{$news.img.title}" data-caption="{$news.img.caption}">
+                        <figure itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
                             <meta itemprop="url" content="{$url}{$news.img.large.src}" />
                             <meta itemprop="height" content="{$news.img.large.h}" />
                             <meta itemprop="width" content="{$news.img.large.w}" />
-                            <a href="{$news.img.large.src}" class="img-zoom" title="{$news.img.title}" data-caption="{$news.img.caption}">
-                                <img class="img-responsive" src="{$news.img.medium.src}" alt="{$news.img.alt}" title="{$news.img.title}" />
-                            </a>
+                            {strip}<picture>
+                                <!--[if IE 9]><video style="display: none;"><![endif]-->
+                                <source type="image/webp" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src_webp']} {$news.img.medium['w']}w">
+                                <source type="{$news.img.medium.ext}" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src']} {$news.img.medium['w']}w">
+                                <!--[if IE 9]></video><![endif]-->
+                                <img data-src="{$news.img.medium['src']}" width="{$news.img.medium['w']}" height="{$news.img.medium['h']}" alt="{$news.img.alt}" title="{$news.img.title}" class="img-responsive lazyload" />
+                                </picture>{/strip}
                             {if $news.img.caption}
                                 <figcaption>{$news.img.caption}</figcaption>
                             {/if}
                         </figure>
+                    </a>
                     {/if}
                     {$news.content}
                 </div>
@@ -138,19 +132,21 @@
             {/if}
             {/strip}
         {/block}
-        <nav>
-            <ul class="pager">
-                {if $news.next}
+    </article>
+{/block}
+{block name="article:after"}
+    <nav class="container">
+        <ul class="pager">
+            {if $news.next}
                 <li class="previous">
                     <a href="{$news.next.url}" class="pull-left btn btn-link" rel="next" title="{$news.next.title}">{#next_topic#}</a>
                 </li>
-                {/if}
-                {if $news.prev}
+            {/if}
+            {if $news.prev}
                 <li class="next">
                     <a href="{$news.prev.url}" class="pull-right btn btn-link" rel="prev" title="{$news.prev.title}">{#previous_topic#}</a>
                 </li>
-                {/if}
-            </ul>
-        </nav>
-    </article>
+            {/if}
+        </ul>
+    </nav>
 {/block}

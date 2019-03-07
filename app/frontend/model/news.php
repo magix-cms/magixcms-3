@@ -114,6 +114,7 @@ class frontend_model_news extends frontend_db_news {
 					$data['img'][$value['type_img']]['w'] = $value['width_img'];
 					$data['img'][$value['type_img']]['h'] = $value['height_img'];
 					$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
+                    $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news']);
                 }
 				$data['img']['name'] = $row['img_news'];
             }

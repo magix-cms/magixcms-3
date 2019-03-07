@@ -9,16 +9,22 @@
                 {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{$url}/{$lang}/","title" => {#home#}]}
                 <h1 itemprop="name">{$pages.name}</h1>
             </header>
-            <div class="text" itemprop="text">
+            <div class="text clearfix" itemprop="text">
                 {if isset($pages.img.name)}
-                    <figure class="img-float pull-right">
-                        <a href="{$pages.img.large.src}" class="img-zoom" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
-                            <img class="img-responsive" src="{$pages.img.medium.src}" alt="{$pages.img.alt}" title="{$pages.img.title}" />
-                        </a>
-                        {if $pages.img.caption}
-                            <figcaption>{$pages.img.caption}</figcaption>
-                        {/if}
-                    </figure>
+                    <a href="{$pages.img.large.src}" class="img-zoom img-float pull-right" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
+                        <figure>
+                            {strip}<picture>
+                                <!--[if IE 9]><video style="display: none;"><![endif]-->
+                                <source type="image/webp" sizes="{$pages.img.medium['w']}px" srcset="{$pages.img.medium['src_webp']} {$pages.img.medium['w']}w">
+                                <source type="{$pages.img.medium.ext}" sizes="{$pages.img.medium['w']}px" srcset="{$pages.img.medium['src']} {$pages.img.medium['w']}w">
+                                <!--[if IE 9]></video><![endif]-->
+                                <img data-src="{$pages.img.medium['src']}" width="{$pages.img.medium['w']}" height="{$pages.img.medium['h']}" alt="{$pages.img.alt}" title="{$pages.img.title}" class="img-responsive lazyload" />
+                                </picture>{/strip}
+                            {if $pages.img.caption}
+                                <figcaption>{$pages.img.caption}</figcaption>
+                            {/if}
+                        </figure>
+                    </a>
                 {/if}
                 {$pages.content}
             </div>
