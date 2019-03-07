@@ -34,7 +34,7 @@
         {if !empty($product.imgs)}
             {foreach $product.imgs as $img}
                 {if $img.default}
-                    {$meta["og:image"] = {''|cat:{$url}|cat:{$img.img.medium}}}
+                    {$meta["og:image"] = {''|cat:{$url}|cat:{$img.img.medium.src}}}
                     {$meta["og:image:width"] = {$img.img.medium.w}}
                     {$meta["og:image:height"] = {$img.img.medium.h}}
                 {/if}
@@ -42,7 +42,7 @@
         {/if}
     {elseif isset($cat)}
         {if $cat.img.medium}
-            {$meta["og:image"] = {''|cat:{$url}|cat:{$cat.img.medium}}}
+            {$meta["og:image"] = {''|cat:{$url}|cat:{$cat.img.medium.src}}}
             {$meta["og:image:width"] = {$cat.img.medium.w}}
             {$meta["og:image:height"] = {$cat.img.medium.h}}
         {/if}
