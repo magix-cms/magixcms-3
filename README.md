@@ -29,7 +29,6 @@ Magix CMS dans sa version 3, incluant une nouvelle librairie et de nouvelles fon
  
 Ressources
 -----
- * https://github.com/Xarksass/CenterColumns
  * https://github.com/gtraxx/tinymce-plugin-youtube
  * https://github.com/gtraxx/jimagine
  * https://github.com/trippo/ResponsiveFilemanager
@@ -37,6 +36,7 @@ Ressources
  * http://getbootstrap.com/
  * http://www.smarty.net
  * https://github.com/gtraxx/magepattern
+ * http://image.intervention.io/
  
 Requirements
 ------------
@@ -49,7 +49,8 @@ Requirements
      * SPL
      * SimpleXML et XML READER
      * PDO
- * MYSQL
+     * Fileinfo Extension
+ * MYSQL Ou MariaDB
 
 ##### Note: Pour utiliser Magix CMS avec PHP 5.6 et plus
 <pre>
