@@ -131,16 +131,20 @@ class component_files_images{
                                 $constraint->upsize();
                             });
                             $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $item['img']),80);
-                            if(!isset($data['webp']) || $data['webp'] != false){
-                                $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $filename . '.'.$extwebp));
+                            if (  function_exists('imagewebp')) {
+                                if (!isset($data['webp']) || $data['webp'] != false) {
+                                    $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $filename . '.' . $extwebp));
+                                }
                             }
                             break;
                         case 'adaptive':
                             //$thumb->adaptiveResize($value['width_img'], $value['height_img']);
                             $thumb->fit($value['width_img'], $value['height_img']);
                             $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $item['img']),80);
-                            if(!isset($data['webp']) || $data['webp'] != false){
-                                $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $filename . '.'.$extwebp));
+                            if (  function_exists('imagewebp')) {
+                                if (!isset($data['webp']) || $data['webp'] != false) {
+                                    $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $filename . '.' . $extwebp));
+                                }
                             }
                             break;
                     }

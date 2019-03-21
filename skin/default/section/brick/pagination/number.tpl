@@ -26,7 +26,7 @@
     {/strip}
 {/capture}
 <nav class="text-center">
-    <ul class="pagination">
+    <ul class="pagination pager">
         <li{if $current == 1} class="disabled"{/if}>
             <a href="{$url}{$request}{if $smarty.get.page && $smarty.get.page > 2}page/{$smarty.get.page - 1}{/if}" aria-label="Previous">
                 <i class="material-icons" aria-hidden="true">arrow_left</i>

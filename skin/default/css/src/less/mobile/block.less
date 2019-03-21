@@ -1,0 +1,181 @@
+//
+// Different block style
+//
+.dropdown {
+	&:not(.open) {
+		.dropdown-toggle .show-less {
+			display: none;
+		}
+	}
+
+	&.open {
+		.dropdown-toggle .show-more {
+			display: none;
+		}
+	}
+
+	.dropdown-header button {
+		&:not(.open) {
+			.show-less {
+				display: none;
+			}
+		}
+
+		&.open {
+			.show-more {
+				display: none;
+			}
+		}
+	}
+
+	.dropdown-menu {
+		padding: 0;
+		box-shadow: 0 0 3px rgba(0,0,0,.4);
+		border-radius: 0;
+		border: none;
+
+		> li {
+			&.active, > a {
+				font-weight: 400;
+				padding: 5px 8px;
+			}
+		}
+	}
+
+	&:not(.toc-drop) {
+		.dropdown-menu {
+			min-width: 100%;
+			top: ~"calc(100% - 2px)";
+		}
+	}
+
+	.dropdown-header {
+		padding: 0;
+	}
+
+	.btn {
+		text-align: left;
+	}
+}
+
+.section-block {
+	padding-top: 30px;
+	padding-bottom: 40px;
+}
+
+.text {
+	figure {
+		margin-bottom: 15px;
+	}
+}
+
+/* --------------------------------------------------------
+                        Vignettes
+---------------------------------------------------------- */
+.vignette {
+	&:not(:last-child) {
+		margin-bottom: 15px;
+	}
+
+	h2 {
+		margin: 5px 0 18px;
+	}
+
+	.figure {
+		position: relative;
+		.shadow(2);
+
+		&:hover, &:focus {
+			.caption {
+				opacity: 1;
+			}
+		}
+	}
+
+	.desc {
+		padding: 15px;
+		background-color: #fff;
+		overflow: hidden;
+
+		p {
+			color: @light-grey;
+		}
+	}
+}
+
+@media (max-width: @screen-xs-max) {
+	.vignette-list {
+		overflow: hidden;
+		margin: 0 -15px;
+
+		.section-block{
+			margin: 0 -15px;
+			padding-right: 30px;
+			padding-left: 30px;
+			background-color: #eee;
+			.shadow(1,inset);
+		}
+	}
+}
+
+/* --------------------------------------------------------
+                        Pagination
+---------------------------------------------------------- */
+.pager {
+	> li > a {
+		border-radius: 0;
+		color: @text-color;
+		border: none;
+		padding: 10px;
+
+		&:active,
+		&:focus {
+			color: @main-color;
+			text-decoration: none;
+			background-color: transparent;
+		}
+	}
+
+	> li {
+		&.active,
+		&:focus {
+			a {
+				color: @main-color;
+				background-color: transparent;
+				font-weight: bold;
+				border-bottom: 1px solid @main-color;
+			}
+		}
+	}
+
+	.material-icons {
+		font-size: 1.4rem;
+	}
+}
+
+/* --------------------------------------------------------
+                    Cookie Consent Alert
+---------------------------------------------------------- */
+#cookies {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	z-index: @z-fixed + 1;
+	background-color: rgba(0,0,0,.6);
+	color: #fff;
+	padding: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-flow: row-reverse;
+
+	p {
+		margin: 0;
+	}
+
+	.normalize-link(@white);
+
+	.material-icons {
+		vertical-align: bottom;
+	}
+}

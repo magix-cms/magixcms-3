@@ -20,10 +20,10 @@ body {
 	max-width: 100vw;
 	height: 100%;
 	position: relative;
-	font-weight: 300;
+	font-weight: @font-weight;
 
 	> main {
-		padding: @headerH+20 0 50px;
+		padding: @headerH+@toolbarH 0 50px;
 		flex: 1 0 auto;
 
 		~ section {
@@ -44,7 +44,7 @@ body {
 	}
 }
 
-.normalize-content;
+.normalize-content(@headingc: same);
 .normalize-link;
 
 // --- Lead paragraphe
@@ -55,3 +55,5 @@ body {
 
 // Set selection style
 .text-select(@main-color);
+
+.adaptive-font-size();

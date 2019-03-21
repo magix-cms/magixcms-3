@@ -9,9 +9,9 @@
             {if $item.mode_link === 'mega'}{$mega = true}{else}{$mega = false}{/if}
             {if $mobile && $item.subdata}
                 {$sn = $sn + 1}
-                <button type="button" class="navbar-toggle{if $item.active} open{/if}" data-toggle="collapse" data-parent="#menul" data-target="#nav{$menu}-{$sn}">
-                    <span class="show-more"><i class="material-icons">more_vert</i></span>
-                    <span class="show-less"><i class="material-icons">close</i></span>
+                <button type="button" class="navbar-toggle{if $item.active} open{else} collapsed{/if}" data-toggle="collapse" data-parent="#menul" data-target="#nav{$menu}-{$sn}">
+                    <span class="show-more"><i class="material-icons">add</i></span>
+                    <span class="show-less"><i class="material-icons">remove</i></span>
                 </button>
             {/if}
             <a itemprop="url" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>

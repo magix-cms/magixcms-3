@@ -73,12 +73,11 @@
                 </div>
             {/if}
         </div>
-        <div class="col">
-            <p><i class="material-icons">copyright</i> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span>
-                | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>
-        </div class="col">
-        {if $companyData.tva}<div><p>{#footer_tva#} {$companyData.tva}</p></div>{/if}
-        <div class="col">
+        <div class="col copy">
+            {strip}<p><i class="material-icons">copyright</i> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span> | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>{/strip}
+        </div>
+        {if $companyData.tva}<div class="col middle"><p>{#footer_tva#} {$companyData.tva}</p></div>{/if}
+        <div class="col created">
             {include file="section/footer/powered.tpl"}
         </div>
     </div>

@@ -798,18 +798,22 @@ class component_files_upload{
                                                     $constraint->upsize();
                                                 });
                                                 $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'],80);
-                                                // Check if webp is defined
-                                                if(!isset($data['webp']) || $data['webp'] != false){
-                                                    $thumb->save($filesPath . $prefix . $data['name'] .'.'.$extwebp);
+                                                if (  function_exists('imagewebp')) {
+                                                    // Check if webp is defined
+                                                    if (!isset($data['webp']) || $data['webp'] != false) {
+                                                        $thumb->save($filesPath . $prefix . $data['name'] . '.' . $extwebp);
+                                                    }
                                                 }
                                                 break;
                                             case 'adaptive':
                                                 //$thumb->adaptiveResize($value['width_img'], $value['height_img']);
                                                 $thumb->fit($value['width_img'], $value['height_img']);
                                                 $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'],80);
-                                                // Check if webp is defined
-                                                if(!isset($data['webp']) || $data['webp'] != false){
-                                                    $thumb->save($filesPath . $prefix . $data['name'] .'.'.$extwebp);
+                                                if (  function_exists('imagewebp')) {
+                                                    // Check if webp is defined
+                                                    if (!isset($data['webp']) || $data['webp'] != false) {
+                                                        $thumb->save($filesPath . $prefix . $data['name'] . '.' . $extwebp);
+                                                    }
                                                 }
                                                 break;
                                         }
@@ -991,17 +995,21 @@ class component_files_upload{
                                                         $constraint->upsize();
                                                     });
                                                     $thumb->save($filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type'],80);
-                                                    // Check if webp is defined
-                                                    if(!isset($data['webp']) || $data['webp'] != false){
-                                                        $thumb->save($filesPath . $prefix . $value['new_name'] .'.'.$extwebp);
+                                                    if (  function_exists('imagewebp')) {
+                                                        // Check if webp is defined
+                                                        if (!isset($data['webp']) || $data['webp'] != false) {
+                                                            $thumb->save($filesPath . $prefix . $value['new_name'] . '.' . $extwebp);
+                                                        }
                                                     }
                                                     break;
                                                 case 'adaptive':
                                                     $thumb->fit($valueConf['width_img'], $valueConf['height_img']);
                                                     $thumb->save($filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type'],80);
-                                                    // Check if webp is defined
-                                                    if(!isset($data['webp']) || $data['webp'] != false){
-                                                        $thumb->save($filesPath . $prefix . $value['new_name'] .'.'.$extwebp);
+                                                    if (  function_exists('imagewebp')) {
+                                                        // Check if webp is defined
+                                                        if (!isset($data['webp']) || $data['webp'] != false) {
+                                                            $thumb->save($filesPath . $prefix . $value['new_name'] . '.' . $extwebp);
+                                                        }
                                                     }
                                                     break;
                                             }

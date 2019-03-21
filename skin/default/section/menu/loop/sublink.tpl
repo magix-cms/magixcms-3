@@ -7,9 +7,9 @@
     {if $mega && $child.subdata}
         {$sn = $sn + 1}
         {if $dp < $deepness}
-        <button type="button" class="navbar-toggle{if $child.active} open{/if}" data-toggle="collapse" data-parent="{$parent}" data-target="#nav{$menu}-{$sn}">
-            <span class="show-more"><i class="material-icons">more_vert</i></span>
-            <span class="show-less"><i class="material-icons">close</i></span>
+        <button type="button" class="navbar-toggle{if $child.active} open{else} collapsed{/if}" data-toggle="collapse" data-parent="{$parent}" data-target="#nav{$menu}-{$sn}">
+            <span class="show-more"><i class="material-icons">add</i></span>
+            <span class="show-less"><i class="material-icons">remove</i></span>
         </button>
         {/if}
     {/if}

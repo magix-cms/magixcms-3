@@ -16,7 +16,9 @@
                 <option value="">{#ph_config#|ucfirst}</option>
                 {foreach $setConfig as $key => $val}
                     {if $val.attr_name != 'about'}
-                    <option value="{$val.attr_name}" class="optional-field" data-target="{if $val.attr_name eq 'catalog'}#subcat{/if}">{#$val.attr_name#|ucfirst}</option>
+                    <option value="{$val.attr_name}" class="optional-field" data-target="{if $val.attr_name eq 'catalog'}#subcat{/if}">
+                        {if $val.attr_name eq 'pages' OR $val.attr_name eq 'news' OR $val.attr_name eq 'catalog'}{#$val.attr_name#|ucfirst}{else}{$val.attr_name}{/if}
+                    </option>
                     {/if}
                 {/foreach}
             </select>

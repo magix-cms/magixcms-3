@@ -42,6 +42,7 @@ class backend_model_plugins{
     /**
      * @param $config
      * @return array
+     * @throws Exception
      */
     private function setItems($config){
         $data =  $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
@@ -86,6 +87,11 @@ class backend_model_plugins{
                     }
 
                     break;
+                case 'thumbnail':
+                    if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$item['name'])) {
+                        $newsItems[] = $item;
+                    }
+                    break;
             }
         }
         $coreComponent = new component_format_array();
@@ -112,6 +118,7 @@ class backend_model_plugins{
     /**
      * @param $config
      * @return array
+     * @throws Exception
      */
     public function getItems($config){
         return $this->setItems($config);

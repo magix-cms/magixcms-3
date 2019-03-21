@@ -51,14 +51,23 @@ Requirements
      * PDO
      * Fileinfo Extension
  * MYSQL Ou MariaDB
-
+ 
 ##### Note: Pour utiliser Magix CMS avec PHP 5.6 et plus
 <pre>
 error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 </pre>
 ##### Note: Magix CMS 3.x.x est optimisé pour PHP 7 !!
 
+
 ## Watchers PHP STORM
+### NPM requirements
+ * npm >= 4.1.2
+ * [less](http://lesscss.org/usage/) >= 3.5.0
+ * [less-plugin-glob](https://github.com/just-boris/less-plugin-glob) >= 3.0.0
+    * Requires: [globby](https://www.npmjs.com/package/globby) >= 9.1.0
+ * [less-plugin-clean-css](https://github.com/less/less-plugin-clean-css) >= 1.5.1
+ * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21
+ * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9
 #### Script Plugins
 <pre>
 file:plugins/*/js/src/*.js

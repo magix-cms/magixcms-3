@@ -2,7 +2,10 @@
     <div class="container">
     {* Show Nav Button (xs ad sm only) *}
     <button type="button" class="toggle-menu navbar-toggle" data-toggle="collapse" data-target="#menu">
-        <i class="material-icons">menu</i>
+        {*<i class="material-icons">menu</i>*}
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
         <span class="sr-only">{#openNavigation#|ucfirst}</span>
     </button>
     {* Brand && Headline *}

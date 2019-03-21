@@ -1,4 +1,4 @@
-<div id="block-about" class="col block">
+<div id="block-about" class="col-6 col-sm block">
     <div>
         {widget_about_data
             conf = [
@@ -7,7 +7,7 @@
             ]
             assign="pages"
         }
-        <h4><a href="{$url}/{$lang}/about/" title="{#about#} {#website_name#}">{#about#|ucfirst}</a></h4>
+        <h4><a href="{$url}/{$lang}/about/" title="{#about#} {#website_name#}">{#about_footer#|ucfirst}</a></h4>
         <ul class="link-list list-unstyled">
             {foreach $pages as $child}
                 <li>

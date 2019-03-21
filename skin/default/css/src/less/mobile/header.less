@@ -3,13 +3,13 @@
 //
 // --- Main header
 #header {
-	z-index: @z-fixed;
-	//padding: 10px;
+	z-index: 500;
 	position: fixed;
 	width: 100%;
-	background-color: @white;
+	background: @header-bg;
 	left: 0;
-	.shadow(4);
+	-webkit-box-shadow: 0 0 15px 0 rgba(0,0,0,.2), 0 5px 20px 0 rgba(0,0,0,.1);
+	box-shadow: 0 0 15px 0 rgba(0,0,0,.2), 0 5px 20px 0 rgba(0,0,0,.1);
 
 	.container {
 		display: flex;
@@ -19,13 +19,6 @@
 		height: 70px;
 	}
 }
-
-/*#navbar-brand {
-	a {
-		display: inline-block;
-		padding: 5px 15px;
-	}
-}*/
 
 .site-name {
 	@media (max-width: @screen-sm-max) {
@@ -53,46 +46,21 @@
 
 	.dropdown-toggle {
 		padding: 15px;
-		font-size: 16px;
 		border: none;
 		color: @text-color;
 	}
 
+	.dropdown a {
+		font-size: .875rem;
+	}
+
 	&:active {
 		box-shadow: none;
-		color: @brand-success;
+		color: @main-color;
 	}
 }
 
 .toggle-menu {
 	left: 5px;
 	padding: 15px;
-}
-
-//
-// Cookie Consent Alert
-//
-
-#cookies {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	z-index: @z-fixed + 1;
-	background-color: rgba(0,0,0,.6);
-	color: #f2f2f2;
-	padding: 15px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	flex-flow: row-reverse;
-
-	p {
-		margin: 0;
-	}
-
-	.normalize-link(@white);
-
-	.material-icons {
-		vertical-align: bottom;
-	}
 }

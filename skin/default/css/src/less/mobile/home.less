@@ -1,0 +1,20 @@
+//
+// Rules for home page
+//
+#home {
+	main {
+		padding-bottom: 15px;
+	}
+}
+
+#home-slideshow {
+	padding-top: @headerH + @toolbarH;
+
+	@media (min-width: @screen-xs-min) {
+		padding-top: @headerH-xs + @toolbarH;
+	}
+
+	+ main {
+		padding-top: 30px;
+	}
+}

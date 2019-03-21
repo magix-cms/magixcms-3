@@ -2,13 +2,13 @@
     {if !$main}
     <div id="menu-overlay" data-toggle="collapse" data-target="#menu"></div>
     <div id="sidebar">
-        <header>
+        {strip}<header>
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
                 <i class="material-icons">close</i>
                 <span class="sr-only">{#closeNavigation#|ucfirst}</span>
             </button>
-            Navigation
-        </header>{/if}
+            {#navigation#}
+        </header>{/strip}{/if}
         <nav id="{if $main}main{else}side{/if}-menu" class="menu menu-tabs-arrow menubar" itemprop="hasPart" itemscope itemtype="http://schema.org/SiteNavigationElement">
             <a href="#content" class="sr-only skip-menu">{#skipMenu#}</a>
             <ul id="menul" class="list-unstyled">

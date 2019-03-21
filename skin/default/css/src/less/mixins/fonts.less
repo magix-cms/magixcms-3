@@ -1,39 +1,29 @@
 //
 // Custom fonts and font rules
 //
-/*@font-size: 22px, 20px, 18px, 16px, 14px, 12px;
-@font-size-sm: 26px, 24px, 20px, 16px, 14px, 12px;
-@font-size-md: 30px, 28px, 22px, 16px, 14px, 12px;
-@font-size-lg: 36px, 30px, 24px, 18px, 14px, 12px;
-
-@font-size-h1: extract(@font-size, 1);
-@font-size-h2: extract(@font-size, 2);
-@font-size-h3: extract(@font-size, 3);
-@font-size-h4: extract(@font-size, 4);
-@font-size-h5: extract(@font-size, 5);
-@font-size-h6: extract(@font-size, 6);*/
-
 @font-family-sans-serif: "Heebo", Arial, sans-serif;
 @headings-font-family: @font-family-sans-serif;
 @headings-font-weight: 300;
 
-@font-size-base:  16px;
-@font-size-large: ceil((@font-size-base * 1.125)); // ~18px
-@font-size-small: ceil((@font-size-base * 0.75)); // ~12px
+@font-size-base: 	14px;
+@font-size-base-md: 16px;
+@font-size-base-lg: 18px;
+@font-size-large:   ceil((@font-size-base * 1.25)); // ~18px
+@font-size-small:   ceil((@font-size-base * 0.85)); // ~12px
 
-@font-size-h1:    floor((@font-size-base * 2.25)); // ~36px
-@font-size-h2:    floor((@font-size-base * 1.875)); // ~30px
-@font-size-h3:    ceil((@font-size-base * 1.5)); // ~24px
-@font-size-h4:    ceil((@font-size-base * 1.125)); // ~18px
-@font-size-h5:    @font-size-base;
-@font-size-h6:    ceil((@font-size-base * 0.75)); // ~12px
+@font-size-h1:    2.25rem;
+@font-size-h2:    1.875rem;
+@font-size-h3:    1.5rem;
+@font-size-h4:    1.125rem;
+@font-size-h5:    1rem;
+@font-size-h6:    0.75rem;
 
 //** Unit-less `line-height` for use in components like buttons.
-@line-height-base:        1.428571429; // 20/14
+@line-height-base: 1.428571429; // 20/14
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-@line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
+@line-height-computed: floor((@font-size-base * @line-height-base)); // ~20px
 
 @font-weight: 300;
-@lead-font-size: floor((@font-size-base * 1.15));
+@lead-font-size: 1.15rem;
 @lead-font: @font-family-sans-serif;
 @quote-font: Georgia, serif;

@@ -6,15 +6,18 @@
 }
 
 #footer {
-	//background: @footer-bg;
-	//color: @footer-color;
+	background: @footer-bg;
+	color: @footer-color;
+
+	.normalize-link(@footer-link);
+
 	.blocks {
-		border-top: 1px solid @light-grey;
+		border-top: @footer-border;
 	}
 
 	.block {
 		padding: 20px 15px;
-		margin-bottom: 20px;
+		//margin-bottom: 20px;
 
 		&:last-child {
 			margin-bottom: 0;
@@ -23,19 +26,9 @@
 		h4 {
 			padding-bottom: 8px;
 			margin-bottom: 10px;
-			border-bottom: 1px solid @light-grey;
-			.normalize-link(@text-color);
+			border-bottom: @footer-border;
 		}
 	}
-
-	/*.block {
-		padding: 30px 0;
-	}*/
-
-	/*.material-icons + p > span:first-child {
-		padding-top: 7px;
-		border-top: 1px solid @light-gray;
-	}*/
 }
 
 .mobile-footer {
@@ -63,8 +56,7 @@
 	&-last-news {
 		.news-list-last {
 			h5 {
-				font-weight: 600;
-				line-height: 1.428;
+				line-height: @line-height-base;
 				.text-overflow();
 			}
 			.date{
@@ -72,14 +64,14 @@
 			}
 			a {
 				text-decoration: none;
-				p{
-					color: #959595;
+				p {
+					//color: #959595;
 					text-decoration: none;
 				}
 			}
 
 			.media-footer {
-				border-bottom: 1px dotted @text-color;
+				border-bottom: 1px dotted @footer-border-color;
 				padding-bottom: 10px;
 				p {
 					font-size: 13px;
@@ -91,22 +83,40 @@
 }
 
 #colophon {
-	//background-color: @colophon-bg;
-	//color: @colophon-color;
+	background-color: @colophon-bg;
+	color: @colophon-color;
 
 	.footer-colophon {
-		border-top: 1px solid @light-grey;
+		border-top: @footer-border;
 		padding: 15px 0;
 		font-size: 85%;
+
+		@media (max-width: @screen-ph-max) {
+			.row {
+				flex-direction: column;
+				align-items: center;
+
+				> div {
+					padding: 5px 0;
+				}
+			}
+		}
+		@media (min-width: @screen-xs-min) {
+			.col.copy {
+				flex-grow: 2;
+			}
+			.col.created {
+				text-align: right;
+			}
+			.col.middle {
+				text-align: center;
+			}
+		}
 
 		p {
 			margin: 0;
 			padding: 0;
 		}
-
-		/*> div:first-child {
-			position: absolute;
-		}*/
 	}
 
 	.material-icons {
@@ -125,10 +135,14 @@
 	.shadow(4);
 
 	.wrapper {
-		background-color: @main-color;
-		color: @smooth-white;
+		background-color: @footbar-bg;
+		color: @footbar-color;
 		height: @footbarH;
 		padding: 3px 0;
+	}
+
+	.btn {
+		.btn-main-theme();
 	}
 
 	.material-icons {
@@ -169,32 +183,4 @@
 		display: flex;
 		align-items: center;
 	}
-}
-
-#newsletter {
-	padding: 20px 0;
-
-	header {
-		h3 {
-			margin: 0;
-		}
-	}
-
-	.form-inline {
-		.radio {
-			display: inline-block;
-
-			&:nth-of-type(n+2) {
-				margin-left: 15px;
-			}
-		}
-
-		.form-group {
-			margin-bottom: 15px;
-		}
-	}
-}
-
-#mailform {
-	padding: 15px 0;
 }

@@ -2,7 +2,7 @@
 // Rules for breadcrumb
 //
 #breadcrumb-container {
-	padding-top: @headerH;
+	padding-top: @headerH + @toolbarH;
 	margin: 7px 0 8px;
 
 	+ main { padding-top: 0; }
@@ -21,7 +21,7 @@
 
 		> li {
 			&+li:before {
-				color: @text-color;
+				color: @bc-separator;
 				content: "/";
 				padding: 4px 2px;
 			}
@@ -30,9 +30,9 @@
 
 	li {
 		display: flex;
-		font-weight: 500;
+		font-weight: @bc-font-weight;
 		color: @bc-item-color;
-		.normalize-link(@bc-link-color,@bc-active-link-color,underline,400);
+		.normalize-link(@bc-link-color,@bc-active-link-color,underline,@font-weight);
 
 		a, > span {
 			display: block;
@@ -40,11 +40,11 @@
 		}
 	}
 
-	.navbar-toggle {
+	/*.navbar-toggle {
 		float: none;
 		margin: 0;
 		padding: 0;
-	}
+	}*/
 
 	.material-icons {
 		font-size: inherit;
@@ -54,7 +54,7 @@
 	}
 }
 
-#breadcrumb-collapse {
+/*#breadcrumb-collapse {
 	position: absolute;
 	left: 0;
 	top: 100%;
@@ -65,15 +65,15 @@
 	li {
 		text-align: center;
 		display: block;
-		color: @text-color;
+		color: @bc-item-color;
 		text-shadow: none;
-		.normalize-link(@text-color,@main-color,underline,400);
+		.normalize-link(@bc-link-color,@bc-active-link-color,underline,@font-weight);
 	}
-}
+}*/
 
-#hellipsis{
+/*#hellipsis{
 	span.fa{
 		padding: 5px;
 		font-size: 14px;
 	}
-}
+}*/

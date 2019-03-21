@@ -3,7 +3,6 @@
 //
 .share-nav {
 	a {
-		//display: block;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -16,17 +15,13 @@
 	}
 
 	.fab {
-		//.square(20px);
-		//font-size: 18px;
-		color: #fff;
-		//text-align: center;
-		//padding: 8px;
+		color: @white;
 
 		&:before {
 			vertical-align: middle;
 		}
 		.fa-google-plus-g:before {
-			font-size: 14px;
+			font-size: 1rem;
 			margin-top: 3px;
 			display: block;
 		}
@@ -41,11 +36,11 @@
 }
 
 .sharebar {
-	background-color: @white;
+	background-color: @sharebar-bg;
 
 	.label {
 		color: @light-grey;
-		font-size: 21px;
+		font-size: 1.15rem;
 	}
 
 	.followbox {
@@ -62,7 +57,7 @@
 					justify-content: center;
 					align-items: center;
 					border-radius: 50%;
-					color: #fff;
+					color: @white;
 				}
 			}
 
@@ -70,7 +65,5 @@
 				margin: 0 0 18px;
 			}
 		}
-
-		.share-buttons();
 	}
 }

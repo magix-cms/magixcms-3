@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
-    {if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
+    {if $googleTools_webmaster !== ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
     {if $domain != null && $domain.tracking_domain != ''}{$domain.tracking_domain}{/if}
     <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
     <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
@@ -29,9 +29,9 @@
         skin/{$theme}/js/vendor/html5shiv.min.js,
         skin/{$theme}/js/vendor/respond.min.js
     {/strip}{/capture}
-    <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url:'js'}{else}{$smarty.capture.scriptHtml5}{/if}" type="text/javascript"></script><![endif]-->
+    <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url:'js'}{else}{$smarty.capture.scriptHtml5}{/if}"></script><![endif]-->
     {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/modernizr.min.js,skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js{/capture}
-    <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" type="text/javascript" async></script>
+    <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" async></script>
     {block name="styleSheet"}{/block}
     {if $setting['analytics']['value']}<script type="text/javascript">
         //<![CDATA[
@@ -49,7 +49,7 @@
         //]]>
     </script>{/if}
 </head>
-<body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
+<body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
 {include file="section/brick/cookie-consent.tpl"}
 {include file="section/header.tpl"}
 {block name="breadcrumb"}
@@ -83,7 +83,7 @@
     {if $viewport !== 'mobile'}skin/{$theme}/js/affixhead.min.js,{/if}
     skin/{$theme}/js/global.min.js
 {/capture}{/strip}
-<script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url:'js'}{else}{$smarty.capture.vendors}{/if}" type="text/javascript" defer></script>
+<script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url:'js'}{else}{$smarty.capture.vendors}{/if}" defer></script>
 {block name="foot"}{/block}
 </body>
 </html>

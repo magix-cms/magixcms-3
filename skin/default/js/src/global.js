@@ -2,9 +2,9 @@
  * MAGIX CMS
  * @copyright  MAGIX CMS Copyright (c) 2010 Gerits Aurelien,
  * http://www.magix-cms.com, magix-cms.com
- * @license     Dual licensed under the MIT or GPL Version 3 licenses.
- * @version     1.0
- * @author      Salvatore Di Salvo <disalvo.infographiste@gmail.com>
+ * @license Dual licensed under the MIT or GPL Version 3 licenses.
+ * @version 1.0
+ * @author Salvatore Di Salvo <disalvo.infographiste@gmail.com>
  */
 
 // Creare's 'Implied Consent' EU Cookie Law Banner v:2.4
@@ -137,16 +137,6 @@ const C = {
                 '<i class="material-icons ico ico-keyboard_arrow_right" aria-hidden="true">keyboard_arrow_right</i>'
             ]
         };
-        if($(".owl-slideshow").length > 0 && $.fn.owlCarousel !== undefined) {
-            $(".owl-slideshow > .owl-carousel").owlCarousel(Object.assign({},owlOptions,{
-                items: 1,
-                margin: 0,
-                dots: true,
-                animateOut: 'fadeOut',
-                dotsContainer: '.owl-slideshow-dots',
-                navContainer: '.owl-slideshow-nav'
-            }));
-        }
         if($(".thumbs").length > 0 && $.fn.owlCarousel !== undefined) {
             $(".thumbs").owlCarousel(Object.assign({},owlOptions,{
                 margin: 5,
@@ -159,90 +149,21 @@ const C = {
                 return false;
             });
         }
-        // *** Owl Carousel in plugins
-        // *** Uncomment this block if you're using the mainsectors plugin
-        /*if($(".owl-cat").length > 0 && $.fn.owlCarousel !== undefined) {
-            $(".owl-cat").owlCarousel(Object.assign({},owlOptions,{
-                responsive:{
-                    0:{
-                        items:1,
-                        margin: 0
-                    },
-                    480:{
-                        items:2,
-                        margin: 0
-                    },
-                    768:{
-                        items:2,
-                        margin: 30
-                    },
-                    992:{
-                        items:3,
-                        margin: 30
-                    }
-                }
-            }));
-        }*/
-        // *** Uncomment this block if you're using the homecatalog plugin
-        /*if($(".owl-products").length > 0 && $.fn.owlCarousel !== undefined) {
-            $(".owl-products").owlCarousel(Object.assign({},owlOptions,{
-                responsive:{
-                    0:{
-                        items:1,
-                        margin: 0
-                    },
-                    480:{
-                        items:2,
-                        margin: 0
-                    },
-                    768:{
-                        items:2,
-                        margin: 30
-                    },
-                    992:{
-                        items:3,
-                        margin: 30
-                    },
-                    1200:{
-                        items:4,
-                        // slideBy:2,
-                        margin: 30
-                    }
-                }
-            }));
-        }*/
-        // *** Uncomment this block if you're using the homebrands plugin
-        /*if($(".owl-brands").length > 0 && $.fn.owlCarousel !== undefined) {
-            $(".owl-brands").owlCarousel(Object.assign({},owlOptions,{
+        if($(".owl-slideshow").length > 0 && $.fn.owlCarousel !== undefined) {
+            $(".owl-slideshow > .owl-carousel").owlCarousel(Object.assign({},owlOptions,{
+                items: 1,
                 margin: 0,
                 dots: true,
-                nav: false,
+                dotsData: true,
                 autoplay: true,
                 autoplayHoverPause: true,
                 autoplayTimeout: 5000,
-                responsive:{
-                    0:{
-                        items:1,
-                        margin: 0
-                    },
-                    480:{
-                        items:2,
-                        margin: 0
-                    },
-                    768:{
-                        items:3,
-                        margin: 30
-                    },
-                    992:{
-                        items:5,
-                        margin: 30
-                    },
-                    1200:{
-                        items:6,
-                        margin: 30
-                    }
-                }
+                animateOut: 'fadeOut',
+                dotsContainer: '.owl-slideshow-dots',
+                navContainer: '.owl-slideshow-nav'
             }));
-        }*/
+        }
+        // *** Owl Carousel in plugins
+        // *** Add here the content of the public.js file of the plugins using owl-carousel
     });
 }(jQuery);

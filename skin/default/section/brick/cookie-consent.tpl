@@ -1,6 +1,7 @@
 <div id="cookies" class="fade in hide" role="alert">
     <button type="button" class="btn btn-box btn-invert-white pull-right" onclick="C.createCookie(C.cookieName, C.cookieValue, C.cookieDuration)">{#close_cookie#|ucfirst}</button>
     <p>
-        <i class="material-icons">info_outline</i> {#cookie_text#} <a href="{#cookie_page#}" class="targetblank bold-link">{#cookie_read_page#|ucfirst}</a>
+        {capture name="cookieLink"}<a href="{#cookie_page#}" class="targetblank bold-link">{#cookie_read_page#|ucfirst}</a>{/capture}
+        <i class="material-icons ico ico-info_outline">{*info_outline*}</i> {#cookie_text#|sprintf:$smarty.capture.cookieLink}
     </p>
 </div>

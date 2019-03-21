@@ -20,7 +20,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css mobile.less" />
+    <option name="arguments" value="--glob --clean-css mobile.less" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -46,7 +46,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css tablet.less" />
+    <option name="arguments" value="--glob --clean-css tablet.less" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -72,7 +72,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css desktop.less" />
+    <option name="arguments" value="--glob --clean-css desktop.less" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -118,7 +118,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css $FileName$" />
+    <option name="arguments" value="--glob --clean-css $FileName$" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -164,7 +164,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--clean-css $FileDir$/$FileName$" />
+    <option name="arguments" value="--glob --clean-css $FileDir$/$FileName$" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -190,7 +190,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css mobile.less" />
+    <option name="arguments" value="--glob --clean-css mobile.less" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -216,7 +216,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css tablet.less" />
+    <option name="arguments" value="--glob --clean-css tablet.less" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -242,7 +242,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css desktop.less" />
+    <option name="arguments" value="--glob --clean-css desktop.less" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />

@@ -4,7 +4,7 @@
 	.owl-slideshow-nav {
 		-webkit-tap-highlight-color: transparent;
 		position: absolute;
-		bottom: 25px;
+		bottom: 3%;
 		justify-content: center;
 		align-items: center;
 		width: 100%;
@@ -59,6 +59,10 @@
 					display: block;
 					-webkit-backface-visibility: visible;
 					border-radius: 100%;
+
+					> span {
+						.sr-only();
+					}
 				}
 
 				&.active,

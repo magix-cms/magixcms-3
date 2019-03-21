@@ -1,4 +1,4 @@
-<div id="block-last-news" class="col block">
+<div id="block-last-news" class="col-12 col-sm block">
     {widget_news_data
         conf =[
             'context' =>  'last-news',

@@ -1,6 +1,6 @@
 // Compiler options
 @import (reference) "mixins/compiler";
-@import "plugins/font-awesome/_variables";
+@import "../../font-awesome/less/_variables";
 
 // Core variables and mixins
 @import (reference) "../../bootstrap/less/variables";
@@ -22,7 +22,8 @@
 //@import "../../bootstrap/less/glyphicons";
 
 // Core CSS
-@import "../../bootstrap/less/scaffolding";
+//@import "../../bootstrap/less/scaffolding";
+@import "mixins/scaffolding";
 @import "../../bootstrap/less/type";
 //@import "../../bootstrap/less/code";
 //@import "../../bootstrap/less/grid";
@@ -68,9 +69,9 @@
 @import "mixins/responsive-utilities";
 
 // Custom Mixins
+@import (reference) "mixins/functions";
 @import (reference) "mixins/media-queries";
 @import (reference) "mixins/vendor-prefixes";
-@import "mixins/responsive-utilities";
 @import "mixins/sizes";
 @import "mixins/fonts";
 @import (reference) "mixins/type-mixins";
@@ -84,37 +85,35 @@
 //@import "mixins/media";
 
 // Plugins
-@import "plugins/featherlight/featherlight";
-@import "plugins/featherlight/featherlight-gallery";
-@import "plugins/owl-carousel/owl.carousel.less";
-@import "plugins/owl-carousel/owl.theme.slideshow.less";
-@import "plugins/owl-carousel/owl.theme.square.less";
-@import "plugins/font-awesome/fontawesome";
-@import "plugins/font-awesome/brands";
-@import "plugins/font-awesome/regular";
-@import "plugins/font-awesome/solid";
+@import "../../featherlight/less/featherlight";
+@import "../../featherlight/less/featherlight-gallery";
+@import "../../owl-carousel/less/owl.carousel.less";
+@import "../../owl-carousel/less/owl.theme.slideshow.less";
+//@import "../../owl-carousel/less/owl.theme.square.less";
+@import "../../font-awesome/less/fontawesome";
+@import "../../font-awesome/less/brands";
+@import "../../font-awesome/less/regular";
+@import "../../font-awesome/less/solid";
 //@import "mixins/carousel";
 
 // Theme Rules
-@import "global/global";
-@import "global/header";
-@import "global/breadcrumbs";
-@import "global/menu";
-@import "global/share";
-//@import "global/sidebar";
-@import "global/footer";
-@import "global/affix";
-@import "global/block";
-@import "theme/home";
-@import "theme/cms";
-@import "theme/product";
-@import "theme/gallery";
-@import "theme/news";
-@import "theme/contact";
-@import "theme/error";
+// --- Global
+@import "mobile/global";
+@import "mobile/header";
+@import "mobile/breadcrumbs";
+@import "mobile/menu";
+@import "mobile/share";
+//@import "mobile/sidebar";
+@import "mobile/footer";
+@import "mobile/affix";
+@import "mobile/block";
+// --- Module
+@import "mobile/home";
+@import "mobile/cms";
+@import "mobile/product";
+@import "mobile/gallery";
+@import "mobile/news";
+@import "mobile/error";
 
 // Magix Plugins
-@import (optional) "theme/search";
-@import (optional) "theme/gmap";
-@import (optional) "theme/advantage";
-@import (optional) "theme/homebrands";
+@import "plugins/**";

@@ -11,7 +11,7 @@
 }
 
 // Normalize link style for all state
-.normalize-link(@color: @main-color, @hover-color: same, @decoration: underline, @weight: 400, @font: @font-family-sans-serif) {
+.normalize-link(@color: @main-color, @hover-color: same, @decoration: underline, @weight: @font-weight, @font: @font-family-sans-serif) {
 	a, a:visited, a:active {
 		font-family: @font;
 		font-weight: @weight;
@@ -76,31 +76,43 @@
 }
 
 // --- Main title page
-.main-title(@color: @text-color, @brd: 1px solid #eee) {
+.main-title(@color: same, @brd: 1px solid #eee) {
 	margin: 8px auto 25px;
 	padding: 0 0 15px;
-	color: @color;
 	border-bottom: @brd;
+
+	.hcolor(@hc) when (@color = same) {
+		color: @text-color;
+	}
+	.hcolor(@hc) {
+		color: @hc;
+	}
+	.hcolor(@color);
 }
 
 // Normalize content
-.normalize-content(@color: @main-color) {
+.normalize-content(@color: @main-color, @headingc: same, @headingb: 1px solid #eee) {
 	article {
 		// Normalize the main title of the content
 		> h1:first-child {
-			.main-title;
+			.main-title(@headingc, @headingb);
 		}
 		// Normalize images in content
 		img {
 			&.float-right {
 				float: right;
-				margin: 0 0 1rem 1rem;
 			}
 			&.float-left {
 				float: left;
-				margin: 0 1rem 1rem 0;
 			}
 			@media (min-width: @screen-sm-min) {
+				&.float-right {
+					margin: 0 0 1rem 1rem;
+				}
+				&.float-left {
+					margin: 0 1rem 1rem 0;
+				}
+
 				&.float-right,
 				&.float-left {
 					max-width: 50%;
@@ -108,15 +120,14 @@
 			}
 		}
 
-		@media (max-width: @screen-sm-max) {
-			p > img {
-				margin: 1rem 0 1rem 1rem;
-			}
-
-			> img {
-				margin: 1rem 0 1rem 1rem;
-			}
+		p > img {
+			margin: 1rem;
 		}
+
+		> img {
+			margin: 1rem;
+		}
+
 		// Normalize small for datetime
 		small.datePublished {
 			display: block;
@@ -136,58 +147,15 @@
 // --- Responsive text sizes
 .adaptive-font-size() {
 	// --- Small Screen
-	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-		h1 { font-size: extract(@font-size-sm, 1); }
-		h2 { font-size: extract(@font-size-sm, 2); }
-		h3 { font-size: extract(@font-size-sm, 3); }
+	@media (min-width: @screen-sm-min) and (max-width: @screen-lg-max) {
+		body {
+			font-size: @font-size-base-md;
+		}
 	}
 	// --- Medium Screen
-	@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-		h1 { font-size: extract(@font-size-md, 1); }
-		h2 { font-size: extract(@font-size-md, 2); }
-		h3 { font-size: extract(@font-size-md, 3); }
-	}
-	// --- Large Screen
-	@media (min-width: @screen-lg-min) {
-		h1 { font-size: extract(@font-size-lg, 1); }
-		h2 { font-size: extract(@font-size-lg, 2); }
-		h3 { font-size: extract(@font-size-lg, 3); }
-		h4 { font-size: extract(@font-size-lg, 4); }
-	}
-
-	// These declarations are kept separate from and placed after
-	// the previous tag-based declarations so that the classes beat the tags in
-	// the CSS cascade, and thus <h1 class="h2"> will be styled like an h2.
-	// --- Small Screen
-	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-		.h1 { font-size: extract(@font-size-sm, 1); }
-		.h2 { font-size: extract(@font-size-sm, 2); }
-		.h3 { font-size: extract(@font-size-sm, 3); }
-	}
-	// --- Medium Screen
-	@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-		.h1 { font-size: extract(@font-size-md, 1); }
-		.h2 { font-size: extract(@font-size-md, 2); }
-		.h3 { font-size: extract(@font-size-md, 3); }
-	}
-	// --- Large Screen
-	@media (min-width: @screen-lg-min) {
-		.h1 { font-size: extract(@font-size-lg, 1); }
-		.h2 { font-size: extract(@font-size-lg, 2); }
-		.h3 { font-size: extract(@font-size-lg, 3); }
-		.h4 { font-size: extract(@font-size-lg, 4); }
-	}
-
-	// --- Small Screen
-	@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-		.lead { font-size: @lead-font-size * 1.03030303030303; } // - 1.0625 rem
-	}
-	// --- Medium Screen
-	@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-		.lead { font-size: @lead-font-size * 1.090909090909091; } // - 1.125 rem
-	}
-	// --- Large Screen
-	@media (min-width: @screen-lg-min) {
-		.lead { font-size: @lead-font-size * 1.151515151515152; } // - 1.1875 rem
+	@media (min-width: @screen-xl-min) {
+		body {
+			font-size: @font-size-base-lg;
+		}
 	}
 }
