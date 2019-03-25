@@ -11,7 +11,7 @@
         </header>{/strip}{/if}
         <nav id="{if $main}main{else}side{/if}-menu" class="menu menu-tabs-arrow menubar" itemprop="hasPart" itemscope itemtype="http://schema.org/SiteNavigationElement">
             <a href="#content" class="sr-only skip-menu">{#skipMenu#}</a>
-            <ul id="menul" class="list-unstyled">
+            <ul{if $mobile} id="menul"{/if} class="list-unstyled">
                 {include file="section/menu/loop/dropdown.tpl" menuData=$links mobile=$mobile}
             </ul>
         </nav>

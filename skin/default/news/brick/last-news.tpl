@@ -6,8 +6,8 @@ conf = [
 assign="news"
 }
 {if $news}
-    <section id="last-news" class="container-fluid">
-        <div class="news-list row">
+    <section id="last-news" class="container-fluid" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
+        <div class="news-list row" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
             <div class="container">
                 <h3>{#last_news#|ucfirst}</h3>
                 <div class="tile-list row row-center">
