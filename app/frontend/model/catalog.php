@@ -152,11 +152,14 @@ class frontend_model_catalog extends frontend_db_catalog {
                                 $data['imgs'][$item]['img']['caption'] = $val['caption_img'];
                                 $data['imgs'][$item]['img']['name'] = $val['name_img'];
                                 foreach ($fetchConfig as $key => $value) {
-                                    $data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+									$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+									$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
                                     $data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-									$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
-									$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
 									$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
+									//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
+									$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+									//$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
+									$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
                                     $data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
                                 }
                                 $data['imgs'][$item]['default'] = $val['default_img'];
@@ -177,10 +180,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $filename = $pathinfo['filename'];
 
                         foreach ($fetchConfig as $key => $value) {
+							$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img']);
                             $data['img'][$value['type_img']]['src'] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img'];
                             $data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-							$data['img'][$value['type_img']]['w'] = $value['width_img'];
-							$data['img'][$value['type_img']]['h'] = $value['height_img'];
+							//$data['img'][$value['type_img']]['w'] = $value['width_img'];
+							$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+							//$data['img'][$value['type_img']]['h'] = $value['height_img'];
+							$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
 							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                             $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img']);
                         }
@@ -235,10 +241,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                             $filename = $pathinfo['filename'];
 
                             foreach ($fetchConfig as $keyConfig => $valueConfig) {
+								$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img']);
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['src'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img'];
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['src_webp'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $filename. '.' .$extwebp;
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $valueConfig['width_img'];
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $valueConfig['height_img'];
+								//$data['img'][$value['type_img']]['w'] = $value['width_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $valueConfig['resize_img'] === 'basic' ? $imginfo['width'] : $valueConfig['width_img'];
+								//$data['img'][$value['type_img']]['h'] = $value['height_img'];
+								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $valueConfig['resize_img'] === 'basic' ? $imginfo['height'] : $valueConfig['height_img'];
 								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $valueConfig['resize_img'];
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img']);
                             }
@@ -292,10 +301,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                     $filename = $pathinfo['filename'];
 
                     foreach ($fetchConfig as $key => $value) {
+						$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat']);
                         $data['img'][$value['type_img']]['src'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat'];
                         $data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-                        $data['img'][$value['type_img']]['w'] = $value['width_img'];
-                        $data['img'][$value['type_img']]['h'] = $value['height_img'];
+						//$data['img'][$value['type_img']]['w'] = $value['width_img'];
+						$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+						//$data['img'][$value['type_img']]['h'] = $value['height_img'];
+						$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
                         $data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                         $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat']);
                     }

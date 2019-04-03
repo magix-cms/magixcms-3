@@ -90,7 +90,7 @@ class frontend_model_mail {
 			}
 			else {
 				if($this->lang) {
-					$noreply = '';
+					$noreply = $sender;
 
 					if($sender === '') {
 						$allowed_hosts = array_map(function($dom) { return $dom['url_domain']; },$this->modelDomain->getValidDomains());
@@ -102,10 +102,6 @@ class frontend_model_mail {
 							$noreply = 'noreply@'.str_replace('www.','',$_SERVER['HTTP_HOST']);
 						}
 					}
-					else {
-						$noreply = $sender;
-					}
-
 
 					if(!empty($noreply)) {
 

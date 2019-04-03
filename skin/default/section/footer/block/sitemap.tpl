@@ -1,4 +1,4 @@
-<div id="block-sitemap" class="col-6 col-sm block">
+<div id="block-sitemap" class="col-6 col-md block">
     <h4><a href="{$url}/{$lang}/" title="">{#site_navigation#|ucfirst}</a></h4>
     <ul class="link-list list-unstyled">
         {*<li>

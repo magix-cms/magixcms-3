@@ -82,7 +82,7 @@
 	background-color: @menu-bg;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	//justify-content: space-between;
 	outline: none;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -96,6 +96,7 @@
 		padding: 15px;
 		color: #fff;
 		height: @headerH;
+		margin-bottom: 15px;
 
 		button {
 			margin: 0;
@@ -112,9 +113,9 @@
 		}
 	}
 
-	/*nav {
+	nav {
 		flex: 1 0 auto;
-	}*/
+	}
 
 	/*footer {
 		padding: 20px 0;
@@ -194,9 +195,16 @@
 		}
 
 		li {
-			a {
-				padding: 7px 15px 7px 25px;
-				font-size: .89rem;
+			@media (max-width: @screen-md-max) {
+				a {
+					padding: 7px 15px 7px 25px;
+					font-size: .89rem;
+				}
+			}
+			@media (min-width: @screen-lg-min) {
+				a {
+					font-size: 1rem;
+				}
 			}
 
 			.navbar-toggle {

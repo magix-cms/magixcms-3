@@ -15,12 +15,11 @@
                     <h2>{#pn_contact_forms#|ucfirst}</h2>
                     <p>{#pn_questions#|ucfirst}</p>
                     <p>{#pn_fill_form#|ucfirst}</p>
-                    <p class="help-block">{#contact_fiels_resquest#|ucfirst}</p>
                     {include file="contact/form/contact.tpl"}
                 </section>
-                <section id="aside" class="col-12 col-md-4 col-lg-5">
+                <aside id="aside" class="col-12 col-md-4 col-lg-5">
                     {include file="contact/block/map.tpl"}
-                </section>
+                </aside>
             </div>
         {/block}
     </article>

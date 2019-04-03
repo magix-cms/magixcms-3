@@ -67,7 +67,8 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
     * Requires: [globby](https://www.npmjs.com/package/globby) >= 9.1.0
  * [less-plugin-clean-css](https://github.com/less/less-plugin-clean-css) >= 1.5.1
  * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21
- * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9
+ * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 
+ * [terser](https://github.com/terser-js/terser) >= 3.17.0 (ou terser-js à la place de Uglify)
 #### Script Plugins
 <pre>
 file:plugins/*/js/src/*.js

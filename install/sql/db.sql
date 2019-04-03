@@ -34,7 +34,8 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_seo', 'seo'),
 (NULL, 'backend_controller_theme', 'theme'),
 (NULL, 'backend_controller_plugins', 'plugins'),
-(NULL, 'backend_controller_translate', 'translate');
+(NULL, 'backend_controller_translate', 'translate')
+(NULL, 'backend_controller_logo', 'logo');
 
 CREATE TABLE IF NOT EXISTS `mc_admin_access` (
   `id_access` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -68,7 +69,8 @@ INSERT INTO `mc_admin_access` (`id_access`, `id_role`, `id_module`, `view`, `app
 (NULL, 1, 17, 1, 1, 1, 1, 1),
 (NULL, 1, 18, 1, 1, 1, 1, 1),
 (NULL, 1, 19, 1, 1, 1, 1, 1),
-(NULL, 1, 20, 1, 1, 1, 1, 1);
+(NULL, 1, 20, 1, 1, 1, 1, 1),
+(NULL, 1, 21, 1, 1, 1, 1, 1);
 
 CREATE TABLE IF NOT EXISTS `mc_admin_employee` (
   `id_admin` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -120,6 +122,27 @@ INSERT INTO `mc_config` (`idconfig`, `attr_name`, `status`) VALUES
 (NULL, 'news', 1),
 (NULL, 'catalog', 1),
 (NULL, 'about', 1);
+
+CREATE TABLE IF NOT EXISTS `mc_logo` (
+  `id_logo` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `img_logo` varchar(125) DEFAULT NULL,
+  `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_logo`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `mc_logo_content` (
+  `id_content` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_logo` smallint(5) UNSIGNED NOT NULL,
+  `id_lang` smallint(3) UNSIGNED NOT NULL DEFAULT '1',
+  `alt_logo` varchar(70) DEFAULT NULL,
+  `title_logo` varchar(70) DEFAULT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_content`),
+  KEY `id_logo` (`id_logo`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mc_logo_content`
+  ADD CONSTRAINT `mc_logo_content_ibfk_1` FOREIGN KEY (`id_logo`) REFERENCES `mc_logo` (`id_logo`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_country` (
   `id_country` int(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -213,7 +236,7 @@ ALTER TABLE `mc_domain_language`
 
 CREATE TABLE IF NOT EXISTS `mc_config_img` (
   `id_config_img` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `module_img` enum('catalog','news','pages','plugins') NOT NULL,
+  `module_img` enum('catalog','news','pages','logo','plugins') NOT NULL,
   `attribute_img` varchar(40) NOT NULL,
   `width_img` decimal(4,0) NOT NULL,
   `height_img` decimal(4,0) NOT NULL,
@@ -234,7 +257,10 @@ INSERT INTO `mc_config_img` (`id_config_img`, `module_img`, `attribute_img`, `wi
 (NULL, 'catalog', 'category', '1000', '1000', 'large', 'basic'),
 (NULL, 'catalog', 'product', '250', '155', 'small', 'adaptive'),
 (NULL, 'catalog', 'product', '500', '309', 'medium', 'adaptive'),
-(NULL, 'catalog', 'product', '1000', '1000', 'large', 'basic');
+(NULL, 'catalog', 'product', '1000', '1000', 'large', 'basic'),
+(NULL, 'logo', 'logo', '500', '121', 'large', 'adaptive'),
+(NULL, 'logo', 'logo', '480', '105', 'medium', 'adaptive'),
+(NULL, 'logo', 'logo', '229', '50', 'small', 'adaptive');
 
 CREATE TABLE IF NOT EXISTS `mc_home_page` (
   `id_page` smallint(3) unsigned NOT NULL AUTO_INCREMENT,

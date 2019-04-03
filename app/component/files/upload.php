@@ -298,10 +298,10 @@ class component_files_upload{
                     // Check if the image to rename exists and if there is not already an image with this name and extension
                     $filesPath = (string) $dirImgArray;
                     if(!file_exists($filesPath.$data['name'].'.'.$ext)
-                        && file_exists($filesPath.$data['edit'])) {
+                        && file_exists($filesPath.$filename.'.'.$ext)) {
                         $makeFiles->rename(
                             array(
-                                'origin' => $filesPath.$data['edit'],
+                                'origin' => $filesPath.$filename.'.'.$ext,
                                 'target' => $filesPath.$data['name'].'.'.$ext
                             )
                         );
@@ -313,31 +313,32 @@ class component_files_upload{
 					foreach ($fetchConfig as $key => $value) {
 						$filesPath = is_array($dirImgArray) ? $dirImgArray[$key] : $dirImgArray;
 						$prefix = (array_key_exists('prefix', $data) && is_array($data['prefix'])) ? $data['prefix'][$key] : '';
+                        $suffix = (array_key_exists('suffix', $data) && is_array($data['suffix'])) ? $data['suffix'][$key] : '';
 
 						// Check if the original image still exists:
 						// - if it is, the renaming has failed, the process should not continue
 						// - if not, the image has been correctly renamed or the image has never exist, the process can continue
 						if(!file_exists($filesPath.$data['edit'])) {
 							// Check if the image to rename exists and if there is not already an image with this name and extension
-							if (file_exists($filesPath.$prefix.$data['edit'])
-								&& !file_exists($filesPath.$prefix.$data['name'].'.'.$ext)) {
+							if (file_exists($filesPath.$prefix.$filename.$suffix.'.'.$ext)
+								&& !file_exists($filesPath.$prefix.$data['name'].$suffix.'.'.$ext)) {
 
 							    $makeFiles->rename(
 									array(
-										'origin' => $filesPath.$prefix.$data['edit'],
-										'target' => $filesPath.$prefix.$data['name'].'.'.$ext
+										'origin' => $filesPath.$prefix.$filename.$suffix.'.'.$ext,
+										'target' => $filesPath.$prefix.$data['name'].$suffix.'.'.$ext
 									)
 								);
 
                                 // Check if webp is defined
                                 if(!isset($data['webp']) || $data['webp'] != false){
                                     // Check if the image to rename exists and if there is not already an image with this name and webp extension
-                                    if(file_exists($filesPath.$prefix.$filename.'.'.$extwebp)
-                                        && !file_exists($filesPath.$prefix.$data['name'].'.'.$extwebp)){
+                                    if(file_exists($filesPath.$prefix.$filename.$suffix.'.'.$extwebp)
+                                        && !file_exists($filesPath.$prefix.$data['name'].$suffix.'.'.$extwebp)){
                                         $makeFiles->rename(
                                             array(
-                                                'origin' => $filesPath.$prefix.$filename.'.'.$extwebp,
-                                                'target' => $filesPath.$prefix.$data['name'].'.'.$extwebp
+                                                'origin' => $filesPath.$prefix.$filename.$suffix.'.'.$extwebp,
+                                                'target' => $filesPath.$prefix.$data['name'].$suffix.'.'.$extwebp
                                             )
                                         );
                                     }
@@ -655,6 +656,7 @@ class component_files_upload{
                 'name'              => filter_rsa::randMicroUI(),
                 'edit'              => $data['img'],
                 'prefix'            => array('l_','m_','s_'),
+                'suffix'            => array('@500','@480','@300'),
                 'module_img'        => 'pages',
                 'attribute_img'     => 'page',
                 'original_remove'   => false,
@@ -687,11 +689,20 @@ class component_files_upload{
                         array('imgBasePath'=>true)
                     )
                 );
-				$fetchConfig = $this->config->fetchData(array('context'=>'all','type'=>'imgSize'),array('module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img']));
+				$fetchConfig = $this->config->fetchData(
+				    array(
+				        'context'=>'all',
+                        'type'=>'imgSize'
+                    ),
+                    array(
+                        'module_img'=>$data['module_img'],
+                        'attribute_img'=>$data['attribute_img']
+                    )
+                );
                 //print_r($fetchConfig);
                 if(!empty($this->$img)){
                     /**
-                     * Envoi une image dans le dossier "racine" catalogimg
+                     * Envoi une image dans le dossier "racine" du module
                      */
                     $resultUpload = $this->uploadImg(
                         $img,
@@ -723,6 +734,11 @@ class component_files_upload{
 							if (!empty($data['edit'])) {
 								if (is_array($imgCollection)) {
 									$dirImgArray = $this->dirImgUploadCollection($imgCollection);
+									//print_r($dirImgArray);
+                                    $imgData = pathinfo($dirImgArray.$data['edit']);
+                                    $filename = $imgData['filename'];
+                                    $mimeContent = $this->mimeContentType(array('filename'=>$dirImgArray.$data['edit']));
+                                    //print $filename.'.'.$mimeContent['type'];
 									foreach ($fetchConfig as $key => $value) {
 										if (is_array($dirImgArray)) {
 											$filesPath = $dirImgArray[$key];
@@ -738,12 +754,30 @@ class component_files_upload{
 										} else {
 											$prefix = '';
 										}
-										if (file_exists($filesPath . $prefix . $data['edit'])) {
+
+                                        if (array_key_exists('suffix', $data)) {
+                                            if (is_array($data['suffix'])) {
+                                                $suffix = $data['suffix'][$key];
+                                            } else {
+                                                $suffix = '';
+                                            }
+                                        } else {
+                                            $suffix = '';
+                                        }
+
+										/*if (file_exists($filesPath . $prefix . $data['edit'])) {
 											$makeFiles->remove(array($filesPath . $prefix . $data['edit']));
 										}
 										if (file_exists($filesPath . $data['edit'])) {
 											$makeFiles->remove(array($filesPath . $data['edit']));
-										}
+										}*/
+
+                                        if (file_exists($filesPath . $prefix . $filename. $suffix.'.'.$mimeContent['type'])) {
+                                            $makeFiles->remove(array($filesPath . $prefix . $filename. $suffix.'.'.$mimeContent['type']));
+                                        }
+                                        if (file_exists($filesPath . $filename.'.'.$mimeContent['type'])) {
+                                            $makeFiles->remove(array($filesPath . $filename.'.'.$mimeContent['type']));
+                                        }
 									}
 								}
 							}
@@ -791,33 +825,43 @@ class component_files_upload{
                                             $prefix = '';
                                         }
 
+                                        if (array_key_exists('suffix', $data)) {
+                                            if (is_array($data['suffix'])) {
+                                                $suffix = $data['suffix'][$key];
+                                            } else {
+                                                $suffix = '';
+                                            }
+                                        } else {
+                                            $suffix = '';
+                                        }
+
                                         switch ($value['resize_img']) {
                                             case 'basic':
                                                 $thumb->resize($value['width_img'], $value['height_img'], function ($constraint) {
                                                     $constraint->aspectRatio();
                                                     $constraint->upsize();
                                                 });
-                                                $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'],80);
+                                                $thumb->save($filesPath . $prefix . $data['name']. $suffix . '.'.$resultUpload['mimecontent']['type'],80);
                                                 if (  function_exists('imagewebp')) {
                                                     // Check if webp is defined
                                                     if (!isset($data['webp']) || $data['webp'] != false) {
-                                                        $thumb->save($filesPath . $prefix . $data['name'] . '.' . $extwebp);
+                                                        $thumb->save($filesPath . $prefix . $data['name'] . $suffix. '.' . $extwebp);
                                                     }
                                                 }
                                                 break;
                                             case 'adaptive':
                                                 //$thumb->adaptiveResize($value['width_img'], $value['height_img']);
                                                 $thumb->fit($value['width_img'], $value['height_img']);
-                                                $thumb->save($filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'],80);
+                                                $thumb->save($filesPath . $prefix . $data['name']. $suffix . '.'.$resultUpload['mimecontent']['type'],80);
                                                 if (  function_exists('imagewebp')) {
                                                     // Check if webp is defined
                                                     if (!isset($data['webp']) || $data['webp'] != false) {
-                                                        $thumb->save($filesPath . $prefix . $data['name'] . '.' . $extwebp);
+                                                        $thumb->save($filesPath . $prefix . $data['name'] . $suffix. '.' . $extwebp);
                                                     }
                                                 }
                                                 break;
                                         }
-                                        $filesPathDebug[] = $filesPath . $prefix . $data['name'] . '.'.$resultUpload['mimecontent']['type'];
+                                        $filesPathDebug[] = $filesPath . $prefix . $data['name']. $suffix . '.'.$resultUpload['mimecontent']['type'];
                                     }
 
                                     $makeFiles->rename(

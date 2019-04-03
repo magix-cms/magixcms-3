@@ -81,11 +81,11 @@
 	padding: 0 0 15px;
 	border-bottom: @brd;
 
-	.hcolor(@hc) when (@color = same) {
-		color: @text-color;
-	}
-	.hcolor(@hc) {
+	.hcolor(@hc) when not (@hc = same) {
 		color: @hc;
+	}
+	.hcolor(@hc) when (@hc = same) {
+		color: @text-color;
 	}
 	.hcolor(@color);
 }
@@ -138,9 +138,9 @@
 			margin-bottom: 30px;
 		}
 		// Normalize heading in content
-		.direct-headings ({
+		/*.direct-headings ({
 			color: @text-color;
-		});
+		});*/
 	}
 }
 

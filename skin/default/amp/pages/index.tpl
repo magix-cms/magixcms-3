@@ -1,8 +1,7 @@
 {extends file="amp/layout.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/pages.min.css"}{/block}
-{block name='body:id'}pages{/block}
-{block name="title"}{if $pages.seoTitle}{$pages.seoTitle}{else}{$pages.title}{/if}{/block}
-{block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|strip_tags|truncate:100:'...'}{/if}{/block}
+{block name="title"}{$pages.seo.title}{/block}
+{block name="description"}{$pages.seo.description}{/block}
 {block name="amp-script"}
     {if $pages.img.large.src}
         <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
@@ -12,20 +11,33 @@
     {/if}
 {/block}
 {block name='article:content'}
-    <h1 itemprop="name">{$pages.title}</h1>
+    <h1 itemprop="name">{$pages.name}</h1>
     <div class="text" itemprop="text">
         {if !empty($pages.img.large.src)}
             <figure>
                 <amp-img on="tap:lightbox1"
                          role="button"
                          tabindex="0"
-                         src="{$pages.img.large.src}"
-                         alt="{$pages.title}"
-                         title="{$pages.title}"
-                         layout="responsive"
-                         width="{$pages.img.large['w']}"
-                         height="{$pages.img.large['h']}"></amp-img>
-                <figcaption class="hidden">{$pages.title}</figcaption>
+                         alt="{$pages.img.alt}"
+                         title="{$pages.img.title}"
+                         src="{$pages.img.medium['src_webp']}"
+                         width="{$pages.img.medium['w']}"
+                         height="{$pages.img.medium['h']}"
+                         layout="responsive">
+                    <amp-img on="tap:lightbox1"
+                             role="button"
+                             tabindex="0"
+                             alt="{$pages.img.alt}"
+                             fallback
+                             title="{$pages.img.title}"
+                             src="{$pages.img.medium['src']}"
+                             width="{$pages.img.medium['w']}"
+                             height="{$pages.img.medium['h']}"
+                             layout="responsive">
+
+                    </amp-img>
+                </amp-img>
+                <figcaption class="hidden">{$pages.img.caption}</figcaption>
             </figure>
             <amp-image-lightbox id="lightbox1" layout="nodisplay"></amp-image-lightbox>
         {/if}

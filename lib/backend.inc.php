@@ -49,7 +49,13 @@ if (file_exists($bootstrap)){
 }else{
     throw new Exception('Boostrap is not exist');
 }
-
+$phpico = __DIR__. '/phpico/class-php-ico.php';
+if (file_exists($phpico)) {
+    require $phpico;
+}else{
+    throw new Exception('Error load library phpico');
+    exit;
+}
 $loader = new autoloader();
 $loader->addPrefixes(array(
 	'component' => '../app',

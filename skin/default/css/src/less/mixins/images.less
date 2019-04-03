@@ -7,10 +7,14 @@
 }
 
 .img-float{
-    margin: 0 10px 10px;
+    margin: 0 0 10px;
+    @media (min-width: @screen-xs-min) {
+        margin-right: 10px;
+        margin-left: 10px;
 
-    &.pull-right { margin-right: 0; }
-    &.pull-left { margin-left: 0; }
+        &.pull-right { margin-right: 0; }
+        &.pull-left { margin-left: 0; }
+    }
 }
 
 figure > figcaption {

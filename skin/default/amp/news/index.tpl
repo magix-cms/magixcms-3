@@ -1,8 +1,8 @@
 {extends file="amp/layout.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/news.min.css"}{/block}
 {block name='body:id'}news{/block}
-{block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{#news#}]}{/block}
-{block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{#last_news#}]}{/block}
+{block name="title"}{$rootSeo['title']}{/block}
+{block name="description"}{$rootSeo['description']}{/block}
 {block name="webType"}CollectionPage{/block}
 {block name='article'}
     <article id="article" class="container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Periodical">
@@ -16,6 +16,7 @@
             </h1>
             {/strip}
             <div class="row">
+                {if !empty($tags)}
                 <div class="col-6">
                     <p class="label">{#news_by_theme#|ucfirst}</p>
                     <div class="dropdown-select">
@@ -32,13 +33,7 @@
                                     <div>
                                         <ul class="list-unstyled">
                                             {foreach $tags as $tag}
-                                                <li{if $tag.id eq $smarty.get.tag} class="active"{/if}>
-                                                    {if $tag.id eq $smarty.get.tag}
-                                                        {$tag.name}
-                                                    {else}
-                                                        <a href="{$tag.url}">{$tag.name}</a>
-                                                    {/if}
-                                                </li>
+                                                <li{if $tag.id eq $smarty.get.tag} class="active"{/if}>{if $tag.id eq $smarty.get.tag}{$tag.name}{else}<a href="{$tag.url}">{$tag.name}</a>{/if}</li>
                                             {/foreach}
                                         </ul>
                                     </div>
@@ -47,6 +42,8 @@
                         </div>
                     </div>
                 </div>
+                {/if}
+                {if $news}
                 <div class="col-6">
                     <p class="label">{#news_by_date#|ucfirst}</p>
                     <div class="dropdown-select">
@@ -89,6 +86,7 @@
                         </div>
                     </div>
                 </div>
+                {/if}
             </div>
             </header>
             {if $news}

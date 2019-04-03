@@ -10,6 +10,7 @@
         <h1 itemprop="headline">{$news.name}</h1>
         <small>
             <time itemprop="datePublished" datetime="{$news.date.publish}">{$news.date.publish|date_format:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
+            <meta itemprop="dateModified" content="{$news.date.update}">
         </small>
     </header>
 {/block}
@@ -43,7 +44,7 @@
                         {strip}<picture>
                             <!--[if IE 9]><video style="display: none;"><![endif]-->
                             <source type="image/webp" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src_webp']} {$news.img.medium['w']}w">
-                            <source type="{$item.img.medium.ext}" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src']} {$news.img.medium['w']}w">
+                            <source type="{$news.img.medium.ext}" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src']} {$news.img.medium['w']}w">
                             <!--[if IE 9]></video><![endif]-->
                             <img data-src="{$news.img.medium['src']}" width="{$news.img.medium['w']}" height="{$news.img.medium['h']}" alt="{$news.img.alt}" title="{$news.img.title}" class="img-responsive lazyload" />
                             </picture>{/strip}

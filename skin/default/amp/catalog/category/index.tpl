@@ -1,8 +1,8 @@
 {extends file="amp/catalog/index.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/catalog.min.css"}{/block}
 {block name='body:id'}category{/block}
-{block name="title"}{seo_rewrite conf=['level'=>'parent','type'=>'title','default'=>{$cat.name}] parent={$cat.name}}{/block}
-{block name="description"}{seo_rewrite conf=['level'=>'parent','type'=>'description','default'=>{$cat.resume}] parent={$cat.name}}{/block}
+{block name="title"}{$cat.seo.title}{/block}
+{block name="description"}{$cat.seo.description}{/block}
 {block name="amp-script"}
     {if $cat.imgSrc.large}
         <script async custom-element="amp-image-lightbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
@@ -21,13 +21,25 @@
                     <amp-img on="tap:lightbox1"
                              role="button"
                              tabindex="0"
-                             src="{$cat.img.large.src}"
-                             alt="{$cat.title}"
-                             title="{$cat.title}"
-                             layout="responsive"
-                             width="{$cat.img.large['w']}"
-                             height="{$cat.img.large['h']}"></amp-img>
-                    <figcaption class="hidden">{$cat.title}</figcaption>
+                             alt="{$cat.img.alt}"
+                             title="{$cat.img.title}"
+                             src="{$cat.img.medium['src_webp']}"
+                             width="{$cat.img.medium['w']}"
+                             height="{$cat.img.medium['h']}"
+                             layout="responsive">
+                        <amp-img on="tap:lightbox1"
+                                 role="button"
+                                 tabindex="0"
+                                 alt="{$cat.img.alt}"
+                                 fallback
+                                 title="{$cat.img.title}"
+                                 src="{$cat.img.medium['src']}"
+                                 width="{$cat.img.medium['w']}"
+                                 height="{$cat.img.medium['h']}"
+                                 layout="responsive">
+                        </amp-img>
+                    </amp-img>
+                    <figcaption class="hidden">{$cat.img.caption}</figcaption>
                 </figure>
                 <amp-image-lightbox id="lightbox1" layout="nodisplay"></amp-image-lightbox>
                 {/if}

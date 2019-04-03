@@ -15,13 +15,10 @@
     {/if}
 {/foreach}
 {$open_days = ','|implode:$open_days}
-
-<time itemprop="openingHours" datetime="{$open_days} {$open}-{$close}"></time>
-
 <table class="table">
     <thead>
     <tr>
-        <th class="text-center" colspan="3"><i class="material-icons">access_time</i></th>
+        <th class="text-center" colspan="3"><i class="material-icons ico ico-schedule">{*access_time*}</i></th>
         {*<th>{#between#}</th>
         <th>{#and_between#}</th>*}
     </tr>
@@ -30,21 +27,21 @@
     {foreach $companyData.specifications as $day => $specific}
         {$dayOfWeek = 'opening_'|cat:$day}
         {if $specific.open_day}
-            <tr itemprop="openingHoursSpecification" itemscope itemtype="http://schema.org/OpeningHoursSpecification">
-                <td itemprop="dayOfWeek" content="{$day}">{#$dayOfWeek#}</td>
+            <tr>
+                <td>{#$dayOfWeek#}</td>
                 {if $specific.noon_time}
                     <td>
-                        <span itemprop="opens" content="{$specific.open_time}">{$specific.open_time}</span> -
-                        <span itemprop="closes" content="{$specific.noon_start}">{$specific.noon_start}</span>
+                        <span>{$specific.open_time}</span> -
+                        <span>{$specific.noon_start}</span>
                     </td>
                     <td>
-                        <span itemprop="opens" content="{$specific.noon_end}">{$specific.noon_end}</span> -
-                        <span itemprop="closes" content="{$specific.close_time}">{$specific.close_time}</span>
+                        <span>{$specific.noon_end}</span> -
+                        <span>{$specific.close_time}</span>
                     </td>
                 {else}
                     <td>
-                        <span itemprop="opens" content="{$specific.open_time}">{$specific.open_time}</span> -
-                        <span itemprop="closes" content="{$specific.close_time}">{$specific.close_time}</span>
+                        <span>{$specific.open_time}</span> -
+                        <span>{$specific.close_time}</span>
                     </td>
                     <td>
                         -

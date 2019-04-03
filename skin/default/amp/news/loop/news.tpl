@@ -22,12 +22,22 @@
                 <div class="time-figure col-12 col-xs-6">
                     <div>
                         {if $item.img.medium.src}
-                            <amp-img src="{$item.img.medium.src}"
-                                     alt="{$item.title}"
-                                     title="{$item.title}"
-                                     layout="responsive"
+                            <amp-img alt="{$item.img.alt}"
+                                     title="{$item.img.title}"
+                                     src="{$item.img.medium['src_webp']}"
                                      width="{$item.img.medium['w']}"
-                                     height="{$item.img.medium['h']}" itemprop="image"></amp-img>
+                                     height="{$item.img.medium['h']}"
+                                     layout="responsive"
+                                     itemprop="image">
+                                <amp-img alt="{$item.img.alt}"
+                                         fallback
+                                         title="{$item.img.title}"
+                                         src="{$item.img.medium['src']}"
+                                         width="{$item.img.medium['w']}"
+                                         height="{$item.img.medium['h']}"
+                                         layout="responsive">
+                                </amp-img>
+                            </amp-img>
                         {else}
                             <amp-img src="{$item.img.default}"
                                      alt="{$item.title}"
@@ -39,12 +49,8 @@
                     </div>
                 </div>
                 <div itemprop="description" class="desc col-12 col-xs-6">
-                    <h2 itemprop="name" class="h3">{$item.title|ucfirst}</h2>
-                    {if $item.resume}
-                    <p>{$item.resume|truncate:$truncate:'...'}</p>
-                    {elseif $item.content}
-                    <p>{$item.content|strip_tags|truncate:$truncate:'...'}</p>
-                    {/if}
+                    <h2 itemprop="name" class="h3">{$item.name}</h2>
+                    <p>{if $truncate}{$item.resume|truncate:$truncate:'&hellip;'}{else}{$item.resume}{/if}</p>
                     {strip}
                     {if !empty($item.tags)}
                     <p class="tag-list">
@@ -58,7 +64,7 @@
                     {/if}
                     {/strip}
                 </div>
-                <a class="all-hover" href="{$item.url}" title="{$item.title|ucfirst}" itemprop="url">{$item.title|ucfirst}</a>
+                <a class="all-hover" href="{$item.url}" title="{$item.seo.description}" itemprop="url">{$item.seo.title}</a>
             </div>
         </div>
     {/foreach}

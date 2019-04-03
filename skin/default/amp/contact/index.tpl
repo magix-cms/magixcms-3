@@ -1,8 +1,8 @@
 {extends file="amp/layout.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/contact.min.css"}{/block}
-{block name='body:id'}contact{/block}
 {block name="title"}{seo_rewrite conf=['level'=>'root','type'=>'title','default'=>{#seo_title_contact#}]}{/block}
 {block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{#seo_desc_contact#}]}{/block}
+{block name='body:id'}contact{/block}
 {block name="webType"}ContactPage{/block}
 {block name="amp-script"}
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>

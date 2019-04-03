@@ -7,7 +7,8 @@ use Intervention\Image\ImageManager;
  */
 class component_files_images{
 
-    protected $template,$configCollection, $fileUpload, $progress, $imageManager;
+    protected $template,$configCollection, $fileUpload, $progress;
+    public $imageManager;
 
     /**
      * component_files_images constructor.
@@ -38,7 +39,7 @@ class component_files_images{
      * @return array
      */
     public function module(){
-        return array('catalog','news','pages','plugins');
+        return array('catalog','news','pages','logo','plugins');
     }
 
     /**
@@ -48,19 +49,34 @@ class component_files_images{
         return array('basic','adaptive');
     }
 
+	/**
+	 * @param $src
+	 * @return array
+	 */
+	public function getImageInfos($src)
+	{
+		list($width, $height, $type, $attr) = getimagesize($src);
+
+		return array(
+			'width' => $width,
+			'height' => $height,
+			'type' => $type,
+			'attr' => $attr
+		);
+    }
+
     /**
-     * @param $data
+     * @param $params
+     * @param array $config
      * @return mixed|null
+     * @throws Exception
      */
-    public function getConfigItems($data){
+    public function getConfigItems($params,$config = array('context'=>'all','type'=>'imgSize')){
         return $this->configCollection->fetchData(
+            $config,
             array(
-                'context'=>'all',
-                'type'=>'imgSize'
-            ),
-            array(
-                'module_img'    =>$data['module_img'],
-                'attribute_img' =>$data['attribute_img']
+                'module_img'    =>$params['module_img'],
+                'attribute_img' =>$params['attribute_img']
             )
         );
     }

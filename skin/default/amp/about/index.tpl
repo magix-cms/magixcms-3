@@ -1,12 +1,10 @@
 {extends file="amp/layout.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/pages.min.css"}{/block}
 {block name='body:id'}about{/block}
-{block name="title"}{if $pages.name}{$pages.title = $pages.name}{/if}{if $pages.seoTitle}{$pages.seoTitle}{else}{$pages.title}{/if}{/block}
-{block name="description"}{if $pages.seoTitle}{$pages.seoDescr}{elseif isset($pages.resume) && !empty($pages.resume)}{$pages.resume}{elseif !empty($pages.content)}{$pages.content|strip_tags|truncate:100:'...'}{/if}{/block}
+{block name="title"}{$pages.seo.title}{/block}
+{block name="description"}{$pages.seo.description}{/block}
 {block name="webType"}{if isset($parent)}WebPage{else}AboutPage{/if}{/block}
-{block name="amp-script"}
-    {amp_components content=$pages.content}
-{/block}
+{block name="amp-script"}{amp_components content=$pages.content}{/block}
 {block name='article'}
     <article class="container" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}

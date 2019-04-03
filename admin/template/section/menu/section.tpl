@@ -141,14 +141,14 @@
     </li>
     {/if}
     {if {employee_access type="view" class_name="backend_controller_theme"} eq 1}
-    <li class="has-submenu{if $smarty.get.controller == 'theme'} active{/if}">
+    <li class="has-submenu{if $smarty.get.controller == 'theme' || $smarty.get.controller == 'logo'} active{/if}">
         <button type="button" class="navbar-toggle{if $smarty.get.controller == 'theme'} open{/if}" data-toggle="collapse" data-parent="#{$menuId}" data-target="#nav-theme">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
-        <a href="{$url}/{baseadmin}/index.php?controller=theme">
-            <span class="fa fa-desktop"></span> {#appearance#}
-        </a>
+        {*<a href="{$url}/{baseadmin}/index.php?controller=theme">*}
+        <span><span class="fa fa-desktop"></span> {#appearance#|ucfirst}</span>
+        {*</a>*}
         <nav id="nav-theme" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'theme'} in{/if}">
             <ul class="nav list-unstyled">
                 <li>
@@ -166,6 +166,13 @@
                         <span class="fa fa-share"></span> {#info_share#}
                     </a>
                 </li>
+                {if {employee_access type="view" class_name="backend_controller_logo"} eq 1}
+                <li{if $smarty.get.controller == 'logo'} class="active"{/if}>
+                    <a href="{$url}/{baseadmin}/index.php?controller=logo">
+                        <span class="far fa-window-maximize"></span> {#logo#|ucfirst}
+                    </a>
+                </li>
+                {/if}
             </ul>
         </nav>
     </li>
@@ -282,7 +289,7 @@
     {/if}
     <li><hr></li>
     {if {employee_access type="view" class_name="backend_controller_plugins"} eq 1}
-    <li class="has-submenu {if $smarty.get.controller == 'plugins' || (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee','access')) && $smarty.get.controller)}active{/if}">
+    <li class="has-submenu {if $smarty.get.controller == 'plugins' || (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee','access','logo')) && $smarty.get.controller)}active{/if}">
         <button type="button" class="navbar-toggle{if $smarty.get.controller == 'plugins'} open{/if}" data-toggle="collapse" data-parent="#{$menuId}" data-target="#nav-plugins">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>

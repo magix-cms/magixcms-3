@@ -1,6 +1,6 @@
 {extends file="amp/layout.tpl"}
-{block name="title"}{if $home.seo.title}{$home.seo.title}{else}{$home.name}{/if}{/block}
-{block name="description"}{if $home.seo.description}{$home.seo.description}{elseif !empty($home.content)}{$home.content|strip_tags|truncate:100:'...'}{/if}{/block}
+{block name="title"}{$home.seo.title}{/block}
+{block name="description"}{$home.seo.description}{/block}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/home.min.css"}{/block}
 {block name='body:id'}home{/block}
 {block name="amp-script"}

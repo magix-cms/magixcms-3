@@ -1,8 +1,8 @@
 {extends file="amp/news/index.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/topicality.min.css"}{/block}
 {block name='body:id'}topicality{/block}
-{block name="title"}{seo_rewrite conf=['level'=>'record','type'=>'title','default'=>{$news.title}] record={$news.title}}{/block}
-{block name="description"}{seo_rewrite conf=['level'=>'record','type'=>'description','default'=>{$news.resume}] record={$news.title}}{/block}
+{block name="title"}{$news.seo.title}{/block}
+{block name="description"}{$news.seo.description}{/block}
 {block name="webType"}WebPage{/block}
 {block name="amp-script"}
     {if $news.img.large.src}
@@ -18,7 +18,7 @@
             <header>
                 {strip}
                     <h1 itemprop="headline">
-                        {$news.title}
+                        {$news.name}
                         <small>
                             {*<span itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 {#news_by#|ucfirst} <span itemprop="name">{$news.author}</span>
@@ -141,7 +141,7 @@
                         <meta itemprop="url" content="{$url}{$news.img.large.src}" />
                         <meta itemprop="height" content="{$news.img.large['h']}" />
                         <meta itemprop="width" content="{$news.img.large['w']}" />
-                        <amp-img on="tap:lightbox1"
+                        {*<amp-img on="tap:lightbox1"
                                  role="button"
                                  tabindex="0"
                                  src="{$news.img.large.src}"
@@ -149,8 +149,29 @@
                                  title="{$news.title}"
                                  layout="responsive"
                                  width="{$news.img.large['w']}"
-                                 height="{$news.img.large['h']}"></amp-img>
-                        <figcaption class="hidden">{$news.title}</figcaption>
+                                 height="{$news.img.large['h']}"></amp-img>*}
+                        <amp-img on="tap:lightbox1"
+                                 role="button"
+                                 tabindex="0"
+                                 src="{$news.img.large['src_webp']}"
+                                 width="{$news.img.large['w']}"
+                                 height="{$news.img.large['h']}"
+                                 layout="responsive"
+                                 alt="{$news.img.alt}"
+                                 title="{$news.img.title}">
+                            <amp-img on="tap:lightbox1"
+                                     role="button"
+                                     tabindex="0"
+                                     alt="{$news.img.alt}"
+                                     fallback
+                                     title="{$news.img.title}"
+                                     src="{$news.img.large['src']}"
+                                     width="{$news.img.large['w']}"
+                                     height="{$news.img.large['h']}"
+                                     layout="responsive">
+                            </amp-img>
+                        </amp-img>
+                        <figcaption class="hidden">{$news.img.caption}</figcaption>
                     </figure>
                     <amp-image-lightbox id="lightbox1" layout="nodisplay"></amp-image-lightbox>
                 {/if}

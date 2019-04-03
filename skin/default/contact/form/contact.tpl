@@ -49,9 +49,10 @@
     </div>
 
     <div class="form-group">
-        <textarea id="content" name="msg[content]" rows="5" class="form-control required" required></textarea>
-        <label for="content">{#pn_contact_message#|ucfirst}*&nbsp;:</label>
+        <textarea id="msg_content" name="msg[content]" rows="5" class="form-control required" required></textarea>
+        <label for="msg_content">{#pn_contact_message#|ucfirst}*&nbsp;:</label>
     </div>
+    <small class="text-center help-block">{#contact_fiels_resquest#|ucfirst}</small>
     <div class="mc-message"></div>
     <p id="btn-contact">
         <input type="hidden" name="msg[moreinfo]" value="" />
