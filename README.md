@@ -75,7 +75,7 @@ file:plugins/*/js/src/*.js
 </pre>
 #### Plugin Style
 <pre>
-file:plugins/*/css/src/*.less
+file:plugins/*/css/src/*.less&&!file:plugins/*/skin//*
 </pre>
 
 #### AMP
