@@ -528,7 +528,7 @@ class backend_controller_logo extends backend_db_logo
                          $filename = $resultUpload['file'];
                          $update = true;
                          /* ##### favicon ######*/
-                         $favCollection = $this->finder->scanDir($this->upload->imgBasePath('img/favicon/'));
+                         $favCollection = $this->finder->scanDir($this->upload->imgBasePath('img/favicon/'),'.gitignore');
                          $favicon = null;
                          if(is_array($favCollection)) {
                              $favicon = array();
@@ -540,7 +540,7 @@ class backend_controller_logo extends backend_db_logo
                              }
                          }
                          /* ##### Touch (Homescreen) ######*/
-                         $touchCollection = $this->finder->scanDir($this->upload->imgBasePath('img/touch/'));
+                         $touchCollection = $this->finder->scanDir($this->upload->imgBasePath('img/touch/'),'.gitignore');
                          $touch = null;
                          if(is_array($touchCollection)) {
                              $touch = array();
@@ -552,7 +552,7 @@ class backend_controller_logo extends backend_db_logo
                              }
                          }
                          $this->template->assign('favicon',$favicon);
-                         $this->template->assign('touch',$touch);
+                         $this->template->assign('homescreen',$touch);
                          $display = $this->template->fetch('logo/brick/favicon.tpl');
 
                          $this->message->json_post_response(true, 'update', $display);
@@ -654,7 +654,7 @@ class backend_controller_logo extends backend_db_logo
                          $touch = array();
 
                          $this->template->assign('favicon',$favicon);
-                         $this->template->assign('touch',$touch);
+                         $this->template->assign('homescreen',$touch);
                          $display = $this->template->fetch('logo/brick/favicon.tpl');
 
                          $this->message->json_post_response(true, 'update', $display);
@@ -678,7 +678,7 @@ class backend_controller_logo extends backend_db_logo
                  $this->template->assign('holder',$newItems);
              }
              /* ##### favicon ######*/
-             $favCollection = $this->finder->scanDir($this->upload->imgBasePath('img/favicon/'));
+             $favCollection = $this->finder->scanDir($this->upload->imgBasePath('img/favicon/'),'.gitignore');
              $favicon = null;
              if(is_array($favCollection)) {
                  $favicon = array();
@@ -690,7 +690,7 @@ class backend_controller_logo extends backend_db_logo
                  }
              }
              /* ##### Touch (Homescreen) ######*/
-             $touchCollection = $this->finder->scanDir($this->upload->imgBasePath('img/touch/'));
+             $touchCollection = $this->finder->scanDir($this->upload->imgBasePath('img/touch/'),'.gitignore');
              $touch = null;
              if(is_array($touchCollection)) {
                  $touch = array();
@@ -702,7 +702,7 @@ class backend_controller_logo extends backend_db_logo
                  }
              }
              $this->template->assign('favicon',$favicon);
-             $this->template->assign('touch',$touch);
+             $this->template->assign('homescreen',$touch);
 
              if($fetchRootData != null) {
                  $id_page = $fetchRootData['id_logo'];

@@ -23,10 +23,10 @@
     {else}
     <div class="row"></div>
 {/if}
-{if isset($touch) && !empty($touch)}
+{if isset($homescreen) && !empty($homescreen)}
     <div class="row">
         <h3>Homescreen</h3>
-        {foreach $touch as $key => $value}
+        {foreach $homescreen as $key => $value}
             {if is_array($value)}
                 <div class="col-ph-12">
                     <figure class="thumbnail">
