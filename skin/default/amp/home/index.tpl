@@ -4,7 +4,11 @@
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/home.min.css"}{/block}
 {block name='body:id'}home{/block}
 {block name="amp-script"}
-    {amp_components content=$home.content}
+    <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
+    {amp_components content=$home.content carousel=false}
+{/block}
+{block name="main:before"}
+    {include file="home/brick/carousel.tpl" amp=true}
 {/block}
 {block name='article'}
     <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
@@ -25,15 +29,11 @@
         assign="news"
     }
     {if $news}
-    <section id="last-news" class="container">
-        <h3>{#last_news#|ucfirst}</h3>
-        <div class="news-list">
-            <div class="section-block">
-                <div class="row">
-                    <div>
-                    {include file="amp/news/loop/news.tpl" data=$news classCol="news-tile"}
-                    </div>
-                </div>
+    <section id="last-news" class="container" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
+        <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+            <h3>{#last_news#|ucfirst}</h3>
+            <div class="tile-list row">
+                {include file="amp/news/loop/news.tpl" data=$news classCol="news-tile col-12"}
             </div>
         </div>
     </section>

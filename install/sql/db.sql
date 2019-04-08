@@ -126,6 +126,7 @@ INSERT INTO `mc_config` (`idconfig`, `attr_name`, `status`) VALUES
 CREATE TABLE IF NOT EXISTS `mc_logo` (
   `id_logo` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   `img_logo` varchar(125) DEFAULT NULL,
+  `active_logo` smallint(1) NOT NULL DEFAULT '0',
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_logo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -260,7 +261,11 @@ INSERT INTO `mc_config_img` (`id_config_img`, `module_img`, `attribute_img`, `wi
 (NULL, 'catalog', 'product', '1000', '1000', 'large', 'basic'),
 (NULL, 'logo', 'logo', '500', '121', 'large', 'adaptive'),
 (NULL, 'logo', 'logo', '480', '105', 'medium', 'adaptive'),
-(NULL, 'logo', 'logo', '229', '50', 'small', 'adaptive');
+(NULL, 'logo', 'logo', '229', '50', 'small', 'adaptive'),
+(NULL, 'logo', 'page', '500', '309', 'medium', 'adaptive'),
+(NULL, 'logo', 'news', '500', '309', 'medium', 'adaptive'),
+(NULL, 'logo', 'category', '500', '309', 'medium', 'adaptive'),
+(NULL, 'logo', 'product', '500', '309', 'medium', 'adaptive');
 
 CREATE TABLE IF NOT EXISTS `mc_home_page` (
   `id_page` smallint(3) unsigned NOT NULL AUTO_INCREMENT,

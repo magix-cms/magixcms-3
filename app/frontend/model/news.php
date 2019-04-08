@@ -42,12 +42,13 @@
  */
 class frontend_model_news extends frontend_db_news {
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$dateFormat,$seo;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$dateFormat,$seo,$logo;
 
-	/**
-	 * frontend_model_news constructor.
-	 * @param stdClass $t
-	 */
+    /**
+     * frontend_model_news constructor.
+     * @param stdClass $t
+     * @throws Exception
+     */
     public function __construct($t = null)
     {
 		$this->template = $t ? $t : new frontend_model_template();
@@ -56,11 +57,12 @@ class frontend_model_news extends frontend_db_news {
 		$this->modelPlugins = new frontend_model_plugins();
         $this->dateFormat = new date_dateformat();
         $this->seo = new frontend_model_seo('news', '', '');
+        $this->logo = new frontend_model_logo();
     }
 
-	/**
-	 *
-	 */
+    /**
+     * @return array
+     */
 	public function rootSeo()
 	{
 		$rootSeo = array();
@@ -85,6 +87,7 @@ class frontend_model_news extends frontend_db_news {
 		$string_format = new component_format_string();
         $data = null;
         $extwebp = 'webp';
+        $imagePlaceHolder = $this->logo->getImagePlaceholder();
 
         if (isset($row['id_news'])) {
             $data['id'] = $row['id_news'];
@@ -121,7 +124,7 @@ class frontend_model_news extends frontend_db_news {
                 }
 				$data['img']['name'] = $row['img_news'];
             }
-            $data['img']['default'] = '/skin/'.$this->template->theme.'/img/news/default.png';
+            $data['img']['default'] = isset($imagePlaceHolder['news']) ? $imagePlaceHolder['news'] : '/skin/'.$this->template->theme.'/img/news/default.png';
 			$data['img']['alt'] = $row['alt_img'];
 			$data['img']['title'] = $row['title_img'];
 			$data['img']['caption'] = $row['caption_img'];
@@ -200,6 +203,7 @@ class frontend_model_news extends frontend_db_news {
     /**
      * @param $row
      * @return array
+     * @throws Exception
      */
     public function setHrefLangData($row)
     {
@@ -224,6 +228,7 @@ class frontend_model_news extends frontend_db_news {
      * @param array $current
      * @param bool $override
      * @return array|null
+     * @throws Exception
      */
     public function getData($custom,$current,$override = false)
     {

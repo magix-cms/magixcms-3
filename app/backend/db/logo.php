@@ -53,8 +53,8 @@ class backend_db_logo
 
         switch ($config['type']) {
             case 'img':
-                $sql = "INSERT INTO `mc_logo`(img_logo,date_register) 
-						VALUES (:img_logo,NOW())";
+                $sql = "INSERT INTO `mc_logo`(img_logo,active_logo,date_register) 
+						VALUES (:img_logo,:active_logo,NOW())";
                 break;
             case 'imgContent':
                 $sql = 'INSERT INTO `mc_logo_content`(id_logo,id_lang,alt_logo,title_logo,last_update) 
@@ -87,7 +87,13 @@ class backend_db_logo
 		switch ($config['type']) {
             case 'img':
                 $sql = 'UPDATE mc_logo
-						SET img_logo = :img_logo
+						SET img_logo = :img_logo,
+						    active_logo = :active_logo
+                		WHERE id_logo = :id_logo';
+                break;
+            case 'active':
+                $sql = 'UPDATE mc_logo
+						SET active_logo = :active_logo
                 		WHERE id_logo = :id_logo';
                 break;
             case 'imgContent':

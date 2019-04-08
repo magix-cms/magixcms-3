@@ -10,14 +10,12 @@
 .text {
 	figure {
 		margin-bottom: 15px;
-		/*@media (min-width: @screen-xs-min) {
-			width: 50%;
-			float: left;
-			margin: 0 15px 15px 0;
-		}*/
 	}
 }
 
+/* --------------------------------------------------------
+                        Vignettes
+---------------------------------------------------------- */
 .vignette {
 	&:not(:last-child) {
 		margin-bottom: 15px;
@@ -49,6 +47,7 @@
 	}
 }
 
+/*
 .vignette-list {
 	overflow: hidden;
 	margin: 0 -15px;
@@ -61,8 +60,9 @@
 		.shadow(1,inset);
 	}
 }
+*/
 
-.news-list {
+/*.news-list {
 	overflow: hidden;
 	margin: 0 -15px;
 
@@ -83,9 +83,9 @@
 			}
 		}
 	}
-}
+}*/
 
-.news-tile {
+/*.news-tile {
 	position: relative;
 	background-color: #fff;
 	&:not(:last-child) { margin-bottom: 30px; }
@@ -152,6 +152,77 @@
 			right: -35px;
 		}
 	}
+}*/
+
+.news-tile {
+	margin-bottom: 22px;
+
+	.tile {
+		.shadow(1);
+		color: #222222;
+	}
+	.desc {
+		background-color: #fff;
+		position: relative;
+		border-top: 1px solid #222;
+		padding: 40px 20px 20px;
+		font-size: .89rem;
+	}
+	h2 {
+		margin-top: 0;
+	}
+	.date {
+		position: absolute;
+		top: -2px;
+		border-radius: 50%;
+		background: #222;
+		color: #fff;
+		width: 62px;
+		height: 62px;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		left: 50%;
+		transform: translate(-50%,-50%);
+		font-weight: 700;
+	}
+}
+
+/* --------------------------------------------------------
+                        Pagination
+---------------------------------------------------------- */
+.pager {
+	> li > a {
+		border-radius: 0;
+		color: @text-color;
+		border: none;
+		padding: 10px;
+
+		&:active,
+		&:focus {
+			color: @main-color;
+			text-decoration: none;
+			background-color: transparent;
+		}
+	}
+
+	> li {
+		&.active,
+		&:focus {
+			a {
+				color: @main-color;
+				background-color: transparent;
+				font-weight: bold;
+				border-bottom: 1px solid @main-color;
+			}
+		}
+	}
+
+	.material-icons {
+		font-size: 1.4rem;
+	}
 }
 
 /* --------------------------------------------------------
@@ -170,4 +241,17 @@
 		z-index: @z-allhover + 1;
 	}
 	.normalize-link(@weight: 600);
+}
+
+/* --------------------------------------------------------
+                      Block Last News
+---------------------------------------------------------- */
+#last-news {
+	margin: 0;
+
+	.time-figure {
+		position: relative;
+		text-align: center;
+		overflow: hidden;
+	}
 }

@@ -1,8 +1,49 @@
+{if $amp}
+<amp-carousel id="home-slideshow" class="carousel2"
+              type="slides"
+              autoplay
+              delay="3000"
+              layout="responsive"
+              height="384"
+              width="960"
+              type="slides">
+        <div class="slide">
+            <amp-img src="/skin/{$theme}/img/carousel/m_urbex.webp"
+                     alt="Urbex"
+                     layout="fill">
+                <amp-img src="/skin/{$theme}/img/carousel/m_urbex.jpg"
+                         alt="Urbex"
+                         layout="fill"
+                        fallback>
+                </amp-img>
+            </amp-img>
+        </div>
+        <div class="slide">
+            <amp-img src="/skin/{$theme}/img/carousel/m_mountain-walker.webp"
+                     alt="Mountain Walker"
+                     layout="fill">
+                <amp-img src="/skin/{$theme}/img/carousel/m_mountain.jpg"
+                         alt="Mountain Walker"
+                         layout="fill"
+                         fallback>
+                </amp-img>
+            </amp-img>
+        </div>
+        <div class="slide">
+            <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.webp"
+                     alt="Skyscraper"
+                     layout="fill">
+                <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.jpg"
+                         alt="Skyscraper"
+                         layout="fill"
+                         fallback>
+                </amp-img>
+            </amp-img>
+        </div>
+</amp-carousel>
+{else}
 <div id="home-slideshow" class="owl-slideshow">
     <div class="owl-carousel owl-theme">
-        {*<img src="/skin/{$theme}/img/carousel/carousel-urbex.jpg" width="1920" height="500" alt="Urbex"  data-dot="<span><span>Slide {$k}</span></span>">
-        <img src="/skin/{$theme}/img/carousel/carousel-mountain-walker.jpg" width="1920" height="500" alt="Mountain-walker"  data-dot="<span><span>Slide {$k}</span></span>">
-        <img src="/skin/{$theme}/img/carousel/carousel-skyscraper.jpg" width="1920" height="500" alt="Skyscraper"  data-dot="<span><span>Slide {$k}</span></span>">*}
         <div class="slide" data-dot="<span><span>Slide {$k}</span></span>">
             {strip}<picture>
                 <!--[if IE 9]><video style="display: none;"><![endif]-->
@@ -47,3 +88,4 @@
         <div class="owl-slideshow-dots"></div>
     </div>
 </div>
+{/if}

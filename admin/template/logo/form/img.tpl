@@ -14,6 +14,16 @@
             <label for="name_img_{$id}">{#name_img#|ucfirst} :</label>
             <input type="text" class="form-control" placeholder="{#ph_name_img#}" id="name_img_{$id}" name="name_img" value="{if isset($page.img_logo)}{$page.img_logo}{else}{$page.content[$default].url_pages}{/if}" />
         </div>
+        <div class="form-group">
+            <label class="radio-inline">
+                <input type="radio" name="active_logo" value="on" {if $page.active_logo eq '1'} checked{/if}>
+                {#active_logo#|ucfirst}
+            </label>
+            <label class="radio-inline">
+                    <input type="radio" name="active_logo" value="off" {if $page.active_logo eq '0'} checked{/if}>
+                    {#unactive_logo#|ucfirst}
+            </label>
+        </div>
         <div id="drop-zone" class="img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}">
             <div id="drop-buttons" class="form-group">
                 <label id="clickHere" class="btn btn-default">

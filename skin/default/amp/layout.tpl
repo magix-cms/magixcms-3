@@ -30,7 +30,7 @@
     {block name="amp-script"}{/block}
     {google_tools tools='amp-analytics'}
 </head>
-<body id="{capture name="bodyId"}{block name="body:id"}layout{/block}{/capture}{$smarty.capture.bodyId}" class="{$bodyClass}{if $touch} touchscreen{/if}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
+<body id="{capture name="bodyId"}{block name="body:id"}layout{/block}{/capture}{$smarty.capture.bodyId}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
 {if isset($analytics)}{$analytics}{/if}
 {include file="amp/section/brick/cookie-consent.tpl"}
 {include file="amp/section/header.tpl"}

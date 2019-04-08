@@ -12,7 +12,7 @@
                 <label id="clickHere" class="btn btn-default">
                     ou cliquez ici.. <span class="fa fa-upload"></span>
                     <input type="hidden" name="MAX_FILE_SIZE" value="4048576" />
-                    <input type="file" id="fav" name="fav" />
+                    <input type="file" class="input-img" name="fav" />
                 </label>
             </div>
             <div class="preview-img">

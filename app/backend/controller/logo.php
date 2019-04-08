@@ -3,7 +3,7 @@ class backend_controller_logo extends backend_db_logo
 {
     public $edit, $action, $tabs, $search, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder,$about;
-    public $id_logo,$content,$img,$iso,$del_img,$del_holder,$ajax,$name_img,$color,$fav,$del_favicon;
+    public $id_logo,$content,$img,$iso,$del_img,$del_holder,$ajax,$name_img,$color,$fav,$del_favicon,$active_logo;
     /**
      * backend_controller_logo constructor.
      * @param null|object $t
@@ -52,9 +52,10 @@ class backend_controller_logo extends backend_db_logo
         // --- Image Upload
         if (isset($_FILES['img']["name"])) $this->img = http_url::clean($_FILES['img']["name"]);
         if (http_request::isPost('name_img')) $this->name_img = http_url::clean($_POST['name_img']);
-        if (http_request::isPost('del_img')) $this->del_img = http_url::clean($_POST['del_img']);
-        if (http_request::isPost('del_holder')) $this->del_holder = http_url::clean($_POST['del_holder']);
-        if (http_request::isPost('del_favicon')) $this->del_favicon = http_url::clean($_POST['del_favicon']);
+        if (http_request::isPost('del_img')) $this->del_img = $formClean->simpleClean($_POST['del_img']);
+        if (http_request::isPost('del_holder')) $this->del_holder = $formClean->simpleClean($_POST['del_holder']);
+        if (http_request::isPost('del_favicon')) $this->del_favicon = $formClean->simpleClean($_POST['del_favicon']);
+        if (http_request::isPost('active_logo')) $this->active_logo = $formClean->simpleClean($_POST['active_logo']);
         if(isset($_FILES['fav']["name"])){
             $this->fav = http_url::clean($_FILES['fav']["name"]);
         }
@@ -135,6 +136,7 @@ class backend_controller_logo extends backend_db_logo
                         $arr[$page['id_logo']]['imgSrc'][$value['type_img']]['height'] = $size[1];
                     }
                 }
+                $arr[$page['id_logo']]['active_logo'] = $page['active_logo'];
                 $arr[$page['id_logo']]['date_register'] = $page['date_register'];
             }
             $arr[$page['id_logo']]['content'][$page['id_lang']] = array(
@@ -177,6 +179,7 @@ class backend_controller_logo extends backend_db_logo
     {
         switch ($data['type']) {
             case 'img':
+            case 'active':
             case 'imgContent':
                 parent::update(
                     array(
@@ -206,6 +209,15 @@ class backend_controller_logo extends backend_db_logo
         }
 
         $fetchRootData = $this->getItems('root', NULL,'one',false);
+        switch($this->active_logo){
+            case 'off':
+                $active_logo = 0;
+                break;
+            case 'on':
+                $active_logo = 1;
+                break;
+        }
+
         if($fetchRootData != null){
             $id_page = $fetchRootData['id_logo'];
             $settings = array(
@@ -244,7 +256,16 @@ class backend_controller_logo extends backend_db_logo
                     'type' => 'img',
                     'data' => array(
                         'id_logo' => $id_page,
-                        'img_logo' => $filename
+                        'img_logo' => $filename,
+                        'active_logo' => $active_logo
+                    )
+                ));
+            }else{
+                $this->upd(array(
+                    'type' => 'active',
+                    'data' => array(
+                        'id_logo' => $id_page,
+                        'active_logo' => $active_logo
                     )
                 ));
             }
@@ -283,7 +304,8 @@ class backend_controller_logo extends backend_db_logo
             $this->add(array(
                 'type' => 'img',
                 'data' => array(
-                    'img_logo' => $filename
+                    'img_logo' => $filename,
+                    'active_logo' => $active_logo
                 )
             ));
             //parent::insert(array('type'=>'img'));
@@ -567,7 +589,8 @@ class backend_controller_logo extends backend_db_logo
                              'type' => 'img',
                              'data' => array(
                                  'id_logo' => $id_page,
-                                 'img_logo' => NULL
+                                 'img_logo' => NULL,
+                                 'active_logo' => 0
                              )
                          ));
 

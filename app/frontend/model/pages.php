@@ -40,7 +40,7 @@
  */
 class frontend_model_pages extends frontend_db_pages{
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$logo;
 
 	/**
 	 * frontend_model_pages constructor.
@@ -53,6 +53,7 @@ class frontend_model_pages extends frontend_db_pages{
 		$this->imagesComponent = new component_files_images($t);
 		$this->modelPlugins = new frontend_model_plugins();
         $this->data = new frontend_model_data($this,$this->template);
+        $this->logo = new frontend_model_logo();
     }
 
     /**
@@ -68,6 +69,7 @@ class frontend_model_pages extends frontend_db_pages{
     	$string_format = new component_format_string();
         $data = null;
         $extwebp = 'webp';
+        $imagePlaceHolder = $this->logo->getImagePlaceholder();
 
         if ($row != null) {
 			if (isset($row['name'])) {
@@ -117,7 +119,7 @@ class frontend_model_pages extends frontend_db_pages{
 					}
 					$data['img']['name'] = $row['img_pages'];
 				}
-				$data['img']['default'] = '/skin/'.$this->template->theme.'/img/pages/default.png';
+				$data['img']['default'] = isset($imagePlaceHolder['pages']) ? $imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png' ;
 				$data['img']['alt'] = $row['alt_img'];
 				$data['img']['title'] = $row['title_img'];
 				$data['img']['caption'] = $row['caption_img'];

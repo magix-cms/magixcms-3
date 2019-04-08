@@ -94,6 +94,9 @@ class component_routing_dispatcher{
 			$this->template->assign('domain',$this->template->domain);
 			$this->template->assign('dataLang',$this->template->langs);
 			$this->template->assign('defaultLang',$this->template->defaultLang);
+            $modelLogo = new frontend_model_logo($this->template);
+            $this->template->assign('logo', $modelLogo->getLogoData());
+            $this->template->assign('favicon', $modelLogo->getFaviconData());
 			$modelAbout = new frontend_model_about($this->template);
 			$this->template->assign('about', $modelAbout->getContentData());
 			$this->template->assign('companyData', $modelAbout->getCompanyData());

@@ -43,7 +43,7 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @var component_routing_url
      */
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$seo;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$seo,$logo;
 
 	/**
 	 * frontend_model_catalog constructor.
@@ -57,6 +57,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 		$this->modelPlugins = new frontend_model_plugins();
 		$this->data = new frontend_model_data($this,$this->template);
 		$this->seo = new frontend_model_seo('catalog', '', '');
+        $this->logo = new frontend_model_logo();
     }
 
     /**
@@ -74,6 +75,8 @@ class frontend_model_catalog extends frontend_db_catalog {
 		$string_format = new component_format_string();
         $data = null;
         $extwebp = 'webp';
+        $imagePlaceHolder = $this->logo->getImagePlaceholder();
+
         if ($row != null) {
             if (isset($row['name'])) {
                 $data['name'] = $row['name'] ? $row['name'] : $this->template->getConfigVars('catalog');
@@ -195,7 +198,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 						$data['img']['caption'] = $row['caption_img'];
 						$data['img']['name'] = $row['name_img'];
                     }
-					$data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+					$data['img']['default'] = isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
 				}
 
 				// -- Similar / Associated product
@@ -256,7 +259,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 							$data['associated'][$key]['img']['caption'] = $value['caption_img'];
 							$data['associated'][$key]['img']['name'] = $value['name_img'];
                         }
-                        $data['associated'][$key]['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+                        $data['associated'][$key]['img']['default'] = isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
                     }
                 }
                 // Plugin
@@ -270,14 +273,14 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 				$this->seo->level = 'record';
 				if (!isset($row['seo_title_p']) || empty($row['seo_title_p'])) {
-					$seoTitle = $this->seo->replace_var_rewrite($data['name'],'','title');
+					$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
 					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
 				}
 				else {
 					$data['seo']['title'] = $row['seo_title_p'];
 				}
 				if (!isset($row['seo_desc_p']) || empty($row['seo_desc_p'])) {
-					$seoDesc = $this->seo->replace_var_rewrite($data['name'],'','description');
+					$seoDesc = $this->seo->replace_var_rewrite('',$data['name'],'description');
 					$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
 				}
 				else {
@@ -316,7 +319,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 				$data['img']['alt'] = $row['alt_img'];
 				$data['img']['title'] = $row['title_img'];
 				$data['img']['caption'] = $row['caption_img'];
-                $data['img']['default'] = '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
+                $data['img']['default'] = isset($imagePlaceHolder['category']) ? $imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
 					'type' => 'category',
 					'iso'  => $row['iso_lang'],

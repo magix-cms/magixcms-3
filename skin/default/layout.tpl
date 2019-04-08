@@ -16,8 +16,13 @@
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
     {if $googleTools_webmaster !== ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
     {if $domain != null && $domain.tracking_domain != ''}{$domain.tracking_domain}{/if}
-    <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
-    <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
+    {if $favicon != null}
+        <link rel="icon" type="image/png" href="{$url}{$favicon.img.png.src}" />
+        <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}{$favicon.img.ico.src}" /><![endif]-->
+        {else}
+        <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
+        <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
+    {/if}
     <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
     {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
     {* Please try to use icomoon to create a small iconfont and reduce load work *}

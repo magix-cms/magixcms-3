@@ -1,6 +1,7 @@
 {extends file="amp/layout.tpl"}
 {block name="stylesheet"}{fetch file="skin/{$theme}/amp/css/news.min.css"}{/block}
 {block name='body:id'}news{/block}
+{block name='body:class'}news-page{/block}
 {block name="title"}{$rootSeo['title']}{/block}
 {block name="description"}{$rootSeo['description']}{/block}
 {block name="webType"}CollectionPage{/block}
