@@ -2,35 +2,37 @@
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-@font-family-sans-serif: "Roboto", Arial, sans-serif;
-@headings-font-family: "Roboto", "Helvetica", Arial, sans-serif;
-@font-family-serif:       Georgia, "Times New Roman", Times, serif;
+@font-family-sans-serif: "Heebo", "Helvetica", Arial, sans-serif;
+@headings-font-family: @font-family-sans-serif;
+@font-family-serif: Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
-@font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
-@font-family-base:        @font-family-sans-serif;
+@font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+@font-family-base: @font-family-sans-serif;
 @lead-font-size: floor((@font-size-base * 1.15));
-@lead-font: "Raleway", "Helvetica", Arial, sans-serif;
+@lead-font: @font-family-sans-serif;
 @quote-font: Georgia, serif;
 
-@font-size-base:          16px;
-@font-weight:			  300;
-@font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
-@font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
+@font-size-base:  14px;
+@font-weight:	  300;
+@font-size-large: ceil((@font-size-base * 1.25)); // ~18px
+@font-size-small: ceil((@font-size-base * 0.85)); // ~12px
 
-@font-size-h1:            floor((@font-size-base * 2.25)); // ~36px
-@font-size-h2:            floor((@font-size-base * 1.875)); // ~30px
-@font-size-h3:            ceil((@font-size-base * 1.5)); // ~24px
-@font-size-h4:            ceil((@font-size-base * 1.125)); // ~18px
-@font-size-h5:            @font-size-base;
-@font-size-h6:            ceil((@font-size-base * 0.75)); // ~12px
+@font-size-h1: 2.25rem;
+@font-size-h2: 1.875rem;
+@font-size-h3: 1.5rem;
+@font-size-h4: 1.125rem;
+@font-size-h5: 1rem;
+@font-size-h6: 0.75rem;
+
+@lead-font-size: 1.15rem;
 
 //** Unit-less `line-height` for use in components like buttons.
-@line-height-base:        1.428571429; // 20/14
+@line-height-base: 1.428571429; // 20/14
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-@line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
+@line-height-computed: floor((@font-size-base * @line-height-base)); // ~20px
 
 //** By default, this inherits from the `<body>`.
-@headings-font-family:    inherit;
-@headings-font-weight:    300;
-@headings-line-height:    1.1;
-@headings-color:          inherit;
+@headings-font-family: inherit;
+@headings-font-weight: 300;
+@headings-line-height: 1.1;
+@headings-color:       inherit;

@@ -14,12 +14,12 @@
 		<authors>
 			<author>
 				<name>Gerits Aurelien</name>
-				<website href="http://www.magix-cms.com" />
+				<website href="https://www.magix-cms.com" />
 			</author>
 		</authors>
 		<release>
-			<date_create>12/07/2017</date_create>
-			<version>1.0</version>
+			<date_create>08/04/2019</date_create>
+			<version>1.1</version>
 			<phase>Stable</phase>
 		</release>
 		<support>

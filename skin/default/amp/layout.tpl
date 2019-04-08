@@ -10,9 +10,17 @@
     {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
+    {if $googleTools_webmaster !== ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
     {if $domainData != null && $domainData.tracking_domain != ''}{$domainData.tracking_domain}{else}{if $googleTools_webmaster != ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}{/if}
-    <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
-    {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Roboto'=>'300,400,600,400italic','Raleway'=>'300,500']}
+    {if $favicon != null}
+        <link rel="icon" type="image/png" href="{$url}{$favicon.img.png.src}" />
+        <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}{$favicon.img.ico.src}" /><![endif]-->
+    {else}
+        <link rel="icon" type="image/png" href="{$url}/skin/{$theme}/img/favicon.png" />
+        <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
+    {/if}
+    <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
+    {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
     {*{if $browser !== 'IE'}<link rel="preload" href="https://fonts.googleapis.com/icon?family=Material+Icons" as="style">{/if}
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     {if $browser !== 'IE'}<link rel="preload" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" crossorigin="anonymous" as="style">{/if}*}
