@@ -162,6 +162,9 @@ const C = {
                 dotsContainer: '.owl-slideshow-dots',
                 navContainer: '.owl-slideshow-nav'
             }));
+            $(".owl-slideshow .owl-dot").on('click', function() {
+                $(".owl-slideshow > .owl-carousel").trigger('to.owl.carousel', $(this).index());
+            });
         }
         // *** Owl Carousel in plugins
         // *** Add here the content of the public.js file of the plugins using owl-carousel

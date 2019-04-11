@@ -2,16 +2,16 @@
     <div>
         {widget_about_data
         conf = [
-        'context' => $context,
+        'context' => 'all',
         'type' => 'menu'
         ]
         assign="pages"
         }
-        <h4><a href="{$url}/{$lang}/amp/about/" title="{#about#} {#website_name#}">{#about#|ucfirst}</a></h4>
+        <h4><a href="{$url}/{$lang}/amp/about/" title="{#about#} {#website_name#}">{#about_footer#|ucfirst}</a></h4>
         <ul class="link-list list-unstyled">
             {foreach $pages as $child}
                 <li>
-                    <a href="{$url}{$child.url}" title="{$child.title|ucfirst}">{$child.title|ucfirst}</a>
+                    <a href="{$url}{$child.url}" title="{$child.seo.description}">{$child.name}</a>
                 </li>
             {/foreach}
         </ul>

@@ -3,7 +3,7 @@
 //
 body {
 	> main {
-		padding: @headerH+20 0 50px;
+		padding: @headerH 0 50px;
 		box-sizing: border-box;
 		flex: 1 0 auto;
 
@@ -16,9 +16,13 @@ body {
 	> main ~ section {
 		padding-bottom: 50px;
 	}
+
+	+ .section-block {
+		padding-top: 0;
+	}
 }
 
-.normalize-content;
+.normalize-content(@headingc: same);
 .normalize-link;
 
 // --- Lead paragraphe

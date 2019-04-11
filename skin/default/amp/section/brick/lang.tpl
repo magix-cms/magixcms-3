@@ -10,40 +10,32 @@
             {/foreach}
         </ul>
     {elseif $display eq 'menu'}
-        <div class="dropdown">
-            <amp-accordion disable-session-states>
-                <section>
-                    <header>
-                        <button class="btn btn-box btn-default" type="button">
-                            <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
-                            <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
-                            {if $smarty.get.strLangue}
-                                {$smarty.get.strLangue|upper}
-                            {else}
-                                {$defaultLang|upper}
-                            {/if}
-                        </button>
-                    </header>
-                    <div>
-                        <ul class="list-unstyled">
-                            {foreach $dataLang as $k => $lang}
-                                {if isset($hreflang) && is_array($hreflang) && isset($hreflang[$lang.id_lang])}
-                                    {$dataLang[$k]['url'] = "{$url}{$hreflang[$lang.id_lang]}"}
-                                {else}
-                                    {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
-                                        {$dataLang[$k]['url'] = "{$url}/{$lang.iso_lang}/amp/{$smarty.get.controller}/"}
-                                    {else}
-                                        {$dataLang[$k]['url'] = "{$url}/{$lang.iso_lang}/amp/"}
-                                    {/if}
-                                {/if}
-                                <li>
-                                    <a href="{$dataLang[$k]['url']}">{$lang.iso_lang|upper}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    </div>
-                </section>
-            </amp-accordion>
+        <div id="menu-language" class="dropdown">
+            <button class="btn btn-box btn-default" type="button" on="tap:menu-language.toggleClass(class='open')">
+                <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
+                <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
+                {if $smarty.get.strLangue}
+                    {$smarty.get.strLangue|upper}
+                {else}
+                    {$defaultLang|upper}
+                {/if}
+            </button>
+            <ul class="dropdown-menu">
+                {foreach $dataLang as $k => $lang}
+                    {if isset($hreflang) && is_array($hreflang) && isset($hreflang[$lang.id_lang])}
+                        {$dataLang[$k]['url'] = "{$url}{$hreflang[$lang.id_lang]}"}
+                    {else}
+                        {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
+                            {$dataLang[$k]['url'] = "{$url}/{$lang.iso_lang}/amp/{$smarty.get.controller}/"}
+                        {else}
+                            {$dataLang[$k]['url'] = "{$url}/{$lang.iso_lang}/amp/"}
+                        {/if}
+                    {/if}
+                    <li>
+                        <a href="{$dataLang[$k]['url']}">{$lang.iso_lang|upper}</a>
+                    </li>
+                {/foreach}
+            </ul>
         </div>
     {/if}
 {/if}

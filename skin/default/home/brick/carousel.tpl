@@ -7,39 +7,45 @@
               height="384"
               width="960"
               type="slides">
-        <div class="slide">
             <amp-img src="/skin/{$theme}/img/carousel/m_urbex.webp"
                      alt="Urbex"
-                     layout="fill">
+                     layout="responsive"
+                     height="384"
+                     width="960">
                 <amp-img src="/skin/{$theme}/img/carousel/m_urbex.jpg"
                          alt="Urbex"
-                         layout="fill"
-                        fallback>
+                         layout="responsive"
+                         height="384"
+                         width="960"
+                         fallback>
                 </amp-img>
             </amp-img>
-        </div>
-        <div class="slide">
             <amp-img src="/skin/{$theme}/img/carousel/m_mountain-walker.webp"
                      alt="Mountain Walker"
-                     layout="fill">
+                     layout="responsive"
+                     height="384"
+                     width="960">
                 <amp-img src="/skin/{$theme}/img/carousel/m_mountain.jpg"
                          alt="Mountain Walker"
-                         layout="fill"
+                         layout="responsive"
+                         height="384"
+                         width="960"
                          fallback>
                 </amp-img>
             </amp-img>
-        </div>
-        <div class="slide">
             <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.webp"
                      alt="Skyscraper"
-                     layout="fill">
+                     layout="responsive"
+                     height="384"
+                     width="960">
                 <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.jpg"
                          alt="Skyscraper"
-                         layout="fill"
+                         layout="responsive"
+                         height="384"
+                         width="960"
                          fallback>
                 </amp-img>
             </amp-img>
-        </div>
 </amp-carousel>
 {else}
 <div id="home-slideshow" class="owl-slideshow">

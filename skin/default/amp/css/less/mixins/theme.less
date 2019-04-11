@@ -21,6 +21,7 @@
 @main-color: #3b61a9;
 @sd-color: #808284;
 @dark-color: #222;
+@text-color: #333;
 
 //// --- Theme Colors Variant
 // --- Main Theme
@@ -77,16 +78,21 @@
 // Menu
 //
 
-@menu-color: 		#444;
-@menu-bg: 			@white;
-@menu-active-color: @text-color;
-@menu-active-bg:	@sd-color;
+@menu-color: 		@text-color;
+@menu-bg: 			#fff;
+@menu-hover-color:	@main-color;
+@menu-hover-bg:		transparent;
+@menu-active-color: @main-color;
+@menu-active-bg:	transparent;
 
 // --- Sub-menu
-@submenu-color: 		#444;
-@submenu-active-color: 	@white;
-@submenu-active-bg: 	@main-color;
-@arrow-color:			@menu-color;
+@submenu-color: 		@menu-color;
+@submenu-bg: 			@menu-bg;
+@submenu-hover-color:	@menu-hover-color;
+@submenu-hover-bg:		transparent;
+@submenu-active-color: 	@menu-active-color;
+@submenu-active-bg: 	transparent;
+@arrow-color:			extract(@main-colors,4);
 
 // --- Mega Dropdown
 @mg-link-color	: @text-color;
@@ -98,16 +104,19 @@
 // Breadcrumb
 //
 
+@bc-font-weight: @font-weight;
 @bc-item-color: @main-color;
 @bc-link-color: @text-color;
 @bc-active-link-color: same;
 @cb-nav-border-color: #ddd;
+@bc-separator: @cb-nav-border-color;
 
 
 //
 // Header
 //
 
+@header-bg: @white;
 @header-fixed-bg:   rgba(242,242,242,.9);
 
 
@@ -123,12 +132,16 @@
 // Footer
 //
 
-@sharebar-bg:	extract(@grey, 2);
-@footer-bg: 	extract(@grey, 11);
-@footer-color: 	@white;
-@colophon-bg: 	@white;
-@colophon-color:@text-color;
-
+@sharebar-bg:	 @white;
+@footer-bg: 	 transparent;
+@footer-border-color: @light-grey;
+@footer-border:	 1px solid @footer-border-color;
+@footer-color: 	 @text-color;
+@footer-link: 	 @text-color;
+@colophon-bg: 	 transparent;
+@colophon-color: @text-color;
+@footbar-bg:	 @main-color;
+@footbar-color:	 @white;
 
 /*---------------*\
 ----- Socials -----
@@ -169,13 +182,13 @@
 //
 //##
 
-@pager-bg:                             @pagination-bg;
-@pager-border:                         @pagination-border;
+@pager-bg:                             transparent;
+@pager-border:                         transparent;
 @pager-border-radius:                  15px;
 
-@pager-hover-bg:                       @pagination-hover-bg;
+@pager-hover-bg:                       transparent;
 
-@pager-active-bg:                      @pagination-active-bg;
+@pager-active-bg:                      transparent;
 @pager-active-color:                   @pagination-active-color;
 
 @pager-disabled-color:                 @pagination-disabled-color;

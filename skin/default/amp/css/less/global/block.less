@@ -255,3 +255,82 @@
 		overflow: hidden;
 	}
 }
+
+/* --------------------------------------------------------
+                         Toc Drop
+---------------------------------------------------------- */
+.dropdown {
+	position: relative;
+
+	&:not(.open) {
+		> button .show-less {
+			display: none;
+		}
+	}
+
+	&.open {
+		.dropdown-menu {
+			display: block;
+		}
+		> button .show-more {
+			display: none;
+		}
+	}
+
+	.dropdown-header button {
+		&:not(.open) {
+			.show-less {
+				display: none;
+			}
+		}
+
+		&.open {
+			.show-more {
+				display: none;
+			}
+		}
+	}
+
+	.dropdown-menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		z-index: 1000;
+		display: none;
+		float: left;
+		min-width: 160px;
+		margin: 2px 0 0;
+		list-style: none;
+		font-size: 14px;
+		text-align: left;
+		background-color: #fff;
+		background-clip: padding-box;
+		padding: 0;
+		-webkit-box-shadow: 0 0 3px rgba(0,0,0,.4);
+		box-shadow: 0 0 3px rgba(0,0,0,.4);
+		border-radius: 0;
+		border: none;
+
+		> li {
+			&.active, > a {
+				font-weight: 400;
+				padding: 5px 8px;
+			}
+		}
+	}
+
+	&:not(.toc-drop) {
+		.dropdown-menu {
+			min-width: 100%;
+			top: ~"calc(100% - 2px)";
+		}
+	}
+
+	.dropdown-header {
+		padding: 0;
+	}
+
+	.btn {
+		text-align: left;
+	}
+}

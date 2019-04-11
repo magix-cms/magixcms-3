@@ -3,6 +3,7 @@
 //
 #breadcrumb-container {
 	padding-top: @headerH;
+	margin: 7px 0 8px;
 
 	+ main { padding-top: 0; }
 }
@@ -29,9 +30,9 @@
 
 	li {
 		display: flex;
-		font-weight: 500;
+		font-weight: @bc-font-weight;
 		color: @bc-item-color;
-		.normalize-link(@bc-link-color,@bc-active-link-color,underline,400);
+		.normalize-link(@bc-link-color,@bc-active-link-color,underline,@font-weight);
 
 		a, > span {
 			display: block;
@@ -39,11 +40,11 @@
 		}
 	}
 
-	.navbar-toggle {
+	/*.navbar-toggle {
 		float: none;
 		margin: 0;
 		padding: 0;
-	}
+	}*/
 
 	.material-icons {
 		font-size: inherit;
@@ -53,7 +54,7 @@
 	}
 }
 
-#breadcrumb-collapse {
+/*#breadcrumb-collapse {
 	position: absolute;
 	left: 0;
 	top: 100%;
@@ -75,4 +76,4 @@
 		padding: 5px;
 		font-size: 14px;
 	}
-}
+}*/

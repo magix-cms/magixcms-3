@@ -30,8 +30,8 @@
                     </amp-img>
                 {else}
                     <amp-img src="{$item.img.default}"
-                             alt="{$item.title}"
-                             title="{$item.title}"
+                             alt="{$item.name}"
+                             title="{$item.name}"
                              layout="responsive"
                              width="500"
                              height="309"></amp-img>

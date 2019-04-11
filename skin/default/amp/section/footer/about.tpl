@@ -43,6 +43,42 @@
                 <meta itemprop="addressLocality" content="{$companyData.contact.adress.city}"/>
             </div>
         {/if}
+        {if $companyData.openinghours && $companyData.type === "LocalBusiness"}
+            {$open_days = array()}
+            {$open = ''}
+            {$close = ''}
+            {foreach $companyData.specifications as $day => $specific}
+                {if $specific.open_day}
+                    {$open_days[] = $day}
+
+                    {if $open == '' || $specific.open_time < $open}
+                        {$open = $specific.open_time}
+                    {/if}
+
+                    {if $close == '' || $specific.close_time > $close}
+                        {$close = $specific.close_time}
+                    {/if}
+                {/if}
+            {/foreach}
+            {$open_days = ','|implode:$open_days}
+            <meta itemprop="openingHours" content="{$open_days} {$open}-{$close}">
+            {foreach $companyData.specifications as $day => $specific}
+                {if $specific.open_day}
+                    <div itemprop="openingHoursSpecification" itemscope itemtype="http://schema.org/OpeningHoursSpecification">
+                        <meta itemprop="dayOfWeek" content="{$day}" />
+                        {if $specific.noon_time}
+                            <meta itemprop="opens" content="{$specific.open_time}" />
+                            <meta itemprop="closes" content="{$specific.noon_start}" />
+                            <meta itemprop="opens" content="{$specific.noon_end}" />
+                            <meta itemprop="closes" content="{$specific.close_time}" />
+                        {else}
+                            <meta itemprop="opens" content="{$specific.open_time}" />
+                            <meta itemprop="closes" content="{$specific.close_time}" />
+                        {/if}
+                    </div>
+                {/if}
+            {/foreach}
+        {/if}
         <div id="contactPoint" itemprop="contactPoint" itemscope itemtype="http://schema.org/ContactPoint">
             {if $companyData.contact.mail}
                 <meta itemprop="email" content="{$companyData.contact.mail}"/>

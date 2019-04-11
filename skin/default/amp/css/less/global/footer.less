@@ -2,40 +2,29 @@
 // Rules for footer
 //
 #footer {
+	background: @footer-bg;
+	color: @footer-color;
 	margin-bottom: @footbarH;
 
-	// Global footer rules
-	h4 {
-		padding-bottom: 8px;
-		margin-bottom: 10px;
-		border-bottom: 1px solid @light-grey;
-		.normalize-link(@text-color);
-	}
+	.normalize-link(@footer-link);
 
+	// Global footer rules
 	.blocks {
-		border-top: 1px solid @light-grey;
+		border-top: @footer-border;
 	}
 
 	.block {
 		padding: 20px 15px;
-		margin-bottom: 20px;
+		//margin-bottom: 20px;
 
 		&:last-child {
 			margin-bottom: 0;
 		}
-	}
 
-	/*&-blocks {
-		padding: 20px 0;
-	}*/
-
-	// --- Block links
-	.link-list {
-		li {
-			a {
-				display: inline-block;
-				padding: 2px 0 3px;
-			}
+		h4 {
+			padding-bottom: 8px;
+			margin-bottom: 10px;
+			border-bottom: @footer-border;
 		}
 	}
 }
@@ -57,12 +46,42 @@
 			font-size: 20px;
 		}
 	}
+	// --- Block last news
+	&-last-news {
+		.news-list-last {
+			h5 {
+				line-height: @line-height-base;
+				.text-overflow();
+			}
+			.date{
+				color: @main-color;
+			}
+			a {
+				text-decoration: none;
+				p {
+					//color: #959595;
+					text-decoration: none;
+				}
+			}
+
+			.media-footer {
+				border-bottom: 1px dotted @footer-border-color;
+				padding-bottom: 10px;
+				p {
+					font-size: 13px;
+					margin-bottom: 5px;
+				}
+			}
+		}
+	}
 }
 
 #colophon {
-	//background-color: @colophon-bg;
+	background-color: @colophon-bg;
+	color: @colophon-color;
+
 	.footer-colophon {
-		border-top: 1px solid @light-grey;
+		border-top: @footer-border;
 		padding: 15px;
 		font-size: 85%;
 
@@ -70,7 +89,12 @@
 			margin: 0;
 			padding: 0;
 		}
+
+		> div:nth-child(n+2) {
+			padding: 5px 0;
+		}
 	}
+
 	.material-icons {
 		font-size: inherit;
 		vertical-align: middle;
@@ -88,6 +112,10 @@
 	padding: 0;
 	background-color: @main-color;
 	.shadow(4);
+
+	.btn {
+		.btn-main-theme();
+	}
 
 	.share-nav {
 		background: @sharebar-bg;

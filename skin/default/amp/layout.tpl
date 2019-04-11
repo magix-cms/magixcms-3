@@ -56,6 +56,6 @@
     </main>
 {/block}
 {block name="main:after"}{/block}
-{include file="amp/section/footer.tpl" adjust="clip" blocks=['sitemap','about','contact']}
+{include file="amp/section/footer.tpl" adjust="clip" blocks=['sitemap','about','news','contact']}
 </body>
 </html>

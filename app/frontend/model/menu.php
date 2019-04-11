@@ -155,7 +155,7 @@ class frontend_model_menu extends frontend_db_menu {
 
 				switch ($link['type_link']) {
 					case 'home':
-						$link['amp_avaiable'] = true;
+						$link['amp_available'] = true;
 					case 'pages':
 						if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
 						$model = $this->pages;
@@ -171,7 +171,7 @@ class frontend_model_menu extends frontend_db_menu {
 						if($link['type_link'] === 'pages') $data = $data[0]['subdata'];
 						break;
 					case 'about':
-						$link['amp_avaiable'] = true;
+						$link['amp_available'] = true;
 					case 'about_page':
 						if(!$this->about) $this->about = new frontend_model_about($this->template);
 						$model = $this->about;
@@ -187,7 +187,7 @@ class frontend_model_menu extends frontend_db_menu {
 						if($link['type_link'] === 'about_page') $data = $data[0]['subdata'];
 						break;
 					case 'catalog':
-						$link['amp_avaiable'] = true;
+						$link['amp_available'] = true;
 					case 'category':
 						if(!$this->catalog) $this->catalog = new frontend_model_catalog($this->template);
 						$model = $this->catalog;
@@ -204,7 +204,7 @@ class frontend_model_menu extends frontend_db_menu {
 						if($link['type_link'] === 'category') $data = $data[0]['subdata'];
 						break;
 					case 'plugin':
-						$link['amp_avaiable'] = $this->getPluginMenuConf(array('id' => $link['id_page']));
+						$link['amp_available'] = $this->getPluginMenuConf(array('id' => $link['id_page']));
 						$link['subdata'] = $this->getPluginPages(
 							array(
 								'type' => 'plugin',

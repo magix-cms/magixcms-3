@@ -1,6 +1,12 @@
 <header id="top" class="header" role="banner">
     <nav class="header-inner">
-        <div role="button" on="tap:sidebar1.toggle" tabindex="0" class="hamburger"><i class="material-icons">menu</i></div>
+        <div id="toggleMenu" role="button" on="tap:sidebar1.toggle,toggleMenu.toggleClass(class='open')" tabindex="0" class="hamburger">
+            {*<i class="material-icons">menu</i>*}
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="sr-only">{#openNavigation#|ucfirst}</span>
+        </div>
         <div class="site-name">
             {capture name="sizes"}(min-width: 1200px) 10vw, (min-width: 992px) 15vw, (orientation: landscape) and (min-width: 768px) 20vw, (orientation: portrait) and (min-width: 480px) 25vw, 200px{/capture}
             {*<a href="{$url}/{$lang}/amp/" title="{#logo_link_title#|ucfirst}">

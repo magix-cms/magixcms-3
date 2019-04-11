@@ -11,8 +11,17 @@
 .share-buttons(@style: flat, @hover: dark, @color: none) {
     @socials: facebook, twitter, viadeo, google, linkedin, pinterest, instagram, github, soundcloud;
 
+    .soc-border (@style, @bdcolor) when (@style = border) {
+        > span { color: @bdcolor; }
+        border: 2px solid @bdcolor;
+        background-color: transparent;
+    }
+
     .soc-bg (@style, @colors) when (@style = color) {
         background: @color;
+    }
+    .soc-bg (@style, @colors) when (@style = pastel) {
+        background-color: lighten(desaturate(extract(@colors,2),5%),10%);
     }
     .soc-bg (@style, @colors) when (@style = flat) {
         background-color: extract(@colors,2);
@@ -50,6 +59,22 @@
         }
         &:hover {
             .soc-bg (@hover, @colors);
+        }
+    }
+    .style (@style, @hover, @colors) when (@hover = coloronly) {
+        &{
+            color: @color;
+        }
+        &:hover {
+            color: extract(@colors,2);
+        }
+    }
+    .style (@style, @hover, @colors) when (@hover = border) {
+        &{
+            .soc-border (@style, @color);
+        }
+        &:hover {
+            .soc-border (@hover, extract(@colors,1));
         }
     }
 

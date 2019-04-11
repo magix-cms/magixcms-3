@@ -11,7 +11,7 @@
 }
 
 // Normalize link style for all state
-.normalize-link(@color: @main-color, @hover-color: same, @decoration: underline, @weight: 400, @font: @font-family-sans-serif) {
+.normalize-link(@color: @main-color, @hover-color: same, @decoration: underline, @weight: @font-weight, @font: @font-family-sans-serif) {
 	a, a:visited, a:active {
 		font-family: @font;
 		font-weight: @weight;
@@ -76,28 +76,43 @@
 }
 
 // --- Main title page
-.main-title(@color: @text-color, @brd: 1px solid #eee) {
+.main-title(@color: same, @brd: 1px solid #eee) {
 	margin: 8px auto 25px;
 	padding: 0 0 15px;
-	color: @color;
 	border-bottom: @brd;
+
+	.hcolor(@hc) when not (@hc = same) {
+		color: @hc;
+	}
+	.hcolor(@hc) when (@hc = same) {
+		color: @text-color;
+	}
+	.hcolor(@color);
 }
 
 // Normalize content
-.normalize-content(@color: @main-color) {
+.normalize-content(@color: @main-color, @headingc: same, @headingb: 1px solid #eee) {
 	article {
 		// Normalize the main title of the content
 		> h1:first-child {
-			.main-title;
+			.main-title(@headingc, @headingb);
 		}
 		// Normalize images in content
 		img {
-			&.pull-right {
-				margin: 0 0 1rem 1rem;
+			&.float-right {
+				float: right;
 			}
-			&.pull-left {
-				margin: 0 1rem 1rem 0;
+			&.float-left {
+				float: left;
 			}
+		}
+
+		p > img {
+			margin: 1rem;
+		}
+
+		> img {
+			margin: 1rem;
 		}
 
 		// Normalize small for datetime
@@ -110,8 +125,8 @@
 			margin-bottom: 30px;
 		}
 		// Normalize heading in content
-		.direct-headings ({
+		/*.direct-headings ({
 			color: @text-color;
-		});
+		});*/
 	}
 }
