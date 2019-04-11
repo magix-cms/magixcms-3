@@ -5,7 +5,7 @@
  * Rules for CMS page
  */
 .cms {
-	header {
+	> header {
 		display: flex;
 		//justify-content: space-between;
 		margin: 8px auto 25px;
@@ -32,14 +32,22 @@
 			color: @text-color;
 		}
 
+		header {
+			background-color: transparent;
+			border: none;
+		}
+
 		.dropdown-header {
-			color: @text-color;
-			flex-direction: row;
-			align-items: center;
-			justify-content: space-between;
+			> div {
+				color: @text-color;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+			}
 
 			&.active {
-				> a {
+				a {
 					font-weight: bold;
 					color: @main-color;
 					background-color: transparent;
@@ -53,13 +61,13 @@
 			margin-bottom: 5px;
 		}
 
-		li {
+		section {
 			padding: 3px 6px;
 
 			&.submenu {
 				padding: 0;
 
-				> ul {
+				> amp-accordion {
 					padding: 3px 6px;
 				}
 			}
@@ -76,7 +84,7 @@
 
 			&:not(.dropdown-header) {
 				.material-icons {
-					font-size: 8px;
+					//font-size: 8px;
 					width: 24px;
 					margin-right: 5px;
 					text-align: center;

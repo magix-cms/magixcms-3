@@ -9,11 +9,13 @@
     <section>
     {if $child.subdata}
         <header class="dropdown-header{if $current_page} active{/if}">
+            <div>
             <a href="{$child.url}" title="{$child.description}">{$child.name}</a>
             <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#s-{$s}-{$child@index}">
                 <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
                 <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
             </button>
+            </div>
         </header>
         <div class="submenu">
             <amp-accordion disable-session-states>
