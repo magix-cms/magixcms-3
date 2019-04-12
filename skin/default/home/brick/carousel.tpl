@@ -1,51 +1,57 @@
 {if $amp}
-<amp-carousel id="home-slideshow" class="carousel2"
+{*<amp-carousel id="home-slideshow" class="carousel2"
               type="slides"
               autoplay
+              loop
+              controls
               delay="3000"
               layout="responsive"
               height="384"
-              width="960"
-              type="slides">
-            <amp-img src="/skin/{$theme}/img/carousel/m_urbex.webp"
-                     alt="Urbex"
-                     layout="responsive"
-                     height="384"
-                     width="960">
-                <amp-img src="/skin/{$theme}/img/carousel/m_urbex.jpg"
-                         alt="Urbex"
-                         layout="responsive"
-                         height="384"
-                         width="960"
-                         fallback>
-                </amp-img>
-            </amp-img>
-            <amp-img src="/skin/{$theme}/img/carousel/m_mountain-walker.webp"
-                     alt="Mountain Walker"
-                     layout="responsive"
-                     height="384"
-                     width="960">
-                <amp-img src="/skin/{$theme}/img/carousel/m_mountain.jpg"
-                         alt="Mountain Walker"
-                         layout="responsive"
-                         height="384"
-                         width="960"
-                         fallback>
-                </amp-img>
-            </amp-img>
-            <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.webp"
-                     alt="Skyscraper"
-                     layout="responsive"
-                     height="384"
-                     width="960">
-                <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.jpg"
-                         alt="Skyscraper"
-                         layout="responsive"
-                         height="384"
-                         width="960"
-                         fallback>
-                </amp-img>
-            </amp-img>
+              width="960">
+    <amp-img src="/skin/{$theme}/img/carousel/m_urbex.webp"
+             alt="Urbex"
+             layout="responsive"
+             height="384"
+             width="960">
+        <amp-img src="/skin/{$theme}/img/carousel/m_urbex.jpg"
+                 alt="Urbex"
+                 layout="responsive"
+                 height="384"
+                 width="960"
+                 fallback>
+        </amp-img>
+    </amp-img>
+    <amp-img src="/skin/{$theme}/img/carousel/m_mountain-walker.webp"
+             alt="Mountain Walker"
+             layout="responsive"
+             height="384"
+             width="960">
+        <amp-img src="/skin/{$theme}/img/carousel/m_mountain.jpg"
+                 alt="Mountain Walker"
+                 layout="responsive"
+                 height="384"
+                 width="960"
+                 fallback>
+        </amp-img>
+    </amp-img>
+    <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.webp"
+             alt="Skyscraper"
+             layout="responsive"
+             height="384"
+             width="960">
+        <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.jpg"
+                 alt="Skyscraper"
+                 layout="responsive"
+                 height="384"
+                 width="960"
+                 fallback>
+        </amp-img>
+    </amp-img>
+</amp-carousel>*}
+<amp-carousel type="slides" autoplay loop controls delay="3000" layout="responsive" height="384" width="960">
+    <amp-img src="/skin/{$theme}/img/carousel/m_urbex.webp" alt="Urbex" layout="responsive" height="384" width="960"></amp-img>
+    <amp-img src="/skin/{$theme}/img/carousel/m_mountain-walker.webp" alt="Mountain Walker" layout="responsive" height="384" width="960"></amp-img>
+    <amp-img src="/skin/{$theme}/img/carousel/m_skyscraper.webp" alt="Skyscraper" layout="responsive" height="384" width="960"></amp-img>
 </amp-carousel>
 {else}
 <div id="home-slideshow" class="owl-slideshow">

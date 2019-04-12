@@ -12,9 +12,15 @@
                 <meta itemprop="hasMap" content="{$url}/{$lang}/gmap/"/>
             {/if}
             <div itemprop="logo image" itemscope itemtype="https://schema.org/ImageObject">
-                <meta itemprop="url" content="{$url}/skin/{$theme}/img/logo/{#logo_img#}">
-                <meta itemprop="width" content="269">
-                <meta itemprop="height" content="50">
+                {if $logo && $logo.img.active eq 1}
+                    <meta itemprop="url" content="{$url}{$logo.img.medium.src}">
+                    <meta itemprop="width" content="{$url}{$logo.img.medium.w}">
+                    <meta itemprop="height" content="{$url}{$logo.img.medium.h}">
+                {else}
+                    <meta itemprop="url" content="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}">
+                    <meta itemprop="width" content="229">
+                    <meta itemprop="height" content="50">
+                {/if}
             </div>
             {if $companyData.contact.phone}
                 <meta itemprop="telephone" content="{$companyData.contact.phone}"/>

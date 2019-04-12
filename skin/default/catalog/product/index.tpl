@@ -79,7 +79,7 @@
                 <h3>{#similar_products#|ucfirst}</h3>
                 <div class="vignette-list">
                     <div class="section-block">
-                        <div class="row row-center">
+                        <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
                             {include file="catalog/loop/product.tpl" data=$product.associated classCol='vignette col-12 col-xs-6 col-md-4'}
                         </div>
                     </div>

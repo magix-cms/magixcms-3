@@ -17,7 +17,7 @@
             </amp-img>
             </a>*}
             {if $logo && $logo.img.active eq 1}
-                <a href="{$url}/{$lang}/" title="{if !empty($logo.img.title)}{$logo.img.title|ucfirst}{else}{#logo_link_title#|ucfirst}{/if}">
+                <a href="{$url}/{$lang}/amp/" title="{if !empty($logo.img.title)}{$logo.img.title|ucfirst}{else}{#logo_link_title#|ucfirst}{/if}">
                     <amp-img alt="{#logo_img_alt#|ucfirst} {$companyData.name}"
                              sizes="{$smarty.capture.sizes}"
                              src="{$url}{$logo.img.small.src_webp}"
@@ -65,4 +65,4 @@
         {/if}
     </nav>
 </header>
-{include file="amp/section/menu/sidebar.tpl"}
+{include file="amp/section/menu/sidebar.tpl" menu="side" main=true mobile=true deepness=2}

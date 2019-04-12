@@ -34,7 +34,7 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_seo', 'seo'),
 (NULL, 'backend_controller_theme', 'theme'),
 (NULL, 'backend_controller_plugins', 'plugins'),
-(NULL, 'backend_controller_translate', 'translate')
+(NULL, 'backend_controller_translate', 'translate'),
 (NULL, 'backend_controller_logo', 'logo');
 
 CREATE TABLE IF NOT EXISTS `mc_admin_access` (

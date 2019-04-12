@@ -20,7 +20,7 @@ class plugins_contact_public extends plugins_contact_db
 		$modelDomain,
 		$config,
 		$settings,
-		$amp_avaiable = true;
+		$amp_available = true;
 
 	/**
 	 * @var array
@@ -315,6 +315,6 @@ class plugins_contact_public extends plugins_contact_db
 	 */
 	public function is_amp()
 	{
-		return $this->amp_avaiable;
+		return $this->amp_available;
     }
 }

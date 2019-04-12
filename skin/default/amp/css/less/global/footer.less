@@ -31,7 +31,7 @@
 
 #block {
 	// --- Block contact
-	&-contact {
+	/*&-contact {
 		li {
 			margin: 5px 0 15px;
 
@@ -45,32 +45,27 @@
 			width: 30px;
 			font-size: 20px;
 		}
-	}
+	}*/
 	// --- Block last news
 	&-last-news {
 		.news-list-last {
 			h5 {
-				line-height: @line-height-base;
+				//line-height: @line-height-base;
 				.text-overflow();
 			}
+
 			.date{
 				color: @main-color;
 			}
-			a {
-				text-decoration: none;
-				p {
-					//color: #959595;
-					text-decoration: none;
-				}
+
+			p {
+				font-size: 13px;
+				margin-bottom: 5px;
 			}
 
 			.media-footer {
 				border-bottom: 1px dotted @footer-border-color;
 				padding-bottom: 10px;
-				p {
-					font-size: 13px;
-					margin-bottom: 5px;
-				}
 			}
 		}
 	}
@@ -80,24 +75,21 @@
 	background-color: @colophon-bg;
 	color: @colophon-color;
 
-	.footer-colophon {
-		border-top: @footer-border;
-		padding: 15px;
-		font-size: 85%;
-
-		p {
-			margin: 0;
-			padding: 0;
-		}
-
-		> div:nth-child(n+2) {
-			padding: 5px 0;
-		}
-	}
-
 	.material-icons {
 		font-size: inherit;
 		vertical-align: middle;
+	}
+}
+
+.footer-colophon {
+	border-top: @footer-border;
+	padding: 15px;
+	font-size: 85%;
+
+	p { margin: 0; }
+
+	> div:nth-child(n+2) {
+		padding: 5px 0;
 	}
 }
 
@@ -106,16 +98,11 @@
 	bottom: 0;
 	display: block;
 	width: 100%;
-	//max-width: 37.5rem;
 	left: 0;
 	z-index: @z-fixed;
 	padding: 0;
 	background-color: @main-color;
 	.shadow(4);
-
-	.btn {
-		.btn-main-theme();
-	}
 
 	.share-nav {
 		background: @sharebar-bg;
@@ -164,6 +151,7 @@
 	}
 
 	.btn {
+		.btn-main-theme();
 		display: flex;
 		align-items: center;
 	}

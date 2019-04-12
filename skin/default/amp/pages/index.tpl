@@ -14,7 +14,7 @@
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}
             <header>
-                {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{$url}/{$lang}/about/","title" => $root.name] amp=true}
+                {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{$url}/{$lang}/","title" => {#home#}] amp=true}
                 <h1 itemprop="name">{$pages.name}</h1>
             </header>
             {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}

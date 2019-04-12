@@ -6,6 +6,7 @@
     <section>
         {if !{$child.url_link|strpos:'amp'} && $child.amp_available}{$child.url_link = {$child.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
         {if $mega && $child.subdata && $dp < $deepness}
+            {$sn = $sn + 1}
             <header>
                 <a itemprop="url" href="{$child.url}" title="{$child.title}"><span>{$child.title}</span></a>
                 <span class="show-more"><i class="material-icons">add</i></span>
@@ -14,6 +15,7 @@
             <div class="nested-accordion">
                 <amp-accordion class="list-unstyled" animate expand-single-section disable-session-states>
                     {include file="section/menu/loop/sublink.tpl" scope="global" parent="subnav-{$sn}" childs=$child.subdata mega=$mega mobile=$mobile dp=($dp+1) amp=true}
+                    {$sn = $sn}
                 </amp-accordion>
             </div>
         {else}

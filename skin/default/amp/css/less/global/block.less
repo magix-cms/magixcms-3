@@ -29,7 +29,7 @@
 		position: relative;
 		.shadow(2);
 
-		&:hover, &:focus {
+		&:focus {
 			.caption {
 				opacity: 1;
 			}
@@ -46,113 +46,6 @@
 		}
 	}
 }
-
-/*
-.vignette-list {
-	overflow: hidden;
-	margin: 0 -15px;
-
-	.section-block{
-		margin: 0 -15px;
-		padding-right: 30px;
-		padding-left: 30px;
-		background-color: #eee;
-		.shadow(1,inset);
-	}
-}
-*/
-
-/*.news-list {
-	overflow: hidden;
-	margin: 0 -15px;
-
-	.section-block{
-		margin: 0 -15px;
-		padding: 0 30px;
-		background-color: #eee;
-		.shadow(1,inset);
-
-		> .row > div {
-			padding: 30px 15px 30px 30px;
-			margin-left: 105px;
-			border-left: 2px solid #dfdfdf;
-
-			@media (min-width: @screen-xs-min) {
-				padding-right: 30px;
-				margin-left: 125px;
-			}
-		}
-	}
-}*/
-
-/*.news-tile {
-	position: relative;
-	background-color: #fff;
-	&:not(:last-child) { margin-bottom: 30px; }
-	//.shadow(2);
-	.shadow(1);
-
-	.figure.row {
-		margin: 0;
-	}
-
-	.time-figure {
-		padding: 0;
-
-		> div {
-			height: 100%;
-		}
-
-		amp-img {
-			width: 100%;
-			height: 100%;
-
-			img {
-				min-width: auto;
-				min-height: auto;
-				max-height: none;
-				max-width: none;
-				width: auto;
-				height: auto;
-				.img-full-height();
-			}
-		}
-
-		+ div {
-			padding: 0 20px 15px;
-
-			@media (min-width: @screen-xs-min) {
-				padding: 0 15px 15px 30px;
-			}
-		}
-	}
-
-	.time-published {
-		position: absolute;
-		left: -125px;
-		background-color: #dfdfdf;
-		padding: 8px;
-		border-radius: 4px;
-		color: rgba(0,0,0,.4);
-
-		p {
-			margin: 0;
-		}
-
-		&:after {
-			content: " ";
-			display: block;
-			position: absolute;
-			width: 10px;
-			height: 10px;
-			background-color: @main-color;
-			border-radius: 100%;
-			top: 50%;
-			transform: translateY(-50%);
-			right: -35px;
-		}
-	}
-}*/
 
 .news-tile {
 	margin-bottom: 22px;
@@ -253,84 +146,5 @@
 		position: relative;
 		text-align: center;
 		overflow: hidden;
-	}
-}
-
-/* --------------------------------------------------------
-                         Toc Drop
----------------------------------------------------------- */
-.dropdown {
-	position: relative;
-
-	&:not(.open) {
-		> button .show-less {
-			display: none;
-		}
-	}
-
-	&.open {
-		.dropdown-menu {
-			display: block;
-		}
-		> button .show-more {
-			display: none;
-		}
-	}
-
-	.dropdown-header button {
-		&:not(.open) {
-			.show-less {
-				display: none;
-			}
-		}
-
-		&.open {
-			.show-more {
-				display: none;
-			}
-		}
-	}
-
-	.dropdown-menu {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		z-index: 1000;
-		display: none;
-		float: left;
-		min-width: 160px;
-		margin: 2px 0 0;
-		list-style: none;
-		font-size: 14px;
-		text-align: left;
-		background-color: #fff;
-		background-clip: padding-box;
-		padding: 0;
-		-webkit-box-shadow: 0 0 3px rgba(0,0,0,.4);
-		box-shadow: 0 0 3px rgba(0,0,0,.4);
-		border-radius: 0;
-		border: none;
-
-		> li {
-			&.active, > a {
-				font-weight: 400;
-				padding: 5px 8px;
-			}
-		}
-	}
-
-	&:not(.toc-drop) {
-		.dropdown-menu {
-			min-width: 100%;
-			top: ~"calc(100% - 2px)";
-		}
-	}
-
-	.dropdown-header {
-		padding: 0;
-	}
-
-	.btn {
-		text-align: left;
 	}
 }

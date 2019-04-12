@@ -8,7 +8,7 @@
 {/strip}
 {if is_array($data) && !empty($data)}
     {foreach $data as $item}
-        <div{if $classCol} class="{$classCol}{/if}" itemprop="hasPart" itemscope itemtype="http://schema.org/Series">
+        <div{if $classCol} class="{$classCol}{/if}" itemprop="itemListElement" itemscope itemtype="http://schema.org/Series">
             <div class="figure">
                 {if $item.img.medium.src}
                     <amp-img alt="{$item.img.alt}"

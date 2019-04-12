@@ -1,6 +1,7 @@
 {if $menuData}
     {assign var="sn" value=0 scope="global"}
     {foreach $menuData as $k => $item}
+        {if $item.mode_link === 'mega'}{$mega = true}{else}{$mega = false}{/if}
         {assign var="dp" value=0}
         {if $item.controller === $active_link.controller && (!isset($item.id_page) || in_array($item.id_page,$active_link.ids))}{$item.active = true}{/if}
         {if $amp}
@@ -14,6 +15,7 @@
             </header>
             <div></div>
         {else}
+            {$sn = $sn + 1}
             <header>
                 <a itemprop="url" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>
                     <span itemprop="name">{$item.name_link}</span>
@@ -23,14 +25,13 @@
             </header>
             <div class="nested-accordion">
                 <amp-accordion class="list-unstyled" animate expand-single-section disable-session-states>
-                {include file="section/menu/loop/sublink.tpl" scope="global" childs=$item.subdata mega=$mega mobile=false dp=($dp+1) chc=$item.controller amp=$amp}
+                {include file="section/menu/loop/sublink.tpl" scope="global" childs=$item.subdata mega=$mega dp=($dp+1) chc=$item.controller amp=$amp}
                 </amp-accordion>
             </div>
         {/if}
         </section>
         {else}
             <li class="panel{if $item.active} active{/if}">
-                {if $item.mode_link === 'mega'}{$mega = true}{else}{$mega = false}{/if}
                 {if $mobile && $item.subdata}
                     {$sn = $sn + 1}
                     <button type="button" class="navbar-toggle{if $item.active} open{else} collapsed{/if}" data-toggle="collapse" data-parent="#menul" data-target="#nav{$menu}-{$sn}">
