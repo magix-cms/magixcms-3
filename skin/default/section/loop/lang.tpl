@@ -1,5 +1,9 @@
 {if is_array($dataLang) && !empty($dataLang)}
-    <link rel="canonical" href="{$url}{$smarty.server.REQUEST_URI|replace:'amp/':''}">
+    {if $domain.default_domain eq '0'}
+        <link rel="canonical" href="{if $setting['ssl']['value'] eq 1}https://{else}http://{/if}{$defaultDomain}{$smarty.server.REQUEST_URI|replace:'amp/':''}" />
+    {else}
+        <link rel="canonical" href="{$url}{$smarty.server.REQUEST_URI|replace:'amp/':''}">
+    {/if}
     {if !$amp & $amp_active}
         <link rel="amphtml" href="{$url}{if $smarty.server.REQUEST_URI}{$smarty.server.REQUEST_URI|replace:{$iso|cat:'/'}:{$iso|cat:'/amp/'}}{else}/amp/{/if}">
     {/if}

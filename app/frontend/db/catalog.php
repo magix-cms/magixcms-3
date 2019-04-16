@@ -103,7 +103,8 @@ class frontend_db_catalog
 								   c.seo_title_cat,
 								   c.seo_desc_cat,
 								   lang.id_lang,
-								   lang.iso_lang
+								   lang.iso_lang,
+								   lang.default_lang
 							FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";

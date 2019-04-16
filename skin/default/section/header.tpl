@@ -10,8 +10,8 @@
     </button>
     {* Brand && Headline *}
     <div class="site-name">
+        {capture name="sizes"}(min-width: 1200px) 10vw, (min-width: 992px) 15vw, (orientation: landscape) and (min-width: 768px) 20vw, (orientation: portrait) and (min-width: 480px) 25vw, 200px{/capture}
         {if $logo && $logo.img.active eq 1}
-            {capture name="sizes"}(min-width: 1200px) 10vw, (min-width: 992px) 15vw, (orientation: landscape) and (min-width: 768px) 20vw, (orientation: portrait) and (min-width: 480px) 25vw, 200px{/capture}
             <a href="{$url}/{$lang}/" title="{if !empty($logo.img.title)}{$logo.img.title|ucfirst}{else}{#logo_link_title#|ucfirst}{/if}">
                 {strip}
                     <picture>
@@ -23,7 +23,6 @@
                     </picture>{/strip}
             </a>
             {else}
-            {capture name="sizes"}(min-width: 1200px) 10vw, (min-width: 992px) 15vw, (orientation: landscape) and (min-width: 768px) 20vw, (orientation: portrait) and (min-width: 480px) 25vw, 200px{/capture}
             <a href="{$url}/{$lang}/" title="{#logo_link_title#|ucfirst}">
                 {strip}
                     <picture>

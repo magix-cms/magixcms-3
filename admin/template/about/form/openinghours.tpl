@@ -1,5 +1,5 @@
-<form id="enable_op_form" method="post" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10">
-    <div class="row">
+<div class="row">
+    <form id="enable_op_form" method="post" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10">
         <div class="row">
             <div class="col-ph-12 col-md-4">
                 <div class="form-group">
@@ -8,11 +8,10 @@
                 </div>
             </div>
         </div>
-    </div>
-    <input type="hidden" id="data_type" name="data_type" value="enable_op">
-</form>
-<form id="info_opening_form" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10 {if $companyData.openinghours} collapse{else} collapse in{/if}">
-    <div class="row">
+        <input type="hidden" id="data_type" name="data_type" value="enable_op">
+    </form>
+    <form id="info_opening_form" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10 {if $companyData.openinghours} collapse{else} collapse in{/if}">
+        {include file="language/brick/dropdown-lang.tpl" onclass=true}
         <table id="openingHours" class="table table-bordered">
             <thead>
             <tr>
@@ -34,11 +33,9 @@
             {include file="about/loop/days.tpl"}
             </tbody>
         </table>
-    </div>
-    <div class="row">
-        <div id="submit" class="col-ph-12 col-md-4">
+        <div id="submit">
             <input type="hidden" id="data_type" name="data_type" value="openinghours">
-            <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
+            <button class="btn btn-main-theme" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
         </div>
-    </div>
-</form>
+    </form>
+</div>

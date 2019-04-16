@@ -7,9 +7,11 @@
     </form>
     <form id="edit_img_default" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form_img col-ph-12 col-md-6 col-lg-5" data-target="holder">
         <div class="form-group">
-            <label for="color[canvas]">{#canvas_color#} <a href="#" class="icon-help text-info"
+            <label for="color[canvas]">{#canvas_color#} <a href="#" class="icon-help text-info" data-trigger="hover" data-placement="top"
                                                            data-toggle="popover"
-                                                           data-title="{#colorpicker_info#}">
+                                                           data-content="{#colorpicker_info#}"
+                                                           data-original-title=""
+                                                           data-title="">
                     <span class="fa fa-question-circle"></span>
                 </a>:</label>
             <div class="input-group colorpicker-component csspicker">

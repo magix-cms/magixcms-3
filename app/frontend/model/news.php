@@ -139,6 +139,7 @@ class frontend_model_news extends frontend_db_news {
             $data['date']['day']   = $this->dateFormat->dateDefine('d',$row['date_publish']);
 
             $data['content'] = $row['content_news'];
+			$data['lead'] = $row['resume_news'];
 			$data['resume'] = $row['resume_news'] ? $row['resume_news'] : ($row['content_news'] ? $string_format->truncate(strip_tags($row['content_news'])) : '');
 
             $data['tags'] = null;

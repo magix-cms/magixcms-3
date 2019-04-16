@@ -40,6 +40,22 @@
  * License: Dual licensed under the MIT or GPL Version
  */
 class component_collections_setting{
+	/**
+	 * @return mixed|null
+	 */
+	public function getSetting(){
+		$data = $this->fetchData(array('context'=>'all','type'=>'setting'));
+		$arr = array();
+		if($data != null) {
+			foreach ($data as $item) {
+				$arr[$item['name']] = array();
+				$arr[$item['name']]['value'] = $item['value'];
+				$arr[$item['name']]['category'] = $item['category'];
+			}
+		}
+		return $arr;
+	}
+
     /**
      * @param $name
      * @return mixed

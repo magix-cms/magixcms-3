@@ -54,7 +54,7 @@
                     </figure>
                 </a>
             {/if}
-            <p class="resume">{$news.resume}</p>
+            {if $news.lead}<p class="resume">{$news.lead}</p>{/if}
             {$news.content}
         </div>
     </div>

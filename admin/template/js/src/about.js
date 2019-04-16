@@ -75,10 +75,17 @@ var about = (function ($, undefined) {
                     if($('.noon_time', line).prop('checked')) {
                         $('.noon_hours input', line).prop('disabled', false);
                     }
+
+                    $('.close_txt', line).addClass('hide');
+                    $('.schedules', line).removeClass('hide');
+
                 }else{
                     $('.open_hours input', line).prop('disabled', true);
                     $('.noon_hours input', line).prop('disabled', true);
                     $('.noon_time', line).bootstrapToggle('disable');
+
+                    $('.schedules', line).addClass('hide');
+                    $('.close_txt', line).removeClass('hide');
                 }
             });
 
@@ -88,8 +95,10 @@ var about = (function ($, undefined) {
 
                 if( $(this).prop("checked") == true) {
                     $('.noon_hours input', line).prop('disabled', false);
+                    $('.noon_hours', line).removeClass('hide');
                 }else{
                     $('.noon_hours input', line).prop('disabled', true);
+                    $('.noon_hours', line).addClass('hide');
                 }
             });
         }

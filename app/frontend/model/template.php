@@ -50,7 +50,7 @@ class frontend_model_template{
 	 * @var string
 	 */
 	private $ConfigFile;
-	protected $amp,$DBDomain;
+	protected $amp,$DBDomain,$settings,$ssl;
     /**
      * @var component_collections_setting
      */
@@ -61,21 +61,34 @@ class frontend_model_template{
 		$langs,
 		$domain,
 		$collectionsSetting,
-		$cLangs;
+		$cLangs,
+        $defaultDomain;
 	/**
 	 *
 	 * Constructor
 	 */
     public function __construct(){
         $this->collectionsSetting = new component_collections_setting();
+        $this->settings = $this->collectionsSetting->getSetting();
         $this->cLangs = new component_collections_language();
-        $this->amp = http_request::isGet('amp') ? true : false;
-        $this->ConfigFile = 'local_';
-        $this->DBDomain = new frontend_db_domain();
-        $this->theme = $this->themeSelected();
+		$this->ConfigFile = 'local_';
+		$this->DBDomain = new frontend_db_domain();
+		$this->theme = $this->themeSelected();
 		$this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST'])) : null;
 		$this->langs = $this->langsAvailable();
 		$this->lang = $this->currentLanguage();
+		$this->ssl = $this->settings['ssl'];
+		$this->amp = (http_request::isGet('amp') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') && $this->ssl['value'])? true : false;
+        $this->defaultDomain = $this->setDefaultDomain();
+	}
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function setDefaultDomain(){
+        $data = $this->DBDomain->fetchData(array('context' => 'one', 'type' => 'defaultDomain'));
+        return $data['url_domain'];
     }
 
 	/**

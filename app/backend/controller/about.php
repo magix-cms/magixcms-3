@@ -336,6 +336,7 @@ class backend_controller_about extends backend_db_about{
 		switch ($data['type']) {
 			case 'page':
 			case 'content':
+			case 'close_txt':
 				parent::insert(
 					array(
 						'context' => $data['context'],
@@ -363,6 +364,7 @@ class backend_controller_about extends backend_db_about{
 			case 'socials':
 			case 'openinghours':
 			case 'pageActiveMenu':
+			case 'close_txt':
 				parent::update(
 					array(
 						'context' => $data['context'],
@@ -517,20 +519,52 @@ class backend_controller_about extends backend_db_about{
 		/* Update openinghours */
 		foreach ($this->company['specifications'] as $day => $opt) {
 			if(isset($this->send['openinghours'][$day])) {
-				$this->company['specifications'][$day]['open_day'] = '1';
+				$this->company['specifications'][$day]['open_day'] = ($this->send['openinghours'][$day]['open_day'] ? '1' : '0');
 
-				if(isset($this->send['openinghours'][$day]['noon_time'])) {
-					$this->company['specifications'][$day]['noon_time'] = '1';
+				if($this->company['specifications'][$day]['open_day']) {
+					if(isset($this->send['openinghours'][$day]['noon_time'])) {
+						$this->company['specifications'][$day]['noon_time'] = '1';
 
-					$this->company['specifications'][$day]['noon_start'] 	= ($this->send['openinghours'][$day]['noon_start']['hh'] ? ($this->send['openinghours'][$day]['noon_start']['hh'].':'.$this->send['openinghours'][$day]['noon_start']['mm']) : null);
-					$this->company['specifications'][$day]['noon_end'] 	= ($this->send['openinghours'][$day]['noon_end']['hh'] ? ($this->send['openinghours'][$day]['noon_end']['hh'].':'.$this->send['openinghours'][$day]['noon_end']['mm']) : null);
-				} else {
-					$this->company['specifications'][$day]['noon_time'] = '0';
+						$this->company['specifications'][$day]['noon_start'] = ($this->send['openinghours'][$day]['noon_start']['hh'] ? ($this->send['openinghours'][$day]['noon_start']['hh'].':'.$this->send['openinghours'][$day]['noon_start']['mm']) : null);
+						$this->company['specifications'][$day]['noon_end'] = ($this->send['openinghours'][$day]['noon_end']['hh'] ? ($this->send['openinghours'][$day]['noon_end']['hh'].':'.$this->send['openinghours'][$day]['noon_end']['mm']) : null);
+					} else {
+						$this->company['specifications'][$day]['noon_time'] = '0';
+					}
+
+					$this->company['specifications'][$day]['open_time'] = ($this->send['openinghours'][$day]['open']['hh'] ? ($this->send['openinghours'][$day]['open']['hh'].':'.$this->send['openinghours'][$day]['open']['mm']) : null);
+					$this->company['specifications'][$day]['close_time'] = ($this->send['openinghours'][$day]['close']['hh'] ? ($this->send['openinghours'][$day]['close']['hh'].':'.$this->send['openinghours'][$day]['close']['mm']) : null);
 				}
+				else {
+					foreach ($this->content as $lang => $content) {
+						$contentPage = $this->getItems('content',array('id_lang'=>$lang,),'one',false);
 
-				$this->company['specifications'][$day]['open_time'] 	= ($this->send['openinghours'][$day]['open']['hh'] ? ($this->send['openinghours'][$day]['open']['hh'].':'.$this->send['openinghours'][$day]['open']['mm']) : null);
-				$this->company['specifications'][$day]['close_time'] 	= ($this->send['openinghours'][$day]['close']['hh'] ? ($this->send['openinghours'][$day]['close']['hh'].':'.$this->send['openinghours'][$day]['close']['mm']) : null);
-			} else {
+						if($contentPage != null) {
+							$this->upd(
+								array(
+									'type' => 'close_txt',
+									'data' => array(
+										'id_content' => $contentPage['id_content'],
+										'column' => 'text_'.$day,
+										'value' => $this->send['openinghours'][$day]['content'][$lang]['txt']
+									)
+								)
+							);
+						}
+						else {
+							$this->add(
+								array(
+									'type' => 'close_txt',
+									'data' => array(
+										'column' => 'text_'.$day,
+										'value' => $this->send['openinghours'][$day]['content'][$lang]['txt']
+									)
+								)
+							);
+						}
+					}
+				}
+			}
+			else {
 				$this->company['specifications'][$day]['open_day'] = '0';
 			}
 		}

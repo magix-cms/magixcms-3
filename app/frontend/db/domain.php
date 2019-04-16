@@ -35,6 +35,9 @@ class frontend_db_domain
 					case 'currentDomain':
 						$sql = 'SELECT d.* FROM mc_domain AS d WHERE d.url_domain = :url';
 						break;
+                    case 'defaultDomain':
+                        $sql = 'SELECT d.* FROM mc_domain AS d WHERE d.default_domain = 1';
+                        break;
 					case 'language':
 						$sql = 'SELECT dl.id_lang,lang.iso_lang, lang.name_lang
 								FROM mc_domain_language AS dl

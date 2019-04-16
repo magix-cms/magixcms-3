@@ -39,29 +39,7 @@ class component_routing_dispatcher{
      * global assign setting
      */
     private function getSetting(){
-        $data = $this->settingCollection->fetchData(array('context'=>'all','type'=>'setting'));
-        $arr = array();
-        if($data != null) {
-            foreach ($data as $item) {
-                $arr[$item['name']] = array();
-                $arr[$item['name']]['value'] = $item['value'];
-                $arr[$item['name']]['category'] = $item['category'];
-            }
-            $this->template->assign('setting', $arr);
-
-            /*if($arr['fav']['value'] !== '') {
-            	$faDir = $this->pathadmin.'template'.DIRECTORY_SEPARATOR.'fonts'.DIRECTORY_SEPARATOR.'fontawesome'.DIRECTORY_SEPARATOR.$arr['fav']['value'].DIRECTORY_SEPARATOR;
-            	if(!file_exists($faDir)){
-					$content = file_get_contents('https://maxcdn.bootstrapcdn.com/font-awesome/'.$arr['fav']['value'].'/fonts/fontawesome-webfont.ttf');
-
-					if ($content !== false) {
-						$makeFiles = new filesystem_makefile();
-						$makeFiles->mkdir($faDir);
-						file_put_contents($faDir.'fontawesome-webfont.ttf', $content);
-					}
-				}
-			}*/
-        }
+        $this->template->assign('setting', $this->settingCollection->getSetting());
     }
 
     /**
@@ -94,6 +72,7 @@ class component_routing_dispatcher{
 			$this->template->assign('domain',$this->template->domain);
 			$this->template->assign('dataLang',$this->template->langs);
 			$this->template->assign('defaultLang',$this->template->defaultLang);
+            $this->template->assign('defaultDomain',$this->template->defaultDomain);
             $modelLogo = new frontend_model_logo($this->template);
             $this->template->assign('logo', $modelLogo->getLogoData());
             $this->template->assign('favicon', $modelLogo->getFaviconData());

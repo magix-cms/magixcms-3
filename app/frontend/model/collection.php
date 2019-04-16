@@ -158,6 +158,7 @@ class frontend_model_collection{
         $imgPath = $this->upload->imgBasePath('upload/catalog/c');
         $arr = array();
         $conf = array();
+        $extwebp = 'webp';
         $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'category'));
         $imgPrefix = $this->imagesComponent->prefix();
 
@@ -176,9 +177,13 @@ class frontend_model_collection{
                 $arr[$page['id_cat']]['id_cat'] = $page['id_cat'];
                 $arr[$page['id_cat']]['id_parent'] = $page['id_parent'];
                 $arr[$page['id_cat']]['menu_cat'] = $page['menu_cat'];
+                // # return filename without extension
+                $pathinfo = pathinfo($page['img_cat']);
+                $filename = $pathinfo['filename'];
                 if($page['img_cat'] != null) {
                     foreach ($fetchConfig as $key => $value) {
                         $arr[$page['id_cat']]['imgSrc'][$value['type_img']] = '/upload/catalog/c/'.$page['id_cat'].'/'.$imgPrefix[$value['type_img']] . $page['img_cat'];
+                        //$data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
                     }
                 }
                 $arr[$page['id_cat']]['date_register'] = $page['date_register'];
