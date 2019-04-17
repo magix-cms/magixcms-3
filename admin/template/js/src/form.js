@@ -274,7 +274,13 @@ var globalForm = (function ($, undefined) {
             options.success = function (d) {
                 if($(f).find('.selectpicker')) {
                     $(f).find('.selectpicker').bootstrapSelect('clear');
-                    $(f).find('.selectpicker').bootstrapSelect('empty');
+                    if(d.extend[0].id) {
+                        $(f).find('.selectpicker [data-value="'+d.extend[0].id+'"]').remove();
+                        $(f).find('.selectpicker').bootstrapSelect('reset');
+                    }
+                    else {
+                        $(f).find('.selectpicker').bootstrapSelect('empty');
+                    }
                 }
                 sub = $(f).data('sub') == '' ? false : $(f).data('sub');
                 initAlert(d.notify,4000,sub);
