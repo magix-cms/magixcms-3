@@ -115,7 +115,8 @@ class frontend_model_about extends frontend_db_about {
 				'close_time' 	=> NULL,
 				'noon_time' 	=> '0',
 				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL
+				'noon_end' 		=> NULL,
+				'close_txt'		=> NULL
 			),
 			'Tu' => array(
 				'open_day' 		=> '0',
@@ -123,7 +124,8 @@ class frontend_model_about extends frontend_db_about {
 				'close_time'	=> NULL,
 				'noon_time' 	=> '0',
 				'noon_start'	=> NULL,
-				'noon_end'		=> NULL
+				'noon_end'		=> NULL,
+				'close_txt'		=> NULL
 			),
 			'We' => array(
 				'open_day' 		=> '0',
@@ -131,7 +133,8 @@ class frontend_model_about extends frontend_db_about {
 				'close_time' 	=> NULL,
 				'noon_time' 	=> '0',
 				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL
+				'noon_end' 		=> NULL,
+				'close_txt'		=> NULL
 			),
 			'Th' => array(
 				'open_day' 		=> '0',
@@ -139,7 +142,8 @@ class frontend_model_about extends frontend_db_about {
 				'close_time' 	=> NULL,
 				'noon_time' 	=> '0',
 				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL
+				'noon_end' 		=> NULL,
+				'close_txt'		=> NULL
 			),
 			'Fr' => array(
 				'open_day' 		=> '0',
@@ -147,7 +151,8 @@ class frontend_model_about extends frontend_db_about {
 				'close_time' 	=> NULL,
 				'noon_time' 	=> '0',
 				'noon_start' 	=> NULL,
-				'noon_end'		=> NULL
+				'noon_end'		=> NULL,
+				'close_txt'		=> NULL
 			),
 			'Sa' => array(
 				'open_day' 		=> '0',
@@ -155,7 +160,8 @@ class frontend_model_about extends frontend_db_about {
 				'close_time' 	=> NULL,
 				'noon_time' 	=> '0',
 				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL
+				'noon_end' 		=> NULL,
+				'close_txt'		=> NULL
 			),
 			'Su' => array(
 				'open_day' 		=> '0',
@@ -163,7 +169,8 @@ class frontend_model_about extends frontend_db_about {
 				'close_time' 	=> NULL,
 				'noon_time' 	=> '0',
 				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL
+				'noon_end' 		=> NULL,
+				'close_txt'		=> NULL
 			)
 		)
 	);
@@ -441,13 +448,15 @@ class frontend_model_about extends frontend_db_about {
 					$this->company[$info] = $about['openinghours'];
 
 					$op = parent::fetchData(array('context'=>'all','type'=>'op'));
+					$op_content = parent::fetchData(array('context'=>'all','type'=>'op_content'));
+
 					foreach ($op as $d) {
-						$schedule[$d['day_abbr']] = $d;
-						//array_shift($schedule[$d['day_abbr']]);
-						//$schedule[$d['day_abbr']]['open_time'] = explode(':',$d['open_time']);
-						//$schedule[$d['day_abbr']]['close_time'] = explode(':',$d['close_time']);
-						//$schedule[$d['day_abbr']]['noon_start'] = explode(':',$d['noon_start']);
-						//$schedule[$d['day_abbr']]['noon_end'] = explode(':',$d['noon_end']);
+						$abbr = $d['day_abbr'];
+						$schedule[$abbr] = $d;
+
+						foreach ($op_content as $opc) {
+							$schedule[$abbr]['close_txt'][$opc['iso_lang']] = $opc['text_' . strtolower($abbr)];
+						}
 					}
 					break;
 				default:

@@ -27,6 +27,9 @@ class backend_db_about
 				case 'op':
 					$sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
 					break;
+				case 'op_content':
+					$sql = "SELECT * FROM `mc_about_op_content`";
+					break;
 				case 'languages':
 					$sql = "SELECT `name_lang` FROM `mc_lang`";
 					break;
@@ -167,6 +170,9 @@ class backend_db_about
 				case 'root':
 					$sql = 'SELECT * FROM mc_about_page ORDER BY id_pages DESC LIMIT 0,1';
 					break;
+				case 'close_txt':
+					$sql = 'SELECT * FROM mc_about_op_content WHERE id_lang = :id_lang';
+					break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
@@ -185,32 +191,39 @@ class backend_db_about
 		$sql = '';
 
 		if($config['context'] === 'about') {
-			if ($config['type'] === 'content') {
-				$queries = array(
-					array(
-						'request' => "SET @lang = :id_lang",
-						'params' => array('id_lang' => $params['id_lang'])
-					),
-					array(
-						'request' => "INSERT INTO `mc_about_data` (`id_lang`,`name_info`,`value_info`) VALUES
+			switch ($config['type']) {
+				case 'content':
+					$queries = array(
+						array(
+							'request' => "SET @lang = :id_lang",
+							'params' => array('id_lang' => $params['id_lang'])
+						),
+						array(
+							'request' => "INSERT INTO `mc_about_data` (`id_lang`,`name_info`,`value_info`) VALUES
 							(@lang,'desc',:dsc),(@lang,'slogan',:slogan),(@lang,'content',:content),(@lang,'seo_desc',:seo_desc),(@lang,'seo_title',:seo_title)",
-						'params' => array(
-							'dsc' => $params['desc'],
-							'slogan' => $params['slogan'],
-							'content' => $params['content'],
-							'seo_desc' => $params['seo_desc'],
-							'seo_title' => $params['seo_title']
-						)
-					),
-				);
+							'params' => array(
+								'dsc' => $params['desc'],
+								'slogan' => $params['slogan'],
+								'content' => $params['content'],
+								'seo_desc' => $params['seo_desc'],
+								'seo_title' => $params['seo_title']
+							)
+						),
+					);
 
-				try {
-					component_routing_db::layer()->transaction($queries);
-					return true;
-				}
-				catch (Exception $e) {
-					return 'Exception reçue : '.$e->getMessage();
-				}
+					try {
+						component_routing_db::layer()->transaction($queries);
+						return true;
+					}
+					catch (Exception $e) {
+						return 'Exception reçue : '.$e->getMessage();
+					}
+					break;
+				case 'close_txt':
+					$sql = 'INSERT INTO `mc_about_op_content`(id_lang,'.$params['column'].') 
+							VALUES (:id_lang,:value)';
+					unset($params['column']);
+					break;
 			}
 		}
 		elseif ($config['context'] === 'page') {
@@ -396,6 +409,10 @@ class backend_db_about
 						}
 					}
 					return true;
+					break;
+				case 'close_txt':
+					$sql = "UPDATE mc_about_op_content SET ".$params['column']." = :value WHERE id_content = :id";
+					unset($params['column']);
 					break;
 			}
 		}

@@ -83,6 +83,10 @@ class frontend_db_about
 				case 'op':
 					$sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
 					break;
+				case 'op_content':
+					$sql = "SELECT * FROM `mc_about_op_content` 
+							JOIN mc_lang AS lang USING(id_lang)";
+					break;
 				case 'langs':
 					$sql = 'SELECT
 							h.id_pages,c.url_pages,c.id_lang,lang.iso_lang

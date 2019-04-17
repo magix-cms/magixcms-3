@@ -16,7 +16,7 @@
         </div>
         <div class="form-group">
             <label class="radio-inline">
-                <input type="radio" name="active_logo" value="on" {if $page.active_logo eq '1'} checked{/if}>
+                <input type="radio" name="active_logo" value="on" {if $page.active_logo eq '1'} checked{/if} {if !$page.active_logo eq '1' && !$page.active_logo eq '0'}checked{/if}>
                 {#active_logo#|ucfirst}
             </label>
             <label class="radio-inline">

@@ -12,38 +12,35 @@
 // Modified by Simon Freytag for syntax, namespace, jQuery and Bootstrap
 // Modified by Salvatore Di Salvo for optimisation and Magix CMS
 
-const C = {
-    createCookie: function() {
-        let date = new Date();
-        date.setTime(date.getTime() + (365*24*60*60*1000));
-        let expires = date.toGMTString();
-        document.cookie = 'complianceCookie=on; expires=' + expires + '; path=/';
-        $("#cookies").removeClass('in').addClass('hide');
-    },
-
-    checkCookie: function() {
-        let nameEQ = 'complianceCookie=';
-        let ca = document.cookie.split(';');
-        for(let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1, c.length);
-            }
-
-            if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
-        }
-        return null;
-    },
-
-    init: function() {
-        if (this.checkCookie() !== 'on') {
-            $("#cookies").removeClass('hide');
-        }
-    }
-};
-
 +function ($) {
     'use strict';
+
+    const C = {
+        createCookie: function() {
+            let date = new Date();
+            date.setTime(date.getTime() + (365*24*60*60*1000));
+            document.cookie = 'complianceCookie=on; expires=' + date.toGMTString() + '; path=/';
+            $("#cookies").removeClass('in').addClass('hide');
+        },
+
+        checkCookie: function() {
+            let nameEQ = 'complianceCookie=';
+            let ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1, c.length);
+                }
+
+                if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
+            }
+            return null;
+        },
+
+        init: function() {
+            if (this.checkCookie() !== 'on') $("#cookies").removeClass('hide');
+        }
+    };
 
     $(window).on('load', function () {
         C.init(); // Cookie EU Law
@@ -62,18 +59,10 @@ const C = {
 
         // *** add the class 'open' on a collapse button when his collapsible element is opened
         $('[data-toggle="collapse"]').each(function(){
-            let self = $(this), target = $($(this).data('target'));
+            let self = $(this);
 
-            target.on('hidden.bs.collapse',function(){
-                if(self.hasClass('open') && !target.hasClass('collapse in')){
-                    self.removeClass('open');
-                }
-            });
-
-            target.on('shown.bs.collapse',function(){
-                if(!self.hasClass('open') && target.hasClass('in')){
-                    self.addClass('open');
-                }
+            $(self.data('target')).on('shown.bs.collapse hidden.bs.collapse',function(e){
+                if(e.target === this) self.toggleClass('open',e.type === 'shown');
             });
         });
 
@@ -81,33 +70,31 @@ const C = {
         $('.dropdown [data-toggle="collapse"]').click(function (e) {
             e.stopPropagation();
             e.preventDefault();
-            $(this).closest(".dropdown").addClass("open");
+            //$(this).closest(".dropdown").addClass("open");
             $($(this).data("target")).collapse('toggle');
         });
 
         // *** featherlight lightbox init
         if($.featherlight !== undefined) {
             let afterContent = function () {
-                let g = $.featherlightGallery !== undefined;
-                let caption = this.$currentTarget.data('caption') ? this.$currentTarget.data('caption') : this.$currentTarget.attr('title');
-                let closebtn = this.$instance.find('button');
-                this.$instance.find('.caption').remove();
-                this.$instance.find('.figure').remove();
-                if(g) {
-                    this.$instance.find('.featherlight-previous').remove();
-                    this.$instance.find('.featherlight-next').remove();
-                }
+                let trg = this.$currentTarget,
+                    g = $.featherlightGallery !== undefined && trg.hasClass('img-gallery'),
+                    fl = '.featherlight',
+                    flc = fl+'-content',
+                    caption = trg.data('caption') ? trg.data('caption') : trg.attr('title'),
+                    closebtn = this.$instance.find('button')[0];
+
+                this.$instance.find('.caption, .figure'+(g ? ', '+fl+'-previous, '+fl+'-next' : '')).remove();
+
                 this.$content
-                    .appendTo(this.$instance.find('.featherlight-content'))
+                    .appendTo(this.$instance.find(flc))
                     .wrapAll('<div class="figure" />');
-                $('<p />')
-                    .text(caption)
-                    .appendTo(this.$instance.find('.featherlight-content .figure'))
-                    .wrapAll('<div class="caption">');
-                $(closebtn[0]).prependTo(this.$instance.find('.featherlight-content .caption'));
-                if(g) {
-                    $(closebtn[0]).after(this.createNavigation('previous')).after(this.createNavigation('next'));
-                }
+
+                $('<div class="caption">')
+                    .append($(closebtn),$('<p />').text(caption))
+                    .appendTo(this.$instance.find(flc+' .figure'));
+
+                if(g) $(closebtn).after(this.createNavigation('next'),this.createNavigation('previous'));
             };
 
             $.featherlight.prototype.afterContent = afterContent;

@@ -7,7 +7,7 @@
  * @author Salvatore Di Salvo <www.disalvo-infographiste.be>
  * @author Gérits Aurélien <aurelien@magix-cms.com>
  */
-const niceForms = (function ($, undefined) {
+const niceForms = (function ($) {
     'use strict';
 
     function isEmpty(elem) {
@@ -16,11 +16,7 @@ const niceForms = (function ($, undefined) {
     }
 
     function updateParent(elem) {
-        const id = elem.attr('id');
-        if(isEmpty(elem))
-            $('[for="'+id+'"]').addClass('is_empty');
-        else
-            $('[for="'+id+'"]').removeClass('is_empty');
+        $('[for="' + elem.attr('id') + '"]').toggleClass('is_empty', isEmpty(elem));
     }
 
     function reset() {
@@ -33,8 +29,7 @@ const niceForms = (function ($, undefined) {
     function init() {
         $('form').each(function(){
             let input = $(this).find('input:not(.not-nice)');
-            let txtarea = $(this).find('textarea:not(.not-nice)');
-            let select = $(this).find('select:not(.not-nice)');
+            let niceElem = $(this).find('textarea:not(.not-nice),select:not(.not-nice)');
 
             input.each(function(){
                 let self = $(this);
@@ -43,12 +38,7 @@ const niceForms = (function ($, undefined) {
                     self.on('change',function(){updateParent(self)});
 				}
             });
-            txtarea.each(function(){
-                let self = $(this);
-                updateParent(self);
-                self.on('change',function(){updateParent(self)});
-            });
-            select.each(function(){
+            niceElem.each(function(){
                 let self = $(this);
                 updateParent(self);
                 self.on('change',function(){updateParent(self)});
@@ -65,7 +55,7 @@ const niceForms = (function ($, undefined) {
     };
 })(jQuery);
 
-const globalForm = (function ($, undefined) {
+const globalForm = (function ($) {
     'use strict';
     /**
      * Replace the submit button by a loader icon.
@@ -275,6 +265,64 @@ const globalForm = (function ($, undefined) {
          */
         run: function () {
             $.gForms = globalForm;
+            $.validator.setDefaults({
+                debug: false,
+                highlight: function(element, errorClass, validClass) {
+                    let parent = $(element).parent();
+                    if(parent.is("div,p")) {
+                        if(parent.hasClass('input-group')) {
+                            parent.parent().addClass(errorClass+" has-feedback");
+                        } else {
+                            if(!parent.hasClass(errorClass)) parent.append('<span class="fas fa-exclamation-triangle form-control-feedback" aria-hidden="true"></span>');
+                            parent.addClass(errorClass+" has-feedback");
+                        }
+                    }
+                    else if($(element).is('[type="radio"],[type="checkbox"]')) {
+                        parent.parent().addClass("has-error").parent().addClass("has-error");
+                    }
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    let parent = $(element).parent();
+                    if(parent.is("div,p")) {
+                        if(parent.hasClass('input-group')) {
+                            parent.parent().removeClass(errorClass+" has-feedback");
+                        } else {
+                            if(parent.hasClass(errorClass)) parent.find('.fas').remove();
+                            parent.removeClass(errorClass+" has-feedback");
+                        }
+                    }
+                    else if($(element).is('[type="radio"],[type="checkbox"]')) {
+                        parent.parent().removeClass("has-error").parent().removeClass("has-error");
+                    }
+                },
+                // the errorPlacement has to take the table layout into account
+                errorPlacement: function(error, element) {
+                    error.addClass('help-block error');
+                    if ( element.is(":radio") ) {
+                        element.parent().parent().parent().append(error);
+                    } else if ( element.is(":checkbox,.checkMail")) {
+                        error.insertAfter(element.next());
+                    } else if ( element.is("#cryptpass,:submit")) {
+                        error.insertAfter(element.next());
+                        $("<br />").insertBefore(error,null);
+                    } else if ( element.next().is(":button,:file") ) {
+                        error.insertAfter(element);
+                        $("<br />").insertBefore(error,null);
+                    } else if ( element.parent().hasClass('input-group') ) {
+                        error.insertAfter(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                errorClass: "has-error",
+                errorElement: "span",
+                validClass: "success",
+                // set this class to error-labels to indicate valid fields
+                success: function(label) {
+                    // set &nbsp; as text for IE
+                    label.remove();
+                }
+            });
             // --- Launch forms validators initialisation
             initValidation();
         },
@@ -290,65 +338,6 @@ const globalForm = (function ($, undefined) {
 	/*jQuery.validator.addClassRules("phone", {
 		pattern: '((?=[0-9\+\-\ \(\)]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})'
 	});*/
-	$.validator.setDefaults({
-        debug: false,
-		highlight: function(element, errorClass, validClass) {
-            let parent = $(element).parent();
-			if(parent.is("div,p")) {
-				if(parent.hasClass('input-group')) {
-					parent.parent().addClass("has-error has-feedback");
-				} else {
-					if(!parent.hasClass('has-error'))
-						parent.append('<span class="fa fa-warning form-control-feedback" aria-hidden="true"></span>');
-					parent.addClass("has-error has-feedback");
-				}
-			}
-			else if($(element).is('[type="radio"],[type="checkbox"]')) {
-				parent.parent().addClass("has-error").parent().addClass("has-error");
-			}
-		},
-		unhighlight: function(element, errorClass, validClass) {
-            let parent = $(element).parent();
-			if(parent.is("div,p")) {
-				if(parent.hasClass('input-group')) {
-					parent.parent().removeClass("has-error has-feedback");
-				} else {
-					if(parent.hasClass('has-error'))
-						parent.find('.fa').remove();
-					parent.removeClass("has-error has-feedback");
-				}
-			}
-			else if($(element).is('[type="radio"],[type="checkbox"]')) {
-				parent.parent().removeClass("has-error").parent().removeClass("has-error");
-			}
-		},
-		// the errorPlacement has to take the table layout into account
-		errorPlacement: function(error, element) {
-			if ( element.is(":radio") ) {
-				element.parent().parent().parent().append(error);
-			} else if ( element.is(":checkbox,.checkMail")) {
-				error.insertAfter(element.next());
-			} else if ( element.is("#cryptpass,:submit")) {
-				error.insertAfter(element.next());
-				$("<br />").insertBefore(error,null);
-			} else if ( element.next().is(":button,:file") ) {
-                error.insertAfter(element);
-                $("<br />").insertBefore(error,null);
-            } else if ( element.parent().hasClass('input-group') ) {
-                error.insertAfter(element.parent());
-            } else {
-                error.insertAfter(element);
-            }
-		},
-		errorClass: "help-block error",
-		errorElement: "span",
-		validClass: "success",
-		// set this class to error-labels to indicate valid fields
-		success: function(label) {
-			// set &nbsp; as text for IE
-			label.remove();
-		}
-    });
 
 	niceForms.init();
 	globalForm.run();

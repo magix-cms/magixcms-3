@@ -78,6 +78,7 @@ var about = (function ($, undefined) {
 
                     $('.close_txt', line).addClass('hide');
                     $('.schedules', line).removeClass('hide');
+                    $('.close_txt input', line).prop('disabled', true);
 
                 }else{
                     $('.open_hours input', line).prop('disabled', true);
@@ -86,6 +87,7 @@ var about = (function ($, undefined) {
 
                     $('.schedules', line).addClass('hide');
                     $('.close_txt', line).removeClass('hide');
+                    $('.close_txt input', line).prop('disabled', false);
                 }
             });
 

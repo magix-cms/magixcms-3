@@ -519,9 +519,9 @@ class backend_controller_about extends backend_db_about{
 		/* Update openinghours */
 		foreach ($this->company['specifications'] as $day => $opt) {
 			if(isset($this->send['openinghours'][$day])) {
-				$this->company['specifications'][$day]['open_day'] = ($this->send['openinghours'][$day]['open_day'] ? '1' : '0');
+				$this->company['specifications'][$day]['open_day'] = (isset($this->send['openinghours'][$day]['open_day']) ? '1' : '0');
 
-				if($this->company['specifications'][$day]['open_day']) {
+				if(isset($this->send['openinghours'][$day]['open_day'])) {
 					if(isset($this->send['openinghours'][$day]['noon_time'])) {
 						$this->company['specifications'][$day]['noon_time'] = '1';
 
@@ -535,15 +535,16 @@ class backend_controller_about extends backend_db_about{
 					$this->company['specifications'][$day]['close_time'] = ($this->send['openinghours'][$day]['close']['hh'] ? ($this->send['openinghours'][$day]['close']['hh'].':'.$this->send['openinghours'][$day]['close']['mm']) : null);
 				}
 				else {
-					foreach ($this->content as $lang => $content) {
-						$contentPage = $this->getItems('content',array('id_lang'=>$lang,),'one',false);
+					foreach ($this->send['openinghours'][$day]['content'] as $lang => $content) {
+						$contentPage = $this->getItems('close_txt',array('id_lang'=>$lang),'one',false);
 
 						if($contentPage != null) {
 							$this->upd(
 								array(
+									'context' => 'about',
 									'type' => 'close_txt',
 									'data' => array(
-										'id_content' => $contentPage['id_content'],
+										'id' => $contentPage['id_content'],
 										'column' => 'text_'.$day,
 										'value' => $this->send['openinghours'][$day]['content'][$lang]['txt']
 									)
@@ -553,8 +554,10 @@ class backend_controller_about extends backend_db_about{
 						else {
 							$this->add(
 								array(
+									'context' => 'about',
 									'type' => 'close_txt',
 									'data' => array(
+										'id_lang' => $lang,
 										'column' => 'text_'.$day,
 										'value' => $this->send['openinghours'][$day]['content'][$lang]['txt']
 									)
@@ -614,14 +617,21 @@ class backend_controller_about extends backend_db_about{
 					$this->company[$info] = $about['openinghours'];
 
 					$op = parent::fetchData(array('context'=>'all','type'=>'op'));
-					foreach ($op as $d) {
-						$schedule[$d['day_abbr']] = $d;
-						array_shift($schedule[$d['day_abbr']]);
+					$op_content = parent::fetchData(array('context'=>'all','type'=>'op_content'));
 
-						$schedule[$d['day_abbr']]['open_time'] = explode(':',$d['open_time']);
-						$schedule[$d['day_abbr']]['close_time'] = explode(':',$d['close_time']);
-						$schedule[$d['day_abbr']]['noon_start'] = explode(':',$d['noon_start']);
-						$schedule[$d['day_abbr']]['noon_end'] = explode(':',$d['noon_end']);
+					foreach ($op as $d) {
+						$abbr = $d['day_abbr'];
+						$schedule[$abbr] = $d;
+						array_shift($schedule[$abbr]);
+
+						foreach ($op_content as $opc) {
+							$schedule[$abbr]['close_txt'][$opc['id_lang']] = $opc['text_'.strtolower($abbr)];
+						}
+
+						$schedule[$abbr]['open_time'] = explode(':',$d['open_time']);
+						$schedule[$abbr]['close_time'] = explode(':',$d['close_time']);
+						$schedule[$abbr]['noon_start'] = explode(':',$d['noon_start']);
+						$schedule[$abbr]['noon_end'] = explode(':',$d['noon_end']);
 					}
 					break;
 				default:

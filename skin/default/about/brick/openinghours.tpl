@@ -39,19 +39,19 @@
                         <span>{$specific.close_time}</span>
                     </td>
                 {else}
-                    <td>
+                    <td colspan="2">
                         <span>{$specific.open_time}</span> -
                         <span>{$specific.close_time}</span>
                     </td>
-                    <td>
+                    {*<td>
                         -
-                    </td>
+                    </td>*}
                 {/if}
             </tr>
         {else}
             <tr>
                 <td>{#$dayOfWeek#}</td>
-                <td colspan="2"><strong>{#closed#}</strong></td>
+                <td colspan="2"><strong>{if !empty($specific.close_txt[$lang])}{$specific.close_txt[$lang]}{else}{#closed#}{/if}</strong></td>
             </tr>
         {/if}
     {/foreach}

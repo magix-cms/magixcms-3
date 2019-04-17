@@ -51,7 +51,7 @@
                 {foreach $langs as $id => $iso}
                 <div role="tabpanel" class="tab-pane{if $iso@first} active{/if} lang-{$id}">
                     <label for="{$day}-txt-lg-{$id}" class="sr-only">{#text_to_show#|ucfirst}</label>
-                    <input id="{$day}-txt-lg-{$id}" placeholder="{#closed#}" name="openinghours[{$day}][content][{$id}][txt]" type="text" value="{if $day_opt.txt}{$day_opt.txt}{else}{#closed#}{/if}" class="form-control" {if $day_opt.open_day}disabled{/if}>
+                    <input id="{$day}-txt-lg-{$id}" placeholder="{#closed#}" name="openinghours[{$day}][content][{$id}][txt]" type="text" value="{if $day_opt.close_txt[$id]}{$day_opt.close_txt[$id]}{else}{#closed#}{/if}" class="form-control" {if $day_opt.open_day}disabled{/if}>
                 </div>
                 {/foreach}
             </div>

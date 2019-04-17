@@ -386,6 +386,23 @@ INSERT INTO `mc_about_op` (`id_day`, `day_abbr`, `open_day`, `noon_time`, `open_
 (6, 'Sa', 0, 0, NULL, NULL, NULL, NULL),
 (7, 'Su', 0, 0, NULL, NULL, NULL, NULL);
 
+CREATE TABLE IF NOT EXISTS `mc_about_op_content` (
+  `id_content` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_lang` smallint(3) UNSIGNED NOT NULL,
+  `text_mo` text,
+  `text_tu` text,
+  `text_we` text,
+  `text_th` text,
+  `text_fr` text,
+  `text_sa` text,
+  `text_su` text,
+  PRIMARY KEY (`id_content`),
+  KEY `id_lang` (`id_lang`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mc_about_op_content`
+  ADD CONSTRAINT `mc_about_op_content_ibfk_1` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang` (`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 CREATE TABLE IF NOT EXISTS `mc_about_page` (
   `id_pages` int(7) unsigned NOT NULL AUTO_INCREMENT,
   `id_parent` int(7) unsigned DEFAULT NULL,
