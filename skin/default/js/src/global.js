@@ -16,11 +16,13 @@
     'use strict';
 
     const C = {
+        block: $('#cookies'),
+        btn: $('#cookies button'),
         createCookie: function() {
             let date = new Date();
             date.setTime(date.getTime() + (365*24*60*60*1000));
             document.cookie = 'complianceCookie=on; expires=' + date.toGMTString() + '; path=/';
-            $("#cookies").removeClass('in').addClass('hide');
+            C.block.removeClass('in').addClass('hide');
         },
 
         checkCookie: function() {
@@ -38,7 +40,8 @@
         },
 
         init: function() {
-            if (this.checkCookie() !== 'on') $("#cookies").removeClass('hide');
+            if (this.checkCookie() !== 'on') C.block.removeClass('hide');
+            C.btn.click(this.createCookie);
         }
     };
 

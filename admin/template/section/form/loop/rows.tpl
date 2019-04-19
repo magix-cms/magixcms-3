@@ -7,6 +7,7 @@
                 </label>
             </div>
         </td>
+        {if $sortable}<td class="text-center fixed-td-sm sort-handle"><span class="fas fa-arrows-alt-v"></span></td>{/if}
         {foreach $table.cols as $name => $col}
             <td class="{$col.class}">
                 {if $col.type == 'enum'}

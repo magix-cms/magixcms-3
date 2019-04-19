@@ -16,6 +16,7 @@
             </div>
             {/if}
         </td>
+        {if $sortable}<td class="text-center fixed-td-sm sort-handle"><span class="fas fa-arrows-alt-v"></span></td>{/if}
         {foreach $scheme as $name => $col}
             <td class="{$col.class}">
                 {*{$col.enum|var_dump}

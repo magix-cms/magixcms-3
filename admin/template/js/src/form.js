@@ -274,7 +274,7 @@ var globalForm = (function ($, undefined) {
             options.success = function (d) {
                 if($(f).find('.selectpicker')) {
                     $(f).find('.selectpicker').bootstrapSelect('clear');
-                    if(d.extend[0].id) {
+                    if(d.extend) {
                         $(f).find('.selectpicker [data-value="'+d.extend[0].id+'"]').remove();
                         $(f).find('.selectpicker').bootstrapSelect('reset');
                     }

@@ -8,7 +8,7 @@
         {if $mega && $child.subdata && $dp < $deepness}
             {$sn = $sn + 1}
             <header>
-                <a itemprop="url" href="{$child.url}" title="{$child.title}"><span>{$child.title}</span></a>
+                <a itemprop="url" href="{$child.url}" title="{$child.seo.title}"><span>{$child.title}</span></a>
                 <span class="show-more"><i class="material-icons">add</i></span>
                 <span class="show-less"><i class="material-icons">remove</i></span>
             </header>
@@ -20,7 +20,7 @@
             </div>
         {else}
             <header>
-                <a itemprop="url" href="{$child.url}" title="{$child.title}"><span>{$child.title}</span></a>
+                <a itemprop="url" href="{$child.url}" title="{$child.seo.title}"><span>{$child.title}</span></a>
             </header>
             <div></div>
         {/if}
@@ -37,7 +37,7 @@
         </button>
         {/if}
     {/if}
-    <a href="{$child.url}" title="{$child.title}"><span>{$child.title}</span></a>
+    <a href="{$child.url}" title="{$child.seo.title}"><span>{$child.title}</span></a>
     {if $mega && $child.subdata && $dp < $deepness}
         <nav id="nav{$menu}-{$sn}" class="collapse navbar-collapse{if $child.active} in{/if}">
             <ul id="subnav-{$sn}" class="list-unstyled">
@@ -49,7 +49,7 @@
 </li>
 {else}
 <li{if $child.active} class="active"{/if} itemprop="name">
-    <a itemprop="url" href="{$child.url}" title="{$child.title}"{if $child.subdata} class="has-dropdown"{/if}><span>{$child.title}</span></a>
+    <a itemprop="url" href="{$child.url}" title="{$child.seo.title}"{if $child.subdata} class="has-dropdown"{/if}><span>{$child.title}</span></a>
     {if $mega && $child.subdata && $dp < $deepness}
         {$sn = $sn + 1}
         {if $dp < $deepness}

@@ -21,6 +21,15 @@ form {
 			}
 		}
 
+		.tr-placeholder {
+			background-color: #eee;
+			border-style: dashed;
+			min-height: 39px;
+		}
+		.ui-sortable-helper {
+			width: 100% !important;
+		}
+
 		.search-bar {
 			background-color: rgba(66,139,202,.2);
 			
@@ -73,6 +82,15 @@ form {
 			left: 30px;
 			height: 44px;
 			margin-top: -7px;
+		}
+
+		.sort-handle {
+			position: relative;
+			z-index: 2;
+
+			&:hover {
+				cursor: ns-resize;
+			}
 		}
 
 		.fixed-td {

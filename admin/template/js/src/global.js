@@ -1,5 +1,5 @@
-$(function()
-{
++function ($) {
+	'use strict';
 
     // *** Add fl2uc method - First Letter To Upper Case
 	String.prototype.fl2uc = function() {
@@ -14,18 +14,21 @@ $(function()
 
 	$('[data-toggle="popover"]').popover();
 
-	$('.navbar-toggle').click(function(){
-		var target = $(this).data('target');
-		if($(this).hasClass('open') || $(target).hasClass('collapse in')){
-			$(this).removeClass('open');
-			$(target).removeClass('open');
-		}else{
-			$(this).addClass('open');
-			$(target).addClass('open');
-		}
+	$('.navbar-toggle[data-toggle="collapse"]').each(function(){
+		let self = $(this);
+
+		$(self.data('target')).on('show.bs.collapse hide.bs.collapse',function(e){
+			if(e.target === this) self.toggleClass('open',e.type === 'show');
+		});
 	});
 
-	$('.has-submenu.dropdown > a').click(function(e){
+	$('.open-menu').click(function(){
+		let self = this, target = $(self).data('target'), opened = $(self).hasClass('open');
+		$(self).toggleClass('open', !opened);
+		$(target).toggleClass('open', !opened);
+	});
+
+	/*$('.has-submenu.dropdown > a').click(function(e){
 		e.preventDefault();
 		if(!$(this).prev('button').hasClass('open')) {
 			$(this).prev('button').addClass('open').removeClass('collapsed').attr('aria-expanded',true);
@@ -41,7 +44,7 @@ $(function()
 
 	$('.has-submenu.dropdown > button').click(function(){
 		$(this).parent('li').toggleClass('active');
-	});
+	});*/
 
     //Unlock input text
     $('.unlocked').on('click',function(event){
@@ -60,6 +63,16 @@ $(function()
         }
     });
 
+	if(typeof IScroll !== "undefined") {
+		var scrollmenu = new IScroll('#aside', {
+			mouseWheel: true,
+			scrollbars: false
+		});
+		$('#mainmenu .collapse').on('shown.bs.collapse hidden.bs.collapse',function(){ scrollmenu.refresh(); });
+		$(window).resize(function(){ scrollmenu.refresh(); });
+	}
+
+
     //Dropdown lang & bootstrapToggle
     /*$('.dropdown-lang a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $('.dropdown-menu li.active').removeClass('active');
@@ -71,4 +84,4 @@ $(function()
             $(this).bootstrapToggle();
         });
     });*/
-});
+}(jQuery);
