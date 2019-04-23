@@ -29,8 +29,8 @@
                     <div class="mc-message mc-message-pages">{if isset($message)}{$message}{/if}</div>
                 </div>
                 {*{if isset($scheme)}{$scheme|var_dump}{/if}*}
-                {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
-                {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_product' activation=false sortable=$sortable controller="product" change_offset=true}
+                {*{if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}*}
+                {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_product' activation=false sortable=false controller="product" change_offset=true}
             </div>
         </section>
     </div>
