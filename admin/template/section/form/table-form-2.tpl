@@ -31,6 +31,7 @@
                 <thead>
                 <tr>
                     <th class="fixed-td-sm">&nbsp;</th>
+                    {if $sortable}<th><span class="sr-only">{#sort#}</span></th>{/if}
                     {foreach $scheme as $name => $col}
                         <th{if $col.class && !empty($col.class)} class="{$col.class}"{/if}>{if $debug}{$col['title']} | {/if}{#$col['title']#|ucfirst}</th>
                     {/foreach}
@@ -47,6 +48,7 @@
                             </label>
                         </div>
                     </th>
+                    {if $sortable}<th>&nbsp;</th>{/if}
                     {foreach $scheme as $name => $col}
                     <th>
                         <div class="form-group">
