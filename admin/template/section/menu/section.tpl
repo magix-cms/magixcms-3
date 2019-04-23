@@ -290,7 +290,7 @@
     <li><hr></li>
     {if {employee_access type="view" class_name="backend_controller_plugins"} eq 1}
     <li class="panel has-submenu {if $smarty.get.controller == 'plugins' || (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee','access','logo')) && $smarty.get.controller)}active{/if}">
-        <button type="button" class="navbar-toggle{if $smarty.get.controller == 'plugins'} open{/if}" data-toggle="collapse" data-parent="#mainmenu" data-target="#nav-plugins">
+        <button type="button" class="navbar-toggle{if $smarty.get.controller == 'plugins' || (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee','access','logo')))} open{/if}" data-toggle="collapse" data-parent="#mainmenu" data-target="#nav-plugins">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
@@ -298,7 +298,7 @@
             <span class="fa fa-cogs"></span> Extensions
         </a>
         {if is_array($getItemsPlugins) && !empty($getItemsPlugins)}
-        <nav id="nav-plugins" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'plugins'} in{/if}">
+        <nav id="nav-plugins" class="collapse{* navbar-collapse*}{if (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee','access','logo')))} in{/if}">
             <ul class="nav list-unstyled">
                 {foreach $getItemsPlugins as $item}
                 {if {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
