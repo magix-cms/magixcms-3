@@ -230,8 +230,8 @@ class backend_db_about
 			switch ($config['type']) {
 				case 'page':
 					$cond = $params['id_parent'] != NULL ? ' IN ('.$params['id_parent'].')' : ' IS NULL';
-					$sql = "INSERT INTO `mc_about_page`(id_parent,order_pages,date_register) 
-						SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_about_page WHERE id_parent".$cond;
+					$sql = "INSERT INTO `mc_about_page`(id_parent,menu_pages,order_pages,date_register) 
+						SELECT :id_parent,:menu_pages,COUNT(id_pages),NOW() FROM mc_about_page WHERE id_parent".$cond;
 					break;
 				case 'content':
 					$sql = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
@@ -421,7 +421,8 @@ class backend_db_about
 				case 'page':
 					$sql = 'UPDATE mc_about_page 
 						SET 
-							id_parent = :id_parent
+							id_parent = :id_parent,
+						    menu_pages = :menu_pages
 						WHERE id_pages = :id_pages';
 					break;
 				case 'content':

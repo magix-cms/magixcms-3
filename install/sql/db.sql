@@ -191,14 +191,15 @@ CREATE TABLE IF NOT EXISTS `mc_setting` (
 INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `category`) VALUES
 (NULL, 'theme', 'default', 'string', 'site theme', 'theme'),
 (NULL, 'analytics', NULL, 'string', 'google analytics', 'google'),
-(NULL, 'magix_version', '3.0.1', 'string', 'Version Magix CMS', 'release'),
+(NULL, 'magix_version', '3.2.0', 'string', 'Version Magix CMS', 'release'),
 (NULL, 'content_css', NULL, 'string', 'css from skin for tinyMCE', 'general'),
 (NULL, 'concat', '0', 'int', 'concat URL', 'general'),
 (NULL, 'cache', 'none', 'string', 'Cache template', 'general'),
 (NULL, 'robots', 'noindex,nofollow', 'string', 'metas robots', 'general'),
 (NULL, 'css_inliner', '1', 'string', 'CSS inliner', 'general'),
 (NULL, 'mode', 'dev', 'string', 'Environment types', 'general'),
-(NULL, 'ssl', '0', 'int', 'SSL protocol', 'general');
+(NULL, 'ssl', '0', 'int', 'SSL protocol', 'general'),
+(NULL, 'service_worker', '0', 'int', 'Service Worker', 'general');
 
 CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,

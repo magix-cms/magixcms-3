@@ -3,7 +3,7 @@ class backend_controller_pages extends backend_db_pages
 {
     public $edit, $action, $tabs, $search, $plugin, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl,$makeFiles,$finder;
-    public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset,$name_img;
+    public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset,$name_img,$menu_pages;
 	public $tableconfig = array(
 		'all' => array(
 			'id_pages',
@@ -74,6 +74,7 @@ class backend_controller_pages extends backend_db_pages
         if (http_request::isGet('id')) $this->id_pages = $formClean->simpleClean($_GET['id']);
         elseif (http_request::isPost('id')) $this->id_pages = $formClean->simpleClean($_POST['id']);
         if (http_request::isPost('parent_id')) $this->parent_id = $formClean->simpleClean($_POST['parent_id']);
+        if (http_request::isPost('menu_pages')) $this->menu_pages = $formClean->simpleClean($_POST['menu_pages']);
         if (http_request::isPost('del_img')) $this->del_img = $formClean->simpleClean($_POST['del_img']);
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
@@ -293,7 +294,8 @@ class backend_controller_pages extends backend_db_pages
 						'type' => 'page',
 						'data' => array(
 							'id_pages' => $id,
-							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+							'menu_pages' => isset($this->menu_pages) ? 1 : 0
 						)
 					)
 				);
@@ -448,7 +450,8 @@ class backend_controller_pages extends backend_db_pages
 								array(
 									'type' => 'page',
 									'data' => array(
-										'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+										'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+										'menu_pages' => isset($this->menu_pages) ? 1 : 0
 									)
 								)
 							);

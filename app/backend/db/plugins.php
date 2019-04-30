@@ -150,4 +150,50 @@ class backend_db_plugins
 			return 'Exception reçue : '.$e->getMessage();
 		}
     }
+
+	/**
+	 * @param $config
+	 * @param array $params
+	 * @return bool|string
+	 */
+	public function delete($config, $params = array())
+	{
+		if (!is_array($config)) return '$config must be an array';
+
+		$sql = '';
+
+		switch ($config['type'])
+		{
+			case 'unregister':
+				$queries = array(
+					array(
+						'request'=>"DELETE FROM mc_plugins WHERE name = :id",
+						'params'=>$params
+					),
+					array(
+						'request'=>"DELETE FROM mc_module WHERE name = :id",
+						'params'=>$params
+					)
+				);
+
+				try {
+					component_routing_db::layer()->transaction($queries);
+					return true;
+				}
+				catch (Exception $e) {
+					return 'Exception reçue : '.$e->getMessage();
+				}
+				break;
+		}
+
+		if($sql === '') return 'Unknown request asked';
+
+		try {
+			component_routing_db::layer()->delete($sql,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
+		}
+    }
 }

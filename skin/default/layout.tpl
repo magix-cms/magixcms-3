@@ -24,6 +24,11 @@
         <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$url}/skin/{$theme}/img/favicon.ico" /><![endif]-->
     {/if}
     <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="{$smarty.capture.title}">
+    <link rel="apple-touch-icon" href="img/touch/homescreen168.png">
+    <meta name="theme-color" content="#7083db" />
     {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
     {* Please try to use icomoon to create a small iconfont and reduce load work *}
     {capture name="stylesheet"}{if $setting.concat.value}{"/min/?f=skin/{$theme}/css/{$viewport}.min.css"|concat_url:'css'}{else}/min/?f=skin/{$theme}/css/{$viewport}.min.css{/if}{/capture}
@@ -90,5 +95,6 @@
 {/capture}{/strip}
 <script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url:'js'}{else}{$smarty.capture.vendors}{/if}" defer></script>
 {block name="foot"}{/block}
+{include file="section/brick/service_worker.tpl"}
 </body>
 </html>

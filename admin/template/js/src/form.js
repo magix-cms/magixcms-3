@@ -420,19 +420,26 @@ var globalForm = (function ($, undefined) {
      * @param {string} sub - The name of the sub-controller used by the script.
      */
     function delete_data(modal, id, controller, sub) {
-        $(modal+' input[type="hidden"]').val(id);
-        $(modal).modal('show');
-        var url = $('#delete_form').attr('action');
-        if(url.indexOf("tabs") === -1) {
-            url = url+(sub?'&tabs='+sub:'');
+        if(id === 'uninstall') {
+            $(modal+' input[name="action"]').val(id);
+            $(modal+' input[name="controller"]').val(controller);
+            $(modal).modal('show');
         }
         else {
-            url.replace('&tabs=([^&]*)','&tabs='+sub);
+            $(modal+' input[type="hidden"]').val(id);
+            $(modal).modal('show');
+            var url = $('#delete_form').attr('action');
+            if(url.indexOf("tabs") === -1) {
+                url = url+(sub?'&tabs='+sub:'');
+            }
+            else {
+                url.replace('&tabs=([^&]*)','&tabs='+sub);
+            }
+
+            $(modal).find('form').attr('action',url);
+
+            initValidation(controller,'#delete_form',sub);
         }
-
-        $(modal).find('form').attr('action',url);
-
-        initValidation(controller,'#delete_form',sub);
     }
 
     /**

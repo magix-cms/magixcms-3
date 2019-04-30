@@ -1,4 +1,37 @@
 <?php
+/*
+ # -- BEGIN LICENSE BLOCK ----------------------------------
+ #
+ # This file is part of MAGIX CMS.
+ # MAGIX CMS, The content management system optimized for users
+ # Copyright (C) 2008 - 2019 magix-cms.com <support@magix-cms.com>
+ #
+ # OFFICIAL TEAM :
+ #
+ #   * Gerits Aurelien (Author - Developer) <aurelien@magix-cms.com>
+ #
+ # Redistributions of files must retain the above copyright notice.
+ # This program is free software: you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation, either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # This program is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ #
+ # -- END LICENSE BLOCK -----------------------------------
+
+ # DISCLAIMER
+
+ # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
+ # versions in the future. If you wish to customize MAGIX CMS for your
+ # needs please refer to http://www.magix-cms.com for more information.
+ */
 class backend_model_plugins{
     protected $template, $controller_name, $dbPlugins,$plugin ,$collectionLanguage;
 
@@ -51,19 +84,26 @@ class backend_model_plugins{
         foreach($data as $item){
             switch($config['type']){
                 case 'self':
-                    if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'admin.php')) {
+                    if(file_exists(component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'admin.php')) {
                         $class = 'plugins_' . $item['name'] . '_admin';
-                        $baseConfigPath = component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'/i18n/public_local_'.$defaultLanguage['iso_lang'].'.conf';
+                        $baseConfigPath = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'/i18n/public_local_'.$defaultLanguage['iso_lang'].'.conf';
                         if(file_exists($baseConfigPath)){
                             $item['translate'] = 1;
                         }else{
                             $item['translate'] = 0;
                         }
+						$files = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.'uninstall.sql';
+						if(file_exists($files)){
+							$item['uninstall'] = 1;
+						}
+						else {
+							$item['uninstall'] = 0;
+						}
                         if (class_exists($class)) {
                             //Si la méthode run existe on ajoute le plugin dans le menu
                             if (method_exists($class, 'getExtensionName')) {
 								$this->template->addConfigFile(
-									array(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR),
+									array(component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR),
 									array($item['name'].'_admin_')
 								);
 								//$this->template->configLoad();
@@ -88,7 +128,7 @@ class backend_model_plugins{
 
                     break;
                 case 'thumbnail':
-                    if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'upload'.DIRECTORY_SEPARATOR.$item['name'])) {
+                    if(file_exists(component_core_system::basePath().'upload'.DIRECTORY_SEPARATOR.$item['name'])) {
                         $newsItems[] = $item;
                     }
                     break;
@@ -104,7 +144,7 @@ class backend_model_plugins{
      *
      */
     public function getCoreItem(){
-        if(file_exists(component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$this->plugin.DIRECTORY_SEPARATOR.'core.php')) {
+        if(file_exists(component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$this->plugin.DIRECTORY_SEPARATOR.'core.php')) {
             $class = 'plugins_' . $this->plugin . '_core';
             if (method_exists($class, 'run')) {
                 if(isset($this->plugin)){

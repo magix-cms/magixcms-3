@@ -15,7 +15,7 @@
                 <input type="text" id="content_css" name="setting[content_css]" class="form-control" value="{$settings.content_css}" />
             </div>
             <div class="row">
-                <div class="col-ph-12 col-md-6">
+                <div class="col-ph-12 col-md-4">
                     <div class="form-group">
                         <label for="concat">{#concat#|ucfirst}&nbsp;?</label>
                         <div class="checkbox">
@@ -25,12 +25,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-ph-12 col-md-6">
+                <div class="col-ph-12 col-md-4">
                     <div class="form-group">
                         <label for="ssl">{#ssl#|ucfirst}&nbsp;?</label>
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" id="ssl" name="setting[ssl]" data-toggle="toggle" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if isset($settings.ssl) && $settings.ssl eq '1'} checked{/if}/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-ph-12 col-md-4">
+                    <div class="form-group">
+                        <label for="service_worker">{#service_worker#|ucfirst}&nbsp;?</label>
+                        <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="SSL Requis">
+                            <span class="fa fa-question-circle"></span>
+                        </a>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="service_worker" name="setting[service_worker]" data-toggle="toggle" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if isset($settings.service_worker) && $settings.service_worker eq '1'} checked{/if}{if isset($settings.ssl) && $settings.ssl !== '1'} disabled{/if}/>
                             </label>
                         </div>
                     </div>
@@ -57,12 +70,12 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-ph-12 col-md-4">
+                {*<div class="col-ph-12 col-md-4">
                     <div class="form-group">
                         <label for="fav">FontAwesome Version&nbsp;?</label>
                         <input type="text" id="fav" name="setting[fav]" class="form-control" value="{$settings.fav}" />
                     </div>
-                </div>
+                </div>*}
             </div>
             <div id="submit">
                 <input type="hidden" id="type" name="type" value="general">

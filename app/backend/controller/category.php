@@ -3,7 +3,7 @@ class backend_controller_category extends backend_db_category
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder;
-    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset,$name_img;
+    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset,$name_img,$menu_cat;
 	public $tableconfig = array(
 		'all' => array(
 			'id_cat',
@@ -69,6 +69,7 @@ class backend_controller_category extends backend_db_category
         if (http_request::isGet('id')) $this->id_cat = $formClean->simpleClean($_GET['id']);
 		elseif (http_request::isPost('id')) $this->id_cat = $formClean->simpleClean($_POST['id']);
         if (http_request::isPost('parent_id')) $this->parent_id = $formClean->simpleClean($_POST['parent_id']);
+		if (http_request::isPost('menu_cat')) $this->menu_cat = $formClean->simpleClean($_POST['menu_cat']);
         if (http_request::isPost('del_img')) $this->del_img = $formClean->simpleClean($_POST['del_img']);
 
         if (http_request::isPost('content')) {
@@ -314,7 +315,8 @@ class backend_controller_category extends backend_db_category
 						'type' => 'page',
 						'data' => array(
 							'id_cat' => $id,
-							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+							'menu_cat' => isset($this->menu_cat) ? 1 : 0
 						)
 					)
 				);
@@ -455,7 +457,8 @@ class backend_controller_category extends backend_db_category
 							array(
 								'type' => 'page',
 								'data' => array(
-									'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+									'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+									'menu_cat' => isset($this->menu_cat) ? 1 : 0
 								)
 							)
 						);

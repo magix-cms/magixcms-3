@@ -25,7 +25,7 @@ Magix CMS dans sa version 3, incluant une nouvelle librairie et de nouvelles fon
 
 ## Contributors
 
- * Disalvo Salvatore (http://www.disalvo-infographiste.be)
+ * Di Salvo Salvatore (http://www.disalvo-infographiste.be)
  
 Ressources
 -----

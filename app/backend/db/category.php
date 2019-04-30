@@ -231,8 +231,8 @@ class backend_db_category
 		switch ($config['type']) {
 			case 'page':
 				$cond = $params['id_parent'] != NULL ? 'IN ('.$params['id_parent'].')' : 'IS NULL' ;
-				$sql = "INSERT INTO `mc_catalog_cat`(id_parent,order_cat,date_register) 
-						SELECT :id_parent,COUNT(id_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond";
+				$sql = "INSERT INTO `mc_catalog_cat`(id_parent,menu_cat,order_cat,date_register) 
+						SELECT :id_parent,:menu_cat,COUNT(id_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond";
 				break;
 			case 'content':
 				$sql = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 
@@ -266,7 +266,8 @@ class backend_db_category
 			case 'page':
 				$sql = 'UPDATE mc_catalog_cat 
 						SET 
-							id_parent = :id_parent
+							id_parent = :id_parent,
+						    menu_cat = :menu_cat
 						WHERE id_cat = :id_cat';
 				break;
 			case 'content':

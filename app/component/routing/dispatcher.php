@@ -72,7 +72,6 @@ class component_routing_dispatcher{
 			$this->template->assign('domain',$this->template->domain);
 			$this->template->assign('dataLang',$this->template->langs);
 			$this->template->assign('defaultLang',$this->template->defaultLang);
-            $this->template->assign('defaultDomain',$this->template->defaultDomain);
             $modelLogo = new frontend_model_logo($this->template);
             $this->template->assign('logo', $modelLogo->getLogoData());
             $this->template->assign('favicon', $modelLogo->getFaviconData());
@@ -118,7 +117,7 @@ class component_routing_dispatcher{
 						$pluginsDir = component_core_system::basePath() . 'plugins' . DIRECTORY_SEPARATOR . $this->controller_name;
 
 						if($this->plugins === 'admin') {
-							$pluginActions = array('setup','upgrade','translate');
+							$pluginActions = array('setup','upgrade','translate','uninstall');
 							if(in_array($this->action,$pluginActions) && class_exists('backend_controller_plugins')) {
 								$pluginsController = new backend_controller_plugins();
 
@@ -131,6 +130,9 @@ class component_routing_dispatcher{
 										break;
 									case 'translate':
 										$pluginsController->translate($this->controller_name);
+										break;
+									case 'uninstall':
+										$pluginsController->unregister($this->controller_name);
 										break;
 								}
 								return;

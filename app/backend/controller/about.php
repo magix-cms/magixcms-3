@@ -4,7 +4,7 @@ class backend_controller_about extends backend_db_about{
     public $edit, $action, $tabs, $search;
 
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $country, $language, $languages, $id_pages ,$parent_id, $order;
-    public $content, $dataType, $enable_op, $send = array('openinghours' => ''),$ajax,$tableaction,$tableform;
+    public $content, $dataType, $enable_op, $send = array('openinghours' => ''),$ajax,$tableaction,$tableform,$menu_pages;
 	public $tableconfig = array(
 		'all' => array(
 			'id_pages',
@@ -220,6 +220,7 @@ class backend_controller_about extends backend_db_about{
 		// --- ADD or EDIT
 		if (http_request::isPost('id')) $this->id_pages = $formClean->simpleClean($_POST['id']);
 		if (http_request::isPost('parent_id')) $this->parent_id = $formClean->simpleClean($_POST['parent_id']);
+		if (http_request::isPost('menu_pages')) $this->menu_pages = $formClean->simpleClean($_POST['menu_pages']);
 
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
@@ -476,7 +477,8 @@ class backend_controller_about extends backend_db_about{
 						'type' => 'page',
 						'data' => array(
 							'id_pages' => $idpage,
-							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+							'menu_pages' => isset($this->menu_pages) ? 1 : 0
 						)
 					)
 				);
@@ -688,7 +690,8 @@ class backend_controller_about extends backend_db_about{
 								'context' => 'page',
 								'type' => 'page',
 								'data' => array(
-									'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id
+									'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+									'menu_pages' => isset($this->menu_pages) ? 1 : 0
 								)
 							)
 						);

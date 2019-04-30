@@ -85,6 +85,12 @@ var setting = (function ($, undefined) {
                 });
             });
             UpdateSkin(controller,btnData);
+
+            $('#ssl').change(function(){
+                $('#service_worker').prop('disabled',!$(this).prop('checked'));
+                if($(this).prop('checked')) $('#service_worker').parent().removeAttr('disabled');
+                else $('#service_worker').parent().attr('disabled','disabled');
+            });
         }
     }
 })(jQuery);

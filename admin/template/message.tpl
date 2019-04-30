@@ -71,6 +71,18 @@
 {capture name="alert_type"}warning{/capture}
 {capture name="icon"}warning{/capture}
 {capture name="alert_message"}{#request_empty_upgrade#}{/capture}
+{case 'uninstall_success' break}
+{capture name="alert_type"}success{/capture}
+{capture name="icon"}check{/capture}
+{capture name="alert_message"}{#request_success_uninstall#}{/capture}
+{case 'uninstall_empty' break}
+{capture name="alert_type"}warning{/capture}
+{capture name="icon"}warning{/capture}
+{capture name="alert_message"}{#request_empty_uninstall#}{/capture}
+{case 'uninstall_error' break}
+{capture name="alert_type"}warning{/capture}
+{capture name="icon"}warning{/capture}
+{capture name="alert_message"}{#request_error_uninstall#}{/capture}
 {********* Warning *********}
 {** Empty **}
 {case 'empty' break}
