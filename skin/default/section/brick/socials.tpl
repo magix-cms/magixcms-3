@@ -8,9 +8,15 @@
     {$meta["og:title"] = {$title}}
     {$meta["og:description"] = {$description}}
     {$meta["og:url"] = {''|cat:{$url}|cat:{$smarty.server.REQUEST_URI}}}
-    {$meta["og:image"] = {''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/logo/logo.png'}}
-    {$meta["og:image:width"] = '250'}
-    {$meta["og:image:height"] = '250'}
+    {if $logo && $logo.img.active eq 1}
+        {$meta["og:image"] = {''|cat:{$url}|cat:$logo.img.large.src}}
+        {$meta["og:image:width"] = $logo.img.large.w}
+        {$meta["og:image:height"] = $logo.img.large.h}
+    {else}
+        {$meta["og:image"] = {''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/logo/logo.png'}}
+        {$meta["og:image:width"] = '250'}
+        {$meta["og:image:height"] = '250'}
+    {/if}
     {$meta["og:type"] = 'website'}
     {$data = null}
 
