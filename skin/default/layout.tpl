@@ -27,7 +27,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="{$smarty.capture.title}">
-    <link rel="apple-touch-icon" href="img/touch/homescreen168.png">
+    {if $homescreen != null}
+        <link rel="apple-touch-icon" href="{if $homescreen.img[168]}{''|cat:{$url}|cat:$homescreen.img[168].src}{/if}">
+        {else}
+        <link rel="apple-touch-icon" href="{''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/touch/homescreen168.png'}">
+    {/if}
     <meta name="theme-color" content="#7083db" />
     {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
     {* Please try to use icomoon to create a small iconfont and reduce load work *}

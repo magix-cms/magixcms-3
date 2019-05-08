@@ -75,6 +75,8 @@ class component_routing_dispatcher{
             $modelLogo = new frontend_model_logo($this->template);
             $this->template->assign('logo', $modelLogo->getLogoData());
             $this->template->assign('favicon', $modelLogo->getFaviconData());
+            $this->template->assign('social', $modelLogo->getImageSocial());
+            $this->template->assign('homescreen', $modelLogo->getHomescreen());
 			$modelAbout = new frontend_model_about($this->template);
 			$this->template->assign('about', $modelAbout->getContentData());
 			$this->template->assign('companyData', $modelAbout->getCompanyData());

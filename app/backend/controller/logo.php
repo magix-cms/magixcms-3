@@ -191,6 +191,44 @@ class backend_controller_logo extends backend_db_logo
                 break;
         }
     }
+
+    /**
+     * @param $filename
+     * @throws Exception
+     */
+    private function setSocialImage($filename){
+        if($filename != null) {
+            $ext = '.jpg';
+            $dirImgArray = $this->upload->dirImgUploadCollection(array(
+                'upload_root_dir' => 'img/social', //string
+                'upload_dir' => '' //string ou array
+            ));
+            $logo = $this->imagesComponent->imageManager->make(
+                $this->upload->imgBasePath('img/logo/') . $filename
+            );
+            //print_r($dirImgArray);
+            $percentage = 50;
+            $width = ($percentage / 100) * 250;
+            $height = ($percentage / 100) * 250;
+
+            $logo->resize($width, $height, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            $logo->save($dirImgArray . 'logo.png');
+            // Create canvas
+            $image = $this->imagesComponent->imageManager->canvas(250, 250, '#fff');
+            $image->save($dirImgArray . 'social' . $ext);
+            // create a new Image instance for inserting
+            $watermark = $this->imagesComponent->imageManager->make($dirImgArray . 'logo.png');
+            $image->insert($watermark, 'center');
+            $image->save($dirImgArray . 'social' . $ext);
+            if (file_exists($dirImgArray . 'logo.png')) {
+                $this->makeFiles->remove($dirImgArray . 'logo.png');
+            }
+        }
+    }
     /**
      * Mise a jour des données
      */
@@ -312,6 +350,8 @@ class backend_controller_logo extends backend_db_logo
             $newData = $this->getItems('root', NULL,'one',false);
             $id_page = $newData['id_logo'];
         }
+
+        $this->setSocialImage($filename);
 
         if($id_page) {
 
@@ -504,6 +544,7 @@ class backend_controller_logo extends backend_db_logo
                     )
                 );
                 $touchSize = array(
+                    array( 512, 512 ),
                     array( 192, 192 ),
                     array( 168, 168 ),
                     array( 144, 144 ),
@@ -612,6 +653,11 @@ class backend_controller_logo extends backend_db_logo
                                      $clean .= $this->makeFiles->remove($setImgDirectory . $file);
                                  }
                              }
+
+                             // Remove social image
+                             if (file_exists($this->upload->imgBasePath('img/social/').'social.jpg')) {
+                                 $this->makeFiles->remove($this->upload->imgBasePath('img/social/').'social.jpg');
+                             }
                          }
 
                          $this->template->assign('page', $setEditData[$id_page]);
@@ -719,11 +765,13 @@ class backend_controller_logo extends backend_db_logo
                  $touch = array();
                  foreach ($touchCollection as $key => $value) {
                      $size = getimagesize($this->upload->imgBasePath('img/touch/') . DIRECTORY_SEPARATOR . $value);
-                     $touch[$key]['img']['filename'] = $value;
-                     $touch[$key]['img']['width'] = $size[0];
-                     $touch[$key]['img']['height'] = $size[1];
+                     $touch[$size[0]]['img']['filename'] = $value;
+                     $touch[$size[0]]['img']['width'] = $size[0];
+                     $touch[$size[0]]['img']['height'] = $size[1];
                  }
              }
+             ksort($touch);
+
              $this->template->assign('favicon',$favicon);
              $this->template->assign('homescreen',$touch);
 

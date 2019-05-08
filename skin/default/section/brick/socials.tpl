@@ -8,10 +8,10 @@
     {$meta["og:title"] = {$title}}
     {$meta["og:description"] = {$description}}
     {$meta["og:url"] = {''|cat:{$url}|cat:{$smarty.server.REQUEST_URI}}}
-    {if $logo && $logo.img.active eq 1}
-        {$meta["og:image"] = {''|cat:{$url}|cat:$logo.img.large.src}}
-        {$meta["og:image:width"] = $logo.img.large.w}
-        {$meta["og:image:height"] = $logo.img.large.h}
+    {if is_array($social) && !empty($social)}
+        {$meta["og:image"] = {''|cat:{$url}|cat:$social.img.src}}
+        {$meta["og:image:width"] = $social.img.w}
+        {$meta["og:image:height"] = $social.img.h}
     {else}
         {$meta["og:image"] = {''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/logo/logo.png'}}
         {$meta["og:image:width"] = '250'}

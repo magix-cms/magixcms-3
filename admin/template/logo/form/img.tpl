@@ -9,7 +9,13 @@
         {if $iso@first}{$default = $id}{break}{/if}
     {/foreach}
     <form id="edit_img_logo" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form_img col-ph-12 col-md-6 col-lg-5" data-target="logo_img">
-        <h3>Image, description de l'image et SEO</h3>
+        <h3>Image, description de l'image et SEO <a href="#" class="icon-help text-info" data-trigger="hover" data-placement="top"
+                                                    data-toggle="popover"
+                                                    data-content="{#info_size_logo#}"
+                                                    data-original-title=""
+                                                    data-title="">
+                <span class="fa fa-question-circle"></span>
+            </a></h3>
         <div class="form-group">
             <label for="name_img_{$id}">{#name_img#|ucfirst} :</label>
             <input type="text" class="form-control" placeholder="{#ph_name_img#}" id="name_img_{$id}" name="name_img" value="{if isset($page.img_logo)}{$page.img_logo}{else}{$page.content[$default].url_pages}{/if}" />
