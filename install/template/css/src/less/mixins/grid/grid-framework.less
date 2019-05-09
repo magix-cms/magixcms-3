@@ -16,50 +16,27 @@
 	}
 }
 
-.calc-grid-column(@index, @class, @type) when (@type = width) and (@index > 0) {
-	.col-@{class}-@{index} {
-		.make-column(@class, @index);
+.calc-grid-column(@class, @index, @type) when (@index > 0) and not(@class = ph) {
+	.@{type}-@{class}-@{index} {
+		.make-column(@index, @type);
 	}
 }
-
-.calc-grid-column(@index, @class, @type) when (@type = push) and (@index > 0) {
-	.push-@{class}-@{index} {
-		.make-column-push(@class, @index);
-	}
-}
-/*.calc-grid-column(@index, @class, @type) when (@type = push) and (@index = 0) {
-	.push-@{class}-0 {
-		left: auto;
-	}
-}*/
-
-.calc-grid-column(@index, @class, @type) when (@type = pull) and (@index > 0) {
-	.pull-@{class}-@{index} {
-		.make-column-pull(@class, @index);
-	}
-}
-/*.calc-grid-column(@index, @class, @type) when (@type = pull) and (@index = 0) {
-	.pull-@{class}-0 {
-		right: auto;
-	}
-}*/
-
-.calc-grid-column(@index, @class, @type) when (@type = offset) and (@index > 0) {
-	.offset-@{class}-@{index} {
-		.make-column-offset(@class, @index);
+.calc-grid-column(@class, @index, @type) when (@index > 0) and (@class = ph) {
+	.@{type}-@{index} {
+		.make-column(@index, @type);
 	}
 }
 
 // Basic looping in LESS
 .loop-grid-columns(@index, @class, @type) when (@index >= 0) {
-	.calc-grid-column(@index, @class, @type);
+	.calc-grid-column(@class, @index, @type);
 	// next iteration
 	.loop-grid-columns((@index - 1), @class, @type);
 }
 
 // Create grid for specific class
 .make-grid(@class) {
-	.loop-grid-columns(@grid-columns, @class, width);
+	.loop-grid-columns(@grid-columns, @class, col);
 	.loop-grid-columns(@grid-columns, @class, pull);
 	.loop-grid-columns(@grid-columns, @class, push);
 	.loop-grid-columns(@grid-columns, @class, offset);

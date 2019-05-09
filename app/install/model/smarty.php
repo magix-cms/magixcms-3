@@ -55,6 +55,8 @@ class install_model_smarty extends Smarty{
     * Variable statique permettant de porter l'instance unique
     */
     static protected $instance;
+
+	protected $install_dir = 'install';
 	/**
 	 * function construct class
 	 *
@@ -83,13 +85,13 @@ class install_model_smarty extends Smarty{
          * Path -> configs
          */
         $this->setConfigDir(array(
-            self::setPath().'install/i18n/'
+            self::setPath().DIRECTORY_SEPARATOR.$this->install_dir.'/i18n/'
         ));
         /**
          * Path -> templates
          */
         $this->setTemplateDir(array(
-            self::setPath().'install/template/'
+            self::setPath().DIRECTORY_SEPARATOR.$this->install_dir.'/template/'
         ));
         /**
          * path plugins
@@ -98,13 +100,13 @@ class install_model_smarty extends Smarty{
         $this->setPluginsDir(array(
             self::setPath().'lib/smarty3/plugins/'
 			,self::setPath().'app/wdcore/'
-			,self::setPath().'install/template/widget/'
+			,self::setPath().DIRECTORY_SEPARATOR.$this->install_dir.'/template/widget/'
         ));
         /**
          * Path -> compile
          */
         $this->setCompileDir(
-            self::setPath().'install/caching/templates_c/'
+            self::setPath().DIRECTORY_SEPARATOR.$this->install_dir.'/caching/templates_c/'
         );
 		/**
 		 * debugging (true/false)
@@ -132,12 +134,13 @@ class install_model_smarty extends Smarty{
         /**
          * cache_dir -> cache
          */
-        $this->setCacheDir(self::setPath().'install/caching/tpl_caches/');
+        $this->setCacheDir(self::setPath().DIRECTORY_SEPARATOR.$this->install_dir.'/caching/tpl_caches/');
 		/**
 		 * load pre filter
 		 */
 		//$this->load_filter('pre','magixmin');
 		//$this->autoload_filters = array('pre' => array('magixmin'));
+		$this->loadFilter('output', 'trimwhitespace');
 		///////
         $this->loadPlugin('smarty_compiler_switch');
 		/**
@@ -162,4 +165,3 @@ class install_model_smarty extends Smarty{
     	return self::$instance;
     }
 }
-?>

@@ -1,0 +1,145 @@
+////
+// FORM STEPS - REGISTRATION
+////
+@step-color: lighten(#2e8639, 10%);
+
+.form-steps {
+	display: flex;
+	width: 100%;
+	position: relative;
+	margin: 15px 0 30px;
+
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	&__item {
+		padding: 0;
+		position: relative;
+		display: block;
+		-ms-flex-preferred-size: 0;
+		flex-basis: 0;
+		-ms-flex-positive: 1;
+		flex-grow: 1;
+		max-width: 100%;
+		text-align: center;
+	}
+
+	&__item-content {
+		display: inline-block;
+		text-decoration: none;
+
+		&:hover,
+		&:focus ,
+		&:active {
+			text-decoration: none;
+		}
+	}
+	// Step Icon
+	&__item-icon {
+		background: #eceff1;
+		color: #8191ab;
+		display: block;
+		border-radius: 100%;
+		text-align: center;
+		width: 9px;
+		height: 9px;
+		line-height: 1;
+		margin: 10px auto 0;
+		position: relative;
+		font-size: 13px;
+		font-weight: 700;
+		z-index: 2;
+	}
+	// Step text
+	&__item-text {
+		font-size: 13px;
+		color: #8191ab;
+		font-weight: 500;
+
+		@media (max-width: 560px) {
+			span {
+				&:first-child {
+					display: none;
+				}
+			}
+		}
+		@media (min-width: 561px) {
+			span {
+				&:last-child {
+					display: none;
+				}
+			}
+		}
+	}
+
+	&__item-line {
+		display: inline-block;
+		height: 3px;
+		width: 100%;
+		background: #cfd8dc;
+		float: left;
+		position: absolute;
+		left: -50%;
+		bottom: 3px;
+		z-index: 1;
+
+		&:after {
+			content: ' ';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 0;
+			height: 100%;
+			.auto-transition(.35s);
+			background: @step-color;
+		}
+	}
+	// Active Step
+	&__item--active {
+		.form-steps__item-icon {
+			background: @step-color;
+			color: #ffffff;
+		}
+
+		.form-steps__item-text {
+			color: #4f5e77;
+		}
+
+		/*.form-steps__item-line {
+			background: @step-color;
+		}*/
+	}
+	// Active Step
+	&__item--completed {
+		.form-steps__item-text {
+			//color: #4f5e77;
+			color: @step-color;
+		}
+
+		.form-steps__item-icon {
+			background: @step-color;
+			/*background-image: url(data:image/svg+xml;base64,PHN2ZyBkYXRhLW5hbWU9IkxheWVyIDEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDkuMTIgNyI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTkuMTIgMS4wNkw4LjA2IDAgMy4xOCA0Ljg4IDEuMDYgMi43NiAwIDMuODIgMy4xOCA3bDUuOTQtNS45NHoiLz48L3N2Zz4=);
+			color: transparent;
+			background-size: 10px;
+			background-repeat: no-repeat;
+			background-position: center center;
+			width: 25px;
+			height: 25px;
+			line-height: 25px;*/
+		}
+
+		/*.form-steps__item-line {
+			background: @step-color;
+		}*/
+	}
+
+	&__item--active,
+	&__item--completed {
+		.form-steps__item-line:after {
+			width: 100%;
+		}
+	}
+}

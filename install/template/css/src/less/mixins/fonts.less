@@ -1,14 +1,29 @@
-/*
- * Custom fonts and font rules
- */
-@font-family-sans-serif: "Open Sans", Arial, sans-serif;
-@quote-font: "Philosopher", Georgia, serif;
-@title-font: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+//
+// Custom fonts and font rules
+//
+@font-family-sans-serif: "Heebo", "Helvetica", Arial, sans-serif;
+@headings-font-family: @font-family-sans-serif;
+@headings-font-weight: 300;
 
-.quote {
-    font-family: @quote-font;
-}
+@font-size-base: 	12px;
+@font-size-base-md: 14px;
+@font-size-base-lg: 14px;
+@font-size-large:   ceil((@font-size-base * 1.25)); // ~18px
+@font-size-small:   ceil((@font-size-base * 0.85)); // ~12px
 
-.title-font {
-    font-family: @title-font;
-}
+@font-size-h1: 2.25rem;
+@font-size-h2: 1.875rem;
+@font-size-h3: 1.5rem;
+@font-size-h4: 1.125rem;
+@font-size-h5: 1rem;
+@font-size-h6: 0.75rem;
+
+//** Unit-less `line-height` for use in components like buttons.
+@line-height-base: 1.428571429; // 20/14
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+@line-height-computed: floor((@font-size-base * @line-height-base)); // ~20px
+
+@font-weight: 300;
+@lead-font-size: 1.15rem;
+@lead-font: @font-family-sans-serif;
+@quote-font: Georgia, serif;

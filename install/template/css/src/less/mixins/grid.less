@@ -10,14 +10,17 @@
 .container {
 	.container-fixed();
 
-	@media (min-width: @screen-sm-min) {
+	/*@media (min-width: @screen-sm-min) {
 		max-width: @container-sm;
-	}
+	}*/
 	@media (min-width: @screen-md-min) {
 		max-width: @container-md;
 	}
 	@media (min-width: @screen-lg-min) {
 		max-width: @container-lg;
+	}
+	@media (min-width: @screen-xl-min) {
+		max-width: @container-xl;
 	}
 }
 
@@ -39,11 +42,24 @@
 .row {
 	.make-row();
 }
+.row-center {
+	justify-content: center;
+}
+
 
 
 // Columns
 //
 // Common styles for small and large grid columns
+
+.col {
+	-ms-flex-preferred-size: 0;
+	flex-basis: 0;
+	-ms-flex-positive: 1;
+	flex-grow: 1;
+	max-width: 100%;
+	padding: 0 15px;
+}
 
 .make-grid-columns();
 
@@ -65,6 +81,10 @@
 @media (min-width: @screen-xs-min) {
 	.make-grid(xs);
 	.make-rows(xs);
+	.col-xs {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }
 
 
@@ -76,6 +96,10 @@
 @media (min-width: @screen-sm-min) {
 	.make-grid(sm);
 	.make-rows(sm);
+	.col-sm {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }
 
 
@@ -86,6 +110,10 @@
 @media (min-width: @screen-md-min) {
 	.make-grid(md);
 	.make-rows(md);
+	.col-md {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }
 
 
@@ -96,4 +124,22 @@
 @media (min-width: @screen-lg-min) {
 	.make-grid(lg);
 	.make-rows(lg);
+	.col-lg {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
+}
+
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+@media (min-width: @screen-xl-min) {
+	.make-grid(xl);
+	.make-rows(xl);
+	.col-xl {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
 }

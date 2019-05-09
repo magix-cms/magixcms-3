@@ -1,6 +1,6 @@
-/*
- * Buttons creation functions
- */
+//
+// Buttons creation functions
+//
 
 // button-gradient-variant override
 .button-gradient-variant(@color; @bg-color-1; @bg-color-2;) {
@@ -68,9 +68,9 @@
 			&.btn-flat {
 				.button-variant(@txt-color, extract(@color, 3), extract(@color, 3));
 			}
-			&.btn-gradient {
-				.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));
-			}
+			//&.btn-gradient {
+			//	.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));
+			//}
 			&.btn-invert {
 				position: relative;
 				padding: 10px 16px;

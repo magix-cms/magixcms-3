@@ -1,20 +1,27 @@
 {autoload_i18n}
 {switch $message}
-{case 'add_redirect' break}
-    {** Add **}
-{capture name="alert_type"}{strip}
-    success
-{/strip}{/capture}
-{capture name="icon"}{strip}
-    check
-{/strip}{/capture}
-{capture name="alert_message"}
-    {#request_success_add_redirect#}
-    <i class="fa fa-spinner fa-pulse fa-fw"></i>
-    <span class="sr-only">Redirection...</span>
-{/capture}
+{case 'config_success' break}
+{capture name="alert_type"}success{/capture}
+{capture name="icon"}check{/capture}
+{capture name="alert_message"}{#request_success_config#}{/capture}
+{case 'request_success' break}
+{capture name="alert_type"}success{/capture}
+{capture name="icon"}check{/capture}
+{capture name="alert_message"}{#request_success#}{/capture}
+{case 'config_error' break}
+{capture name="alert_type"}danger{/capture}
+{capture name="icon"}exclamation-triangle{/capture}
+{capture name="alert_message"}{#request_warning_config#}{/capture}
+{case 'connexion_impossible' break}
+{capture name="alert_type"}warning{/capture}
+{capture name="icon"}exclamation-triangle{/capture}
+{capture name="alert_message"}{#request_warning_db#}{/capture}
+{case 'request_missing' break}
+{capture name="alert_type"}warning{/capture}
+{capture name="icon"}exclamation-triangle{/capture}
+{capture name="alert_message"}{#request_missing#}{/capture}
 {/switch}
-<p class="alert alert-{$smarty.capture.alert_type} fade in">
+<p class="col-sm-12 alert alert-{$smarty.capture.alert_type} fade in">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <span class="fa fa-{$smarty.capture.icon} fa-lg"></span> {$smarty.capture.alert_message}
+    <span class="fas fa-{$smarty.capture.icon} fa-lg"></span> {$smarty.capture.alert_message}
 </p>

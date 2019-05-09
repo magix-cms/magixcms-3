@@ -1,37 +1,36 @@
 @charset "utf-8";
-/*
- * Custom rules for text
- */
-/*---------------------------*\
------ Font weight classes -----
-\*---------------------------*/
-.semiBold {
-    font-weight: 600;
+//
+// Custom rules for text
+//
+.material-icons {
+	vertical-align: bottom;
 }
 
-.extraBold {
-    font-weight: 800;
+//
+// Font weight classes
+//
+.quote {
+	font-family: @quote-font;
 }
 
-/*-------------*\
------ Liens -----
-\*-------------*/
-.bold-link {
-	color: inherit !important;
-	font-weight: bold !important;
+.title-font {
+	font-family: @headings-font-family;
 }
 
+//
+// Liens
+//
 .all-hover {
 	.hover-link();
 }
 
-/*----------------------*\
------ Citation style -----
-\*----------------------*/
+//
+// Quote
+//
 blockquote {
-    border-left: none;
-    padding-left: 40px;
-    position: relative;
+	border-left: none;
+	padding-left: 40px;
+	position: relative;
 	font-size: @font-size-base;
 
 	&:before {
@@ -66,14 +65,14 @@ blockquote {
 }
 
 
-/*--------------*\
------ Listes -----
-\*--------------*/
+//
+// List
+//
 .link-bar {
 	text-align: center;
 	.list-unstyled;
 	.list-inline;
-	.normalize-link(@main-color);
+	//.normalize-link(@main-color);
 
 	li {
 		border-right: 1px solid #959595;
@@ -88,10 +87,29 @@ blockquote {
 		}
 	}
 }
+.link-list {
+	//.normalize-link(@text-color);
+	li {
+		a {
+			display: inline-block;
+			padding: 2px 0 3px;
+		}
+	}
+}
 
-/*-----------------------*\
------ Text font sizes -----
-\*-----------------------*/
+.touchscreen {
+	.link-list {
+		li {
+			a {
+				padding: 10px 0;
+			}
+		}
+	}
+}
+
+//
+// Text font sizes
+//
 // --- justify content
 .text-justify {
 	.text-justify;

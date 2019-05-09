@@ -72,6 +72,9 @@ $(document).ready(function(){
             label.remove();
         } 
     });
+    $.jmRequest.notifier = {
+        cssClass : '.mc-message'
+    };
 });
 
 var globalForm = (function ($, undefined) {

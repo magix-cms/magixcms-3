@@ -38,7 +38,68 @@
 	@umbra: "umbra-@{depth}";
 	@penumbra: "penumbra-@{depth}";
 	@ambient: "ambient-@{depth}";
-	-moz-box-shadow: @inset @@umbra, @inset @@penumbra, @inset @@ambient;
+	//-moz-box-shadow: @inset @@umbra, @inset @@penumbra, @inset @@ambient;
 	-webkit-box-shadow: @inset @@umbra, @inset @@penumbra, @inset @@ambient;
 	box-shadow: @inset @@umbra, @inset @@penumbra, @inset @@ambient;
+}
+
+@simple: 2px 4px 3px rgba(0,0,0,0.3);
+@hard: 6px 6px 0 rgba(0,0,0,0.2);
+@double: 4px 3px 0 #fff, 9px 8px 0 rgba(0,0,0,0.15);
+@distant: 0 3px 0 #b2a98f, 0 14px 10px rgba(0,0,0,0.15), 0 24px 2px rgba(0,0,0,0.1), 0 34px 30px rgba(0,0,0,0.1);
+@close-heavy: 0 0.016em 0.0125em rgba(0,0,0,.4), 0 0.033em 0.054em rgba(0,0,0,.1), 0 0.075em 0.096em rgba(0,0,0,.1);
+@text-3d: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
+@glow: 0px 0px 6px rgba(255,255,255,0.7);
+@spotlights: 0 0.06em 0.02em rgba(0,0,0,.1), 0.04em 0.08em 0.02em rgba(0,0,0,.05), -0.04em 0.08em 0.02em rgba(0,0,0,.05);
+@spotted: 0 0.016em 0.0125em rgba(0,0,0,0.4), 0 0.033em 0.054em rgba(0,0,0,0.1), 0 0.075em 0.096em rgba(0,0,0,0.1), 0 0.06em 0.02em rgba(0,0,0,.1), 0.04em 0.08em 0.02em rgba(0,0,0,.05), -0.04em 0.08em 0.02em rgba(0,0,0,.05);
+
+.text-shadow(@type) {
+	text-shadow: @@type;
+}
+
+.text-dirty-press() {
+	color: rgba(0,0,0,0.6);
+	text-shadow: 2px 2px 3px rgba(255,255,255,0.1);
+}
+
+.text-inset(@color: rgba(255,255,255,.5)) {
+	background-color: rgba(0,0,0,0.6);
+	-webkit-background-clip: text;
+	-moz-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	text-shadow: @color 0 0.01em 0.01em;
+}
+
+.text-heavy(@color) {
+	color: @color;
+	text-shadow: 0 0.016em 0.0125em darken(desaturate(@color, 35%),35%),
+	0 0.033em 0.054em rgba(0,0,0,.1),
+	0 0.075em 0.096em rgba(0,0,0,.1);
+}
+
+.text-lighted(@color) {
+	color: @color;
+	/*text-shadow: 0 3px 0 darken(desaturate(@color, 25%),25%),
+	0 14px 10px rgba(0,0,0,0.15),
+	0 24px 2px rgba(0,0,0,0.1),
+	0 34px 30px rgba(0,0,0,0.1);*/
+	text-shadow: 0 0.016em 0.0125em darken(desaturate(@color, 35%),35%),
+	0 0.033em 0.054em rgba(0,0,0,.1),
+	0 0.075em 0.096em rgba(0,0,0,.1),
+	0 0.157em 0.157em rgba(0,0,0,.1);
+}
+
+.text-layered(@color) {
+	color: #fff;
+	font-weight: 700;
+	text-shadow: -0.05em 0.05em 0 @color,
+	-0.10em 0.10em 0 darken(@color, 7%),
+	-0.15em 0.15em 0 darken(@color, 14%);
+}
+
+.text-embossed() {
+	color: rgba(0,0,0,0.6);
+	text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+		0px -5px 35px rgba(255,255,255,0.3);
 }
