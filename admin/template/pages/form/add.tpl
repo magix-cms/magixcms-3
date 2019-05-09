@@ -50,7 +50,7 @@
                 <div class="col-ph-12 col-sm-4">
                     <div class="form-group">
                         <label for="menu_pages">{#menu#}</label>
-                        <input id="menu_pages" data-toggle="toggle" type="checkbox" name="menu_pages" data-on="{#visible#}" data-off="{#hidden_f#}" data-onstyle="success" data-offstyle="danger"{if $page.menu_pages} checked{/if}>
+                        <input id="menu_pages" data-toggle="toggle" type="checkbox" name="menu_pages" data-on="{#visible#}" data-off="{#hidden_f#}" data-onstyle="success" data-offstyle="danger" checked>
                     </div>
                 </div>
             </div>
