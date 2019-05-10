@@ -68,13 +68,13 @@
         <div class="form-group">
             <label for="setting_pwd" class="col-5 col-xs-4 col-sm-3 control-label">{#setting_pwd#}*&nbsp;:</label>
             <div class="col-7 col-xs-6 col-sm-4">
-                <input id="setting_pwd" type="password" name="setting[pwd]" placeholder=" {#setting_pwd_ph#}" class="form-control required" value="" required/>
+                <input id="setting_pwd" type="password" name="setting[pwd]" placeholder="{#setting_pwd_ph#}" class="form-control required" value="" required/>
             </div>
         </div>
         <div class="form-group">
             <label for="setting_rppwd" class="col-5 col-xs-4 col-sm-3 control-label">{#setting_rppwd#}*&nbsp;:</label>
             <div class="col-7 col-xs-6 col-sm-4">
-                <input id="setting_rppwd" type="password" name="setting[rppwd]" placeholder=" {#setting_rppwd_ph#}" class="form-control required" equalTo="#setting_pwd" value="" required/>
+                <input id="setting_rppwd" type="password" name="setting[rppwd]" placeholder="{#setting_rppwd_ph#}" class="form-control required" equalTo="#setting_pwd" value="" required/>
             </div>
         </div>
     </fieldset>

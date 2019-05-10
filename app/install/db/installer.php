@@ -14,6 +14,9 @@ class install_db_installer
 		$sql = '';
 
 		switch ($config['type']) {
+            case 'database':
+                $sql = "SELECT COUNT(DISTINCT `table_name`) FROM `information_schema`.`columns` WHERE `table_schema` = 'dsi_dev'";
+                break;
 			case 'lastEmployee':
 				$sql = 'SELECT em.* FROM mc_admin_employee AS em ORDER BY em.id_admin DESC LIMIT 0,1';
 				break;

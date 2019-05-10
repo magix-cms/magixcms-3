@@ -6,6 +6,9 @@ $config = dirname(__FILE__).DIRECTORY_SEPARATOR.'config.php';
 if (file_exists($config)) {
 	require $config;
 }
+else {
+    header('Location: /install/');
+}
 //setlocale(LC_TIME, 'fr_FR.UTF8', 'fr.UTF8', 'fr_FR.UTF-8', 'fr.UTF-8');
 if(defined('MP_LOG')){
     if(MP_LOG == 'debug'){

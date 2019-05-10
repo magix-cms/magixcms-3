@@ -322,6 +322,19 @@ class install_controller_installer extends install_db_installer {
 			}
 		}
     	else {
+    	    $db = false;
+    	    if(file_exists('../app/init/config.php')) {
+                $config_in = '../app/init/common.inc.php';
+                if (file_exists($config_in)) {
+                    require $config_in;
+                }else{
+                    throw new Exception('Error Ini Common Files');
+                    exit;
+                }
+                $db = parent::fetchData(array('type' => 'database'));
+                $db = !empty($db);
+            }
+            $this->template->assign('install_detected',$db);
 			$this->template->display('index.tpl');
 		}
     }
