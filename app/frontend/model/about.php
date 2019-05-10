@@ -813,9 +813,17 @@ class frontend_model_about extends frontend_db_about {
 				}
 			}
 			else {
-
+				$params = array('iso' => $conf['lang']);
 				$conditions = '';
-				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.id_parent = :id';
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1';
+
+				if($conf['id']) {
+					$conditions .= ' AND p.id_parent = :id';
+					$params['id'] = $conf['id'];
+				}
+				else {
+					$conditions .= ' AND p.id_parent IS NULL';
+				}
 
 				if ($conf['type'] == 'menu') {
 					$conditions .= ' AND p.menu_pages = 1';
@@ -835,9 +843,7 @@ class frontend_model_about extends frontend_db_about {
 						'type' => 'child',
 						'conditions' => $conditions
 					),
-					array(
-						':iso' => $conf['lang'],
-						':id' => $conf['id'])
+					$params
 				);
 			}
 		}
