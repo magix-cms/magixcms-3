@@ -190,7 +190,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--glob --clean-css mobile.less" />
+    <option name="arguments" value="--clean-css=&quot;--s0&quot; --glob mobile.less ../../mobile.min.css" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -201,22 +201,48 @@
     <option name="outputFilters">
       <array>
         <FilterInfo>
-          <option name="description" value="lessc error format" />
-          <option name="name" value="lessc" />
+          <option name="description" value="" />
+          <option name="name" value="" />
           <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
         </FilterInfo>
       </array>
     </option>
-    <option name="outputFromStdout" value="true" />
+    <option name="outputFromStdout" value="false" />
     <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Mobile" />
     <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileDir$" />
+    <option name="workingDir" value="$Sourcepath$/less" />
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--glob --clean-css tablet.less" />
+    <option name="arguments" value="--clean-css=&quot;--s0&quot; --glob --source-map mobile.less ../../mobile.min.css" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="Mobile (Clean) + SourceMap" />
+    <option name="output" value="../../mobile.min.css:../../mobile.min.css.map" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="" />
+          <option name="name" value="" />
+          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="Mobile" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$Sourcepath$/less" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--clean-css=&quot;--s0&quot; --glob tablet.less ../../tablet.min.css" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -227,22 +253,48 @@
     <option name="outputFilters">
       <array>
         <FilterInfo>
-          <option name="description" value="lessc error format" />
-          <option name="name" value="lessc" />
+          <option name="description" value="" />
+          <option name="name" value="" />
           <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
         </FilterInfo>
       </array>
     </option>
-    <option name="outputFromStdout" value="true" />
+    <option name="outputFromStdout" value="false" />
     <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Tablet" />
     <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileDir$" />
+    <option name="workingDir" value="$Sourcepath$/less" />
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--glob --clean-css desktop.less" />
+    <option name="arguments" value="--clean-css=&quot;--s0&quot; --glob --source-map tablet.less ../../tablet.min.css" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="Tablet (Clean) + SourceMap" />
+    <option name="output" value="../../tablet.min.css:../../tablet.min.css.map" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="" />
+          <option name="name" value="" />
+          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="Tablet" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$Sourcepath$/less" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--clean-css=&quot;--s0&quot; --glob desktop.less ../../desktop.min.css" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -253,18 +305,44 @@
     <option name="outputFilters">
       <array>
         <FilterInfo>
-          <option name="description" value="lessc error format" />
-          <option name="name" value="lessc" />
+          <option name="description" value="" />
+          <option name="name" value="" />
           <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
         </FilterInfo>
       </array>
     </option>
-    <option name="outputFromStdout" value="true" />
+    <option name="outputFromStdout" value="false" />
     <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Desktop" />
     <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileDir$" />
+    <option name="workingDir" value="$Sourcepath$/less" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--clean-css=&quot;--s0&quot; --glob --source-map desktop.less ../../desktop.min.css" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="Desktop (Clean) + SourceMap" />
+    <option name="output" value="../../desktop.min.css:../../desktop.min.css.map" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="" />
+          <option name="name" value="" />
+          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="Desktop" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$Sourcepath$/less" />
     <envs />
   </TaskOptions>
   <TaskOptions>

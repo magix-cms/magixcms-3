@@ -1,2 +1,0 @@
-Put the "scopes" folder into your ".idea" folder of your phpstorm project and then import the watchers through the Files Watchers pannel.
-Replace the "$USER_HOME$" by the path to your user folder (ex: C:\users\USERNAME for Windows OS) in the program path for all the watchers.

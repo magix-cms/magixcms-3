@@ -124,6 +124,7 @@ class frontend_model_menu extends frontend_db_menu {
 					$link['controller'] = null;
 					break;
 				case 'pages':
+					$link['controller'] = 'pages';
 					$link['url_link'] =
 						$this->routingUrl->getBuildUrl(array(
 								'type' => 'pages',
