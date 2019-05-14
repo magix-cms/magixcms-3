@@ -12,4 +12,6 @@ Import the watchers (watchers.xml) through the Files Watchers pannel.
 - In the Project panel, navigate to your *skin folder/css/src/* and then right click on the "src" folder and mark it as "Sources Root".
 
 ## 4. Debugging
-There is two file watchers available for each case (mobile,tablet and desktop). One which will create a sourcemap (usefull in a dev environment) and one which will not.
+The compilers create 3 files for each case : *.css*, *.css.map* and *.min.css*. The first two are made for development purpose.
+
+Switch mode to *Production* in the configuration to use the minified file.

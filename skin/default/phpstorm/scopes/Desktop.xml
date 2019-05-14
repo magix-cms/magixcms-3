@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="Desktop" pattern="file:skin/*/css/font-awesome/less//*||file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*" />
+  <scope name="Desktop" pattern="file:skin/*/css/**/*.less&amp;&amp;!file:skin/*/css/src/less/tinymce.less" />
 </component>

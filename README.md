@@ -65,7 +65,8 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
  * [less](http://lesscss.org/usage/) >= 3.5.0
  * [less-plugin-glob](https://github.com/just-boris/less-plugin-glob) >= 3.0.0
     * Requires: [globby](https://www.npmjs.com/package/globby) >= 9.1.0
- * [less-plugin-clean-css](https://github.com/less/less-plugin-clean-css) >= 1.5.1
+ * [less-plugin-clean-css](https://github.com/less/less-plugin-clean-css) >= 1.5.1 *deprecated use clean-css-cli instead*
+ * [clean-css-cli](https://www.npmjs.com/package/clean-css-cli) >= 4.3.0
  * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21
  * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 
  * [terser](https://github.com/terser-js/terser) >= 3.17.0 (ou terser-js à la place de Uglify)
@@ -85,17 +86,17 @@ file:skin/*/amp/css/less//*
 
 #### Mobile
 <pre>
-(file:skin/*/css/font-awesome/less//*||file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*)&&!file:skin/*/css/src/less/tablet//*&&!file:skin/*/css/src/less/tablet.less&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less
+file:skin/*/css/**/*.less&&!file:skin/*/css/src/less/tablet//*&&!file:skin/*/css/src/less/tablet.less&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less&&!file:skin/*/css/src/less/tinymce.less
 </pre>
 
 #### Tablet
 <pre>
-(file:skin/*/css/font-awesome/less//*||file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*)&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less
+file:skin/*/css/**/*.less&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less&&!file:skin/*/css/src/less/tinymce.less
 </pre>
 
 #### Desktop
 <pre>
-file:skin/*/css/font-awesome/less//*||file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*
+file:file:skin/*/css/**/*.less&&!file:skin/*/css/src/less/tinymce.less
 </pre>
 
 #### Script
