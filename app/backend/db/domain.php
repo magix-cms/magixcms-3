@@ -82,7 +82,7 @@ class backend_db_domain
 
 		switch ($config['type']) {
 			case 'newDomain':
-				$sql = 'INSERT INTO mc_domain (url_domain,default_domain) VALUE (:url_domain,:default_domain)';
+				$sql = 'INSERT INTO mc_domain (url_domain,default_domain,canonical_domain) VALUE (:url_domain,:default_domain,:canonical_domain)';
 				break;
 			case 'newLanguage':
 				$sql = 'INSERT INTO `mc_domain_language` (id_domain,id_lang,default_lang) VALUES (:id_domain,:id_lang,:default_lang)';
@@ -117,7 +117,8 @@ class backend_db_domain
 						SET
 							url_domain = :url_domain,
 							tracking_domain = :tracking_domain, 
-							default_domain=:default_domain 
+							default_domain=:default_domain,
+							canonical_domain=:canonical_domain
                 		WHERE id_domain = :id_domain';
 				break;
 			case 'modules':

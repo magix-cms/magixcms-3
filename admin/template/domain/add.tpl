@@ -23,26 +23,43 @@
                 <div class="row">
                     <div class="col-ph-12 col-md-6">
                         <div class="row">
-                            <div class="col-xs-8">
+                            <div class="col-xs-12">
                                 <div class="form-group">
                                     <label for="url_domain">{#url_domain#|ucfirst}</label>
                                     <input type="text" class="form-control required" name="url_domain" id="url_domain" placeholder="{#ph_url_domain#|ucfirst}" required>
                                 </div>
                             </div>
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label>{#default_domain#|ucfirst}&nbsp;*</label>
-                                    <div class="radio">
-                                        <label for="default_1">
-                                            <input type="radio" name="default_domain" id="default_1" value="1" required>
-                                            {#bin_1#}
-                                        </label>
-                                        <label for="default_0">
-                                            <input type="radio" name="default_domain" id="default_0" value="0" checked required>
-                                            {#bin_0#}
-                                        </label>
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>{#default_domain#|ucfirst}&nbsp;*</label>
+                            <div class="radio">
+                                <label for="default_1">
+                                    <input type="radio" name="default_domain" id="default_1" value="1" required>
+                                    {#bin_1#}
+                                </label>
+                                <label for="default_0">
+                                    <input type="radio" name="default_domain" id="default_0" value="0" checked required>
+                                    {#bin_0#}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label>{#canonical_domain#|ucfirst}&nbsp;*</label>
+                            <div class="radio">
+                                <label for="canonical_1">
+                                    <input type="radio" name="canonical_domain" id="canonical_1" value="1" required>
+                                    {#bin_1#}
+                                </label>
+                                <label for="canonical_0">
+                                    <input type="radio" name="canonical_domain" id="canonical_0" value="0" checked required>
+                                    {#bin_0#}
+                                </label>
                             </div>
                         </div>
                     </div>

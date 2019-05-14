@@ -10,6 +10,7 @@
     <meta itemprop="description" content="{$smarty.capture.description}">
     <meta name="robots" content="{$setting['robots']['value']}">
     {strip}{include file="section/loop/lang.tpl" amp=false amp_active=true iso={$lang}}{/strip}
+    {strip}{include file="section/brick/canonical.tpl" amp=false amp_active=true}{/strip}
     {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">

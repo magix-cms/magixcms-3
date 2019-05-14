@@ -4,7 +4,7 @@ class backend_controller_domain extends backend_db_domain
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $xml;
     protected $collectionLanguage;
-    public $id_domain,$url_domain,$default_domain, $data_type,$id_lang,$default_lang,$tracking_domain,$config;
+    public $id_domain,$url_domain,$default_domain,$canonical_domain, $data_type,$id_lang,$default_lang,$tracking_domain,$config;
 
 	/**
 	 * backend_controller_domain constructor.
@@ -43,6 +43,9 @@ class backend_controller_domain extends backend_db_domain
         }
         if (http_request::isPost('default_domain')) {
             $this->default_domain = $formClean->numeric($_POST['default_domain']);
+        }
+        if (http_request::isPost('canonical_domain')) {
+            $this->canonical_domain = $formClean->numeric($_POST['canonical_domain']);
         }
         if (http_request::isPost('default_lang')) {
             $this->default_lang = $formClean->numeric($_POST['default_lang']);
@@ -89,6 +92,10 @@ class backend_controller_domain extends backend_db_domain
 		return $this->getItems('domain',null,'all',false);
 	}
 
+    /**
+     * @param $config
+     * @throws Exception
+     */
     private function getBuildXmlItems($config){
         $langDomain = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$config['url_domain']));
         $setLang = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'domain'),array('id'=>$langDomain['id_domain']));
@@ -130,7 +137,8 @@ class backend_controller_domain extends backend_db_domain
                         'type'=>$data['type']
                     ),array(
                         'url_domain'      => $this->url_domain,
-                        'default_domain'  => $this->default_domain
+                        'default_domain'  => $this->default_domain,
+                        'canonical_domain'=>$this->canonical_domain
                     )
                 );
                 $this->message->json_post_response(true,'add_redirect');
@@ -162,7 +170,8 @@ class backend_controller_domain extends backend_db_domain
                         'id_domain'       => $this->id_domain,
                         'url_domain'      => $this->url_domain,
                         'tracking_domain' => $this->tracking_domain,
-                        'default_domain'  => $this->default_domain
+                        'default_domain'  => $this->default_domain,
+                        'canonical_domain'=>$this->canonical_domain
                     )
                 );
                 break;
@@ -343,9 +352,10 @@ class backend_controller_domain extends backend_db_domain
 			$assign = array(
 				'id_domain',
 				'url_domain' => ['title' => 'url_domain', 'class' => ''],
-				'default_domain' => ['title' => 'default_domain']
+				'default_domain' => ['title' => 'default_domain'],
+                'canonical_domain' => ['title' => 'canonical_domain']
 			);
-			$this->data->getScheme(array('mc_domain'),array('id_domain','url_domain','default_domain'),$assign);
+			$this->data->getScheme(array('mc_domain'),array('id_domain','url_domain','default_domain','canonical_domain'),$assign);
 
             $this->template->assign('setConfig',$this->xml->setConfigData());
             $this->template->display('domain/index.tpl');
