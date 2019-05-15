@@ -27,9 +27,9 @@
     <meta name="theme-color" content="#7083db" />
     {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
     {* Please try to use icomoon to create a small iconfont and reduce load work *}
-    {strip}{capture name="stylesheet"}skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css{/capture}
+    {strip}{capture name="stylesheet"}/skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css{/capture}
     {$csspath = $smarty.capture.stylesheet}
-    {if $setting.mode.value !== 'dev'}{$csspath = {'/min/?f='|cat:$csspath}}{/if}
+    {if $setting.mode.value !== 'dev'}{$csspath = {'/min/?f='|cat:$csspath}}{else}{$csspath = {$url|cat:$csspath}}{/if}
     {if $setting.concat.value}{$csspath = {$csspath|concat_url:'css'}}{/if}
     {if $browser !== 'IE'}<link rel="preload" href="{$csspath}" as="style">{/if}
     <link rel="stylesheet" href="{$csspath}">{/strip}

@@ -70,6 +70,8 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
  * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21
  * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 
  * [terser](https://github.com/terser-js/terser) >= 3.17.0 (ou terser-js à la place de Uglify)
+ * [sass](https://sass-lang.com/install) >= 1.20.1
+ 
 #### Script Plugins
 <pre>
 file:plugins/*/js/src/*.js
