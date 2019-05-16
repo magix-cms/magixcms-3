@@ -769,8 +769,8 @@ class backend_controller_logo extends backend_db_logo
                      $touch[$size[0]]['img']['width'] = $size[0];
                      $touch[$size[0]]['img']['height'] = $size[1];
                  }
+                 ksort($touch);
              }
-             ksort($touch);
 
              $this->template->assign('favicon',$favicon);
              $this->template->assign('homescreen',$touch);
