@@ -8,6 +8,8 @@
     ],
     "scriptsFiles": [
         "/min/?f=skin/default/js/vendor/modernizr.min.js,skin/default/js/vendor/picturefill.min.js,skin/default/js/vendor/intersection-observer.min.js",
-        "/min/?f=skin/default/js/vendor/bootstrap-custom.min.js,skin/default/js/vendor/jquery.detect_swipe.min.js,skin/default/js/vendor/featherlight.min.js,skin/default/js/vendor/featherlight.gallery.min.js,skin/default/js/vendor/owl.carousel.min.js,skin/default/js/vendor/lazysizes.min.js,skin/default/js/affixhead.min.js,skin/default/js/global.min.js"
+        "/min/?f=skin/default/js/vendor/bootstrap-custom.min.js,skin/default/js/vendor/jquery.detect_swipe.min.js,skin/default/js/vendor/featherlight.min.js,skin/default/js/vendor/featherlight.gallery.min.js,skin/default/js/vendor/owl.carousel.min.js,skin/default/js/global.min.js",
+        "/min/?f=skin/default/js/vendor/bootstrap-custom.min.js,skin/default/js/vendor/jquery.detect_swipe.min.js,skin/default/js/vendor/featherlight.min.js,skin/default/js/vendor/featherlight.gallery.min.js,skin/default/js/vendor/owl.carousel.min.js,skin/default/js/affixhead.min.js,skin/default/js/global.min.js",
+        "/min/?f=skin/default/js/vendor/bootstrap-custom.min.js,skin/default/js/vendor/featherlight.min.js,skin/default/js/vendor/featherlight.gallery.min.js,skin/default/js/vendor/owl.carousel.min.js,skin/default/js/affixhead.min.js,skin/default/js/global.min.js"
     ]
 }

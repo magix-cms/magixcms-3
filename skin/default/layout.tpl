@@ -68,6 +68,13 @@
 {block name="main:after"}{/block}
 {include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','news','contact']}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+    window.lazyLoadOptions = {
+        elements_selector: "[loading=lazy]",
+        use_native: true
+    };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js"></script>
 {include file="section/brick/scripts.tpl"}
 {block name="foot"}{/block}
 {include file="section/brick/service_worker.tpl"}

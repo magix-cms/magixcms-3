@@ -48,6 +48,10 @@
     $(window).on('load', function () {
         C.init(); // Cookie EU Law
 
+        let lazyLoadInstance = new LazyLoad({
+            elements_selector: ".lazyload"
+        });
+
         // *** target_blank
         $('a.targetblank').click( function() {
             window.open($(this).attr('href'));

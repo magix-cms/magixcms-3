@@ -44,33 +44,40 @@
  * @version    plugin version
  * @author Salvatore Di Salvo <disalvo.infographiste@gmail.com>
  *
- * @param string $str string
+ * @param (string) $str url
+ * @param (string) $type js|css
  *
  * @return string
  */
 function smarty_modifier_concat_url($str,$type)
 {
 	$system = new component_core_system();
-	switch ($type) {
-		case 'js': $url = 'src'; break;
-		case 'css': $url = 'href'; break;
-	}
+	$url = $str;
+	$options = array(
+		'url' => $str,
+		'type' => $type,
+		'filesgroups' => 'min/groupsConfig.php'
+	);
+
 	if(defined('PATHADMIN')){
-		$url = $system->getUrlConcat(array(
-			$url=>$str,
-			'caches'=>'caching/caches',
-			'filesgroups'=> 'min/groupsConfig.php',
-			'minDir'=>'/'.PATHADMIN.'/min/',
-			'callback'=>'/admin'
-		));
-	}else{
-		$url = $system->getUrlConcat(array(
-			$url=>$str,
-			'caches'=>'var/caches',
-			'filesgroups'=> 'min/groupsConfig.php',
-			'minDir'=>'/min/',
-			'callback'=>''
-		));
+		$options['caches'] = 'caching/caches';
+		$options['minDir'] = '/'.PATHADMIN.'/min/';
+		$options['callback'] = '/admin';
 	}
+	else{
+		$options['caches'] = 'var/caches';
+		$options['minDir'] = '/min/';
+		$options['callback'] = '';
+	}
+
+	if(is_array($options) && !empty($options)) {
+		try {
+			$url = $system->getUrlConcat($options);
+		} catch(Exception $e) {
+			$logger = new debug_logger(MP_LOG_DIR);
+			$logger->log('minify', 'concat', "Error : $e", debug_logger::LOG_MONTH);
+		}
+	}
+
 	return $url;
 }

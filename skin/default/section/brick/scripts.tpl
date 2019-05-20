@@ -4,7 +4,6 @@
     /skin/{$theme}/js/vendor/featherlight.min.js,
     /skin/{$theme}/js/vendor/featherlight.gallery.min.js,
     /skin/{$theme}/js/vendor/owl.carousel.min.js,
-    /skin/{$theme}/js/vendor/lazysizes.min.js,
     {if $viewport !== 'mobile'}/skin/{$theme}/js/affixhead.min.js,{/if}
     /skin/{$theme}/js/global.min.js
 {/capture}{/strip}

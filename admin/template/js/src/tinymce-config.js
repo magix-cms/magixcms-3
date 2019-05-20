@@ -204,7 +204,7 @@
         template_popup_width: 800,
         language : tinyLanguage,
         schema: "html5",
-        extended_valid_elements: "+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
+        extended_valid_elements: "+img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
         //verify_html: false,
         //end_container_on_empty_block: false,
         /*fix_list_elements : true*/

@@ -17,14 +17,10 @@ $body-font-family: Helvetica, Arial, sans-serif !important;
         padding: 0;
     }
 
-    .container td {
-        padding: 15px;
-    }
+    /*.container td {
+        padding: 30px;
+    }*/
 }
-
-/*.body table.container {
-    box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-}*/
 
 .footer {
     p{
@@ -33,14 +29,7 @@ $body-font-family: Helvetica, Arial, sans-serif !important;
     ul{
         list-style: none;
     }
-    .container td{
-        padding: 15px;
-    }
+    /*.container td{
+        padding: 30px;
+    }*/
 }
-
-/*
-.vignette {
-    -moz-box-shadow: 0 0 4px 0 rgba(0,0,0,.14),0 3px 4px 0 rgba(0,0,0,.12),0 1px 5px 0 rgba(0,0,0,.2);
-    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-    box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-}*/

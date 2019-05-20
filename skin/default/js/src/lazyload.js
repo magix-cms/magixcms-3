@@ -1,25 +1,14 @@
 $(function() {
     'use strict';
-    var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
-
-    if ("IntersectionObserver" in window) {
-        let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    let lazyImage = entry.target;
-                    lazyImage.src = lazyImage.dataset.src;
-                    if(lazyImage.dataset.srcset) lazyImage.srcset = lazyImage.dataset.srcset;
-                    lazyImage.classList.remove("lazy");
-                    lazyImageObserver.unobserve(lazyImage);
-                }
-            });
+    if ('loading' in HTMLImageElement.prototype) {
+        const images = document.querySelectorAll("img.lazyload");
+        images.forEach(img => {
+            img.src = img.dataset.src;
         });
-
-        lazyImages.forEach(function(lazyImage) {
-            lazyImageObserver.observe(lazyImage);
-        });
-    }
-    else {
-        console.log('No observer found');
+    } else {
+        // Dynamically import the LazySizes library
+        //const lazySizesLib = await import('/lazysizes.min.js');
+        // Initiate LazySizes (reads data-src & class=lazyload)
+        lazySizes.init(); // lazySizes works off a global.
     }
 });

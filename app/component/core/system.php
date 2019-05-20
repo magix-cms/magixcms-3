@@ -53,73 +53,70 @@ class component_core_system{
      * @author Gérits Aurelien and JB Demonte (http://jb.demonte.fr/)
      */
     public function getUrlConcat($options){
-        if(is_array($options)){
-            if(array_key_exists('caches', $options)){
-                $min_cachePath = $options['caches'];
-            }else{
-                throw new Exception("Error caches dir is not defined");
-            }
-            if(array_key_exists('href', $options)){
-                $url = $options["href"];
-                $ext = 'css';
-            }elseif(array_key_exists('src', $options)){
-                $url = $options["src"];
-                $ext = 'js';
-            }
-            if(array_key_exists('filesgroups', $options)){
-                $filesgroups = $options['filesgroups'];
-            }else{
-                $filesgroups = 'min/groupsConfig.php';
-            }
-            if(array_key_exists('minDir', $options)){
-                $minDir = $options['minDir'];
-            }else{
-                $minDir = '/min/';
-            }
-            if(array_key_exists('callback', $options)){
-                $callback = $options['callback'];
-            }else{
-                $callback = '';
-            }
-        }else{
-            throw new Exception("Error options is not array");
-        }
+        if(!is_array($options)) throw new Exception("Error options is not array");
 
-        $name = "";
-        //Parse a URL and return its components
-        $parseurl = parse_url($url);
+		if(!array_key_exists('caches', $options)) throw new Exception("Error caches dir is not defined");
+		$min_cachePath = $options['caches'];
 
-        //return position
-        $position = strpos($parseurl['query'], '=');
+		if(!array_key_exists('url', $options) || empty($options["url"])) throw new Exception("No url was passed");
+		$url = $options["url"];
 
-        //return first query
-        $query = substr($parseurl['query'],0,$position);
+		if(!array_key_exists('type', $options)) throw new Exception("Must precise the type of the resource");
+		$ext = $options["type"];
 
-        //return url after query
-        $filesPath = substr(strrchr($parseurl['query'], '='), 1);
-        // Group
-        if($query === 'g'){
-            $filesCollection = array();
-            if(file_exists($filesgroups)){
-                $groups = (require $filesgroups);
-                foreach(explode(",", $filesPath) as $group){
-                    $filesCollection = array_merge($filesCollection, isset($groups[$group]) ? $groups[$group] : array());
-                }
-            }else{
-                throw new Exception("filesgroups is not exist");
-            }
-            // Files
-        }elseif($query === 'f'){
-            $filesCollection = explode(",", $filesPath);
-        }
-        foreach($filesCollection as &$file){
-            $file = ltrim($file, "/");
-            $name .= $file . "|" . filemtime(self::basePath().$file) . "|" . filesize(self::basePath().$file) . "/";
-        };
-        $sha1name = sha1($name) . "." . $ext;
-        if(file_exists($min_cachePath) AND is_writable($min_cachePath)){
-            $filepath = realpath(".") . "/" . $min_cachePath . "/" . $sha1name;
-            if (!file_exists($filepath)){
+		$filesgroups = (array_key_exists('filesgroups', $options)) ? $options['filesgroups'] : 'min/groupsConfig.php';
+		$minDir = (array_key_exists('minDir', $options)) ? $options['minDir'] : '/min/';
+		$callback = (array_key_exists('callback', $options)) ? $options['callback'] : '';
+		$name = "";
+		$filesCollection = false;
+
+		//Parse a URL and return its components
+		$parseurl = parse_url($url);
+
+		//return position
+		$position = strpos($parseurl['query'], '=');
+
+		if($position) {
+			//return first query
+			$query = substr($parseurl['query'],0,$position);
+			//return url after query
+			$filesPath = substr(strrchr($parseurl['query'], '='), 1);
+
+			if($query !== 'g' && $query !== 'f') throw new Exception("Minifier type should be group (g) or files (f)");
+			if(empty($filesPath)) throw new Exception("No filepath");
+
+			if($query === 'g'){
+				// Group
+				$filesCollection = array();
+				if(file_exists($filesgroups)){
+					$groups = (require $filesgroups);
+					foreach(explode(",", $filesPath) as $group){
+						$filesCollection = array_merge($filesCollection, isset($groups[$group]) ? $groups[$group] : array());
+					}
+				}
+				else{
+					throw new Exception("filesgroups is not exist");
+				}
+			}
+			elseif($query === 'f'){
+				// Files
+				$filesCollection = explode(",", $filesPath);
+			}
+		}
+
+		if(!$filesCollection) $filesCollection = array($url);
+
+		foreach($filesCollection as &$file){
+			$file = ltrim($file, "/");
+			$name .= $file . "|" . filemtime(self::basePath().$file) . "|" . filesize(self::basePath().$file) . "/";
+		};
+
+		$sha1name = sha1($name) . "." . $ext;
+
+		if(file_exists($min_cachePath) AND is_writable($min_cachePath)){
+			$filepath = realpath(".") . "/" . $min_cachePath . "/" . $sha1name;
+
+			if (!file_exists($filepath)){
 				try {
 					$stream = stream_context_create(
 						array(
@@ -134,9 +131,9 @@ class component_core_system{
 					if ($content === false) {
 						$logger = new debug_logger(MP_LOG_DIR);
 						$logger->log('minify', 'concat', "Concat : Test\r\n
-                                    file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection)."\r\n
-                                    error = no content\r\n
-                                    content = $content\r\n", debug_logger::LOG_MONTH);
+						file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection)."\r\n
+						error = no content\r\n
+						content = $content\r\n", debug_logger::LOG_MONTH);
 					}
 					else {
 						file_put_contents($filepath, $content);
@@ -144,14 +141,15 @@ class component_core_system{
 				} catch (Exception $e) {
 					$logger = new debug_logger(MP_LOG_DIR);
 					$logger->log('minify', 'concat', "Concat : Test\n
-                                    file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection)."\n
-                                    error=$e\n", debug_logger::LOG_MONTH);
+						file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection)."\n
+						error=$e\n", debug_logger::LOG_MONTH);
 				}
-            }
-            return $callback."/" . $min_cachePath . "/" . $sha1name;
-        }else{
-            throw new Exception("Error ".$min_cachePath." is not writable");
-        }
+			}
+			return $callback."/" . $min_cachePath . "/" . $sha1name;
+		}
+		else{
+			throw new Exception("Error ".$min_cachePath." is not writable");
+		}
     }
     /**
      * Parse le fichier de configuration

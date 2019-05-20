@@ -7,6 +7,7 @@ tinymce.PluginManager.add('lazyloadimage', function(editor, url) {
             if(el.is('img')) {
                 let src = tinymce.DOM.getAttrib(el,'src');
                 tinymce.DOM.addClass('lazyload');
+                tinymce.DOM.setAttrib(el,'loading','lazy');
                 tinymce.DOM.setAttrib(el,'data-src',src);
                 tinymce.DOM.setAttrib(el,'src','');
             }

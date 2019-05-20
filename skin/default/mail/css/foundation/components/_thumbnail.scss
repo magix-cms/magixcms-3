@@ -41,8 +41,8 @@ $thumbnail-radius: $global-radius !default;
   border-radius: $thumbnail-radius;
   margin-bottom: $thumbnail-margin-bottom;
 
-  &:hover,
-  &:focus {
+  &:hover/*,
+  &:focus*/ {
     box-shadow: $thumbnail-shadow-hover;
   }
 }

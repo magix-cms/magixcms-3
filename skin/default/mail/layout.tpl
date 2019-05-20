@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{if $title_mail}{$title_mail}{/if}</title>
     <style>
+        body, table.body, h1, h2, h3, h4, h5, h6, p, td, th, a { font-family: Helvetica, Arial, sans-serif !important; font-weight: normal; }
+        h1, h2, h3, h4, h5, h6 { margin: 0; Margin: 0; margin-bottom: 10px; Margin-bottom: 10px; }
         .header { background: {$getDataCSSIColor[0].color_cssi}; }
         .header .container { background: {$getDataCSSIColor[0].color_cssi}; }
         .header p { color: {$getDataCSSIColor[1].color_cssi}; }
@@ -16,7 +18,7 @@
 </head>
 <body>
     <span class="preheader"></span>
-    <table class="body">
+    <table class="body" style="padding-bottom: 30px;">
     <tr>
         <td class="float-center" align="center" valign="top">
             <center data-parsed="">
@@ -28,7 +30,7 @@
                                 <tbody>
                                 <tr>
                                     <th class="small-12 large-12 columns first last">
-                                        <table>
+                                        <table style="width: 100%;">
                                             <tr>
                                                 <th>
                                                     <table class="spacer">
@@ -38,12 +40,12 @@
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <p class="text-center">
-                                                        <a href="{$url}" target="_blank" title="{$companyData.name}" style="text-decoration: none; font-size: 46px; padding: 15px;">
+                                                    <p class="text-center" style="text-align: center;">
+                                                        <a href="{$url}" target="_blank" title="{$companyData.name}" style="display: block; text-decoration: none; font-size: 46px; padding: 15px;">
                                                             {if $logo && $logo.img.active eq 1}
                                                                 <img src="{$url}{$logo.img.medium.src}" width="{$logo.img.medium.w}" height="{$logo.img.medium.h}" alt="{if !empty($logo.img.alt)}{$logo.img.alt}{else}Logo {$companyData.name}{/if}" />
                                                             {else}
-                                                                <img src="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}" alt="Logo {$companyData.name}" width="130" height="89"/>
+                                                                <img src="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}" alt="Logo {$companyData.name}" width="192" height="95"/>
                                                             {/if}
                                                         </a>
                                                     </p>

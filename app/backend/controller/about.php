@@ -43,7 +43,7 @@ class backend_controller_about extends backend_db_about{
         ),
         'corp' 		=> array(
             'schema' => 'Corporation',
-            'label' => 'Société'
+            'label' => 'Société commerciale'
         ),
         'store' 	=> array(
             'schema' => 'Store',

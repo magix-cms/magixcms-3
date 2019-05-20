@@ -21,7 +21,43 @@
                                 <tr>
                                     <td>
                                         <h4>{#object_mail#|ucfirst}&nbsp;: {$data.title}</h4>
-                                        <p>{$data.content|replace:'\n':'<br />'}</p>
+                                    </td>
+{*                                    <td class="expander"></td>*}
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="small-12 large-12 first last">
+                            <table class="spacer-hr">
+                                <tr>
+                                    <th class="hr" height="2px"></th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <table>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                    </th>
+                                </tr>
+                            </table>
+                            <table class="spacer spacer-hr">
+                                <tbody>
+                                <tr>
+                                    <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="small-12 large-12 columns first last">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p>{$data.content|replace:'\n\n':'</p><p>'|replace:'\n':'<br />'}</p>
                                     </td>
                                     <td class="expander"></td>
                                 </tr>
@@ -30,13 +66,13 @@
                     </tr>
                     <tr>
                         <td class="small-12 large-12 first last">
-                            {*<table class="spacer hr">
+                            <table class="spacer spacer-hr">
                                 <tbody>
                                 <tr>
                                     <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
                                 </tr>
                                 </tbody>
-                            </table>*}
+                            </table>
                             <table class="spacer-hr">
                                 <tr>
                                     <th class="hr" height="2px"></th>
@@ -53,13 +89,12 @@
                             </table>
                         </td>
                     </tr>
-
                     <tr>
-                        <td class="small-12 large-6 columns first last">
+                        <td class="small-12 large-12 columns first last">
                             <table>
                                 <tr>
                                     <td>
-                                        <h5>{#mail_from#|ucfirst} {$data.firstname}&nbsp;{$data.lastname}</h5>
+                                        <p>{#mail_from#|ucfirst} <strong>{$data.firstname}&nbsp;{$data.lastname}</strong></p>
                                         {if $data.address != null}
                                             <p>{$data.address|ucfirst}, {$data.postcode} {$data.city}</p>
                                         {/if}
