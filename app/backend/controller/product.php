@@ -937,9 +937,9 @@ class backend_controller_product extends backend_db_product
 								'type' => 'product',
 								'iso'  => $product['iso_lang'],
 								'id'   => $product['id_product'],
-								'url'  => $product['name_p'],
+								'url'  => $product['url_p'],
 								'id_parent'   => $product['id_parent'],
-								'url_parent'  => $product['name_parent']
+								'url_parent'  => $product['url_parent']
 							));
 							//$link = '<a title="'.$cat['url'].'" href="'.$cat['name_cat'].'">'.$cat['name_cat'].'</a>';
 							$this->header->set_json_headers();

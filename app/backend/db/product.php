@@ -184,8 +184,10 @@ class backend_db_product{
 					$sql = 'SELECT 
 								p.id_product,
 								pc.name_p,
+								pc.url_p,
 								cc.id_cat as id_parent,
 								ccc.name_cat as name_parent,
+								ccc.url_cat as url_parent,
 								lang.iso_lang
 							FROM mc_catalog_product AS p
 							JOIN mc_catalog_product_content AS pc USING ( id_product )
