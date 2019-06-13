@@ -21,7 +21,7 @@
         relative_urls : false,
         entity_encoding : "raw",
         plugins: [
-            'advlist autolink lists link image lazyloadimage charmap print preview anchor',
+            'advlist autolink lists clists link image lazyloadimage charmap print preview anchor',
             'searchreplace visualblocks code fullscreen colorpicker textpattern wordcount directionality',
             'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager mc_pages mc_cat mc_product mc_news'
         ],
@@ -199,6 +199,17 @@
                     {title: "Media 4:3", block: "div", classes: 'embed-responsive embed-responsive-4by3'}
                 ]}
             ]}
+        ],
+        cbullet_styles: [
+            'default',
+            {title: 'disc', style: 'disc'},
+            {title: 'circle', style: 'circle'},
+            {title: 'square', style: 'square'},
+            {title: 'Bullet List', classes: 'bullet-list'},
+            {title: 'Circle List', classes: 'circle-list'},
+            {title: 'Square List', classes: 'square-list'},
+            {title: 'Arrow List', classes: 'arrow-list'},
+            {title: 'Label List', classes: 'label-list'}
         ],
         templates : '/'+baseadmin+'/index.php?controller=setting&action=getSnippet',
         template_popup_width: 800,
