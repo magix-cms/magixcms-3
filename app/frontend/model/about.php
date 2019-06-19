@@ -408,7 +408,7 @@ class frontend_model_about extends frontend_db_about {
 									break;
 								case 'linkedin':
 									//$link = (($this->touch) ? 'linkedin://profile?id=' : 'https://www.linkedin.com/in/') . $about[$social_name];
-									$link = 'https://www.linkedin.com/in/'.$about[$social_name];
+									$link = 'https://www.linkedin.com/'.(strpos($about[$social_name],'company/') === false ? 'in/' : '').$about[$social_name];
 									break;
 								case 'viadeo':
 									//$link = (($this->touch) ? 'viadeo://profile?id=' : 'http://www.viadeo.com/fr/profile/') . $about[$social_name];
