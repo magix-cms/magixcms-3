@@ -148,12 +148,15 @@ class backend_controller_setting extends backend_db_setting{
 			$setData['path'] = $this->setSkinPath.$this->setSkinData().DIRECTORY_SEPARATOR.'snippet';
 			$setData['type'] = 'skin';
 			$setData['directory'] = $this->setSkinData().'/snippet';
-		}else{
+		}/*else{
 			$setData['path'] = component_core_system::basePath().PATHADMIN.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'snippet';
 			$setData['type'] = 'admin';
 			$setData['directory'] = 'snippet';
-		}
-		return $setData;
+		}*/
+        else{
+            $setData = null;
+        }
+        return $setData;
 	}
 
 	/**
