@@ -198,7 +198,7 @@ class backend_controller_setting extends backend_db_setting{
 							}
 						}
 
-						$files[] = /*$delimiter.*/'{'.'"title":"'.$fileinfo->getBasename('.'.$getExtension).'","url":"'.$url.'"}';
+						$files[] = /*$delimiter.*/'{'.'"title":"'.$fileinfo->getBasename('.'.$getExtension).'",'.'"description":""'.',"url":"'.$url.'"}';
 					}
 				}
 				if (is_array($files)) {

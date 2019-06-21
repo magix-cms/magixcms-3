@@ -14,43 +14,39 @@
     $('.mceEditor').tinymce({
         // Location of TinyMCE script
         script_url : '/'+baseadmin+'/template/js/vendor/tiny_mce.'+editor_version+'/tinymce.min.js',
-        theme: "modern",
+        theme: 'silver',
+        skin: "oxide",
         mobile: {
-            theme: "mobile"
+            theme: 'mobile',
+            plugins: [ 'lists', 'autolink' ],
+            toolbar: [ 'undo', 'bold', 'italic', 'styleselect' ]
         },
         relative_urls : false,
+        //convert_urls: false,
         entity_encoding : "raw",
         plugins: [
-            'advlist autolink lists clists link image lazyloadimage charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen colorpicker textpattern wordcount directionality',
-            'insertdatetime media table contextmenu paste textcolor template youtube imagetools codesample fontawesome responsivefilemanager mc_pages mc_cat mc_product mc_news'
+            'hr advlist autolink lists clists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen textpattern wordcount directionality codesample',
+            'insertdatetime media table paste template imagetools codesample youtube loremipsum responsivefilemanager mc_pages mc_cat mc_news mc_product lazyloadimage'
         ],
-        toolbar1: 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | fontsizeselect | forecolor backcolor',
-        toolbar2: 'cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | charmap | undo redo | responsivefilemanager image media lazyloadimage | link unlink anchor',
-        toolbar3: 'table | hr removeformat | fullscreen | visualblocks | loremipsum | inserttime | styleselect | template | youtube | fontawesome codesample | code preview | mc_pages mc_cat mc_product mc_news',
+        toolbar1: 'fullscreen | code | removeformat | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | link unlink | bullist numlist | blockquote | forecolor | mc_pages mc_cat mc_news mc_product',
         imagetools_toolbar: "imageoptions",
-        menubar: false,
-        toolbar_items_size: 'small',
+        menu : {
+            edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall | searchreplace'},
+            insert : {title : 'Insert', items : 'link anchor | image media youtube responsivefilemanager | template | table | hr | loremipsum | codesample'},
+            view   : {title : 'View'  , items : 'code | visualaid visualblocks | preview fullscreen'},
+            format : {title : 'Format', items : 'formats | lazyloadimage'},
+            table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
+            tools  : {title : 'Tools' , items : 'code'}
+        },
+        menubar: 'view edit insert format table tools',
         image_advtab: true,
-        //filemanager_crossdomain: false,
         external_filemanager_path: '/'+baseadmin+'/template/js/vendor/filemanager/',
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
             "filemanager" : '/'+baseadmin+'/template/js/vendor/filemanager/plugin.min.js'
         },
-        setup: function(ed) {
-            ed.addButton('loremipsum', {
-                title: 'loremipsum',
-                //text : 'loremipsum',
-                image: '/'+baseadmin+'/template/img/ico/loremipsum.png',
-                icon: true,
-                onclick: function() {
-                    var li = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.|Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.|Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-                    ed.insertContent(li);
-                }
-            });
-        },
-        min_height: 250,
+        min_height: 350,
         image_dimensions: true,
         image_class_list: [
             {title: 'None', value: ''},
@@ -212,13 +208,9 @@
             {title: 'Label List', classes: 'label-list'}
         ],
         templates : '/'+baseadmin+'/index.php?controller=setting&action=getSnippet',
-        template_popup_width: 800,
         language : tinyLanguage,
         schema: "html5",
-        extended_valid_elements: "+img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
-        //verify_html: false,
-        //end_container_on_empty_block: false,
-        /*fix_list_elements : true*/
+        extended_valid_elements: "+img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
         content_css : content_css
     });
 })( jQuery, window, document );
