@@ -273,14 +273,14 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 				$this->seo->level = 'record';
 				if (!isset($row['seo_title_p']) || empty($row['seo_title_p'])) {
-					$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
+					$seoTitle = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'title');
 					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
 				}
 				else {
 					$data['seo']['title'] = $row['seo_title_p'];
 				}
 				if (!isset($row['seo_desc_p']) || empty($row['seo_desc_p'])) {
-					$seoDesc = $this->seo->replace_var_rewrite('',$data['name'],'description');
+					$seoDesc = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'description');
 					$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
 				}
 				else {

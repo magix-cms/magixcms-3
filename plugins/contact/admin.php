@@ -180,7 +180,7 @@ class plugins_contact_admin extends plugins_contact_db{
                         'context' => 'contact',
                         'type' => 'contact',
                         'data' => array(
-                            'id_pages' => $id_contact,
+                            'id_contact' => $id_contact,
                             'mail_contact' => $this->mail_contact
                         )
                     )
