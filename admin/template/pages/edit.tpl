@@ -15,11 +15,11 @@
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_pages#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" {if !$smarty.get.plugin}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{if !$smarty.get.plugin}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
-                    <li role="presentation"><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{/if}#image" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#}</a></li>
-                    <li role="presentation"><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{/if}#child" aria-controls="child" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#child_page#}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && !$smarty.get.tab}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{else}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'image'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&tab=image{else}#image{/if}" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#|ucfirst}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'child'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&tab=child{else}#child{/if}" aria-controls="child" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#child_page#|ucfirst}</a></li>
                     {foreach $setTabsPlugins as $key => $value}
-                        <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.name}</a></li>
+                        <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.title|ucfirst}</a></li>
                     {/foreach}
                 </ul>
             </header>
@@ -28,10 +28,10 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane {if !$smarty.get.plugin}active{/if}" id="general">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && !$smarty.get.tab} active{/if}" id="general">
                         {include file="pages/form/edit.tpl" controller="pages"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="image">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'image'} active{/if}" id="image">
                         {include file="pages/form/img.tpl" controller="pages"}
                         {*<pre>{$page|print_r}</pre>*}
                         {*<div class="block-img">
@@ -40,7 +40,7 @@
                             {/if}
                         </div>*}
                     </div>
-                    <div role="tabpanel" class="tab-pane tab-table" id="child">
+                    <div role="tabpanel" class="tab-pane tab-table{if !$smarty.get.plugin && $smarty.get.tab === 'child'} active{/if}" id="child">
                         <p class="text-right">
                             {#nbr_pages#|ucfirst}: {$pagesChild|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&parent_id={$smarty.get.edit}" title="{#add_pages#}" class="btn btn-link">
                                 <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
@@ -51,7 +51,7 @@
                     </div>
                     {foreach $setTabsPlugins as $key => $value}
                         <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
-                            {block name="plugin:content"}{/block}
+                            {if $smarty.get.plugin eq $value.name}{block name="plugin:content"}{/block}{/if}
                         </div>
                     {/foreach}
                 </div>

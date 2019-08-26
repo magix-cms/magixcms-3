@@ -22,8 +22,8 @@
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_news#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" {if !$smarty.get.plugin}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}{/if}#general" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
-                    <li role="presentation"><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}{/if}#image" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && !$smarty.get.tab}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}{else}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'image'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}&tab=image{else}#image{/if}" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#|ucfirst}</a></li>
                     {foreach $setTabsPlugins as $key => $value}
                         <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.name}</a></li>
                     {/foreach}
@@ -35,10 +35,10 @@
                 </div>
                 <div class="tab-content">
                     {*<pre>{$page|print_r}</pre>*}
-                    <div role="tabpanel" class="tab-pane {if !$smarty.get.plugin}active{/if}" id="general">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && !$smarty.get.tab} active{/if}" id="general">
                         {include file="news/form/edit.tpl" controller="news"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="image">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'image'} active{/if}" id="image">
                         {include file="news/form/img.tpl" controller="news"}
                         {*<div class="block-img">
                             {if $page.imgSrc != null}
@@ -48,7 +48,7 @@
                     </div>
                     {foreach $setTabsPlugins as $key => $value}
                         <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
-                            {block name="plugin:content"}{/block}
+                            {if $smarty.get.plugin eq $value.name}{block name="plugin:content"}{/block}{/if}
                         </div>
                     {/foreach}
                 </div>

@@ -122,8 +122,23 @@ class backend_model_plugins{
                 case 'tabs':
                     //Ajoute l'onglet si le plugin est inscrit pour le core
                     if($item[$config['controller']] != '0'){
-                        $newsItems[] = $item;
-                        $this->template->assign('setTabsPlugins',$newsItems);
+                        $class = 'plugins_' . $item['name'] . '_core';
+                        if (class_exists($class)) {
+                            //Si la méthode run existe on ajoute le plugin dans le menu
+                            if (method_exists($class, 'getExtensionName')) {
+                                $this->template->addConfigFile(
+                                    array(component_core_system::basePath() . 'plugins' . DIRECTORY_SEPARATOR . $item['name'] . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR),
+                                    array($item['name'] . '_admin_')
+                                );
+                                //$this->template->configLoad();
+                                $ext = new $class();
+                                $item['title'] = $ext->getExtensionName();
+                            } else {
+                                $item['title'] = $item['name'];
+                            }
+                            $newsItems[] = $item;
+                            $this->template->assign('setTabsPlugins', $newsItems);
+                        }
                     }
 
                     break;

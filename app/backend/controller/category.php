@@ -3,7 +3,7 @@ class backend_controller_category extends backend_db_category
 {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder;
-    public $id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset,$name_img,$menu_cat;
+    public $controller,$id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset,$name_img,$menu_cat,$plugin,$modelPlugins;
 	public $tableconfig = array(
 		'all' => array(
 			'id_cat',
@@ -46,8 +46,10 @@ class backend_controller_category extends backend_db_category
         $this->routingUrl = new component_routing_url();
         $this->makeFiles = new filesystem_makefile();
         $this->finder = new file_finder();
+        $this->modelPlugins = new backend_model_plugins();
 
         // --- GET
+        if(http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
         if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
         if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
         elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
@@ -92,6 +94,8 @@ class backend_controller_category extends backend_db_category
         # ORDER PAGE
         if (http_request::isPost('category')) $this->order = $formClean->arrayClean($_POST['category']);
         elseif (http_request::isPost('product')) $this->order = $formClean->arrayClean($_POST['product']);
+
+        if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
 
 		# JSON LINK (TinyMCE)
 		if (http_request::isGet('iso')) $this->iso = $formClean->simpleClean($_GET['iso']);
@@ -446,223 +450,246 @@ class backend_controller_category extends backend_db_category
      * 
      */
     public function run(){
-		if(isset($this->tableaction)) {
-			$this->tableform->run();
-		}
-		elseif(isset($this->action)) {
-            switch ($this->action) {
-                case 'add':
-                    if(isset($this->content)) {
-						$this->add(
-							array(
-								'type' => 'page',
-								'data' => array(
-									'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
-									'menu_cat' => isset($this->menu_cat) ? 1 : 0
-								)
-							)
-						);
-
-						$page = $this->getItems('root',null,'one',false);
-
-						if ($page['id_cat']) {
-							$this->saveContent($page['id_cat']);
-							$this->message->json_post_response(true,'add_redirect');
-						}
-					}
-					else {
-						$this->modelLanguage->getLanguage();
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-						$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
-						$this->template->display('catalog/category/add.tpl');
-					}
-                    break;
-                case 'edit':
-					if(isset($this->img) || isset($this->name_img)){
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-						$page = $this->getItems('pageLang', array('id' => $this->id_cat, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
-						$settings = array(
-							'name' => $this->name_img !== '' ? $this->name_img : $page['url_cat'],
-							'edit' => $page['img_cat'],
-							'prefix' => array('s_', 'm_', 'l_'),
-							'module_img' => 'catalog',
-							'attribute_img' => 'category',
-							'original_remove' => false
-						);
-						$dirs = array(
-							'upload_root_dir' => 'upload/catalog/c', //string
-							'upload_dir' => $this->id_cat //string ou array
-						);
-						$filename = '';
-						$update = false;
-
-						if(isset($this->img)) {
-							$resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
-							$filename = $resultUpload['file'];
-							$update = true;
-						}
-						elseif(isset($this->name_img)) {
-							$img_pages = pathinfo($page['img_cat']);
-							$img_name = $img_pages['filename'];
-
-							if($this->name_img !== $img_name && $this->name_img !== '') {
-								$result = $this->upload->renameImages($settings,$dirs);
-								$filename = $result;
-								$update = true;
-							}
-						}
-
-						if($filename !== '' && $update) {
-							$this->upd(array(
-								'type' => 'img',
-								'data' => array(
-									'id_cat' => $this->id_cat,
-									'img_cat' => $filename
-								)
-							));
-						}
-
-						foreach ($this->content as $lang => $content) {
-							$content['id_lang'] = $lang;
-							$content['id_cat'] = $this->id_cat;
-							$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
-							$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
-							$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
-							$this->upd(array(
-								'type' => 'imgContent',
-								'data' => $content
-							));
-						}
-
-						$setEditData = $this->getItems('page',array('edit'=>$this->id_cat),'all',false);
-						$setEditData = $this->setItemData($setEditData);
-						$this->template->assign('page',$setEditData[$this->id_cat]);
-						$display = $this->template->fetch('catalog/category/brick/img.tpl');
-						$this->message->json_post_response(true, 'update',$display);
-					}
-					elseif (isset($this->id_cat)) {
-						$extendData = $this->saveContent($this->id_cat);
-						$this->message->json_post_response(true, 'update', array('result'=>$this->id_cat,'extend'=>$extendData));
-					}
-					else {
-						// Initialise l'API menu des plugins core
-						/*$this->modelPlugins->getItems(
-							array(
-								'type'      =>  'tabs',
-								'controller'=>  $this->controller
-							)
-						);*/
-						$this->modelLanguage->getLanguage();
-						$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
-						$setEditData = $this->setItemData($setEditData);
-						$this->template->assign('page',$setEditData[$this->edit]);
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-						$this->getItems('pagesChild', array('default_lang' => $defaultLanguage['id_lang'],'id' => $this->edit), 'all');
-						$this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','content_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
-						$this->getItems('catalog', array('default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
-						$assignCatalog = array(
-							'id_catalog',
-							'name_p' => ['title' => 'name']
-						);
-						$this->data->getScheme(array('mc_catalog', 'mc_catalog_product_content'), array('id_catalog', 'name_p'), $assignCatalog, 'schemeCatalog');
-						$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
-						$this->template->display('catalog/category/edit.tpl');
-					}
-                    break;
-                case 'order':
-                    if (isset($this->order)) {
-                        $this->upd(
+        if(isset($this->plugin)) {
+            if(isset($this->action)) {
+                switch ($this->action) {
+                    case 'edit':
+                        // Initialise l'API menu des plugins core
+                        $this->modelPlugins->getItems(
                             array(
-                                'type' => 'order'
+                                'type'      =>  'tabs',
+                                'controller'=>  $this->controller
                             )
                         );
-                    }
-                    break;
-                case 'delete':
-                    if(isset($this->id_cat)) {
-                        if(isset($this->tabs)){
-                            if($this->tabs === 'product') {
+                        $this->modelLanguage->getLanguage();
+                        $setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
+                        $setEditData = $this->setItemData($setEditData);
+                        $this->template->assign('page',$setEditData[$this->edit]);
+                        $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','content_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
+                        // Execute un plugin core
+                        $this->modelPlugins->getCoreItem();
+                        break;
+                }
+            }
+        }else{
+            if(isset($this->tableaction)) {
+                $this->tableform->run();
+            }
+            elseif(isset($this->action)) {
+                switch ($this->action) {
+                    case 'add':
+                        if(isset($this->content)) {
+                            $this->add(
+                                array(
+                                    'type' => 'page',
+                                    'data' => array(
+                                        'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+                                        'menu_cat' => isset($this->menu_cat) ? 1 : 0
+                                    )
+                                )
+                            );
+
+                            $page = $this->getItems('root',null,'one',false);
+
+                            if ($page['id_cat']) {
+                                $this->saveContent($page['id_cat']);
+                                $this->message->json_post_response(true,'add_redirect');
+                            }
+                        }
+                        else {
+                            $this->modelLanguage->getLanguage();
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+                            $this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
+                            $this->template->display('catalog/category/add.tpl');
+                        }
+                        break;
+                    case 'edit':
+                        if(isset($this->img) || isset($this->name_img)){
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                            $page = $this->getItems('pageLang', array('id' => $this->id_cat, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
+                            $settings = array(
+                                'name' => $this->name_img !== '' ? $this->name_img : $page['url_cat'],
+                                'edit' => $page['img_cat'],
+                                'prefix' => array('s_', 'm_', 'l_'),
+                                'module_img' => 'catalog',
+                                'attribute_img' => 'category',
+                                'original_remove' => false
+                            );
+                            $dirs = array(
+                                'upload_root_dir' => 'upload/catalog/c', //string
+                                'upload_dir' => $this->id_cat //string ou array
+                            );
+                            $filename = '';
+                            $update = false;
+
+                            if(isset($this->img)) {
+                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
+                                $filename = $resultUpload['file'];
+                                $update = true;
+                            }
+                            elseif(isset($this->name_img)) {
+                                $img_pages = pathinfo($page['img_cat']);
+                                $img_name = $img_pages['filename'];
+
+                                if($this->name_img !== $img_name && $this->name_img !== '') {
+                                    $result = $this->upload->renameImages($settings,$dirs);
+                                    $filename = $result;
+                                    $update = true;
+                                }
+                            }
+
+                            if($filename !== '' && $update) {
+                                $this->upd(array(
+                                    'type' => 'img',
+                                    'data' => array(
+                                        'id_cat' => $this->id_cat,
+                                        'img_cat' => $filename
+                                    )
+                                ));
+                            }
+
+                            foreach ($this->content as $lang => $content) {
+                                $content['id_lang'] = $lang;
+                                $content['id_cat'] = $this->id_cat;
+                                $content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
+                                $content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
+                                $content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
+                                $this->upd(array(
+                                    'type' => 'imgContent',
+                                    'data' => $content
+                                ));
+                            }
+
+                            $setEditData = $this->getItems('page',array('edit'=>$this->id_cat),'all',false);
+                            $setEditData = $this->setItemData($setEditData);
+                            $this->template->assign('page',$setEditData[$this->id_cat]);
+                            $display = $this->template->fetch('catalog/category/brick/img.tpl');
+                            $this->message->json_post_response(true, 'update',$display);
+                        }
+                        elseif (isset($this->id_cat)) {
+                            $extendData = $this->saveContent($this->id_cat);
+                            $this->message->json_post_response(true, 'update', array('result'=>$this->id_cat,'extend'=>$extendData));
+                        }
+                        else {
+                            // Initialise l'API menu des plugins core
+                            $this->modelPlugins->getItems(
+                                array(
+                                    'type'      =>  'tabs',
+                                    'controller'=>  $this->controller
+                                )
+                            );
+                            $this->modelLanguage->getLanguage();
+                            $setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
+                            $setEditData = $this->setItemData($setEditData);
+                            $this->template->assign('page',$setEditData[$this->edit]);
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+                            $this->getItems('pagesChild', array('default_lang' => $defaultLanguage['id_lang'],'id' => $this->edit), 'all');
+                            $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'name_cat', 'img_cat','content_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
+                            $this->getItems('catalog', array('default_lang' => $defaultLanguage['id_lang'],':id_cat' => $this->edit), 'all');
+                            $assignCatalog = array(
+                                'id_catalog',
+                                'name_p' => ['title' => 'name']
+                            );
+                            $this->data->getScheme(array('mc_catalog', 'mc_catalog_product_content'), array('id_catalog', 'name_p'), $assignCatalog, 'schemeCatalog');
+                            $this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
+                            $this->template->display('catalog/category/edit.tpl');
+                        }
+                        break;
+                    case 'order':
+                        if (isset($this->order)) {
+                            $this->upd(
+                                array(
+                                    'type' => 'order'
+                                )
+                            );
+                        }
+                        break;
+                    case 'delete':
+                        if(isset($this->id_cat)) {
+                            if(isset($this->tabs)){
+                                if($this->tabs === 'product') {
+                                    $this->del(
+                                        array(
+                                            'type' => 'delProduct',
+                                            'data' => array(
+                                                'id' => $this->id_cat
+                                            )
+                                        )
+                                    );
+                                }
+                            }
+                            else {
                                 $this->del(
                                     array(
-                                        'type' => 'delProduct',
-                                        'data' => array(
+                                        'type'=>'delPages',
+                                        'data'=>array(
                                             'id' => $this->id_cat
                                         )
                                     )
                                 );
                             }
                         }
-                        else {
-                            $this->del(
-                                array(
-                                    'type'=>'delPages',
-                                    'data'=>array(
-                                        'id' => $this->id_cat
-                                    )
+                        elseif(isset($this->del_img)) {
+                            $this->upd(array(
+                                'type'    => 'img',
+                                'data' => array(
+                                    'id_cat' => $this->del_img,
+                                    'img_cat' => NULL
+                                )
+                            ));
+
+                            $setEditData = $this->getItems('page',array('edit'=>$this->del_img),'all',false);
+                            $setEditData = $this->setItemData($setEditData);
+
+                            $setImgDirectory = $this->upload->dirImgUpload(
+                                array_merge(
+                                    array('upload_root_dir'=>'upload/catalog/c/'.$this->del_img),
+                                    array('imgBasePath'=>true)
                                 )
                             );
+
+                            if(file_exists($setImgDirectory)){
+                                $setFiles = $this->finder->scanDir($setImgDirectory);
+                                $clean = '';
+                                if($setFiles != null){
+                                    foreach($setFiles as $file){
+                                        $clean .= $this->makeFiles->remove($setImgDirectory.$file);
+                                    }
+                                }
+                            }
+                            $this->template->assign('page',$setEditData[$this->del_img]);
+                            $display = $this->template->fetch('catalog/category/brick/img.tpl');
+                            $this->message->json_post_response(true, 'update',$display);
                         }
-                    }
-                    elseif(isset($this->del_img)) {
-                        $this->upd(array(
-                            'type'    => 'img',
-							'data' => array(
-								'id_cat' => $this->del_img,
-								'img_cat' => NULL
-							)
-                        ));
-
-						$setEditData = $this->getItems('page',array('edit'=>$this->del_img),'all',false);
-                        $setEditData = $this->setItemData($setEditData);
-
-						$setImgDirectory = $this->upload->dirImgUpload(
-							array_merge(
-								array('upload_root_dir'=>'upload/catalog/c/'.$this->del_img),
-								array('imgBasePath'=>true)
-							)
-						);
-
-						if(file_exists($setImgDirectory)){
-							$setFiles = $this->finder->scanDir($setImgDirectory);
-							$clean = '';
-							if($setFiles != null){
-								foreach($setFiles as $file){
-									$clean .= $this->makeFiles->remove($setImgDirectory.$file);
-								}
-							}
-						}
-                        $this->template->assign('page',$setEditData[$this->del_img]);
-                        $display = $this->template->fetch('catalog/category/brick/img.tpl');
-                        $this->message->json_post_response(true, 'update',$display);
-                    }
-                    break;
-				case 'getLink':
-					if(isset($this->id_cat) && isset($this->iso)) {
-						$cat = $this->getItems('pageLang',array('id' => $this->id_cat,'iso' => $this->iso),'one',false);
-						if($cat) {
-							$cat['url'] = $this->routingUrl->getBuildUrl(array(
-								'type' => 'category',
-								'iso'  => $cat['iso_lang'],
-								'id'   => $cat['id_cat'],
-								'url'  => $cat['url_cat']
-							));
-							//$link = '<a title="'.$cat['url'].'" href="'.$cat['name_cat'].'">'.$cat['name_cat'].'</a>';
-							$this->header->set_json_headers();
-							print '{"name":'.json_encode($cat['name_cat']).',"url":'.json_encode($cat['url']).'}';
-						}
-						else {
-							print false;
-						}
-					}
-					break;
+                        break;
+                    case 'getLink':
+                        if(isset($this->id_cat) && isset($this->iso)) {
+                            $cat = $this->getItems('pageLang',array('id' => $this->id_cat,'iso' => $this->iso),'one',false);
+                            if($cat) {
+                                $cat['url'] = $this->routingUrl->getBuildUrl(array(
+                                    'type' => 'category',
+                                    'iso'  => $cat['iso_lang'],
+                                    'id'   => $cat['id_cat'],
+                                    'url'  => $cat['url_cat']
+                                ));
+                                //$link = '<a title="'.$cat['url'].'" href="'.$cat['name_cat'].'">'.$cat['name_cat'].'</a>';
+                                $this->header->set_json_headers();
+                                print '{"name":'.json_encode($cat['name_cat']).',"url":'.json_encode($cat['url']).'}';
+                            }
+                            else {
+                                print false;
+                            }
+                        }
+                        break;
+                }
             }
-        }
-        else {
-            $this->modelLanguage->getLanguage();
-            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-            $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
-            $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
-            $this->template->display('catalog/category/index.tpl');
+            else {
+                $this->modelLanguage->getLanguage();
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
+                $this->data->getScheme(array('mc_catalog_cat', 'mc_catalog_cat_content'), array('id_cat', 'img_cat', 'name_cat', 'content_cat','seo_title_cat','seo_desc_cat','menu_cat', 'date_register'), $this->tableconfig['parent']);
+                $this->template->display('catalog/category/index.tpl');
+            }
         }
     }
 }

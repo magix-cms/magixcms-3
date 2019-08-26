@@ -15,10 +15,13 @@
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_product#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
-                    <li role="presentation"><a href="#images" aria-controls="images" role="tab" data-toggle="tab">{#images#|ucfirst}</a></li>
-                    <li role="presentation"><a href="#cat" aria-controls="cat" role="tab" data-toggle="tab">Catégories</a></li>
-                    <li role="presentation"><a href="#similar" aria-controls="similar" role="tab" data-toggle="tab">Similaires</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && !$smarty.get.tab}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'images'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tab=images{else}#images{/if}" aria-controls="images" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#images#|ucfirst}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'cat'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tab=cat{else}#cat{/if}" aria-controls="cat" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#categories#|ucfirst}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'similar'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tab=similar{else}#similar{/if}" aria-controls="similar" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>similar</a></li>
+                    {foreach $setTabsPlugins as $key => $value}
+                        <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.title|ucfirst}</a></li>
+                    {/foreach}
                 </ul>
             </header>
             <div class="panel-body panel-body-form">
@@ -26,10 +29,10 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="general">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && !$smarty.get.tab} active{/if}" id="general">
                         {include file="catalog/product/form/edit.tpl" controller="product"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="images">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'images'} active{/if}" id="images">
                         {*<pre>{$images|print_r}</pre>*}
                         {include file="catalog/product/form/img.tpl" controller="product"}
                         <div id="gallery-product" class="block-img">
@@ -38,7 +41,7 @@
                             {/if}
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="cat">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'cat'} active{/if}" id="cat">
                         <form action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tabs=cat" method="post" class="validate_form">
                             <div class="row">
                                 <div class="col-ph-12 col-sm-6 col-md-4">
@@ -58,7 +61,7 @@
                             </div>
                         </form>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="similar">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'similar'} active{/if}" id="similar">
                         {*<p class="text-right">
                             {#nbr_product_rel#|ucfirst}: {$productRel|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&product_id={$page.id_product}" title="{#add_product_rel#}" class="btn btn-link">
                                 <span class="fa fa-plus"></span> {#add_product_rel#|ucfirst}
@@ -68,6 +71,11 @@
                         <hr>*}
                         {include file="section/form/list-form.tpl" controller="product" sub="similar" dir_controller="catalog/product" data=$productRel id=$page.id_product class_form="col-ph-12 col-lg-5" class_table="col-ph-12 col-lg-7"}
                     </div>
+                    {foreach $setTabsPlugins as $key => $value}
+                        <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
+                            {if $smarty.get.plugin eq $value.name}{block name="plugin:content"}{/block}{/if}
+                        </div>
+                    {/foreach}
                 </div>
                 {*<pre>{$page|print_r}</pre>*}
             </div>

@@ -3,7 +3,7 @@ class backend_controller_product extends backend_db_product
 {
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory,$routingUrl;
-	public $id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img;
+	public $controller,$id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img,$plugin,$modelPlugins;
 	public $tableconfig = array(
 		'id_product',
 		'name_p' => ['title' => 'name'],
@@ -36,8 +36,10 @@ class backend_controller_product extends backend_db_product
 		$this->imagesComponent = new component_files_images($this->template);
 		$this->dbCategory = new backend_db_category();
 		$this->routingUrl = new component_routing_url();
+        $this->modelPlugins = new backend_model_plugins();
 
 		// --- GET
+        if(http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
 		if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
 		if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
 		elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
@@ -93,6 +95,9 @@ class backend_controller_product extends backend_db_product
 
 		# JSON LINK (TinyMCE)
 		if (http_request::isGet('iso')) $this->iso = $formClean->simpleClean($_GET['iso']);
+
+		#plugin
+        if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
 
 	}
 
@@ -519,445 +524,464 @@ class backend_controller_product extends backend_db_product
 	 */
 	public function run()
 	{
-		if(isset($this->tableaction)) {
-			$this->tableform->run();
-		}
-		elseif (isset($this->action)) {
-			switch ($this->action) {
-				case 'add':
-					if (isset($this->content)) {
-						$this->add(array(
-							'type' => 'newPages',
-							'data' => array(
-								'price_p' => $this->productData['price'],
-								'reference_p' => $this->productData['reference']
-							)
-						));
-
-						$product = parent::fetchData(array('context' => 'one', 'type' => 'root'));
-
-						foreach ($this->content as $lang => $content) {
-							$content['id_product'] = $product['id_product'];
-							$content['id_lang'] = $lang;
-							$content['published_p'] = (!isset($content['published_p']) ? 0 : 1);
-							$content['longname_p'] = (!empty($content['longname_p']) ? $content['longname_p'] : NULL);
-							$content['resume_p'] = (!empty($content['resume_p']) ? $content['resume_p'] : NULL);
-							$content['content_p'] = (!empty($content['content_p']) ? $content['content_p'] : NULL);
-							$content['seo_title_p'] = (!empty($content['seo_title_p']) ? $content['seo_title_p'] : NULL);
-							$content['seo_desc_p'] = (!empty($content['seo_desc_p']) ? $content['seo_desc_p'] : NULL);
-
-							if (empty($content['url_p'])) {
-								$content['url_p'] = http_url::clean($content['name_p'],
-									array(
-										'dot' => false,
-										'ampersand' => 'strict',
-										'cspec' => '', 'rspec' => ''
-									)
-								);
-							}
-
-							$this->add(array( 'type' => 'newContent', 'data' => $content ));
-						}
-						$this->message->json_post_response(true, 'add_redirect');
-					}
-					elseif(isset($this->id_product_2)) {
-						$this->add(array(
-							'type' => 'newProductRel',
-							'data' => array(
-								'id_product'    => $this->id_product,
-								'id_product_2'  => $this->id_product_2,
-							)
-						));
-
-
-						$this->modelLanguage->getLanguage();
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-						$this->getItems('lastProductRel',array('default_lang' => $defaultLanguage['id_lang'],'id'=>$this->id_product),'one','row');
-						$display = $this->template->fetch('catalog/product/loop/similar.tpl');
-						$this->message->json_post_response(true,'add',$display);
-						//$this->header->set_json_headers();
-						//$this->message->json_post_response(true, 'add');
-					}
-                    else {
-						$this->modelLanguage->getLanguage();
-						$this->template->display('catalog/product/add.tpl');
-					}
-					break;
-				case 'edit':
-					if (isset($this->id_product)) {
-						if(isset($this->content)) {
-							$this->productData['price'] = number_format(str_replace(",", ".", $this->productData['price']), 6, '.', '');
-							$this->productData['reference'] = !empty($this->productData['reference']) ? $this->productData['reference'] : NULL;
-
-							$this->upd(array(
-								'type' => 'product',
-								'data' => array(
-									'id_product' => $this->id_product,
-									'price_p' => $this->productData['price'],
-									'reference_p' => $this->productData['reference']
-								)
-							));
-
-							$extendData = array();
-
-							foreach ($this->content as $lang => $content) {
-								$content['id_product'] = $this->id_product;
-								$content['id_lang'] = $lang;
-								$content['published_p'] = (!isset($content['published_p']) ? 0 : 1);
-								$content['longname_p'] = (!empty($content['longname_p']) ? $content['longname_p'] : NULL);
-								$content['resume_p'] = (!empty($content['resume_p']) ? $content['resume_p'] : NULL);
-								$content['content_p'] = (!empty($content['content_p']) ? $content['content_p'] : NULL);
-								$content['seo_title_p'] = (!empty($content['seo_title_p']) ? $content['seo_title_p'] : NULL);
-								$content['seo_desc_p'] = (!empty($content['seo_desc_p']) ? $content['seo_desc_p'] : NULL);
-
-								if (empty($content['url_p'])) {
-									$content['url_p'] = http_url::clean($content['name_p'],
-										array(
-											'dot' => false,
-											'ampersand' => 'strict',
-											'cspec' => '', 'rspec' => ''
-										)
-									);
-								}
-
-								$checkLangData = parent::fetchData(
-									array('context' => 'one', 'type' => 'content'),
-									array('id_product' => $this->id_product, 'id_lang' => $lang)
-								);
-
-								// Check language page content
-								if ($checkLangData != null) {
-									$this->upd(array(
-										'type' => 'content',
-										'data' => $content
-									));
-								}
-								else {
-									$this->add(array(
-										'type' => 'newContent',
-										'data' => $content
-									));
-								}
-
-								/*$setEditData = parent::fetchData(
-									array('context' => 'all', 'type' => 'page'),
-									array('edit' => $this->id_product)
-								);
-								$setEditData = $this->setItemData($setEditData);
-								$extendData[$lang] = $setEditData[$this->id_product]['content'][$lang]['public_url'];*/
-							}
-							$this->message->json_post_response(true, 'update', array('result' => $this->id_product, 'extend' => $extendData));
-						}
-						elseif (isset($this->img_multiple)) {
-							$this->template->configLoad();
-							$this->progress = new component_core_feedback($this->template);
-
-							usleep(200000);
-							$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 10));
-
-							$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-							$product = $this->getItems('content', array('id_product' => $this->id_product, 'id_lang' => $defaultLanguage['id_lang']), 'one', false);
-							$newimg = $this->getItems('lastImgId',null,'one',false);
-							// If $newimg = NULL return 0
-							$newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
-
-							$resultUpload = $this->upload->setMultipleImageUpload(
-								'img_multiple',
-								array(
-									'name' => $product['url_p'],
-									'prefix_name' => $newimg['id_img'],
-									'prefix_increment' => true,
-									'prefix' => array('s_', 'm_', 'l_'),
-									'module_img' => 'catalog',
-									'attribute_img' => 'product',
-									'original_remove' => false
-								),
-								array(
-									'upload_root_dir' => 'upload/catalog/p', //string
-									'upload_dir' => $this->id_product //string ou array
-								),
-								false
-							);
-
-							if ($resultUpload != null) {
-								$preparePercent = 80 / count($resultUpload);
-								$percent = 10;
-
-								foreach ($resultUpload as $key => $value) {
-									if ($value['statut'] == '1') {
-										$percent = $percent + $preparePercent;
-
-										usleep(200000);
-										$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent));
-
-										$this->add(array(
-											'type' => 'newImg',
-											'data' => array(
-												'id_product' => $this->id_product,
-												'name_img' => $value['file']
-											)
-										));
-									}
-								}
-
-								usleep(200000);
-								$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'), 'progress' => 90));
-
-								usleep(200000);
-								$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success', 'result' => $display));
-							}
-							else {
-								usleep(200000);
-								$this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'), 'progress' => 100, 'status' => 'error', 'error_code' => 'error_data'));
-							}
-						}
-					}
-					elseif (isset($this->editimg)) {
-						if (isset($this->id_img)) {
-                            foreach ($this->imgData as $lang => $content) {
-                                $content['id_img'] = $this->id_img;
-                                $content['id_lang'] = $lang;
-								$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
-								$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
-								$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
-
-                                $checkLangData = parent::fetchData(
-                                    array('context' => 'one', 'type' => 'imgContent'),
-                                    array('id_img' => $this->id_img, 'id_lang' => $lang)
-                                );
-
-                                // Check language page content
-                                if ($checkLangData != null) {
-                                    $this->upd(array(
-                                        'type' => 'imgContent',
-                                        'data' => $content
-                                    ));
-                                }
-                                else {
-                                    $this->add(array(
-                                        'type' => 'newImgContent',
-                                        'data' => $content
-                                    ));
-                                }
-                            }
-
-							if(isset($this->name_img)) {
-								$page = $this->getItems('img', array('id' => $this->id_img), 'one', false);
-								$img_pages = pathinfo($page['name_img']);
-								$img_name = $img_pages['filename'];
-
-								if($this->name_img !== $img_name && $this->name_img !== '') {
-									$result = $this->upload->renameImages(
-										array(
-											'name' => $this->name_img,
-											'edit' => $page['name_img'],
-											'prefix' => array('s_', 'm_', 'l_'),
-											'module_img' => 'catalog',
-											'attribute_img' => 'product',
-											'original_remove' => false
-										),
-										array(
-											'upload_root_dir' => 'upload/catalog/p', //string
-											'upload_dir' => $page['id_product'] //string ou array
-										)
-									);
-
-									$this->upd(array(
-										'type' => 'img',
-										'data' => array(
-											'id_img' => $this->id_img,
-											'name_img' => $result
-										)
-									));
-								}
-							}
-
-							$this->message->json_post_response(true, 'add_redirect');
-						}
-						else {
-                            $this->modelLanguage->getLanguage();
-                            $setEditData = parent::fetchData(
-                                array('context' => 'all', 'type' => 'imgData'),
-                                array('edit' => $this->editimg)
-                            );
-                            $setEditData = $this->setItemsImgData($setEditData);
-                            $this->template->assign('img', $setEditData[$this->editimg]);
-							$this->template->display('catalog/product/edit-img.tpl');
-						}
-					}
-					elseif (isset($this->product_cat)) {
-						if (isset($this->parent)) {
-							$ids = array();
-
-							foreach ($this->parent as $id => $val) {
-								$ids[] = $id;
-								$link = parent::fetchData( array('context' => 'one', 'type' => 'catRel'), array('id' => $this->edit, 'id_cat' => $id) );
-
-								if($link == null) {
-									$data = array('id' => $this->edit, 'id_cat' => $id, 'default_c' => 0);
-
-									$this->add(array(
-										'type' => 'newCatRel',
-										'data' => $data
-									));
-								}
-
-								if($this->default_cat == $id) {
-									$this->upd(array(
-										'type' => 'catRel',
-										'data' => array('id' => $this->edit, 'id_cat' => $id)
-									));
-								}
-							}
-
-							$this->del(array(
-								'type' => 'oldCatRel',
-								'data' => array('id' => $this->edit, 'id_cat' => implode(',',$ids))
-							));
-						}
-						else {
-							$this->del(array(
-								'type' => 'catRel',
-								'data' => array('id' => $this->edit)
-							));
-						}
-						$this->message->json_post_response(true,'update');
-					}
-					else {
-						// --- Product content
-						$this->modelLanguage->getLanguage();
-						$setEditData = parent::fetchData(
-							array('context' => 'all', 'type' => 'page'),
-							array('edit' => $this->edit)
-						);
-						$setEditData = $this->setItemData($setEditData);
-						$this->template->assign('page', $setEditData[$this->edit]);
-
-						// --- Product images
-						$this->getItems('images',$this->edit,'all');
-
-						// --- Categories
-						$this->setCategoriesTree();
-						$this->getCatRels();
-						// ---- Similar
-                        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                        $this->getItems('productRel',array(':default_lang' => $defaultLanguage['id_lang'],':id'=>$this->edit),'all');
-                        /*$assign = array(
-                            'id_rel',
-                            'name_p' => ['title' => 'name']
+        if(isset($this->plugin)) {
+            if(isset($this->action)) {
+                switch ($this->action) {
+                    case 'edit':
+                        // Initialise l'API menu des plugins core
+                        $this->modelPlugins->getItems(
+                            array(
+                                'type'      =>  'tabs',
+                                'controller'=>  $this->controller
+                            )
                         );
-                        $this->data->getScheme(array('mc_catalog_product_rel', 'mc_catalog_product_content'), array('id_rel', 'name_p'), $assign);*/
-						$this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all','products');
-						$this->template->display('catalog/product/edit.tpl');
-					}
-					break;
-				case 'setImgDefault':
-					if(isset($this->id_img)) {
-						$this->upd(array(
-							'type' => 'imageDefault',
-							'data' => array(':id' => $this->edit, ':id_img' => $this->id_img)
-						));
-					}
-					break;
-				case 'getImgDefault':
-					if(isset($this->edit)) {
-						$imgDefault = $this->getItems('imgDefault',$this->edit,'one',false);
-						print $imgDefault['id_img'];
-					}
-					break;
-				case 'getImages':
-					if(isset($this->edit)) {
-						$this->getItems('images',$this->edit, 'all');
-						$display = $this->template->fetch('catalog/product/brick/img.tpl');
-						$this->message->json_post_response(true,'',$display);
-					}
-					break;
-				case 'orderImages':
-					if (isset($this->order)) {
-						$this->upd(
-							array(
-								'type' => 'order'
-							)
-						);
-					}
-					break;
-				case 'delete':
-					if (isset($this->id_product)) {
-						if(isset($this->tabs)) {
-							switch ($this->tabs) {
-								case 'image':
-									$this->del(
-										array(
-											'type' => 'delImages',
-											'data' => array(
-												'id' => $this->id_product
-											)
-										)
-									);
-									$this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
-									break;
-                                case 'similar':
-                                    $this->del(
+                        // --- Product content
+                        $this->modelLanguage->getLanguage();
+                        $setEditData = parent::fetchData(
+                            array('context' => 'all', 'type' => 'page'),
+                            array('edit' => $this->edit)
+                        );
+                        $setEditData = $this->setItemData($setEditData);
+                        $this->template->assign('page', $setEditData[$this->edit]);
+
+                        // Execute un plugin core
+                        $this->modelPlugins->getCoreItem();
+                        break;
+                }
+            }
+        }else {
+            if (isset($this->tableaction)) {
+                $this->tableform->run();
+            } elseif (isset($this->action)) {
+                switch ($this->action) {
+                    case 'add':
+                        if (isset($this->content)) {
+                            $this->add(array(
+                                'type' => 'newPages',
+                                'data' => array(
+                                    'price_p' => $this->productData['price'],
+                                    'reference_p' => $this->productData['reference']
+                                )
+                            ));
+
+                            $product = parent::fetchData(array('context' => 'one', 'type' => 'root'));
+
+                            foreach ($this->content as $lang => $content) {
+                                $content['id_product'] = $product['id_product'];
+                                $content['id_lang'] = $lang;
+                                $content['published_p'] = (!isset($content['published_p']) ? 0 : 1);
+                                $content['longname_p'] = (!empty($content['longname_p']) ? $content['longname_p'] : NULL);
+                                $content['resume_p'] = (!empty($content['resume_p']) ? $content['resume_p'] : NULL);
+                                $content['content_p'] = (!empty($content['content_p']) ? $content['content_p'] : NULL);
+                                $content['seo_title_p'] = (!empty($content['seo_title_p']) ? $content['seo_title_p'] : NULL);
+                                $content['seo_desc_p'] = (!empty($content['seo_desc_p']) ? $content['seo_desc_p'] : NULL);
+
+                                if (empty($content['url_p'])) {
+                                    $content['url_p'] = http_url::clean($content['name_p'],
                                         array(
-                                            'type' => 'productRel',
-                                            'data' => array(
-                                                'id' => $this->id_product
-                                            )
+                                            'dot' => false,
+                                            'ampersand' => 'strict',
+                                            'cspec' => '', 'rspec' => ''
                                         )
                                     );
-                                    $this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
-                                    break;
-							}
-						}
-						else {
-                            $this->del(
-                                array(
-                                    'type' => 'delImagesProducts',
+                                }
+
+                                $this->add(array('type' => 'newContent', 'data' => $content));
+                            }
+                            $this->message->json_post_response(true, 'add_redirect');
+                        } elseif (isset($this->id_product_2)) {
+                            $this->add(array(
+                                'type' => 'newProductRel',
+                                'data' => array(
+                                    'id_product' => $this->id_product,
+                                    'id_product_2' => $this->id_product_2,
+                                )
+                            ));
+
+
+                            $this->modelLanguage->getLanguage();
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                            $this->getItems('lastProductRel', array('default_lang' => $defaultLanguage['id_lang'], 'id' => $this->id_product), 'one', 'row');
+                            $display = $this->template->fetch('catalog/product/loop/similar.tpl');
+                            $this->message->json_post_response(true, 'add', $display);
+                            //$this->header->set_json_headers();
+                            //$this->message->json_post_response(true, 'add');
+                        } else {
+                            $this->modelLanguage->getLanguage();
+                            $this->template->display('catalog/product/add.tpl');
+                        }
+                        break;
+                    case 'edit':
+                        if (isset($this->id_product)) {
+                            if (isset($this->content)) {
+                                $this->productData['price'] = number_format(str_replace(",", ".", $this->productData['price']), 6, '.', '');
+                                $this->productData['reference'] = !empty($this->productData['reference']) ? $this->productData['reference'] : NULL;
+
+                                $this->upd(array(
+                                    'type' => 'product',
                                     'data' => array(
-                                        'id' => $this->id_product
+                                        'id_product' => $this->id_product,
+                                        'price_p' => $this->productData['price'],
+                                        'reference_p' => $this->productData['reference']
                                     )
+                                ));
+
+                                $extendData = array();
+
+                                foreach ($this->content as $lang => $content) {
+                                    $content['id_product'] = $this->id_product;
+                                    $content['id_lang'] = $lang;
+                                    $content['published_p'] = (!isset($content['published_p']) ? 0 : 1);
+                                    $content['longname_p'] = (!empty($content['longname_p']) ? $content['longname_p'] : NULL);
+                                    $content['resume_p'] = (!empty($content['resume_p']) ? $content['resume_p'] : NULL);
+                                    $content['content_p'] = (!empty($content['content_p']) ? $content['content_p'] : NULL);
+                                    $content['seo_title_p'] = (!empty($content['seo_title_p']) ? $content['seo_title_p'] : NULL);
+                                    $content['seo_desc_p'] = (!empty($content['seo_desc_p']) ? $content['seo_desc_p'] : NULL);
+
+                                    if (empty($content['url_p'])) {
+                                        $content['url_p'] = http_url::clean($content['name_p'],
+                                            array(
+                                                'dot' => false,
+                                                'ampersand' => 'strict',
+                                                'cspec' => '', 'rspec' => ''
+                                            )
+                                        );
+                                    }
+
+                                    $checkLangData = parent::fetchData(
+                                        array('context' => 'one', 'type' => 'content'),
+                                        array('id_product' => $this->id_product, 'id_lang' => $lang)
+                                    );
+
+                                    // Check language page content
+                                    if ($checkLangData != null) {
+                                        $this->upd(array(
+                                            'type' => 'content',
+                                            'data' => $content
+                                        ));
+                                    } else {
+                                        $this->add(array(
+                                            'type' => 'newContent',
+                                            'data' => $content
+                                        ));
+                                    }
+
+                                    /*$setEditData = parent::fetchData(
+                                        array('context' => 'all', 'type' => 'page'),
+                                        array('edit' => $this->id_product)
+                                    );
+                                    $setEditData = $this->setItemData($setEditData);
+                                    $extendData[$lang] = $setEditData[$this->id_product]['content'][$lang]['public_url'];*/
+                                }
+                                $this->message->json_post_response(true, 'update', array('result' => $this->id_product, 'extend' => $extendData));
+                            } elseif (isset($this->img_multiple)) {
+                                $this->template->configLoad();
+                                $this->progress = new component_core_feedback($this->template);
+
+                                usleep(200000);
+                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 10));
+
+                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                                $product = $this->getItems('content', array('id_product' => $this->id_product, 'id_lang' => $defaultLanguage['id_lang']), 'one', false);
+                                $newimg = $this->getItems('lastImgId', null, 'one', false);
+                                // If $newimg = NULL return 0
+                                $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
+
+                                $resultUpload = $this->upload->setMultipleImageUpload(
+                                    'img_multiple',
+                                    array(
+                                        'name' => $product['url_p'],
+                                        'prefix_name' => $newimg['id_img'],
+                                        'prefix_increment' => true,
+                                        'prefix' => array('s_', 'm_', 'l_'),
+                                        'module_img' => 'catalog',
+                                        'attribute_img' => 'product',
+                                        'original_remove' => false
+                                    ),
+                                    array(
+                                        'upload_root_dir' => 'upload/catalog/p', //string
+                                        'upload_dir' => $this->id_product //string ou array
+                                    ),
+                                    false
+                                );
+
+                                if ($resultUpload != null) {
+                                    $preparePercent = 80 / count($resultUpload);
+                                    $percent = 10;
+
+                                    foreach ($resultUpload as $key => $value) {
+                                        if ($value['statut'] == '1') {
+                                            $percent = $percent + $preparePercent;
+
+                                            usleep(200000);
+                                            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent));
+
+                                            $this->add(array(
+                                                'type' => 'newImg',
+                                                'data' => array(
+                                                    'id_product' => $this->id_product,
+                                                    'name_img' => $value['file']
+                                                )
+                                            ));
+                                        }
+                                    }
+
+                                    usleep(200000);
+                                    $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'), 'progress' => 90));
+
+                                    usleep(200000);
+                                    $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success', 'result' => $display));
+                                } else {
+                                    usleep(200000);
+                                    $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'), 'progress' => 100, 'status' => 'error', 'error_code' => 'error_data'));
+                                }
+                            }
+                        } elseif (isset($this->editimg)) {
+                            if (isset($this->id_img)) {
+                                foreach ($this->imgData as $lang => $content) {
+                                    $content['id_img'] = $this->id_img;
+                                    $content['id_lang'] = $lang;
+                                    $content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
+                                    $content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
+                                    $content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
+
+                                    $checkLangData = parent::fetchData(
+                                        array('context' => 'one', 'type' => 'imgContent'),
+                                        array('id_img' => $this->id_img, 'id_lang' => $lang)
+                                    );
+
+                                    // Check language page content
+                                    if ($checkLangData != null) {
+                                        $this->upd(array(
+                                            'type' => 'imgContent',
+                                            'data' => $content
+                                        ));
+                                    } else {
+                                        $this->add(array(
+                                            'type' => 'newImgContent',
+                                            'data' => $content
+                                        ));
+                                    }
+                                }
+
+                                if (isset($this->name_img)) {
+                                    $page = $this->getItems('img', array('id' => $this->id_img), 'one', false);
+                                    $img_pages = pathinfo($page['name_img']);
+                                    $img_name = $img_pages['filename'];
+
+                                    if ($this->name_img !== $img_name && $this->name_img !== '') {
+                                        $result = $this->upload->renameImages(
+                                            array(
+                                                'name' => $this->name_img,
+                                                'edit' => $page['name_img'],
+                                                'prefix' => array('s_', 'm_', 'l_'),
+                                                'module_img' => 'catalog',
+                                                'attribute_img' => 'product',
+                                                'original_remove' => false
+                                            ),
+                                            array(
+                                                'upload_root_dir' => 'upload/catalog/p', //string
+                                                'upload_dir' => $page['id_product'] //string ou array
+                                            )
+                                        );
+
+                                        $this->upd(array(
+                                            'type' => 'img',
+                                            'data' => array(
+                                                'id_img' => $this->id_img,
+                                                'name_img' => $result
+                                            )
+                                        ));
+                                    }
+                                }
+
+                                $this->message->json_post_response(true, 'add_redirect');
+                            } else {
+                                $this->modelLanguage->getLanguage();
+                                $setEditData = parent::fetchData(
+                                    array('context' => 'all', 'type' => 'imgData'),
+                                    array('edit' => $this->editimg)
+                                );
+                                $setEditData = $this->setItemsImgData($setEditData);
+                                $this->template->assign('img', $setEditData[$this->editimg]);
+                                $this->template->display('catalog/product/edit-img.tpl');
+                            }
+                        } elseif (isset($this->product_cat)) {
+                            if (isset($this->parent)) {
+                                $ids = array();
+
+                                foreach ($this->parent as $id => $val) {
+                                    $ids[] = $id;
+                                    $link = parent::fetchData(array('context' => 'one', 'type' => 'catRel'), array('id' => $this->edit, 'id_cat' => $id));
+
+                                    if ($link == null) {
+                                        $data = array('id' => $this->edit, 'id_cat' => $id, 'default_c' => 0);
+
+                                        $this->add(array(
+                                            'type' => 'newCatRel',
+                                            'data' => $data
+                                        ));
+                                    }
+
+                                    if ($this->default_cat == $id) {
+                                        $this->upd(array(
+                                            'type' => 'catRel',
+                                            'data' => array('id' => $this->edit, 'id_cat' => $id)
+                                        ));
+                                    }
+                                }
+
+                                $this->del(array(
+                                    'type' => 'oldCatRel',
+                                    'data' => array('id' => $this->edit, 'id_cat' => implode(',', $ids))
+                                ));
+                            } else {
+                                $this->del(array(
+                                    'type' => 'catRel',
+                                    'data' => array('id' => $this->edit)
+                                ));
+                            }
+                            $this->message->json_post_response(true, 'update');
+                        } else {
+                            // Initialise l'API menu des plugins core
+                            $this->modelPlugins->getItems(
+                                array(
+                                    'type'      =>  'tabs',
+                                    'controller'=>  $this->controller
                                 )
                             );
-							$this->del(
-								array(
-									'type' => 'delPages',
-									'data' => array(
-										'id' => $this->id_product
-									)
-								)
-							);
-						}
-					}
-					break;
-				case 'getLink':
-					if(isset($this->id_product) && isset($this->iso)) {
-						$product = $this->getItems('pageLang',array('id' => $this->id_product,'iso' => $this->iso),'one',false);
-						if($product) {
-							$product['url'] = $this->routingUrl->getBuildUrl(array(
-								'type' => 'product',
-								'iso'  => $product['iso_lang'],
-								'id'   => $product['id_product'],
-								'url'  => $product['url_p'],
-								'id_parent'   => $product['id_parent'],
-								'url_parent'  => $product['url_parent']
-							));
-							//$link = '<a title="'.$cat['url'].'" href="'.$cat['name_cat'].'">'.$cat['name_cat'].'</a>';
-							$this->header->set_json_headers();
-							print '{"name":'.json_encode($product['name_p']).',"url":'.json_encode($product['url']).'}';
-						}
-						else {
-							print false;
-						}
-					}
-					break;
-			}
-		}
-		else {
-			$this->modelLanguage->getLanguage();
-			$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-			$this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
-			$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'default_img','seo_title_p','seo_desc_p', 'date_register'), $this->tableconfig);
-			$this->template->display('catalog/product/index.tpl');
-		}
+                            // --- Product content
+                            $this->modelLanguage->getLanguage();
+                            $setEditData = parent::fetchData(
+                                array('context' => 'all', 'type' => 'page'),
+                                array('edit' => $this->edit)
+                            );
+                            $setEditData = $this->setItemData($setEditData);
+                            $this->template->assign('page', $setEditData[$this->edit]);
+
+                            // --- Product images
+                            $this->getItems('images', $this->edit, 'all');
+
+                            // --- Categories
+                            $this->setCategoriesTree();
+                            $this->getCatRels();
+                            // ---- Similar
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                            $this->getItems('productRel', array(':default_lang' => $defaultLanguage['id_lang'], ':id' => $this->edit), 'all');
+                            /*$assign = array(
+                                'id_rel',
+                                'name_p' => ['title' => 'name']
+                            );
+                            $this->data->getScheme(array('mc_catalog_product_rel', 'mc_catalog_product_content'), array('id_rel', 'name_p'), $assign);*/
+                            $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all', 'products');
+                            $this->template->display('catalog/product/edit.tpl');
+                        }
+                        break;
+                    case 'setImgDefault':
+                        if (isset($this->id_img)) {
+                            $this->upd(array(
+                                'type' => 'imageDefault',
+                                'data' => array(':id' => $this->edit, ':id_img' => $this->id_img)
+                            ));
+                        }
+                        break;
+                    case 'getImgDefault':
+                        if (isset($this->edit)) {
+                            $imgDefault = $this->getItems('imgDefault', $this->edit, 'one', false);
+                            print $imgDefault['id_img'];
+                        }
+                        break;
+                    case 'getImages':
+                        if (isset($this->edit)) {
+                            $this->getItems('images', $this->edit, 'all');
+                            $display = $this->template->fetch('catalog/product/brick/img.tpl');
+                            $this->message->json_post_response(true, '', $display);
+                        }
+                        break;
+                    case 'orderImages':
+                        if (isset($this->order)) {
+                            $this->upd(
+                                array(
+                                    'type' => 'order'
+                                )
+                            );
+                        }
+                        break;
+                    case 'delete':
+                        if (isset($this->id_product)) {
+                            if (isset($this->tabs)) {
+                                switch ($this->tabs) {
+                                    case 'image':
+                                        $this->del(
+                                            array(
+                                                'type' => 'delImages',
+                                                'data' => array(
+                                                    'id' => $this->id_product
+                                                )
+                                            )
+                                        );
+                                        $this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
+                                        break;
+                                    case 'similar':
+                                        $this->del(
+                                            array(
+                                                'type' => 'productRel',
+                                                'data' => array(
+                                                    'id' => $this->id_product
+                                                )
+                                            )
+                                        );
+                                        $this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
+                                        break;
+                                }
+                            } else {
+                                $this->del(
+                                    array(
+                                        'type' => 'delImagesProducts',
+                                        'data' => array(
+                                            'id' => $this->id_product
+                                        )
+                                    )
+                                );
+                                $this->del(
+                                    array(
+                                        'type' => 'delPages',
+                                        'data' => array(
+                                            'id' => $this->id_product
+                                        )
+                                    )
+                                );
+                            }
+                        }
+                        break;
+                    case 'getLink':
+                        if (isset($this->id_product) && isset($this->iso)) {
+                            $product = $this->getItems('pageLang', array('id' => $this->id_product, 'iso' => $this->iso), 'one', false);
+                            if ($product) {
+                                $product['url'] = $this->routingUrl->getBuildUrl(array(
+                                    'type' => 'product',
+                                    'iso' => $product['iso_lang'],
+                                    'id' => $product['id_product'],
+                                    'url' => $product['url_p'],
+                                    'id_parent' => $product['id_parent'],
+                                    'url_parent' => $product['url_parent']
+                                ));
+                                //$link = '<a title="'.$cat['url'].'" href="'.$cat['name_cat'].'">'.$cat['name_cat'].'</a>';
+                                $this->header->set_json_headers();
+                                print '{"name":' . json_encode($product['name_p']) . ',"url":' . json_encode($product['url']) . '}';
+                            } else {
+                                print false;
+                            }
+                        }
+                        break;
+                }
+            } else {
+                $this->modelLanguage->getLanguage();
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all', true, true);
+                $this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'default_img', 'seo_title_p', 'seo_desc_p', 'date_register'), $this->tableconfig);
+                $this->template->display('catalog/product/index.tpl');
+            }
+        }
 	}
 }
