@@ -109,6 +109,17 @@ class frontend_db_catalog
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
 					break;
+				case 'category_short':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$sql = "SELECT p.id_cat,
+								   c.name_cat,
+								   c.url_cat,
+								   c.seo_title_cat,
+								   lang.iso_lang
+							FROM mc_catalog_cat AS p
+							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
+					break;
 				case 'parents':
 					$sql = "SELECT t.id_cat AS parent, GROUP_CONCAT(f.id_cat) AS children
 								FROM mc_catalog_cat t
@@ -136,6 +147,25 @@ class frontend_db_catalog
 								COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img,
 								pc.seo_title_p,
 								pc.seo_desc_p
+						FROM mc_catalog AS catalog 
+						JOIN mc_catalog AS c2 ON ( catalog.id_product = c2.id_product )
+						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
+						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
+						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
+						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
+						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
+						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
+						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang) $conditions";
+					break;
+				case 'product_short':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$sql = "SELECT 
+								catalog.id_product,
+								cat.name_cat,
+								pc.name_p, 
+								pc.url_p,
+								lang.iso_lang, 
+								pc.seo_title_p
 						FROM mc_catalog AS catalog 
 						JOIN mc_catalog AS c2 ON ( catalog.id_product = c2.id_product )
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )

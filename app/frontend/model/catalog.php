@@ -367,6 +367,53 @@ class frontend_model_catalog extends frontend_db_catalog {
     }
 
     /**
+     * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
+     * @param $row
+     * @return array|null
+     */
+    public function setItemShortData ($row)
+    {
+        $data = null;
+        if ($row != null) {
+            if (isset($row['name'])) {
+                $data['name'] = $row['name'] ? $row['name'] : $this->template->getConfigVars('catalog');
+            }
+            // *** Product
+            elseif (isset($row['name_p'])) {
+                $data['name']      = $row['name_p'];
+                $data['url'] = $this->routingUrl->getBuildUrl(array(
+					'type'       => 'product',
+					'iso'        => $row['iso_lang'],
+					'id'         => $row['id_product'],
+					'url'        => $row['url_p'],
+					'id_parent'  => $row['id_cat'],
+					'url_parent' => $row['url_cat']
+				));
+                $data['id_parent'] = $row['id_cat'];
+                $data['url_parent'] = $this->routingUrl->getBuildUrl(array(
+					'type' => 'category',
+					'iso'  => $row['iso_lang'],
+					'id'   => $row['id_cat'],
+					'url'  => $row['url_cat']
+				));
+			}
+			// *** Category
+			elseif(isset($row['name_cat'])) {
+                $data['url'] = $this->routingUrl->getBuildUrl(array(
+					'type' => 'category',
+					'iso'  => $row['iso_lang'],
+					'id'   => $row['id_cat'],
+					'url'  => $row['url_cat']
+				));
+                // Base url for category
+                $data['id_parent'] = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
+                $data['name']      = $row['name_cat'];
+            }
+        }
+		return $data;
+    }
+
+    /**
      * @param $row
      * @return array
      * @throws Exception
@@ -415,38 +462,29 @@ class frontend_model_catalog extends frontend_db_catalog {
 	/**
 	 * @param $d
 	 * @param $c
+	 * @param $nr
+	 * @param $s
 	 * @return mixed|null
 	 */
-	public function parseData($d,$c,$nr = false)
+	public function parseData($d,$c,$nr = false,$s = false)
 	{
-		return $this->data->parseData($d,$this,$c,$nr);
+		return $this->data->parseData($d,$this,$c,$nr,$s);
 	}
 
-    /**
-     * Retourne les données sql sur base des paramètres passés en paramète
-     * @param array $custom
-     * @param array $current
-     * @param bool $override
-     * @return array|null
-     * @throws Exception
-     */
-    public function getData($custom,$current,$override = false)
-    {
-        if (!(is_array($custom))) return null;
-
-        if (!(array_key_exists('controller', $current))) return null;
-
-        $lang = $current['lang']['iso'];
-		$current = $current['controller'];
-		$current['name'] = !empty($current['name']) ? $current['name'] : 'catalog';
-
-        $conf = array(
-            'id' => ($current['id'] ? $current['id'] : null),
-            'id_parent' => ($current['id_parent'] ? $current['id_parent'] : null),
-            'type' => 'data',
-            'lang' =>  $lang,
-            'context' => array(
-            	1 => ($current['id_parent'] ? 'product' : 'category')
+	/**
+	 * @param $custom
+	 * @param $current
+	 * return array
+	 */
+	private function parseConf($custom,$current)
+	{
+		$conf = array(
+			'id' => null,
+			'id_parent' => ($current['controller']['id_parent'] ? $current['controller']['id_parent'] : null),
+			'type' => 'data',
+			'lang' =>  $current['lang']['iso'],
+			'context' => array(
+				1 => ($current['id_parent'] ? 'product' : 'category')
 			),
 			'sort' => array(
 				'type' => 'order',
@@ -455,10 +493,10 @@ class frontend_model_catalog extends frontend_db_catalog {
 			'exclude' => null,
 			'limit' => null,
 			'deepness' => 0
-        );
+		);
 
 		// Define context
-        if (isset($custom['context'])) {
+		if (isset($custom['context'])) {
 			if (is_array($custom['context'])) {
 				foreach ($custom['context'] as $k => $v)
 				{
@@ -485,62 +523,83 @@ class frontend_model_catalog extends frontend_db_catalog {
 			}
 		}
 
-        // Define select
-        if (isset($custom['select'])) {
-            if ($custom['select'] === 'current') {
-            	$conf['type'] = 'collection';
-            }
+		// Define select
+		if (isset($custom['select'])) {
+			if ($custom['select'] === 'current') {
+				$conf['type'] = 'collection';
+			}
 			elseif ($custom['select'] === 'all') {
 				$conf['id'] = null;
 				$conf['type'] = null;
 			}
-            else {
+			else {
 				$conf['id'] = $custom['select'];
 				$conf['type'] = 'collection';
-            }
-        }
+			}
+		}
 
 		// Define exclude
-        if (isset($custom['exclude'])) {
-            if (is_array($custom['exclude'])) {
+		if (isset($custom['exclude'])) {
+			if (is_array($custom['exclude'])) {
 				$conf['exclude'] = $custom['exclude'];
 				$conf['type'] = 'collection';
-            }
-        }
+			}
+		}
 
-        // Define limit
-        if (isset($custom['limit'])) $conf['limit'] = $custom['limit'];
+		// Define limit
+		if (isset($custom['limit'])) $conf['limit'] = $custom['limit'];
 
-        // Define sort
-        if (isset($custom['sort'])) {
-            if (is_array($custom['sort'])) {
-                if(array_key_exists('type', $custom['sort'])) $conf['sort']['type'] =  $custom['sort']['type'];
+		// Define sort
+		if (isset($custom['sort'])) {
+			if (is_array($custom['sort'])) {
+				if(array_key_exists('type', $custom['sort'])) $conf['sort']['type'] =  $custom['sort']['type'];
 				if(array_key_exists('order', $custom['sort'])) $conf['sort']['order'] =  $custom['sort']['order'];
-            }
-        }
+			}
+		}
 
-        // deepness for element
-        if(isset($custom['deepness'])) {
-            $deepness_allowed = array('all','none');
-            if (in_array($custom['deepness'],$deepness_allowed)) {
-                if($custom['deepness'] == 'all'){
-                    $conf['deepness'] = null;
-                }
-                elseif($custom['deepness'] == 'none') {
-                    $conf['deepness'] = 0;
-                }
-            }
-            else {
-                $conf['deepness'] = 0;
-            }
-        }
+		// deepness for element
+		if(isset($custom['deepness'])) {
+			$deepness_allowed = array('all','none');
+			if (in_array($custom['deepness'],$deepness_allowed)) {
+				if($custom['deepness'] == 'all'){
+					$conf['deepness'] = null;
+				}
+				elseif($custom['deepness'] == 'none') {
+					$conf['deepness'] = 0;
+				}
+			}
+			else {
+				$conf['deepness'] = 0;
+			}
+		}
 
 		// Override with plugin
 		if (isset($custom['plugins'])) $conf['plugins'] = $custom['plugins'];
 
-        // *** Load SQL data
-        $conditions = '';
-        $data = null;
+		return $conf;
+	}
+
+    /**
+     * Retourne les données sql sur base des paramètres passés en paramète
+     * @param array $custom
+     * @param array $current
+     * @param bool $override
+     * @return array|null
+     * @throws Exception
+     */
+    public function getData($custom,$current,$override = false)
+    {
+		if (!(is_array($custom))) return null;
+
+		if (!(array_key_exists('controller', $current))) return null;
+
+		$conf = $this->parseConf($custom,$current);
+		$current = $current['controller'];
+		$current['name'] = !empty($current['name']) ? $current['name'] : 'pages';
+
+		// *** Load SQL data
+		$conditions = '';
+		$data = null;
 
         if ($conf['context'][1] == 'category') {
             if ($override) {
@@ -633,11 +692,11 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
 
                 if (isset($custom['exclude'])) {
-                    $conditions .= ' AND catalog.id_product NOT IN (' . implode(',',$conf['id']) . ')';
+                    $conditions .= ' AND catalog.id_product NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
                 }
 
                 if (isset($custom['select'])) {
-                    $conditions .= ' AND catalog.id_product IN (' . implode(',',$conf['id']) . ')';
+                    $conditions .= ' AND catalog.id_product IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
                 }
 
                 $conditions .= ' GROUP BY catalog.id_product';
@@ -733,6 +792,151 @@ class frontend_model_catalog extends frontend_db_catalog {
                     }*/
                 }
             }
+        }
+
+        return $data;
+    }
+
+	/**
+	 * Retourne les données sql sur base des paramètres donnés
+	 * @param $custom
+	 * @param array $current
+	 * @return array|null
+	 */
+    public function getShortData(array $custom,array $current)
+    {
+		if (!(is_array($custom))) return null;
+
+		if (!(array_key_exists('controller', $current))) return null;
+
+		$conf = $this->parseConf($custom,$current);
+		$current = $current['controller'];
+		$current['name'] = !empty($current['name']) ? $current['name'] : 'pages';
+
+		// *** Load SQL data
+		$conditions = '';
+		$data = null;
+
+        if ($conf['context'][1] == 'category') {
+			$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_cat = 1';
+
+			if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
+				if (isset($custom['select'])) {
+					$conditions .= ' AND (p.id_cat IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
+				}
+
+				if (isset($custom['exclude'])) {
+					$conditions .= ' AND p.id_cat NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+				}
+			}
+
+			if ($custom['type'] == 'menu') {
+				$conditions .= ' AND p.menu_cat = 1';
+			}
+
+			// Set order
+			switch ($conf['sort']['type']) {
+				case 'order':
+					$conditions .= ' ORDER BY p.id_parent, p.order_cat '.$conf['sort']['order'];
+					break;
+			}
+
+			if ($conf['limit'] !== null) $conditions .= ' LIMIT ' . $conf['limit'];
+
+			if ($conditions !== '') {
+				$data = parent::fetchData(
+					array('context' => 'all', 'type' => 'category_short', 'conditions' => $conditions),
+					array('iso' => $conf['lang'])
+				);
+
+				if(is_array($data) && !empty($data)) {
+					$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+					$data = $this->data->setPagesTree($data,'cat',$branch);
+				}
+			}
+        }
+        elseif ($conf['context'][1] == 'product') {
+			$conditions .= ' WHERE lang.iso_lang = :iso 
+							AND cat.published_cat = 1 
+							AND pc.published_p = 1 
+							AND catalog.default_c = 1 
+							AND (img.default_img = 1 
+							OR img.default_img IS NULL)';
+
+			if(isset($current['id_parent'])){
+				$conditions .= ' AND catalog.id_cat = '.$conf['id_parent'];
+			}
+
+			if (isset($custom['exclude'])) {
+				$conditions .= ' AND catalog.id_product NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+			}
+
+			if (isset($custom['select'])) {
+				$conditions .= ' AND catalog.id_product IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+			}
+
+			$conditions .= ' GROUP BY catalog.id_product';
+
+			// ORDER
+			// Set order
+			switch ($conf['sort']['type']) {
+				case 'order':
+					$conditions .= ' ORDER BY catalog.order_p '.$conf['sort']['order'];
+					break;
+			}
+
+			if ($conf['limit'] != null) $conditions .= ' LIMIT ' . $conf['limit'];
+
+			if ($conditions != '') {
+				$data = parent::fetchData(
+					array('context' => 'all', 'type' => 'product_short', 'conditions' => $conditions),
+					array('iso' => $conf['lang'])
+				);
+
+				/*if($data != null) {
+					$branch = isset($custom['select']) ? $conf['id'] : 'root';
+					$data = $this->setPagesTree($data,$branch);
+				}*/
+			}
+        }
+        elseif ($conf['context'][1] == 'lastProduct') {
+			$conditions .= ' WHERE lang.iso_lang = :iso 
+							AND cat.published_cat = 1 
+							AND pc.published_p = 1 
+							AND catalog.default_c = 1 
+							AND (img.default_img = 1 
+							OR img.default_img IS NULL)
+							GROUP BY catalog.id_product';
+
+			if (isset($custom['exclude'])) {
+				$conditions .= ' AND catalog.id_product NOT IN (' . $conf['id'] . ') ';
+			}
+
+			if (isset($custom['select'])) {
+				$conditions .= ' AND catalog.id_product IN (' . $conf['id'] . ') ';
+			}
+
+			// ORDER
+			$conditions .= ' ORDER BY catalog.id_product DESC';
+
+			if ($conf['limit'] != null) {
+				$conditions .= ' LIMIT ' . $conf['limit'];
+			}
+
+			if ($conditions != '') {
+
+				$data = parent::fetchData(
+					array('context' => 'all', 'type' => 'product_short', 'conditions' => $conditions),
+					array(
+						':iso' => $conf['lang']
+					)
+				);
+
+				/*if($data != null) {
+					$branch = isset($custom['select']) ? $conf['id'] : 'root';
+					$data = $this->setPagesTree($data,$branch);
+				}*/
+			}
         }
 
         return $data;

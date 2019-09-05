@@ -80,9 +80,10 @@ class frontend_model_mail {
 	 * @param $data
 	 * @param string $title
 	 * @param string $sender
+     * @param string $from
 	 * @return bool
 	 */
-	public function send_email($email, $tpl, $data, $title = '', $sender = '') {
+	public function send_email($email, $tpl, $data, $title = '', $sender = '', $from = '') {
 		if($email) {
 			$this->template->configLoad();
 			if(!$this->sanitize->mail($email)) {
@@ -109,6 +110,7 @@ class frontend_model_mail {
 							($title === '') ? self::setTitleMail($tpl) : $title,
 							array($noreply),
 							array($email),
+                            array($from),
 							self::getBodyMail($tpl,$data),
 							false
 						);

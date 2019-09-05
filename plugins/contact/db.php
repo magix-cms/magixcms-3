@@ -79,8 +79,8 @@ class plugins_contact_db
 				  			VALUES (:id_contact,:id_lang,:published_contact)';
 					break;
 				case 'config':
-					$sql = 'INSERT INTO `mc_contact_config`(address_enabled,address_required) 
-				  			VALUES (:address_enabled,:address_required)';
+					$sql = 'INSERT INTO `mc_contact_config`(address_enabled,address_required,mail_sender) 
+				  			VALUES (:address_enabled,:address_required,:mail_sender)';
 					break;
 			}
 
@@ -116,7 +116,8 @@ class plugins_contact_db
 					$sql = 'UPDATE mc_contact_config 
 							SET 
 								address_enabled=:address_enabled,
-								address_required=:address_required
+								address_required=:address_required,
+								mail_sender=:mail_sender
 							WHERE id_config = :id_config';
 					break;
 			}

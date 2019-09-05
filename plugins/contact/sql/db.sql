@@ -21,14 +21,15 @@ ALTER TABLE `mc_contact_content`
   ADD CONSTRAINT `mc_contact_content_ibfk_1` FOREIGN KEY (`id_contact`) REFERENCES `mc_contact` (`id_contact`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_contact_config` (
-  `id_config` smallint(3) unsigned NOT NULL AUTO_INCREMENT,
-  `address_enabled` smallint(3) unsigned NOT NULL,
-  `address_required` smallint(3) unsigned NOT NULL,
+  `id_config` smallint(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `address_enabled` smallint(3) UNSIGNED NOT NULL,
+  `address_required` smallint(3) UNSIGNED NOT NULL,
+  `mail_sender` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_config`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-INSERT INTO `mc_contact_config` (`id_config`, `address_enabled`, `address_required`) VALUES
-(NULL, 0, 0);
+INSERT INTO `mc_contact_config` (`id_config`, `address_enabled`, `address_required`, `mail_sender`) VALUES
+(NULL, 0, 0, NULL);
 
 INSERT INTO `mc_admin_access` (`id_role`, `id_module`, `view`, `append`, `edit`, `del`, `action`)
   SELECT 1, m.id_module, 1, 1, 1, 1, 1 FROM mc_module as m WHERE name = 'contact';

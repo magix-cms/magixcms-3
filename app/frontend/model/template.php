@@ -82,6 +82,14 @@ class frontend_model_template{
         $this->defaultDomain = $this->setDefaultDomain();
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function is_amp()
+	{
+		return $this->amp;
+	}
+
     /**
      * @return mixed
      * @throws Exception

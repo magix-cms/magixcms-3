@@ -29,7 +29,7 @@ class frontend_model_data{
 	 * @param bool $newRow
 	 * @return mixed|null
 	 */
-	public function parseData($data,$model,$current,$newRow = false)
+	public function parseData($data,$model,$current,$newRow = false,$short = false)
 	{
 		if($data && $model && $current){
 			// ** Loop management var
@@ -98,7 +98,10 @@ class frontend_model_data{
 
 					// Construit doonées de l'item en array avec clée nominative unifiée ('name' => 'monname,'descr' => '<p>ma descr</p>,...)
 
-					$itemData = method_exists($model, 'setItemData') ? $model->setItemData($row[$deep],$current,$newRow) : null;
+					if($short)
+						$itemData = method_exists($model, 'setItemShortData') ? $model->setItemShortData($row[$deep]) : null;
+					else
+						$itemData = method_exists($model, 'setItemData') ? $model->setItemData($row[$deep],$current,$newRow) : null;
 
 					// Récupération des sous-données (enfants)
 					if(isset($items[$deep_plus]) != null) {

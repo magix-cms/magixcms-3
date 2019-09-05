@@ -389,6 +389,7 @@ class backend_controller_login extends backend_db_employee{
 				self::setTitleMail($type,$_SERVER['HTTP_HOST']),
 				array($noreply),
 				array($mail),
+                array($noreply),
 				self::getBodyMail($data,$type,false),
 				false
 			);

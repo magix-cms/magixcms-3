@@ -145,6 +145,34 @@ class frontend_model_pages extends frontend_db_pages{
         }
     }
 
+	/**
+	 * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
+	 * @param $row
+	 * @return array|null
+	 * @throws Exception
+	 */
+	public function setItemShortData($row)
+	{
+		$data = null;
+		if ($row != null) {
+			if (isset($row['name'])) {
+				$data['name'] = $row['name'];
+			}
+			elseif (isset($row['name_pages'])) {
+				$data['name'] = $row['name_pages'];
+				$data['url'] =
+					$this->routingUrl->getBuildUrl(array(
+						'type' => 'pages',
+						'iso'  => $row['iso_lang'],
+						'id'   => $row['id_pages'],
+						'url'  => $row['url_pages']
+					));
+				$data['seo']['title'] = $row['seo_title_pages'];
+			}
+			return $data;
+		}
+	}
+
     /**
      * @param $row
      * @return array
@@ -168,35 +196,27 @@ class frontend_model_pages extends frontend_db_pages{
 	/**
 	 * @param $d
 	 * @param $c
+	 * @param $nr
+	 * @param $s
 	 * @return mixed|null
 	 */
-	public function parseData($d,$c,$nr = false)
+	public function parseData($d,$c,$nr = false,$s = false)
 	{
-		return $this->data->parseData($d,$this,$c,$nr);
+		return $this->data->parseData($d,$this,$c,$nr,$s);
 	}
 
-    /**
-     * Retourne les données sql sur base des paramètres passés en paramète
-     * @param $custom
-     * @param array $current
-     * @param bool $override
-     * @return array|null
-     */
-    public function getData($custom,$current,$override = false)
-    {
-		if (!(is_array($custom))) return null;
-
-		if (!(array_key_exists('controller', $current))) return null;
-
-		$lang = $current['lang']['iso'];
-		$current = $current['controller'];
-		$current['name'] = !empty($current['name']) ? $current['name'] : 'pages';
-
-        $conf = array(
-            'id' => null,
-			'id_parent' => ($current['id_parent'] ? $current['id_parent'] : null),
-            'type' => 'data',
-			'lang' =>  $lang,
+	/**
+	 * @param $custom
+	 * @param $current
+	 * return array
+	 */
+	private function parseConf($custom,$current)
+	{
+		$conf = array(
+			'id' => null,
+			'id_parent' => ($current['controller']['id_parent'] ? $current['controller']['id_parent'] : null),
+			'type' => 'data',
+			'lang' =>  $current['lang']['iso'],
 			'context' => array(
 				1 => 'parent'
 			),
@@ -205,9 +225,9 @@ class frontend_model_pages extends frontend_db_pages{
 				'order' => 'ASC'
 			),
 			'exclude' => null,
-            'limit' => null,
+			'limit' => null,
 			'deepness' => 0
-        );
+		);
 
 		// Define context
 		if (isset($custom['context'])) {
@@ -279,6 +299,26 @@ class frontend_model_pages extends frontend_db_pages{
 
 		// Override with plugin
 		if (isset($custom['plugins'])) $conf['plugins'] = $custom['plugins'];
+
+		return $conf;
+	}
+
+    /**
+     * Retourne les données sql sur base des paramètres passés en paramète
+     * @param $custom
+     * @param array $current
+     * @param bool $override
+     * @return array|null
+     */
+    public function getData($custom,$current,$override = false)
+    {
+		if (!(is_array($custom))) return null;
+
+		if (!(array_key_exists('controller', $current))) return null;
+
+		$conf = $this->parseConf($custom,$current);
+		$current = $current['controller'];
+		$current['name'] = !empty($current['name']) ? $current['name'] : 'pages';
 
 		// *** Load SQL data
 		$conditions = '';
@@ -388,6 +428,93 @@ class frontend_model_pages extends frontend_db_pages{
 					);
 				}
             }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Retourne les données sql sur base des paramètres donnés
+     * @param $custom
+     * @param array $current
+     * @return array|null
+     */
+    public function getShortData(array $custom,array $current)
+    {
+		if (!(is_array($custom))) return null;
+
+		if (!(array_key_exists('controller', $current))) return null;
+
+		$conf = $this->parseConf($custom,$current);
+		$current = $current['controller'];
+		$current['name'] = !empty($current['name']) ? $current['name'] : 'pages';
+
+		// *** Load SQL data
+		$conditions = '';
+		$data = null;
+
+        if ($conf['context'][1] == 'all') {
+			$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
+
+			if (isset($custom['exclude'])) {
+				$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+			}
+
+			if ($custom['type'] == 'menu') {
+				$conditions .= ' AND p.menu_pages = 1';
+			}
+
+			// Set order
+			switch ($conf['sort']['type']) {
+				case 'order':
+					$conditions .= ' ORDER BY p.id_parent, p.order_pages '.$conf['sort']['order'];
+					break;
+			}
+
+			if ($conf['limit'] !== null) $conditions .= ' LIMIT ' . $conf['limit'];
+
+			if ($conditions != '') {
+				$data = parent::fetchData(
+					array('context' => 'all', 'type' => 'pages_short', 'conditions' => $conditions),
+					array('iso' => $conf['lang'])
+				);
+
+				if(is_array($data) && !empty($data)) {
+					$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+					$data = $this->data->setPagesTree($data,'pages',$branch);
+				}
+			}
+		}
+        elseif ($conf['context'][1] == 'one') {
+			$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
+
+			if (isset($custom['select'])) {
+				$conditions .= ' AND p.id_pages IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+			}
+
+			if (isset($custom['exclude'])) {
+				$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
+			}
+
+			if ($custom['type'] == 'menu') {
+				$conditions .= ' AND p.menu_pages = 1';
+			}
+
+			// Set order
+			switch ($conf['sort']['type']) {
+				case 'order':
+					$conditions .= ' ORDER BY p.id_parent, p.order_pages '.$conf['sort']['order'];
+					break;
+			}
+
+			if ($conf['limit'] !== null) $conditions .= ' LIMIT ' . $conf['limit'];
+
+			if ($conditions != '') {
+				$data = parent::fetchData(
+					array('context' => 'all', 'type' => 'pages_short', 'conditions' => $conditions),
+					array('iso' => $conf['lang'])
+				);
+			}
         }
 
         return $data;

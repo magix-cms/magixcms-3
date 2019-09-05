@@ -118,8 +118,9 @@ class mail_swift{
     /**
      * Le contenu du message (email,sujet,contenu,...)
      * @param string $subject
-     * @param array|string $from
+     * @param array|string $reply
      * @param array|string $recipient
+     * @param array|string $from
      * @param string $bodyhtml
      * @param bool $setReadReceiptTo
      * @internal param void $sw_message
@@ -128,13 +129,17 @@ class mail_swift{
      * @access public
      * @static
      */
-	public function body_mail($subject,$from=array(),$recipient=array(),$bodyhtml,$setReadReceiptTo=false){
+	public function body_mail($subject,$reply=array(),$recipient=array(),$from=array(),$bodyhtml,$setReadReceiptTo=false){
 		$sw_message = Swift_Message::newInstance();
 		$sw_message->getHeaders()->get('Content-Type')->setValue('text/html');
 		$sw_message->getHeaders()->get('Content-Type')->setParameter('charset', 'utf-8');
 		$sw_message->setSubject($subject)
 		       ->setEncoder(Swift_Encoding::get8BitEncoding())
-		       ->setFrom($from)
+            // Set the from address of this message.
+               ->setFrom($from)
+            // Set the reply-to address of this message.
+               ->setReplyTo($reply)
+            //Set the to addresses of this message.
 		       ->setTo($recipient)
 		       ->setBody($bodyhtml,'text/html')
 		       ->addPart(form_inputEscape::tagClean($bodyhtml),'text/plain');

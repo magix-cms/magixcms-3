@@ -61,6 +61,19 @@ class frontend_db_news
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							$conditions";
 			    	break;
+			    case 'pages_short':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$sql = "SELECT 
+								p.id_news,
+								c.name_news,
+								c.url_news,
+								c.seo_title_news,
+								lang.iso_lang
+							FROM mc_news AS p
+							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							$conditions";
+			    	break;
 			    case 'tagsRel':
 					$sql = 'SELECT tag.id_tag,tag.name_tag,lang.iso_lang
 						FROM mc_news_tag AS tag

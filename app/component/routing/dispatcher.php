@@ -83,6 +83,8 @@ class component_routing_dispatcher{
 			$this->template->assign('companyData', $modelAbout->getCompanyData());
 			$modelMenu = new frontend_model_menu($this->template);
 			$modelMenu->setLinksData($lang);
+			$modelBread = new frontend_model_breadcrumb($this->template);
+			$modelBread->getBreadcrumb($lang);
 			$modelShare = new frontend_model_share($this->template);
 			$this->template->assign('shareUrls',$modelShare->getShareUrl());
 			$this->template->assign('shareConfig',$modelShare->getShareConfig());
