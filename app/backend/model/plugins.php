@@ -112,7 +112,7 @@ class backend_model_plugins{
                             } else {
                             	$item['title'] = $item['name'];
 							}
-                            if (method_exists($class, 'run')) {
+                            if (method_exists($class, 'run') && !property_exists($class, 'hidden')) {
                                 $newsItems[] = $item;
                             }
                         }
