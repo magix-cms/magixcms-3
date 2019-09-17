@@ -82,7 +82,7 @@ class frontend_model_breadcrumb extends frontend_db_menu {
 
 		$bread = array();
 		$bread[] = array('name' => '');
-		if($this->controller != 'home') {
+		if($this->controller !== 'home') {
 			$bread[0]['url'] = http_url::getUrl().'/'.$iso.($this->template->is_amp() ? '/amp/':'/');
 			$bread[0]['title'] = '';
 		}
@@ -170,8 +170,8 @@ class frontend_model_breadcrumb extends frontend_db_menu {
 					}
 				}
 			}
-
-			$this->template->assign('bread',$bread);
 		}
+
+		$this->template->assign('bread',$bread);
 	}
 }

@@ -58,6 +58,34 @@ class frontend_db_pages
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
                     			$conditions";
             	    	break;
+					case 'rand_pages':
+						$queries = array(
+							array('request'=>'CREATE TEMPORARY TABLE page_map (row_id int not NULL primary key, random_id int not null)'),
+							array('request'=>'CREATE TEMPORARY TABLE random_ids (rand_id int auto_increment not NULL primary key, gen_id int not null)'),
+							array('request'=>'SET @id = 0'),
+							array('request'=>'
+									INSERT INTO page_map 
+									SELECT @id := @id + 1, p.id_pages 
+									FROM mc_cms_page AS p 
+									JOIN mc_cms_page_content AS pc ON ( p.id_pages = pc.id_pages )
+									JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) WHERE pc.published_pages = 1 and lang.iso_lang = :iso',
+								'params'=>array('iso' => $params['iso'])),
+							array('request'=>'INSERT INTO random_ids (gen_id) VALUES '.$params['ids']),
+							array('request'=>"
+							SELECT rows.random_id
+							FROM page_map as rows
+							JOIN random_ids as ids ON(rows.row_id = ids.gen_id)
+						",'fetch'=>true)
+						);
+
+						try {
+							$result = component_routing_db::layer()->transaction($queries);
+							return $result[5];
+						}
+						catch (Exception $e) {
+							return 'Exception reçue : '.$e->getMessage();
+						}
+						break;
             	    case 'pages_short':
 						$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 						$sql = "SELECT
@@ -157,6 +185,13 @@ class frontend_db_pages
 							WHERE p.id_pages = :id
 							AND lang.iso_lang = :iso';
                         break;
+					case 'tot_pages':
+						$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+						$sql = "SELECT COUNT(DISTINCT p.id_pages) as tot
+								FROM mc_cms_page AS p
+								JOIN mc_cms_page_content AS c ON(p.id_pages = c.id_pages) 
+								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
+						break;
             	}
 
                 return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;

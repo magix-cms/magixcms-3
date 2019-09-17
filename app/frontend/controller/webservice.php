@@ -5,7 +5,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
      */
     protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
     protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory,$DBProduct;
-    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage,$collectionDomain;
+    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage,$collectionDomain,$buildPlugins;
     public $collection, $retrieve, $id, $filter ,$sort, $url, $img, $img_multiple, $imgData;
 
     /**
@@ -38,6 +38,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->url = http_url::getUrl();
         $this->collectionLanguage = new component_collections_language();
         $this->ws = new frontend_model_webservice();
+        $this->buildPlugins = new frontend_model_plugins();
 
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
@@ -118,6 +119,23 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     )
                 )
             );
+        }
+        $plugins = $this->buildPlugins->setWebserviceItems();
+        if($plugins != null) {
+            foreach ($plugins as $key) {
+                $this->xml->setElement(
+                    array(
+                        'start' => 'module',
+                        'attrNS' => array(
+                            array(
+                                'prefix' => 'xlink',
+                                'name' => 'href',
+                                'uri' => $this->url . '/webservice/plugin/' . $key . '/'
+                            )
+                        )
+                    )
+                );
+            }
         }
         $this->xml->newEndElement();
         $this->xml->output();
@@ -2859,6 +2877,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }else{
                             $this->getBuildParse(array('type' => 'catalog'));
                         }
+                        break;
+                    case 'plugin':
+                        if (isset($this->retrieve)) {
+                            $this->buildPlugins->getWebserviceItems($this->retrieve);
+                        }
+                        break;
                 }
             } else {
                 $this->xml->getXmlHeader();

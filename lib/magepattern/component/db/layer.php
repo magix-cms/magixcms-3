@@ -514,14 +514,26 @@ class db_layer{
             $transaction = $this->beginTransaction();
             if($transaction->inTransaction()){
                 if(is_array($queries)){
+					$rslt = array();
                     foreach ($queries as $key => $value){
                         if($config['type'] === 'prepare'){
                             if(is_array($value)) {
                                 if (isset($value['request'])) {
-                                    $this->isPrepared = true;
-                                    $prepare = $transaction->prepare($value['request']);
+									$this->isPrepared = true;
+									$setConfig = $this->setConfig(false);
+									$prepare = $transaction->prepare($value['request']);
                                     if(is_object($prepare)) {
-                                        $value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
+                                    	if($value['fetch']) {
+											$prepare->setFetchMode($this->setMode($setConfig['mode']));
+											$value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
+											$setConfig['debugParams'] ? $prepare->debugDumpParams():'';
+											$result = $prepare->fetchAll();
+											$setConfig['closeCursor'] ? $prepare->closeCursor():'';
+											$rslt[$key] = $result;
+										}
+                                    	else {
+											$value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
+										}
                                     }else{
                                         throw new Exception('delete Error with SQL prepare transaction');
                                     }
@@ -535,6 +547,7 @@ class db_layer{
                         }
                     }
                     $transaction->commit();
+                    return $rslt;
                 }else{
                     throw new Exception("queries params is not array");
                 }

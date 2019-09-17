@@ -109,6 +109,34 @@ class frontend_db_catalog
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
 					break;
+				case 'rand_category':
+					$queries = array(
+						array('request'=>'CREATE TEMPORARY TABLE cat_map (row_id int not NULL primary key, random_id int not null)'),
+						array('request'=>'CREATE TEMPORARY TABLE random_ids (rand_id int auto_increment not NULL primary key, gen_id int not null)'),
+						array('request'=>'SET @id = 0'),
+						array('request'=>'
+									INSERT INTO cat_map 
+									SELECT @id := @id + 1, p.id_cat 
+									FROM mc_catalog_cat AS p 
+									JOIN mc_catalog_cat_content AS pc ON ( p.id_cat = pc.id_cat )
+									JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) WHERE pc.published_cat = 1 and lang.iso_lang = :iso',
+							'params'=>array('iso' => $params['iso'])),
+						array('request'=>'INSERT INTO random_ids (gen_id) VALUES '.$params['ids']),
+						array('request'=>"
+							SELECT rows.random_id
+							FROM cat_map as rows
+							JOIN random_ids as ids ON(rows.row_id = ids.gen_id)
+						",'fetch'=>true)
+					);
+
+					try {
+						$result = component_routing_db::layer()->transaction($queries);
+						return $result[5];
+					}
+					catch (Exception $e) {
+						return 'Exception reçue : '.$e->getMessage();
+					}
+					break;
 				case 'category_short':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT p.id_cat,
@@ -147,8 +175,7 @@ class frontend_db_catalog
 								COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img,
 								pc.seo_title_p,
 								pc.seo_desc_p
-						FROM mc_catalog AS catalog 
-						JOIN mc_catalog AS c2 ON ( catalog.id_product = c2.id_product )
+						FROM mc_catalog AS catalog
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
 						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
 						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
@@ -156,6 +183,62 @@ class frontend_db_catalog
 						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
 						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang) $conditions";
+					break;
+				case 'rand_product':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$queries = array(
+						array('request'=>'CREATE TEMPORARY TABLE product_map (row_id int not NULL primary key, random_id int not null)'),
+						array('request'=>'CREATE TEMPORARY TABLE random_ids (rand_id int auto_increment not NULL primary key, gen_id int not null)'),
+						array('request'=>'SET @id = 0'),
+						array('request'=>'
+									INSERT INTO product_map 
+									SELECT @id := @id + 1, p.id_product 
+									FROM mc_catalog_product AS p 
+									JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
+									JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) WHERE pc.published_p = 1 and lang.iso_lang = :iso',
+							'params'=>array('iso' => $params['iso'])),
+						array('request'=>'INSERT INTO random_ids (gen_id) VALUES '.$params['ids']),
+						array('request'=>"
+							SELECT 
+							   	catalog.* ,
+								cat.name_cat, 
+								cat.url_cat, 
+								p.*, 
+								pc.name_p, 
+								pc.longname_p, 
+								pc.resume_p, 
+								pc.content_p, 
+								pc.url_p, 
+								pc.id_lang,
+								lang.iso_lang, 
+								pc.last_update, 
+								img.name_img,
+								COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
+								COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
+								COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img,
+								pc.seo_title_p,
+								pc.seo_desc_p 
+							FROM mc_catalog AS catalog 
+							JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
+							JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
+							JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
+							JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
+							LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
+							LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang)
+							JOIN product_map as rows ON (p.id_product = rows.random_id)
+							JOIN random_ids as ids ON(rows.row_id = ids.gen_id)
+							$conditions
+						",'params'=>array('iso' => $params['iso']),'fetch'=>true)
+					);
+
+					try {
+						$result = component_routing_db::layer()->transaction($queries);
+						return $result[5];
+					}
+					catch (Exception $e) {
+						return 'Exception reçue : '.$e->getMessage();
+					}
 					break;
 				case 'product_short':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
@@ -166,8 +249,7 @@ class frontend_db_catalog
 								pc.url_p,
 								lang.iso_lang, 
 								pc.seo_title_p
-						FROM mc_catalog AS catalog 
-						JOIN mc_catalog AS c2 ON ( catalog.id_product = c2.id_product )
+						FROM mc_catalog AS catalog
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
 						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
 						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
@@ -243,6 +325,26 @@ class frontend_db_catalog
 					break;
 				case 'root':
 					$sql = 'SELECT * FROM `mc_catalog_data` WHERE `id_lang` = :id_lang';
+					break;
+				case 'tot_product':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$sql = "SELECT 
+								COUNT(DISTINCT p.id_product) as tot
+						FROM mc_catalog AS catalog
+						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
+						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
+						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
+						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
+						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
+						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
+						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang) $conditions";
+					break;
+				case 'tot_cat':
+					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$sql = "SELECT COUNT(DISTINCT p.id_cat) as tot
+							FROM mc_catalog_cat AS p
+							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
 					break;
 			}
 

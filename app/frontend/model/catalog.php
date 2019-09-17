@@ -43,7 +43,7 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @var component_routing_url
      */
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$seo,$logo;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$math,$seo,$logo;
 
 	/**
 	 * frontend_model_catalog constructor.
@@ -55,6 +55,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 		$this->routingUrl = new component_routing_url();
 		$this->imagesComponent = new component_files_images($t);
 		$this->modelPlugins = new frontend_model_plugins();
+		$this->math = new component_format_math();
 		$this->data = new frontend_model_data($this,$this->template);
 		$this->seo = new frontend_model_seo('catalog', '', '');
         $this->logo = new frontend_model_logo();
@@ -557,6 +558,10 @@ class frontend_model_catalog extends frontend_db_catalog {
 			}
 		}
 
+		// Define random
+		$conf['random']  = $custom['random'] ? $custom['random'] : false;
+		$conf['allow_duplicate']  = $custom['allow_duplicate'] ? $custom['allow_duplicate'] : false;
+
 		// deepness for element
 		if(isset($custom['deepness'])) {
 			$deepness_allowed = array('all','none');
@@ -636,26 +641,56 @@ class frontend_model_catalog extends frontend_db_catalog {
 					$conditions .= ' AND p.menu_cat = 1';
 				}
 
-                // Set order
+				if($conf['random'] && $conf['limit']) {
+					$ttp = parent::fetchData(
+						array('context' => 'one', 'type' => 'tot_cat', 'conditions' => $conditions),
+						array('iso' => $conf['lang'])
+					);
+
+					$limit = $conf['limit'] < $ttp['tot'] ? $conf['limit'] : $ttp['tot'];
+					$gen_ids = $this->math->getRandomIds($limit,$ttp['tot'],1,$conf['allow_duplicate']);
+
+					$ids = array();
+					foreach ($gen_ids as $id) $ids[] = "($id)";
+					$ids = implode(',',$ids);
+
+					$cat_ids = parent::fetchData(
+						array('context' => 'all', 'type' => 'rand_category', 'conditions' => $conditions),
+						array('iso' => $conf['lang'],'ids' => $ids)
+					);
+				}
+
+				// ORDER
+				// Set order
 				switch ($conf['sort']['type']) {
 					case 'order':
 						$conditions .= ' ORDER BY p.id_parent, p.order_cat '.$conf['sort']['order'];
 						break;
 				}
 
-                if ($conf['limit'] !== null) $conditions .= ' LIMIT ' . $conf['limit'];
+                if ($conf['limit'] !== null && !$conf['random']) $conditions .= ' LIMIT ' . $conf['limit'];
 
-                if ($conditions !== '') {
-                    $data = parent::fetchData(
-                        array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
-                        array('iso' => $conf['lang'])
-                    );
+				if ($conditions != '') {
+					$data = parent::fetchData(
+						array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
+						array('iso' => $conf['lang'])
+					);
 
 					if(is_array($data) && !empty($data)) {
-						$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
-						$data = $this->data->setPagesTree($data,'cat',$branch);
+						if($conf['random']) {
+							if(!$conf['limit']) {
+								$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+								$data = $this->data->setPagesTree($data,'cat',$branch);
+								shuffle($data);
+							}
+							else {
+								$new_arr = array();
+								foreach ($cat_ids as $id) $new_arr[] = $id['random_id'];
+								$data = $this->data->setPagesTree($data,'cat',$new_arr);
+							}
+						}
 					}
-                }
+				}
             }
         }
         elseif ($conf['context'][1] == 'product') {
@@ -677,9 +712,6 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
             }
             else {
-
-                //$conditions .= ' WHERE lang.iso_lang = :iso AND cat.published_cat =1 AND pc.published_p =1 AND catalog.default_c = 1 AND img.default_img = 1';
-
 				$conditions .= ' WHERE lang.iso_lang = :iso 
                 				AND cat.published_cat = 1 
                 				AND pc.published_p = 1 
@@ -687,19 +719,33 @@ class frontend_model_catalog extends frontend_db_catalog {
                 				AND (img.default_img = 1 
                 				OR img.default_img IS NULL)';
 
-                if(isset($current['id_parent'])){
-                    $conditions .= ' AND catalog.id_cat = '.$conf['id_parent'];
+                if(isset($current['id_parent'])) {
+                    $conditions .= ' AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = '.$conf['id_parent'].')';
                 }
 
                 if (isset($custom['exclude'])) {
                     $conditions .= ' AND catalog.id_product NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
                 }
 
-                if (isset($custom['select'])) {
+                if (isset($custom['select']) AND !$conf['random']) {
                     $conditions .= ' AND catalog.id_product IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
                 }
 
-                $conditions .= ' GROUP BY catalog.id_product';
+				if($conf['random'] && $conf['limit']) {
+					$ttp = parent::fetchData(
+						array('context' => 'one', 'type' => 'tot_product', 'conditions' => $conditions),
+						array('iso' => $conf['lang'])
+					);
+
+					$limit = $conf['limit'] < $ttp['tot'] ? $conf['limit'] : $ttp['tot'];
+					$product_ids = $this->math->getRandomIds($limit,$ttp['tot'],1,$conf['allow_duplicate']);
+
+					//$conditions .= ' AND rows.row_id IN  (' . implode(',',$product_ids) .')';
+					$ids = array();
+					foreach ($product_ids as $id) $ids[] = "($id)";
+					$ids = implode(',',$ids);
+				}
+                //$conditions .= ' GROUP BY catalog.id_product';
 
                 // ORDER
 				// Set order
@@ -707,15 +753,29 @@ class frontend_model_catalog extends frontend_db_catalog {
 					case 'order':
 						$conditions .= ' ORDER BY catalog.order_p '.$conf['sort']['order'];
 						break;
+					case 'random':
+						if($conf['limit']) $conditions .= ' ORDER BY FIELD(rows.row_id,' . implode(',',$product_ids) .')';
 				}
 
-                if ($conf['limit'] != null) $conditions .= ' LIMIT ' . $conf['limit'];
+                if ($conf['limit'] != null && !$conf['random']) $conditions .= ' LIMIT ' . $conf['limit'];
 
                 if ($conditions != '') {
-                    $data = parent::fetchData(
-                        array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
-                        array('iso' => $conf['lang'])
-                    );
+                	if(!$conf['random'] || ($conf['random'] && !$conf['limit'])) {
+						$data = parent::fetchData(
+							array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
+							array('iso' => $conf['lang'])
+						);
+					}
+
+                    if($conf['random']) {
+						if(!$conf['limit']) shuffle($data);
+						else {
+							$data = parent::fetchData(
+								array('context' => 'all', 'type' => 'rand_product', 'conditions' => $conditions),
+								array('iso' => $conf['lang'],'ids' => $ids)
+							);
+						}
+					}
 
                     /*if($data != null) {
                         $branch = isset($custom['select']) ? $conf['id'] : 'root';
