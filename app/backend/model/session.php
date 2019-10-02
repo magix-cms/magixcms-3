@@ -1,5 +1,5 @@
 <?php
-class backend_model_session{
+class backend_model_session {
     private $employee,$httpSession,$setting,$settings;
 
 	/**

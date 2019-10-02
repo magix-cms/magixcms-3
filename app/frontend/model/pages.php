@@ -362,23 +362,24 @@ class frontend_model_pages extends frontend_db_pages{
 					$conditions .= ' AND p.menu_pages = 1';
 				}
 
-				if($conf['random'] && $conf['limit']) {
-					$ttp = parent::fetchData(
-						array('context' => 'one', 'type' => 'tot_pages', 'conditions' => $conditions),
-						array('iso' => $conf['lang'])
-					);
+				$ttp = parent::fetchData(
+					array('context' => 'one', 'type' => 'tot_pages', 'conditions' => $conditions),
+					array('iso' => $conf['lang'])
+				);
+				$ttp = $ttp['tot'];
 
-					$limit = $conf['limit'] < $ttp['tot'] ? $conf['limit'] : $ttp['tot'];
-					$gen_ids = $this->math->getRandomIds($limit,$ttp['tot'],1,$conf['allow_duplicate']);
+				if($conf['random'] && ($conf['limit'] < $ttp || $conf['allow_duplicate'])) {
+					$limit = $conf['limit'] < $ttp ? $conf['limit'] : $ttp;
+					$pages_ids = $this->math->getRandomIds($limit,$ttp['tot'],1,$conf['allow_duplicate']);
 
 					$ids = array();
-					foreach ($gen_ids as $id) $ids[] = "($id)";
+					foreach ($pages_ids as $id) $ids[] = "($id)";
 					$ids = implode(',',$ids);
 
-					$pages_ids = parent::fetchData(
+					/*$pages_ids = parent::fetchData(
 						array('context' => 'all', 'type' => 'rand_pages', 'conditions' => $conditions),
 						array('iso' => $conf['lang'],'ids' => $ids)
-					);
+					);*/
 				}
 
 				// Set order
@@ -386,19 +387,23 @@ class frontend_model_pages extends frontend_db_pages{
 					case 'order':
 						$conditions .= ' ORDER BY p.id_parent, p.order_pages '.$conf['sort']['order'];
 						break;
+					case 'random':
+						if($conf['limit'] < $ttp || $conf['allow_duplicate']) $conditions .= ' ORDER BY FIELD(rows.row_id,' . implode(',',$pages_ids) .')';
 				}
 
 				if ($conf['limit'] !== null && !$conf['random']) $conditions .= ' LIMIT ' . $conf['limit'];
 
 				if ($conditions != '') {
-					$data = parent::fetchData(
-						array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
-						array('iso' => $conf['lang'])
-					);
+					if(!$conf['random'] || ($conf['random'] && !$conf['limit']) || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
+						$data = parent::fetchData(
+							array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
+							array('iso' => $conf['lang'])
+						);
+					}
 
 					if(is_array($data) && !empty($data)) {
 						if($conf['random']) {
-							if(!$conf['limit']) {
+							if(!$conf['limit'] || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
 								$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
 								$data = $this->data->setPagesTree($data,'pages',$branch);
 								shuffle($data);
@@ -408,6 +413,10 @@ class frontend_model_pages extends frontend_db_pages{
 								foreach ($pages_ids as $id) $new_arr[] = $id['random_id'];
 								$data = $this->data->setPagesTree($data,'pages',$new_arr);
 							}
+						}
+						else {
+							$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+							$data = $this->data->setPagesTree($data,'pages',$branch);
 						}
 					}
 				}

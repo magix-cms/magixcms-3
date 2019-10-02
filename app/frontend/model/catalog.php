@@ -731,16 +731,16 @@ class frontend_model_catalog extends frontend_db_catalog {
                     $conditions .= ' AND catalog.id_product IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
                 }
 
-				if($conf['random'] && $conf['limit']) {
-					$ttp = parent::fetchData(
-						array('context' => 'one', 'type' => 'tot_product', 'conditions' => $conditions),
-						array('iso' => $conf['lang'])
-					);
+				$ttp = parent::fetchData(
+					array('context' => 'one', 'type' => 'tot_product', 'conditions' => $conditions),
+					array('iso' => $conf['lang'])
+				);
+				$ttp = $ttp['tot'];
 
-					$limit = $conf['limit'] < $ttp['tot'] ? $conf['limit'] : $ttp['tot'];
-					$product_ids = $this->math->getRandomIds($limit,$ttp['tot'],1,$conf['allow_duplicate']);
+				if($conf['limit'] < $ttp || $conf['allow_duplicate']) {
+					$limit = $conf['limit'] < $ttp ? $conf['limit'] : $ttp;
+					$product_ids = $this->math->getRandomIds($limit,$ttp,1,$conf['allow_duplicate']);
 
-					//$conditions .= ' AND rows.row_id IN  (' . implode(',',$product_ids) .')';
 					$ids = array();
 					foreach ($product_ids as $id) $ids[] = "($id)";
 					$ids = implode(',',$ids);
@@ -754,21 +754,21 @@ class frontend_model_catalog extends frontend_db_catalog {
 						$conditions .= ' ORDER BY catalog.order_p '.$conf['sort']['order'];
 						break;
 					case 'random':
-						if($conf['limit']) $conditions .= ' ORDER BY FIELD(rows.row_id,' . implode(',',$product_ids) .')';
+						if($conf['limit'] < $ttp || $conf['allow_duplicate']) $conditions .= ' ORDER BY FIELD(rows.row_id,' . implode(',',$product_ids) .')';
 				}
 
                 if ($conf['limit'] != null && !$conf['random']) $conditions .= ' LIMIT ' . $conf['limit'];
 
                 if ($conditions != '') {
-                	if(!$conf['random'] || ($conf['random'] && !$conf['limit'])) {
+					if(!$conf['random'] || ($conf['random'] && !$conf['limit']) || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
 						$data = parent::fetchData(
 							array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
 							array('iso' => $conf['lang'])
 						);
 					}
 
-                    if($conf['random']) {
-						if(!$conf['limit']) shuffle($data);
+					if($conf['random']) {
+						if(!$conf['limit'] || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) shuffle($data);
 						else {
 							$data = parent::fetchData(
 								array('context' => 'all', 'type' => 'rand_product', 'conditions' => $conditions),

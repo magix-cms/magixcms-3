@@ -214,6 +214,14 @@ CREATE TABLE IF NOT EXISTS `mc_plugins` (
   PRIMARY KEY (`id_plugins`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `mc_plugins_module` (
+  `id_module` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `plugin_name` varchar(200) NOT NULL,
+  `module_name` varchar(200) NOT NULL,
+  `active` smallint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id_module`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `mc_domain` (
   `id_domain` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT,
   `url_domain` varchar(175) NOT NULL,

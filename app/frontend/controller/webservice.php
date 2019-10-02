@@ -2760,7 +2760,24 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $product = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'content'), array('id_product' => $this->id, 'id_lang' => $defaultLanguage['id_lang']));
                                 $newimg = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'lastImgId'));
+                                $newData = array();
+                                foreach($_FILES as $key => $value){
+                                    $newData['name'][$key] = $value['name'];
+                                    $imageInfo = getimagesize( $value['tmp_name'] );
+                                    $newData['type'][$key] = $imageInfo['mime'];
+                                    $newData['tmp_name'][$key] = $value['tmp_name'];
+                                    $newData['error'][$key] = $value['error'];
+                                    $newData['size'][$key] = $value['size'];
+                                }
+                                $_FILES = array(
+                                    'img_multiple' => $newData
+                                );
 
+                                // If $newimg = NULL return 0
+                                $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
+                                //$img_multiple = $newData;
+                                $this->img_multiple = ($_FILES['img_multiple']["name"]);
+                                $this->upload = new component_files_upload();
                                 $resultUpload = $this->upload->setMultipleImageUpload(
                                     'img_multiple',
                                     array(
@@ -2778,13 +2795,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                     ),
                                     false
                                 );
+
                                 if ($resultUpload != null) {
-                                    $preparePercent = 80 / count($resultUpload);
-                                    $percent = 10;
 
                                     foreach ($resultUpload as $key => $value) {
                                         if ($value['statut'] == '1') {
-                                            $percent = $percent + $preparePercent;
 
                                             $this->DBProduct->insert(
                                                 array(

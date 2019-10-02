@@ -1,6 +1,6 @@
 <?php
 class backend_controller_plugins extends backend_db_plugins{
-    protected $modelPlugins,$template,$message,$header,$data,$finder,$modelLanguage,$collectionLanguage,$system;
+    protected $modelPlugins,$module,$template,$message,$header,$data,$finder,$modelLanguage,$collectionLanguage,$system;
     public $config;
 
     /**
@@ -14,6 +14,7 @@ class backend_controller_plugins extends backend_db_plugins{
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
+        $this->module = new backend_controller_module();
         $this->finder = new file_finder();
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
@@ -135,6 +136,14 @@ class backend_controller_plugins extends backend_db_plugins{
                 if(isset($config['release']['version'])){
 					parent::insert(array('type'=>'register'),array('name'=>$id,'version'=>$config['release']['version']));
 					$this->setSQLProcess($id);
+					if(isset($config['bind']['plugin'])) {
+						foreach ($config['bind']['plugin'] as $plugin) {
+							$data = parent::fetchData(array('context'=>'one','type'=>'register'),array('id'=>$plugin));
+							$active = $data['id_plugins'] !== null ? 1 : 0;
+							$this->module->register($id,$plugin,$active);
+						}
+					}
+					$this->module->toggle_register($id);
 					$this->message->getNotify('setup_success',array('method'=>'fetch','assignFetch'=>'message'));
                     $this->template->display('plugins/setup.tpl');
                 }else{
@@ -151,10 +160,12 @@ class backend_controller_plugins extends backend_db_plugins{
      * @throws Exception
      */
     public function unregister($id){
-        $data = parent::fetchData(array('context'=>'one','type'=>'register'),array(':id'=>$id));
+        $data = parent::fetchData(array('context'=>'one','type'=>'register'),array('id'=>$id));
         if($data['id_plugins'] != null){
-            if($this->unsetSQLProcess($id))
-            	$msg = 'uninstall_success';
+            if($this->unsetSQLProcess($id)) {
+				$msg = 'uninstall_success';
+				$this->module->toggle_register($id,true);
+			}
             else
 				$msg = 'uninstall_error';
         }else{

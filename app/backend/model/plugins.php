@@ -205,6 +205,24 @@ class backend_model_plugins{
                             $i++;
                         }
                     }
+                    if(isset($xml->data->bind)) {
+						if(isset($xml->data->bind->plugin)) {
+							foreach ($xml->data->bind->plugin as $item) {
+								if (isset($item->name)) {
+									$newData['bind']['plugin'][$i] = $item->name->__toString();
+								}
+								$i++;
+							}
+						}
+						if(isset($xml->data->bind->module)) {
+							foreach ($xml->data->bind->module as $item) {
+								if (isset($item->name)) {
+									$newData['bind']['module'][$i] = $item->name->__toString();
+								}
+								$i++;
+							}
+						}
+                    }
                     foreach ($xml->{'data'}->{'release'}->children() as $item => $value) {
                         $newData['release'][$item] = $value->__toString();
                     }

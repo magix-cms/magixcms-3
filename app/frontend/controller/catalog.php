@@ -102,9 +102,9 @@ class frontend_controller_catalog extends frontend_db_catalog {
 		$conditions = ' WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL) 
-						AND c2.id_cat = :id_cat 
 						AND catalog.default_c = 1 
-						ORDER BY c2.order_p ASC';
+						AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat) 
+						ORDER BY catalog.order_p ASC';
 		$collection = parent::fetchData(
 			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
 			array('iso' => $this->getlang,'id_cat' => $this->id)
