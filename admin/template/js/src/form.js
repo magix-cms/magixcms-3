@@ -174,6 +174,25 @@ var globalForm = (function ($, undefined) {
                 initModalActions();
             };
         }
+        // --- Rules form classic form with loader
+        else if($(f).hasClass('loader_form')) {
+            var targ = $(f).attr('id');
+            options.beforeSend = function(){
+                var loader = $(document.createElement("div")).addClass("loader")
+                    .append(
+                        $(document.createElement("i")).addClass("fa fa-spinner fa-pulse fa-2x fa-fw"),
+                        $(document.createElement("span")).append("Opération en cours...").addClass("sr-only")
+                    );
+                $('#'+targ+ ' button[type="submit"]').addClass('hide');
+                $('#'+targ+ ' button[type="submit"]').parent().append(loader);
+            };
+            options.success = function (d) {
+                $('#'+targ+ ' .loader').remove();
+                $('#'+targ+ ' button[type="submit"]').removeClass('hide');
+                initAlert(d.notify,4000);
+                $.jmRequest.initbox(d.notify,{ display:true });
+            };
+        }
         // --- Rules form search form
         else if($(f).hasClass('search_form')) {
             options.method = 'get';
