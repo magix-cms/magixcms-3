@@ -161,19 +161,32 @@ class component_core_language{
      * Modification du setlocale suivant la langue courante pour les dates
      */
     private function setTimeLocal(){
-        if($this->template->lang == 'nl'){
-            setlocale(LC_TIME, 'nl_NL.UTF8','nl');
-        }elseif($this->template->lang == 'fr' || $this->template->lang == 'fr-ca'){
-            setlocale(LC_TIME, 'fr_FR.UTF8', 'fra');
-        }elseif($this->template->lang == 'de'){
-            setlocale(LC_TIME, 'de_DE.UTF8', 'de');
-        }elseif($this->template->lang == 'es'){
-            setlocale(LC_TIME, 'es_ES.UTF8', 'es');
-        }elseif($this->template->lang == 'it'){
-            setlocale(LC_TIME, 'it_IT.UTF8', 'it');
-        }else{
-            setlocale(LC_TIME, 'en_US.UTF8', 'en');
-        }
+    	$conf = array('locale' => 'en_US','other' => 'en');
+    	switch ($this->template->lang) {
+			case 'nl':
+				$conf['locale'] = 'nl_NL';
+				$conf['other'] = 'nl';
+				break;
+			case 'fr':
+			case 'fr-ca':
+				$conf['locale'] = 'fr_FR';
+				$conf['other'] = 'fra';
+				break;
+			case 'de':
+				$conf['locale'] = 'de_DE';
+				$conf['other'] = 'de';
+				break;
+			case 'es':
+				$conf['locale'] = 'es_ES';
+				$conf['other'] = 'es';
+				break;
+			case 'it':
+				$conf['locale'] = 'it_IT';
+				$conf['other'] = 'it';
+				break;
+		}
+
+		setlocale(LC_TIME, $conf['locale'].'.UTF8',$conf['other']);
     }
 
     /**
