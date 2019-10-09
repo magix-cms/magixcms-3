@@ -38,11 +38,12 @@
 # -- END LICENSE BLOCK -----------------------------------
 
 class date_dateformat extends DateTime{
-	/**
-	 * création de l'objet datetime
-	 * @param string $time
-	 * @param DateTimeZone $timezone
+    /**
+     * création de l'objet datetime
+     * @param string $time
+     * @param DateTimeZone $timezone
      * @return \DateTime
+     * @throws Exception
      */
 	private function create($time = "now", DateTimeZone $timezone = NULL){
 		if ($timezone != NULL)
@@ -105,6 +106,17 @@ class date_dateformat extends DateTime{
         return false;
     }
 
+    /**
+     * @param $format
+     * @param $time
+     * @return DateTime|false
+     * @example
+     * $formatType = $dateFormat->dateFromFormat('d/m/Y',$time);
+        print $formatType->format('Y-m-d');
+     */
+    public function dateFromFormat($format,$time){
+        return date_create_from_format($format,$time);
+    }
     /**
      *
      * @param string $format
