@@ -281,6 +281,7 @@ class plugins_contact_public extends plugins_contact_db
 		}
 		else {
         	if(isset($this->moreinfo)) $this->template->assign('title',$this->moreinfo);
+			$this->getItems('page',array('lang' => $this->getlang),'one');
             $this->template->assign('contact',$this->getContactConf());
 			$this->template->display('contact/index.tpl');
 		}

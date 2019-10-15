@@ -46,8 +46,22 @@ class plugins_contact_db
 					case 'root':
 						$sql = 'SELECT * FROM mc_contact ORDER BY id_contact DESC LIMIT 0,1';
 						break;
+					case 'root_page':
+						$sql = 'SELECT * FROM mc_contact_page ORDER BY id_page DESC LIMIT 0,1';
+						break;
 					case 'content':
 						$sql = 'SELECT * FROM `mc_contact_content` WHERE `id_contact` = :id_contact AND `id_lang` = :id_lang';
+						break;
+					case 'content_page':
+						$sql = 'SELECT * FROM mc_contact_page_content WHERE id_page = :id AND id_lang = :id_lang';
+						break;
+					case 'page':
+						$sql = 'SELECT *
+								FROM mc_contact_page as g
+								JOIN mc_contact_page_content as gc USING(id_page)
+								JOIN mc_lang as l USING(id_lang)
+								WHERE iso_lang = :lang
+								LIMIT 0,1';
 						break;
 					case 'config':
 						$sql = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
@@ -70,6 +84,9 @@ class plugins_contact_db
             $sql = '';
 
 			switch ($config['type']) {
+				case 'root_page':
+					$sql = 'INSERT INTO mc_contact_page(date_register) VALUES (NOW())';
+					break;
 				case 'contact':
 					$sql = 'INSERT INTO mc_contact (mail_contact)
                 			VALUE (:mail_contact)';
@@ -77,6 +94,10 @@ class plugins_contact_db
 				case 'content':
 					$sql = 'INSERT INTO `mc_contact_content`(id_contact,id_lang,published_contact) 
 				  			VALUES (:id_contact,:id_lang,:published_contact)';
+					break;
+				case 'content_page':
+					$sql = 'INSERT INTO mc_contact_page_content(id_page, id_lang, name_page, content_page, published_page) 
+				  			VALUES (:id, :id_lang, :name_page, :content_page, :published_page)';
 					break;
 				case 'config':
 					$sql = 'INSERT INTO `mc_contact_config`(address_enabled,address_required,mail_sender) 
@@ -111,6 +132,15 @@ class plugins_contact_db
 								published_contact=:published_contact
 							WHERE id_contact = :id_contact 
 							AND id_lang = :id_lang';
+					break;
+				case 'content_page':
+					$sql = 'UPDATE mc_contact_page_content 
+							SET 
+								name_page = :name_page,
+							 	content_page = :content_page,
+							  	published_page = :published_page
+                			WHERE id_page = :id 
+                			AND id_lang = :id_lang';
 					break;
 				case 'config':
 					$sql = 'UPDATE mc_contact_config 

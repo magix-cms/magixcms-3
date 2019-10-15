@@ -142,22 +142,26 @@ class http_url{
                 }
             }
             if(array_key_exists('ampersand', $option)){
-                if($option['ampersand'] == 'strict'){
-                    /*replace & => $amp (w3c convert)*/
-                    $str = str_replace('&','&amp;',$str);
-                }elseif($option['ampersand'] == 'none'){
-                    /*replace & => ''*/
-                    $str = str_replace('&','',$str);
-                }else{
-                    /*replace & => $amp (w3c convert)*/
-                    $str = str_replace('&','&amp;',$str);
-                }
+            	switch ($option['ampersand']) {
+					case 'strict':
+						/*replace & => $amp (w3c convert)*/
+						$str = str_replace('&','&amp;',$str);
+						break;
+					case 'none':
+						/*replace & => ''*/
+						$str = str_replace('&','',$str);
+						break;
+					default:
+						/*replace & => $option['ampersand'] value*/
+						$str = str_replace('&',(is_string($option['ampersand']) ? $option['ampersand'] : '&amp;'),$str);
+						break;
+				}
             }
         }
         /* stripcslashes backslash */
         $str = filter_escapeHtml::cleanQuote($str);
-        $tbl_o = array("@'@i",'@[[:blank:]]@i','[\?]','[\#]','[\@]','[\,]','[\!]','[\:]','[\(]','[\)]');
-        $tbl_r = array ('-','-',"","","","","","","","");
+        $tbl_o = array("@'@i",'@[[:blank:]]@i','[\|]','[\?]','[\#]','[\@]','[\,]','[\!]','[\:]','[\(]','[\)]');
+        $tbl_r = array ('-','-','-',"","","","","","","","");
         $cSpec = '';
         $rSpec = '';
         if(is_array($option)){

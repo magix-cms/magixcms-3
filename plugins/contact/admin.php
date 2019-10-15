@@ -38,15 +38,15 @@ class plugins_contact_admin extends plugins_contact_db{
             $this->tabs = $formClean->simpleClean($_GET['tabs']);
         }
 
-        if (http_request::isPost('content')) {
-            $array = $_POST['content'];
-            foreach($array as $key => $arr) {
-                foreach($arr as $k => $v) {
-                    $array[$key][$k] = $formClean->simpleClean($v);
-                }
-            }
-            $this->content = $array;
-        }
+		if (http_request::isPost('content')) {
+			$array = $_POST['content'];
+			foreach($array as $key => $arr) {
+				foreach($arr as $k => $v) {
+					$array[$key][$k] = ($k == 'content_page') ? $formClean->cleanQuote($v) : $formClean->simpleClean($v);
+				}
+			}
+			$this->content = $array;
+		}
 
         // --- ADD or EDIT
         if (http_request::isPost('id')) {
@@ -122,6 +122,7 @@ class plugins_contact_admin extends plugins_contact_db{
         switch ($data['type']) {
             case 'contact':
             case 'content':
+            case 'content_page':
                 parent::insert(
                     array(
                         'context' => $data['context'],
@@ -142,6 +143,7 @@ class plugins_contact_admin extends plugins_contact_db{
         switch ($data['type']) {
             case 'contact':
             case 'content':
+            case 'content_page':
                 parent::update(
                     array(
                         'context' => $data['context'],
@@ -277,11 +279,34 @@ class plugins_contact_admin extends plugins_contact_db{
                     }
                     break;
                 case 'edit':
-                    if (isset($this->id_contact)) {
-                        $this->saveContent($this->id_contact);
-                        $this->message->json_post_response(true, 'update', array('result'=>$this->id_contact));
-                    }elseif(isset($this->id_config)) {
+                	if(isset($this->tabs) && $this->tabs === 'content' && isset($this->content) && !empty($this->content)) {
+						$root = parent::fetchData(array('context' => 'one', 'type' => 'root_page'));
+						if (!$root) {
+							parent::insert(array('type' => 'root_page'));
+							$root = parent::fetchData(array('context' => 'one', 'type' => 'root_page'));
+						}
+						$id = $root['id_page'];
 
+						foreach ($this->content as $lang => $content) {
+							if(empty($content['id'])) $content['id'] = $id;
+							$rootLang = $this->getItems('content_page',array('id' => $id,'id_lang' => $lang),'one',false);
+
+							$content['id_lang'] = $lang;
+							$content['published_page'] = (!isset($content['published_page']) ? 0 : 1);
+
+							$config = array(
+								'type' => 'content_page',
+								'data' => $content
+							);
+
+							($rootLang) ? $this->upd($config) : $this->add($config);
+						}
+						$this->message->json_post_response(true,'update');
+					}
+                    elseif (isset($this->id_contact)) {
+						$this->saveContent($this->id_contact);
+						$this->message->json_post_response(true, 'update', array('result' => $this->id_contact));
+					}elseif(isset($this->id_config)) {
                         $this->save(array('address_enabled'=>$this->address_enabled,'address_required'=>$this->address_required,'mail_sender'=>$this->mail_sender));
                         $this->message->json_post_response(true, 'update', array('result'=>$this->id_config));
 

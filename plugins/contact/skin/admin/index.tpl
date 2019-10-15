@@ -23,7 +23,8 @@
                 <header class="panel-header panel-nav">
                     <h2 class="panel-heading h5">Gestion des contacts</h2>
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">Mail</a></li>
+                        <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{#text#}</a></li>
+                        <li role="presentation"><a href="#mail" aria-controls="mail" role="tab" data-toggle="tab">Mail</a></li>
                         <li role="presentation"><a href="#config" aria-controls="config" role="tab" data-toggle="tab">Configuration</a></li>
                     </ul>
                 </header>
@@ -34,6 +35,9 @@
                     {*<pre>{$pages|print_r}</pre>*}
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="general">
+                            {include file="form/content.tpl" controller="contact"}
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="mail">
                             {include file="section/form/table-form-2.tpl" idcolumn='id_contact' data=$contact activation=false sortable=false controller="contact"}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="config">
@@ -75,4 +79,8 @@
     {else}
         {include file="section/brick/viewperms.tpl"}
     {/if}
+{/block}
+
+{block name="foot" append}
+    {include file="section/footer/editor.tpl"}
 {/block}
