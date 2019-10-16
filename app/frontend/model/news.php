@@ -130,13 +130,66 @@ class frontend_model_news extends frontend_db_news {
 			$data['img']['caption'] = $row['caption_img'];
             $data['active'] = ($row['id_news'] == $current['controller']['id']) ? true : false;
 
-            $data['date']['register'] = $this->dateFormat->SQLDate($row['date_register']);
-            $data['date']['update']   = $this->dateFormat->SQLDate($row['last_update']);
-            $data['date']['publish']  = $this->dateFormat->SQLDate($row['date_publish']);
+            $dr = new DateTime($row['date_register']);
+            $drt = $dr->getTimestamp();
+            $du = new DateTime($row['last_update']);
+            $dut = $du->getTimestamp();
+            $dp = new DateTime($row['date_publish']);
+            $dpt = $dp->getTimestamp();
 
-            $data['date']['year']  = $this->dateFormat->dateDefine('Y',$row['date_publish']);
-            $data['date']['month'] = $this->dateFormat->dateDefine('m',$row['date_publish']);
-            $data['date']['day']   = $this->dateFormat->dateDefine('d',$row['date_publish']);
+            $data['date'] = array(
+            	'register' => array(
+					'timestamp' => $drt,
+					'date' => $dr->format('Y-m-d'),
+            		'year' => $dr->format('Y'),
+            		'month' => array(
+            			'num' => $dr->format('m'),
+						'name' => strftime('%B',$drt),
+						'abv' => strftime('%b',$drt)
+					),
+            		'week' => $dr->format('W'),
+            		'day' => array(
+            			'num' => $dr->format('j'),
+						'name' => strftime('%A'),
+						'abv' => strftime('%a')
+					),
+            		'suffix' => $dr->format('S'),
+				),
+            	'update' => array(
+					'timestamp' => $dut,
+					'date' => $du->format('Y-m-d'),
+            		'year' => $du->format('Y'),
+            		'month' => array(
+            			'num' => $du->format('m'),
+						'name' => strftime('%B',$dut),
+						'abv' => strftime('%b',$dut)
+					),
+            		'week' => $du->format('W'),
+            		'day' => array(
+            			'num' => $du->format('j'),
+						'name' => strftime('%A'),
+						'abv' => strftime('%a')
+					),
+            		'suffix' => $du->format('S'),
+				),
+            	'publish' => array(
+					'timestamp' => $dpt,
+					'date' => $dp->format('Y-m-d'),
+            		'year' => $dp->format('Y'),
+            		'month' => array(
+            			'num' => $dp->format('m'),
+						'name' => strftime('%B',$dpt),
+						'abv' => strftime('%b',$dpt)
+					),
+            		'week' => $dp->format('W'),
+            		'day' => array(
+            			'num' => $dp->format('j'),
+						'name' => strftime('%A'),
+						'abv' => strftime('%a')
+					),
+            		'suffix' => $dp->format('S'),
+				)
+			);
 
             $data['content'] = $row['content_news'];
 			$data['lead'] = $row['resume_news'];
@@ -152,7 +205,13 @@ class frontend_model_news extends frontend_db_news {
                                 'type' => 'tag',
                                 'iso' => $value['iso_lang'],
                                 'id' => $value['id_tag'],
-                                'url' => $value['name_tag']
+                                'url' => http_url::clean(html_entity_decode($value['name_tag']),
+									array(
+										'dot' => false,
+										'ampersand' => 'and',
+										'cspec' => '', 'rspec' => ''
+									)
+								)
                             )
                         );
                     }
@@ -193,7 +252,13 @@ class frontend_model_news extends frontend_db_news {
                     'type' => 'tag',
                     'iso' => $row['iso_lang'],
                     'id' => $row['id_tag'],
-                    'url' => $row['name_tag']
+                    'url' => http_url::clean(html_entity_decode($row['name_tag']),
+						array(
+							'dot' => false,
+							'ampersand' => 'and',
+							'cspec' => '', 'rspec' => ''
+						)
+					)
                 )
             );
         }
@@ -229,7 +294,13 @@ class frontend_model_news extends frontend_db_news {
                     'type' => 'tag',
                     'iso' => $row['iso_lang'],
                     'id' => $row['id_tag'],
-                    'url' => $row['name_tag']
+                    'url' => http_url::clean(html_entity_decode($row['name_tag']),
+						array(
+							'dot' => false,
+							'ampersand' => 'and',
+							'cspec' => '', 'rspec' => ''
+						)
+					)
                 )
             );
         }

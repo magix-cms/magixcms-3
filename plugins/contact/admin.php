@@ -91,6 +91,29 @@ class plugins_contact_admin extends plugins_contact_db{
         return $this->data->getItems($type, $id, $context, $assign);
     }
 
+	/**
+	 * @param $data
+	 * @return array
+	 */
+	private function setItemPageData($data)
+	{
+		$arr = array();
+		if(!empty($data)) {
+			foreach ($data as $page) {
+				if (!array_key_exists('id_page', $arr)) {
+					$arr['id_page'] = $page['id_page'];
+				}
+				$arr['content'][$page['id_lang']] = array(
+					'id_lang'          => $page['id_lang'],
+					'name_page'        => $page['name_page'],
+					'content_page'     => $page['content_page'],
+					'published_page'   => $page['published_page']
+				);
+			}
+		}
+		return $arr;
+	}
+
     /**
      * @param $data
      * @return array
@@ -332,15 +355,22 @@ class plugins_contact_admin extends plugins_contact_db{
                     }
                     break;
             }
-        }else{
+        }
+        else {
             $this->modelLanguage->getLanguage();
             $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+            // Page content
+			$last = $this->getItems('root_page',null,'one',false);
+			$collection = $this->getItems('pages',$last['id_page'],'all',false);
+			$this->template->assign('pages', $this->setItemPageData($collection));
+			// Mails
             $this->getItems('contact',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
             $assign = array(
                 'id_contact',
                 'mail_contact' => ['title' => 'name']
             );
             $this->data->getScheme(array('mc_contact','mc_contact_content'),array('id_contact','mail_contact'),$assign);
+            // Configuration
             $this->getItems('config',null,'one','config');
             $this->template->display('index.tpl');
         }

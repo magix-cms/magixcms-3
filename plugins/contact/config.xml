@@ -16,11 +16,15 @@
 				<name>Gerits Aurelien</name>
 				<website href="http://www.magix-cms.com" />
 			</author>
+			<author>
+				<name>Salvatore di Salvo</name>
+				<website href="http://www.disalvo-infographiste.be" />
+			</author>
 		</authors>
 		<release>
 			<date_create>10/04/2010</date_create>
-			<date_update>28/09/2017</date_update>
-			<version>3.0</version>
+			<date_update>16/10/2019</date_update>
+			<version>3.1</version>
 			<phase>Stable</phase>
 		</release>
 		<support>

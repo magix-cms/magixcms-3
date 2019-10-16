@@ -13,13 +13,14 @@
                 {if isset($pages.img.name)}
                     <a href="{$pages.img.large.src}" class="img-zoom img-float pull-right" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
                         <figure>
-                            {strip}<picture>
+                            {*{strip}<picture>
                                 <!--[if IE 9]><video style="display: none;"><![endif]-->
                                 <source type="image/webp" sizes="{$pages.img.medium['w']}px" srcset="{$pages.img.medium['src_webp']} {$pages.img.medium['w']}w">
                                 <source type="{$pages.img.medium.ext}" sizes="{$pages.img.medium['w']}px" srcset="{$pages.img.medium['src']} {$pages.img.medium['w']}w">
                                 <!--[if IE 9]></video><![endif]-->
                                 <img data-src="{$pages.img.medium['src']}" width="{$pages.img.medium['w']}" height="{$pages.img.medium['h']}" alt="{$pages.img.alt}" title="{$pages.img.title}" class="img-responsive lazyload" />
-                                </picture>{/strip}
+                                </picture>{/strip}*}
+                            {include file="img/img.tpl" img=$pages.img lazy=true}
                             {if $pages.img.caption}
                                 <figcaption>{$pages.img.caption}</figcaption>
                             {/if}

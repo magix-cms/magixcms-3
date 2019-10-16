@@ -14,6 +14,13 @@ class plugins_contact_db
         if (is_array($config)) {
             if ($config['context'] === 'all') {
             	switch ($config['type']) {
+					case 'pages':
+						$sql = 'SELECT h.*,c.*
+                    			FROM mc_contact_page AS h
+                    			JOIN mc_contact_page_content AS c USING(id_page)
+                    			JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+                    			WHERE h.id_page = :id';
+						break;
 					case 'contact':
 						$sql = 'SELECT p.*,c.*,lang.*
 								FROM mc_contact AS p

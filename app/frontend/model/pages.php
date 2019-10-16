@@ -402,9 +402,11 @@ class frontend_model_pages extends frontend_db_pages{
 					}
 
 					if(is_array($data) && !empty($data)) {
+						if(is_string($conf['id']) && strpos($conf['id'],',')) $conf['id'] = explode(',',$conf['id']);
+						$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+
 						if($conf['random']) {
 							if(!$conf['limit'] || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
-								$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
 								$data = $this->data->setPagesTree($data,'pages',$branch);
 								shuffle($data);
 							}
@@ -415,7 +417,6 @@ class frontend_model_pages extends frontend_db_pages{
 							}
 						}
 						else {
-							$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
 							$data = $this->data->setPagesTree($data,'pages',$branch);
 						}
 					}

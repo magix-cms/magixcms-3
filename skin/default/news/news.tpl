@@ -41,13 +41,14 @@
                         <meta itemprop="height" content="{$news.img.large.h}" />
                         <meta itemprop="width" content="{$news.img.large.w}" />
                         {*<img class="img-responsive" src="{$news.img.medium.src}" alt="{$news.img.alt}" title="{$news.img.title}" />*}
-                        {strip}<picture>
+                        {*{strip}<picture>
                             <!--[if IE 9]><video style="display: none;"><![endif]-->
                             <source type="image/webp" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src_webp']} {$news.img.medium['w']}w">
                             <source type="{$news.img.medium.ext}" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src']} {$news.img.medium['w']}w">
                             <!--[if IE 9]></video><![endif]-->
                             <img data-src="{$news.img.medium['src']}" width="{$news.img.medium['w']}" height="{$news.img.medium['h']}" alt="{$news.img.alt}" title="{$news.img.title}" class="img-responsive lazyload" />
-                            </picture>{/strip}
+                            </picture>{/strip}*}
+                        {include file="img/img.tpl" img=$news.img lazy=true}
                         {if $news.img.caption}
                             <figcaption>{$news.img.caption}</figcaption>
                         {/if}

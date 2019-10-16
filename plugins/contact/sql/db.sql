@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `mc_contact_page_content` (
      `name_page` varchar(175) DEFAULT NULL,
      `content_page` text,
      `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     `published_gmap` smallint(1) NOT NULL DEFAULT '0',
+     `published_page` smallint(1) NOT NULL DEFAULT '0',
      PRIMARY KEY (`id_content`),
      KEY `id_gmap` (`id_page`),
      KEY `id_lang` (`id_lang`)

@@ -6,13 +6,7 @@
                     <meta itemprop="contentUrl" content="{$item.img.medium.src}" />
                     <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
                         {*<img itemprop="image" class="img-responsive" src="{$item.img.medium.src}" alt="{$item.img.alt}" itemprop="contentUrl"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium.w}" height="{$item.img.medium.h}"{/if}/>*}
-                       {strip}<picture>
-                           {if isset($item.img.name)}<!--[if IE 9]><video style="display: none;"><![endif]-->
-                           <source type="image/webp" sizes="{$item.img.medium['w']}px" srcset="{$item.img.medium['src_webp']} {$item.img.medium['w']}w">
-                            <source type="{$item.img.medium.ext}" sizes="{$item.img.medium['w']}px" srcset="{$item.img.medium['src']} {$item.img.medium['w']}w">
-                           <!--[if IE 9]></video><![endif]-->{/if}
-                            <img src="{$item.img.medium.src}" itemprop="image"{if $item.img.medium.crop === 'adaptative'} width="{$item.img.medium['w']}" height="{$item.img.medium['h']}"{/if} alt="{$item.img.alt}" title="{$item.img.title}" class="img-responsive" />
-                           </picture>{/strip}
+                        {include file="img/img.tpl" img=$item.img lazy=false}
                     </span>
                 </a>
             {/foreach}
@@ -39,13 +33,7 @@
             {foreach $product.imgs as $k => $item}
                 {*<a class="show-img" href="#" data-target="#{if $item.default}default{else}img{$k}{/if}" rel="productGallery"><img class="img-responsive owl-lazy" data-src="{$item.img.small.src}" alt="{$item.img.alt}"{if $item.img.small.crop === 'adaptative'} width="{$item.img.small.w}" height="{$item.img.small.h}"{/if}/></a>*}
             <a class="show-img" href="#" data-target="#{if $item.default}default{else}img{$k}{/if}" {*rel="productGallery"*}>
-                {strip}<picture>
-                    {if isset($item.img.name)}<!--[if IE 9]><video style="display: none;"><![endif]-->
-                    <source type="image/webp" sizes="{$item.img.small['w']}px" srcset="{$item.img.small['src_webp']} {$item.img.small['w']}w">
-                    <source type="{$item.img.small.ext}" sizes="{$item.img.small['w']}px" srcset="{$item.img.small['src']} {$item.img.small['w']}w">
-                    <!--[if IE 9]></video><![endif]-->{/if}
-                    <img data-src="{$item.img.small.src}" itemprop="image"{if $item.img.small.crop === 'adaptative'} width="{$item.img.small['w']}" height="{$item.img.small['h']}"{/if} alt="{$item.img.alt}" title="{$item.img.title}" class="img-responsive owl-lazy" />
-                </picture>{/strip}
+                {include file="img/img.tpl" img=$item.img size='small' lazy=true lazyClass='owl-lazy'}
             </a>
             {/foreach}
         </div>

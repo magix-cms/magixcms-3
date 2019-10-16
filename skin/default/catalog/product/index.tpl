@@ -44,13 +44,14 @@
                                 {*<a href="{$img.img.large.src}" class="img-zoom" title="{$img.img.title}" data-caption="{$img.img.caption}" itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
                                     <img data-src="{$img.img.medium.src}" alt="{$img.img.alt}" class="img-responsive lazyload" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium.w}" height="{$img.img.medium.h}"{/if}/>
                                 </a>*}
-                            {strip}<picture>
+                            {*{strip}<picture>
                                 {if isset($img.img.name)}<!--[if IE 9]><video style="display: none;"><![endif]-->
                                 <source type="image/webp" sizes="{$img.img.medium['w']}px" srcset="{$img.img.medium['src_webp']} {$img.img.medium['w']}w">
                                 <source type="{$img.img.medium.ext}" sizes="{$img.img.medium['w']}px" srcset="{$img.img.medium['src']} {$img.img.medium['w']}w">
                                 <!--[if IE 9]></video><![endif]-->{/if}
                                 <img data-src="{$img.img.medium.src}" itemprop="contentUrl"{if $img.img.medium.crop === 'adaptative'} width="{$img.img.medium['w']}" height="{$img.img.medium['h']}"{/if} alt="{$img.img.alt}" title="{$img.img.title}" class="img-responsive lazyload" />
-                                </picture>{/strip}
+                                </picture>{/strip}*}
+                            {include file="img/img.tpl" img=$img.img lazy=true}
                             {if $img.img.caption}
                                 <figcaption>{$img.img.caption}</figcaption>
                             {/if}

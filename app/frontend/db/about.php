@@ -64,7 +64,6 @@ class frontend_db_about
 					$sql = "SELECT
 								p.id_pages,
        							p.id_parent,
-       							p.img_pages,
        							p.menu_pages,
        							p.date_register, 
       							c.name_pages,
@@ -75,7 +74,7 @@ class frontend_db_about
        							COALESCE(c.seo_title_pages, c.name_pages) as seo_title_pages,
 								COALESCE(c.seo_desc_pages, c.resume_pages) as seo_desc_pages,
     							lang.iso_lang
-							FROM mc_cms_page AS p
+							FROM mc_about_page AS p
 							JOIN mc_about_page_content AS c USING ( id_pages )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
