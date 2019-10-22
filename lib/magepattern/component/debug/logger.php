@@ -59,6 +59,9 @@ class debug_logger {
     const LOG_MONTH = 'MONTH'; # Archivage mensuel
     const LOG_YEAR  = 'YEAR';  # Archivage annuel
 
+	public $ms = 0;
+	public $last = 0;
+
     /**
      * Constructeur
      * Vérifie que le dossier dépôt éxiste
@@ -196,6 +199,82 @@ class debug_logger {
 
         # Ajout de la date et de l'heure au début de la ligne
         $row = $date->dateDefine('d/m/Y H:i:s').' '.$row;
+
+        # Ajout du retour chariot de fin de ligne si il n'y en a pas
+        if( !preg_match('#\n$#',$row) ){
+            $row .= "\n";
+        }
+
+        $this->write($logfile, $row);
+
+        # Firephp
+        $firephp = new debug_firephp();
+        if($firephp instanceof debug_firephp){
+            $firephp->error($row);
+        }
+    }
+
+	/**
+	 * @return array
+	 */
+	private static function the_trace_entry_to_return() {
+		$trace = debug_backtrace();
+
+		for ($i = 0; $i < count($trace); ++$i) {
+			if ('debug' == $trace[$i]['function']) {
+				if (isset($trace[$i + 1]['class'])) {
+					return array(
+						'class' => $trace[$i + 1]['class'],
+						'line' => $trace[$i]['line'],
+					);
+				}
+
+				return array(
+					'file' => $trace[$i]['file'],
+					'line' => $trace[$i]['line'],
+				);
+			}
+		}
+
+		return $trace[0];
+	}
+
+    /**
+     * @param string $txt Texte à ajouter au fichier de log
+     *
+     * @return bool
+     */
+    public function tracelog($txt,$new = false){
+        /**
+         * Instance dateformat
+         */
+        $date = new date_dateformat();
+        # Contrôle des arguments
+        if( empty($txt) ){
+            trigger_error("Params is not defined", E_USER_WARNING);
+            return false;
+        }
+
+        $logfile = $this->path('php', 'trace', self::LOG_MONTH);
+
+        if( $logfile === false ){
+            trigger_error("Unable to save the log", E_USER_WARNING);
+            return false;
+        }
+
+        # Ajout de la date et de l'heure au début de la ligne
+		$now = microtime(true);
+        if($new) $this->ms = $this->last = 0;
+		if(!$this->ms) $this->ms = $now;
+
+        //$row = $date->dateDefine('d/m/Y H:i:s');
+		$bt = debug_backtrace();
+		$row = str_replace(component_core_system::basePath(),'',$bt[0]['file']);
+        $row .= ' | '.($this->ms === $now ? '0' : number_format($now - $this->ms,4)).' ms ';
+        $row .= $this->last ? '(+'.number_format($now - $this->last,4).' ms)' : '';
+        $row .= ' | '.$txt;
+		$this->last = $now;
+
 
         # Ajout du retour chariot de fin de ligne si il n'y en a pas
         if( !preg_match('#\n$#',$row) ){
