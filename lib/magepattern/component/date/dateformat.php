@@ -442,5 +442,26 @@ class date_dateformat extends DateTime{
         $datetime->setDate($year, $month, $day);
         return $datetime->format($format);
     }
+
+	/**
+	 * Find the corresponding TimeZone based on the offset
+	 * @param int $offset, UTC offset in seconds
+	 * @return bool|DateTimeZone
+	 */
+	public function findTimeZone($offset)
+	{
+		$abbr = timezone_name_from_abbr('', $offset, 1);
+
+		if($abbr !== false) {
+			$tz = new DateTimeZone($abbr);
+			$transition = $tz->getTransitions(time(),strtotime('+1 year'));
+
+			if($transition[1]['isdst']) $abbr = timezone_name_from_abbr('', $offset, 0);
+		}
+
+		if($abbr === false) $abbr = timezone_name_from_abbr('', $offset, -1);
+
+		return $abbr !== false ? new DateTimeZone($abbr) : false;
+    }
 }
 ?>
