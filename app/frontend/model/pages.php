@@ -478,10 +478,11 @@ class frontend_model_pages extends frontend_db_pages{
     }
 
     /**
-     * Retourne les données sql sur base des paramètres donnés
-     * @param $custom
+     * Retourne les données sql sur base des paramètres données
+     * @param array $custom
      * @param array $current
-     * @return array|null
+     * @return array|mixed|null
+     * @throws Exception
      */
     public function getShortData(array $custom,array $current)
     {
