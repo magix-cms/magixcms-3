@@ -2760,6 +2760,28 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $product = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'content'), array('id_product' => $this->id, 'id_lang' => $defaultLanguage['id_lang']));
                                 $newimg = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'lastImgId'));
+                                // ----- Remove Image All for replace from Webservice
+                                $this->DBProduct->delete(array('type' => 'delImagesAll'), array('id' => $this->id));
+                                $makeFiles = new filesystem_makefile();
+                                $finder = new file_finder();
+
+                                $setImgDirectory = $this->upload->dirImgUpload(
+                                    array_merge(
+                                        array('upload_root_dir'=>'upload/catalog/p/'.$this->id),
+                                        array('imgBasePath'=>true)
+                                    )
+                                );
+
+                                if(file_exists($setImgDirectory)){
+                                    $setFiles = $finder->scanDir($setImgDirectory);
+                                    $clean = '';
+                                    if($setFiles != null){
+                                        foreach($setFiles as $file){
+                                            $clean .= $makeFiles->remove($setImgDirectory.$file);
+                                        }
+                                    }
+                                }
+                                // -----------
                                 $newData = array();
                                 foreach($_FILES as $key => $value){
                                     $newData['name'][$key] = $value['name'];

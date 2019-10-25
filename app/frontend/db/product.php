@@ -158,4 +158,34 @@ class frontend_db_product
 			return 'Exception reçue : '.$e->getMessage();
 		}
     }
+    /**
+     * @param $config
+     * @param array $params
+     * @return bool|string
+     */
+    public function delete($config, $params = array())
+    {
+        if (!is_array($config)) return '$config must be an array';
+        $sql = '';
+
+        switch ($config['type']) {
+            case 'delImages':
+                $sql = 'DELETE FROM `mc_catalog_product_img` WHERE `id_img` IN ('.$params['id'].')';
+                $params = array();
+                break;
+            case 'delImagesAll':
+                $sql = 'DELETE FROM `mc_catalog_product_img` WHERE id_product = :id';
+                break;
+        }
+
+        if($sql === '') return 'Unknown request asked';
+
+        try {
+            component_routing_db::layer()->delete($sql,$params);
+            return true;
+        }
+        catch (Exception $e) {
+            return 'Exception reçue : '.$e->getMessage();
+        }
+    }
 }
