@@ -897,7 +897,12 @@ class frontend_model_catalog extends frontend_db_catalog {
 			// Set order
 			switch ($conf['sort']['type']) {
 				case 'order':
-					$conditions .= ' ORDER BY p.id_parent, p.order_cat '.$conf['sort']['order'];
+					if(!isset($custom['id'])) {
+						$conditions .= 'ORDER BY FIELD(p.id_cat,'.(is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']).')';
+					}
+					else {
+						$conditions .= ' ORDER BY p.id_parent, p.order_cat '.$conf['sort']['order'];
+					}
 					break;
 			}
 
