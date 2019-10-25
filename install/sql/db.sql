@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `mc_setting` (
 INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `category`) VALUES
 (NULL, 'theme', 'default', 'string', 'site theme', 'theme'),
 (NULL, 'analytics', NULL, 'string', 'google analytics', 'google'),
-(NULL, 'magix_version', '3.2.2', 'string', 'Version Magix CMS', 'release'),
+(NULL, 'magix_version', '3.2.3', 'string', 'Version Magix CMS', 'release'),
 (NULL, 'content_css', NULL, 'string', 'css from skin for tinyMCE', 'general'),
 (NULL, 'concat', '0', 'int', 'concat URL', 'general'),
 (NULL, 'cache', 'none', 'string', 'Cache template', 'general'),
