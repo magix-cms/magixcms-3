@@ -130,8 +130,10 @@ class frontend_db_category
 							name_cat = :name_cat, 
 							url_cat = :url_cat, 
 							resume_cat = :resume_cat, 
-							content_cat = :content_cat, 
-							published_cat = :published_cat
+							content_cat = :content_cat,
+							seo_title_cat=:seo_title_cat, 
+                            seo_desc_cat=:seo_desc_cat, 
+                            published_cat=:published_cat
 						WHERE id_cat = :id_cat AND id_lang = :id_lang';
 				break;
 			case 'img':
