@@ -2110,7 +2110,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         $fetchRootData = $this->DBProduct->fetchData(array('context'=>'one','type'=>'page'),array('id'=>$this->id));
                         if($fetchRootData != null){
                             $id_product = $fetchRootData['id_product'];
-                            $this->DBProduct->update(array('type'=>'page'),array(':price_p' => empty($arrData['price']) ? NULL : $arrData['price'],':reference_p' => empty($arrData['reference']) ? NULL : $arrData['reference'],':id_product'=>$id_product));
+                            $this->DBProduct->update(array('type'=>'product'),array(':price_p' => empty($arrData['price']) ? NULL : $arrData['price'],':reference_p' => empty($arrData['reference']) ? NULL : $arrData['reference'],':id_product'=>$id_product));
                         }else{
                             $this->DBProduct->insert(array('type'=>'newPages'),array(':price_p' => empty($arrData['price']) ? NULL : $arrData['price'],':reference_p' => empty($arrData['reference']) ? NULL : $arrData['reference']));//reference_p
                             $newData = $this->DBProduct->fetchData(array('context'=>'one','type'=>'root'));
