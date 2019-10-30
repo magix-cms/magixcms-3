@@ -1704,9 +1704,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 }
 
                 if($id_page) {
-                    //print_r($arrData['language']);
-                    foreach ($arrData['language'] as $lang => $content) {
-                        //$content['published'] = (!isset($content['published']) ? 0 : 1);
+                    if(!array_key_exists('0',$arrData['language'])) {
+                        $content = $arrData['language'];
 
                         $data = array(
                             'title_page'        => !is_array($content['name']) ? $content['name'] : '',
@@ -1723,7 +1722,29 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         } else {
                             $this->DBHome->insert(array('type' => 'newContent'), $data);
                         }
+                    }else{
+                        foreach ($arrData['language'] as $lang => $content) {
+                            //$content['published'] = (!isset($content['published']) ? 0 : 1);
+
+                            $data = array(
+                                'title_page'        => !is_array($content['name']) ? $content['name'] : '',
+                                'content_page'      => !is_array($content['content']) ? $content['content'] : '',
+                                'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
+                                'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'published'         => $content['published'],
+                                'id_page'           => $id_page,
+                                'id_lang'           => $content['id_lang']
+                            );
+
+                            if ($this->DBHome->fetchData(array('context' => 'one', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $content['id_lang'])) != null) {
+                                $this->DBHome->update(array('type' => 'content'), $data);
+                            } else {
+                                $this->DBHome->insert(array('type' => 'newContent'), $data);
+                            }
+                        }
                     }
+                    //print_r($arrData['language']);
+
                     $this->header->set_json_headers();
                     $this->message->json_post_response(true, null, array('id'=>$id_page));
                 }
@@ -2760,6 +2781,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $product = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'content'), array('id_product' => $this->id, 'id_lang' => $defaultLanguage['id_lang']));
                                 $newimg = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'lastImgId'));
+
                                 // ----- Remove Image All for replace from Webservice
                                 $this->DBProduct->delete(array('type' => 'delImagesAll'), array('id' => $this->id));
                                 $makeFiles = new filesystem_makefile();
@@ -2783,6 +2805,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 }
                                 // -----------
                                 $newData = array();
+
                                 foreach($_FILES as $key => $value){
                                     $newData['name'][$key] = $value['name'];
                                     $imageInfo = getimagesize( $value['tmp_name'] );
