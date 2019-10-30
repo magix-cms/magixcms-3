@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <image>
+        <id>1</id>
+        <name>1_my_images.jpg</name>
+        <default>1</default>
+        <src>
+            <original xlink:href="http://www.my-website.tld/upload/catalog/p/4/1_my_images.jpg"/>
+            <small xlink:href="http://www.my-website.tld/upload/catalog/p/4/s_1_my_images.jpg"/>
+            <medium xlink:href="http://www.my-website.tld/upload/catalog/p/4/m_1_my_images.jpg"/>
+            <large xlink:href="http://www.my-website.tld/upload/catalog/p/4/l_1_my_images.jpg"/>
+        </src>
+        <languages>
+            <language>
+                <id_lang>2</id_lang>
+                <iso>en</iso>
+                <alt></alt>
+                <title></title>
+                <caption></caption>
+            </language>
+            <language>
+                <id_lang>6</id_lang>
+                <iso>fr</iso>
+                <alt>mon attribut de test</alt>
+                <title>mon title de test</title>
+                <caption>Légende de l'image</caption>
+            </language>
+        </languages>
+    </image>
+</magixcms>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<magixcms>
+    <image>
+        <id>10</id>
+        <name>exploring-the-sckyscrapers.jpg</name>
+        <default>1</default>
+        <src>
+            <original xlink:href="http://www.my-website.tld/upload/catalog/c/10/exploring-the-sckyscrapers.jpg"/>
+            <small xlink:href="http://www.my-website.tld/upload/catalog/c/10/s_exploring-the-sckyscrapers.jpg"/>
+            <medium xlink:href="http://www.my-website.tld/upload/catalog/c/10/m_exploring-the-sckyscrapers.jpg"/>
+            <large xlink:href="http://www.my-website.tld/upload/catalog/c/10/l_exploring-the-sckyscrapers.jpg"/>
+        </src>
+        <languages>
+            <language>
+                <id_lang>2</id_lang>
+                <iso>en</iso>
+                <alt></alt>
+                <title></title>
+                <caption></caption>
+            </language>
+            <language>
+                <id_lang>6</id_lang>
+                <iso>fr</iso>
+                <alt>mon attribut de test</alt>
+                <title>mon title de test</title>
+                <caption>Légende de l'image</caption>
+            </language>
+        </languages>
+    </image>
+</magixcms>

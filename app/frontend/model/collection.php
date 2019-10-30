@@ -45,6 +45,7 @@ class frontend_model_collection{
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
                 $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
                 if($page['img_pages'] != null) {
+                    $arr[$page['id_pages']]['imgSrc']['original'] = '/upload/pages/' . $page['id_pages'] . '/' . $page['img_pages'];
                     foreach ($fetchConfig as $key => $value) {
                         $arr[$page['id_pages']]['imgSrc'][$value['type_img']] = '/upload/pages/'.$page['id_pages'].'/'.$imgPrefix[$value['type_img']] . $page['img_pages'];
                     }
@@ -98,6 +99,7 @@ class frontend_model_collection{
                 $arr[$page['id_news']] = array();
                 $arr[$page['id_news']]['id_news'] = $page['id_news'];
                 if($page['img_news'] != null) {
+                    $arr[$page['id_news']]['imgSrc']['original'] = '/upload/news/' . $page['id_news'] . '/' . $page['img_news'];
                     foreach ($fetchConfig as $key => $value) {
                         $arr[$page['id_news']]['imgSrc'][$value['type_img']] = '/upload/news/'.$page['id_news'].'/'.$imgPrefix[$value['type_img']] . $page['img_news'];
                     }
@@ -181,6 +183,7 @@ class frontend_model_collection{
                 $pathinfo = pathinfo($page['img_cat']);
                 $filename = $pathinfo['filename'];
                 if($page['img_cat'] != null) {
+                    $arr[$page['id_cat']]['imgSrc']['original'] = '/upload/catalog/c/' . $page['id_cat'] . '/' . $page['img_cat'];
                     foreach ($fetchConfig as $key => $value) {
                         $arr[$page['id_cat']]['imgSrc'][$value['type_img']] = '/upload/catalog/c/'.$page['id_cat'].'/'.$imgPrefix[$value['type_img']] . $page['img_cat'];
                         //$data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
