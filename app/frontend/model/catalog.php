@@ -676,20 +676,25 @@ class frontend_model_catalog extends frontend_db_catalog {
 						array('iso' => $conf['lang'])
 					);
 
-					if(is_array($data) && !empty($data)) {
-						if($conf['random']) {
-							if(!$conf['limit']) {
-								$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
-								$data = $this->data->setPagesTree($data,'cat',$branch);
-								shuffle($data);
-							}
-							else {
-								$new_arr = array();
-								foreach ($cat_ids as $id) $new_arr[] = $id['random_id'];
-								$data = $this->data->setPagesTree($data,'cat',$new_arr);
-							}
-						}
-					}
+                    if(is_array($data) && !empty($data)) {
+                        if(is_string($conf['id']) && strpos($conf['id'],',')) $conf['id'] = explode(',',$conf['id']);
+                        $branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+
+                        if($conf['random']) {
+                            if(!$conf['limit'] || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
+                                $data = $this->data->setPagesTree($data,'cat',$branch);
+                                shuffle($data);
+                            }
+                            else {
+                                $new_arr = array();
+                                foreach ($cat_ids as $id) $new_arr[] = $id['random_id'];
+                                $data = $this->data->setPagesTree($data,'cat',$new_arr);
+                            }
+                        }
+                        else {
+                            $data = $this->data->setPagesTree($data,'cat',$branch);
+                        }
+                    }
 				}
             }
         }
