@@ -20,6 +20,7 @@
                         <p>{#pn_fill_form#|ucfirst}</p>
                     {/if}
                     {include file="contact/form/contact.tpl"}
+                </section>
                 <aside id="aside" class="col-12 col-md-4 col-lg-5">
                     {include file="contact/block/map.tpl"}
                 </aside>
