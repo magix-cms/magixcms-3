@@ -11,7 +11,7 @@
         <div{if $classCol} class="{$classCol}"{/if} itemprop="itemListElement" itemscope itemtype="http://schema.org/CreativeWork">
             <link itemprop="additionalType" href="http://schema.org/Article" />
             <meta itemprop="position" content="{$item@index + 1}">
-            <time itemprop="datePublished" datetime="{$item.date.publish}"></time>
+            <time itemprop="datePublished" datetime="{$item.date.publish.date}"></time>
             <div class="tile">
                 <figure class="time-figure">
                     {*{if isset($item.img.name)}{$src = $item.img.medium.src}{else}{$src = $item.img.default}{/if}
