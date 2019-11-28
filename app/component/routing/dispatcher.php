@@ -191,6 +191,7 @@ class component_routing_dispatcher{
 		$this->template->assign('url',http_url::getUrl());
 		$lang = $this->template->lang;
 		$this->template->assign('lang',$lang);
+		$this->preloadComponents($lang);
 
     	if($this->http_error) {
 			$this->getError($this->http_error);
@@ -199,7 +200,7 @@ class component_routing_dispatcher{
 			$dispatcher = $this->getController();
 			if($dispatcher){
 				if(method_exists($dispatcher,'run')){
-					$this->preloadComponents($lang);
+					//$this->preloadComponents($lang);
 					$dispatcher->run();
 				}
 			}

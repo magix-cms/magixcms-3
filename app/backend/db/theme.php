@@ -91,11 +91,11 @@ class backend_db_theme{
 							FROM mc_menu as m
 							LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
 							LEFT JOIN mc_cms_page as p ON m.id_page = p.id_pages AND m.type_link = 'pages'
-							LEFT JOIN mc_cms_page_content as pc ON p.id_pages = pc.id_pages AND pc.id_lang = mc.id_lang
+							LEFT JOIN mc_cms_page_content as pc ON p.id_pages = pc.id_pages
 							LEFT JOIN mc_about_page as ap ON m.id_page = ap.id_pages AND m.type_link = 'about_page'
-							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages AND apc.id_lang = mc.id_lang
+							LEFT JOIN mc_about_page_content as apc ON ap.id_pages = apc.id_pages
 							LEFT JOIN mc_catalog_cat as c ON m.id_page = c.id_cat AND m.type_link = 'category'
-							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = mc.id_lang
+							LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat
 							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 							ORDER BY m.order_link ASC";
 						break;

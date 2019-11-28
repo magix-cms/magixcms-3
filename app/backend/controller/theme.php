@@ -401,13 +401,13 @@ class backend_controller_theme extends backend_db_theme{
 								$link['id'] = $this->edit;
 								$link['id_lang'] = $k;
 
-								$lang = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'lang'),array('id' => $k));
+								$lang = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'isoFromId'),array('id' => $k));
 								$cl = $this->getItems('link',array('id' => $this->edit),'one',false);
 
 								if(in_array($cl['type_link'],$this->roots)) {
 									$this->template->configLoad();
 									if($cl['type_link'] === 'plugin') {
-										$plugin = $this->getItems($cl['type_link'],$this->id,'one',false);
+										$plugin = $this->getItems($cl['type_link'],$cl['id_page'],'one',false);
 									}
 
 									$url = '/'.$lang['iso_lang'].'/'.(isset($plugin) ? $plugin['name'].'/' : ($cl['type_link'] !== 'home' ? $cl['type_link'].'/' : ''));

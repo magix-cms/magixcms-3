@@ -41,11 +41,11 @@
                                                         </tbody>
                                                     </table>
                                                     <p class="text-center" style="text-align: center;">
-                                                        <a href="{$url}" target="_blank" title="{$companyData.name}" style="display: block; text-decoration: none; font-size: 46px; padding: 15px;">
+                                                        <a href="{$url}" target="_blank" title="{$companyData.name|escape}" style="display: block; text-decoration: none; font-size: 46px; padding: 15px;">
                                                             {if $logo && $logo.img.active eq 1}
-                                                                <img src="{$url}{$logo.img.medium.src}" width="{$logo.img.medium.w}" height="{$logo.img.medium.h}" alt="{if !empty($logo.img.alt)}{$logo.img.alt}{else}Logo {$companyData.name}{/if}" />
+                                                                <img src="{$url}{$logo.img.medium.src}" width="{$logo.img.medium.w}" height="{$logo.img.medium.h}" alt="{if !empty($logo.img.alt)}{$logo.img.alt|escape}{else}Logo {$companyData.name|escape}{/if}" />
                                                             {else}
-                                                                <img src="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}" alt="Logo {$companyData.name}" width="192" height="95"/>
+                                                                <img src="{$url}/skin/{$theme}/img/logo/{#logo_img_mail#}" alt="Logo {$companyData.name|escape}" width="192" height="95"/>
                                                             {/if}
                                                         </a>
                                                     </p>
