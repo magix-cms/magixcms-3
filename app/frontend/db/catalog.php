@@ -157,9 +157,10 @@ class frontend_db_catalog
 				case 'product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT 
-								catalog.*,
+								catalog.* ,
 								cat.name_cat, 
-								cat.url_cat,
+								cat.url_cat, 
+								p.*, 
 								pc.name_p, 
 								pc.longname_p, 
 								pc.resume_p, 
@@ -175,8 +176,7 @@ class frontend_db_catalog
 								pc.seo_title_p,
 								pc.seo_desc_p
 						FROM mc_catalog AS catalog
-						JOIN mc_catalog AS c2 ON( catalog.id_product = c2.id_product AND c2.default_c = 1)
-						JOIN mc_catalog_cat AS c ON ( c2.id_cat = c.id_cat )
+						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
 						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
 						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
 						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )

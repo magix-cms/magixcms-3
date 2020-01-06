@@ -99,11 +99,12 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 */
     private function getBuildProductList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso
+		$conditions = ' WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL) 
-						AND catalog.id_cat = :id_cat
-						ORDER BY catalog.order_p';
+						AND catalog.default_c = 1 
+						AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat) 
+						ORDER BY catalog.order_p ASC';
 		$collection = parent::fetchData(
 			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
 			array('iso' => $this->getlang,'id_cat' => $this->id)

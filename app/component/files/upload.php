@@ -518,8 +518,8 @@ class component_files_upload{
                                     }
                                 }
 
-                                $prefix = '';
-                                $name = filter_rsa::randMicroUI();
+                                $prefix = '';$name = filter_rsa::randMicroUI();
+
                                 if(is_array($data)){
                                 	if(isset($data['prefix_name'])) {
                                 		if(isset($data['prefix_increment']) && $data['prefix_increment']) {
