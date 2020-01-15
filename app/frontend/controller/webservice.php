@@ -1708,10 +1708,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         $content = $arrData['language'];
 
                         $data = array(
-                            'title_page'        => !is_array($content['name']) ? $content['name'] : '',
-                            'content_page'      => !is_array($content['content']) ? $content['content'] : '',
-                            'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                            'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                            'title_page'        => !is_array($content['name']) ? $content['name'] : NULL,
+                            'content_page'      => !is_array($content['content']) ? $content['content'] : NULL,
+                            'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                            'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                             'published'         => $content['published'],
                             'id_page'           => $id_page,
                             'id_lang'           => $content['id_lang']
@@ -1727,10 +1727,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             //$content['published'] = (!isset($content['published']) ? 0 : 1);
 
                             $data = array(
-                                'title_page'        => !is_array($content['name']) ? $content['name'] : '',
-                                'content_page'      => !is_array($content['content']) ? $content['content'] : '',
-                                'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'title_page'        => !is_array($content['name']) ? $content['name'] : NULL,
+                                'content_page'      => !is_array($content['content']) ? $content['content'] : NULL,
+                                'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                                'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                                 'published'         => $content['published'],
                                 'id_page'           => $id_page,
                                 'id_lang'           => $content['id_lang']
@@ -1784,10 +1784,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                     'cspec' => '', 'rspec' => ''
                                 )
                             ) : '',
-                            'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : '',
-                            'content_pages'     => !is_array($content['content']) ? $content['content'] : '',
-                            'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                            'seo_desc_pages'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                            'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : NULL,
+                            'content_pages'     => !is_array($content['content']) ? $content['content'] : NULL,
+                            'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                            'seo_desc_pages'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                             'published_pages'   => $content['published'],
                             'id_pages'          => $id_page,
                             'id_lang'           => $content['id_lang']
@@ -1816,10 +1816,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                         'cspec' => '', 'rspec' => ''
                                     )
                                 ) : '',
-                                'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : '',
-                                'content_pages'     => !is_array($content['content']) ? $content['content'] : '',
-                                'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                'seo_desc_pages'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'resume_pages'      => !is_array($content['resume']) ? $content['resume'] : NULL,
+                                'content_pages'     => !is_array($content['content']) ? $content['content'] : NULL,
+                                'seo_title_pages'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                                'seo_desc_pages'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                                 'published_pages'   => $content['published'],
                                 'id_pages'          => $id_page,
                                 'id_lang'           => $content['id_lang']
@@ -1876,10 +1876,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             'id_news'           => $id_news,
                             'name_news'         => !is_array($content['name']) ? $content['name'] : '',
                             'url_news'          => !is_array($content['url']) ? $content['url'] : '',
-                            'content_news'      => !is_array($content['content']) ? $content['content'] : '',
-                            'resume_news'       => !is_array($content['resume']) ? trim($content['resume']) : '',
-                            'seo_title_news'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                            'seo_desc_news'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                            'content_news'      => !is_array($content['content']) ? $content['content'] : NULL,
+                            'resume_news'       => !is_array($content['resume']) ? trim($content['resume']) : NULL,
+                            'seo_title_news'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                            'seo_desc_news'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                             'date_publish'      => $datePublish,
                             'published_news'    => $content['published']
                         );
@@ -1970,18 +1970,18 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     if ($this->DBCatalog->fetchData(array('context' => 'one', 'type' => 'root'), array('id_lang' => $content['id_lang'])) != null) {
                         $this->DBCatalog->update(array('type' => 'content'), array(
                                 'name'          => !is_array($content['name']) ? $content['name'] : '',
-                                'content'       => !is_array($content['content']) ? $content['content'] : '',
-                                'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'content'       => !is_array($content['content']) ? $content['content'] : NULL,
+                                'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                                'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                                 'id_lang'       => $content['id_lang']
                             )
                         );
                     } else {
                         $this->DBCatalog->insert(array('type' => 'newContent'), array(
-                                'name'          => !is_array($content['name']) ? $content['name'] : '',
-                                'content'       => !is_array($content['content']) ? $content['content'] : '',
-                                'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'name'          => !is_array($content['name']) ? $content['name'] : NULL,
+                                'content'       => !is_array($content['content']) ? $content['content'] : NULL,
+                                'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                                'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                                 'id_lang'       => $content['id_lang']
                             )
                         );
@@ -1991,19 +1991,19 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     foreach ($arrData['language'] as $lang => $content) {
                         if ($this->DBCatalog->fetchData(array('context' => 'one', 'type' => 'root'), array('id_lang' => $content['id_lang'])) != null) {
                             $this->DBCatalog->update(array('type' => 'content'), array(
-                                    'name'          => !is_array($content['name']) ? $content['name'] : '',
-                                    'content'       => !is_array($content['content']) ? $content['content'] : '',
-                                    'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                    'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                    'name'          => !is_array($content['name']) ? $content['name'] : NULL,
+                                    'content'       => !is_array($content['content']) ? $content['content'] : NULL,
+                                    'seo_title'     => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                                    'seo_desc'      => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                                     'id_lang'       => $content['id_lang']
                                 )
                             );
                         } else {
                             $this->DBCatalog->insert(array('type' => 'newContent'), array(
-                                    'name'      => !is_array($content['name']) ? $content['name'] : '',
-                                    'content'   => !is_array($content['content']) ? $content['content'] : '',
-                                    'seo_title' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                    'seo_desc'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                    'name'      => !is_array($content['name']) ? $content['name'] : NULL,
+                                    'content'   => !is_array($content['content']) ? $content['content'] : NULL,
+                                    'seo_title' => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                                    'seo_desc'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
                                     'id_lang'   => $content['id_lang']
                                 )
                             );
@@ -2048,10 +2048,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                     'cspec' => '', 'rspec' => ''
                                 )
                             ) : '',
-                            'resume_cat'    => !is_array($content['resume']) ? trim($content['resume']) : '',
-                            'content_cat'   => !is_array($content['content']) ? $content['content'] : '',
-                            'seo_title_cat' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                            'seo_desc_cat'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                            'resume_cat'    => !is_array($content['resume']) ? trim($content['resume']) : NUll,
+                            'content_cat'   => !is_array($content['content']) ? $content['content'] : NUll,
+                            'seo_title_cat' => !is_array($content['seo']['title']) ? $content['seo']['title'] : NUll,
+                            'seo_desc_cat'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : NUll,
                             'published_cat' => $content['published'],
                             'id_cat'        => $id_cat,
                             'id_lang'       => $content['id_lang']
@@ -2078,10 +2078,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                         'cspec' => '', 'rspec' => ''
                                     )
                                 ) : '',
-                                'resume_cat' => !is_array($content['resume']) ? trim($content['resume']) : '',
-                                'content_cat' => !is_array($content['content']) ? $content['content'] : '',
-                                'seo_title_cat' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                'seo_desc_cat'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'resume_cat' => !is_array($content['resume']) ? trim($content['resume']) : NUll,
+                                'content_cat' => !is_array($content['content']) ? $content['content'] : NUll,
+                                'seo_title_cat' => !is_array($content['seo']['title']) ? $content['seo']['title'] : NUll,
+                                'seo_desc_cat'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : NUll,
                                 'published_cat' => $content['published'],
                                 'id_cat' => $id_cat,
                                 'id_lang' => $content['id_lang']
@@ -2155,11 +2155,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                         'cspec' => '', 'rspec' => ''
                                     )
                                 ) : '',
-                                'longname_p'    => !is_array($content['longname']) ? $content['longname'] : '',
-                                'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : '',
-                                'content_p'     => !is_array($content['content']) ? $content['content'] : '',
-                                'seo_title_p'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                'seo_desc_p'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                'longname_p'    => !is_array($content['longname']) ? $content['longname'] : NUll,
+                                'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : NUll,
+                                'content_p'     => !is_array($content['content']) ? $content['content'] : NUll,
+                                'seo_title_p'   => !is_array($content['seo']['title']) ? $content['seo']['title'] : NUll,
+                                'seo_desc_p'    => !is_array($content['seo']['description']) ? $content['seo']['description'] : NUll,
                                 'published_p'   => $content['published'],
                                 'id_product'    => $id_product,
                                 'id_lang'       => $content['id_lang']
@@ -2185,11 +2185,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                             'cspec' => '', 'rspec' => ''
                                         )
                                     ) : '',
-                                    'longname_p'    => !is_array($content['longname']) ? $content['longname'] : '',
-                                    'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : '',
-                                    'content_p'     => !is_array($content['content']) ? $content['content'] : '',
-                                    'seo_title_p' => !is_array($content['seo']['title']) ? $content['seo']['title'] : '',
-                                    'seo_desc_p'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : '',
+                                    'longname_p'    => !is_array($content['longname']) ? $content['longname'] : NUll,
+                                    'resume_p'      => !is_array($content['resume']) ? trim($content['resume']) : NUll,
+                                    'content_p'     => !is_array($content['content']) ? $content['content'] : NUll,
+                                    'seo_title_p' => !is_array($content['seo']['title']) ? $content['seo']['title'] : NUll,
+                                    'seo_desc_p'  => !is_array($content['seo']['description']) ? $content['seo']['description'] : NUll,
                                     'published_p'   => $content['published'],
                                     'id_product'    => $id_product,
                                     'id_lang'       => $content['id_lang']
