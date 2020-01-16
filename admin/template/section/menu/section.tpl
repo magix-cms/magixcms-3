@@ -142,14 +142,14 @@
     {/if}
     {if {employee_access type="view" class_name="backend_controller_theme"} eq 1}
     <li class="panel has-submenu{if $smarty.get.controller == 'theme' || $smarty.get.controller == 'logo'} active{/if}">
-        <button type="button" class="navbar-toggle{if $smarty.get.controller == 'theme'} open{/if}" data-toggle="collapse" data-parent="#mainmenu" data-target="#nav-theme">
+        <button type="button" class="navbar-toggle{if $smarty.get.controller == 'theme' || $smarty.get.controller == 'logo'} open{/if}" data-toggle="collapse" data-parent="#mainmenu" data-target="#nav-theme">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
         {*<a href="{$url}/{baseadmin}/index.php?controller=theme">*}
         <span><span class="fa fa-desktop"></span> {#appearance#|ucfirst}</span>
         {*</a>*}
-        <nav id="nav-theme" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'theme'} in{/if}">
+        <nav id="nav-theme" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'theme' || $smarty.get.controller == 'logo'} in{/if}">
             <ul class="nav list-unstyled">
                 <li>
                     <a href="{$url}/{baseadmin}/index.php?controller=theme&tab=theme">
