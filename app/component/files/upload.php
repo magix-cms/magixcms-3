@@ -58,9 +58,9 @@ class component_files_upload{
         if(isset($_FILES['img']["name"])){
             $this->img = http_url::clean($_FILES['img']["name"]);
         }
-        if(isset($_FILES['file']["name"])){
+        /*if(isset($_FILES['file']["name"])){
             $this->file = http_url::clean($_FILES['file']["name"]);
-        }
+        }*/
     }
     /**
      * si fileInfo n'est pas disponible c'est mime_content_type qui
@@ -146,7 +146,7 @@ class component_files_upload{
             'css' => 'text/css',
             'js' => 'application/javascript',
             'json' => 'application/json',
-            'xml' => 'application/xml',
+            'xml' => ['application/xml','text/xml'],
             'swf' => 'application/x-shockwave-flash',
             'flv' => 'video/x-flv',
 
@@ -193,14 +193,26 @@ class component_files_upload{
             'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         );
         if(is_array($data)){
-            if(isset($data['filename'])){
-                $mimeContent = mime_content_type($data['filename']);
-                foreach($mimeTypes as $key=>$value){
-                    if($value === $mimeContent){
-                        return array('type'=>$key,'mime'=>$value);
-                    }
-                }
-            }
+            $mimeContent = null;
+			if(isset($data['filename'])){
+				$mimeContent = mime_content_type($data['filename']);
+			}
+			elseif(isset($data['mime'])) {
+				$mimeContent = $data['mime'];
+			}
+
+			if($mimeContent !== null) {
+				foreach($mimeTypes as $key=>$value){
+					if(is_array($value)) {
+						if(in_array($mimeContent,$value)) {
+							return array('type'=>$key,'mime'=>$mimeContent);
+						}
+					}
+					if($value === $mimeContent){
+						return array('type'=>$key,'mime'=>$mimeContent);
+					}
+				}
+			}
         }
     }
     /**
@@ -1116,7 +1128,7 @@ class component_files_upload{
 
     /**
      * Return path string for upload
-     * @param $data
+     * @param array $data
      * @return string
      * @throws Exception
      */
@@ -1164,8 +1176,8 @@ class component_files_upload{
 
     /**
      * Upload un fichier
-     * @param files $file
-     * @param dir $path
+     * @param string $file file
+     * @param string $path directory
      * @param bool $debug
      * @return array
      * @throws Exception
@@ -1221,60 +1233,91 @@ class component_files_upload{
      * @param bool $debug
      * @return array
      */
-    public function setUploadFile($file,$data,$filesCollection,$debug=false)
+    public function setUploadFile($file,$data,$filesCollection,$accept=null,$debug=false)
     {
-        if (isset($this->$file)) {
+		if(isset($_FILES[$file]["name"])) $this->file = http_url::clean($_FILES[$file]["name"]);
+
+        if (isset($this->file)) {
             try {
                 // Charge la classe pour le traitement du fichier
                 $makeFiles = new filesystem_makefile();
                 $resultUpload = null;
-                $dirFiles = $this->dirFileUpload(array_merge(array('upload_root_dir'=>$filesCollection['upload_root_dir'],'upload_dir'=>$filesCollection['upload_dir']),array('fileBasePath'=>true)));
+                $dirconf = [
+					'upload_root_dir' => $filesCollection['upload_root_dir'],
+					'upload_dir' => $filesCollection['upload_dir'],
+					'fileBasePath' => true
+				];
+                $dirFiles = $this->dirFileUpload($dirconf);
 
-                if(!empty($this->$file)){
+                if(!empty($this->file)) {
+                    $filename = $this->file;
+                    $dirconf['fileBasePath'] = false;
+					$mimeContent = $this->mimeContentType(['mime'=>$_FILES[$file]['type']]);
 
-                    $resultUpload = $this->uploadFiles(
+					if(is_array($accept) && !empty($accept)) {
+						if(!in_array($mimeContent['type'],$accept)) {
+							return [
+								'file' => $filename,
+								'type' => $mimeContent['type'],
+								'mime' => $mimeContent['mime'],
+								'status' => false,
+								'notify' => 'error_file_type',
+								'msg' => 'File type '.$mimeContent['type'].' not supported',
+								'debug' => null
+							];
+						}
+					}
+
+					$resultUpload = $this->uploadFiles(
                         $file,
-                        $this->dirFileUpload(
-                            array_merge(
-                                array('upload_root_dir'=>$filesCollection['upload_root_dir'],'upload_dir'=>$filesCollection['upload_dir']),
-                                array('fileBasePath'=>false)
-                            )
-                        ),
+                        $this->dirFileUpload($dirconf),
                         $debug
                     );
 
-                    if($resultUpload['statut'] != null) {
-                        // Renomme le fichier
-                        $makeFiles->rename(
-                            array(
-                                'origin' => $dirFiles . $this->$file,
-                                'target' => $dirFiles . $data['name'] .'.'.$resultUpload['mimecontent']['type']
-                            )
-                        );
-                        // Supprime l'ancien fichier
-                        if (!empty($data['edit'])) {
-                            if (is_array($filesCollection)) {
-                                if (file_exists($dirFiles . $data['edit'])) {
-                                    $makeFiles->remove(array($dirFiles . $data['edit']));
-                                }
-                            }
-                        }
-                        if ($debug) {
-                            $debugResult = '<pre>';
-                            $debugResult .= print_r($resultUpload['mimecontent'],true);
-                            $debugResult .=  '</pre>';
-                        }
-                        return array('file' => $data['name'] .'.'.$resultUpload['mimecontent']['type'],'type'=>$resultUpload['mimecontent']['type'], 'mime'=>$resultUpload['mimecontent']['mime'], 'statut' => $resultUpload['statut'], 'notify' => $resultUpload['notify'], 'msg' => $resultUpload['msg'],'debug'=>$debugResult);
-                    }else{
-                        return array('file'=>null,'type'=>$resultUpload['mimecontent']['type'], 'mime'=>$resultUpload['mimecontent']['mime'],'statut'=>$resultUpload['statut'],'notify'=>$resultUpload['notify'],'msg'=>$resultUpload['msg']);
+                    if($resultUpload['statut'] === true) {
+						if(!empty($data)) {
+							// Renomme le fichier
+							if (!empty($data['name'])) {
+								$makeFiles->rename(
+									array(
+										'origin' => $dirFiles . $filename,
+										'target' => $dirFiles . $data['name'] . '.' . $resultUpload['mimecontent']['type']
+									)
+								);
+								$filename = $data['name'] . '.' . $resultUpload['mimecontent']['type'];
+							}
+							// Supprime l'ancien fichier
+							if (!empty($data['edit'])) {
+								if (is_array($filesCollection)) {
+									if (file_exists($dirFiles . $data['edit'])) {
+										$makeFiles->remove(array($dirFiles . $data['edit']));
+									}
+								}
+							}
+						}
                     }
-                }
 
-            } catch (Exception $e) {
+					if ($debug) {
+						$debugResult = '<pre>';
+						$debugResult .= print_r($resultUpload['mimecontent'],true);
+						$debugResult .=  '</pre>';
+					}
+					return [
+						'file' => $filename,
+						'path' => $dirFiles,
+						'type' => $resultUpload['mimecontent']['type'],
+						'mime' => $resultUpload['mimecontent']['mime'],
+						'status' => $resultUpload['statut'],
+						'notify' => $resultUpload['notify'],
+						'msg' => $resultUpload['msg'],
+						'debug' => $debugResult
+					];
+                }
+            }
+            catch (Exception $e) {
                 $logger = new debug_logger(MP_LOG_DIR);
                 $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
             }
         }
     }
 }
-?>

@@ -219,8 +219,23 @@ class plugins_contact_public extends plugins_contact_db
 							$error = true;
 							$sender = '';
 						}
+						$file = null;
+						/*if(isset($_FILES["curriculumvitae"])) {
+							$upload = new component_files_upload();
+							$result = $upload->setUploadFile("curriculumvitae",null,[
+								'upload_root_dir' => 'upload',
+								'upload_dir' => 'contact'
+							],['jpg','png','pdf','doc','odt']);
+							if($result['status']) {
+								$file = [
+									'path' => $result['path'].$result['file'],
+									'type' => $result['mime']
+								];
+							}
+						}*/
+
 						foreach ($contacts as $recipient) {
-							$isSend = $this->mail->send_email($recipient['mail_contact'],$tpl,$this->msg,$this->setTitleMail($error),$sender,$this->config['mail_sender']);
+							$isSend = $this->mail->send_email($recipient['mail_contact'],$tpl,$this->msg,$this->setTitleMail($error),$sender,$this->config['mail_sender'],$file);
 							if(!$send) $send = $isSend;
 						}
 						if($send)

@@ -83,7 +83,7 @@ class frontend_model_mail {
      * @param string $from
 	 * @return bool
 	 */
-	public function send_email($email, $tpl, $data, $title = '', $sender = '', $from = '') {
+	public function send_email($email, $tpl, $data, $title = '', $sender = '', $from = '', $file = null) {
 		if($email) {
 			$this->template->configLoad();
 			if(!$this->sanitize->mail($email)) {
@@ -114,6 +114,12 @@ class frontend_model_mail {
 							self::getBodyMail($tpl,$data),
 							false
 						);
+
+						if(is_array($file)) {
+							if(key_exists('path',$file) && key_exists('type',$file)) {
+								if(file_exists($file['path'])) $message->attach(Swift_Attachment::fromPath($file['path'], $file['type']));
+							}
+						}
 
 						if($this->mail->batch_send_mail($message)) {
 							return true;

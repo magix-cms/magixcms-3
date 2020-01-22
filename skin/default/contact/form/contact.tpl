@@ -52,6 +52,12 @@
         <textarea id="msg_content" name="msg[content]" rows="5" class="form-control required" required></textarea>
         <label for="msg_content" class="is_empty">{#pn_contact_message#|ucfirst}*&nbsp;:</label>
     </div>
+    {*<div class="form-group">
+        <input type="file"
+               id="curriculumvitae" name="curriculumvitae"
+               accept="image/png, image/jpeg, application/pdf, .doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        <label for="curriculumvitae" class="is_empty">CV*&nbsp;:</label>
+    </div>*}
     <small class="text-center help-block">{#contact_fiels_resquest#|ucfirst}</small>
     <div class="mc-message"></div>
     <p id="btn-contact">
