@@ -117,6 +117,8 @@ class frontend_model_menu extends frontend_db_menu {
 		$current = $this->modelSystem->setCurrentId();
 		$links = $this->getItems('links',array('iso' => $iso),'all',false);
 		$active = array('controller' => $this->controller, 'ids' => array());
+		$catalog = null;
+		$pages = null;
 
 		foreach ($links as &$link) {
 			switch ($link['type_link']) {
@@ -174,7 +176,7 @@ class frontend_model_menu extends frontend_db_menu {
 				switch ($link['type_link']) {
 					case 'home':
 					case 'pages':
-						if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
+						/*if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
 						$model = $this->pages;
 						$conf = array(
 							'context' => 'all',
@@ -185,7 +187,23 @@ class frontend_model_menu extends frontend_db_menu {
 							$conf,
 							$current
 						);
-						if($link['type_link'] === 'pages') $data = $data[0]['subdata'];
+						if($link['type_link'] === 'pages') $data = $data[0]['subdata'];*/
+
+						if($pages === null) {
+							if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
+							$model = $this->pages;
+							$conf = array(
+								'context' => 'all',
+								'type' => 'menu',
+								'select' => 'tree'
+							);
+							$pages = $this->pages->getData(
+								$conf,
+								$current
+							);
+						}
+						$data = $pages[($link['type_link'] === 'category' ? $link['id_page'] : 'root')];
+
 						break;
 					case 'about':
 					case 'about_page':
@@ -204,19 +222,20 @@ class frontend_model_menu extends frontend_db_menu {
 						break;
 					case 'catalog':
 					case 'category':
-						if(!$this->catalog) $this->catalog = new frontend_model_catalog($this->template);
-						$model = $this->catalog;
-						$conf = array(
-							'context' => 'category',
-							'type' => 'menu',
-							'select' => 'all'
-						);
-						if($link['type_link'] === 'category') $conf['select'] = $link['id_page'];
-						$data = $this->catalog->getData(
-							$conf,
-							$current
-						);
-						if($link['type_link'] === 'category') $data = $data[0]['subdata'];
+						if($catalog === null) {
+							if(!$this->catalog) $this->catalog = new frontend_model_catalog($this->template);
+							$model = $this->catalog;
+							$conf = array(
+								'context' => 'category',
+								'type' => 'menu',
+								'select' => 'tree'
+							);
+							$catalog = $this->catalog->getData(
+								$conf,
+								$current
+							);
+						}
+						$data = $catalog[($link['type_link'] === 'category' ? $link['id_page'] : 'root')];
 						break;
 					case 'plugin':
 						$link['subdata'] = $this->getPluginPages(

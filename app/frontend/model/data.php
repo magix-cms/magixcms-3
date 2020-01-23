@@ -162,7 +162,10 @@ class frontend_model_data{
 			}
 		}
 
-		if($branch === 'root') {
+		if($branch === 'tree') {
+			return $childs;
+		}
+		elseif($branch === 'root') {
 			return $childs[$branch];
 		}
 		else {

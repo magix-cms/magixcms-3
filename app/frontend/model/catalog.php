@@ -493,6 +493,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 			),
 			'exclude' => null,
 			'limit' => null,
+			'pagination' => false,
 			'deepness' => 0
 		);
 
@@ -560,6 +561,8 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 		// Define random
 		$conf['random']  = $custom['random'] ? $custom['random'] : false;
+		$conf['pagination']  = $custom['pagination'] ? $custom['pagination'] : false;
+		$conf['page']  = $custom['page'] ? $custom['page'] : 1;
 		$conf['allow_duplicate']  = $custom['allow_duplicate'] ? $custom['allow_duplicate'] : false;
 
 		// deepness for element
@@ -584,6 +587,28 @@ class frontend_model_catalog extends frontend_db_catalog {
 		return $conf;
 	}
 
+	/**
+	 * Retourne les données sql sur base des paramètres passés en paramète
+	 * @param array $custom
+	 * @param array $current
+	 * @param bool $override
+	 * @return int|null
+	 * @throws Exception
+	 */
+	public function getPages($custom,$current,$override = false)
+	{
+		$limit = $custom['limit'];
+		if(isset($custom['limit'])) unset($custom['limit']);
+
+		$data = $this->getData($custom,$current,$override);
+
+		$nbp = 1;
+		if(!empty($data)) {
+			$nbp = ceil((count($data)/ $limit));
+		}
+		return $nbp;
+	}
+
     /**
      * Retourne les données sql sur base des paramètres passés en paramète
      * @param array $custom
@@ -598,6 +623,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 		if (!(array_key_exists('controller', $current))) return null;
 
+		//var_dump($custom);
 		$conf = $this->parseConf($custom,$current);
 		$current = $current['controller'];
 		$current['name'] = !empty($current['name']) ? $current['name'] : 'pages';
@@ -628,9 +654,9 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_cat = 1';
 
                 if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
-					if (isset($custom['select'])) {
+					/*if (isset($custom['select'])) {
 						$conditions .= ' AND (p.id_cat IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
-					}
+					}*/
 
 					if (isset($custom['exclude'])) {
 						$conditions .= ' AND p.id_cat NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
@@ -663,6 +689,9 @@ class frontend_model_catalog extends frontend_db_catalog {
 				// ORDER
 				// Set order
 				switch ($conf['sort']['type']) {
+					case 'name':
+						$conditions .= ' ORDER BY c.name_cat '.$conf['sort']['order'].', p.order_cat '.$conf['sort']['order'];
+						break;
 					case 'order':
 						$conditions .= ' ORDER BY p.id_parent, p.order_cat '.$conf['sort']['order'];
 						break;
@@ -677,24 +706,24 @@ class frontend_model_catalog extends frontend_db_catalog {
 					);
 
                     if(is_array($data) && !empty($data)) {
-                        if(is_string($conf['id']) && strpos($conf['id'],',')) $conf['id'] = explode(',',$conf['id']);
-                        $branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
+						if(is_string($conf['id']) && strpos($conf['id'],',')) $conf['id'] = explode(',',$conf['id']);
+						$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
 
-                        if($conf['random']) {
-                            if(!$conf['limit'] || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
-                                $data = $this->data->setPagesTree($data,'cat',$branch);
-                                shuffle($data);
-                            }
-                            else {
-                                $new_arr = array();
-                                foreach ($cat_ids as $id) $new_arr[] = $id['random_id'];
-                                $data = $this->data->setPagesTree($data,'cat',$new_arr);
-                            }
-                        }
-                        else {
-                            $data = $this->data->setPagesTree($data,'cat',$branch);
-                        }
-                    }
+						if($conf['random']) {
+							if(!$conf['limit'] || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
+								$data = $this->data->setPagesTree($data,'cat',$branch);
+								shuffle($data);
+							}
+							else {
+								$new_arr = array();
+								foreach ($cat_ids as $id) $new_arr[] = $id['random_id'];
+								$data = $this->data->setPagesTree($data,'cat',$new_arr);
+							}
+						}
+						else {
+							$data = $this->data->setPagesTree($data,'cat',$branch);
+						}
+					}
 				}
             }
         }

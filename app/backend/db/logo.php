@@ -34,6 +34,13 @@ class backend_db_logo
                 case 'content':
                     $sql = 'SELECT * FROM `mc_logo_content` WHERE `id_logo` = :id_logo AND `id_lang` = :id_lang';
                     break;
+				case 'page':
+					$sql = 'SELECT p.img_logo,p.active_logo,c.alt_logo,c.title_logo,lang.iso_lang,lang.id_lang
+							FROM mc_logo AS p
+							JOIN mc_logo_content AS c USING(id_logo)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE lang.iso_lang = :iso LIMIT 0,1';
+					break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
