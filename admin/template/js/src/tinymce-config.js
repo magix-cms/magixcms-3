@@ -17,7 +17,8 @@
         theme: 'silver',
         skin: "oxide",
         mobile: {
-            theme: 'mobile',
+            //theme: 'mobile',
+            menubar: true,
             plugins: [ 'lists', 'autolink' ],
             toolbar: [ 'undo', 'bold', 'italic', 'styleselect' ]
         },
