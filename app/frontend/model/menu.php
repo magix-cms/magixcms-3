@@ -202,8 +202,12 @@ class frontend_model_menu extends frontend_db_menu {
 								$current
 							);
 						}
-						$data = $pages[($link['type_link'] === 'category' ? $link['id_page'] : 'root')];
-
+						if($link['type_link'] === 'pages') {
+							$data = $pages[$link['id_page']]['subdata'];
+						}
+						else {
+							$data = $pages['root'];
+						}
 						break;
 					case 'about':
 					case 'about_page':
@@ -235,7 +239,12 @@ class frontend_model_menu extends frontend_db_menu {
 								$current
 							);
 						}
-						$data = $catalog[($link['type_link'] === 'category' ? $link['id_page'] : 'root')];
+						if($link['type_link'] === 'category') {
+							$data = $catalog[$link['id_page']]['subdata'];
+						}
+						else {
+							$data = $catalog['root'];
+						}
 						break;
 					case 'plugin':
 						$link['subdata'] = $this->getPluginPages(

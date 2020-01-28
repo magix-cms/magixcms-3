@@ -286,6 +286,16 @@ class backend_controller_setting extends backend_db_setting{
                     )
                 );
                 break;
+            case 'catalog':
+                parent::update(
+                    array(
+                        'type'=>$data['type']
+                    ),array(
+                        'vat_rate'      => $this->setting['vat_rate'],
+                        'price_display' => $this->setting['price_display']
+                    )
+                );
+                break;
         }
         $this->message->json_post_response(true,'update',$data['type']);
     }
@@ -306,6 +316,8 @@ class backend_controller_setting extends backend_db_setting{
                             $this->upd(array('type'=>'theme'));
                         }elseif($this->type === 'google'){
                             $this->upd(array('type'=>'google'));
+                        }elseif($this->type === 'catalog'){
+                            $this->upd(array('type'=>'catalog'));
                         }
                     }
                     break;

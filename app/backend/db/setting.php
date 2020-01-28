@@ -153,6 +153,14 @@ class backend_db_setting{
 						END
 						WHERE `name` IN ('analytics','robots')";
 				break;
+            case 'catalog':
+                $sql = "UPDATE `mc_setting`
+						SET `value` = CASE `name`
+							WHEN 'vat_rate' THEN :vat_rate
+							WHEN 'price_display' THEN :price_display
+						END
+						WHERE `name` IN ('vat_rate','price_display')";
+                break;
 		}
 
 		if($sql === '') return 'Unknown request asked';
