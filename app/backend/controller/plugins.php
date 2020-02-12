@@ -19,15 +19,22 @@ class backend_controller_plugins extends backend_db_plugins{
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
         $this->system = new component_core_system();
-        if (http_request::isPost('config')) {
-            $array = $_POST['config'];
+		if (http_request::isPost('config')) {
+			$array = $_POST['config'];
 			foreach($array as $key => $arr) {
 				foreach($arr as $k => $v) {
-					$array[$key][$k] = html_entity_decode($v);
+					if(is_array($v)) {
+						foreach($v as $sk => $sv) {
+							$array[$key][$k][$sk] = html_entity_decode($sv);
+						}
+					}
+					else {
+						$array[$key][$k] = html_entity_decode($v);
+					}
 				}
 			}
 			$this->config = $array;
-        }
+		}
     }
 
 	/**

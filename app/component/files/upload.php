@@ -117,6 +117,7 @@ class component_files_upload{
             'doc' => 'application/msword',
             'rtf' => 'application/rtf',
             'xls' => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'ppt' => 'application/vnd.ms-powerpoint',
 
             // open office
@@ -186,6 +187,7 @@ class component_files_upload{
             'doc' => 'application/msword',
             'rtf' => 'application/rtf',
             'xls' => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'ppt' => 'application/vnd.ms-powerpoint',
 
             // open office
@@ -1230,8 +1232,10 @@ class component_files_upload{
      * @param $file
      * @param $data
      * @param $filesCollection
+     * @param null $accept
      * @param bool $debug
      * @return array
+     * @throws Exception
      */
     public function setUploadFile($file,$data,$filesCollection,$accept=null,$debug=false)
     {
