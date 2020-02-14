@@ -140,6 +140,7 @@ class frontend_db_catalog
 				case 'category_short':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT p.id_cat,
+       								p.id_parent,
 								   c.name_cat,
 								   c.url_cat,
 								   c.seo_title_cat,

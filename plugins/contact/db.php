@@ -73,6 +73,9 @@ class plugins_contact_db
 					case 'config':
 						$sql = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
 						break;
+					case 'sender':
+						$sql = 'SELECT mail_sender FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
+						break;
 				}
 
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;

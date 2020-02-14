@@ -104,6 +104,15 @@ class db_adapter_mysql extends db_adapter_connector {
             $dsn .= ";unix_socket={$config['unix_socket']}";
         }
 
+		/*global $GLOBAL_PDO;
+		if ($GLOBAL_PDO==null)
+		{
+			$GLOBAL_PDO = $connection = new PDO($dsn, $username, $password, $this->options($config));
+		}
+		else
+		{
+			$connection = $GLOBAL_PDO;
+		}*/
         $connection = new PDO($dsn, $username, $password, $this->options($config));
 
         // If a character set has been specified, we'll execute a query against

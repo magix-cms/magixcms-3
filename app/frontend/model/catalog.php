@@ -43,22 +43,22 @@ class frontend_model_catalog extends frontend_db_catalog {
     /**
      * @var component_routing_url
      */
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$math,$seo,$logo;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$math,$seo,$logo,$imagePlaceHolder;
 
 	/**
 	 * frontend_model_catalog constructor.
-	 * @param stdClass $t
+	 * @param null|frontend_model_template $t
 	 */
     public function __construct($t = null)
     {
-		$this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
-		$this->imagesComponent = new component_files_images($t);
-		$this->modelPlugins = new frontend_model_plugins();
+		$this->imagesComponent = new component_files_images($this->template);
+		$this->modelPlugins = new frontend_model_plugins($this->template);
 		$this->math = new component_format_math();
 		$this->data = new frontend_model_data($this,$this->template);
-		$this->seo = new frontend_model_seo('catalog', '', '');
-        $this->logo = new frontend_model_logo();
+		$this->seo = new frontend_model_seo('catalog', '', '',$this->template);
+        $this->logo = new frontend_model_logo($this->template);
     }
 
     /**
@@ -76,7 +76,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 		$string_format = new component_format_string();
         $data = null;
         $extwebp = 'webp';
-        $imagePlaceHolder = $this->logo->getImagePlaceholder();
+        if(!isset($this->imagePlaceHolder)) $this->imagePlaceHolder = $this->logo->getImagePlaceholder();
 
         if ($row != null) {
             if (isset($row['name'])) {
@@ -138,39 +138,36 @@ class frontend_model_catalog extends frontend_db_catalog {
 				$data['resume']    = $row['resume_p'] ? $row['resume_p'] : ($row['content_p'] ? $string_format->truncate(strip_tags($row['content_p'])) : '');
                 $data['order']     = $row['order_p'];
                 if (isset($row['img'])) {
-                    if($row['img'] != NULL) {
-                        $imgPrefix = $this->imagesComponent->prefix();
-                        $fetchConfig = $this->imagesComponent->getConfigItems(array(
-                            'module_img' => 'catalog',
-                            'attribute_img' => 'product'
-                        ));
+					$imgPrefix = $this->imagesComponent->prefix();
+					$fetchConfig = $this->imagesComponent->getConfigItems(array(
+						'module_img' => 'catalog',
+						'attribute_img' => 'product'
+					));
 
-                        if(is_array($row['img'])) {
-                            foreach ($row['img'] as $item => $val) {
-                                // # return filename without extension
-                                $pathinfo = pathinfo($val['name_img']);
-                                $filename = $pathinfo['filename'];
+					if(is_array($row['img'])) {
+						foreach ($row['img'] as $item => $val) {
+							// # return filename without extension
+							$pathinfo = pathinfo($val['name_img']);
+							$filename = $pathinfo['filename'];
 
-                                $data['imgs'][$item]['img']['alt'] = $val['alt_img'];
-                                $data['imgs'][$item]['img']['title'] = $val['title_img'];
-                                $data['imgs'][$item]['img']['caption'] = $val['caption_img'];
-                                $data['imgs'][$item]['img']['name'] = $val['name_img'];
-                                foreach ($fetchConfig as $key => $value) {
-									$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
-									$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
-                                    $data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-									$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
-									//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
-									$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-									//$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
-									$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-                                    $data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
-                                }
-                                $data['imgs'][$item]['default'] = $val['default_img'];
-                            }
-                        }
-                    }
-                    //$data['img_default'] = '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+							$data['imgs'][$item]['img']['alt'] = $val['alt_img'];
+							$data['imgs'][$item]['img']['title'] = $val['title_img'];
+							$data['imgs'][$item]['img']['caption'] = $val['caption_img'];
+							$data['imgs'][$item]['img']['name'] = $val['name_img'];
+							foreach ($fetchConfig as $key => $value) {
+								$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+								$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+								$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
+								//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+								//$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+							}
+							$data['imgs'][$item]['default'] = $val['default_img'];
+						}
+					}
                 }
                 else {
                     if(isset($row['name_img'])){
@@ -199,7 +196,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 						$data['img']['caption'] = $row['caption_img'];
 						$data['img']['name'] = $row['name_img'];
                     }
-					$data['img']['default'] = isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+					$data['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
 				}
 
 				// -- Similar / Associated product
@@ -260,7 +257,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 							$data['associated'][$key]['img']['caption'] = $value['caption_img'];
 							$data['associated'][$key]['img']['name'] = $value['name_img'];
                         }
-                        $data['associated'][$key]['img']['default'] = isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+                        $data['associated'][$key]['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
                     }
                 }
                 // Plugin
@@ -320,7 +317,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 				$data['img']['alt'] = $row['alt_img'];
 				$data['img']['title'] = $row['title_img'];
 				$data['img']['caption'] = $row['caption_img'];
-                $data['img']['default'] = isset($imagePlaceHolder['category']) ? $imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
+                $data['img']['default'] = isset($this->imagePlaceHolder['category']) ? $this->imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
 					'type' => 'category',
 					'iso'  => $row['iso_lang'],
@@ -494,7 +491,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 			'exclude' => null,
 			'limit' => null,
 			'pagination' => false,
-			'deepness' => 0
+			'deepness' => 'all'
 		);
 
 		// Define context
@@ -575,6 +572,9 @@ class frontend_model_catalog extends frontend_db_catalog {
 				elseif($custom['deepness'] == 'none') {
 					$conf['deepness'] = 0;
 				}
+			}
+			elseif(is_int($custom['deepness']) && $custom['deepness'] >= 0) {
+				$conf['deepness'] = $custom['deepness'];
 			}
 			else {
 				$conf['deepness'] = 0;
@@ -711,17 +711,17 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 						if($conf['random']) {
 							if(!$conf['limit'] || ($conf['limit'] >= $ttp && !$conf['allow_duplicate'])) {
-								$data = $this->data->setPagesTree($data,'cat',$branch);
+								$data = $this->data->setPagesTree($data,'cat',$branch,$conf['deepness']);
 								shuffle($data);
 							}
 							else {
 								$new_arr = array();
 								foreach ($cat_ids as $id) $new_arr[] = $id['random_id'];
-								$data = $this->data->setPagesTree($data,'cat',$new_arr);
+								$data = $this->data->setPagesTree($data,'cat',$new_arr,$conf['deepness']);
 							}
 						}
 						else {
-							$data = $this->data->setPagesTree($data,'cat',$branch);
+							$data = $this->data->setPagesTree($data,'cat',$branch,$conf['deepness']);
 						}
 					}
 				}
@@ -895,6 +895,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 	 * Retourne les données sql sur base des paramètres donnés
 	 * @param $custom
 	 * @param array $current
+	 * @param false|int $deepness
 	 * @return array|null
 	 */
     public function getShortData(array $custom,array $current)
@@ -915,7 +916,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 			$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_cat = 1';
 
 			if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
-				if (isset($custom['select'])) {
+				if (isset($custom['select']) && (is_int($conf['id']) || is_array($conf['id']))) {
 					$conditions .= ' AND (p.id_cat IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
 				}
 
@@ -931,7 +932,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 			// Set order
 			switch ($conf['sort']['type']) {
 				case 'order':
-					if(!isset($custom['id'])) {
+					if(isset($custom['select']) && (is_int($conf['id']) || is_array($conf['id']))) {
 						$conditions .= 'ORDER BY FIELD(p.id_cat,'.(is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']).')';
 					}
 					else {
@@ -950,7 +951,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 
 				if(is_array($data) && !empty($data)) {
 					$branch = ($conf['id'] !== null) ? $conf['id'] : 'root';
-					$data = $this->data->setPagesTree($data,'cat',$branch);
+					$data = $this->data->setPagesTree($data,'cat',$branch,$conf['deepness']);
 				}
 			}
         }

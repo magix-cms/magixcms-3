@@ -80,20 +80,20 @@
         assign="pages"
     }
  */
-function smarty_function_widget_cms_data ($params, $template)
+function smarty_function_widget_cms_data ($params, $smarty)
 {
 	if(!empty($params)) {
-		$modelSystem = new frontend_model_core();
-		$modelPages = new frontend_model_pages();
+		$modelTemplate = $smarty->tpl_vars['modelTemplate']->value instanceof frontend_model_template ? $smarty->tpl_vars['modelTemplate']->value : new frontend_model_template();
+		$modelSystem = new frontend_model_core($modelTemplate);
+		$modelPages = new frontend_model_pages($modelTemplate);
 
 		// Set and load data
 		$current  = $modelSystem->setCurrentId();
 		$conf     = (is_array($params['conf'])) ? $params['conf'] : array();
 		$override = $params['conf']['plugins']['override'] ? $params['conf']['plugins']['override'] : '';
-		$data     = $modelPages->getData($conf,$current,$override);
+		$data     = (isset($params['datatype']) && $params['datatype'] === 'short') ?  $modelPages->getShortData($conf,$current) : $modelPages->getData($conf,$current,$override);
 		$newRow   = (is_array($params['conf']['plugins']['item'])) ? $params['conf']['plugins']['item'] : array();
-		$current  = $current;
 
-		$template->assign(isset($params['assign']) ? $params['assign'] : 'data',$modelPages->parseData($data,$current,$newRow));
+		$smarty->assign(isset($params['assign']) ? $params['assign'] : 'data',$modelPages->parseData($data,$current,$newRow,(isset($params['datatype']) && $params['datatype'] === 'short')));
 	}
 }

@@ -9,6 +9,7 @@ class component_files_images{
 
     protected $template,$configCollection, $fileUpload, $progress, $config;
     public $imageManager;
+    protected $imgconfig = [];
 
     /**
      * component_files_images constructor.
@@ -73,13 +74,20 @@ class component_files_images{
      * @throws Exception
      */
     public function getConfigItems($params,$config = array('context'=>'all','type'=>'imgSize')){
-        return $this->configCollection->fetchData(
-            $config,
-            array(
-                'module_img'    =>$params['module_img'],
-                'attribute_img' =>$params['attribute_img']
-            )
-        );
+    	if(!isset($this->imgconfig[$params['module_img']][$params['attribute_img']])) {
+			$imgconf = $this->configCollection->fetchData(
+				$config,
+				array(
+					'module_img'    =>$params['module_img'],
+					'attribute_img' =>$params['attribute_img']
+				)
+			);
+			$this->imgconfig[$params['module_img']] = [
+				$params['attribute_img'] => $imgconf
+			];
+		}
+
+        return $this->imgconfig[$params['module_img']][$params['attribute_img']];
     }
 
     /**

@@ -48,13 +48,14 @@ class frontend_model_setting extends frontend_db_setting {
 	/**
 	 * @var frontend_model_data
 	 */
-	protected $data;
+	protected $template, $data;
 
 	/**
 	 * Constructor
 	 */
-	function __construct(){
-		$this->data = new frontend_model_data($this);
+	function __construct($t = null){
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$this->data = new frontend_model_data($this,$this->template);
 	}
 
 	/**

@@ -60,12 +60,12 @@ class frontend_model_smarty extends Smarty{
 	 * function construct class
 	 *
 	 */
-	public function __construct(){
+	public function __construct($t){
 		/**
 		 * include parent var smarty
 		 */
 		parent::__construct(); 
-		self::setParams();
+		self::setParams($t);
 		/*
 		 You can remove this comment, if you prefer this JSP tag style
 		 instead of the default { and }
@@ -76,11 +76,14 @@ class frontend_model_smarty extends Smarty{
 	private function setPath(){
 		return component_core_system::basePath();
 	}
+
 	/**
 	 * Les paramètres pour la configuration de smarty 3
+	 * @param null|frontend_model_template $t
 	 */
-	protected function setParams(){
-        $template = new frontend_model_template();
+	protected function setParams($t){
+		$template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+
 		/**
 		 * Path -> configs
 		 */
@@ -179,10 +182,10 @@ class frontend_model_smarty extends Smarty{
 		 */
 		//$this->enableSecurity('Security_Policy');
 	}
-	public static function getInstance(){
+	public static function getInstance($t = null){
         if (!isset(self::$instance))
       {
-         self::$instance = new frontend_model_smarty();
+         self::$instance = new frontend_model_smarty($t);
       }
     	return self::$instance;
     }

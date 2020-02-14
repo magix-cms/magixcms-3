@@ -4,7 +4,7 @@ include_once ('db.php');
  * Class plugins_contact_admin
  * Fichier pour l'administration d'un plugin
  */
-class plugins_contact_admin extends plugins_contact_db{
+class plugins_contact_admin extends plugins_contact_db {
     public $edit, $action, $tabs;
     protected $controller,$data,$template, $message, $plugins, $xml, $sitemap,$modelLanguage,$collectionLanguage,$header;
     public $content,$id_contact,$mail_contact,$address_required,$address_enabled,$mail_sender,$id_config;
@@ -136,6 +136,21 @@ class plugins_contact_admin extends plugins_contact_db{
         return $arr;
     }
 
+	/**
+	 * @return array
+	 */
+	public function getContact(){
+		return $this->getItems('contacts',array('lang' => $this->getlang),'all',false);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getSender()
+	{
+		return $this->getItems('sender',null,'one',false);
+	}
+
     /**
      * Update data
      * @param $data
@@ -161,6 +176,7 @@ class plugins_contact_admin extends plugins_contact_db{
      * Mise a jour des données
      * @param $data
      */
+
     private function upd($data)
     {
         switch ($data['type']) {
@@ -235,6 +251,9 @@ class plugins_contact_admin extends plugins_contact_db{
         //if(!empty($extendData)) return $extendData;
     }
 
+	/**
+	 * @param $data
+	 */
     private function save($data){
         $data['address_enabled'] = (!isset($data['address_enabled']) ? 0 : 1);
         $data['address_required'] = (!isset($data['address_required']) ? 0 : 1);
@@ -253,6 +272,7 @@ class plugins_contact_admin extends plugins_contact_db{
         );
 
     }
+
     /**
      * Insertion de données
      * @param $data

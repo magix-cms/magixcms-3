@@ -34,42 +34,42 @@
 */
 class frontend_model_seo extends frontend_db_seo {
 	/**
-	 * @var backend_model_data
+	 * @var frontend_model_template $template
+	 * @var frontend_model_data $data
 	 */
-	protected $data, $template;
+	protected $template, $data;
 
 	/**
-	 * Définition de l'attribut
-	 * @var $attribute
+	 * @var array $seoVar String memory
 	 */
-	public $attribute,
-		/**
-		 * Définition du niveau
-		 */
+	protected $seoVar = [];
+
+	/**
+	 * @var string $attribute Définition de l'attribut
+	 * @var string $level Définition du niveau
+	 * @var string $type Définition du style de métas
+	 * @var string $iso Définition de la langue
+	 */
+	public
+		$attribute,
 		$level,
-		/**
-		 * Définition du style de métas
-		 */
 		$type,
-		/**
-		 * Définition de la langue
-		 */
 		$iso;
 
 	/**
 	 * frontend_model_seo constructor.
-	 * @param $attribute
-	 * @param $level
-	 * @param $type
+	 * @param string $attribute
+	 * @param string $level
+	 * @param string $type
+	 * @param null|frontend_model_template $t
 	 */
-	public function __construct($attribute, $level, $type){
-		$this->data = new frontend_model_data($this);
-		$this->template = new frontend_model_template();
-
+	public function __construct($attribute, $level, $type, $t = null){
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$this->data = new frontend_model_data($this,$this->template);
 		$this->attribute = $attribute;
 		$this->level = $level;
 		$this->type = $type;
-		$this->iso = $this->template->currentLanguage();
+		$this->iso = $this->template->lang;
 	}
 
 	/**
@@ -93,17 +93,30 @@ class frontend_model_seo extends frontend_db_seo {
 	 * @return mixed
 	 */
 	public function replace_var_rewrite($parent='', $record='', $type =''){
+		$content = null;
 		if($type === '') $type = $this->type;
-		$db = $this->getItems('replace',array('attribute' => $this->attribute, 'lvl' => $this->level, 'type' => $type, 'iso' => $this->iso),'one',false);
 
-		if($db != null){
+		if(!is_array($this->seoVar[$this->iso][$this->attribute][$this->level]) || !key_exists($type, $this->seoVar[$this->iso][$this->attribute][$this->level])) {
+			$db = $this->getItems('replace',array('attribute' => $this->attribute, 'lvl' => $this->level, 'type' => $type, 'iso' => $this->iso),'one',false);
+
+			if(!key_exists($this->iso, $this->seoVar)) $this->seoVar[$this->iso] = [];
+			if(!key_exists($this->attribute, $this->seoVar[$this->iso])) $this->seoVar[$this->iso][$this->attribute] = [];
+			if(!key_exists($this->level, $this->seoVar[$this->iso][$this->attribute])) $this->seoVar[$this->iso][$this->attribute][$this->level] = [];
+
+			$this->seoVar[$this->iso][$this->attribute][$this->level][$type] = (isset($db['content_seo']) && !empty($db['content_seo'])) ? $db['content_seo'] : null;
+		}
+
+		$string = $this->seoVar[$this->iso][$this->attribute][$this->level][$type];
+
+		if($string !== null){
 			//Tableau des variables à rechercher
 			$search = array('[[PARENT]]','[[RECORD]]');
 			//Tableau des variables à remplacer
 			$replace = array($parent, $record);
 			//texte générique à remplacer
-			$content = str_replace($search ,$replace, $db['content_seo']);
-			return $content;
+			$content = str_replace($search ,$replace, $string);
 		}
+
+		return $content;
 	}
 }

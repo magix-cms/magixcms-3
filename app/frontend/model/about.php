@@ -183,9 +183,9 @@ class frontend_model_about extends frontend_db_about {
 	 */
 	public function __construct($t = null)
 	{
-		$this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
-		$this->modelPlugins = new frontend_model_plugins();
+		$this->modelPlugins = new frontend_model_plugins($this->template);
 		$this->data = new frontend_model_data($this,$this->template);
 		$this->language = new frontend_controller_language($this->template);
 		$this->languages = $this->language->setCollection();

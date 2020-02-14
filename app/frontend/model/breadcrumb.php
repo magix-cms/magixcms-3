@@ -42,35 +42,19 @@ class frontend_model_breadcrumb extends frontend_db_menu {
 	 */
 	public function __construct($t = null)
 	{
-		$this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->data = new frontend_model_data($this,$this->template);
-		$this->modelSystem = new frontend_model_core();
+		$this->modelSystem = new frontend_model_core($this->template);
 		$formClean = new form_inputEscape();
 
-		if (http_request::isGet('controller')) {
-			$this->controller = $formClean->simpleClean($_GET['controller']);
-		}
-		if (http_request::isGet('id')) {
-			$this->id = $formClean->numeric($_GET['id']);
-		}
-		if (http_request::isGet('id_parent')) {
-			$this->id_parent = $formClean->numeric($_GET['id_parent']);
-		}
-		if (http_request::isGet('date')) {
-			$this->date = $formClean->simpleClean($_GET['date']);
-		}
-		if (http_request::isGet('year')) {
-			$this->year = $formClean->simpleClean($_GET['year']);
-		}
-		if (http_request::isGet('month')) {
-			$this->month = $formClean->simpleClean($_GET['month']);
-		}
-		if (http_request::isGet('tag')) {
-			$this->tag = $formClean->simpleClean($_GET['tag']);
-		}
-		if (http_request::isGet('page')) {
-			$this->page = $formClean->simpleClean($_GET['page']) - 1;
-		}
+		if (http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
+		if (http_request::isGet('id')) $this->id = $formClean->numeric($_GET['id']);
+		if (http_request::isGet('id_parent')) $this->id_parent = $formClean->numeric($_GET['id_parent']);
+		if (http_request::isGet('date')) $this->date = $formClean->simpleClean($_GET['date']);
+		if (http_request::isGet('year')) $this->year = $formClean->simpleClean($_GET['year']);
+		if (http_request::isGet('month')) $this->month = $formClean->simpleClean($_GET['month']);
+		if (http_request::isGet('tag')) $this->tag = $formClean->simpleClean($_GET['tag']);
+		if (http_request::isGet('page')) $this->page = $formClean->simpleClean($_GET['page']) - 1;
 	}
 
 	/**

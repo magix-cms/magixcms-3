@@ -37,19 +37,15 @@ class frontend_model_plugins{
 
 	/**
 	 * frontend_model_plugins constructor.
-	 * @param stdClass $t
+	 * @param null|frontend_model_template $t
 	 */
     public function __construct($t = null)
     {
-        $this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $formClean = new form_inputEscape();
         $this->DBPlugins = new frontend_db_plugins();
-        if(http_request::isGet('controller')){
-            $this->controller_name = $formClean->simpleClean($_GET['controller']);
-        }
-        if(http_request::isGet('plugin')){
-            $this->plugin = $formClean->simpleClean($_GET['plugin']);
-        }
+        if(http_request::isGet('controller')) $this->controller_name = $formClean->simpleClean($_GET['controller']);
+        if(http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
         //$this->dbPlugins = new backend_db_plugins();
         //$this->data = new backend_model_data($this);
         $this->collectionLanguage = new component_collections_language();
@@ -58,7 +54,8 @@ class frontend_model_plugins{
      * @param $routes
      * @param $template
      */
-    public function addConfigDir($routes, $template){
+    public function addConfigDir($routes, $template = null){
+    	$template = $template === null ? $this->template : $template;
         if(isset($this->controller_name)){
             $setConfigPath = component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/';
             if(file_exists($setConfigPath)){

@@ -44,8 +44,8 @@ class frontend_model_share extends frontend_db_share {
 	 */
 	public function __construct($t = null)
 	{
-		$this->template = $t ? $t : new frontend_model_template();
-		$this->data = new frontend_model_data($this);
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$this->data = new frontend_model_data($this,$this->template);
 	}
 
 	/**

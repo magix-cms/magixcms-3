@@ -38,8 +38,9 @@ class frontend_model_module extends frontend_db_module {
 	/**
 	 * frontend_model_plugins constructor.
 	 */
-    public function __construct() {
-		$this->data = new frontend_model_data($this);
+    public function __construct($t = null) {
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$this->data = new frontend_model_data($this,$this->template);
 	}
 
 	/**

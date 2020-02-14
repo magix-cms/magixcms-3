@@ -1,6 +1,6 @@
 <?php
 class frontend_model_data{
-	protected $template, $db, $caller;
+	protected $template, $db, $caller, $logger;
 
 	/**
 	 * backend_model_data constructor.
@@ -10,14 +10,14 @@ class frontend_model_data{
 	public function __construct($caller, $t = null)
 	{
 		$this->caller = $caller;
-		$this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$this->logger = new debug_logger(MP_LOG_DIR);
 
 		try {
 			$this->db = (new ReflectionClass(get_parent_class($caller)))->newInstance();
 		}
 		catch(Exception $e) {
-			$logger = new debug_logger(MP_LOG_DIR);
-			$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			$this->logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
 		}
 	}
 
@@ -44,35 +44,35 @@ class frontend_model_data{
 			$items = array();
 			$i[$deep] = 0;
 
-			do{
+			do {
 				// *** loop management START
-				if ($pass_trough == 0){
+				if ($pass_trough === 0){
 					// Si je n'ai plus de données à traiter je vide ma variable
 					$row[$deep] = null;
-				}else{
+				}
+				else {
 					// Sinon j'active le traitement des données
 					$pass_trough = 0;
 				}
 
 				// Si je suis au premier niveaux et que je n'ai pas de donnée à traiter
-				if ($deep == 1 AND $row[$deep] == null) {
+				if ($deep === 1 AND $row[$deep] === null) {
 					// récupération des données dans $data
 					$row[$deep] = array_shift($data);
 				}
 
 				// Si ma donnée possède des sous-donnée sous-forme de tableau
-				if (isset($row[$deep]['subdata']) ){
-					if (is_array($row[$deep]['subdata']) AND $row[$deep]['subdata'] != null){
-						// On monte d'une profondeur
-						$deep++;
-						$deep_minus++;
-						$deep_plus++;
-						// on récupére la  première valeur des sous-données en l'éffacant du tableau d'origine
-						$row[$deep] = array_shift($row[$deep_minus]['subdata']);
-						// Désactive le traitement des données
-						$pass_trough = 1;
-					}
-				}elseif($deep != 1){
+				if (isset($row[$deep]['subdata']) && is_array($row[$deep]['subdata'])){
+					// On monte d'une profondeur
+					$deep++;
+					$deep_minus++;
+					$deep_plus++;
+					// on récupére la  première valeur des sous-données en l'éffacant du tableau d'origine
+					$row[$deep] = array_shift($row[$deep_minus]['subdata']);
+					// Désactive le traitement des données
+					$pass_trough = 1;
+				}
+				elseif($deep !== 1){
 					if ( $row[$deep] == null) {
 						if ($row[$deep_minus]['subdata'] == null){
 							// Si je n'ai pas de sous-données & pas de données à traiter & pas de frères à récupérer dans mon parent
@@ -93,7 +93,7 @@ class frontend_model_data{
 				// *** loop management END
 
 				// *** list format START
-				if ($row[$deep] != null AND $pass_trough != 1){
+				if ($row[$deep] !== null AND $pass_trough !== 1){
 					$i[$deep]++;
 
 					// Construit doonées de l'item en array avec clée nominative unifiée ('name' => 'monname,'descr' => '<p>ma descr</p>,...)
@@ -116,11 +116,11 @@ class frontend_model_data{
 				// *** list format END
 
 				// Si $data est vide ET que je n'ai plus de données en traitement => arrête la boucle
-				if (empty($data) AND $row[1] == null){
+				if (empty($data) AND $row[1] === null){
 					$data_empty = true;
 				}
 
-			}while($data_empty == false);
+			} while($data_empty == false);
 
 			return $items[$deep];
 		}
@@ -133,30 +133,43 @@ class frontend_model_data{
 	 * @param string $branch
 	 * @return array|mixed
 	 */
-	public function setPagesTree($data, $type, $branch = 'root')
+	public function setPagesTree($data, $type, $branch = 'root', $deepness = 'all', $parser = false, $shortParser = false)
 	{
 		$childs = array();
+		$kept = array();
 		$id = 'id_'.$type;
 
 		foreach ($data as &$item) {
 			if(!isset($item[$id])) $id = 'id';
-			$childs[$item[$id]] = &$item;
-			$childs[$item[$id]]['subdata'] = array();
+
+			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all'){
+				if($parser !== false) {
+					if($shortParser) $item = method_exists($parser, 'setItemShortData') ? $parser->setItemShortData($item) : $item;
+					else $item = method_exists($parser, 'setItemData') ? $parser->setItemData($item) : $item;
+				}
+
+				$childs[$item[$id]] = &$item;
+				$childs[$item[$id]]['subdata'] = array();
+				$childs[$item[$id]]['deepness'] = !isset($childs[$item['id_parent']]) ? 0 : $childs[$item['id_parent']]['deepness'] +1;
+				$kept[] = &$item;
+			}
 		}
 		unset($item);
 
-		foreach($data as &$item) {
-			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
-			if(!isset($item[$id])) $id = 'id';
+		foreach($kept as &$item) {
+			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all') {
+				$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+				if (!isset($item[$id])) $id = 'id';
 
-			if($k === 'root')
-				$childs[$k][] = &$item;
-			else
-				$childs[$k]['subdata'][] = &$item;
+				if ($k === 'root')
+					$childs[$k][] = &$item;
+				else
+					$childs[$k]['subdata'][] = &$item;
+			}
 		}
 		unset($item);
 
-		foreach($data as &$item) {
+		foreach($kept as &$item) {
 			if (isset($childs[$item[$id]])) {
 				$item['subdata'] = $childs[$item[$id]]['subdata'];
 			}

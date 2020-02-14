@@ -50,11 +50,12 @@ class frontend_model_template{
 	 * @var string
 	 */
 	private $ConfigFile;
-	protected $amp,$DBDomain,$settings,$ssl;
+	protected $amp,$DBDomain,$ssl;
     /**
      * @var component_collections_setting
      */
     public
+		$settings,
 		$theme,
 		$defaultLang,
 		$lang,
@@ -68,16 +69,21 @@ class frontend_model_template{
 	 * Constructor
 	 */
     public function __construct(){
-        $this->collectionsSetting = new component_collections_setting();
-        $this->settings = $this->collectionsSetting->getSetting();
-        $this->cLangs = new component_collections_language();
 		$this->ConfigFile = 'local_';
+		$this->collectionsSetting = new component_collections_setting();
+		$this->cLangs = new component_collections_language();
 		$this->DBDomain = new frontend_db_domain();
-		$this->theme = $this->themeSelected();
+
+		$this->init();
+	}
+
+    public function init(){
+        $this->settings = $this->collectionsSetting->getSetting();
+		$this->ssl = $this->settings['ssl'];
 		$this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST'])) : null;
 		$this->langs = $this->langsAvailable();
 		$this->lang = $this->currentLanguage();
-		$this->ssl = $this->settings['ssl'];
+		$this->theme = $this->themeSelected();
 		$this->amp = (http_request::isGet('amp') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') && $this->ssl['value'])? true : false;
         $this->defaultDomain = $this->setDefaultDomain();
 	}
@@ -105,9 +111,9 @@ class frontend_model_template{
 	public function langsAvailable()
 	{
 		$langs = null;
-		if($this->domain != null) {
+		if(!empty($this->domain)) {
 			$data = $this->DBDomain->fetchData(array('context' => 'all', 'type' => 'languages'), array('id' => $this->domain['id_domain']));
-			if($data != null) $langs = $data;
+			if(!empty($data)) $langs = $data;
 		}
 		if(!$langs) $langs = $this->cLangs->fetchData(array('context'=>'all','type'=>'active'));
 
@@ -125,7 +131,7 @@ class frontend_model_template{
     	$lang = null;
         if($this->domain['id_domain'] != null) {
 			$data = $this->DBDomain->fetchData(array('context' => 'one', 'type' => 'language'), array('id' => $this->domain['id_domain']));
-			if($data != null) $lang = $data['iso_lang'];
+			if(!empty($data)) $lang = $data['iso_lang'];
 		}
 
         if(!$lang) {
@@ -211,9 +217,9 @@ class frontend_model_template{
 	 */
 	public function configLoad($section = ''){
 	    try {
-            frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad($this->ConfigFile), $section);
+            frontend_model_smarty::getInstance($this)->configLoad($this->pathConfigLoad($this->ConfigFile), $section);
             if (file_exists(component_core_system::basePath() . '/skin/' . $this->theme . '/i18n/')) {
-                frontend_model_smarty::getInstance()->configLoad($this->pathConfigLoad('theme_'));
+                frontend_model_smarty::getInstance($this)->configLoad($this->pathConfigLoad('theme_'));
             }
         }catch(Exception $e) {
             $logger = new debug_logger(MP_LOG_DIR);
@@ -225,7 +231,8 @@ class frontend_model_template{
 	 * Charge le theme selectionné ou le theme par défaut
 	 */
 	public function loadTheme(){
-		$db = $this->collectionsSetting->fetch('theme');
+		//$db = $this->collectionsSetting->fetch('theme');
+		$db = $this->settings['theme'];
 		if($db['value'] != null){
 			if($db['value'] == 'default'){
 				$theme =  $db['value'];
@@ -287,7 +294,7 @@ class frontend_model_template{
      * @return void
      */
 	public function addWidgetDir($smarty,$rootpath,$debug=false){
-        $add_widget_dir = $rootpath."skin/".$this->loadTheme().'/widget/';
+        $add_widget_dir = $rootpath."skin/".$this->theme.'/widget/';
         if(file_exists($add_widget_dir)){
             if(is_dir($add_widget_dir)){
                 $smarty->addPluginsDir($add_widget_dir);
@@ -314,10 +321,11 @@ class frontend_model_template{
 				$template = 'amp/'.$template;
 			}
 		}
+    	$this->assign('modelTemplate',$this);
         if(!self::isCached($template, $cache_id, $compile_id, $parent)){
-            frontend_model_smarty::getInstance()->display($template, $cache_id, $compile_id, $parent);
+            frontend_model_smarty::getInstance($this)->display($template, $cache_id, $compile_id, $parent);
         }else{
-            frontend_model_smarty::getInstance()->display($template, $cache_id, $compile_id, $parent);
+            frontend_model_smarty::getInstance($this)->display($template, $cache_id, $compile_id, $parent);
         }
     }
 
@@ -432,9 +440,9 @@ class frontend_model_template{
 		if(is_array($addConfigDir)){
             $setDefaultConfigDir = $this->setDefaultConfigDir();
             //frontend_model_smarty::getInstance()->addConfigDir($addConfigDir);
-            frontend_model_smarty::getInstance()->setConfigDir(array_merge($setDefaultConfigDir,$addConfigDir));
-
-		}else{
+            frontend_model_smarty::getInstance($this)->setConfigDir(array_merge($setDefaultConfigDir,$addConfigDir));
+		}
+		else{
 			throw new Exception('Error: addConfigDir is not array');
 		}
 		/*if(is_array($load_files)){
@@ -452,15 +460,17 @@ class frontend_model_template{
             foreach ($load_files as $row=>$val){
                 if(is_string($row)){
                     if(array_key_exists($row, $load_files)){
-                        frontend_model_smarty::getInstance()->configLoad($row.$this->currentLanguage().'.conf',$val);
+                        frontend_model_smarty::getInstance($this)->configLoad($row.$this->lang.'.conf',$val);
                     }
                 }else{
-                    frontend_model_smarty::getInstance()->configLoad($load_files[$row].$this->currentLanguage().'.conf');
+                    frontend_model_smarty::getInstance($this)->configLoad($load_files[$row].$this->lang.'.conf');
                 }
             }
-        }else{
+        }
+		else{
 			throw new Exception('Error: load_files is not array');
 		}
+
 		if($debug!=false){
             $config_dir = $this->getConfigDir();
             print '<pre>';

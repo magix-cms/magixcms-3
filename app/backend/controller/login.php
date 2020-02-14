@@ -80,7 +80,7 @@ class backend_controller_login extends backend_db_employee{
 	 * @param stdClass $t
 	 */
     public function __construct($t = null){
-		$this->template = $t ? $t : new backend_model_template;
+		$this->template = $t instanceof backend_model_template ? $t : new backend_model_template;
 		$this->header = new http_header();
 		$this->data = new backend_model_data($this);
         $this->message = new component_core_message($this->template);

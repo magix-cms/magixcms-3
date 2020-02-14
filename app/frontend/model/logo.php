@@ -39,13 +39,13 @@ class frontend_model_logo extends frontend_db_logo {
 
     /**
      * frontend_model_domain constructor.
-     * @param stdClass $t
+     * @param null|frontend_model_template $t
      */
     public function __construct($t = null)
     {
-        $this->template = $t ? $t : new frontend_model_template();
+        $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $this->data = new frontend_model_data($this,$this->template);
-        $this->iso = $this->template->currentLanguage();
+        $this->iso = $this->template->lang;
         $this->imagesComponent = new component_files_images($this->template);
         $this->finder = new file_finder();
     }

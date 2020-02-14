@@ -44,17 +44,17 @@ class frontend_model_pages extends frontend_db_pages{
 
 	/**
 	 * frontend_model_pages constructor.
-	 * @param stdClass $t
+	 * @param null|frontend_model_template $t
 	 */
     public function __construct($t = null)
     {
-		$this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
-		$this->imagesComponent = new component_files_images($t);
-		$this->modelPlugins = new frontend_model_plugins();
+		$this->imagesComponent = new component_files_images($this->template);
+		$this->modelPlugins = new frontend_model_plugins($this->template);
 		$this->math = new component_format_math();
         $this->data = new frontend_model_data($this,$this->template);
-        $this->logo = new frontend_model_logo();
+        $this->logo = new frontend_model_logo($this->template);
     }
 
     /**
@@ -512,7 +512,7 @@ class frontend_model_pages extends frontend_db_pages{
 			// Set order
 			switch ($conf['sort']['type']) {
 				case 'order':
-					if(!isset($custom['id'])) {
+					if(isset($custom['select']) && (is_int($conf['id']) || is_array($conf['id']))) {
 						$conditions .= 'ORDER BY FIELD(p.id_pages,'.(is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']).')';
 					}
 					else {

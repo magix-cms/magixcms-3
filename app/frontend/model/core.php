@@ -39,7 +39,17 @@
  * Time: 00:10
  * License: Dual licensed under the MIT or GPL Version
  */
-class frontend_model_core{
+class frontend_model_core {
+	/**
+	 * frontend_model_core constructor.
+	 * @param null|frontend_model_template $t
+	 */
+	public function __construct($t = null)
+	{
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$this->formClean = new form_inputEscape();
+	}
+
     /**
      * Retourne un tableaux contenant les identifiant actif (int OR string)
      * @access public
@@ -47,24 +57,22 @@ class frontend_model_core{
      * @return array
      * @internal param array $setRouter
      */
-    public function setCurrentId ()
+    public function setCurrentId()
     {
-        $ModelTemplate  =   new frontend_model_template();
-        //$HelperClean    =   new form_inputFilter();
-        $formClean = new form_inputEscape();
-        $current = array();
-        $current['controller']['id'] = null;
-        if (http_request::isGet('controller')){
-            $current['controller']['name'] = $formClean->simpleClean($_GET['controller']);
-        }
-        if (http_request::isGet('id')){
-            $current['controller']['id'] = $formClean->numeric($_GET['id']);
-        }
-        if (http_request::isGet('id_parent')){
-            $current['controller']['id_parent'] = $formClean->numeric($_GET['id_parent']);
-        }
+        $current = [
+        	'controller' => [
+        		'name' => null,
+				'id' => null,
+				'id_parent' => null
+			],
+			'lang' => [
+				'iso' => $this->template->lang
+			]
+		];
 
-        $current['lang']['iso']  = $ModelTemplate->currentLanguage();
+        if (http_request::isGet('controller')) $current['controller']['name'] = $this->formClean->simpleClean($_GET['controller']);
+        if (http_request::isGet('id')) $current['controller']['id'] = $this->formClean->numeric($_GET['id']);
+        if (http_request::isGet('id_parent')) $current['controller']['id_parent'] = $this->formClean->numeric($_GET['id_parent']);
 
         return $current;
     }

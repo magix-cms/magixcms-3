@@ -1,31 +1,140 @@
 <?php
-class component_routing_dispatcher{
-    protected $header,$template,$pluginsCollection,$settingCollection,$pathadmin;
-    /**
-     * @var Dispatcher
-     */
-    public $router,$controller,$controller_name,$plugins,$action,$http_error;
+class component_routing_dispatcher {
+	/**
+	 * @var string $basepath
+	 */
+	protected $basepath;
 
-    public function __construct($router,$template,$plugins = null){
-        $formClean = new form_inputEscape();
-        $this->router = $router;
-        $this->controller = $router.'_controller_';
+	/**
+	 * @var frontend_model_template|backend_model_template $template
+	 * @var component_httpUtils_header $header
+	 * @var component_core_language $language
+	 * @var component_collections_plugins $pluginsCollection
+	 * @var component_collections_setting $settingCollection
+	 * @var form_inputEscape $formClean
+	 * @var debug_logger $logger
+	 */
+    protected
+		$template,
+		$header,
+		$language,
+		$pluginsCollection,
+		$settingCollection,
+		$formClean,
+		$logger;
 
-        if(http_request::isGet('controller')) $this->controller_name = $formClean->simpleClean($_GET['controller']);
+	/**
+	 * @var string $pathadmin
+	 */
+    protected $pathadmin;
 
-        if(http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
+	/**
+	 * @var array $controllerCollection
+	 */
+    protected $controllerCollection;
 
+	/**
+	 * @var string $access
+	 * @var string $router
+	 * @var string $controller
+	 * @var string $controller_name
+	 * @var string $plugins
+	 * @var string $action
+	 * @var string $http_error
+	 */
+    public
+		$access,
+		$router,
+		$controller,
+		$controller_name,
+		$plugins,
+		$action,
+		$http_error;
+
+	/**
+	 * component_routing_dispatcher constructor.
+	 * @param string(frontend|backend) $access
+	 */
+    public function __construct($access){
+    	$this->access = $access;
+    	$this->basepath = component_core_system::basePath();
+        $this->formClean = new form_inputEscape();
+		$this->setRoutes();
+		$this->header = new component_httpUtils_header($this->template);
+		$this->pluginsCollection = new component_collections_plugins();
+		$this->settingCollection = new component_collections_setting();
+
+		if(http_request::isGet('action')) $this->action = $this->formClean->simpleClean($_GET['action']);
         if(http_request::isGet('http_error')) $this->http_error = form_inputFilter::isAlphaNumeric($_GET['http_error']);
 
-        $this->plugins = $plugins;
-		$this->template = $template;
-		$this->header = new component_httpUtils_header($template);
-		$this->pluginsCollection = new component_collections_plugins();
-        $this->settingCollection = new component_collections_setting();
-        if(defined('PATHADMIN')) {
-            $this->pathadmin = component_core_system::basePath() . PATHADMIN . DIRECTORY_SEPARATOR;
-        }
+        if(defined('PATHADMIN')) $this->pathadmin = $this->basepath . PATHADMIN . DIRECTORY_SEPARATOR;
+
+        $this->dispatch();
     }
+
+	/**
+	 * Define routes
+	 * @param string(frontend|backend) $access
+	 */
+    private function setRoutes() {
+		$this->router = $this->access;
+		$this->plugins = null;
+    	$model = $this->access.'_model_template';
+		$this->template = new $model;
+		$this->language = new component_core_language($this->template);
+		if(http_request::isGet('controller')) $this->controller_name = $this->formClean->simpleClean($_GET['controller']);
+
+		if($this->access === 'frontend') {
+			$this->controller_name = isset($this->controller_name) ? $this->controller_name : 'home';
+			$this->controllerCollection = ['home','about','pages','news','catalog','cookie','webservice','service'];
+
+			if(!in_array($this->controller_name,$this->controllerCollection)){
+				$this->router = 'plugins';
+				$this->plugins = 'public';
+				$pluginsSetConfig = new frontend_model_plugins($this->template);
+				$pluginsSetConfig->addConfigDir($this->router);
+			}
+		}
+		elseif($this->access === 'backend') {
+			$file_finder = new file_finder();
+			$controllerFinder = $file_finder->scanDir($this->basepath.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'controller');
+			$funcBasenameFinder = function($value) {
+				return basename($value,'.php');
+			};
+			$this->controllerCollection = array_map($funcBasenameFinder,$controllerFinder);
+			$members = new backend_controller_login($this->template);
+
+			if(!$this->controller_name)
+			{
+				$members->checkout();
+			}
+			else {
+				if(in_array($this->controller_name,$this->controllerCollection)){
+					if($this->controller_name !== 'login'){
+						$members->checkout();
+
+						if (http_request::isSession('keyuniqid_admin')) {
+							$members->getAdminProfile();
+						}
+					}
+				}
+				else {
+					$this->router = 'plugins';
+					$this->plugins = 'admin';
+					$members->checkout();
+
+					if (http_request::isSession('keyuniqid_admin')) {
+						$members->getAdminProfile();
+						$pluginsSetConfig = new backend_model_plugins($this->template);
+						$pluginsSetConfig->addConfigDir($this->router);
+						$pluginsSetConfig->templateDir($this->router, $this->plugins);
+					}
+				}
+			}
+		}
+
+		$this->controller = $this->router.'_controller_';
+	}
 
     /**
      * @return mixed
@@ -35,37 +144,13 @@ class component_routing_dispatcher{
         return $pluginsCheck['name'];
     }
 
-    /**
-     * global assign setting
-     */
-    private function getSetting(){
-        $this->template->assign('setting', $this->settingCollection->getSetting());
-    }
-
-    /**
-     * global assign css inliner
-     */
-    private function getCssInliner(){
-        $data = $this->settingCollection->fetchData(array('context'=>'all','type'=>'cssInliner'));
-        $arr = array();
-        if($data != null) {
-
-            foreach ($data as $item) {
-                //$arr[$item['property_cssi']] = array();
-                $arr[$item['property_cssi']] = $item['color_cssi'];
-            }
-            $this->template->assign('cssInliner', $arr);
-        }
-    }
-
 	/**
 	 * Preload components
 	 * @param $lang
 	 */
 	private function preloadComponents($lang)
 	{
-		$this->getSetting();
-		//$this->getCssInliner();
+		$this->template->assign('setting', $this->template->settings);
 
 		if ($this->router === 'frontend' || ($this->router === 'plugins' && $this->plugins === 'public')) {
 			$this->template->assign('theme',$this->template->theme);
@@ -103,9 +188,10 @@ class component_routing_dispatcher{
     }
 
     /**
-     * @return mixed
+     * @return void|stdClass
      */
     private function getController(){
+    	$this->logger = new debug_logger(MP_LOG_DIR);
 		$controller_class = '';
 
         switch($this->router) {
@@ -116,13 +202,12 @@ class component_routing_dispatcher{
 				$controller_class = $this->controller . $this->controller_name;
 				break;
 			case 'plugins':
-				if (isset($this->plugins) && $this->plugins != null) {
-					$pluginLoadFiles = array('public', 'admin');
+				if (isset($this->plugins) && $this->plugins !== null) {
+					$pluginLoadFiles = ['public', 'admin'];
 					if (in_array($this->plugins, $pluginLoadFiles)) {
 						$pluginsDir = component_core_system::basePath() . 'plugins' . DIRECTORY_SEPARATOR . $this->controller_name;
-
 						if($this->plugins === 'admin') {
-							$pluginActions = array('setup','upgrade','translate','uninstall');
+							$pluginActions = ['setup','upgrade','translate','uninstall'];
 							if(in_array($this->action,$pluginActions) && class_exists('backend_controller_plugins')) {
 								$pluginsController = new backend_controller_plugins();
 
@@ -144,7 +229,7 @@ class component_routing_dispatcher{
 							}
 						}
 
-						if ($this->pluginsRegister() != null && file_exists($pluginsDir)) {
+						if ($this->pluginsRegister() !== null && file_exists($pluginsDir)) {
 							$controller_class = $this->router . '_' . $this->controller_name . '_' . $this->plugins;
 						}
 						else {
@@ -153,33 +238,31 @@ class component_routing_dispatcher{
 						}
 					}
 					else {
-						$logger = new debug_logger(MP_LOG_DIR);
-						$logger->log('php', 'error', 'An error has occured : ' . $this->router . ' ' . $this->controller_name, debug_logger::LOG_MONTH);
-						//trigger_error('An error has occured : '.$this->router. ' ' . $this->controller_name, E_USER_WARNING);
+						$this->logger->log('php', 'error', 'An error has occured : ' . $this->router . ' ' . $this->controller_name, debug_logger::LOG_MONTH);
 					}
 				}
 				break;
 		}
 
-		if($this->router === 'backend' || ($this->router === 'plugins' && $this->plugins === 'admin')) $this->template->assign('cClass',$controller_class);
+		if($this->access === 'backend') $this->template->assign('cClass',$controller_class);
 
-        try{
-            if($controller_class && class_exists($controller_class)) {
-                $class =  new $controller_class($this->template);
-                if ($class instanceof $controller_class) {
-                    return $class;
-                }
-                else {
-                    //throw new Exception('not instantiate the class: ' . $controller_class);
-                    $logger = new debug_logger(MP_LOG_DIR);
-                    $logger->log('php', 'error', 'Not instantiate the class: : '.$controller_class , debug_logger::LOG_MONTH);
-                }
-            }
+		if($controller_class && class_exists($controller_class)) {
+			try {
+				$class =  new $controller_class($this->template);
+				if ($class instanceof $controller_class) {
+					return $class;
+				}
+				else {
+					throw new Exception('Fail to instantiate the class: : '.$controller_class);
+				}
+			}
+			catch(Exception $e) {
+				$this->logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			}
         }
-        catch(Exception $e) {
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-        }
+		else {
+			$this->logger->log('php', 'error', 'An error has occured : the class '.$controller_class.' does not exist', debug_logger::LOG_MONTH);
+		}
     }
 
     /**
@@ -198,12 +281,7 @@ class component_routing_dispatcher{
 		}
 		else {
 			$dispatcher = $this->getController();
-			if($dispatcher){
-				if(method_exists($dispatcher,'run')){
-					//$this->preloadComponents($lang);
-					$dispatcher->run();
-				}
-			}
+			if(gettype($dispatcher) === 'object' && method_exists($dispatcher,'run')) $dispatcher->run();
 		}
     }
 }

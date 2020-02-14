@@ -91,11 +91,12 @@
         assign="tags"
     }
  */
-function smarty_function_widget_news_data($params, $template)
+function smarty_function_widget_news_data($params, $smarty)
 {
 	if(!empty($params)) {
-		$ModelNews = new frontend_model_news();
-		$modelSystem = new frontend_model_core();
+		$modelTemplate = $smarty->tpl_vars['modelTemplate']->value instanceof frontend_model_template ? $smarty->tpl_vars['modelTemplate']->value : new frontend_model_template();
+		$ModelNews = new frontend_model_news($modelTemplate);
+		$modelSystem = new frontend_model_core($modelTemplate);
 
 		// Set and load data
 		$current  = $modelSystem->setCurrentId();
@@ -103,24 +104,9 @@ function smarty_function_widget_news_data($params, $template)
 		$override = $params['conf']['plugins']['override'] ? $params['conf']['plugins']['override'] : '';
 		$data     = $ModelNews->getData($conf,$current,$override);
 		$newRow   = (is_array($params['conf']['plugins']['item'])) ? $params['conf']['plugins']['item'] : array();
-		$current  = $current;
 
-		// Set Pagination
-		/*$pagination =   array();
-		if (isset($data['total']) AND isset($data['limit'])) {
-			$pagination  =
-				$ModelPager->setPaginationData(
-					$data['total'],
-					$data['limit'],
-					'/'.$current['lang']['iso'].$ModelRewrite->mod_news_lang($current['lang']['iso']),
-					$current['news']['pagination']['id'],
-					'/'
-				);
-			unset($data['total']);
-			unset($data['limit']);
-		}*/
 		// Format data
-		$items = array();
+		/*$items = array();
 		if ($data != null) {
 			foreach ($data as $row)
 			{
@@ -130,9 +116,7 @@ function smarty_function_widget_news_data($params, $template)
 			}
 		}
 		$assign = isset($params['assign']) ? $params['assign'] : 'data';
-		$template->assign($assign,$items);
-
-		//$assignPager = isset($params['assignPagination']) ? $params['assignPagination'] : 'paginationData';
-		//$template->assign($assignPager,$pagination);
+		$template->assign($assign,$items);*/
+		$smarty->assign(isset($params['assign']) ? $params['assign'] : 'data',$ModelNews->parseData($data,$current,$newRow,(isset($params['datatype']) && $params['datatype'] === 'short')));
 	}
 }

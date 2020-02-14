@@ -45,9 +45,9 @@ class component_core_language{
 
 	/**
 	 * component_core_language constructor.
-	 * @param $setParams
+	 * @param backend_model_template|frontend_model_template $t
 	 */
-	public function __construct($t,$setParams){
+	public function __construct($t){
 		$this->template = $t;
         /*if(!empty($setParams)){
             $this->setParams = $setParams;
@@ -55,6 +55,7 @@ class component_core_language{
                 $this->getLanguage = $_GET[$setParams];
             }
         }*/
+        $this->init();
 	}
 
     /**
@@ -193,7 +194,7 @@ class component_core_language{
      * Initialisation de la création de session de langue
      * @param bool $debug
      */
-    public function run($debug = false){
+    public function init($debug = false){
         $session = new http_session(0);
         $session->start('lang');
         if($debug){

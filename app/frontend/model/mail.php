@@ -19,17 +19,18 @@ class frontend_model_mail {
 
 	/**
 	 * frontend_model_mail constructor.
+	 * @param null|frontend_model_template $t
 	 * @param $tpl_dir
 	 */
-	public function __construct($tpl_dir)
+	public function __construct($t = null, $tpl_dir)
 	{
-		$this->template = new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->message = new component_core_message($this->template);
 		$this->lang = $this->template->currentLanguage();
 		$this->sanitize = new filter_sanitize();
 		$this->mail = new mail_swift('mail');
 		$this->modelDomain = new frontend_model_domain($this->template);
-		$this->settings = new frontend_model_setting();
+		$this->settings = new frontend_model_setting($this->template);
 
 		$this->tpl_dir = $tpl_dir;
 	}

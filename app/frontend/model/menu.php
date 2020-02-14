@@ -36,31 +36,24 @@ class frontend_model_menu extends frontend_db_menu {
 
 	protected $template, $data, $routingUrl, $modelPlugins, $language, $languages, $collectionLanguage, $modelSystem;
 
-	public $about, $pages, $catalog, $category, $plugin, $controller, $id, $id_parent;
+	public $about, $pages, $catalog, $category, $plugin, $current, $controller, $id, $id_parent;
 
 	/**
 	 * frontend_model_menu constructor.
-	 * @param stdClass $t
+	 * @param null|frontend_model_template $t
 	 */
 	public function __construct($t = null)
 	{
-		$this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
-		$this->modelPlugins = new frontend_model_plugins();
+		$this->modelPlugins = new frontend_model_plugins($this->template);
 		$this->data = new frontend_model_data($this,$this->template);
 		$this->collectionLanguage = new component_collections_language();
-		$this->modelSystem = new frontend_model_core();
-		$formClean = new form_inputEscape();
-
-		if (http_request::isGet('controller')) {
-			$this->controller = $formClean->simpleClean($_GET['controller']);
-		}
-		if (http_request::isGet('id')) {
-			$this->id = $formClean->numeric($_GET['id']);
-		}
-		if (http_request::isGet('id_parent')) {
-			$this->id_parent = $formClean->numeric($_GET['id_parent']);
-		}
+		$this->modelSystem = new frontend_model_core($this->template);
+		$this->current = $this->modelSystem->setCurrentId();
+		$this->controller = $this->current['controller']['name'];
+		$this->id = $this->current['controller']['id'];
+		$this->id_parent = $this->current['controller']['id_parent'];
 	}
 
 	/**
@@ -114,7 +107,6 @@ class frontend_model_menu extends frontend_db_menu {
 	 * @return array
 	 */
 	public function setLinksData($iso) {
-		$current = $this->modelSystem->setCurrentId();
 		$links = $this->getItems('links',array('iso' => $iso),'all',false);
 		$active = array('controller' => $this->controller, 'ids' => array());
 		$catalog = null;
@@ -176,32 +168,19 @@ class frontend_model_menu extends frontend_db_menu {
 				switch ($link['type_link']) {
 					case 'home':
 					case 'pages':
-						/*if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
-						$model = $this->pages;
-						$conf = array(
-							'context' => 'all',
-							'type' => 'menu'
-						);
-						if($link['type_link'] === 'pages') $conf['select'] = $link['id_page'];
-						$data = $this->pages->getData(
-							$conf,
-							$current
-						);
-						if($link['type_link'] === 'pages') $data = $data[0]['subdata'];*/
-
 						if($pages === null) {
 							if(!$this->pages) $this->pages = new frontend_model_pages($this->template);
-							$model = $this->pages;
 							$conf = array(
 								'context' => 'all',
 								'type' => 'menu',
 								'select' => 'tree'
 							);
-							$pages = $this->pages->getData(
+							$pages = $this->pages->getShortData(
 								$conf,
-								$current
+								$this->current
 							);
 						}
+						$model = $this->pages;
 						if($link['type_link'] === 'pages') {
 							$data = $pages[$link['id_page']]['subdata'];
 						}
@@ -218,9 +197,9 @@ class frontend_model_menu extends frontend_db_menu {
 							'type' => 'menu'
 						);
 						if($link['type_link'] === 'about_page') $conf['select'] = $link['id_page'];
-						$data = $this->about->getData(
+						$data = $this->about->getShortData(
 							$conf,
-							$current
+							$this->current
 						);
 						if($link['type_link'] === 'about_page') $data = $data[0]['subdata'];
 						break;
@@ -228,17 +207,18 @@ class frontend_model_menu extends frontend_db_menu {
 					case 'category':
 						if($catalog === null) {
 							if(!$this->catalog) $this->catalog = new frontend_model_catalog($this->template);
-							$model = $this->catalog;
 							$conf = array(
 								'context' => 'category',
 								'type' => 'menu',
-								'select' => 'tree'
+								'select' => 'tree',
+								'deepness' => $link['mode_link'] === 'dropdown' ? 1 : 2
 							);
-							$catalog = $this->catalog->getData(
+							$catalog = $this->catalog->getShortData(
 								$conf,
-								$current
+								$this->current
 							);
 						}
+						$model = $this->catalog;
 						if($link['type_link'] === 'category') {
 							$data = $catalog[$link['id_page']]['subdata'];
 						}
@@ -257,7 +237,7 @@ class frontend_model_menu extends frontend_db_menu {
 						break;
 				}
 
-				if($data) $link['subdata'] = $this->data->parseData($data,$model,$current);
+				if($data) $link['subdata'] = $this->data->parseData($data,$model,$this->current,false,true);
 			}
 		}
 

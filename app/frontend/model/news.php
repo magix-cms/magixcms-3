@@ -42,7 +42,7 @@
  */
 class frontend_model_news extends frontend_db_news {
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$dateFormat,$seo,$logo;
+    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$dateFormat,$seo,$logo;
 
     /**
      * frontend_model_news constructor.
@@ -51,13 +51,14 @@ class frontend_model_news extends frontend_db_news {
      */
     public function __construct($t = null)
     {
-		$this->template = $t ? $t : new frontend_model_template();
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->imagesComponent = new component_files_images($this->template);
-		$this->modelPlugins = new frontend_model_plugins();
+		$this->modelPlugins = new frontend_model_plugins($this->template);
         $this->dateFormat = new date_dateformat();
-        $this->seo = new frontend_model_seo('news', '', '');
-        $this->logo = new frontend_model_logo();
+		$this->data = new frontend_model_data($this,$this->template);
+        $this->seo = new frontend_model_seo('news', '', '',$this->template);
+        $this->logo = new frontend_model_logo($this->template);
     }
 
     /**

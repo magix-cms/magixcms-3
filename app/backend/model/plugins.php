@@ -41,7 +41,7 @@ class backend_model_plugins{
 	 */
     public function __construct($t = null)
     {
-        $this->template = $t ? $t : new backend_model_template();
+        $this->template = $t instanceof backend_model_template ? $t : new backend_model_template();
         $formClean = new form_inputEscape();
         if(http_request::isGet('controller')){
             $this->controller_name = $formClean->simpleClean($_GET['controller']);
@@ -247,7 +247,8 @@ class backend_model_plugins{
      * @param $template
      * @param $plugins
      */
-    public function templateDir($routes, $template, $plugins){
+    public function templateDir($routes, $plugins, $template = null){
+		$template = $template === null ? $this->template : $template;
         if(isset($this->controller_name)){
             $setTemplatePath = component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/skin/'.$plugins.'/';
             if(file_exists($setTemplatePath)){
@@ -260,7 +261,8 @@ class backend_model_plugins{
      * @param $routes
      * @param $template
      */
-    public function addConfigDir($routes, $template){
+    public function addConfigDir($routes,  $template = null){
+		$template = $template === null ? $this->template : $template;
         if(isset($this->controller_name)){
             $setConfigPath = component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/';
             if(file_exists($setConfigPath)){

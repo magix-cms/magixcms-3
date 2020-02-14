@@ -38,16 +38,16 @@ class plugins_contact_public extends plugins_contact_db
      */
     public function __construct($t = null)
     {
-        $this->template = $t ? $t : new frontend_model_template();
+        $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $formClean = new form_inputEscape();
         $this->sanitize = new filter_sanitize();
 		$this->header = new http_header();
         $this->data = new frontend_model_data($this,$this->template);
 		$this->getlang = $this->template->lang;
-        $this->mail = new frontend_model_mail('contact');
+        $this->mail = new frontend_model_mail($this->template,'contact');
         $this->modelDomain = new frontend_model_domain($this->template);
 		$this->config = $this->getItems('config',null,'one',false);
-		$this->settings = new frontend_model_setting();
+		$this->settings = new frontend_model_setting($this->template);
         $this->amp = http_request::isGet('amp') ? true : false;
 
 		if (http_request::isPost('msg')) {
@@ -186,6 +186,14 @@ class plugins_contact_public extends plugins_contact_db
 	 */
 	public function getContact(){
 		return $this->getItems('contacts',array('lang' => $this->getlang),'all',false);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getSender()
+	{
+		return $this->getItems('sender',null,'one',false);
 	}
 
 	/**

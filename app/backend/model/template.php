@@ -68,9 +68,14 @@ class backend_model_template{
     public function __construct(){
         self::$collectionsSetting = new component_collections_setting();
         //self::$collectionsLang = new component_collections_language();
+		$this->init();
+    }
+
+    private function init() {
 		self::getReleaseData();
 		$this->lang = $this->currentLanguage();
-    }
+	}
+
 	/**
 	 * 
 	 */

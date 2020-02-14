@@ -75,6 +75,7 @@ class db_layer{
      * @var boolean
      */
     protected $isPrepared = false;
+    protected $logger;
 
     /**
      * db_layer constructor.
@@ -82,6 +83,7 @@ class db_layer{
      * @throws Exception
      */
     public function __construct($config = false){
+    	$this->logger = new debug_logger(MP_LOG_DIR);
         try{
             if($config != false){
                 if(is_array($config)){
@@ -111,8 +113,7 @@ class db_layer{
             //$this->connection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An Exception PDO has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+            $this->logger->log('statement', 'db', 'An Exception PDO has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
@@ -221,6 +222,10 @@ class db_layer{
      * @throws Exception
      */
     public function prepare($sql){
+    	//$log = preg_replace('~[\r\n]+~', '', $sql);
+    	//$log = preg_replace('~([\t]+)~', ' ', $log);
+    	//$log = preg_replace('~([ ]+)~', ' ', $log);
+		//$this->logger->log('statement', 'requests', trim($log), debug_logger::LOG_VOID);
         try{
             if ($this->isPrepared) {
                 throw new Exception('This statement has been prepared already');
@@ -230,8 +235,7 @@ class db_layer{
             $this->isPrepared = true;
 
         }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			$this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
