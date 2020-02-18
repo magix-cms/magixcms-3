@@ -83,8 +83,7 @@ $loader->addPrefix('plugins',filter_path::basePath(array('lib','magepattern')));
 $loader->register();
 
 $template = new backend_model_template();
-$language = new component_core_language($template,'strLanguage');
-$language->run();
+$language = new component_core_language($template);
 $members = new backend_controller_login($template);
 $product = new backend_controller_product();
 $product->tinymce();
