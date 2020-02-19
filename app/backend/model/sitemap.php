@@ -167,6 +167,7 @@ class backend_model_sitemap{
                 );
             }
             $this->xml->endElement();
+            $this->xml->endDocument();
             /* ------ Retourne les URLS des sitemaps dans le résultat ######*/
             $parentXML = $this->url(array($config['domain'], 'domain' => $config['domain'], 'url' => '/'. 'sitemap-' . $config['domain'] . '.xml'));
 
@@ -276,6 +277,7 @@ class backend_model_sitemap{
                     }
                 }
                 $this->xml->endElement();
+                $this->xml->endDocument();
             }
 
             $i = 0;
@@ -466,6 +468,7 @@ class backend_model_sitemap{
                 );
 
                 $this->xml->endElement();
+                $this->xml->endDocument();
             }
             $this->template->assign('xmlItems', $newData);
             $display = $this->template->fetch('domain/loop/sitemap.tpl');

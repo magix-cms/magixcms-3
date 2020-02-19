@@ -121,12 +121,21 @@ class xml_sitemap extends xml_factory_sitemap{
     public function setIndent($indent=true){
         $this->xmlWriter()->setIndent($indent);
     }
+
     /**
      * End Parent element
      * @return void
      */
     public function endElement(){
         $this->xmlWriter()->endElement();
+    }
+
+    /**
+     * End Parent element
+     * @return void
+     */
+    public function endDocument(){
+        $this->xmlWriter()->endDocument();
     }
 
     /**
