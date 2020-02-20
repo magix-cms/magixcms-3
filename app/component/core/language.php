@@ -45,7 +45,7 @@ class component_core_language{
 
 	/**
 	 * component_core_language constructor.
-	 * @param backend_model_template|frontend_model_template $t
+	 * @param install_model_template|backend_model_template|frontend_model_template $t
 	 */
 	public function __construct($t){
 		$this->template = $t;

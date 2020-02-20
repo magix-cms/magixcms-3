@@ -83,7 +83,8 @@ class install_controller_installer extends install_db_installer {
 				OR !defined('MP_DBHOST')
 				OR !defined('MP_DBUSER')
 				OR !defined('MP_DBPASSWORD')
-				OR !defined('MP_DBNAME'))
+				OR !defined('MP_DBNAME')
+                OR !defined('MP_LOG_DIR'))
 				{
 
 				define('MP_DBDRIVER',$this->config['driver']);
@@ -95,6 +96,8 @@ class install_controller_installer extends install_db_installer {
 				define('MP_DBPASSWORD',$this->config['pwd']);
 				// Database name
 				define('MP_DBNAME',$this->config['dbname']);
+                // path name
+                define('MP_LOG_DIR',component_core_system::basePath() . 'var' . DIRECTORY_SEPARATOR . 'logs');
 			}
 
 			try {
