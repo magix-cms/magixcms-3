@@ -81,3 +81,21 @@
     </div>
     {/if}
 {/block}
+{block name="foot" append}
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        {baseadmin}/template/js/language.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
+
+    <script type="text/javascript">
+        $(function(){
+            if (typeof language == "undefined")
+            {
+                console.log("language is not defined");
+            }else{
+                language.runEdit();
+            }
+        });
+    </script>
+{/block}
