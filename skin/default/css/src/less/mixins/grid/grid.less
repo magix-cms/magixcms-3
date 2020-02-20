@@ -9,15 +9,6 @@
 	&:extend(.clearfix all);
 }
 
-.col-width(@columns; @flex: @enb-flex) when (@flex = 1) {
-	flex: 0 0 percentage((@columns / @grid-columns));
-	max-width: percentage((@columns / @grid-columns));
-}
-.col-width(@columns; @flex: @enb-flex) when (@flex = 0) {
-	float: left;
-	width: percentage((@columns / @grid-columns));
-}
-
 .container(@gutter) {
 	margin-right: auto;
 	margin-left: auto;
@@ -52,14 +43,14 @@
 
 // Generate the phone columns
 .make-column(@columns, @type) when (@type = col){
-	.col-width(@columns);
+	--nbcol: @columns;
 }
 .make-column(@columns, @type) when (@type = push){
-	left: percentage((@columns / @grid-columns));
+	--push: @columns;
 }
 .make-column(@columns, @type) when (@type = pull){
-	right: percentage((@columns / @grid-columns));
+	--pull: @columns;
 }
 .make-column(@columns, @type) when (@type = offset){
-	margin-left: percentage((@columns / @grid-columns));
+	--offset: @columns;
 }

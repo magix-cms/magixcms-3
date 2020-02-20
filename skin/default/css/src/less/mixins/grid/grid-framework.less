@@ -5,6 +5,7 @@
 
 .make-grid-columns() {
 	[class*="col-"] {
+		--col-width: calc(var(--nbcol)/var(--grid-column));
 		position: relative;
 		// Prevent columns from collapsing when empty
 		min-height: 1px;
@@ -13,6 +14,17 @@
 		padding-right: floor((@grid-gutter-width / 2));
 		left: auto;
 		right: auto;
+		flex: 0 0 ~"calc(100% * var(--col-width))";
+		max-width: ~"calc(100% * var(--col-width))";
+	}
+	[class*="push-"] {
+		left: ~"calc(100% * (var(--push)/var(--grid-column)))";
+	}
+	[class*="pull-"] {
+		right:  ~"calc(100% * (var(--pull)/var(--grid-column)))";
+	}
+	[class*="offset-"] {
+		margin-left:  ~"calc(100% * (var(--offset)/var(--grid-column)))";
 	}
 }
 

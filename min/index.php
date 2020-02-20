@@ -7,7 +7,9 @@
  * @package Minify
  */
 
-$app = (require __DIR__ . '/bootstrap.php');
+$app = (require realpath('../lib/Minify/bootstrap.php'));
 /* @var \Minify\App $app */
 
+$app->configPath = __DIR__.DIRECTORY_SEPARATOR.'config.php';
+$app->groupsConfigPath = __DIR__.DIRECTORY_SEPARATOR.'groupsConfig.php';
 $app->runServer();

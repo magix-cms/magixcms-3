@@ -16,7 +16,7 @@
                 {strip}
                     <picture>
                     <!--[if IE 9]><video style="display: none;"><![endif]-->
-                    <source type="image/webp" sizes="{$smarty.capture.sizes}" srcset="{$url}{$logo.img.small.src_webp} {$logo.img.small.w}w, {$url}{$logo.img.medium.src_webp} {$logo.img.medium.w}w, {$url}{$logo.img.large.src_webp} {$logo.img.large.w}w">
+                    {if isset({$logo.img.small.src_webp})}<source type="image/webp" sizes="{$smarty.capture.sizes}" srcset="{$url}{$logo.img.small.src_webp} {$logo.img.small.w}w, {$url}{$logo.img.medium.src_webp} {$logo.img.medium.w}w, {$url}{$logo.img.large.src_webp} {$logo.img.large.w}w">{/if}
                     <source type="{$logo.img.small.ext}" sizes="{$smarty.capture.sizes}" srcset="{$url}{$logo.img.small.src} {$logo.img.small.w}w, {$url}{$logo.img.medium.src} {$logo.img.medium.w}w, {$url}{$logo.img.large.src} {$logo.img.large.w}w">
                     <!--[if IE 9]></video><![endif]-->
                     <img src="{$url}{$logo.img.small.src}" sizes="{$smarty.capture.sizes}" srcset="{$url}{$logo.img.small.src} {$logo.img.small.w}w, {$url}{$logo.img.medium.src} {$logo.img.medium.w}w, {$url}{$logo.img.large.src} {$logo.img.large.w}w" alt="{if !empty($logo.img.alt)}{$logo.img.alt}{else}{#logo_img_alt#|ucfirst} {$companyData.name}{/if}" />
