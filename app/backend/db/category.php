@@ -102,7 +102,7 @@ class backend_db_category
 							}
 						}
 					}
-					$sql = "SELECT p.id_cat, c.name_cat,p.menu_cat, p.date_register,p.img_cat
+					$sql = "SELECT p.id_cat, c.name_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
 						FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c USING ( id_cat )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
