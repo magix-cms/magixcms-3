@@ -396,6 +396,24 @@ class plugins_contact_admin extends plugins_contact_db {
         }
     }
 
+    /**
+     * @param $config
+     * @throws Exception
+     */
+    public function setSitemap($config){
+        $dateFormat = new date_dateformat();
+        $url = '/' . $config['iso_lang']. '/'.$config['name'].'/';
+        $this->xml->writeNode(
+            array(
+                'type'      =>  'child',
+                'loc'       =>  $this->sitemap->url(array('domain' => $config['domain'], 'url' => $url)),
+                'image'     =>  false,
+                'lastmod'   =>  $dateFormat->dateDefine(),
+                'changefreq'=>  'always',
+                'priority'  =>  '0.7'
+            )
+        );
+    }
 	/**
 	 * @return array|bool
 	 */
