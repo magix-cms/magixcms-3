@@ -1,0 +1,10 @@
+<mj-section>
+    <mj-column width="100%">
+        <mj-text font-weight="bold" font-size="16px" padding-bottom="0">
+            {$data.title}
+        </mj-text>
+        <mj-text mj-class="lightext" font-size="16px">
+            Error {$data.error} on : <a href="{$data.content}">{$data.content}</a>
+        </mj-text>
+    </mj-column>
+</mj-section>

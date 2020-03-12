@@ -13,10 +13,18 @@
 
 	.container {
 		display: flex;
-		justify-content: center;
 		align-items: center;
-		padding: 10px 15px;
-		height: 70px;
+		padding: 0 1rem 0 .5rem;
+		height: @headerH;
+	}
+}
+
+#menu {
+	+ div, + section, + main {
+		margin-top: @headerH + @toolbarH;
+		@media (min-width: @screen-xs-min) {
+			margin-top: @headerH-xs + @toolbarH;
+		}
 	}
 }
 
@@ -29,7 +37,7 @@
 	a { display: block; }
 }
 
-.toggle-menu,
+/*.toggle-menu,
 .select-lang {
 	@media (max-width: @screen-sm-max) {
 		position: absolute;
@@ -59,9 +67,10 @@
 		box-shadow: none;
 		color: @main-color;
 	}
-}
+}*/
 
-.toggle-menu {
-	left: 5px;
-	padding: 15px;
+.toggle-menu,
+.select-lang {
+	padding: 1rem;
+	margin: 0;
 }

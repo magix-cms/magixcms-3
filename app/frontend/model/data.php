@@ -241,7 +241,7 @@ class frontend_model_data{
 			$params = null;
 			$context = $context ? $context : 'all';
 		}
-		return $this->db->fetchData(array('context'=>$context,'type'=>$type,'search'=>$this->search),$params);
+		return $this->db->fetchData(array('context'=>$context,'type'=>$type),$params);
 	}
 
 	/**

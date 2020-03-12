@@ -1,0 +1,10 @@
+<mjml background-color="#EEE">
+<mj-include path="common/head.mjml" />
+<mj-body background-color="#EEE">
+    <mj-include path="common/header.mjml" />
+    <mj-wrapper padding-top="0" padding-bottom="0" background-color="#fff" css-class="body-section">
+        <mj-include path="template/error.mjml" />
+    </mj-wrapper>
+    <mj-include path="common/footer.mjml" />
+</mj-body>
+</mjml>

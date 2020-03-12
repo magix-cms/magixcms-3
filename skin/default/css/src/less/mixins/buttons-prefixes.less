@@ -3,110 +3,97 @@
 //
 
 // button-gradient-variant override
+.button-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
+	--btn-padding-base-vertical: @padding-vertical;
+	--btn-padding-base-horizontal: @padding-horizontal;
+	--btn-font-size: @font-size;
+	--btn-line-height: @line-height;
+	--btn-border-radius: @border-radius;
+}
+
+.button-variant(@color; @background; @border) {
+	--btn-color: @color;
+	--btn-bg-color: @background;
+	--btn-border-color: @border;
+	--btn-hover-bg-color: darken(@background, 10%);
+	--btn-ahf-bg-color: darken(@background, 17%);
+	--btn-hover-border-color: darken(@border, 12%);
+	--btn-focus-border-color: darken(@border, 25%);
+}
+
 .button-gradient-variant(@color; @bg-color-1; @bg-color-2;) {
-	color: @color;
-	#gradient .directional(@bg-color-1, @bg-color-2);
+	.button-variant(@color; @bg-color-1; transparent);
+	background-repeat: repeat-x;
+	--btn-bg-img: linear-gradient(45deg, @bg-color-1, @bg-color-2);
+	--btn-hover-bg-img: linear-gradient(45deg, darken(@bg-color-1, 10%), darken(@bg-color-2, 10%));
+	--btn-ahf-bg-img: linear-gradient(45deg, darken(@bg-color-1, 17%), darken(@bg-color-2, 17%));
 	border: none;
+}
 
-	@dark-bg-1: darken(@bg-color-1, 10%);
-	@dark-bg-2: darken(@bg-color-2, 10%);
+/** Button invert Style
+ * @hv-color {color} background color on hover
+ * @hv-txt {color} text color on hover
+ * @base-color {color} base border color | default: main text color
+ * @base-txt {color} base text color | default: main text color
+ */
+.button-invert(@hv-color; @hv-txt; @base-color: @text-color; @base-txt: @text-color) {
+	--btn-color: @base-txt;
+	--btn-bg-color: transparent;
+	--btn-border-color: @base-color;
+	--btn-hover-bg-color: transparent;
+	--btn-ahf-bg-color: transparent;
+	--btn-hover-border-color: @hv-color;
+	--btn-focus-border-color: @hv-color;
 
-	&:focus,
-	&.focus {
-		color: @color;
-		#gradient .directional(@dark-bg-1, @dark-bg-2);
+	.button-size(10px; 16px; @font-size-base; @line-height-base; 0);
+	position: relative;
+	border-width: 2px;
+	z-index: 2;
+	.auto-transition(.25s);
+
+	&:before {
+		content: '';
+		position: absolute;
+		display: inline-block;
+		height: 100%;
+		width: 0;
+		top: 0;
+		left: 0;
+		background-color: @hv-color;
+		z-index: -1;
+		transition: 0.25s;
 	}
+
 	&:hover {
-		color: @color;
-		#gradient .directional(@dark-bg-1, @dark-bg-2);
-	}
-	&:active,
-	&.active,
-	.open > .dropdown-toggle& {
-		color: @color;
-		#gradient .directional(@dark-bg-1, @dark-bg-2);
+		color: @hv-txt;
 
-		&:hover,
-		&:focus,
-		&.focus {
-			color: @color;
-			#gradient .directional(darken(@bg-color-1, 17%), darken(@bg-color-2, 17%));
+		&:before {
+			width: 100%;
 		}
-	}
-	&:active,
-	&.active,
-	.open > .dropdown-toggle& {
-		background-image: none;
-	}
-	&.disabled,
-	&[disabled],
-	fieldset[disabled] & {
-		&,
-		&:hover,
-		&:focus,
-		&.focus,
-		&:active,
-		&.active {
-			#gradient .directional(@bg-color-1, @bg-color-2);
-		}
-	}
-
-	.badge {
-		color: @bg-color-1;
-		background-color: @color;
 	}
 }
 
+/** Theme buttons Styles
+ * Create 3 theme style :
+ * - btn-{@name} | Simple flat button
+ * - btn-{@name}-gradient |Button with gradient background
+ * - btn-{@name}-invert | Button with background color on hover
+ *
+ * Requires a @{name}-colors list of colors
+ */
 .custom-button(@name,@txt-color: #fff,@invert-base: @text-color){
 	@var: ~'@{name}-colors';
 	@color: @@var;
-	@class: ~".btn-@{name}-theme";
+	@class: ~".btn-@{name}";
 	.btn {
 		&@{class} {
-			.button-variant(@txt-color, extract(@color, 3), extract(@color, 4));
+			.button-variant(@txt-color, extract(@color, 3), extract(@color, 3));
 
-			&.btn-flat {
-				.button-variant(@txt-color, extract(@color, 3), extract(@color, 3));
+			&-gradient {
+				.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));
 			}
-			//&.btn-gradient {
-			//	.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));
-			//}
-			&.btn-invert {
-				position: relative;
-				padding: 10px 16px;
-				line-height: 1.3333333;
-				background-color: transparent;
-				border-color: @invert-base;
-				border-width: 2px;
-				color: @invert-base;
-				z-index: 2;
-				.auto-transition(.25s);
-
-				&:before {
-					content: '';
-					position: absolute;
-					display: inline-block;
-					height: 100%;
-					width: 0;
-					top: 0;
-					left: 0;
-					background-color: extract(@color, 3);
-					z-index: -1;
-					-moz-transition: 0.25s;
-					-webkit-transition: 0.25s;
-					-o-transition: 0.25s;
-					transition: 0.25s;
-				}
-
-				&:hover {
-					background-color: transparent;
-					border-color: extract(@color, 3);
-					color: @txt-color;
-
-					&:before {
-						width: 100%;
-					}
-				}
+			&-invert {
+				.button-invert(extract(@color, 3); @txt-color; @invert-base; @invert-base);
 			}
 		}
 	}

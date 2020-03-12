@@ -23,24 +23,16 @@ body {
 	font-weight: @font-weight;
 
 	> main {
-		padding: @headerH+@toolbarH 0 50px;
+		padding: 1rem 0 3rem;
 		flex: 1 0 auto;
 
 		~ section {
-			padding-bottom: 50px;
+			padding-bottom: 3rem;
 		}
 
 		+ .section-block {
 			padding-top: 0;
 		}
-	}
-}
-
-#breadcrumb-container {
-	padding-top: @headerH;
-
-	+ main {
-		padding-top: 0;
 	}
 }
 
@@ -56,4 +48,4 @@ body {
 // Set selection style
 .text-select(@main-color);
 
-.adaptive-font-size();
+//.adaptive-font-size();

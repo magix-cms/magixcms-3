@@ -11,7 +11,7 @@
 
 // Phone screen
 //** Deprecated `@screen-xs` as of v3.0.1
-@screen-ph:                  300px;
+@screen-ph:                  22rem;
 //** Deprecated `@screen-xs-min` as of v3.2.0
 @screen-ph-min:              @screen-ph;
 //** Deprecated `@screen-phone` as of v3.0.1
@@ -19,46 +19,46 @@
 
 // Extra small screen
 //** Deprecated `@screen-xs` as of v3.0.1
-@screen-xs:                  480px;
+@screen-xs:                  38rem;
 //** Deprecated `@screen-xs-min` as of v3.2.0
 @screen-xs-min:              @screen-xs;
 //** Deprecated `@screen-phone` as of v3.0.1
-@screen-phone:               @screen-xs-min;
+@screen-smalltablet:               @screen-xs-min;
 
 // Small screen / tablet
 //** Deprecated `@screen-sm` as of v3.0.1
-@screen-sm:                  768px;
+@screen-sm:                  55rem;
 @screen-sm-min:              @screen-sm;
 //** Deprecated `@screen-tablet` as of v3.0.1
 @screen-tablet:              @screen-sm-min;
 
 // Medium screen / desktop
 //** Deprecated `@screen-md` as of v3.0.1
-@screen-md:                  992px;
+@screen-md:                  71rem;
 @screen-md-min:              @screen-md;
 //** Deprecated `@screen-desktop` as of v3.0.1
 @screen-desktop:             @screen-md-min;
 
 // Large screen / wide desktop
 //** Deprecated `@screen-lg` as of v3.0.1
-@screen-lg:                  1200px;
+@screen-lg:                  86rem;
 @screen-lg-min:              @screen-lg;
 //** Deprecated `@screen-lg-desktop` as of v3.0.1
 @screen-lg-desktop:          @screen-lg-min;
 
 // Extra Large screen / extra wide desktop
 //** Deprecated `@screen-lg` as of v3.0.1
-@screen-xl:                  1600px;
+@screen-xl:                  100rem;
 @screen-xl-min:              @screen-xl;
 //** Deprecated `@screen-lg-desktop` as of v3.0.1
 @screen-xl-desktop:          @screen-xl-min;
 
 // So media queries don't overlap when required, provide a maximum
-@screen-ph-max:              (@screen-xs-min - 1);
-@screen-xs-max:              (@screen-sm-min - 1);
-@screen-sm-max:              (@screen-md-min - 1);
-@screen-md-max:              (@screen-lg-min - 1);
-@screen-lg-max:              (@screen-xl-min - 1);
+@screen-ph-max: ~"calc(@{screen-xs-min} - 1px)";
+@screen-xs-max: ~"calc(@{screen-sm-min} - 1px)";
+@screen-sm-max: ~"calc(@{screen-md-min} - 1px)";
+@screen-md-max: ~"calc(@{screen-lg-min} - 1px)";
+@screen-lg-max: ~"calc(@{screen-xl-min} - 1px)";
 
 
 //== Grid system
@@ -68,12 +68,12 @@
 //** Number of columns in the grid.
 @grid-columns:              12;
 //** Padding between columns. Gets divided in half for the left and right.
-@grid-gutter-width:         30px;
+@grid-gutter-width:         2rem;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
 @grid-float-breakpoint:     @screen-md-min;
 //** Point at which the navbar begins collapsing.
-@grid-float-breakpoint-max: (@grid-float-breakpoint - 1);
+@grid-float-breakpoint-max: ~"calc(@{grid-float-breakpoint} - 1px)";;
 
 
 //== Container sizes
@@ -81,22 +81,22 @@
 //## Define the maximum width of `.container` for different screen sizes.
 
 // Small screen / tablet
-@container-tablet:             (720px + @grid-gutter-width);
+//@container-tablet:             (720px + @grid-gutter-width);
 //** For `@screen-sm-min` and up.
-@container-sm:                 @container-tablet;
+//@container-sm:                 @container-tablet;
 
 // Medium screen / desktop
-@container-desktop:            (940px + @grid-gutter-width);
+@container-desktop:            (70rem + @grid-gutter-width);
 //** For `@screen-md-min` and up.
 @container-md:                 @container-desktop;
 
 // Large screen / wide desktop
-@container-large-desktop:      (1140px + @grid-gutter-width);
+@container-large-desktop:      (84rem + @grid-gutter-width);
 //** For `@screen-lg-min` and up.
 @container-lg:                 @container-large-desktop;
 
 // Large screen / wide desktop
-@container-xlarge-desktop:      (1540px + @grid-gutter-width);
+@container-xlarge-desktop:      (98rem + @grid-gutter-width);
 //** For `@screen-lg-min` and up.
 @container-xl:                 @container-xlarge-desktop;
 

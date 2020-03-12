@@ -6,45 +6,27 @@
  * @version     1.0
  * @author      Salvatore Di Salvo <disalvo.infographiste@gmail.com>
  */
+'use strict';
+window.addEventListener('DOMContentLoaded', function () {
+    // *** Auto-position of the affix header
+    let tar = window.innerHeight/2;
 
-/*function getPosition(element) {
-    var xPosition = 0;
-    var yPosition = 0;
+    function affixHead() {
+        let pos = window.pageYOffset,
+            header = document.getElementById('header'),
+            //btn = document.querySelectorAll('.toTop'),
+            atTop = header.classList.contains('at-top');
 
-    while(element) {
-        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
-        element = element.offsetParent;
-    }
-    return { x: xPosition, y: yPosition };
-}*/
-
-+function ($) {
-    'use strict';
-
-    $(window).on('load', function () {
-        // *** Auto-position of the affix header
-        //let tar = document.documentElement.clientHeight * (1/3);
-        //let hH = $('#header').height();
-        //tar = (hH - 92);
-        //let tar = (hH - 150);
-        let tar = window.innerHeight/2;
-
-        //let toptar = document.documentElement.clientHeight * (1/3);
-        function affixHead() {
-            let pos = window.pageYOffset,
-                atTop = $('#header').hasClass('at-top');
-
-            if (pos > tar && atTop) {
-                $('#header').removeClass('at-top');
-                $('body > .toTop').addClass('affix');
-            } else if(pos < tar && !atTop){
-                $('#header').addClass('at-top');
-                $('body > .toTop').removeClass('affix');
-            }
+        if (pos > tar && atTop) {
+            header.classList.remove('at-top');
+            //btn.forEach( function(i) { i.classList.add('affix'); });
+        } else if(pos < tar && !atTop){
+            header.classList.add('at-top');
+            //btn.forEach( function(i) { i.classList.remove('affix'); });
         }
-        $(window).scroll(affixHead);
-        $(window).resize(affixHead);
-        affixHead();
-    });
-}(jQuery);
+    }
+
+    window.addEventListener('scroll',affixHead);
+    window.addEventListener('resize',affixHead);
+    affixHead();
+});

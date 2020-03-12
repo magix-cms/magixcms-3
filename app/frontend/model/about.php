@@ -473,7 +473,7 @@ class frontend_model_about extends frontend_db_about {
 				case 'specifications':
 					foreach ($value as $day => $op_info) {
 						foreach ($op_info as $t => $v) {
-							$this->company['specifications'][$day][$t] = $schedule[$day][$t];
+							$this->company['specifications'][$day][$t] = isset($schedule[$day][$t]) ? $schedule[$day][$t] : $this->company['specifications'][$day][$t];
 						}
 					}
 					break;
@@ -493,7 +493,7 @@ class frontend_model_about extends frontend_db_about {
 					}
 					break;
 				default:
-					$this->company[$info] = $about[$info];
+					$this->company[$info] = isset($about[$info]) ? $about[$info] : $this->company[$info];
 			}
 		}
 

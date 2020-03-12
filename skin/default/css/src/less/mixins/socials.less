@@ -12,22 +12,22 @@
     @socials: facebook, twitter, viadeo, google, linkedin, pinterest, instagram, github, soundcloud;
 
     .soc-border (@style, @bdcolor) when (@style = border) {
-        > span { color: @bdcolor; }
-        border: 2px solid @bdcolor;
-        background-color: transparent;
+        --soc-color: @bdcolor;
+        --soc-brd: 2px solid @bdcolor;
+        --soc-bg: transparent;
     }
 
     .soc-bg (@style, @colors) when (@style = color) {
-        background: @color;
+        --soc-bg: @color;
     }
     .soc-bg (@style, @colors) when (@style = pastel) {
-        background-color: lighten(desaturate(extract(@colors,2),5%),10%);
+        --soc-bg: lighten(desaturate(extract(@colors,2),5%),10%);
     }
     .soc-bg (@style, @colors) when (@style = flat) {
-        background-color: extract(@colors,2);
+        --soc-bg: extract(@colors,2);
     }
     .soc-bg (@style, @colors) when (@style = gradient) {
-        #gradient .directional(extract(@colors,1), extract(@colors,2));
+        --soc-bg: linear-gradient(45deg, extract(@colors,1), extract(@colors,2));
     }
 
     .style (@style, @hover, @colors) when (@hover = same) {
@@ -37,45 +37,41 @@
     }
     .style (@style, @hover, @colors) when (@hover = dark) {
         @dark: darken(extract(@colors,1),10%), darken(extract(@colors,2),10%);
-        &{
-            .soc-bg (@style, @colors);
-        }
+        .soc-bg (@style, @colors);
         &:hover {
             .soc-bg (@style, @dark);
         }
     }
     .style (@style, @hover, @colors) when (@hover = light) {
         @light: lighten(extract(@colors,1),10%), lighten(extract(@colors,2),10%);
-        &{
-            .soc-bg (@style, @colors);
-        }
+        .soc-bg (@style, @colors);
         &:hover {
             .soc-bg (@style, @light);
         }
     }
     .style (@style, @hover, @colors) when (@hover = flat) {
-        &{
-            .soc-bg (@style, @colors);
-        }
+        .soc-bg (@style, @colors);
         &:hover {
             .soc-bg (@hover, @colors);
         }
     }
     .style (@style, @hover, @colors) when (@hover = coloronly) {
-        &{
-            color: @color;
-        }
+        --soc-color: @color;
         &:hover {
-            color: extract(@colors,2);
+            --soc-color: extract(@colors,2);
         }
     }
     .style (@style, @hover, @colors) when (@hover = border) {
-        &{
-            .soc-border (@style, @color);
-        }
+        .soc-border (@style, @color);
         &:hover {
             .soc-border (@hover, extract(@colors,1));
         }
+    }
+
+    [class*="share-"] a {
+        color: var(--soc-color, var(--text-color, @text-color)) !important;
+        background: var(--soc-bg, none) !important;
+        border: var(--soc-brd, none) !important;
     }
 
     .share {

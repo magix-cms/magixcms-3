@@ -243,7 +243,15 @@ class plugins_contact_public extends plugins_contact_db
 						}*/
 
 						foreach ($contacts as $recipient) {
-							$isSend = $this->mail->send_email($recipient['mail_contact'],$tpl,$this->msg,$this->setTitleMail($error),$sender,$this->config['mail_sender'],$file);
+							$isSend = $this->mail->send_email(
+								$recipient['mail_contact'],
+								$tpl,
+								$this->msg,
+								$this->setTitleMail($error),
+								$sender,
+								$this->config['mail_sender'],
+								$file
+							);
 							if(!$send) $send = $isSend;
 						}
 						if($send)

@@ -1,4 +1,7 @@
-{if $aid}<script type="text/javascript">
+{if $aid}
+    <link rel="preconnect" href="https://ssl.google-anaytics.com"/>
+    <link rel="dns-prefetch" href="https://ssl.google-anaytics.com"/>
+    <script type="text/javascript">
     //<![CDATA[
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', "{$aid}"]);

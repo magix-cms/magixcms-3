@@ -1,0 +1,164 @@
+<mj-wrapper background-color="#EEE" full-width="full-width">
+    <mj-section>
+        <mj-column width="100%" padding="0">
+            <mj-raw>
+                <tbody>
+                    <tr>
+                        <td style="vertical-align:top;padding:0;">
+                            <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                                <tr>
+                                    <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><![endif]-->
+                                        {if isset($companyData['socials']['facebook'])}
+                                        <!--[if mso | IE]><td><![endif]-->
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                                            <tr>
+                                                <td style="padding:4px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
+                                                        <tr>
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://www.facebook.com/sharer/sharer.php?u={$companyData.socials.facebook}" target="_blank">
+                                                                <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/facebook.png" style="border-radius:3px;display:block;" width="30"/>
+                                                            </a> </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--[if mso | IE]></td><![endif]-->
+                                        {/if}
+                                        {if isset($companyData['socials']['twitter'])}
+                                        <!--[if mso | IE]><td><![endif]-->
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                                            <tr>
+                                                <td style="padding:4px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
+                                                        <tr>
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://twitter.com/home?status={$companyData.socials.twitter}" target="_blank">
+                                                                <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/twitter.png" style="border-radius:3px;display:block;" width="30"/>
+                                                            </a> </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--[if mso | IE]></td><![endif]-->
+                                        {/if}
+                                        {if isset($companyData['socials']['linkedin'])}
+                                        <!--[if mso | IE]><td><![endif]-->
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                                            <tr>
+                                                <td style="padding:4px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
+                                                        <tr>
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={$companyData.socials.linkedin}&amp;title=&amp;summary=&amp;source=" target="_blank">
+                                                                <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/linkedin.png" style="border-radius:3px;display:block;" width="30"/>
+                                                            </a> </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--[if mso | IE]></td><![endif]-->
+                                        {/if}
+                                        {if isset($companyData['socials']['pinterest'])}
+                                        <!--[if mso | IE]><td><![endif]-->
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                                            <tr>
+                                                <td style="padding:4px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
+                                                        <tr>
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://pinterest.com/pin/create/button/?url={$companyData.socials.pinterest}&amp;media=&amp;description=" target="_blank">
+                                                                <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/pinterest.png" style="border-radius:3px;display:block;" width="30"/>
+                                                            </a> </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--[if mso | IE]></td><![endif]-->
+                                        {/if}
+                                        {if isset($companyData['socials']['instagram'])}
+                                        <!--[if mso | IE]><td><![endif]-->
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                                            <tr>
+                                                <td style="padding:4px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
+                                                        <tr>
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.instagram}" target="_blank">
+                                                                <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/instagram.png" style="border-radius:3px;display:block;" width="30"/>
+                                                            </a> </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--[if mso | IE]></td><![endif]-->
+                                        {/if}
+                                        {if isset($companyData['socials']['github'])}
+                                        <!--[if mso | IE]><td><![endif]-->
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                                            <tr>
+                                                <td style="padding:4px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
+                                                        <tr>
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.github}" target="_blank">
+                                                                <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/github.png" style="border-radius:3px;display:block;" width="30"/>
+                                                            </a> </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--[if mso | IE]></td><![endif]-->
+                                        {/if}
+                                        {if isset($companyData['socials']['soundcloud'])}
+                                        <!--[if mso | IE]><td><![endif]-->
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                                            <tr>
+                                                <td style="padding:4px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
+                                                        <tr>
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.soundcloud}" target="_blank">
+                                                                <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/soundcloud.png" style="border-radius:3px;display:block;" width="30"/>
+                                                            </a> </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!--[if mso | IE]></td><![endif]-->
+                                        {/if}
+                                        <!--[if mso | IE]></tr></table><![endif]-->
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </mj-raw>
+        </mj-column>
+    </mj-section>
+    <mj-section>
+        <mj-column width="50%">
+            <mj-text mj-class="lightext" padding-top="0" font-size="11px">
+                {#call_us_at#}<br/>{$companyData['contact']['phone']}<br/>
+                {if $companyData['contact']['mobile']}{#call_us_at#}<br/>{$companyData['contact']['mobile']}<br/>{/if}
+                {#email_us_at#}<br/>{$companyData['contact']['mail']}
+            </mj-text>
+        </mj-column>
+        <mj-column width="50%">
+            <mj-text mj-class="lightext" padding-top="0" font-size="11px">
+                {$companyData['contact']['adress']['street']},<br/>
+                {$companyData['contact']['adress']['postcode']} {$companyData['contact']['adress']['city']}{if isset($companyData['contact']['adress']['country'])},<br/>
+                {$companyData['contact']['adress']['country']}{/if}
+            </mj-text>
+        </mj-column>
+    </mj-section>
+    <mj-section>
+        <mj-column width="100%" padding="0">
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px">
+                &copy; {$companyData['name']}, {#mail_all_rights_reserved#}.
+            </mj-text>
+        </mj-column>
+    </mj-section>
+</mj-wrapper>

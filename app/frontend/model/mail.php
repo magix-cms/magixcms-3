@@ -22,13 +22,13 @@ class frontend_model_mail {
 	 * @param null|frontend_model_template $t
 	 * @param $tpl_dir
 	 */
-	public function __construct($t = null, $tpl_dir)
+	public function __construct($t = null, $tpl_dir, $type='mail', $options=null)
 	{
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->message = new component_core_message($this->template);
 		$this->lang = $this->template->currentLanguage();
 		$this->sanitize = new filter_sanitize();
-		$this->mail = new mail_swift('mail');
+		$this->mail = new mail_swift($type, $options);
 		$this->modelDomain = new frontend_model_domain($this->template);
 		$this->settings = new frontend_model_setting($this->template);
 
@@ -64,6 +64,7 @@ class frontend_model_mail {
 		$bodyMail = $this->template->fetch($this->tpl_dir.'/mail/'.$tpl.'.tpl');
 		if ($cssInliner['value']) {
 			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->theme.'/mail/css' => 'mail.min.css'));
+			//$bodyMail = $this->mail->plugin_css_inliner($bodyMail);
 		}
 
 		if($debug) {
@@ -121,6 +122,8 @@ class frontend_model_mail {
 								if(file_exists($file['path'])) $message->attach(Swift_Attachment::fromPath($file['path'], $file['type']));
 							}
 						}
+
+						//$fail = $this->mail->batch_send_mail($message,true,true);
 
 						if($this->mail->batch_send_mail($message)) {
 							return true;

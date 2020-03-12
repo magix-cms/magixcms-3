@@ -6,161 +6,136 @@
  * @version 1.0
  * @author Salvatore Di Salvo <disalvo.infographiste@gmail.com>
  */
+'use strict';
 
-// Creare's 'Implied Consent' EU Cookie Law Banner v:2.4
-// Conceived by Robert Kent, James Bavington & Tom Foyster
-// Modified by Simon Freytag for syntax, namespace, jQuery and Bootstrap
-// Modified by Salvatore Di Salvo for optimisation and Magix CMS
+const C = {
+    block: document.getElementById('cookies'),
+    btn: document.querySelector('#cookies button'),
+    createCookie: function() {
+        Cookie.createCookie('complianceCookie');
+        C.block.classList.remove('in');
+        C.block.classList.add('hide');
+    },
+    init: function() {
+        if (Cookie.checkCookie('complianceCookie') !== 'on') C.block.classList.remove('hide');
+        C.btn.addEventListener('click',this.createCookie);
+    }
+};
 
-+function ($) {
-    'use strict';
+window.addEventListener('load', function() {
+    if(Cookie !== undefined) {
+        C.init();
+    }
 
-    const C = {
-        block: $('#cookies'),
-        btn: $('#cookies button'),
-        createCookie: function() {
-            let date = new Date();
-            date.setTime(date.getTime() + (365*24*60*60*1000));
-            document.cookie = 'complianceCookie=on; expires=' + date.toGMTString() + '; path=/';
-            C.block.removeClass('in').addClass('hide');
-        },
+    let lazyLoadInstance = new LazyLoad({
+        elements_selector: ".lazyload"
+    });
 
-        checkCookie: function() {
-            let nameEQ = 'complianceCookie=';
-            let ca = document.cookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1, c.length);
-                }
+    // *** target_blank
+    document.querySelectorAll("a.targetblank").forEach( function(i) {
+        i.addEventListener('click',function(e) {
+            e.preventDefault();
+            window.open(i.getAttribute('href'));
+            return false;
+        })
+    });
 
-                if (c.indexOf(nameEQ) === 0) { return c.substring(nameEQ.length, c.length); }
-            }
-            return null;
-        },
+    // *** Smooth Scroll to Top
+    document.querySelectorAll(".toTop").forEach( function(i) {
+        i.addEventListener('click',function(e) {
+            e.preventDefault();
+            //document.querySelector('html, body').animate({ scrollTop: 0 }, 450);
+            scrollToTop(450);
+            return false;
+        })
+    });
 
-        init: function() {
-            if (this.checkCookie() !== 'on') C.block.removeClass('hide');
-            C.btn.click(this.createCookie);
+    // *** add the class 'open' on a collapse button when his collapsible element is opened
+    document.querySelectorAll('[data-toggle="collapse"]').forEach( function(i) {
+        let parent = i.dataset.parent || false,
+            target = i.dataset.target ? i.dataset.target : i.getAttribute('href');
+        parent ? new Collapse(i,{parent: document.querySelector(parent)}) : new Collapse(i);
+        function toggle(i,e,t) { if(e.target === t) i.classList.toggle('open',/^shown.*/.test(e.type)); }
+        if(typeof target === 'string' && /^#.+/.test(target)) {
+            document.querySelector(target).addEventListener('shown.bs.collapse', function(e) { toggle(i,e,this); });
+            document.querySelector(target).addEventListener('hidden.bs.collapse', function(e) { toggle(i,e,this); });
         }
-    };
+    });
 
-    $(window).on('load', function () {
-        C.init(); // Cookie EU Law
-
-        let lazyLoadInstance = new LazyLoad({
-            elements_selector: ".lazyload"
-        });
-
-        // *** target_blank
-        $('a.targetblank').click( function() {
-            window.open($(this).attr('href'));
-            return false;
-        });
-
-        // *** Smooth Scroll to Top
-        $('.toTop').click( function() {
-            $('html, body').animate({ scrollTop: 0 }, 450);
-            return false;
-        });
-
-        // *** add the class 'open' on a collapse button when his collapsible element is opened
-        $('[data-toggle="collapse"]').each(function(){
-            let self = $(this);
-
-            $(self.data('target')).on('shown.bs.collapse hidden.bs.collapse',function(e){
-                if(e.target === this) self.toggleClass('open',e.type === 'shown');
-            });
-        });
-
-        // *** Enable the use of collapsible elements in a dropdown context
-        $('.dropdown [data-toggle="collapse"]').click(function (e) {
+    // *** Enable the use of collapsible elements in a dropdown context
+    document.querySelectorAll('.dropdown [data-toggle="collapse"]').forEach( function(i) {
+        i.addEventListener( 'click', function(e) {
             e.stopPropagation();
             e.preventDefault();
-            //$(this).closest(".dropdown").addClass("open");
-            $($(this).data("target")).collapse('toggle');
+            document.querySelector(this.dataset.target).collapse('toggle');
         });
-
-        // *** featherlight lightbox init
-        if($.featherlight !== undefined) {
-            let afterContent = function () {
-                let trg = this.$currentTarget,
-                    g = $.featherlightGallery !== undefined && trg.hasClass('img-gallery'),
-                    fl = '.featherlight',
-                    flc = fl+'-content',
-                    caption = trg.data('caption') ? trg.data('caption') : trg.attr('title'),
-                    closebtn = this.$instance.find('button')[0];
-
-                this.$instance.find('.caption, .figure'+(g ? ', '+fl+'-previous, '+fl+'-next' : '')).remove();
-
-                this.$content
-                    .appendTo(this.$instance.find(flc))
-                    .wrapAll('<div class="figure" />');
-
-                $('<div class="caption">')
-                    .append($(closebtn),$('<p />').text(caption))
-                    .appendTo(this.$instance.find(flc+' .figure'));
-
-                if(g) $(closebtn).after(this.createNavigation('next'),this.createNavigation('previous'));
-            };
-
-            $.featherlight.prototype.afterContent = afterContent;
-            $('.img-zoom').featherlight();
-            if($.featherlightGallery !== undefined) {
-                $.featherlightGallery.prototype.previousIcon = '<i class="material-icons">keyboard_arrow_left</i>';
-                $.featherlightGallery.prototype.nextIcon = '<i class="material-icons">keyboard_arrow_right</i>';
-                $.featherlightGallery.prototype.afterContent = afterContent
-                $('.img-gallery').featherlightGallery();
-            }
-            else {
-                $('.img-gallery').featherlight();
-            }
-        }
-
-        // *** Owl Carousel init
-        let owlOptions = {
-            loop: true,
-            margin: 30,
-            responsiveClass: true,
-            nav: true,
-            dots: false,
-            lazyLoad:true,
-            navElement: 'a',
-            navText: [
-                '<i class="material-icons ico ico-keyboard_arrow_left" aria-hidden="true">keyboard_arrow_left</i>',
-                '<i class="material-icons ico ico-keyboard_arrow_right" aria-hidden="true">keyboard_arrow_right</i>'
-            ]
-        };
-        if($(".thumbs").length > 0 && $.fn.owlCarousel !== undefined) {
-            $(".thumbs").owlCarousel(Object.assign({},owlOptions,{
-                margin: 5,
-                items:3
-            }));
-            // *** for gallery pictures
-            $(".show-img").off('click').click(function(){
-                $(".big-image a").animate({ opacity: 0, 'z-index': -1 }, 200);
-                $($(this).data('target')).animate({ opacity: 1, 'z-index': 1 }, 200);
-                return false;
-            });
-        }
-        if($(".owl-slideshow").length > 0 && $.fn.owlCarousel !== undefined) {
-            $(".owl-slideshow > .owl-carousel").owlCarousel(Object.assign({},owlOptions,{
-                items: 1,
-                margin: 0,
-                dots: true,
-                dotsData: true,
-                autoplay: true,
-                autoplayHoverPause: true,
-                autoplayTimeout: 5000,
-                animateOut: 'fadeOut',
-                dotsContainer: '.owl-slideshow-dots',
-                navContainer: '.owl-slideshow-nav'
-            }));
-            $(".owl-slideshow .owl-dot").on('click', function() {
-                $(".owl-slideshow > .owl-carousel").trigger('to.owl.carousel', $(this).index());
-            });
-        }
-        // *** Owl Carousel in plugins
-        // *** Add here the content of the public.js file of the plugins using owl-carousel
     });
-}(jQuery);
+
+    if(SimpleLightbox !== undefined) {
+        let slOptions = {
+            closeBtnContent: '<i class="material-icons">close</i>',
+            nextBtnContent: '<i class="material-icons">keyboard_arrow_left</i>',
+            prevBtnContent: '<i class="material-icons">keyboard_arrow_right</i>'
+        };
+        new SimpleLightbox(Object.assign({},slOptions,{
+            elements: '.img-zoom',
+        }));
+        new SimpleLightbox(Object.assign({},slOptions,{
+            elements: '.img-gallery',
+        }));
+    }
+
+    // *** Tiny Slider Carousel init
+    let tnsOptions = {
+        loop: true,
+        gutter: 30,
+        nav: false,
+        controls: true,
+        lazyLoad: true,
+        controlsText: [
+            '<i class="material-icons" aria-hidden="true">keyboard_arrow_left</i>',
+            '<i class="material-icons" aria-hidden="true">keyboard_arrow_right</i>'
+        ]
+    };
+    if(document.getElementsByClassName('slideshow').length > 0 && tns !== undefined) {
+        let slidec = document.querySelector('.slideshow');
+        let slideshow = tns(Object.assign({},tnsOptions,{
+            container: '.slideshow',
+            mode: 'gallery',
+            items: 1,
+            gutter: 0,
+            speed: 500,
+            autoplay: true,
+            autoplayButtonOutput: false,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            controls: false
+        }));
+    }
+    if(document.getElementsByClassName('thumbs').length > 0 && tns !== undefined) {
+        let thumbs = tns(Object.assign({},tnsOptions,{
+            container: '.thumbs',
+            loop:false,
+            responsive:{
+                0:{
+                    items:2,
+                    gutter: 7
+                },
+                536:{
+                    items: 3,
+                    gutter: 14
+                },
+                768:{
+                    items: 3,
+                    gutter: 21
+                },
+                1400:{
+                    items: 3,
+                    gutter: 28
+                }
+            }
+        }));
+    }
+    // *** Owl Carousel in plugins
+    // *** Add here the content of the public.js file of the plugins using owl-carousel
+});

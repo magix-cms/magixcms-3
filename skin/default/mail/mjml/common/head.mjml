@@ -1,0 +1,24 @@
+<mj-head>
+    <mj-title>{if isset($title_mail)}{$title_mail}{/if}</mj-title>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"></mj-font>
+    <mj-attributes>
+        <mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+        <mj-text font-weight="400" font-size="14px" color="#333333" line-height="23px" font-family="Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+        <mj-divider border-color="{$main_color}" border-width="2px"></mj-divider>
+        <mj-class name="smalltitle" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0" />
+        <mj-class name="smalltitle" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0" />
+        <mj-class name="lightext" color="{$light_grey}" />
+    </mj-attributes>
+    <mj-style inline="inline">
+        html, body { background: #EEEEEE !important; }
+    </mj-style>
+    <mj-style inline="inline">
+        .body-section { -webkit-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15); -moz-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15); box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15); }
+    </mj-style>
+    <mj-style inline="inline">
+        .text-link { color: {$main_color}; }
+    </mj-style>
+    <mj-style inline="inline">
+        .footer-link { color:{$footer_color}; }
+    </mj-style>
+</mj-head>

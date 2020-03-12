@@ -1,0 +1,23 @@
+<mj-section background-color="#EEE">
+    <mj-column>
+        <mj-raw>
+            <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                <tr>
+                    <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width:100px;">
+                                        <a href="{$url}" target="_blank" align="center">
+                                            <img alt="{$logo_alt}" height="{$logo_h}" width="{$logo_w}" src="{$logo_url}" style="border:0;display:block;outline:none;text-decoration:none;width:100%;font-size:13px;" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </mj-raw>
+    </mj-column>
+</mj-section>

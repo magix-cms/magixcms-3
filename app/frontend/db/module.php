@@ -19,7 +19,7 @@ class frontend_db_module
 					$sql = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :plugin OR module_name = :module';
 					break;
 				case 'mod':
-					$sql = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :id';
+					$sql = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :id AND active = 1';
 					break;
 			}
 

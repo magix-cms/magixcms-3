@@ -1,17 +1,10 @@
 //
 // Rules for breadcrumb
 //
-#breadcrumb-container {
-	padding-top: @headerH + @toolbarH;
-	margin: 7px 0 8px;
-
-	+ main { padding-top: 0; }
-}
-
 .breadcrumb {
-	font-size: 12px;
+	font-size: .85rem;
 	position: relative;
-	padding: 5px 15px;
+	padding: 5px 1rem;
 
 	> ol {
 		.no-martini;
@@ -53,27 +46,3 @@
 		top: -2px;
 	}
 }
-
-/*#breadcrumb-collapse {
-	position: absolute;
-	left: 0;
-	top: 100%;
-	width: 100%;
-	background-color: #fff;
-	box-shadow: 0 3px 5px rgba(0,0,0,.2);
-
-	li {
-		text-align: center;
-		display: block;
-		color: @bc-item-color;
-		text-shadow: none;
-		.normalize-link(@bc-link-color,@bc-active-link-color,underline,@font-weight);
-	}
-}*/
-
-/*#hellipsis{
-	span.fa{
-		padding: 5px;
-		font-size: 14px;
-	}
-}*/

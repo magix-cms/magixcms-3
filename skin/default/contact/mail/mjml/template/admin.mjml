@@ -1,0 +1,28 @@
+<mj-section>
+    <mj-column width="100%">
+        <mj-text font-weight="bold" font-size="16px" padding-bottom="0">
+            {#object_mail#|ucfirst}&nbsp;: {$data.title}
+        </mj-text>
+        <mj-text mj-class="lightext" font-size="16px">
+            <mj-raw>{nl2pandbr text=$data.content}</mj-raw>
+        </mj-text>
+    </mj-column>
+</mj-section>
+<mj-section padding="0">
+<mj-column width="100%" padding="0">
+    <mj-divider/>
+</mj-column>
+</mj-section>
+<mj-section>
+<mj-column>
+    <mj-text mj-class="smalltitle">
+        {#mail_from#|ucfirst}
+    </mj-text>
+    <mj-text mj-class="lightext" padding-top="0">
+        {$data.firstname}&nbsp;{$data.lastname}<br/><br/>
+        {if $data.address != null}{$data.address|ucfirst}, {$data.postcode} {$data.city}<br/>{/if}
+        {if $data.phone != null}{#mail_phone#|ucfirst}&nbsp;: {$data.phone}<br/>{/if}
+        {#mail_email#|ucfirst}&nbsp;: <a href="mailto:{$data.email}">{$data.email}</a>
+    </mj-text>
+</mj-column>
+</mj-section>

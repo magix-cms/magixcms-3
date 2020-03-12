@@ -6,7 +6,28 @@
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}
             <header>
-                {include file="section/brick/toc.tpl" pages=$pagesTree root=['url' => "{$url}/{$lang}/","title" => {#home#}]}
+                {widget_about_data conf=['context' => 'all'] assign="aboutPages"}
+                <ul class="menu-cms">
+                    {if $aboutPages}
+                        <li class="dropdown-header{if $controller === 'about'} active{/if}">
+                            <a href="{$url}/{$lang}/about/" title="{#about_footer#}">{#about_footer#}</a>
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#aboutPages">
+                                <span class="show-more"><i class="material-icons ico ico-keyboard_arrow_right">{*keyboard_arrow_right*}</i></span>
+                                <span class="show-less"><i class="material-icons ico ico-keyboard_arrow_up">{*keyboard_arrow_up*}</i></span>
+                            </button>
+                        </li>
+                        <li class="submenu">
+                            <ul id="aboutPages" class="collapse">
+                                {include file="section/loop/toc.tpl" pages=$aboutPages s=0 controller="about"}
+                            </ul>
+                        </li>
+                    {else}
+                        <li{if $controller === 'about' && !$smarty.get.id} class="active"{/if}>
+                            <a href="{$url}/{$lang}/about/" title="{#about_footer#}">{#about_footer#}</a>
+                        </li>
+                    {/if}
+                    {include file="section/loop/toc.tpl" pages=$pagesTree}
+                </ul>
                 <h1 itemprop="name">{$pages.name}</h1>
             </header>
             <div class="text clearfix" itemprop="text">

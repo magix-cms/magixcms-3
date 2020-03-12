@@ -16,21 +16,30 @@
 	}
 
 	.block {
-		padding: 20px 15px;
-		//margin-bottom: 20px;
+		padding: 0 1rem 2rem;
 
 		&:last-child {
 			margin-bottom: 0;
 		}
 
 		h4 {
-			padding-bottom: 8px;
-			margin-bottom: 10px;
-			border-bottom: @footer-border;
+			margin: 0 0 1rem;
+			font-size: 1.2rem;
+			font-weight: bold;
+
+			&, & a {
+				font-weight: bold;
+			}
 		}
 
-		.link-list a {
-			width: 100%;
+		.link-list {
+			li {
+				margin-bottom: 11px;
+			}
+			a {
+				width: 100%;
+				padding: 0;
+			}
 		}
 	}
 }
@@ -100,7 +109,7 @@
 
 	.footer-colophon {
 		border-top: @footer-border;
-		padding: 15px 0;
+		padding: 1rem 0;
 		font-size: 85%;
 
 		@media (max-width: @screen-ph-max) {
@@ -140,21 +149,18 @@
 #footbar {
 	position: fixed;
 	bottom: 0;
-	display: block;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 	width: 100%;
 	z-index: @z-fixed;
-	padding: 0;
 	.shadow(4);
+	color: @footbar-color;
 
-	.wrapper {
-		background-color: @footbar-bg;
-		color: @footbar-color;
-		height: @footbarH;
-		padding: 3px 0;
-	}
-
-	.btn {
-		.btn-main-theme();
+	@media (max-width: @screen-md-max) {
+		.btn {
+			.btn-main-theme();
+		}
 	}
 
 	.material-icons {
@@ -163,6 +169,9 @@
 
 	.dropup {
 		position: static;
+		flex: 1 0 auto;
+		background-color: @footbar-bg;
+
 		.material-icons {
 			margin-right: 4px;
 		}
@@ -170,11 +179,13 @@
 
 	.share-nav {
 		position: absolute;
+		border-radius: 0;
+		border: none;
 		width: 100%;
 		z-index: -1;
 		bottom: -16px;
 		background: @sharebar-bg;
-		display: block;
+		display: flex;
 		padding: 8px 15px;
 		height: 50px;
 		.auto-transition(.5s);
@@ -182,12 +193,11 @@
 		margin-bottom: 0;
 
 		li {
-			float: left;
 			margin-right: 15px;
 		}
 	}
 
-	.dropup.open + .share-nav {
+	.dropup.open .share-nav {
 		bottom: @footbarH;
 	}
 

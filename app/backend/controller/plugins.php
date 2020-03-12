@@ -146,8 +146,8 @@ class backend_controller_plugins extends backend_db_plugins{
 					if(isset($config['bind']['plugin'])) {
 						foreach ($config['bind']['plugin'] as $plugin) {
 							$data = parent::fetchData(array('context'=>'one','type'=>'register'),array('id'=>$plugin));
-							$active = $data['id_plugins'] !== null ? 1 : 0;
-							$this->module->register($id,$plugin,$active);
+							//$active = $data['id_plugins'] !== null ? 1 : 0;
+							$this->module->register($id,$plugin,0);
 						}
 					}
 					$this->module->toggle_register($id);
