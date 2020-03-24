@@ -44,15 +44,15 @@ Requirements
 ### Server
  * APACHE / IIS / NGINX
      * Le serveur doit avoir la réécriture d'url activé pour fonctionner (rewrite_mod).
- * PHP 5.5 et plus
-     * GD activé
+ * PHP 7 et plus
+     * GD activé avec le support Webp
      * SPL
      * SimpleXML et XML READER
      * PDO
      * Fileinfo Extension
  * MYSQL Ou MariaDB
  
-##### Note: Pour utiliser Magix CMS avec PHP 5.6 et plus
+##### Note: Pour utiliser Magix CMS avec PHP 7 et plus
 <pre>
 error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 </pre>
@@ -67,8 +67,8 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
     * Requires: [globby](https://www.npmjs.com/package/globby) >= 9.1.0
  * [less-plugin-clean-css](https://github.com/less/less-plugin-clean-css) >= 1.5.1 *deprecated use clean-css-cli instead*
  * [clean-css-cli](https://www.npmjs.com/package/clean-css-cli) >= 4.3.0
- * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21
- * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 
+ * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21 *deprecated use terser-js*
+ * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 *deprecated use terser-js*
  * [terser](https://github.com/terser-js/terser) >= 3.17.0 (ou terser-js à la place de Uglify)
  * [sass](https://sass-lang.com/install) >= 1.20.1
  
