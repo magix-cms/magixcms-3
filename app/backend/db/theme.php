@@ -251,7 +251,7 @@ class backend_db_theme{
 		switch ($config['type']) {
 			case 'link':
 				$sql = "INSERT INTO `mc_menu`(type_link, id_page, order_link)  
-					SELECT :type, :id_page, (MAX(order_link) + 1) FROM mc_menu";
+					SELECT :type, :id_page, (IFNULL(MAX(order_link),0) + 1) FROM mc_menu";
 				break;
 			case 'link_content':
 				$sql = 'INSERT INTO `mc_menu_content`(id_link,id_lang,name_link,url_link) 
