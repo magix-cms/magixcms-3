@@ -385,7 +385,6 @@ class backend_controller_news extends backend_db_news
 			case 'imgContent':
 				parent::update(
 					array(
-						'context' => $data['context'],
 						'type' => $data['type']
 					),
 					$data['data']

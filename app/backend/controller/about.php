@@ -637,7 +637,7 @@ class backend_controller_about extends backend_db_about{
 					}
 					break;
 				default:
-					$this->company[$info] = $about[$info];
+					if(isset($about[$info])) $this->company[$info] = $about[$info];
 			}
         }
 

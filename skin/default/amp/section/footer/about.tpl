@@ -115,7 +115,7 @@
         {/if}
     </div>
     <div>
-        <p><i class="material-icons">copyright</i> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span>
+        <p><i class="material-icons ico ico-copyright"></i> <span itemprop="copyrightYear">2017{if 'Y'|date != '2017'} - {'Y'|date}{/if}</span>
             | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>
     </div>
     {if $companyData.tva}

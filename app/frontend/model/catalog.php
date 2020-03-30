@@ -79,42 +79,21 @@ class frontend_model_catalog extends frontend_db_catalog {
         if(!isset($this->imagePlaceHolder)) $this->imagePlaceHolder = $this->logo->getImagePlaceholder();
 
         if ($row != null) {
-            if (isset($row['name'])) {
-                $data['name'] = $row['name'] ? $row['name'] : $this->template->getConfigVars('catalog');
-                $data['content'] = $row['content'];
-				$this->seo->level = 'root';
-
-				if (!isset($row['seo_title']) || empty($row['seo_title'])) {
-					$seoTitle = $this->seo->replace_var_rewrite('','','title');
-					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
-				}
-				else {
-					$data['seo']['title'] = $row['seo_title'];
-				}
-
-				if (!isset($row['seo_desc']) || empty($row['seo_desc'])) {
-					$seoDesc = $this->seo->replace_var_rewrite('','','description');
-					$data['seo']['description'] = $seoDesc ? $seoDesc : ( $row['content'] ? $string_format->truncate(strip_tags($data['content'])) : $data['name'] );
-				}
-				else {
-					$data['seo']['description'] = $row['seo_desc'];
-				}
-            }
             // *** Product
-            elseif (isset($row['name_p'])) {
+            if (isset($row['name_p'])) {
                 //$subcat['id']   = (isset($row['idcls'])) ? $row['idcls'] : null;
                 //$subcat['name'] = (isset($row['pathslibelle'])) ? $row['pathslibelle'] : null;
                 $data['short_name']= $row['name_p'];
                 $data['name']      = $row['name_p'];
                 $data['long_name'] = $row['longname_p'];
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
-					'type'       => 'product',
-					'iso'        => $row['iso_lang'],
-					'id'         => $row['id_product'],
-					'url'        => $row['url_p'],
-					'id_parent'  => $row['id_cat'],
-					'url_parent' => $row['url_cat']
-				));
+                    'type'       => 'product',
+                    'iso'        => $row['iso_lang'],
+                    'id'         => $row['id_product'],
+                    'url'        => $row['url_p'],
+                    'id_parent'  => $row['id_cat'],
+                    'url_parent' => $row['url_cat']
+                ));
                 // Base url for product
                 $data['baseUrl']       = $row['url_p'];
                 $data['active'] = false;
@@ -124,50 +103,50 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['id']        = $row['id_product'];
                 $data['id_parent'] = $row['id_cat'];
                 $data['url_parent'] = $this->routingUrl->getBuildUrl(array(
-					'type' => 'category',
-					'iso'  => $row['iso_lang'],
-					'id'   => $row['id_cat'],
-					'url'  => $row['url_cat']
-				));
+                    'type' => 'category',
+                    'iso'  => $row['iso_lang'],
+                    'id'   => $row['id_cat'],
+                    'url'  => $row['url_cat']
+                ));
                 $data['cat']       = $row['name_cat'];
                 $data['id_lang']   = $row['id_lang'];
                 $data['iso']       = $row['iso_lang'];
                 $data['price']     = $row['price_p'];
                 $data['reference'] = $row['reference_p'];
-				$data['content']   = $row['content_p'];
-				$data['resume']    = $row['resume_p'] ? $row['resume_p'] : ($row['content_p'] ? $string_format->truncate(strip_tags($row['content_p'])) : '');
+                $data['content']   = $row['content_p'];
+                $data['resume']    = $row['resume_p'] ? $row['resume_p'] : ($row['content_p'] ? $string_format->truncate(strip_tags($row['content_p'])) : '');
                 $data['order']     = $row['order_p'];
                 if (isset($row['img'])) {
-					$imgPrefix = $this->imagesComponent->prefix();
-					$fetchConfig = $this->imagesComponent->getConfigItems(array(
-						'module_img' => 'catalog',
-						'attribute_img' => 'product'
-					));
+                    $imgPrefix = $this->imagesComponent->prefix();
+                    $fetchConfig = $this->imagesComponent->getConfigItems(array(
+                        'module_img' => 'catalog',
+                        'attribute_img' => 'product'
+                    ));
 
-					if(is_array($row['img'])) {
-						foreach ($row['img'] as $item => $val) {
-							// # return filename without extension
-							$pathinfo = pathinfo($val['name_img']);
-							$filename = $pathinfo['filename'];
+                    if(is_array($row['img'])) {
+                        foreach ($row['img'] as $item => $val) {
+                            // # return filename without extension
+                            $pathinfo = pathinfo($val['name_img']);
+                            $filename = $pathinfo['filename'];
 
-							$data['imgs'][$item]['img']['alt'] = $val['alt_img'];
-							$data['imgs'][$item]['img']['title'] = $val['title_img'];
-							$data['imgs'][$item]['img']['caption'] = $val['caption_img'];
-							$data['imgs'][$item]['img']['name'] = $val['name_img'];
-							foreach ($fetchConfig as $key => $value) {
-								$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
-								$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-								$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
-								//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-								//$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
-							}
-							$data['imgs'][$item]['default'] = $val['default_img'];
-						}
-					}
+                            $data['imgs'][$item]['img']['alt'] = $val['alt_img'];
+                            $data['imgs'][$item]['img']['title'] = $val['title_img'];
+                            $data['imgs'][$item]['img']['caption'] = $val['caption_img'];
+                            $data['imgs'][$item]['img']['name'] = $val['name_img'];
+                            foreach ($fetchConfig as $key => $value) {
+                                $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+                                $data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+                                $data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+                                $data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
+                                //$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
+                                $data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+                                //$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
+                                $data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
+                                $data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+                            }
+                            $data['imgs'][$item]['default'] = $val['default_img'];
+                        }
+                    }
                 }
                 else {
                     if(isset($row['name_img'])){
@@ -181,36 +160,36 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $filename = $pathinfo['filename'];
 
                         foreach ($fetchConfig as $key => $value) {
-							$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img']);
+                            $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img']);
                             $data['img'][$value['type_img']]['src'] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img'];
                             $data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-							//$data['img'][$value['type_img']]['w'] = $value['width_img'];
-							$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-							//$data['img'][$value['type_img']]['h'] = $value['height_img'];
-							$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
+                            //$data['img'][$value['type_img']]['w'] = $value['width_img'];
+                            $data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+                            //$data['img'][$value['type_img']]['h'] = $value['height_img'];
+                            $data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
+                            $data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                             $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$imgPrefix[$value['type_img']] . $row['name_img']);
                         }
-						$data['img']['alt'] = $row['alt_img'];
-						$data['img']['title'] = $row['title_img'];
-						$data['img']['caption'] = $row['caption_img'];
-						$data['img']['name'] = $row['name_img'];
+                        $data['img']['alt'] = $row['alt_img'];
+                        $data['img']['title'] = $row['title_img'];
+                        $data['img']['caption'] = $row['caption_img'];
+                        $data['img']['name'] = $row['name_img'];
                     }
-					$data['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
-				}
+                    $data['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+                }
 
-				// -- Similar / Associated product
+                // -- Similar / Associated product
                 if(isset($row['associated'])){
                     foreach($row['associated'] as $key => $value){
                         $data['associated'][$key]['name'] = $value['name_p'];
                         $data['associated'][$key]['url'] = $this->routingUrl->getBuildUrl(array(
-							'type'       => 'product',
-							'iso'        => $value['iso_lang'],
-							'id'         => $value['id_product'],
-							'url'        => $value['url_p'],
-							'id_parent'  => $value['id_cat'],
-							'url_parent' => $value['url_cat']
-						));
+                            'type'       => 'product',
+                            'iso'        => $value['iso_lang'],
+                            'id'         => $value['id_product'],
+                            'url'        => $value['url_p'],
+                            'id_parent'  => $value['id_cat'],
+                            'url_parent' => $value['url_cat']
+                        ));
                         // Base url for product
                         $data['associated'][$key]['baseUrl']       = $value['url_p'];
                         $data['associated'][$key]['active'] = false;
@@ -220,11 +199,11 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['associated'][$key]['id']        = $value['id_product'];
                         $data['associated'][$key]['id_parent'] = $value['id_cat'];
                         $data['associated'][$key]['url_parent'] = $this->routingUrl->getBuildUrl(array(
-							'type' => 'category',
-							'iso'  => $value['iso_lang'],
-							'id'   => $value['id_cat'],
-							'url'  => $value['url_cat']
-						));
+                            'type' => 'category',
+                            'iso'  => $value['iso_lang'],
+                            'id'   => $value['id_cat'],
+                            'url'  => $value['url_cat']
+                        ));
                         $data['associated'][$key]['id_lang']    = $value['id_lang'];
                         $data['associated'][$key]['iso']        = $value['iso_lang'];
                         $data['associated'][$key]['price']      = $value['price_p'];
@@ -242,20 +221,20 @@ class frontend_model_catalog extends frontend_db_catalog {
                             $filename = $pathinfo['filename'];
 
                             foreach ($fetchConfig as $keyConfig => $valueConfig) {
-								$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img']);
+                                $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img']);
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['src'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img'];
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['src_webp'] = '/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $filename. '.' .$extwebp;
-								//$data['img'][$value['type_img']]['w'] = $value['width_img'];
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $valueConfig['resize_img'] === 'basic' ? $imginfo['width'] : $valueConfig['width_img'];
-								//$data['img'][$value['type_img']]['h'] = $value['height_img'];
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $valueConfig['resize_img'] === 'basic' ? $imginfo['height'] : $valueConfig['height_img'];
-								$data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $valueConfig['resize_img'];
+                                //$data['img'][$value['type_img']]['w'] = $value['width_img'];
+                                $data['associated'][$key]['img'][$valueConfig['type_img']]['w'] = $valueConfig['resize_img'] === 'basic' ? $imginfo['width'] : $valueConfig['width_img'];
+                                //$data['img'][$value['type_img']]['h'] = $value['height_img'];
+                                $data['associated'][$key]['img'][$valueConfig['type_img']]['h'] = $valueConfig['resize_img'] === 'basic' ? $imginfo['height'] : $valueConfig['height_img'];
+                                $data['associated'][$key]['img'][$valueConfig['type_img']]['crop'] = $valueConfig['resize_img'];
                                 $data['associated'][$key]['img'][$valueConfig['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/'.$value['id_product'].'/'.$imgPrefix[$valueConfig['type_img']] . $value['name_img']);
                             }
-							$data['associated'][$key]['img']['alt'] = $value['alt_img'];
-							$data['associated'][$key]['img']['title'] = $value['title_img'];
-							$data['associated'][$key]['img']['caption'] = $value['caption_img'];
-							$data['associated'][$key]['img']['name'] = $value['name_img'];
+                            $data['associated'][$key]['img']['alt'] = $value['alt_img'];
+                            $data['associated'][$key]['img']['title'] = $value['title_img'];
+                            $data['associated'][$key]['img']['caption'] = $value['caption_img'];
+                            $data['associated'][$key]['img']['name'] = $value['name_img'];
                         }
                         $data['associated'][$key]['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
                     }
@@ -269,24 +248,24 @@ class frontend_model_catalog extends frontend_db_catalog {
                     }
                 }
 
-				$this->seo->level = 'record';
-				if (!isset($row['seo_title_p']) || empty($row['seo_title_p'])) {
-					$seoTitle = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'title');
-					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
-				}
-				else {
-					$data['seo']['title'] = $row['seo_title_p'];
-				}
-				if (!isset($row['seo_desc_p']) || empty($row['seo_desc_p'])) {
-					$seoDesc = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'description');
-					$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
-				}
-				else {
-					$data['seo']['description'] = $row['seo_desc_p'];
-				}
-			}
-			// *** Category
-			elseif(isset($row['name_cat'])) {
+                $this->seo->level = 'record';
+                if (!isset($row['seo_title_p']) || empty($row['seo_title_p'])) {
+                    $seoTitle = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'title');
+                    $data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+                }
+                else {
+                    $data['seo']['title'] = $row['seo_title_p'];
+                }
+                if (!isset($row['seo_desc_p']) || empty($row['seo_desc_p'])) {
+                    $seoDesc = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'description');
+                    $data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+                }
+                else {
+                    $data['seo']['description'] = $row['seo_desc_p'];
+                }
+            }
+            // *** Category
+            elseif(isset($row['name_cat'])) {
                 $data['active'] = false;
                 if ($row['id_cat'] == $current['controller']['id'] OR $row['id_cat'] == $current['controller']['id_parent'] ) {
                     $data['active'] = true;
@@ -302,28 +281,28 @@ class frontend_model_catalog extends frontend_db_catalog {
                     $filename = $pathinfo['filename'];
 
                     foreach ($fetchConfig as $key => $value) {
-						$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat']);
+                        $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat']);
                         $data['img'][$value['type_img']]['src'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat'];
                         $data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-						//$data['img'][$value['type_img']]['w'] = $value['width_img'];
-						$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-						//$data['img'][$value['type_img']]['h'] = $value['height_img'];
-						$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
+                        //$data['img'][$value['type_img']]['w'] = $value['width_img'];
+                        $data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+                        //$data['img'][$value['type_img']]['h'] = $value['height_img'];
+                        $data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
                         $data['img'][$value['type_img']]['crop'] = $value['resize_img'];
                         $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $row['img_cat']);
                     }
-					$data['img']['name'] = $row['img_cat'];
+                    $data['img']['name'] = $row['img_cat'];
                 }
-				$data['img']['alt'] = $row['alt_img'];
-				$data['img']['title'] = $row['title_img'];
-				$data['img']['caption'] = $row['caption_img'];
+                $data['img']['alt'] = $row['alt_img'];
+                $data['img']['title'] = $row['title_img'];
+                $data['img']['caption'] = $row['caption_img'];
                 $data['img']['default'] = isset($this->imagePlaceHolder['category']) ? $this->imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
-					'type' => 'category',
-					'iso'  => $row['iso_lang'],
-					'id'   => $row['id_cat'],
-					'url'  => $row['url_cat']
-				));
+                    'type' => 'category',
+                    'iso'  => $row['iso_lang'],
+                    'id'   => $row['id_cat'],
+                    'url'  => $row['url_cat']
+                ));
                 // Base url for category
                 $data['baseUrl']   = $row['url_cat'];
                 $data['id']        = $row['id_cat'];
@@ -332,7 +311,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['iso']       = $row['iso_lang'];
                 $data['name']      = $row['name_cat'];
                 $data['content']   = $row['content_cat'];
-				$data['resume']    = $row['resume_cat'] ? $row['resume_cat'] : ($row['content_cat'] ? $string_format->truncate(strip_tags($row['content_cat'])) : '');
+                $data['resume']    = $row['resume_cat'] ? $row['resume_cat'] : ($row['content_cat'] ? $string_format->truncate(strip_tags($row['content_cat'])) : '');
                 $data['menu']      = $row['menu_cat'];
                 $data['order']     = $row['order_cat'];
                 // Plugin
@@ -344,21 +323,43 @@ class frontend_model_catalog extends frontend_db_catalog {
                     }
                 }
 
-				$this->seo->level = 'parent';
-				if (!isset($row['seo_title_cat']) || empty($row['seo_title_cat'])) {
-					$seoTitle = $this->seo->replace_var_rewrite($data['name'],'','title');
-					$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
-				}
-				else {
-					$data['seo']['title'] = $row['seo_title_cat'];
-				}
-				if (!isset($row['seo_desc_cat']) || empty($row['seo_desc_cat'])) {
-					$seoDesc = $this->seo->replace_var_rewrite($data['name'],'','description');
-					$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
-				}
-				else {
-					$data['seo']['description'] = $row['seo_desc_cat'];
-				}
+                $this->seo->level = 'parent';
+                if (!isset($row['seo_title_cat']) || empty($row['seo_title_cat'])) {
+                    $seoTitle = $this->seo->replace_var_rewrite($data['name'],'','title');
+                    $data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+                }
+                else {
+                    $data['seo']['title'] = $row['seo_title_cat'];
+                }
+                if (!isset($row['seo_desc_cat']) || empty($row['seo_desc_cat'])) {
+                    $seoDesc = $this->seo->replace_var_rewrite($data['name'],'','description');
+                    $data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+                }
+                else {
+                    $data['seo']['description'] = $row['seo_desc_cat'];
+                }
+            }
+            // *** Root
+            else {
+                $data['name'] = $row['name'] ? $row['name'] : $this->template->getConfigVars('catalog');
+                $data['content'] = $row['content'];
+                $this->seo->level = 'root';
+
+                if (!isset($row['seo_title']) || empty($row['seo_title'])) {
+                    $seoTitle = $this->seo->replace_var_rewrite('','','title');
+                    $data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+                }
+                else {
+                    $data['seo']['title'] = $row['seo_title'];
+                }
+
+                if (!isset($row['seo_desc']) || empty($row['seo_desc'])) {
+                    $seoDesc = $this->seo->replace_var_rewrite('','','description');
+                    $data['seo']['description'] = $seoDesc ? $seoDesc : ( $row['content'] ? $string_format->truncate(strip_tags($data['content'])) : $data['name'] );
+                }
+                else {
+                    $data['seo']['description'] = $row['seo_desc'];
+                }
             }
         }
 		return $data;
@@ -378,7 +379,8 @@ class frontend_model_catalog extends frontend_db_catalog {
             }
             // *** Product
             elseif (isset($row['name_p'])) {
-                $data['name']      = $row['name_p'];
+                $data['id'] = $row['id_product'];
+                $data['name'] = $row['name_p'];
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
 					'type'       => 'product',
 					'iso'        => $row['iso_lang'],
@@ -397,6 +399,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 			}
 			// *** Category
 			elseif(isset($row['name_cat'])) {
+                $data['id'] = $row['id_cat'];
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
 					'type' => 'category',
 					'iso'  => $row['iso_lang'],
@@ -405,7 +408,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 				));
                 // Base url for category
                 $data['id_parent'] = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
-                $data['name']      = $row['name_cat'];
+                $data['name'] = $row['name_cat'];
             }
         }
 		return $data;
@@ -482,7 +485,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 			'type' => 'data',
 			'lang' =>  $current['lang']['iso'],
 			'context' => array(
-				1 => ($current['id_parent'] ? 'product' : 'category')
+				1 => (isset($current['id_parent']) ? 'product' : 'category')
 			),
 			'sort' => array(
 				'type' => 'order',
@@ -557,10 +560,10 @@ class frontend_model_catalog extends frontend_db_catalog {
 		}
 
 		// Define random
-		$conf['random']  = $custom['random'] ? $custom['random'] : false;
-		$conf['pagination']  = $custom['pagination'] ? $custom['pagination'] : false;
-		$conf['page']  = $custom['page'] ? $custom['page'] : 1;
-		$conf['allow_duplicate']  = $custom['allow_duplicate'] ? $custom['allow_duplicate'] : false;
+		$conf['random']  = isset($custom['random']) ? $custom['random'] : false;
+		$conf['pagination']  = isset($custom['pagination']) ? $custom['pagination'] : false;
+		$conf['page']  = isset($custom['page']) ? $custom['page'] : 1;
+		$conf['allow_duplicate']  = isset($custom['allow_duplicate']) ? $custom['allow_duplicate'] : false;
 
 		// deepness for element
 		if(isset($custom['deepness'])) {
@@ -925,7 +928,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 				}
 			}
 
-			if ($custom['type'] == 'menu') {
+			if (isset($custom['type']) && $custom['type'] == 'menu') {
 				$conditions .= ' AND p.menu_cat = 1';
 			}
 

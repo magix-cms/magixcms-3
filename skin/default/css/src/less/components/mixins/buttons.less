@@ -1,0 +1,155 @@
+//
+// Buttons creation functions
+//
+
+// button-gradient-variant override
+.button-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
+	--btn-padding-vertical: @padding-vertical;
+	--btn-padding-horizontal: @padding-horizontal;
+	--btn-font-size: @font-size;
+	--btn-line-height: @line-height;
+	--btn-border-radius: @border-radius;
+}
+
+.button-variant(@color; @bgch; @bgcs; @bgcl; @bgca; @brdch; @brdcs; @brdcl; @brdca) {
+	--btn-color: @color;
+	--btn-bg-h: @bgch;
+	--btn-bg-s: @bgcs;
+	--btn-bg-l: @bgcl;
+	--btn-bg-a: @bgca;
+	--btn-brd-h: @brdch;
+	--btn-brd-s: @brdcs;
+	--btn-brd-l: @brdcl;
+	--btn-brd-a: @brdca;
+	/*--btn-bg-color: @background;
+	--btn-border-color: @border;
+	--btn-hover-bg-color: darken(@background, 10%);
+	--btn-ahf-bg-color: darken(@background, 17%);
+	--btn-hover-border-color: darken(@border, 12%);
+	--btn-focus-border-color: darken(@border, 25%);*/
+}
+
+.button-gradient-variant(@color; @bg-color-1; @bg-color-2;) {
+	.button-variant(@color; @bg-color-1; transparent);
+	background-repeat: repeat-x;
+	--btn-bg-img: linear-gradient(45deg, @bg-color-1, @bg-color-2);
+	--btn-hover-bg-img: linear-gradient(45deg, darken(@bg-color-1, 10%), darken(@bg-color-2, 10%));
+	--btn-ahf-bg-img: linear-gradient(45deg, darken(@bg-color-1, 17%), darken(@bg-color-2, 17%));
+	border: none;
+}
+
+/** Button invert Style
+ * @hv-color {color} background color on hover
+ * @hv-txt {color} text color on hover
+ * @base-color {color} base border color | default: main text color
+ * @base-txt {color} base text color | default: main text color
+ */
+.button-invert(@hv-color; @hv-txt; @base-color: @text-color; @base-txt: @text-color) {
+	--btn-color: @base-txt;
+	--btn-bg: transparent;
+	--btn-brd: @base-color;
+	--btn-hover-bg-color: transparent;
+	--btn-ahf-bg-color: transparent;
+	--btn-hover-border-color: @hv-color;
+	--btn-focus-border-color: @hv-color;
+
+	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; 0);
+	position: relative;
+	border-width: 2px;
+	z-index: 2;
+	.auto-transition(.25s);
+
+	&:before {
+		content: '';
+		position: absolute;
+		display: inline-block;
+		height: 100%;
+		width: 0;
+		top: 0;
+		left: 0;
+		background-color: @hv-color;
+		z-index: -1;
+		transition: 0.25s;
+	}
+
+	&:hover {
+		color: @hv-txt;
+
+		&:before {
+			width: 100%;
+		}
+	}
+}
+
+/** Button Outline Style
+ * @hv-color {color} background color on hover
+ * @hv-txt {color} text color on hover
+ */
+.button-outline(@hv-color; @hv-txt) {
+	--btn-color: @hv-color;
+	--btn-bg: transparent;
+	--btn-brd: @hv-color;
+	--btn-hover-bg-color: transparent;
+	--btn-ahf-bg-color: transparent;
+	--btn-hover-border-color: @hv-color;
+	--btn-focus-border-color: @hv-color;
+
+	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; 0);
+	position: relative;
+	border-width: 2px;
+	z-index: 2;
+	.auto-transition(.25s);
+
+	&:before {
+		content: '';
+		position: absolute;
+		display: inline-block;
+		height: 100%;
+		width: 0;
+		top: 0;
+		left: 0;
+		background-color: @hv-color;
+		z-index: -1;
+		transition: 0.25s;
+	}
+
+	&:hover {
+		color: @hv-txt;
+
+		&:before {
+			width: 100%;
+		}
+	}
+}
+
+/** Theme buttons Styles
+ * Create 3 theme style :
+ * - btn-{@name} | Simple flat button
+ * - btn-{@name}-gradient |Button with gradient background
+ * - btn-{@name}-invert | Button with background color on hover
+ *
+ * Requires a @{name}-colors list of colors
+ */
+.custom-button(@name,@txt-color: var(--white),@invert-base: var(--text-color)){
+	@var: ~'--@{name}-color';
+	@class: ~".btn-@{name}";
+	@ch: ~"--@{name}-color-h";
+	@cs: ~"--@{name}-color-s";
+	@cl: ~"--@{name}-color-l";
+	@ca: ~"--@{name}-color-a";
+	.btn {
+		&@{class} {
+			.button-variant(@txt-color,var(@ch),var(@cs),var(@cl),var(@ca),var(@ch),var(@cs),var(@cl),var(@ca));
+
+			/*&-gradient {
+				.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));
+			}*/
+			&-outline {
+				.button-outline(var(@var); @txt-color);
+			}
+			&-invert {
+				.button-invert(var(@var); @txt-color; @invert-base; @invert-base);
+			}
+		}
+	}
+}

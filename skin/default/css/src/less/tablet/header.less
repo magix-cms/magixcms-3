@@ -1,26 +1,5 @@
-#header {
-	.container {
-		height: @headerH-sm;
-	}
-}
-
-#menu {
-	+ div, + section, + main {
-		margin-top: @headerH-sm + @toolbarH;
-	}
-}
-
 @media (min-width: @screen-md-min) {
-	#header {
-		.container {
-			@media (max-width: @screen-md-max) {
-				max-width: none;
-			}
-			padding: 0 1rem;
-		}
-
-		.site-name + div {
-			margin-left: auto;
-		}
+	:root {
+		--toolbar-h: @toolbarH-md;
 	}
 }

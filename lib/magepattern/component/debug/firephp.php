@@ -44,7 +44,7 @@ define('INSIGHT_PATHS', dirname(__FILE__));
 define('INSIGHT_SERVER_PATH', '/index.php');
 define('INSIGHT_DEBUG', false);
 //set_include_path(dirname(__FILE__) . '/lib-1.0b1rc6' . PATH_SEPARATOR . get_include_path());
-if (MP_FIREPHP == false){
+if (MP_FIREPHP == false && !defined('FIREPHP_ACTIVATED')){
 	define('FIREPHP_ACTIVATED', false);
 }
 //define('INSIGHT_CONFIG_PATH', dirname(__FILE__).'/package.json');

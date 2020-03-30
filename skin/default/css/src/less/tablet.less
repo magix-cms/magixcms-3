@@ -1,16 +1,19 @@
+// Include small device rules
 @import "mobile";
 
-@media (min-width: @screen-xs-min) {
-	@import "mixins/type";
-	@import "tablet/global";
-	@import "tablet/header";
-	@import "tablet/footer";
-	@import "tablet/menu";
-	@import "tablet/block";
-	@import "tablet/product";
-	@import "tablet/gallery";
-	@import "tablet/news";
-	@import "tablet/contact";
+// Components w/ JavaScript
+//@import "components/tooltip";
 
-	@import (optional) "tablet/advantage";
-}
+// Add rules for wider devices
+@import "tablet/grid";
+@import "tablet/global";
+@import "tablet/header";
+@import "tablet/breadcrumb";
+@import "tablet/footer";
+@import "tablet/menu";
+@import "tablet/block";
+@import "tablet/home";
+@import "tablet/cms";
+@import "tablet/product";
+@import "tablet/gallery";
+@import "tablet/news";

@@ -1,0 +1,234 @@
+//
+// Global Colors
+// --------------------------------------------------
+
+@gray-base:              #000;
+@gray-darker:            lighten(@gray-base, 13.5%); // #222
+@gray-dark:              lighten(@gray-base, 20%);   // #333
+@gray:                   lighten(@gray-base, 33.5%); // #555
+@gray-light:             lighten(@gray-base, 46.7%); // #777
+@gray-lighter:           lighten(@gray-base, 93.5%); // #eee
+
+@brand-primary:         darken(#428bca, 6.5%); // #337ab7
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+
+//== Scaffolding
+//
+//** Global textual link color.
+@link-color: @main-color;
+//** Link decoration.
+@link-decoration: none;
+//** Link hover color set via `darken()` function.
+@link-hover-color: darken(@link-color, 15%);
+//** Link hover decoration.
+@link-hover-decoration: underline;
+
+//
+//                      Define Sizes
+//--------------------------------------------------------
+@footbarH: 52px;
+@headerH: 70px;
+@headerH-xs: @headerH;
+@headerH-sm: @headerH-xs;
+@headerH-md: @headerH-sm;
+@headerH-lg: @headerH-md;
+@headerH-xl: @headerH-lg;
+@toolbarH: 0px;
+@toolbarH-md: 0px;
+
+//
+// Theme Colors
+// --------------------------------------------------
+
+// --- Theme Colors
+@main-color: #3b61a9;
+@main-color-hsla: 219, 48%, 45%, 1;
+@sd-color: #808284;
+@sd-color-hsla: 210, 2%, 51%, 1;
+@dark-color: #333;
+@dark-color-hsla: 0, 0%, 20%, 1;
+@text-color: @dark-color;
+@headings-color: var(--heading-color);
+
+//// --- Theme Colors Variant
+// --- Main Theme
+@main-colors:
+	darken(@main-color, 28%),
+	darken(@main-color, 14%),
+	@main-color,
+	lighten(@main-color, 14%),
+	lighten(@main-color, 28%);
+
+
+// --- Secondary Colors
+@sd-colors:
+	darken(@sd-color, 28%),
+	darken(@sd-color, 14%),
+	@sd-color,
+	lighten(@sd-color, 14%),
+	lighten(@sd-color, 28%);
+
+// --- Neutral Colors
+@grey-colors:
+	extract(@grey, 9),
+	extract(@grey, 8),
+	extract(@grey, 7),
+	extract(@grey, 6),
+	extract(@grey, 5);
+
+// --- Dark Color
+@dark-colors:
+	extract(@grey, 12),
+	#111,
+	extract(@grey, 11),
+	extract(@grey, 10),
+	extract(@grey, 9);
+
+
+//
+// Theme Textures
+//
+
+@main-texture:  	"@{patternpath}fabric_plaid.png";
+@header-texture:	@main-texture;
+@menu-texture:  	@main-texture;
+@footer-texture:	"@{patternpath}dark_wall.png";
+@sharebar-txt:		"@{patternpath}fabric_plaid.png";
+
+//
+// Toolbar
+//
+
+@toolbar-bg:		extract(@grey, 11);
+
+
+//
+// Menu
+//
+
+@menu-color: 		var(--text-color);
+@menu-bg: 			var(--menu-bg);
+@menu-hover-color:	var(--main-color);
+@menu-hover-bg:		transparent;
+@menu-active-color: var(--main-color);
+@menu-active-bg:	transparent;
+
+// --- Sub-menu
+@submenu-color: 		@menu-color;
+@submenu-bg: 			@menu-bg;
+@submenu-hover-color:	@menu-hover-color;
+@submenu-hover-bg:		transparent;
+@submenu-active-color: 	@menu-active-color;
+@submenu-active-bg: 	transparent;
+@arrow-color:			extract(@main-colors,4);
+
+// --- Mega Dropdown
+@mg-link-color	: var(--text-color);
+@mg-hover-bg	: extract(@grey, 11);
+@mg-head-color	: @mg-hover-bg;
+
+
+//
+// Breadcrumb
+//
+
+@bc-font-weight: @font-weight;
+@bc-item-color: var(--main-color);
+@bc-link-color: var(--text-color);
+@bc-active-link-color: same;
+@cb-nav-border-color: var(--smooth-grey);
+@bc-separator: @cb-nav-border-color;
+
+
+//
+// Header
+//
+
+@header-bg: @white;
+@header-fixed-bg:   rgba(242,242,242,.9);
+
+
+//
+// Slider
+//
+
+@slider-h-color: 	@smooth-white;
+@slider-desc-color: @smooth-white;
+
+
+//
+// Footer
+//
+
+@sharebar-bg:	 var(--white);
+@footer-bg: 	 var(--dark-color);
+@footer-border-color: var(--smooth-grey);
+@footer-border:	 1px solid @footer-border-color;
+@footer-color: 	 var(--white);
+@footer-link: 	 @footer-color;
+@colophon-bg: 	 transparent;
+@colophon-color: @footer-color;
+@footbar-bg:	 var(--main-color);
+@footbar-color:	 var(--white);
+
+
+//** Dropdown link text color.
+@dropdown-link-color:            var(--text-color);
+//** Hover color for dropdown links.
+@dropdown-link-hover-color:      darken(@text-color, 5%);
+//** Hover background for dropdown links.
+@dropdown-link-hover-bg:         #f5f5f5;
+
+
+//
+// Socials
+//
+
+@facebook:  #425fb0, #5c79ca;
+@twitter:   #1e87d9, #38a1f3;
+@viadeo:    #0a0a0a, #242424;
+@google:    #c8311b, #e24b35;
+@linkedin:  #2f6296, #497cb0;
+@pinterest: #bd081c, #d62035;
+@soundcloud: #f50, #ff621a;
+@github: #111111, #222222;
+@instagram: #913AC5, #D82F81;
+
+//== Pagination
+//
+//##
+
+@pagination-color:                     @link-color;
+@pagination-bg:                        #fff;
+@pagination-border:                    #ddd;
+
+@pagination-hover-color:               @link-hover-color;
+@pagination-hover-bg:                  @gray-lighter;
+@pagination-hover-border:              #ddd;
+
+@pagination-active-color:              #fff;
+@pagination-active-bg:                 @brand-primary;
+@pagination-active-border:             @brand-primary;
+
+@pagination-disabled-color:            @gray-light;
+@pagination-disabled-bg:               #fff;
+@pagination-disabled-border:           #ddd;
+
+
+//== Pager
+//
+//##
+
+@pager-bg:                             transparent;
+@pager-border:                         transparent;
+@pager-border-radius:                  15px;
+
+@pager-hover-bg:                       transparent;
+
+@pager-active-bg:                      transparent;
+@pager-active-color:                   @pagination-active-color;
+
+@pager-disabled-color:                 @pagination-disabled-color;

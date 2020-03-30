@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="TinyMCE Plugins" pattern="file:admin/template/js/vendor/tiny_mce*//plugin.js" />
+</component>

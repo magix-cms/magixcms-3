@@ -19,13 +19,6 @@
 		box-shadow: 0 0 3px rgba(0,0,0,.4);
 		border-radius: 0;
 		border: none;
-
-		> li {
-			&.active, > a {
-				font-weight: @font-weight;
-				padding: 5px 8px;
-			}
-		}
 	}
 
 	&:not(.toc-drop) {
@@ -76,13 +69,17 @@
 /* --------------------------------------------------------
                         Vignettes
 ---------------------------------------------------------- */
+.vignette-list {
+	padding-bottom: @spacer;
+}
 .vignette {
 	&:not(:last-child) {
-		margin-bottom: 15px;
+		margin-bottom: @spacer;
 	}
 
-	h2 {
-		margin: 5px 0 18px;
+	.h3 {
+		margin: @spacer 0;
+		--heading-color: var(--main-color);
 	}
 
 	.figure {
@@ -97,30 +94,86 @@
 	}
 
 	.desc {
-		padding: 15px;
-		background-color: #fff;
+		padding: 1rem;
+		background-color: var(--white);
 		overflow: hidden;
 
 		p {
-			color: @light-grey;
+			color: var(--light-grey);
 		}
 	}
 }
 
-/*@media (max-width: @screen-xs-max) {
-	.vignette-list {
-		overflow: hidden;
-		margin: 0 -15px;
+/* --------------------------------------------------------
+                        Snippets
+---------------------------------------------------------- */
+.cms-img-gallery {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin-left: @spacer / -2;
+	margin-right: @spacer / -2;
+	
+	> div {
+		padding: @spacer/2;
+	}
+	
+	a.img-gallery {
+		display: block;
+	}
+}
 
-		.section-block{
-			margin: 0 -15px;
-			padding-right: 30px;
-			padding-left: 30px;
-			background-color: #eee;
-			.shadow(1,inset);
+/* --------------------------------------------------------
+                       Custom lists
+---------------------------------------------------------- */
+ul.arrow-list,
+ul.bullet-list,
+ul.circle-list,
+ul.square-list,
+ul.label-list {
+	.list-unstyled;
+	
+	> li {
+		padding-left: 1.5rem;
+		position: relative;
+		
+		&::before {
+			position: absolute;
+			top: ~"calc(((1rem * @{line-height-base}) - 1em ) / 2)";
+			.ico;
+			color: var(--main-color);
+			left: 0;
 		}
 	}
-}*/
+}
+
+ul.bullet-list,
+ul.circle-list {
+	> li:before {
+		font-size: 10px;
+	}
+}
+ul.bullet-list > li::before {
+	content: @ico-disk;
+}
+ul.circle-list > li::before {
+	content: @ico-circle;
+}
+ul.square-list {
+	> li:before {
+		content: @ico-square;
+		font-size: 12px;
+	}
+}
+ul.arrow-list {
+	> li:before {
+		content: @ico-keyboard_arrow_right;
+		font-size: 18px;
+	}
+}
+ul.label-list > li:before {
+	content: @ico-label;
+}
 
 /* --------------------------------------------------------
                         Pagination
@@ -128,13 +181,13 @@
 .pager {
 	> li > a {
 		border-radius: 0;
-		color: @text-color;
+		color:var(--text-color);
 		border: none;
 		padding: 10px;
 
 		&:active,
 		&:focus {
-			color: @main-color;
+			color: var(--main-color);
 			text-decoration: none;
 			background-color: transparent;
 		}
@@ -144,10 +197,10 @@
 		&.active,
 		&:focus {
 			a {
-				color: @main-color;
+				color: var(--main-color);
 				background-color: transparent;
 				font-weight: bold;
-				border-bottom: 1px solid @main-color;
+				border-bottom: 1px solid var(--main-color);
 			}
 		}
 	}
@@ -162,11 +215,11 @@
 ---------------------------------------------------------- */
 #cookies {
 	position: fixed;
-	bottom: 0;
+	bottom: var(--footbar-h);
 	width: 100%;
 	z-index: @z-fixed + 1;
 	background-color: rgba(0,0,0,.6);
-	color: #fff;
+	color: var(--white);
 	padding: 1rem;
 	display: flex;
 	align-items: center;
@@ -177,9 +230,9 @@
 		margin: 0;
 	}
 
-	.normalize-link(@white);
+	.normalize-link(var(--white));
 
 	.material-icons {
-		vertical-align: bottom;
+		margin-right: .5rem;
 	}
 }

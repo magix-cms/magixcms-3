@@ -147,7 +147,7 @@ class frontend_controller_pages extends frontend_db_pages {
         $pagesTree = $this->getBuildItemsTree();
         $this->template->assign('pages',$data,true);
         $this->template->assign('parent',$parent,true);
-        $this->template->assign('childs',$childs[0]['subdata'],true);
+        if(isset($childs[0]['subdata'])) $this->template->assign('childs',$childs[0]['subdata'],true);
         $this->template->assign('pagesTree',$pagesTree,true);
         $this->template->assign('hreflang',$hreflang,true);
     }

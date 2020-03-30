@@ -1,7 +1,7 @@
 <amp-sidebar id="sidebar1" layout="nodisplay" side="left">
     <div class="sidebar">
         <header>
-            <div role="button" aria-label="close sidebar" on="tap:sidebar1.toggle" tabindex="0" class="close-sidebar"><i class="material-icons">close</i></div>
+            <div role="button" aria-label="close sidebar" on="tap:sidebar1.toggle" tabindex="0" class="close-sidebar"><i class="material-icons ico ico-close"></i></div>
             Navigation
         </header>
         <amp-accordion class="menu list-unstyled" animate expand-single-section disable-session-states>

@@ -10,7 +10,7 @@
 {capture name="icon"}check{/capture}
 {capture name="alert_message"}{strip}
     {#request_success_add_redirect#}
-    <i class="fa fa-spinner fa-pulse fa-fw"></i>
+    <i class="fa ico ico-spinner fa-pulse fa-fw"></i>
     <span class="sr-only">Redirection...</span>
 {/strip}{/capture}
     {** Update **}
@@ -174,5 +174,5 @@
 {/switch}
 <p class="{if $message neq 'error_login' AND $message neq 'error_hash'}col-sm-12{/if} alert alert-{$smarty.capture.alert_type} fade in">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <span class="fa fa-{$smarty.capture.icon} fa-lg"></span> {$smarty.capture.alert_message}
+    <span class="fa ico ico-{$smarty.capture.icon} fa-lg"></span> {$smarty.capture.alert_message}
 </p>

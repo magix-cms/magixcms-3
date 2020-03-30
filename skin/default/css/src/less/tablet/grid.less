@@ -1,0 +1,99 @@
+//
+// Grid system
+// --------------------------------------------------
+
+// Container widths
+//
+// Set the container width, and override it for fixed navbars in media queries.
+
+.container {
+	@media (min-width: @screen-md-min) {
+		max-width: @container-md;
+	}
+	@media (min-width: @screen-lg-min) {
+		max-width: @container-lg;
+	}
+	@media (min-width: @screen-xl-min) {
+		max-width: @container-xl;
+	}
+}
+
+// Small grid
+//
+// Columns, offsets, pushes, and pulls for the small device range, from phones
+// to tablets.
+
+@media (min-width: @screen-sm-min) {
+	:root {
+		--grid-column: @grid-columns-sm;
+	}
+	.make-grid(sm);
+	.make-rows(sm);
+	@sm-tier: @grid-columns-sm * 1/3;
+	.col-sm-th {
+		/*flex: 1 0 100%/3;
+		max-width: 100%/3;*/
+		--nbcol: @sm-tier;
+	}
+	.col-sm {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
+}
+
+// Medium grid
+//
+// Columns, offsets, pushes, and pulls for the desktop device range.
+
+@media (min-width: @screen-md-min) {
+	:root {
+		--grid-column: @grid-columns-md;
+		--grid-gutter: 2rem;
+	}
+	.make-grid(md);
+	.make-rows(md);
+	@md-tier: @grid-columns-md * 1/3;
+	@md-quarter: @grid-columns-md * 1/4;
+	.col-md-th {
+		--nbcol: @md-tier;
+	}
+	.col-md-qr {
+		--nbcol: @md-quarter;
+	}
+	.col-md {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
+}
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+@media (min-width: @screen-lg-min) {
+	:root {
+		--grid-column: @grid-columns-lg;
+	}
+	.make-grid(lg);
+	.make-rows(lg);
+	.col-lg {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
+}
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+@media (min-width: @screen-xl-min) {
+	:root {
+		--grid-column: @grid-columns-xl;
+	}
+	.make-grid(xl);
+	.make-rows(xl);
+	.col-xl {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
+}

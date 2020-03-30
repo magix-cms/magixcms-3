@@ -67,7 +67,7 @@ const globalForm = (function ($) {
         closeForm = typeof closeForm !== 'undefined' ? closeForm : false;
         const loader = $(document.createElement("div")).addClass("loader")
             .append(
-                $(document.createElement("i")).addClass("fa fa-spinner fa-pulse fa-fw"),
+                $(document.createElement("i")).addClass("fa ico ico-spinner fa-pulse fa-fw"),
                 $(document.createElement("span")).append("Chargement en cours...").addClass("sr-only")
             );
         if(closeForm) $(f).collapse();
@@ -164,7 +164,7 @@ const globalForm = (function ($) {
         }
         else if($(f).hasClass('button_feedback')) {
             options.beforeSend = function(){
-                $(f).find('button[type="submit"]').replaceWith('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
+                $(f).find('button[type="submit"]').replaceWith('<i class="fa ico ico-spinner fa-pulse fa-fw"></i>');
             };
             options.success = function () {
                 $(f).hide().next('.success').removeClass('hide');
@@ -273,7 +273,7 @@ const globalForm = (function ($) {
                         if(parent.hasClass('input-group')) {
                             parent.parent().addClass(errorClass+" has-feedback");
                         } else {
-                            if(!parent.hasClass(errorClass)) parent.append('<span class="fas fa-exclamation-triangle form-control-feedback" aria-hidden="true"></span>');
+                            if(!parent.hasClass(errorClass)) parent.append('<i class="material-icons ico ico-warning form-control-feedback" aria-hidden="true"></i>');
                             parent.addClass(errorClass+" has-feedback");
                         }
                     }

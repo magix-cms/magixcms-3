@@ -2,47 +2,31 @@
                         Catalog
 ---------------------------------------------------------- */
 .catalog {
-	h3 {
-		margin: 0;
-		padding: 17px 0;
-	}
-
-	.text {
-		margin-bottom: 20px;
+	.text ~ .h2 {
+		.main-title();
 	}
 }
+
+/*@media (min-width: @screen-xs-min) and (max-width: @screen-sm-max) {
+	.catalog {
+		.img-float {
+			max-width: 50%;
+		}
+	}
+}*/
 
 /* --------------------------------------------------------
                          Product
 ---------------------------------------------------------- */
 #product {
-	article {
-		// Normalize the main title of the content
-		header {
-			margin: 0 auto 25px;
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-between;
-
-			h1 {
-				flex: 1 0 100%;
-				padding: 0 0 10px;
-				border-bottom: 1px solid #eee;
-			}
-		}
-	}
-
 	.interested-form {
-		margin: 50px 0 25px;
-		span {
-			margin: 0 8px;
-		}
+		margin: @spacer*2 0;
 	}
-
-	.owl-theme-square.owl-loaded {
-		flex-direction: column;
-	}
-	.owl-theme-square .owl-nav {
-		margin-bottom: 0;
+	
+	.price {
+		text-align: center;
+		margin-bottom: @spacer;
+		font-size: 3rem;
+		color: var(--main-color);
 	}
 }

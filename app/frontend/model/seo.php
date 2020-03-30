@@ -96,7 +96,11 @@ class frontend_model_seo extends frontend_db_seo {
 		$content = null;
 		if($type === '') $type = $this->type;
 
-		if(!is_array($this->seoVar[$this->iso][$this->attribute][$this->level]) || !key_exists($type, $this->seoVar[$this->iso][$this->attribute][$this->level])) {
+		if(!isset($this->seoVar[$this->iso])
+            || !isset($this->seoVar[$this->iso][$this->attribute])
+            || !isset($this->seoVar[$this->iso][$this->attribute][$this->level])
+            || !is_array($this->seoVar[$this->iso][$this->attribute][$this->level])
+            || !key_exists($type, $this->seoVar[$this->iso][$this->attribute][$this->level])) {
 			$db = $this->getItems('replace',array('attribute' => $this->attribute, 'lvl' => $this->level, 'type' => $type, 'iso' => $this->iso),'one',false);
 
 			if(!key_exists($this->iso, $this->seoVar)) $this->seoVar[$this->iso] = [];

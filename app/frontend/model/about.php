@@ -259,10 +259,10 @@ class frontend_model_about extends frontend_db_about {
 				$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
 				$data['content'] = $row['content_pages'];
 				$data['menu'] = $row['menu_pages'];
-				$data['date']['update'] = $row['last_update'];
-				$data['date']['register'] = $row['date_register'];
-				$data['seo']['title'] = $row['seo_title_pages'];
-				$data['seo']['description'] = $row['seo_desc_pages'] ? $row['seo_desc_pages'] : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+				$data['date']['update'] = isset($row['last_update']) ? $row['last_update'] : null;
+				$data['date']['register'] = isset($row['date_register']) ? $row['date_register'] : null;
+				$data['seo']['title'] = isset($row['seo_title_pages']) ? $row['seo_title_pages'] : $data['name'];
+				$data['seo']['description'] = isset($row['seo_desc_pages']) ? $row['seo_desc_pages'] : (isset($data['resume']) ? $data['resume'] : $data['seo']['title']);
 				// Plugin
 				if($newRow != false){
 					if(is_array($newRow)){
@@ -333,7 +333,7 @@ class frontend_model_about extends frontend_db_about {
 		unset($item);
 
 		foreach($pages as &$item) {
-			if (isset($childs[$item[$id]])) {
+			if (isset($childs[$item[$id]]) && isset($childs[$item[$id]]['subdata'])) {
 				$item['subdata'] = $childs[$item[$id]]['subdata'];
 			}
 		}
@@ -977,7 +977,7 @@ class frontend_model_about extends frontend_db_about {
 				$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
 			}
 
-			if ($custom['type'] == 'menu') {
+			if (isset($custom['type']) && $custom['type'] === 'menu') {
 				$conditions .= ' AND p.menu_pages = 1';
 			}
 

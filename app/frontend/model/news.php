@@ -133,64 +133,70 @@ class frontend_model_news extends frontend_db_news {
 
             $dr = new DateTime($row['date_register']);
             $drt = $dr->getTimestamp();
-            $du = new DateTime($row['last_update']);
-            $dut = $du->getTimestamp();
-            $dp = new DateTime($row['date_publish']);
-            $dpt = $dp->getTimestamp();
 
             $data['date'] = array(
-            	'register' => array(
-					'timestamp' => $drt,
-					'date' => $dr->format('Y-m-d'),
-            		'year' => $dr->format('Y'),
-            		'month' => array(
-            			'num' => $dr->format('m'),
-						'name' => strftime('%B',$drt),
-						'abv' => strftime('%b',$drt)
-					),
-            		'week' => $dr->format('W'),
-            		'day' => array(
-            			'num' => $dr->format('j'),
-						'name' => strftime('%A'),
-						'abv' => strftime('%a')
-					),
-            		'suffix' => $dr->format('S'),
-				),
-            	'update' => array(
-					'timestamp' => $dut,
-					'date' => $du->format('Y-m-d'),
-            		'year' => $du->format('Y'),
-            		'month' => array(
-            			'num' => $du->format('m'),
-						'name' => strftime('%B',$dut),
-						'abv' => strftime('%b',$dut)
-					),
-            		'week' => $du->format('W'),
-            		'day' => array(
-            			'num' => $du->format('j'),
-						'name' => strftime('%A'),
-						'abv' => strftime('%a')
-					),
-            		'suffix' => $du->format('S'),
-				),
-            	'publish' => array(
-					'timestamp' => $dpt,
-					'date' => $dp->format('Y-m-d'),
-            		'year' => $dp->format('Y'),
-            		'month' => array(
-            			'num' => $dp->format('m'),
-						'name' => strftime('%B',$dpt),
-						'abv' => strftime('%b',$dpt)
-					),
-            		'week' => $dp->format('W'),
-            		'day' => array(
-            			'num' => $dp->format('j'),
-						'name' => strftime('%A'),
-						'abv' => strftime('%a')
-					),
-            		'suffix' => $dp->format('S'),
-				)
-			);
+                'register' => array(
+                    'timestamp' => $drt,
+                    'date' => $dr->format('Y-m-d'),
+                    'year' => $dr->format('Y'),
+                    'month' => array(
+                        'num' => $dr->format('m'),
+                        'name' => strftime('%B',$drt),
+                        'abv' => strftime('%b',$drt)
+                    ),
+                    'week' => $dr->format('W'),
+                    'day' => array(
+                        'num' => $dr->format('j'),
+                        'name' => strftime('%A'),
+                        'abv' => strftime('%a')
+                    ),
+                    'suffix' => $dr->format('S'),
+                )
+            );
+            if(isset($row['last_update'])) {
+                $du = new DateTime($row['last_update']);
+                $dut = $du->getTimestamp();
+
+                $data['date']['update'] = array(
+                    'timestamp' => $dut,
+                    'date' => $du->format('Y-m-d'),
+                    'year' => $du->format('Y'),
+                    'month' => array(
+                        'num' => $du->format('m'),
+                        'name' => strftime('%B',$dut),
+                        'abv' => strftime('%b',$dut)
+                    ),
+                    'week' => $du->format('W'),
+                    'day' => array(
+                        'num' => $du->format('j'),
+                        'name' => strftime('%A'),
+                        'abv' => strftime('%a')
+                    ),
+                    'suffix' => $du->format('S'),
+                );
+            }
+            if(isset($row['date_publish'])) {
+                $dp = new DateTime($row['date_publish']);
+                $dpt = $dp->getTimestamp();
+
+                $data['date']['publish'] = array(
+                    'timestamp' => $dpt,
+                    'date' => $dp->format('Y-m-d'),
+                    'year' => $dp->format('Y'),
+                    'month' => array(
+                        'num' => $dp->format('m'),
+                        'name' => strftime('%B',$dpt),
+                        'abv' => strftime('%b',$dpt)
+                    ),
+                    'week' => $dp->format('W'),
+                    'day' => array(
+                        'num' => $dp->format('j'),
+                        'name' => strftime('%A'),
+                        'abv' => strftime('%a')
+                    ),
+                    'suffix' => $dp->format('S'),
+                );
+            }
 
             $data['content'] = $row['content_news'];
 			$data['lead'] = $row['resume_news'];

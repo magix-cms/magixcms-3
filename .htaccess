@@ -59,17 +59,6 @@
   </FilesMatch>
 </IfModule>
 # ----------------------------------------------------------------------
-# | Rewrite engine |
-# ----------------------------------------------------------------------
-<IfModule mod_rewrite.c>
-    #Options +FollowSymLinks
-    RewriteEngine On
-
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-
-</IfModule>
-# ----------------------------------------------------------------------
 # | Expires headers                                                    |
 # ----------------------------------------------------------------------
 # BEGIN Expire headers
@@ -114,18 +103,18 @@
       ExpiresByType video/webm                            "access plus 1 month"
     # Web fonts
       # Embedded OpenType (EOT)
-      ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
-      ExpiresByType font/eot                              "access plus 1 month"
+      ExpiresByType application/vnd.ms-fontobject         "access plus 1 year"
+      ExpiresByType font/eot                              "access plus 1 year"
       # OpenType
-      ExpiresByType font/opentype                         "access plus 1 month"
+      ExpiresByType font/opentype                         "access plus 1 year"
       # TrueType
-      ExpiresByType application/x-font-ttf                "access plus 1 month"
+      ExpiresByType application/x-font-ttf                "access plus 1 year"
       # Web Open Font Format (WOFF) 1.0
-      ExpiresByType application/font-woff                 "access plus 1 month"
-      ExpiresByType application/x-font-woff               "access plus 1 month"
-      ExpiresByType font/woff                             "access plus 1 month"
+      ExpiresByType application/font-woff                 "access plus 1 year"
+      ExpiresByType application/x-font-woff               "access plus 1 year"
+      ExpiresByType font/woff                             "access plus 1 year"
       # Web Open Font Format (WOFF) 2.0
-      ExpiresByType application/font-woff2                "access plus 1 month"
+      ExpiresByType application/font-woff2                "access plus 1 year"
     # Other
       ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
 </IfModule>
@@ -153,43 +142,36 @@
 </IfModule>
 	FileETag None
 # END Turn ETags Off
-# <IfModule mod_headers.c>
-# BEGIN Remove Last-Modified Header
-# Header unset Last-Modified
-# </IfModule>
+<IfModule mod_headers.c>
+    BEGIN Remove Last-Modified Header
+    Header unset Last-Modified
+</IfModule>
 # END Remove Last-Modified Header
 # BEGIN Compress text files
-#<IfModule mod_deflate.c>
+<IfModule mod_deflate.c>
 #	#DeflateCompressionLevel 1
-#    <FilesMatch "\.(css|js|x?html?|php)$">
-#      SetOutputFilter DEFLATE
-#    </FilesMatch>
-#	AddOutputFilterByType DEFLATE text/xml
-#    AddOutputFilterByType DEFLATE text/css
-#    AddOutputFilterByType DEFLATE text/javascript
-#    AddOutputFilterByType DEFLATE text/html
-#    AddOutputFilterByType DEFLATE text/plain
-#    AddOutputFilterByType DEFLATE application/xml
-#    AddOutputFilterByType DEFLATE application/xhtml+xml
-#    AddOutputFilterByType DEFLATE application/rss+xml
-#    AddOutputFilterByType DEFLATE application/javascript
-#    AddOutputFilterByType DEFLATE application/x-javascript
-#	# Properly handle old browsers that do not support compression
-#	BrowserMatch ^Mozilla/4 gzip-only-text/html
-#	BrowserMatch ^Mozilla/4\.0[678] no-gzip
-#	BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
-#	# Explicitly exclude binary files from compression just in case
-#	SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|pdf|swf|ico|zip)$ no-gzip
-#    # Below uses mod_deflate to compress text files. Never compress binary files.
-#	<IfModule mod_headers.c>
-#	# Make sure proxies don't deliver the wrong content
-#    	Header append Vary User-Agent env=!dont-vary
-#	# set cache control to private to ignore proxies and avoid edge cases
-#		Header append Cache-Control "private"
-#	# Remove the vary header for MSIE
-#		BrowserMatch "MSIE" force-no-vary
-#	</IfModule>
-#</IfModule>
+    <FilesMatch "\.(css|js|x?html?|php)$">
+      SetOutputFilter DEFLATE
+    </FilesMatch>
+    <IfModule mod_filter.c>
+	AddOutputFilterByType DEFLATE text/xml text/css text/javascript text/html text/plain application/xml application/xhtml+xml application/rss+xml application/javascript application/x-javascript
+	</IfModule>
+	# Properly handle old browsers that do not support compression
+	BrowserMatch ^Mozilla/4 gzip-only-text/html
+	BrowserMatch ^Mozilla/4\.0[678] no-gzip
+	BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+	# Explicitly exclude binary files from compression just in case
+	SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|pdf|swf|ico|zip)$ no-gzip
+    # Below uses mod_deflate to compress text files. Never compress binary files.
+	<IfModule mod_headers.c>
+	    # Make sure proxies don't deliver the wrong content
+    	Header append Vary User-Agent env=!dont-vary
+	    # set cache control to private to ignore proxies and avoid edge cases
+		Header append Cache-Control "private"
+	    # Remove the vary header for MSIE
+		BrowserMatch "MSIE" force-no-vary
+	</IfModule>
+</IfModule>
 # ----------------------------------------------------------------------
 # | Reducing MIME type security risks |
 # ----------------------------------------------------------------------
@@ -221,70 +203,76 @@ AddDefaultCharset utf-8
                      .xloc \
                      .xml
 </IfModule>
-<IfModule mod_rewrite.c>
-<IfModule mod_ssl.c>
-    RewriteCond %{HTTP_HOST} !^www\.
-    RewriteCond %{HTTP_HOST} !^(?:[-_0-9a-zA-Z]+\.){2,}
-    RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
-</IfModule>
-    RewriteCond %{HTTP_HOST} !^www\.
-    RewriteCond %{HTTP_HOST} !^(?:[-_0-9a-zA-Z]+\.){2,}
-    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
-</IfModule>
 DirectoryIndex index.php
-#RewriteBase /
 # ----------------------------------------------------------------------
-# Custom 404 page
+# | Rewrite engine |
 # ----------------------------------------------------------------------
-
-# You can add custom pages to handle 500 or 403 pretty easily, if you like.
-ErrorDocument 401 /index.php?http_error=401
-ErrorDocument 403 /index.php?http_error=403
-ErrorDocument 404 /index.php?http_error=404
-ErrorDocument 500 /index.php?http_error=500
-# ----------------------------------------------------------------------
-# Redirect Rewrite
-# ----------------------------------------------------------------------
-# RewriteRule ^fr/catalog/$ http://www.magixcms3.test/fr/news/ [R=301,L]
-# Redirect a plus sign
-# RewriteRule	^fr/actualites/tag/magix[\s+]cms[\s+]3	http://www.magixcms3.test/fr/news/tag/39-magix-cms-3/	[R=301,L]
-# ----------------------------------------------------------------------
-# Language
-RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload|amp|img|var)
-RewriteCond %{QUERY_STRING} !(strLangue)+
-RewriteRule ^([-_a-zA-Z]{1,5})/(.*) 										/$2?strLangue=$1		[QSA,L]
-# AMP
-RewriteCond %{REQUEST_URI} ^/amp
-RewriteRule ^(?:amp)/(.*) 										/$1?amp=1		[QSA,L]
-# Web Service
-RewriteRule ^webservice/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2&action=$3 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2 [QSA,L]
-RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2&id=$3 [QSA,L]
-# Pagination
-RewriteCond %{QUERY_STRING} !(page)+
-RewriteRule (.*)/page/(\d*)/{0,1}$ /$1?page=$2 [QSA,L]
-# News tags
-RewriteCond %{QUERY_STRING} !(tag)+
-RewriteRule (.*)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?tag=$2 [QSA,L]
-# id page and id parent page
-RewriteCond %{QUERY_STRING} ^(id=)|(&id=)+
-RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id_parent=$2&url_parent=$3 [QSA,L]
-RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id=$2&url=$3 [QSA,L]
-# Date and year
-RewriteRule (.*)/(\d{4}/\d{2}/\d{2})/{0,1}$ /$1?date=$2 [QSA,L]
-RewriteCond %{QUERY_STRING} !(date)+
-RewriteRule (.*)/(\d{4})/(\d{2})/{0,1}$ /$1?year=$2&month=$3 [QSA,L]
-RewriteCond %{QUERY_STRING} !(year)+
-RewriteRule (.*)/(\d{4})/{0,1}$ /$1?year=$2 [QSA,L]
-# Custom action
-RewriteCond %{QUERY_STRING} !(action)+
-RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?action=$2 [QSA,L]
-# Custom hash key
-RewriteCond %{QUERY_STRING} !(hash)+
-RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?hash=$2 [QSA,L]
-# Controller
-RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload|amp|img|var)
-RewriteRule ^([0-9a-zA-Z]+)/{0,1}$ /index.php?controller=$1 [QSA,L]
+<IfModule mod_rewrite.c>
+    #Options +FollowSymLinks
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} !^www\.
+    RewriteCond %{HTTP_HOST} !^(?:[-_0-9a-zA-Z]+\.){2,}
+    RewriteRule .* http://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    <IfModule mod_ssl.c>
+        RewriteCond %{HTTPS} !=on [OR]
+        RewriteCond %{SERVER_PORT} 80
+        RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
+    </IfModule>
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    #RewriteBase /
+    # ----------------------------------------------------------------------
+    # Custom 404 page
+    # ----------------------------------------------------------------------
+    # You can add custom pages to handle 500 or 403 pretty easily, if you like.
+    ErrorDocument 401 /index.php?http_error=401
+    ErrorDocument 403 /index.php?http_error=403
+    ErrorDocument 404 /index.php?http_error=404
+    ErrorDocument 500 /index.php?http_error=500
+    # ----------------------------------------------------------------------
+    # Redirect Rewrite
+    # ----------------------------------------------------------------------
+    # RewriteRule ^fr/catalog/$ http://www.magixcms3.test/fr/news/ [R=301,L]
+    # Redirect a plus sign
+    # RewriteRule	^fr/actualites/tag/magix[\s+]cms[\s+]3	http://www.magixcms3.test/fr/news/tag/39-magix-cms-3/	[R=301,L]
+    # ----------------------------------------------------------------------
+    # Language
+    RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload|amp|img|var)
+    RewriteCond %{QUERY_STRING} !(strLangue)+
+    RewriteRule ^([-_a-zA-Z]{1,5})/(.*) 										/$2?strLangue=$1		[QSA,L]
+    # AMP
+    RewriteCond %{REQUEST_URI} ^/amp
+    RewriteRule ^(?:amp)/(.*) 										/$1?amp=1		[QSA,L]
+    # Web Service
+    RewriteRule ^webservice/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice [QSA,L]
+    RewriteRule ^webservice[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1 [QSA,L]
+    RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2 [QSA,L]
+    RewriteRule ^webservice[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&id=$2&action=$3 [QSA,L]
+    RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2 [QSA,L]
+    RewriteRule ^webservice[/]([a-zA-Z]+)[/]([a-zA-Z]+)[/]([0-9]+)/{0,1}$ %{ENV:REWRITEBASE}/index.php?controller=webservice&collection=$1&retrieve=$2&id=$3 [QSA,L]
+    # Pagination
+    RewriteCond %{QUERY_STRING} !(page)+
+    RewriteRule (.*)/page/(\d*)/{0,1}$ /$1?page=$2 [QSA,L]
+    # News tags
+    RewriteCond %{QUERY_STRING} !(tag)+
+    RewriteRule (.*)/tag/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?tag=$2 [QSA,L]
+    # id page and id parent page
+    RewriteCond %{QUERY_STRING} ^(id=)|(&id=)+
+    RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id_parent=$2&url_parent=$3 [QSA,L]
+    RewriteRule (.*)/([/0-9]+)[-]([-_0-9a-zA-Z]+)/{0,1}$ /$1?id=$2&url=$3 [QSA,L]
+    # Date and year
+    RewriteRule (.*)/(\d{4}/\d{2}/\d{2})/{0,1}$ /$1?date=$2 [QSA,L]
+    RewriteCond %{QUERY_STRING} !(date)+
+    RewriteRule (.*)/(\d{4})/(\d{2})/{0,1}$ /$1?year=$2&month=$3 [QSA,L]
+    RewriteCond %{QUERY_STRING} !(year)+
+    RewriteRule (.*)/(\d{4})/{0,1}$ /$1?year=$2 [QSA,L]
+    # Custom action
+    RewriteCond %{QUERY_STRING} !(action)+
+    RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?action=$2 [QSA,L]
+    # Custom hash key
+    RewriteCond %{QUERY_STRING} !(hash)+
+    RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?hash=$2 [QSA,L]
+    # Controller
+    RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload|amp|img|var)
+    RewriteRule ^([0-9a-zA-Z]+)/{0,1}$ /index.php?controller=$1 [QSA,L]
+</IfModule>

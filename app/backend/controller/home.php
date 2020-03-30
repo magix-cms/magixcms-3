@@ -160,11 +160,9 @@ class backend_controller_home extends backend_db_home{
                 $last = $this->setItemData();
                 $pages = $this->setItemsData();
                 $this->template->assign('home',$last);
-                $this->template->assign('page', $pages[$last['id_page']]);
+                $this->template->assign('page', empty($pages) ? null : $pages[$last['id_page']]);
                 $this->template->display('home/edit.tpl');
             }
         }
     }
-
 }
-?>

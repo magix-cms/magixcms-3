@@ -14,15 +14,15 @@ window.addEventListener('DOMContentLoaded', function () {
     function affixHead() {
         let pos = window.pageYOffset,
             header = document.getElementById('header'),
-            //btn = document.querySelectorAll('.toTop'),
+            btn = document.querySelectorAll('.toTop'),
             atTop = header.classList.contains('at-top');
 
         if (pos > tar && atTop) {
             header.classList.remove('at-top');
-            //btn.forEach( function(i) { i.classList.add('affix'); });
+            btn.forEach( function(i) { i.classList.remove('at-top'); });
         } else if(pos < tar && !atTop){
             header.classList.add('at-top');
-            //btn.forEach( function(i) { i.classList.remove('affix'); });
+            btn.forEach( function(i) { i.classList.add('at-top'); });
         }
     }
 

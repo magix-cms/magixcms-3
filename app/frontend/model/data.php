@@ -94,7 +94,7 @@ class frontend_model_data{
 
 				// *** list format START
 				if ($row[$deep] !== null AND $pass_trough !== 1){
-					$i[$deep]++;
+					if(isset($i[$deep])) $i[$deep]++;
 
 					// Construit doonées de l'item en array avec clée nominative unifiée ('name' => 'monname,'descr' => '<p>ma descr</p>,...)
 

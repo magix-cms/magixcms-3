@@ -1,49 +1,85 @@
-@media (min-width: @screen-lg-min) {
+@media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
+	#block-sitemap { order: 1; }
+	#block-about { order: 2; }
+	#block-socials { order: 3; }
+	#block-contact { order: 4; }
+	#block-last-news { order: 5; }
+}
+@media (min-width: @screen-sm-min) {
 	#footbar {
-		align-items: center;
-		box-shadow: none;
-		bottom: 3rem;
-
 		.dropup {
-			flex: 0 0 auto;
-			position: relative;
-
-			.dropdown-toggle {
-				padding: 1rem;
-
-				> span {
-					.sr-only;
+			text-align: left;
+		}
+	}
+}
+@media (min-width: @grid-float-breakpoint) {
+	.desktop {
+		#footbar {
+			align-items: center;
+			box-shadow: none;
+			padding: 0 2rem;
+			bottom: 7rem;
+			
+			.dropup {
+				flex: 0 0 auto;
+				position: relative;
+				
+				.dropdown-toggle {
+					padding: 1rem;
+					
+					> span {
+						.sr-only;
+					}
 				}
 			}
-		}
-		.toTop {
-			a {
-				.square(3rem);
-				position: relative;
-				display: block;
-				padding: 0;
+			
+			.dropup .dropdown-toggle > span,
+			.toTop a > span {
+				.sr-only;
+			}
+			.toTop {
+				opacity: 1;
+				.auto-transition(.35s);
+				
+				&.at-top {
+					opacity: 0;
+				}
+			}
+			
+			.share-nav {
+				top: 50%;
+				left: 100%;
+				padding-left: 1rem;
+				width: auto;
+				bottom: -16px;
+				background: transparent;
+				height: auto;
+				box-shadow: none;
+				opacity: 0;
+				transform: translateY(-50%);
+				visibility: hidden;
+			}
+			
+			.dropup.open .share-nav {
+				bottom: auto;
+				opacity: 1;
+				z-index: 1;
+				visibility: visible;
 			}
 		}
-
-		.share-nav {
-			top: 50%;
-			left: 100%;
-			padding-left: 1rem;
-			width: auto;
-			bottom: -16px;
-			background: transparent;
-			height: auto;
-			box-shadow: none;
-			opacity: 0;
-			transform: translateY(-50%);
-			visibility: hidden;
-		}
-
-		.dropup.open .share-nav {
-			bottom: auto;
-			opacity: 1;
-			z-index: 1;
-			visibility: visible;
+	}
+}
+@media (min-width: @screen-lg-min) {
+	#block-sitemap { order: 1; }
+	#block-about { order: 2; }
+	#block-last-news { order: 3; }
+	#block-socials { order: 4; }
+	#block-contact { order: 5; }
+}
+@media (min-width: @screen-xl-min) {
+	.desktop {
+		#footbar {
+			padding: 0 4rem;
 		}
 	}
 }

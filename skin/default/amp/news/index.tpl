@@ -27,8 +27,8 @@
                                     <header>
                                         <button class="btn btn-block btn-box btn-default" type="button">
                                             {if isset($tag)}{$tag.name}{else}{#choose_a_theme#|ucfirst}{/if}
-                                            <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
-                                            <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
+                                            <span class="show-more"><i class="material-icons ico ico-arrow_drop_down"></i></span>
+                                            <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
                                         </button>
                                     </header>
                                     <div>
@@ -54,8 +54,8 @@
                                     <header>
                                         <button class="btn btn-block btn-box btn-default" type="button">
                                             {if $smarty.get.date}{$smarty.get.date|date_format:'%Y/%m/%d'}{elseif $monthName}{$smarty.get.year}/{if isset($smarty.get.month)}{$smarty.get.month}/{/if}{else}{#choose_a_date#|ucfirst}{/if}
-                                            <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
-                                            <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
+                                            <span class="show-more"><i class="material-icons ico ico-arrow_drop_down"></i></span>
+                                            <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
                                         </button>
                                     </header>
                                     <amp-accordion class="nested-accordion">
@@ -64,8 +64,8 @@
                                                 <header>
                                                     <button class="btn btn-block btn-box btn-default" type="button">
                                                         <a href="{$year.url}" title="{$year.year}">{$year.year}</a>
-                                                        <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
-                                                        <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
+                                                        <span class="show-more"><i class="material-icons ico ico-arrow_drop_down"></i></span>
+                                                        <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
                                                     </button>
                                                 </header>
                                                 <div>

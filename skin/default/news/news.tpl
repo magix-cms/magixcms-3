@@ -32,7 +32,7 @@
         </div>
     </div>
     <div itemprop="author" itemscope itemtype="https://schema.org/{$companyData.type}" itemref="publisher"></div>
-    <div itemprop="articleBody">
+    <div itemprop="articleBody" class="clearfix">
         <div class="desc">
             {if isset($news.img.name)}
                 <a href="{$news.img.large.src}" class="img-zoom" title="{$news.img.title}" data-caption="{$news.img.caption}">

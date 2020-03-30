@@ -18,7 +18,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" name="page" id="getpage" placeholder="Accéder à la page ...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit"><i class="material-icons">search</i></button>
+                        <button class="btn btn-default" type="submit"><i class="material-icons ico ico-search"></i></button>
                     </span>
                 </div>
             </div>
@@ -29,7 +29,7 @@
     <ul class="pagination pager">
         <li{if $current == 1} class="disabled"{/if}>
             <a href="{$url}{$request}{if $smarty.get.page && $smarty.get.page > 2}page/{$smarty.get.page - 1}{/if}" aria-label="Previous">
-                <i class="material-icons" aria-hidden="true">arrow_left</i>
+                <i class="material-icons ico ico-arrow_left" aria-hidden="true"></i>
             </a>
         </li>
         <li{if $smarty.get.page === '1' || !$smarty.get.page } class="active"{/if}>
@@ -83,13 +83,13 @@
         {if $nbp > 10}
         <li>
             <a class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" title="Rechercher une page" data-html="true" data-content='{$smarty.capture.searchform}'>
-                <i class="material-icons">search</i>
+                <i class="material-icons ico ico-search"></i>
             </a>
         </li>
         {/if}
         <li{if $current == $nbp} class="disabled"{/if}>
             <a href="{$url}{$request}{if $smarty.get.page != $nbp}page/{if $smarty.get.page}{$smarty.get.page + 1}{else}2{/if}{/if}" aria-label="Next">
-                <i class="material-icons" aria-hidden="true">arrow_right</i>
+                <i class="material-icons ico ico-arrow_right" aria-hidden="true"></i>
             </a>
         </li>
     </ul>

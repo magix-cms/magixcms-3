@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Install Script" pattern="file:install*/template/js/src/*.js" />
+</component>

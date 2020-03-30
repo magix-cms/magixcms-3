@@ -1,0 +1,45 @@
+//
+// Additional rules for image classes
+//
+.img-galery,
+.img-zoom {
+    z-index: 1;
+}
+
+.img-float {
+    margin: 0 0 1rem;
+    /*@media (min-width: @screen-xs-min) {
+        margin-right: 1rem;
+        margin-left: 1rem;
+
+        &.pull-right { margin-right: 0; }
+        &.pull-left { margin-left: 0; }
+    }*/
+    &.float-right {
+        float: right;
+    }
+    &.float-left {
+        float: left;
+    }
+    @media (min-width: @screen-xs-min) {
+        &.float-right {
+            margin: 0 0 1rem 1rem;
+        }
+        &.float-left {
+            margin: 0 1rem 1rem 0;
+        }
+        
+        &.float-right,
+        &.float-left {
+            max-width: 50%;
+        }
+    }
+}
+
+figure > figcaption {
+    text-align: center;
+    font-size: 90%;
+    font-style: italic;
+    color: @text-muted;
+    padding: .5rem 0;
+}

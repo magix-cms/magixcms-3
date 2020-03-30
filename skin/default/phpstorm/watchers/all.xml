@@ -12,9 +12,55 @@
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="terser" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Libjs" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$FileParentDir$" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--clean-css install.less" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="Install (Less)" />
+    <option name="output" value="../../install.min.css" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="" />
+          <option name="name" value="" />
+          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="true" />
+    <option name="program" value="lessc" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="Install" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$FileDir$" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="js" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="Install Script" />
+    <option name="output" value="$FileNameWithoutExtension$.min.js" />
+    <option name="outputFilters">
+      <array />
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="terser" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="Install Script" />
     <option name="trackOnlyRoot" value="true" />
     <option name="workingDir" value="$FileParentDir$" />
     <envs />
@@ -38,7 +84,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="true" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Admin Mobile" />
     <option name="trackOnlyRoot" value="true" />
@@ -64,7 +110,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="true" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Admin Tablet" />
     <option name="trackOnlyRoot" value="true" />
@@ -90,7 +136,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="true" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Admin Desktop" />
     <option name="trackOnlyRoot" value="true" />
@@ -110,11 +156,31 @@
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="terser" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Admin Script" />
     <option name="trackOnlyRoot" value="true" />
     <option name="workingDir" value="$FileParentDir$" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="js" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="TinyMCE Plugins" />
+    <option name="output" value="$FileNameWithoutExtension$.min.js" />
+    <option name="outputFilters">
+      <array />
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="terser" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="TinyMCE Plugins" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$FileDir$" />
     <envs />
   </TaskOptions>
   <TaskOptions>
@@ -136,7 +202,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="true" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Plugins Style" />
     <option name="trackOnlyRoot" value="true" />
@@ -156,35 +222,9 @@
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="terser" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Plugins Script" />
-    <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileParentDir$" />
-    <envs />
-  </TaskOptions>
-  <TaskOptions>
-    <option name="arguments" value="--clean-css $FileDir$/$FileName$" />
-    <option name="checkSyntaxErrors" value="true" />
-    <option name="description" />
-    <option name="exitCodeBehavior" value="ERROR" />
-    <option name="fileExtension" value="less" />
-    <option name="immediateSync" value="false" />
-    <option name="name" value="AMP (Less)" />
-    <option name="output" value="$FileNameWithoutAllExtensions$.min.css" />
-    <option name="outputFilters">
-      <array>
-        <FilterInfo>
-          <option name="description" value="" />
-          <option name="name" value="" />
-          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
-        </FilterInfo>
-      </array>
-    </option>
-    <option name="outputFromStdout" value="true" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
-    <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="AMP" />
     <option name="trackOnlyRoot" value="true" />
     <option name="workingDir" value="$FileParentDir$" />
     <envs />
@@ -208,7 +248,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Mobile" />
     <option name="trackOnlyRoot" value="true" />
@@ -234,7 +274,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Tablet" />
     <option name="trackOnlyRoot" value="true" />
@@ -260,7 +300,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Desktop" />
     <option name="trackOnlyRoot" value="true" />
@@ -268,23 +308,101 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="-O1 specialComments:0 -o $FileNameWithoutAllExtensions$.min.css $FileNameWithoutAllExtensions$.css" />
+    <option name="arguments" value="--source-map --source-map-rootpath=. --source-map-basepath=$SourcepathEntry$ --glob $SourcepathEntry$/src/less/tinymce.less tinymce.css" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
-    <option name="fileExtension" value="css" />
+    <option name="fileExtension" value="less" />
     <option name="immediateSync" value="false" />
-    <option name="name" value="CleanCSS" />
+    <option name="name" value="TinyMCE + SourceMap" />
+    <option name="output" value="tinymce.css:tinymce.css.map" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="" />
+          <option name="name" value="" />
+          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="lessc" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="TinyMCE" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$SourcepathEntry$" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--source-map --source-map-rootpath=. --source-map-basepath=$SourcepathEntry$ --glob $SourcepathEntry$/src/less/form.less form.css" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="Form + SourceMap" />
+    <option name="output" value="form.css:form.css.map" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="" />
+          <option name="name" value="" />
+          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="false" />
+    <option name="program" value="lessc" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="Form" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$SourcepathEntry$" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--clean-css $FileDir$/$FileName$" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="AMP (Less)" />
     <option name="output" value="$FileNameWithoutAllExtensions$.min.css" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="" />
+          <option name="name" value="" />
+          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="true" />
+    <option name="program" value="lessc" />
+    <option name="runOnExternalChanges" value="true" />
+    <option name="scopeName" value="AMP" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="$FileParentDir$" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="js" />
+    <option name="immediateSync" value="false" />
+    <option name="name" value="Script Vendors" />
+    <option name="output" value="$FileNameWithoutExtension$.min.js" />
     <option name="outputFilters">
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/cleancss" />
+    <option name="program" value="terser" />
     <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="CSS" />
+    <option name="scopeName" value="Script Vendors" />
     <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$SourcepathEntry$" />
+    <option name="workingDir" value="$FileParentDir$" />
     <envs />
   </TaskOptions>
   <TaskOptions>
@@ -300,31 +418,11 @@
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="terser" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Script" />
     <option name="trackOnlyRoot" value="true" />
     <option name="workingDir" value="$FileParentDir$" />
-    <envs />
-  </TaskOptions>
-  <TaskOptions>
-    <option name="arguments" value="--no-cache --update $FileName$:$FileNameWithoutExtension$.css" />
-    <option name="checkSyntaxErrors" value="true" />
-    <option name="description" />
-    <option name="exitCodeBehavior" value="ERROR" />
-    <option name="fileExtension" value="scss" />
-    <option name="immediateSync" value="true" />
-    <option name="name" value="Mail (SCSS)" />
-    <option name="output" value="$FileNameWithoutExtension$.css:$FileNameWithoutExtension$.css.map" />
-    <option name="outputFilters">
-      <array />
-    </option>
-    <option name="outputFromStdout" value="false" />
-    <option name="program" value="C:/Ruby23-x64/bin/scss.bat" />
-    <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="Mail" />
-    <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileDir$" />
     <envs />
   </TaskOptions>
   <TaskOptions>
@@ -340,7 +438,7 @@
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="terser" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Service Worker" />
     <option name="trackOnlyRoot" value="true" />
@@ -348,69 +446,43 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="--no-cache --update $FileName$:$FileNameWithoutExtension$.css" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
-    <option name="fileExtension" value="js" />
-    <option name="immediateSync" value="false" />
-    <option name="name" value="Install Script" />
-    <option name="output" value="$FileNameWithoutExtension$.min.js" />
+    <option name="fileExtension" value="scss" />
+    <option name="immediateSync" value="true" />
+    <option name="name" value="Mail (SCSS)" />
+    <option name="output" value="$FileNameWithoutExtension$.css:$FileNameWithoutExtension$.css.map" />
     <option name="outputFilters">
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="sass" />
     <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="Install Script" />
-    <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileParentDir$" />
-    <envs />
-  </TaskOptions>
-  <TaskOptions>
-    <option name="arguments" value="--clean-css install.less" />
-    <option name="checkSyntaxErrors" value="true" />
-    <option name="description" />
-    <option name="exitCodeBehavior" value="ERROR" />
-    <option name="fileExtension" value="less" />
-    <option name="immediateSync" value="false" />
-    <option name="name" value="Install (Less)" />
-    <option name="output" value="../../install.min.css" />
-    <option name="outputFilters">
-      <array>
-        <FilterInfo>
-          <option name="description" value="" />
-          <option name="name" value="" />
-          <option name="regExp" value="$MESSAGE$\Q in \E$FILE_PATH$\Q on line \E$LINE$\Q, column \E$COLUMN$" />
-        </FilterInfo>
-      </array>
-    </option>
-    <option name="outputFromStdout" value="true" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
-    <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="Install" />
+    <option name="scopeName" value="Mail" />
     <option name="trackOnlyRoot" value="true" />
     <option name="workingDir" value="$FileDir$" />
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="-O1 specialComments:0 -o $FileNameWithoutAllExtensions$.min.css $FileNameWithoutAllExtensions$.css" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
-    <option name="fileExtension" value="js" />
+    <option name="fileExtension" value="css" />
     <option name="immediateSync" value="false" />
-    <option name="name" value="TinyMCE Plugins" />
-    <option name="output" value="$FileNameWithoutExtension$.min.js" />
+    <option name="name" value="CleanCSS" />
+    <option name="output" value="$FileNameWithoutAllExtensions$.min.css" />
     <option name="outputFilters">
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="cleancss" />
     <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="tinyMCE Plugins" />
+    <option name="scopeName" value="CSS" />
     <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileDir$" />
+    <option name="workingDir" value="$SourcepathEntry$" />
     <envs />
   </TaskOptions>
   <TaskOptions>
@@ -431,26 +503,6 @@
     <option name="scopeName" value="mjml" />
     <option name="trackOnlyRoot" value="false" />
     <option name="workingDir" value="$FileDir$" />
-    <envs />
-  </TaskOptions>
-  <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
-    <option name="checkSyntaxErrors" value="true" />
-    <option name="description" />
-    <option name="exitCodeBehavior" value="ERROR" />
-    <option name="fileExtension" value="js" />
-    <option name="immediateSync" value="false" />
-    <option name="name" value="Script Vendors" />
-    <option name="output" value="$FileNameWithoutExtension$.min.js" />
-    <option name="outputFilters">
-      <array />
-    </option>
-    <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
-    <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="Script Vendors" />
-    <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="$FileParentDir$" />
     <envs />
   </TaskOptions>
 </TaskOptions>

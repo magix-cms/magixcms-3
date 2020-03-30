@@ -3,7 +3,7 @@
     <nav id="breadcrumb" class="breadcrumb container" itemprop="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
         <ol>
         {foreach from=$bread item=breadcrumb key=i}
-            {if $length > 3 && $i == 1 && $mobile}
+            {* if $length > 3 && $i == 1 && $mobile}
             <li id="hellipsis">
                 <div class="dropdown">
                     <amp-accordion disable-session-states>
@@ -16,7 +16,7 @@
                             </header>
                             <div id="breadcrumb-collapse">
                                 <ol>
-            {/if}
+            {/if*}
             <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                 {strip}{if isset($breadcrumb.url)}
                 <a href="{$breadcrumb.url}" title="{$breadcrumb.title|ucfirst}">
@@ -32,14 +32,14 @@
                 </span>
                 {/if}{/strip}
             </li>
-            {if $length > 3 && $i == $length-2 && $mobile}
+            {* if $length > 3 && $i == $length-2 && $mobile}
                 </ol>
                 </div>
                 </section>
                 </amp-accordion>
                 </div>
             </li>
-            {/if}
+            {/if*}
         {/foreach}
         </ol>
     </nav>

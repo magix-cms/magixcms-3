@@ -14,9 +14,9 @@
             <input type="hidden" name="msg[error]" value="{if $error_code}{$error_code}{else}404{/if}" class="required" required/>
             <input type="hidden" name="msg[content]" value="{$url}{$smarty.server.REQUEST_URI}" class="required" required>
             <input type="hidden" name="msg[moreinfo]" value="" />
-            <p class="lead">{#report_link#}<br><button type="submit" class="btn btn-box btn-link">{#report#} <i class="material-icons">error_outline</i></button></p>
+            <p class="lead">{#report_link#}<br><button type="submit" class="btn btn-box btn-link">{#report#} <i class="material-icons ico ico-error_outline"></i></button></p>
         </form>
-        <p class="lead text-success success hide">{#thanks#} <i class="material-icons">check</i></p>
+        <p class="lead text-success success hide">{#thanks#} <i class="material-icons ico ico-check"></i></p>
         <ul class="link-bar">
             {foreach $links as $k => $link}
             <li>

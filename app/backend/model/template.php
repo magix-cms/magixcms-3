@@ -60,7 +60,7 @@ class backend_model_template{
 	 * @var void
 	 */
 	static protected $frontendtheme;
-	public $lang;
+	public $lang, $settings;
 	/**
 	 * 
 	 * Constructor
@@ -74,6 +74,7 @@ class backend_model_template{
     private function init() {
 		self::getReleaseData();
 		$this->lang = $this->currentLanguage();
+		$this->settings = self::$collectionsSetting->getSetting();
 	}
 
 	/**

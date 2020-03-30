@@ -16,12 +16,13 @@
             <div></div>
         {else}
             {$sn = $sn + 1}
+            {$parent = {"subnav-"|cat:$sn}}
             <header>
                 <a itemprop="url" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>
                     <span itemprop="name">{$item.name_link}</span>
                 </a>
-                <span class="show-more"><i class="material-icons">add</i></span>
-                <span class="show-less"><i class="material-icons">remove</i></span>
+                <span class="show-more"><i class="material-icons ico ico-add"></i></span>
+                <span class="show-less"><i class="material-icons ico ico-remove"></i></span>
             </header>
             <div class="nested-accordion">
                 <amp-accordion class="list-unstyled" animate expand-single-section disable-session-states>
@@ -32,26 +33,27 @@
         </section>
         {else}
             <li class="panel{if $item.active} active{/if}">
-                {if $mobile && $item.subdata}
+                {if $item.subdata}
                     {$sn = $sn + 1}
+                    {$parent = {"subnav-"|cat:$sn}}
                     <button type="button" class="navbar-toggle{if $item.active} open{else} collapsed{/if}" data-toggle="collapse" data-parent="#menul" data-target="#nav{$menu}-{$sn}">
-                        <span class="show-more"><i class="material-icons">add</i></span>
-                        <span class="show-less"><i class="material-icons">remove</i></span>
+                        <span class="show-more"><i class="material-icons ico ico-add"></i></span>
+                        <span class="show-less"><i class="material-icons ico ico-remove"></i></span>
                     </button>
                 {/if}
                 <a itemprop="url" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>
                     <span itemprop="name">{$item.name_link}</span>
                 </a>
-                {if !$mobile && $item.subdata}
+                {*if !$mobile && $item.subdata}
                     <ul class="{if $item.mode_link eq 'mega'}mega{/if}dropdown" itemprop="hasPart" itemscope itemtype="http://schema.org/SiteNavigationElement">
                         {include file="section/menu/loop/sublink.tpl" scope="global" childs=$item.subdata mega=$mega mobile=false dp=($dp+1) chc=$item.controller}
                     </ul>
-                {/if}
-                {if $mobile && $item.subdata}
-                    <nav id="nav{$menu}-{$sn}" class="collapse navbar-collapse{if $item.active} in{/if}">
+                {/if*}
+                {if $item.subdata}
+                    <nav id="nav{$menu}-{$sn}" class="collapse navbar-collapse{if $item.active} in{/if} {if $item.mode_link eq 'mega'}mega{/if}dropdown" itemprop="hasPart" itemscope itemtype="http://schema.org/SiteNavigationElement" >
                         <ul id="subnav-{$sn}" class="list-unstyled">
                             {if $item.mode_link === 'mega'}{$mega = true}{else}{$mega = false}{/if}
-                            {include file="section/menu/loop/sublink.tpl" scope="global" childs=$item.subdata mega=$mega parent="subnav-{$sn}" mobile=true dp=($dp+1) chc=$item.controller}
+                            {include file="section/menu/loop/sublink.tpl" scope="global" childs=$item.subdata mega=$mega parent=$parent mobile=true dp=($dp+1) chc=$item.controller}
                             {$sn = $sn}
                         </ul>
                     </nav>

@@ -1,0 +1,75 @@
+//
+// Grid system
+// --------------------------------------------------
+
+// Container widths
+.container, .container-fluid {
+	margin-right: auto;
+	margin-left: auto;
+	padding-left: ~"calc(var(--grid-gutter) / 2)";
+	padding-right: ~"calc(var(--grid-gutter) / 2)";
+	width: 100%;
+}
+
+// Row
+//
+// Rows contain and clear the floats of your columns.
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: ~"calc(var(--grid-gutter) / -2)";
+	margin-right: ~"calc(var(--grid-gutter) / -2)";
+}
+.row-center {
+	justify-content: center;
+}
+
+// Columns
+//
+// Common styles for small and large grid columns
+
+.col {
+	position: relative;
+	flex-basis: 0;
+	flex-grow: 1;
+	max-width: 100%;
+	left: auto;
+	right: auto;
+	padding-left: ~"calc(var(--grid-gutter) / 2)";
+	padding-right: ~"calc(var(--grid-gutter) / 2)";
+}
+.make-grid-columns();
+
+// Phone grid
+//
+// Columns, offsets, pushes, and pulls for extra small devices like
+// smartphones.
+:root {
+	--grid-column: @grid-columns-ph;
+	--grid-gutter: 1rem;
+}
+.make-grid(ph);
+.make-rows(ph);
+.col-half {
+	flex-basis: 50%;
+	max-width: 50%;
+}
+
+// Extra small grid
+//
+// Columns, offsets, pushes, and pulls for the extra small device range, from large phones
+// to small tablets.
+
+@media (min-width: @screen-xs-min) {
+	:root {
+		--grid-column: @grid-columns-xs;
+	}
+
+	.make-grid(xs);
+	.make-rows(xs);
+	.col-xs {
+		flex: 1 0 0;
+		max-width: 100%;
+	}
+}

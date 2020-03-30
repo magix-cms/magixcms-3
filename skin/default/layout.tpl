@@ -1,3 +1,4 @@
+{$variant = 'blue'}
 <!DOCTYPE html>
 <!--[if lt IE 7]><html lang="{$lang}" class="lt-ie9 lt-ie8 lt-ie7" dir="ltr"><![endif]-->
 <!--[if IE 7]><html lang="{$lang}" class="lt-ie9 lt-ie8" dir="ltr"><![endif]-->
@@ -24,22 +25,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="{$smarty.capture.title}">
     <link rel="apple-touch-icon" href="{if $homescreen != null}{if $homescreen.img[168]}{''|cat:{$url}|cat:$homescreen.img[168].src}{/if}{else}{''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/touch/homescreen168.png'}{/if}">
-    <meta name="theme-color" content="#7083db" />
-    {include file="section/brick/google-font.tpl" fonts=['Material Icons'=>'0','Heebo'=>'300,500,700']}
+    {if $variant !== null}{include file="{$variant}.tpl"}{/if}
     {* Please try to use icomoon to create a small iconfont and reduce load work *}
+    {include file="section/brick/google-font.tpl" fonts=['Heebo'=>'300,500,700']}
     {strip}{capture name="stylesheet"}/skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css{/capture}
-    {$csspath = $smarty.capture.stylesheet}
-    {if $setting.mode.value !== 'dev'}{$csspath = {'/min/?f='|cat:$csspath}}{else}{$csspath = {$url|cat:$csspath}}{/if}
-    {if $setting.concat.value}{$csspath = {$csspath|concat_url:'css'}}{/if}
-    {if $browser !== 'IE'}<link rel="preload" href="{$csspath}" as="style">{/if}
-    <link rel="stylesheet" href="{$csspath}">{/strip}
+        {$csspath = $smarty.capture.stylesheet}
+        {if $setting.mode.value !== 'dev'}{$csspath = {'/min/?f='|cat:$csspath|cat:'&amp;'|cat:$smarty.now}}{else}{$csspath = {$url|cat:$csspath}}{/if}
+        {if $setting.concat.value}{$csspath = {$csspath|concat_url:'css'}}{/if}
+        {if $browser !== 'IE'}<link rel="preload" href="{$csspath}" as="style">{/if}
+        <link rel="stylesheet" href="{$csspath}">{/strip}
+    <meta name="theme-color" content="{$main_color}" />
     {capture name="scriptHtml5"}{strip}
         /min/?f=
         skin/{$theme}/js/vendor/html5shiv.min.js,
         skin/{$theme}/js/vendor/respond.min.js
     {/strip}{/capture}
     <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url:'js'}{else}{$smarty.capture.scriptHtml5}{/if}"></script><![endif]-->
-    {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/modernizr.min.js,skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js{/capture}
+    {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/modernizr.min.js,skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js&amp;{$smarty.now}{/capture}
     <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" async></script>
     {block name="styleSheet"}{/block}
     {if $setting['analytics']['value']}{include file="section/brick/analytics.tpl" aid=$setting['analytics']['value']}{/if}
@@ -49,7 +51,7 @@
 {include file="section/header.tpl"}
 {block name="breadcrumb"}
     {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
-        {include file="section/brick/breadcrumb.tpl" icon='home' amp=false}
+        {include file="section/brick/breadcrumb.tpl" icon='home' amp=false scope="global"}
     {/if}
 {/block}
 {block name="main:before"}{/block}
@@ -57,16 +59,16 @@
     <main id="content">
         {block name="article:before"}{/block}
         {block name='article'}
-            <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
-                {block name='article:content'}{/block}
-            </article>
+        <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
+            {block name='article:content'}{/block}
+        </article>
         {/block}
         {block name="aside"}{/block}
         {block name="article:after"}{/block}
     </main>
 {/block}
 {block name="main:after"}{/block}
-{include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','news','contact']}
+{include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','socials','news','contact']}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script>
     window.lazyLoadOptions = {

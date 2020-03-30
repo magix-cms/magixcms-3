@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Service Worker" pattern="file:sw.js" />
+</component>

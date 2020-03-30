@@ -12,8 +12,8 @@
     {elseif $display eq 'menu'}
         <div id="menu-language" class="dropdown">
             <button class="btn btn-box btn-default" type="button" on="tap:menu-language.toggleClass(class='open')">
-                <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
-                <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
+                <span class="show-more"><i class="material-icons ico ico-arrow_drop_down"></i></span>
+                <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
                 {if $smarty.get.strLangue}
                     {$smarty.get.strLangue|upper}
                 {else}

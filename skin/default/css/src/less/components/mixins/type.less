@@ -1,0 +1,107 @@
+// Set background text and text color for selected text
+.text-select(@bg-color, @color: #fff) {
+	::-moz-selection {
+		color: @color;
+		background: @bg-color;
+	}
+	::selection {
+		color: @color;
+		background: @bg-color;
+	}
+}
+
+// Normalize link style for all state
+.normalize-link(@color: var(--main-color), @hover-color: same, @decoration: underline, @weight: @font-weight, @font: @font-family-sans-serif) {
+	.set-hover(@color, @hover-color) when (@hover-color = same) {
+		--link-hover-color: @color;
+	};
+	.set-hover(@color, @hover-color) {
+		--link-hover-color: @hover-color;
+	};
+	a {
+		--link-font: @font;
+		--link-weight: @weight;
+		--link-color: @color;
+		--link-hover-deco: @decoration;
+		.set-hover(@color, @hover-color);
+	}
+}
+
+// set a link to cover all his relative parent
+.hover-link() {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: @z-allhover;
+	text-indent: 200%;
+	white-space: nowrap;
+	font-size: 0;
+	opacity: 0;
+	.square(100%);
+}
+
+/*--------------------------*\
+-----  Headings styling  -----
+----- shortcut functions -----
+\*--------------------------*/
+
+// --- All headings
+.headings(@function) {
+	h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+		@function();
+	}
+}
+// --- Direct child headings
+.direct-headings(@function) {
+	> h1, > h2, > h3, > h4, > h5, > h6, > .h1, > .h2, > .h3, > .h4, > .h5, > .h6 {
+		@function();
+	}
+}
+
+// --- Justify content | may be not cross-browser
+.text-justify() {
+	text-align: justify;
+	word-wrap: normal;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	-o-hyphens: auto;
+	hyphens: auto;
+}
+
+// --- Main title page
+.main-title(@color: @text-color, @brd: 1px solid var(--brd-default)) {
+	margin: var(--title-mg, .5rem auto 2rem);
+	padding: var(--title-pd, 0 0 1rem);
+	border-bottom: var(--title-brd, @brd);
+	--heading-color: var(--title-color, var(--text-color));
+	//color: var(--title-color, @color);
+}
+
+// Normalize content
+.normalize-content(@color: @main-color, @headingb: 1px solid var(--brd-default), @headingc: @text-color) {
+	article {
+		// Normalize the main title of the content
+		h1 {
+			.main-title(@headingc, @headingb);
+		}
+
+		p > img:not(.img-float) {
+			margin: 1rem;
+		}
+
+		> img:not(.img-float) {
+			margin: 1rem;
+		}
+
+		// Normalize small for datetime
+		small.datePublished {
+			display: block;
+			margin-bottom: 1rem;
+			color: var(--light-grey);
+		}
+		.description {
+			margin-bottom: 2rem;
+		}
+	}
+}

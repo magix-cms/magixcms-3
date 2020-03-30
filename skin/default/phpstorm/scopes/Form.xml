@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Form" pattern="file:skin/*/css/bootstrap/less//*||file:skin/*/css/src/less//*" />
+</component>

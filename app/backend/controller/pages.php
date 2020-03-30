@@ -374,7 +374,6 @@ class backend_controller_pages extends backend_db_pages
 			case 'pageActiveMenu':
 				parent::update(
 					array(
-						'context' => $data['context'],
 						'type' => $data['type']
 					),
 					$data['data']

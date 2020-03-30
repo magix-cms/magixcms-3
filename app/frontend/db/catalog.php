@@ -245,7 +245,9 @@ class frontend_db_catalog
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT 
 								catalog.id_product,
+								catalog.id_cat,
 								cat.name_cat,
+								cat.url_cat, 
 								pc.name_p, 
 								pc.url_p,
 								lang.iso_lang, 

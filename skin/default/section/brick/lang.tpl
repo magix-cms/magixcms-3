@@ -1,7 +1,7 @@
 <div class="dropdown">
     {strip}<button id="menu-language" class="dropdown-toggle btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span class="show-more"><i class="material-icons">arrow_drop_down</i></span>
-        <span class="show-less"><i class="material-icons">arrow_drop_up</i></span>
+        <span class="show-more"><i class="material-icons ico ico-arrow_drop_down"></i></span>
+        <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
         {if $smarty.get.strLangue}
             {$smarty.get.strLangue|upper}
         {else}

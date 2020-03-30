@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Install" pattern="file:install*/template/css/font-awesome/less//*||file:install*/template/css/bootstrap/less//*||file:install*/template/css/src/less//*" />
+</component>

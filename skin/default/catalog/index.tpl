@@ -11,11 +11,10 @@
                 {$root.content}
             </div>
             {if $categories}
+            <p class="h2">{#categories#}</p>
             <div class="vignette-list">
-                <div class="section-block">
-                    <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                        {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4'}
-                    </div>
+                <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-4 col-xs-3 col-sm-4 col-md-th col-lg-4 col-xl-3'}
                 </div>
             </div>
             {/if}

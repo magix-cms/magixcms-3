@@ -75,9 +75,25 @@ class component_core_system{
 
 		//return position
 		$position = strpos($parseurl['query'], '=');
+        $args = null;
 
 		if($position) {
 			//return first query
+            $argspos = strrpos($parseurl['query'], '&amp;');
+            if($argspos) {
+                $query = explode('&amp;',$parseurl['query']);
+                $parseurl['query'] = $query[0];
+                $args = $query[1];
+            }
+            else {
+                $argspos = strrchr($parseurl['query'], '&');
+                if($argspos) {
+                    $query = explode('&',$parseurl['query']);
+                    $parseurl['query'] = $query[0];
+                    $args = $query[1];
+                }
+            }
+
 			$query = substr($parseurl['query'],0,$position);
 			//return url after query
 			$filesPath = substr(strrchr($parseurl['query'], '='), 1);
@@ -126,7 +142,7 @@ class component_core_system{
 							)
 						)
 					);
-					$content = file_get_contents(http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection),false,$stream);
+					$content = file_get_contents(http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection) .'&amp;'. $args,false,$stream);
 
 					if ($content === false) {
 						$logger = new debug_logger(MP_LOG_DIR);
@@ -141,7 +157,7 @@ class component_core_system{
 				} catch (Exception $e) {
 					$logger = new debug_logger(MP_LOG_DIR);
 					$logger->log('minify', 'concat', "Concat : Test\n
-						file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection)."\n
+						file(s)=".http_url::getUrl().$minDir.'?f=' . implode(",", $filesCollection) .'&amp;'. $args."\n
 						error=$e\n", debug_logger::LOG_MONTH);
 				}
 			}

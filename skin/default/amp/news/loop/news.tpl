@@ -44,7 +44,7 @@
                         {if !empty($item.tags)}
                             <p class="tag-list">
                                 {$nbt = $item.tags|count}
-                                <span class="fa fa-tag{if $nbt > 1}s{/if}"></span>
+                                <span class="fa ico ico-tag{if $nbt > 1}s{/if}"></span>
                                 {foreach $item.tags as $tag}
                                     <span itemprop="about"><a href="{$tag.url}" title="{#see_more_news_about#} {$tag.name|ucfirst}">{$tag.name}</a></span>
                                     {if !$tag@last}, {/if}

@@ -1,0 +1,141 @@
+//
+// Responsive: Utility classes
+// --------------------------------------------------
+
+
+// IE10 in Windows (Phone) 8
+//
+// Support for responsive views via media queries is kind of borked in IE10, for
+// Surface/desktop in split view and for Windows Phone 8. This particular fix
+// must be accompanied by a snippet of JavaScript to sniff the user agent and
+// apply some conditional CSS to *only* the Surface/desktop Windows 8. Look at
+// our Getting Started page for more information on this bug.
+//
+// For more information, see the following:
+//
+// Issue: https://github.com/twbs/bootstrap/issues/10497
+// Docs: http://getbootstrap.com/getting-started/#support-ie10-width
+// Source: http://timkadlec.com/2013/01/windows-phone-8-and-device-width/
+// Source: http://timkadlec.com/2012/10/ie10-snap-mode-and-responsive-design/
+
+// Visibility utilities
+[class*="visible-"]{
+    .responsive-invisibility();
+}
+
+@media (max-width: (@screen-ph-max)) {
+    .visible-ph { .responsive-visibility(); }
+    .hidden-ph { .responsive-invisibility(); }
+}
+@media (max-width: (@screen-xs-max)) {
+    .visible-xs-down { .responsive-visibility(); }
+    .hidden-xs-down { .responsive-invisibility(); }
+}
+@media (min-width: (@screen-xs-min)) {
+    .visible-xs-up { .responsive-visibility(); }
+    .hidden-xs-up { .responsive-invisibility(); }
+
+    @media (max-width: @screen-xs-max) {
+        .visible-xs { .responsive-visibility(); }
+        .hidden-xs { .responsive-invisibility(); }
+    }
+}
+@media (max-width: (@screen-sm-max)) {
+    .visible-sm-down { .responsive-visibility(); }
+    .hidden-sm-down { .responsive-invisibility(); }
+}
+@media (min-width: (@screen-sm-min)) {
+    .visible-sm-up { .responsive-visibility(); }
+    .hidden-sm-up { .responsive-invisibility(); }
+
+    @media (max-width: @screen-sm-max) {
+        .visible-sm { .responsive-visibility(); }
+        .hidden-sm { .responsive-invisibility(); }
+    }
+}
+@media (max-width: (@screen-md-max)) {
+    .visible-md-down { .responsive-visibility(); }
+    .hidden-md-down { .responsive-invisibility(); }
+}
+@media (min-width: (@screen-md-min)) {
+    .visible-md-up { .responsive-visibility(); }
+    .hidden-md-up { .responsive-invisibility(); }
+
+    @media (max-width: @screen-md-max) {
+        .visible-md { .responsive-visibility(); }
+        .hidden-md { .responsive-invisibility(); }
+    }
+}
+@media (max-width: (@screen-lg-max)) {
+    .visible-lg-down { .responsive-visibility(); }
+    .hidden-lg-down { .responsive-invisibility(); }
+}
+@media (min-width: (@screen-lg-min)) {
+    .visible-lg-up { .responsive-visibility(); }
+    .hidden-lg-up { .responsive-invisibility(); }
+
+    @media (max-width: @screen-lg-max) {
+        .visible-lg { .responsive-visibility(); }
+        .hidden-lg { .responsive-invisibility(); }
+    }
+}
+@media (min-width: (@screen-lg-min)) {
+    .visible-lg { .responsive-visibility(); }
+    .hidden-lg { .responsive-invisibility(); }
+}
+
+// --- Pull block right or left on different breakpoint
+@media (max-width: @screen-ph-max) {
+    .pull-ph-left {
+        float: left;
+    }
+    .pull-ph-right {
+        float: right;
+    }
+}
+
+// --- Pull block right or left on different breakpoint
+@media (max-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+    .pull-xs-left {
+        float: left;
+    }
+    .pull-xs-right {
+        float: right;
+    }
+}
+
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+    .pull-sm-left {
+        float: left;
+    }
+    .pull-sm-right {
+        float: right;
+    }
+}
+
+@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+    .pull-md-left {
+        float: left;
+    }
+    .pull-md-right {
+        float: right;
+    }
+}
+
+@media (min-width: @screen-lg-min) and (max-width: @screen-lg-max) {
+    .pull-lg-left {
+        float: left;
+    }
+    .pull-lg-right {
+        float: right;
+    }
+}
+
+@media (min-width: @screen-xl-min) {
+    .pull-xl-left {
+        float: left;
+    }
+    .pull-xl-right {
+        float: right;
+    }
+}

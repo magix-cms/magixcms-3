@@ -8,7 +8,7 @@
     /skin/{$theme}/js/{if $dev}src/{/if}global{if !$dev}.min{/if}.js
 {/capture}{/strip}
 {if !$dev}
-    {capture name="vendors"}{'/min/?f='|cat:$smarty.capture.vendors}{/capture}
+    {capture name="vendors"}{'/min/?f='|cat:$smarty.capture.vendors|cat:"{if !$dev}&amp;{$smarty.now}{/if}"}{/capture}
     <script src="{if $setting.concat.value}{$smarty.capture.vendors|concat_url:'js'}{else}{$smarty.capture.vendors}{/if}" defer></script>
 {else}
     {assign var=vendors value=','|explode:$smarty.capture.vendors}

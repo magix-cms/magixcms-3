@@ -5,7 +5,7 @@
  */
 
 //
-// Load core variables and mixins
+// Load core variables and components
 // --------------------------------------------------
 
 @import "variables.less";
@@ -228,7 +228,7 @@
 .progress-bar-warning    { .progress-bar-styles(@progress-bar-warning-bg); }
 .progress-bar-danger     { .progress-bar-styles(@progress-bar-danger-bg); }
 
-// Reset the striped class because our mixins don't do multiple gradients and
+// Reset the striped class because our components don't do multiple gradients and
 // the above custom styles override the new `.progress-bar-striped` in v3.2.0.
 .progress-bar-striped {
   #gradient > .striped();

@@ -5,53 +5,52 @@
 {block name='article'}
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}
-            <header>
-                {widget_about_data conf=['context' => 'all'] assign="aboutPages"}
-                <ul class="menu-cms">
-                    {if $aboutPages}
-                        <li class="dropdown-header{if $controller === 'about'} active{/if}">
-                            <a href="{$url}/{$lang}/about/" title="{#about_footer#}">{#about_footer#}</a>
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#aboutPages">
-                                <span class="show-more"><i class="material-icons ico ico-keyboard_arrow_right">{*keyboard_arrow_right*}</i></span>
-                                <span class="show-less"><i class="material-icons ico ico-keyboard_arrow_up">{*keyboard_arrow_up*}</i></span>
-                            </button>
-                        </li>
-                        <li class="submenu">
-                            <ul id="aboutPages" class="collapse">
-                                {include file="section/loop/toc.tpl" pages=$aboutPages s=0 controller="about"}
-                            </ul>
-                        </li>
-                    {else}
-                        <li{if $controller === 'about' && !$smarty.get.id} class="active"{/if}>
-                            <a href="{$url}/{$lang}/about/" title="{#about_footer#}">{#about_footer#}</a>
-                        </li>
-                    {/if}
-                    {include file="section/loop/toc.tpl" pages=$pagesTree}
-                </ul>
-                <h1 itemprop="name">{$pages.name}</h1>
-            </header>
-            <div class="text clearfix" itemprop="text">
-                {if isset($pages.img.name)}
-                    <a href="{$pages.img.large.src}" class="img-zoom img-float pull-right" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
-                        <figure>
-                            {*{strip}<picture>
-                                <!--[if IE 9]><video style="display: none;"><![endif]-->
-                                <source type="image/webp" sizes="{$pages.img.medium['w']}px" srcset="{$pages.img.medium['src_webp']} {$pages.img.medium['w']}w">
-                                <source type="{$pages.img.medium.ext}" sizes="{$pages.img.medium['w']}px" srcset="{$pages.img.medium['src']} {$pages.img.medium['w']}w">
-                                <!--[if IE 9]></video><![endif]-->
-                                <img data-src="{$pages.img.medium['src']}" width="{$pages.img.medium['w']}" height="{$pages.img.medium['h']}" alt="{$pages.img.alt}" title="{$pages.img.title}" class="img-responsive lazyload" />
-                                </picture>{/strip}*}
-                            {include file="img/img.tpl" img=$pages.img lazy=true}
-                            {if $pages.img.caption}
-                                <figcaption>{$pages.img.caption}</figcaption>
-                            {/if}
-                        </figure>
-                    </a>
-                {/if}
-                {$pages.content}
+            <div class="row">
+                <div class="col-4 col-xs-6 col-sm-8 col-md-7 col-lg-9 push-md-3 content">
+                    <h1 itemprop="name">{$pages.name}</h1>
+                    {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
+                    {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
+                    <div itemprop="text clearfix">
+                        {if isset($pages.img.name)}
+                            <a href="{$pages.img.large.src}" class="img-zoom img-float float-right" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
+                                <figure>
+                                    {include file="img/img.tpl" img=$pages.img lazy=true}
+                                    {if $pages.img.caption}
+                                        <figcaption>{$pages.img.caption}</figcaption>
+                                    {/if}
+                                </figure>
+                            </a>
+                        {/if}
+                        {$pages.content}
+                    </div>
+                </div>
+                <div class="col-4 col-xs-6 col-sm-8 col-md-3 pull-md-7 pull-lg-9 menu-cms">
+                    {widget_about_data conf=['context' => 'all'] assign="aboutPages"}
+                    <ul>
+                        {if $aboutPages}
+                            <li class="dropdown-header{if $controller === 'about'} active{/if}">
+                                <a href="{$url}/{$lang}/about/" title="{#about_footer#}">{#about_footer#}</a>
+                                <button class="btn btn-link{if $controller === 'about'} open{/if}" type="button" data-toggle="collapse" data-target="#aboutPages">
+                                    <span class="show-more"><i class="material-icons ico ico-add"></i></span>
+                                    <span class="show-less"><i class="material-icons ico ico-remove"></i></span>
+                                </button>
+                            </li>
+                            <li class="submenu">
+                                <ul id="aboutPages" class="collapse{if $controller === 'about'} in{/if}">
+                                    {include file="section/loop/toc.tpl" pages=$aboutPages s=0 controller="about"}
+                                </ul>
+                            </li>
+                        {else}
+                            <li{if $controller === 'about' && !$smarty.get.id} class="active"{/if}>
+                                <a href="{$url}/{$lang}/about/" title="{#about_footer#}">{#about_footer#}</a>
+                            </li>
+                        {/if}
+                        {include file="section/loop/toc.tpl" pages=$pagesTree}
+                    </ul>
+                </div>
             </div>
-            {if $childs}
-                {*<h3>{#subcategories#|ucfirst}</h3>*}
+            {*{if $childs}
+                *}{*<h3>{#subcategories#|ucfirst}</h3>*}{*
                 <div class="vignette-list">
                     <div class="section-block">
                         <div class="row row-center">
@@ -59,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-            {/if}
+            {/if}*}
         {/block}
     </article>
 {/block}

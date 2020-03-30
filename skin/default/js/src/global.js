@@ -42,9 +42,11 @@ window.addEventListener('load', function() {
 
     // *** Smooth Scroll to Top
     document.querySelectorAll(".toTop").forEach( function(i) {
+        if(i.dataset.toggle === 'tooltip') {
+            new Tooltip(i);
+        }
         i.addEventListener('click',function(e) {
             e.preventDefault();
-            //document.querySelector('html, body').animate({ scrollTop: 0 }, 450);
             scrollToTop(450);
             return false;
         })
@@ -66,16 +68,18 @@ window.addEventListener('load', function() {
     document.querySelectorAll('.dropdown [data-toggle="collapse"]').forEach( function(i) {
         i.addEventListener( 'click', function(e) {
             e.stopPropagation();
-            e.preventDefault();
-            document.querySelector(this.dataset.target).collapse('toggle');
+            //e.preventDefault();
+            //console.log(i.dataset.target);
+            //console.log(i.Collapse);
+            i.Collapse.toggle(e);
         });
     });
 
     if(SimpleLightbox !== undefined) {
         let slOptions = {
-            closeBtnContent: '<i class="material-icons">close</i>',
-            nextBtnContent: '<i class="material-icons">keyboard_arrow_left</i>',
-            prevBtnContent: '<i class="material-icons">keyboard_arrow_right</i>'
+            closeBtnContent: '<i class="material-icons ico ico-close"></i>',
+            nextBtnContent: '<i class="material-icons ico ico-keyboard_arrow_left"></i>',
+            prevBtnContent: '<i class="material-icons ico ico-keyboard_arrow_right"></i>'
         };
         new SimpleLightbox(Object.assign({},slOptions,{
             elements: '.img-zoom',
@@ -93,8 +97,8 @@ window.addEventListener('load', function() {
         controls: true,
         lazyLoad: true,
         controlsText: [
-            '<i class="material-icons" aria-hidden="true">keyboard_arrow_left</i>',
-            '<i class="material-icons" aria-hidden="true">keyboard_arrow_right</i>'
+            '<i class="material-icons ico ico-keyboard_arrow_left" aria-hidden="true"></i>',
+            '<i class="material-icons ico ico-keyboard_arrow_right" aria-hidden="true"></i>'
         ]
     };
     if(document.getElementsByClassName('slideshow').length > 0 && tns !== undefined) {
@@ -135,6 +139,21 @@ window.addEventListener('load', function() {
                 }
             }
         }));
+
+        document.querySelectorAll('.show-img').forEach(function(i){
+            i.addEventListener('click',function(e){
+                e.preventDefault();
+                document.querySelectorAll('.big-image a').forEach(function(main){
+                    main.style.opacity = 0;
+                    main.style.zindex = -1;
+                });
+
+                let img = document.querySelectorAll(i.dataset.target)[0];
+                img.style.opacity = 1;
+                img.style.zindex = 1;
+                return false;
+            });
+        });
     }
     // *** Owl Carousel in plugins
     // *** Add here the content of the public.js file of the plugins using owl-carousel

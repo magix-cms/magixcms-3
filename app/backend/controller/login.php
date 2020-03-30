@@ -182,7 +182,7 @@ class backend_controller_login extends backend_db_employee{
                     //Check database Authentification exist
                     $authExist = $this->getItems('auth',array('email_admin' => $this->employee['email_admin'], 'passwd_admin' => $account['passwd_admin']),'one',false);
 
-                    if (count($authExist['id_admin'])) {
+                    if (isset($authExist['id_admin'])) {
 						$account = $this->getItems('session',array('keyuniqid_admin' => $authExist['keyuniqid_admin']),'one',false);
 
 						$expires = $this->stay_logged ? strtotime("+13 month") : 0;

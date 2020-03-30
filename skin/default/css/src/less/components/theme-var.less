@@ -1,0 +1,54 @@
+//
+// Theme Variables
+//
+
+// --- Theme Colors
+:root {
+	/* Colors */
+	--white: @white;
+	--smooth-white: @smooth-white;
+	--dark-white: #eee;
+	--smooth-grey: #ccc;
+	--light-grey: @light-grey;
+	--black: @black;
+	--sd-color-h: extract(@sd-color-hsla, 1);
+	--sd-color-s: extract(@sd-color-hsla, 2);
+	--sd-color-l: extract(@sd-color-hsla, 3);
+	--sd-color-a: extract(@sd-color-hsla, 4);
+	--sd-color: hsla(var(--sd-color-h),var(--sd-color-s),var(--sd-color-l),var(--sd-color-a));
+	--dark-color-h: extract(@dark-color-hsla, 1);
+	--dark-color-s: extract(@dark-color-hsla, 2);
+	--dark-color-l: extract(@dark-color-hsla, 3);
+	--dark-color-a: extract(@dark-color-hsla, 4);
+	--dark-color: hsla(var(--dark-color-h),var(--dark-color-s),var(--dark-color-l),var(--dark-color-a));
+	--default-color-h: 0;
+	--default-color-s: 0%;
+	--default-color-l: 100%;
+	--default-color-a: 1;
+	--default-color: hsla(var(--dark-color-h),var(--dark-color-s),var(--dark-color-l),var(--dark-color-a));
+	--default-brd-h: 0;
+	--default-brd-s: 0%;
+	--default-brd-l: 80%;
+	--default-brd-a: 1;
+	--default-brd: hsla(var(--dark-color-h),var(--dark-color-s),var(--dark-color-l),var(--dark-color-a));
+	--text-light: var(--white);
+	--text-dark: var(--dark-color);
+	--text-color: var(--text-dark);
+	--body-bg: var(--white);
+	--header-bg: var(--white);
+	--menu-bg: var(--white);
+	--footer-color: @footer-color;
+	--footer-bg: @footer-bg;
+	--brd-default: var(--smooth-grey);
+	/* Font */
+	--font-size-base: @font-size-base;
+	--font-size: @font-size;
+	--line-height: @gold_n;
+	--font-family: @font-family-base;
+	--font-weight: @font-weight-base;
+	--font-bold: 700;
+	/* Sizes */
+	--toolbar-h: @toolbarH;
+	--header-h: @headerH;
+	--footbar-h: @footbarH;
+}

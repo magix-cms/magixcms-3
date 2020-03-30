@@ -200,7 +200,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
                 break;
         }
 
-		if($data['id_parent'] !== null) {
+		if(isset($data['id_parent'])) {
 			$this->id = $data['id_parent'];
 			$parent = $this->getBuildCategoryItems();
 			$this->template->assign('parent',$parent,true);

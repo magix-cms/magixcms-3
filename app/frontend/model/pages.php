@@ -129,10 +129,10 @@ class frontend_model_pages extends frontend_db_pages{
 				$data['content'] = $row['content_pages'];
 				$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
 				$data['menu'] = $row['menu_pages'];
-				$data['date']['update'] = $row['last_update'];
-				$data['date']['register'] = $row['date_register'];
-				$data['seo']['title'] = $row['seo_title_pages'];
-				$data['seo']['description'] = $row['seo_desc_pages'] ? $row['seo_desc_pages'] : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+				$data['date']['update'] = isset($row['last_update']) ? $row['last_update'] : null;
+				$data['date']['register'] = isset($row['date_register']) ? $row['date_register'] : null;
+				$data['seo']['title'] = isset($row['seo_title_pages']) ? $row['seo_title_pages'] : $data['name'];
+				$data['seo']['description'] = isset($row['seo_desc_pages']) ? $row['seo_desc_pages'] : (isset($data['resume']) ? $data['resume'] : $data['seo']['title']);
 				// Plugin
 				if($newRow != false){
 					if(is_array($newRow)){
@@ -160,6 +160,7 @@ class frontend_model_pages extends frontend_db_pages{
 				$data['name'] = $row['name'];
 			}
 			elseif (isset($row['name_pages'])) {
+                $data['id']   = $row['id_pages'];
 				$data['name'] = $row['name_pages'];
 				$data['url'] =
 					$this->routingUrl->getBuildUrl(array(
@@ -283,8 +284,8 @@ class frontend_model_pages extends frontend_db_pages{
 		}
 
 		// Define random
-		$conf['random']  = $custom['random'] ? $custom['random'] : false;
-		$conf['allow_duplicate']  = $custom['allow_duplicate'] ? $custom['allow_duplicate'] : false;
+		$conf['random'] = isset($custom['random']) ? $custom['random'] : false;
+		$conf['allow_duplicate'] = isset($custom['allow_duplicate']) ? $custom['allow_duplicate'] : false;
 
 		// deepness for element
 		if(isset($custom['deepness'])) {
@@ -358,7 +359,7 @@ class frontend_model_pages extends frontend_db_pages{
 					$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
 				}
 
-				if ($custom['type'] == 'menu') {
+				if (isset($custom['type']) && $custom['type'] == 'menu') {
 					$conditions .= ' AND p.menu_pages = 1';
 				}
 
@@ -505,7 +506,7 @@ class frontend_model_pages extends frontend_db_pages{
 				$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
 			}
 
-			if ($custom['type'] == 'menu') {
+			if (isset($custom['type']) && $custom['type'] == 'menu') {
 				$conditions .= ' AND p.menu_pages = 1';
 			}
 

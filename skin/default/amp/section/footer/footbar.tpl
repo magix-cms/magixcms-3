@@ -4,10 +4,10 @@
             <header>
                 <div>
                     <button class="btn btn-flat btn-box btn-main-theme" type="button" id="menu-share">
-                        <i class="material-icons">share</i>
+                        <i class="material-icons ico ico-share"></i>
                         {#share#|ucfirst}
                     </button>
-                    <a href="#{$smarty.capture.bodyId}" class="btn btn-flat btn-box btn-main-theme"><i class="material-icons">keyboard_arrow_up</i></a>
+                    <a href="#{$smarty.capture.bodyId}" class="btn btn-flat btn-box btn-main-theme"><i class="material-icons ico ico-keyboard_arrow_up"></i></a>
                 </div>
             </header>
             <div>

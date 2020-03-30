@@ -44,6 +44,7 @@ class frontend_db_about
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$sql = "SELECT
 								p.id_pages,
+								p.id_parent,
 								c.name_pages,
 								c.url_pages,
        							COALESCE(c.seo_title_pages, c.name_pages) as seo_title_pages,

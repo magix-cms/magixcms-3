@@ -48,7 +48,7 @@
         <div class="col-ph-12 col-sm-4">
             <div class="form-group">
                 <label for="menu_cat">{#menu#}</label>
-                <input id="menu_cat" data-toggle="toggle" type="checkbox" name="menu_cat" data-on="{#visible#}" data-off="{#hidden_f#}" data-onstyle="success" data-offstyle="danger"{if $page.menu_cat} checked{/if}>
+                <input id="menu_cat" data-toggle="toggle" type="checkbox" name="menu_cat" data-on="{#visible#}" data-off="{#hidden_f#}" data-onstyle="success" data-offstyle="danger"{if $page.menu_cat || !isset($page)} checked{/if}>
             </div>
         </div>
     </div>

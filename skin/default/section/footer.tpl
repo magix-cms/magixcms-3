@@ -4,7 +4,7 @@
         {assign var="blocks" value=['news','contact']}
     {/if}
 {/strip}
-<footer id="footer"{if $touch} class="mobile-footer"{/if}>
+<footer id="footer">
     {if is_array($blocks) && !empty($blocks)}
         <section id="footer-blocks">
             <div class="container">

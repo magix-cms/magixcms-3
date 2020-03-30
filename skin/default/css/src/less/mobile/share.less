@@ -6,8 +6,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: 32px;
-		width: 32px;
+		height: 2.5rem;
+		width: 2.5rem;
 		padding: 0;
 
 		&:focus, &:active {
@@ -16,11 +16,8 @@
 	}
 
 	.fab {
-		color: @white;
-
-		&:before {
-			vertical-align: middle;
-		}
+		color: var(--white);
+		
 		.fa-google-plus-g:before {
 			font-size: 1rem;
 			margin-top: 3px;
@@ -36,35 +33,57 @@
 	.share-buttons(flat,dark);
 }
 
-.sharebar {
-	background-color: @sharebar-bg;
-
+/*.sharebar {
 	.label {
-		color: @light-grey;
+		color: var(--light-grey);
 		font-size: 1.15rem;
 	}
 
 	.followbox {
-		@media (max-width: @screen-md-max) {
+		 //@media (max-width: @screen-md-max) {
+		 display: flex;
+		 flex-flow: column;
+		 align-items: center;
+		
+		 li {
+			 a {
+				 display: flex;
+				 width: 2rem;
+				 height: 2rem;
+				 justify-content: center;
+				 align-items: center;
+				 border-radius: 50%;
+				 color: var(--white);
+			 }
+		 }
+		
+		 ul {
+			 margin: 0 0 1.5rem;
+		 }
+		 //}
+	 }
+}*/
+
+.followbox {
+	.h4 {
+		text-align: center;
+	}
+	li {
+		a {
 			display: flex;
-			flex-flow: column;
+			width: 3rem;
+			height: 3rem;
+			justify-content: center;
 			align-items: center;
-
-			li {
-				a {
-					display: flex;
-					width: 30px;
-					height: 30px;
-					justify-content: center;
-					align-items: center;
-					border-radius: 50%;
-					color: @white;
-				}
-			}
-
-			ul {
-				margin: 0 0 18px;
-			}
+			color: var(--white);
 		}
+	}
+	
+	ul {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+		margin: 0 0 1.5rem;
 	}
 }

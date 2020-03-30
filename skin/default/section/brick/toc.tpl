@@ -1,7 +1,7 @@
 {if $amp}
 <div id="tocdrop" class="dropdown toc-drop">
     <button class="btn btn-link dropdown-toggle" type="button" on="tap:tocdrop.toggleClass(class='open')">
-        <i class="material-icons">toc</i>
+        <i class="material-icons ico ico-toc"></i>
     </button>
     <div class="dropdown-menu">
         {if $root}
@@ -17,7 +17,7 @@
 {else}
 <div class="dropdown toc-drop">
     <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-        <i class="material-icons">toc</i>
+        <i class="material-icons ico ico-toc"></i>
     </button>
     <div class="dropdown-menu">
         {if $root}

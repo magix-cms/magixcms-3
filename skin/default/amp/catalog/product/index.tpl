@@ -43,7 +43,7 @@
                               type="slides" controls loop>
                     {foreach $product.imgs as $img}
                     <button on="tap:lightbox-gallery,carousel.goToSlide(index={$img@index})">
-                        <i class="material-icons">fullscreen</i>
+                        <i class="material-icons ico ico-fullscreen"></i>
                         <amp-img src="{$img.img.medium['src_webp']}"
                                  width="{$img.img.medium['w']}"
                                  height="{$img.img.medium['h']}"
@@ -131,7 +131,7 @@
                             </figure>
                             {/foreach}
                         </amp-carousel>
-                        <div class="close-btn" on="tap:lightbox-gallery.close" role="button" tabindex="0"><i class="material-icons">close</i></div>
+                        <div class="close-btn" on="tap:lightbox-gallery.close" role="button" tabindex="0"><i class="material-icons ico ico-close"></i></div>
                     </div>
                 </amp-lightbox>
             </div>

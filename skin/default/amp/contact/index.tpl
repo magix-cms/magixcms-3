@@ -89,7 +89,7 @@
                     </div>
                     <p id="btn-contact">
                         <input type="hidden" name="msg[moreinfo]" value="" />
-                        <button type="submit" class="btn btn-box btn-invert btn-main-theme"><i class="material-icons">send</i> {#pn_contact_send#|ucfirst}</button>
+                        <button type="submit" class="btn btn-box btn-invert btn-main-theme">{#pn_contact_send#|ucfirst}</button>
                     </p>
                     <div class="alert alert-success" submit-success>
                         <p>{#message_send_success#|ucfirst}</p>

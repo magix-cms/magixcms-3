@@ -67,6 +67,7 @@ class frontend_db_news
 								p.id_news,
 								c.name_news,
 								c.url_news,
+								c.date_publish,
 								c.seo_title_news,
 								lang.iso_lang
 							FROM mc_news AS p
@@ -120,6 +121,7 @@ class frontend_db_news
 								c.resume_news,
 								c.content_news,
 								c.published_news,
+								p.date_register,
 								c.date_publish,
 								COALESCE(c.alt_img, c.name_news) as alt_img,
 								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,

@@ -3,7 +3,7 @@
 
 {* Home *}
 {if $icon}
-    {$hname = "<i class=\"material-icons\">{$icon}</i>"}
+    {$hname = "<i class=\"material-icons ico ico-{$icon}\"></i>"}
 {else}
     {$hname = {#home#}}
 {/if}
@@ -17,7 +17,7 @@
 {switch $smarty.get.controller}
 {case 'about'}
 {* About *}
-{if $root.name === ''}{$root.name = {#about#}}{/if}
+{if empty($root.name)}{$root.name = {#about#}}{/if}
 {* Root *}
 {if $smarty.get.id}
     {$bread[] = ['name' => {$root.name},'url' => "{$url}/{$lang}/{if $amp}amp/{/if}about/",'title' => {$root.name}]}
@@ -40,7 +40,7 @@
 
 {case 'catalog' break}
 {* Catalog *}
-{if $root.name === ''}{$root.name = {#catalog#}}{/if}
+{if empty($root.name)}{$root.name = {#catalog#}}{/if}
 {* Root *}
 {if $cat || $product}
     {$bread[] = ['name' => {$root.name},'url' => "{$url}/{$lang}/{if $amp}amp/{/if}catalog/",'title' => {$root.name}]}

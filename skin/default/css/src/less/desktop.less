@@ -1,12 +1,7 @@
+// Include medium/mobile device rules
 @import "tablet";
 
-//@import "desktop/affix";
-
-@media (min-width: @screen-md-min){
-	@import "desktop/header";
-	@import "desktop/news";
-}
-
-@media (min-width: @screen-lg-min) {
-	@import "desktop/share";
-}
+// Add rules for wider/desktop devices
+@import "desktop/header";
+@import "desktop/news";
+@import "desktop/share";

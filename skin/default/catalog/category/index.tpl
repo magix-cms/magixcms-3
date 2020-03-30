@@ -9,51 +9,32 @@
             <h1 itemprop="name">{$cat.name}</h1>
             <div class="text clearfix" itemprop="text">
                 {if isset($cat.img.name)}
-                    {*<figure>
-                        <a href="{$cat.img.large.src}" class="img-zoom" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
-                            <img class="img-responsive lazyload" src="{$cat.img.medium.src}" alt="{$cat.img.alt}" title="{$cat.img.title}" />
-                        </a>
+                <a href="{$cat.img.large.src}" class="img-zoom img-float float-right" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
+                    <figure>
+                        {include file="img/img.tpl" img=$cat.img lazy=true}
                         {if $cat.img.caption}
-                            <figcaption>{$cat.img.caption}</figcaption>
+                        <figcaption>{$cat.img.caption}</figcaption>
                         {/if}
-                    </figure>*}
-                    <a href="{$cat.img.large.src}" class="img-zoom img-float pull-right" title="{$cat.img.title}" data-caption="{$cat.img.caption}">
-                        <figure>
-                            {*{strip}<picture>
-                                <!--[if IE 9]><video style="display: none;"><![endif]-->
-                                <source type="image/webp" sizes="{$cat.img.medium['w']}px" srcset="{$cat.img.medium['src_webp']} {$cat.img.medium['w']}w">
-                                <source type="{$cat.img.medium.ext}" sizes="{$cat.img.medium['w']}px" srcset="{$cat.img.medium['src']} {$cat.img.medium['w']}w">
-                                <!--[if IE 9]></video><![endif]-->
-                                <img data-src="{$cat.img.medium['src']}" width="{$cat.img.medium['w']}" height="{$cat.img.medium['h']}" alt="{$cat.img.alt}" title="{$cat.img.title}" class="img-responsive lazyload" />
-                                </picture>{/strip}*}
-                            {include file="img/img.tpl" img=$cat.img lazy=true}
-                            {if $cat.img.caption}
-                                <figcaption>{$cat.img.caption}</figcaption>
-                            {/if}
-                        </figure>
-                    </a>
+                    </figure>
+                </a>
                 {/if}
                 {$cat.content}
             </div>
             {if $categories}
-                <h3>{#subcategories#|ucfirst}</h3>
-                <div class="vignette-list">
-                    <div class="section-block">
-                        <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                            {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4'}
-                        </div>
-                    </div>
+            <p class="h2">{#subcategories#|ucfirst}</p>
+            <div class="vignette-list">
+                <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-4 col-xs-3 col-sm-4 col-md-th col-lg-4 col-xl-3'}
                 </div>
+            </div>
             {/if}
             {if $products}
-                <h3>{#products#|ucfirst}</h3>
-                <div class="vignette-list">
-                    <div class="section-block">
-                        <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                            {include file="catalog/loop/product.tpl" data=$products classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4'}
-                        </div>
-                    </div>
+            <p class="h2">{#products#|ucfirst}</p>
+            <div class="vignette-list">
+                <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    {include file="catalog/loop/product.tpl" data=$products classCol='vignette col-4 col-xs-3 col-sm-4 col-md-th col-lg-4 col-xl-3'}
                 </div>
+            </div>
             {/if}
         {/block}
     </article>
