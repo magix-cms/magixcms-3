@@ -143,7 +143,7 @@
 	FileETag None
 # END Turn ETags Off
 <IfModule mod_headers.c>
-    BEGIN Remove Last-Modified Header
+    # BEGIN Remove Last-Modified Header
     Header unset Last-Modified
 </IfModule>
 # END Remove Last-Modified Header
