@@ -196,7 +196,7 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `categ
 (NULL, 'concat', '0', 'int', 'concat URL', 'general'),
 (NULL, 'cache', 'none', 'string', 'Cache template', 'general'),
 (NULL, 'robots', 'noindex,nofollow', 'string', 'metas robots', 'general'),
-(NULL, 'css_inliner', '1', 'string', 'CSS inliner', 'general'),
+(NULL, 'css_inliner', '0', 'string', 'CSS inliner', 'general'),
 (NULL, 'mode', 'dev', 'string', 'Environment types', 'general'),
 (NULL, 'ssl', '0', 'int', 'SSL protocol', 'general'),
 (NULL, 'service_worker', '0', 'int', 'Service Worker', 'general'),
