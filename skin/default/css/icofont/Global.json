@@ -2064,9 +2064,13 @@
           "id": 63
         },
         {
-          "order": 0,
+          "order": 1748,
           "ligatures": "fiber_manual_record",
-          "id": 67
+          "id": 67,
+          "name": "disk",
+          "prevSize": 24,
+          "code": 59652,
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -2479,9 +2483,13 @@
           "id": 58
         },
         {
-          "order": 0,
+          "order": 1747,
           "ligatures": "fullscreen",
-          "id": 598
+          "id": 598,
+          "name": "fullscreen",
+          "prevSize": 24,
+          "code": 59651,
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -2690,7 +2698,7 @@
           "prevSize": 24,
           "code": 59682,
           "name": "home",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -2809,7 +2817,7 @@
           "prevSize": 24,
           "code": 59683,
           "name": "info_outline",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -2883,7 +2891,7 @@
           "prevSize": 24,
           "code": 59684,
           "name": "keyboard_arrow_down",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 1724,
@@ -2892,7 +2900,7 @@
           "prevSize": 24,
           "code": 59685,
           "name": "keyboard_arrow_left",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 1723,
@@ -2901,7 +2909,7 @@
           "prevSize": 24,
           "code": 59686,
           "name": "keyboard_arrow_right",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 1722,
@@ -2910,7 +2918,7 @@
           "prevSize": 24,
           "code": 59687,
           "name": "keyboard_arrow_up",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -2962,9 +2970,13 @@
           "id": 1135
         },
         {
-          "order": 0,
+          "order": 1749,
           "ligatures": "label",
-          "id": 764
+          "id": 764,
+          "prevSize": 24,
+          "code": 59658,
+          "name": "label",
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -3228,7 +3240,7 @@
           "prevSize": 24,
           "code": 59649,
           "name": "print",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -3267,7 +3279,7 @@
           "prevSize": 24,
           "code": 59689,
           "name": "location",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -3770,9 +3782,13 @@
           "id": 473
         },
         {
-          "order": 0,
+          "order": 1750,
           "ligatures": "panorama_fish_eye, radio_button_unchecked",
-          "id": 474
+          "id": 474,
+          "name": "circle",
+          "prevSize": 24,
+          "code": 59666,
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -3920,7 +3936,7 @@
           "prevSize": 24,
           "code": 59691,
           "name": "phone",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -4263,7 +4279,7 @@
           "prevSize": 24,
           "code": 59702,
           "name": "remove",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -4532,7 +4548,7 @@
           "prevSize": 24,
           "code": 59693,
           "name": "search",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -4681,7 +4697,7 @@
           "prevSize": 24,
           "code": 59694,
           "name": "share",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -5000,12 +5016,16 @@
           "prevSize": 24,
           "code": 59695,
           "name": "smartphone",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
-          "order": 0,
+          "order": 1751,
           "ligatures": "stop",
-          "id": 42
+          "id": 42,
+          "name": "square",
+          "prevSize": 24,
+          "code": 59667,
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -5344,7 +5364,7 @@
           "prevSize": 24,
           "code": 59696,
           "name": "toc",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -5698,7 +5718,7 @@
           "prevSize": 24,
           "code": 59650,
           "name": "warning",
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -15429,7 +15449,8 @@
           "isMulticolor": false,
           "isMulticolor2": false,
           "tags": [
-            "panorama_fish_eye, radio_button_unchecked"
+            "panorama_fish_eye",
+            "radio_button_unchecked"
           ],
           "grid": 24
         },
@@ -20979,7 +21000,7 @@
           "name": "at",
           "prevSize": 20,
           "code": 59648,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -24479,7 +24500,7 @@
           "name": "spinner",
           "prevSize": 20,
           "code": 59653,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -24712,7 +24733,7 @@
           "name": "tag",
           "prevSize": 20,
           "code": 59654,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 1677,
@@ -24720,7 +24741,7 @@
           "name": "tags",
           "prevSize": 20,
           "code": 59655,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -43512,7 +43533,7 @@
           "name": "facebook-f",
           "prevSize": 20,
           "code": 59656,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -43675,7 +43696,7 @@
           "name": "github",
           "prevSize": 20,
           "code": 59657,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -43861,7 +43882,7 @@
           "name": "instagram",
           "prevSize": 20,
           "code": 59659,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -44009,7 +44030,7 @@
           "name": "linkedin-in",
           "prevSize": 20,
           "code": 59661,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -44292,7 +44313,7 @@
           "name": "pinterest-p",
           "prevSize": 20,
           "code": 59662,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -44545,7 +44566,7 @@
           "name": "soundcloud",
           "prevSize": 20,
           "code": 59663,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -44723,7 +44744,7 @@
           "name": "twitter",
           "prevSize": 20,
           "code": 59664,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
@@ -44796,7 +44817,7 @@
           "name": "viadeo",
           "prevSize": 20,
           "code": 59665,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "order": 0,
