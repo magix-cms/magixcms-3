@@ -53,7 +53,7 @@ class install_controller_installer extends install_db_installer {
 		$data = array(
 			'php' => array(
 				'v' => phpversion(),
-				'version' => is_valid(version_compare(phpversion(),'5.4','<') || version_compare(phpversion(),'7.2','>')),
+                'version' => is_valid(version_compare(phpversion(),'7','<') || version_compare(phpversion(),'7.4','>')),
 				'encoding' => is_valid(!function_exists('mb_detect_encoding')),
 				'iconv' => is_valid(!function_exists('iconv')),
 				'ob' => is_valid(!function_exists('ob_start')),
@@ -320,8 +320,6 @@ class install_controller_installer extends install_db_installer {
 						$this->message->json_post_response(false,null);
 					}
 					break;
-				case '': break;
-				case '': break;
 			}
 		}
     	else {

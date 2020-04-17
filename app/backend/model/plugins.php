@@ -115,6 +115,8 @@ class backend_model_plugins{
                             if (method_exists($class, 'run') && !property_exists($class, 'hidden')) {
                                 $newsItems[] = $item;
                             }
+                            $coreComponent = new component_format_array();
+                            $coreComponent->array_sortBy('title', $newsItems);
                         }
                     }
 
@@ -138,9 +140,10 @@ class backend_model_plugins{
                             }
                             $newsItems[] = $item;
                             $this->template->assign('setTabsPlugins', $newsItems);
+                            $coreComponent = new component_format_array();
+                            $coreComponent->array_sortBy('title', $newsItems);
                         }
                     }
-
                     break;
                 case 'thumbnail':
                     if(file_exists(component_core_system::basePath().'upload'.DIRECTORY_SEPARATOR.$item['name'])) {
@@ -149,9 +152,6 @@ class backend_model_plugins{
                     break;
             }
         }
-        $coreComponent = new component_format_array();
-        $coreComponent->array_sortBy('title', $newsItems);
-
         return $newsItems;
     }
 

@@ -204,3 +204,14 @@ $min_uploaderHoursBehind = 0;
 //$min_factories['minify'] = ... a callable accepting a Minify\App object
 //$min_factories['controller'] = ... a callable accepting a Minify\App object
 
+
+/**
+ * @var array
+ */
+$min_envArgs = array();
+
+
+/**
+ * @var array
+ */
+$min_factories = array();
