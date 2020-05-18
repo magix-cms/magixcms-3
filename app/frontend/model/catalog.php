@@ -115,7 +115,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['reference'] = $row['reference_p'];
                 $data['content']   = $row['content_p'];
                 $data['resume']    = $row['resume_p'] ? $row['resume_p'] : ($row['content_p'] ? $string_format->truncate(strip_tags($row['content_p'])) : '');
-                $data['order']     = $row['order_p'];
+                $data['order']     = isset($row['order_p']) ? $row['order_p'] : null;
                 if (isset($row['img'])) {
                     $imgPrefix = $this->imagesComponent->prefix();
                     $fetchConfig = $this->imagesComponent->getConfigItems(array(

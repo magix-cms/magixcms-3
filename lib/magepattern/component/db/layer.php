@@ -527,7 +527,7 @@ class db_layer{
 									$setConfig = $this->setConfig(false);
 									$prepare = $transaction->prepare($value['request']);
                                     if(is_object($prepare)) {
-                                    	if($value['fetch']) {
+                                        if(isset($value['fetch']) && $value['fetch']) {
 											$prepare->setFetchMode($this->setMode($setConfig['mode']));
 											$value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
 											$setConfig['debugParams'] ? $prepare->debugDumpParams():'';
