@@ -185,10 +185,12 @@ class component_files_upload{
 
             // ms office
             'doc' => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'rtf' => 'application/rtf',
             'xls' => 'application/vnd.ms-excel',
             'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'ppt' => 'application/vnd.ms-powerpoint',
+            'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 
             // open office
             'odt' => 'application/vnd.oasis.opendocument.text',
