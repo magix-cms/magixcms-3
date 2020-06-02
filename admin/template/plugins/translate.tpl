@@ -32,12 +32,12 @@
                                                             <header>
                                                                 <span class="lead">{$key}</span>
                                                                 <div class="actions">
-                                                                    <a href="#collapse{$value@index}" data-toggle="collapse" class="btn btn-link collapsed">
+                                                                    <a href="#collapse{$iso}{$value@index}" data-toggle="collapse" class="btn btn-link collapsed">
                                                                         <i class="material-icons">more_vert</i>
                                                                     </a>
                                                                 </div>
                                                             </header>
-                                                            <div class="collapse" id="collapse{$value@index}">
+                                                            <div class="collapse" id="collapse{$iso}{$value@index}">
                                                                 <div class="subform">
                                                                     {foreach $value as $k => $v nocache}
                                                                         <div class="form-group">
