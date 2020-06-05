@@ -203,32 +203,31 @@ AddDefaultCharset utf-8
                      .xloc \
                      .xml
 </IfModule>
-DirectoryIndex index.php
 # ----------------------------------------------------------------------
 # | Rewrite engine |
 # ----------------------------------------------------------------------
+DirectoryIndex index.php
+#RewriteBase /
+# ----------------------------------------------------------------------
+# Custom 404 page
+# ----------------------------------------------------------------------
+# You can add custom pages to handle 500 or 403 pretty easily, if you like.
+ErrorDocument 401 /index.php?http_error=401
+ErrorDocument 403 /index.php?http_error=403
+ErrorDocument 404 /index.php?http_error=404
+ErrorDocument 500 /index.php?http_error=500
+
 <IfModule mod_rewrite.c>
     #Options +FollowSymLinks
     RewriteEngine On
     RewriteCond %{HTTP_HOST} !^www\.
     RewriteCond %{HTTP_HOST} !^(?:[-_0-9a-zA-Z]+\.){2,}
     RewriteRule .* http://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    <IfModule mod_ssl.c>
-        RewriteCond %{HTTPS} !=on [OR]
-        RewriteCond %{SERVER_PORT} 80
-        RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
-    </IfModule>
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    #RewriteBase /
-    # ----------------------------------------------------------------------
-    # Custom 404 page
-    # ----------------------------------------------------------------------
-    # You can add custom pages to handle 500 or 403 pretty easily, if you like.
-    ErrorDocument 401 /index.php?http_error=401
-    ErrorDocument 403 /index.php?http_error=403
-    ErrorDocument 404 /index.php?http_error=404
-    ErrorDocument 500 /index.php?http_error=500
+    #<IfModule mod_ssl.c>
+    #    RewriteCond %{HTTPS} !=on [OR]
+    #    RewriteCond %{SERVER_PORT} 80
+    #    RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
+    #</IfModule>
     # ----------------------------------------------------------------------
     # Redirect Rewrite
     # ----------------------------------------------------------------------
@@ -236,8 +235,10 @@ DirectoryIndex index.php
     # Redirect a plus sign
     # RewriteRule	^fr/actualites/tag/magix[\s+]cms[\s+]3	http://www.magixcms3.test/fr/news/tag/39-magix-cms-3/	[R=301,L]
     # ----------------------------------------------------------------------
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     # Language
-    RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload|amp|img|var)
+    RewriteCond %{REQUEST_URI} !^/amp
     RewriteCond %{QUERY_STRING} !(strLangue)+
     RewriteRule ^([-_a-zA-Z]{1,5})/(.*) 										/$2?strLangue=$1		[QSA,L]
     # AMP
@@ -273,6 +274,7 @@ DirectoryIndex index.php
     RewriteCond %{QUERY_STRING} !(hash)+
     RewriteRule (.*)/([0-9a-zA-Z]+)/{0,1}$ /$1?hash=$2 [QSA,L]
     # Controller
-    RewriteCond %{REQUEST_URI} !^/(admin|install|skin|media|upload|amp|img|var)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^([0-9a-zA-Z]+)/{0,1}$ /index.php?controller=$1 [QSA,L]
 </IfModule>
