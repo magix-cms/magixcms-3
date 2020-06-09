@@ -97,34 +97,38 @@ class frontend_model_pages extends frontend_db_pages{
 					$data['active'] = true;
 				}
 
-				if (isset($row['img_pages'])) {
+				if (isset($row['img'])) {
 					$imgPrefix = $this->imagesComponent->prefix();
 					$fetchConfig = $this->imagesComponent->getConfigItems(array(
 						'module_img' => 'pages',
 						'attribute_img' => 'page'
 					));
-					// # return filename without extension
-                    $pathinfo = pathinfo($row['img_pages']);
-                    $filename = $pathinfo['filename'];
 
-					foreach ($fetchConfig as $key => $value) {
-						$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['img_pages']);
-						$data['img'][$value['type_img']]['src'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['img_pages'];
-                        $data['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-						//$data['img'][$value['type_img']]['w'] = $value['width_img'];
-						$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-						//$data['img'][$value['type_img']]['h'] = $value['height_img'];
-						$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-						$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
-                        $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['img_pages']);
+					if(is_array($row['img'])) {
+						foreach ($row['img'] as $item => $val) {
+							// # return filename without extension
+							$pathinfo = pathinfo($val['name_img']);
+							$filename = $pathinfo['filename'];
+
+							$data['imgs'][$item]['img']['alt'] = $val['alt_img'];
+							$data['imgs'][$item]['img']['title'] = $val['title_img'];
+							$data['imgs'][$item]['img']['caption'] = $val['caption_img'];
+							$data['imgs'][$item]['img']['name'] = $val['name_img'];
+							foreach ($fetchConfig as $key => $value) {
+								$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+								$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+								$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
+								//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+								//$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
+								$data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+							}
+							$data['imgs'][$item]['default'] = $val['default_img'];
+						}
 					}
-					$data['img']['name'] = $row['img_pages'];
 				}
-				$data['img']['default'] = isset($imagePlaceHolder['pages']) ? $imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png' ;
-				$data['img']['alt'] = $row['alt_img'];
-				$data['img']['title'] = $row['title_img'];
-				$data['img']['caption'] = $row['caption_img'];
-
 
 				$data['content'] = $row['content_pages'];
 				$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
@@ -349,7 +353,7 @@ class frontend_model_pages extends frontend_db_pages{
 				}
 			}
 			else {
-				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND (img.default_img = 1 OR img.default_img IS NULL) ';
 
 				/*if (isset($custom['select'])) {
 					$conditions .= ' AND (p.id_pages IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
@@ -443,7 +447,7 @@ class frontend_model_pages extends frontend_db_pages{
                 }
             }
             else {
-				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 ';
+				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND (img.default_img = 1 OR img.default_img IS NULL) ';
 
 				if (isset($custom['select'])) {
 					$conditions .= ' AND p.id_pages IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';

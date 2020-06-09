@@ -196,7 +196,7 @@ class backend_model_sitemap{
                 /*Ecrit la DTD ainsi que l'entête complète suivi de l'encodage souhaité*/
                 $this->xml->headerSitemap(array('encode' => 'UTF-8', 'type' => 'image'));
                 # WriteNode Pages
-                if($setConfig['pages'] != '0') {
+                /*if($setConfig['pages'] != '0') {
                     // Load Data pages
                     $dataPages = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
 
@@ -208,6 +208,35 @@ class backend_model_sitemap{
                                     'type' => 'image',
                                     'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
                                     'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/pages/' . $value['id_pages'] . '/')), 'imageloc' => $value['img_pages'])
+                                )
+                            );
+                        }
+                    }
+                }*/
+                if($setConfig['pages'] != '0') {
+                    // WriteNode product catalog
+                    $newImgArr = array();
+                    $dataPages = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
+                    foreach ($dataPages as $key => $value) {
+                        $url = '/' . $value['iso_lang'] . '/pages/' . $value['id_pages'] . '-' . $value['url_pages'] . '/';
+
+                        $dataPagesImg = $this->DBPages->fetchData(array('context' => 'all', 'type' => 'images'), array('id' => $value['id_pages']));
+                        if ($dataPagesImg != null) {
+                            // Multi images
+                            foreach ($dataPagesImg as $img) {
+                                $newImgArr[] = $img['name_img'];
+                            }
+                            //print_r($newImgArr);
+
+                            $this->xml->writeNode(
+
+                                array(
+                                    'type' => 'image',
+                                    'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                    'image' => array(
+                                        'url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/pages/' . $value['id_pages'] . '/')),
+                                        'loop' => $newImgArr
+                                    )
                                 )
                             );
                         }

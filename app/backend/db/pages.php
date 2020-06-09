@@ -25,9 +25,10 @@ class backend_db_pages
 						}
 					}
 
-					$sql = "SELECT p.id_pages, c.name_pages, p.img_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
+					$sql = "SELECT p.id_pages, c.name_pages, IFNULL(pi.default_img,0) as img_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
 						FROM mc_cms_page AS p
 							JOIN mc_cms_page_content AS c USING ( id_pages )
+						    LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
 							GROUP BY p.id_pages 
@@ -65,12 +66,14 @@ class backend_db_pages
 								}
 							}
 
-							$sql = "SELECT p.id_pages, c.name_pages, p.img_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
+							$sql = "SELECT p.id_pages, c.name_pages, IFNULL(pi.default_img,0) as img_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, 
+                                    p.date_register, ca.name_pages AS parent_pages
 								FROM mc_cms_page AS p
 									JOIN mc_cms_page_content AS c USING ( id_pages )
 									JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 									LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
 									LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+								    LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
 									WHERE c.id_lang = :default_lang $cond
 									GROUP BY p.id_pages 
 								ORDER BY p.order_pages".$limit;
@@ -107,13 +110,14 @@ class backend_db_pages
 						}
 					}
 
-					$sql = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, p.img_pages
+					$sql = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, IFNULL(pi.default_img,0) as img_pages
 							FROM mc_cms_page AS p
 							JOIN mc_cms_page_content AS c USING ( id_pages )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
-							LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-							WHERE p.id_parent = :id $cond
+							LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages )
+                            LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
+							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond
 							GROUP BY p.id_pages 
 							ORDER BY p.order_pages";
 					break;
@@ -147,13 +151,29 @@ class backend_db_pages
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE p.id_pages = :edit';
 					break;
-				case 'img':
+				/*case 'img':
 					$sql = 'SELECT p.id_pages, p.img_pages FROM mc_cms_page AS p WHERE p.img_pages IS NOT NULL';
-					break;
+					break;*/
+                case 'images':
+                    $sql = 'SELECT img.*
+						FROM mc_cms_page_img AS img
+						WHERE img.id_pages = :id ORDER BY order_img ASC';
+                    break;
+                case 'imagesAll':
+                    $sql = 'SELECT img.* FROM mc_cms_page_img AS img';
+                    break;
+                case 'imgData':
+                    $sql = 'SELECT img.id_img,img.id_pages, img.name_img,c.id_lang,c.alt_img,c.title_img,c.caption_img,lang.iso_lang
+							FROM mc_cms_page_img AS img
+							LEFT JOIN mc_cms_page_img_content AS c USING(id_img)
+							LEFT JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
+							WHERE img.id_img = :edit';
+                    break;
 				case 'sitemap':
-					$sql = 'SELECT p.id_pages, p.img_pages, c.name_pages, c.url_pages, lang.iso_lang, c.id_lang, c.last_update
+					$sql = 'SELECT p.id_pages, IFNULL(pi.default_img,0) as img_pages, c.name_pages, c.url_pages, lang.iso_lang, c.id_lang, c.last_update
 							FROM mc_cms_page AS p
 							JOIN mc_cms_page_content AS c USING ( id_pages )
+							LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							WHERE c.published_pages = 1 AND c.id_lang = :id_lang
 							ORDER BY p.id_pages ASC';
@@ -191,6 +211,18 @@ class backend_db_pages
 							WHERE p.id_pages = :id
 							AND lang.iso_lang = :iso';
 					break;
+                case 'imgContent':
+                    $sql = 'SELECT * FROM mc_cms_page_img_content WHERE `id_img` = :id_img AND `id_lang` = :id_lang';
+                    break;
+                case 'img':
+                    $sql = 'SELECT * FROM mc_cms_page_img WHERE `id_img` = :id';
+                    break;
+                case 'lastImgId':
+                    $sql = 'SELECT id_img FROM mc_cms_page_img ORDER BY id_img DESC LIMIT 0,1';
+                    break;
+                case 'imgDefault':
+                    $sql = 'SELECT id_img FROM mc_cms_page_img WHERE id_pages = :id AND default_img = 1';
+                    break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
@@ -218,6 +250,14 @@ class backend_db_pages
 				$sql = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
 				  		VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
 				break;
+            case 'newImg':
+                $sql = 'INSERT INTO `mc_cms_page_img`(id_pages,name_img,order_img,default_img) 
+						SELECT :id_pages,:name_img,COUNT(id_img),IF(COUNT(id_img) = 0,1,0) FROM mc_cms_page_img WHERE id_pages IN ('.$params['id_pages'].')';
+                break;
+            case 'newImgContent':
+                $sql = 'INSERT INTO `mc_cms_page_img_content`(id_img,id_lang,alt_img,title_img,caption_img) 
+			  			VALUES (:id_img,:id_lang,:alt_img,:title_img,:caption_img)';
+                break;
 		}
 
 		if($sql === '') return 'Unknown request asked';
@@ -263,20 +303,20 @@ class backend_db_pages
                 		WHERE id_pages = :id_pages 
                 		AND id_lang = :id_lang';
 				break;
-			case 'img':
-				$sql = 'UPDATE mc_cms_page 
-						SET img_pages = :img_pages
-                		WHERE id_pages = :id_pages';
-				break;
-			case 'imgContent':
-				$sql = 'UPDATE mc_cms_page_content 
+            case 'imgContent':
+                $sql = 'UPDATE mc_cms_page_img_content 
 						SET 
-							alt_img = :alt_img,
+							alt_img = :alt_img, 
 							title_img = :title_img,
 							caption_img = :caption_img
-                		WHERE id_pages = :id_pages 
-                		AND id_lang = :id_lang';
-				break;
+                		WHERE id_img = :id_img AND id_lang = :id_lang';
+                break;
+            case 'img':
+                $sql = 'UPDATE mc_cms_page_img 
+						SET 
+							name_img = :name_img
+                		WHERE id_img = :id_img';
+                break;
 			case 'pageActiveMenu':
 				$sql = 'UPDATE mc_cms_page 
 						SET menu_pages = :menu_pages 
@@ -288,6 +328,25 @@ class backend_db_pages
 						SET order_pages = :order_pages
                 		WHERE id_pages = :id_pages';
 				break;
+            case 'order_img':
+                $sql = 'UPDATE mc_cms_page_img SET order_img = :order_img
+                		WHERE id_img = :id_img';
+                break;
+            case 'imageDefault':
+                $sql = 'UPDATE mc_cms_page_img
+                		SET default_img = CASE id_img
+							WHEN :id_img THEN 1
+							ELSE 0
+						END
+						WHERE id_pages = :id';
+                break;
+            case 'firstImageDefault':
+                $sql = 'UPDATE mc_cms_page_img
+                		SET default_img = 1
+                		WHERE id_pages = :id 
+						ORDER BY order_img ASC 
+						LIMIT 1';
+                break;
 		}
 
 		if($sql === '') return 'Unknown request asked';
@@ -317,6 +376,10 @@ class backend_db_pages
 						WHERE id_pages IN ('.$params['id'].')';
 				$params = array();
 				break;
+            case 'delImages':
+                $sql = 'DELETE FROM `mc_cms_page_img` WHERE `id_img` IN ('.$params['id'].')';
+                $params = array();
+                break;
 		}
 
 		if($sql === '') return 'Unknown request asked';

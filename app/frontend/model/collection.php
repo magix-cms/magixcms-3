@@ -1,7 +1,7 @@
 <?php
 class frontend_model_collection{
 
-    protected $template,$upload,$imagesComponent,$routingUrl,$DBNews,$DBCatalog,$DBproduct;
+    protected $template,$upload,$imagesComponent,$routingUrl,$DBNews,$DBCatalog,$DBproduct,$DBPages;
 
 	/**
 	 * frontend_model_collection constructor.
@@ -16,6 +16,7 @@ class frontend_model_collection{
         $this->DBNews = new frontend_db_news();
         $this->DBCatalog = new frontend_db_catalog();
         $this->DBproduct = new frontend_db_product();
+        $this->DBPages = new frontend_db_pages();
     }
 
     /**
@@ -44,10 +45,44 @@ class frontend_model_collection{
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
                 $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
-                if($page['img_pages'] != null) {
-                    $arr[$page['id_pages']]['imgSrc']['original'] = '/upload/pages/' . $page['id_pages'] . '/' . $page['img_pages'];
-                    foreach ($fetchConfig as $key => $value) {
-                        $arr[$page['id_pages']]['imgSrc'][$value['type_img']] = '/upload/pages/'.$page['id_pages'].'/'.$imgPrefix[$value['type_img']] . $page['img_pages'];
+                // Images collection
+                $imgCollection = $this->DBPages->fetchData(
+                    array('context' => 'all', 'type' => 'images','conditions'=>'WHERE img.id_pages = :id AND img.default_img = 1'),
+                    array('id'=>$page['id_pages']/*,'iso'=>$page['iso_lang']*/)
+                );
+
+                if($imgCollection != null) {
+
+                    foreach ($imgCollection as $img) {
+
+                        if (!array_key_exists($page['id_img'], $arr)) {
+                            $arr[$page['id_pages']]['images'][$img['id_img']] = array();
+                            $arr[$page['id_pages']]['images'][$img['id_img']]['id_img'] = $img['id_img'];
+                            $arr[$page['id_pages']]['images'][$img['id_img']]['id_pages'] = $img['id_pages'];
+                            $arr[$page['id_pages']]['images'][$img['id_img']]['name_img'] = $img['name_img'];
+                            $arr[$page['id_pages']]['images'][$img['id_img']]['default_img'] = $img['default_img'];
+                            $arr[$page['id_pages']]['images'][$img['id_img']]['imgSrc']['original'] = '/upload/pages/' . $page['id_pages'] . '/' . $img['name_img'];
+                            foreach ($fetchConfig as $key => $value) {
+                                $arr[$page['id_pages']]['images'][$img['id_img']]['imgSrc'][$value['type_img']] = '/upload/pages/' . $page['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $img['name_img'];
+                            }
+                        }
+
+                        $imgContent = $this->DBPages->fetchData(
+                            array('context' => 'all', 'type' => 'images_content', 'conditions' => 'WHERE c.id_img = :id'),
+                            array('id' => $img['id_img'])
+                        );
+
+                        if ($imgContent != null) {
+                            foreach ($imgContent as $content) {
+
+                                $arr[$page['id_pages']]['images'][$img['id_img']]['content'][$content['id_lang']] = array(
+                                    'id_lang' => $content['id_lang'],
+                                    'iso_lang' => $content['iso_lang'],
+                                    'alt_img' => $content['alt_img'],
+                                    'title_img' => $content['title_img']
+                                );
+                            }
+                        }
                     }
                 }
                 $arr[$page['id_pages']]['menu_pages'] = $page['menu_pages'];
@@ -104,13 +139,10 @@ class frontend_model_collection{
                         $arr[$page['id_news']]['imgSrc'][$value['type_img']] = '/upload/news/'.$page['id_news'].'/'.$imgPrefix[$value['type_img']] . $page['img_news'];
                     }
                 }
-                //$arr[$page['id_news']]['menu_news'] = $page['menu_news'];
+
                 $arr[$page['id_news']]['date_register'] = $page['date_register'];
             }
-            /*$tagData = $this->DBNews->fetchData(
-                array('context'=>'all','type'=>'tags','conditions'=>' WHERE tag.id_lang = :id_lang'),
-                array('id_lang'=>$page['id_lang'])
-            );*/
+
             $tagData = $this->DBNews->fetchData(
                 array('context' => 'all', 'type' => 'tagsRel'),
                 array(

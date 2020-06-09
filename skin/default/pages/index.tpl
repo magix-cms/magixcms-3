@@ -11,7 +11,7 @@
                     {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
                     {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
                     <div itemprop="text clearfix">
-                        {if isset($pages.img.name)}
+                        {*if isset($pages.img.name)}
                             <a href="{$pages.img.large.src}" class="img-zoom img-float float-right" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
                                 <figure>
                                     {include file="img/img.tpl" img=$pages.img lazy=true}
@@ -20,7 +20,10 @@
                                     {/if}
                                 </figure>
                             </a>
-                        {/if}
+                        {/if*}
+                        <div class="col-4 col-md-5 col-xl-4">
+                            {include file="img/loop/gallery.tpl" imgs=$pages.imgs}
+                        </div>
                         {$pages.content}
                     </div>
                 </div>

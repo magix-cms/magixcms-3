@@ -300,7 +300,6 @@ CREATE TABLE IF NOT EXISTS `mc_home_page_content` (
 CREATE TABLE IF NOT EXISTS `mc_cms_page` (
   `id_pages` int(7) unsigned NOT NULL AUTO_INCREMENT,
   `id_parent` int(7) unsigned DEFAULT NULL,
-  `img_pages` varchar(125) DEFAULT NULL,
   `menu_pages` smallint(1) unsigned DEFAULT '1',
   `order_pages` smallint(5) unsigned NOT NULL DEFAULT '0',
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -319,9 +318,6 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
   `url_pages` varchar(150) DEFAULT NULL,
   `resume_pages` text,
   `content_pages` text,
-  `alt_img` varchar(70) DEFAULT NULL,
-  `title_img` varchar(70) DEFAULT NULL,
-  `caption_img` varchar(125) DEFAULT NULL,
   `seo_title_pages` varchar(180) DEFAULT NULL,
   `seo_desc_pages` text,
   `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -332,6 +328,35 @@ CREATE TABLE IF NOT EXISTS `mc_cms_page_content` (
 
 ALTER TABLE `mc_cms_page_content`
   ADD CONSTRAINT `mc_cms_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_cms_page_img` (
+ `id_img` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+ `id_pages` int(11) UNSIGNED NOT NULL,
+ `name_img` varchar(150) NOT NULL,
+ `default_img` smallint(1) NOT NULL DEFAULT 0,
+ `order_img` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+ PRIMARY KEY (`id_img`),
+ KEY `id_pages` (`id_pages`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mc_cms_page_img`
+    ADD CONSTRAINT `mc_cms_page_img_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_cms_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_cms_page_img_content` (
+ `id_content` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+ `id_img` int(11) UNSIGNED NOT NULL,
+ `id_lang` smallint(3) UNSIGNED NOT NULL,
+ `alt_img` varchar(70) DEFAULT NULL,
+ `title_img` varchar(70) DEFAULT NULL,
+ `caption_img` varchar(125) DEFAULT NULL,
+ PRIMARY KEY (`id_content`),
+ KEY `id_img` (`id_img`,`id_lang`),
+ KEY `id_lang` (`id_lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mc_cms_page_img_content`
+    ADD CONSTRAINT `mc_cms_page_img_content_ibfk_1` FOREIGN KEY (`id_img`) REFERENCES `mc_cms_page_img` (`id_img`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `mc_cms_page_img_content_ibfk_2` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang` (`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_about` (
   `id_info` smallint(2) unsigned NOT NULL AUTO_INCREMENT,

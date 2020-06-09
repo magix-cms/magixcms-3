@@ -317,7 +317,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     'text' => $value['id_parent']
                 )
             );
-            if(isset($value['imgSrc'])) {
+            /*if(isset($value['imgSrc'])) {
                 $this->xml->newStartElement('image');
                 foreach ($value['imgSrc'] as $k => $item) {
                     $this->xml->setElement(
@@ -333,6 +333,76 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         )
                     );
                 }
+                $this->xml->newEndElement();
+            }*/
+            if(isset($value['images'])) {
+                $this->xml->newStartElement('images');
+                foreach ($value['images'] as $k) {
+                    $this->xml->newStartElement('image');
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'name',
+                            'text' => $k['name_img']
+                        )
+                    );
+                    //start src
+                    $this->xml->newStartElement('src');
+                    foreach ($k['imgSrc'] as $images => $imgSrc) {
+                        $this->xml->setElement(
+                            array(
+                                'start' => $images,
+                                'attrNS' => array(
+                                    array(
+                                        'prefix' => 'xlink',
+                                        'name' => 'href',
+                                        'uri' => $this->url . $imgSrc
+                                    )
+                                )
+                            )
+                        );
+                    }
+                    //End src
+                    $this->xml->newEndElement();
+                    if($k['content']!= null) {
+                        // Start languages loop
+                        $this->xml->newStartElement('languages');
+                        foreach ($k['content'] as $imgData) {
+                            // Start Language
+                            $this->xml->newStartElement('language');
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'id_lang',
+                                    'text' => $imgData['id_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'iso',
+                                    'text' => $imgData['iso_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'alt',
+                                    'text' => $imgData['alt_img']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'title',
+                                    'text' => $imgData['title_img']
+                                )
+                            );
+                            //End language img
+                            $this->xml->newEndElement();
+                        }
+                        //End languages img
+                        $this->xml->newEndElement();
+                    }
+                    // End loop image
+                    $this->xml->newEndElement();
+                }
+                // End images
                 $this->xml->newEndElement();
             }
             // Start languages loop
@@ -425,7 +495,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     'text' => $value['id_parent']
                 )
             );
-            if(isset($value['imgSrc'])) {
+            /*if(isset($value['imgSrc'])) {
                 $this->xml->newStartElement('image');
                 foreach ($value['imgSrc'] as $k => $item) {
                     $this->xml->setElement(
@@ -441,6 +511,76 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         )
                     );
                 }
+                $this->xml->newEndElement();
+            }*/
+            if(isset($value['images'])) {
+                $this->xml->newStartElement('images');
+                foreach ($value['images'] as $k) {
+                    $this->xml->newStartElement('image');
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'name',
+                            'text' => $k['name_img']
+                        )
+                    );
+                    //start src
+                    $this->xml->newStartElement('src');
+                    foreach ($k['imgSrc'] as $images => $imgSrc) {
+                        $this->xml->setElement(
+                            array(
+                                'start' => $images,
+                                'attrNS' => array(
+                                    array(
+                                        'prefix' => 'xlink',
+                                        'name' => 'href',
+                                        'uri' => $this->url . $imgSrc
+                                    )
+                                )
+                            )
+                        );
+                    }
+                    //End src
+                    $this->xml->newEndElement();
+                    if($k['content']!= null) {
+                        // Start languages loop
+                        $this->xml->newStartElement('languages');
+                        foreach ($k['content'] as $imgData) {
+                            // Start Language
+                            $this->xml->newStartElement('language');
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'id_lang',
+                                    'text' => $imgData['id_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'iso',
+                                    'text' => $imgData['iso_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'alt',
+                                    'text' => $imgData['alt_img']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'title',
+                                    'text' => $imgData['title_img']
+                                )
+                            );
+                            //End language img
+                            $this->xml->newEndElement();
+                        }
+                        //End languages img
+                        $this->xml->newEndElement();
+                    }
+                    // End loop image
+                    $this->xml->newEndElement();
+                }
+                // End images
                 $this->xml->newEndElement();
             }
             // Start languages loop
@@ -2500,37 +2640,91 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             $arrData = json_decode(json_encode($this->parse()), true);
                             $this->getBuildSave($operations,$arrData);
 
-                        }elseif($getContentType === 'files'){
+                        }
+                        elseif($getContentType === 'files'){
 
                             if (isset($this->id)) {
 
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $page = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
+                                $newimg = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'lastImgId'));
 
-                                $settings = array(
-                                    'name' => $page['url_pages'],
-                                    'edit' => $page['img_pages'],
-                                    'prefix' => array('s_', 'm_', 'l_'),
-                                    'module_img' => 'pages',
-                                    'attribute_img' => 'page',
-                                    'original_remove' => false
-                                );
-                                $dirs = array(
-                                    'upload_root_dir' => 'upload/pages', //string
-                                    'upload_dir' => $this->id //string ou array
-                                );
+                                // ----- Remove Image All for replace from Webservice
+                                $this->DBPages->delete(array('type' => 'delImagesAll'), array('id' => $this->id));
+                                $makeFiles = new filesystem_makefile();
+                                $finder = new file_finder();
 
-                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
-
-                                $this->DBPages->update(
-                                    array(
-                                        'type' => 'img'
-                                    ),
-                                    array(
-                                        'id_pages' => $this->id,
-                                        'img_pages' => $resultUpload['file']
+                                $setImgDirectory = $this->upload->dirImgUpload(
+                                    array_merge(
+                                        array('upload_root_dir'=>'upload/pages/'.$this->id),
+                                        array('imgBasePath'=>true)
                                     )
                                 );
+
+                                if(file_exists($setImgDirectory)){
+                                    $setFiles = $finder->scanDir($setImgDirectory);
+                                    $clean = '';
+                                    if($setFiles != null){
+                                        foreach($setFiles as $file){
+                                            $clean .= $makeFiles->remove($setImgDirectory.$file);
+                                        }
+                                    }
+                                }
+                                // -----------
+                                $newData = array();
+
+                                foreach($_FILES as $key => $value){
+                                    $newData['name'][$key] = $value['name'];
+                                    $imageInfo = getimagesize( $value['tmp_name'] );
+                                    $newData['type'][$key] = $imageInfo['mime'];
+                                    $newData['tmp_name'][$key] = $value['tmp_name'];
+                                    $newData['error'][$key] = $value['error'];
+                                    $newData['size'][$key] = $value['size'];
+                                }
+                                $_FILES = array(
+                                    'img_multiple' => $newData
+                                );
+
+                                // If $newimg = NULL return 0
+                                $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
+                                //$img_multiple = $newData;
+                                $this->img_multiple = ($_FILES['img_multiple']["name"]);
+                                $this->upload = new component_files_upload();
+                                $resultUpload = $this->upload->setMultipleImageUpload(
+                                    'img_multiple',
+                                    array(
+                                        'name' => $page['url_pages'],
+                                        'prefix_name' => $newimg['id_img'],
+                                        'prefix_increment' => true,
+                                        'prefix' => array('s_', 'm_', 'l_'),
+                                        'module_img' => 'pages',
+                                        'attribute_img' => 'page',
+                                        'original_remove' => false
+                                    ),
+                                    array(
+                                        'upload_root_dir' => 'upload/pages', //string
+                                        'upload_dir' => $this->id //string ou array
+                                    ),
+                                    false
+                                );
+
+                                if ($resultUpload != null) {
+
+                                    foreach ($resultUpload as $key => $value) {
+                                        if ($value['statut'] == '1') {
+
+                                            $this->DBPages->insert(
+                                                array(
+                                                    'type' => 'newImg'
+                                                ),
+                                                array(
+                                                    'id_pages' => $this->id,
+                                                    'name_img' => $value['file']
+                                                )
+                                            );
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

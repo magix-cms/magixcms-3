@@ -16,7 +16,7 @@
                 <h2 class="panel-heading h5">{#edit_pages#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" {if !$smarty.get.plugin && !$smarty.get.tab}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{else}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
-                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'image'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&tab=image{else}#image{/if}" aria-controls="image" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#image#|ucfirst}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'images'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&tab=images{else}#images{/if}" aria-controls="images" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#images#|ucfirst}</a></li>
                     <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'child'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&tab=child{else}#child{/if}" aria-controls="child" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#child_page#|ucfirst}</a></li>
                     {foreach $setTabsPlugins as $key => $value}
                         <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.title|ucfirst}</a></li>
@@ -31,14 +31,13 @@
                     <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && !$smarty.get.tab} active{/if}" id="general">
                         {include file="pages/form/edit.tpl" controller="pages"}
                     </div>
-                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'image'} active{/if}" id="image">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'images'} active{/if}" id="images">
                         {include file="pages/form/img.tpl" controller="pages"}
-                        {*<pre>{$page|print_r}</pre>*}
-                        {*<div class="block-img">
-                            {if $page.imgSrc != null}
+                        <div id="gallery-pages" class="block-img">
+                            {if $images != null}
                                 {include file="pages/brick/img.tpl"}
                             {/if}
-                        </div>*}
+                        </div>
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table{if !$smarty.get.plugin && $smarty.get.tab === 'child'} active{/if}" id="child">
                         <p class="text-right">
@@ -68,12 +67,12 @@
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
         libjs/vendor/jquery-ui-1.12.min.js,
+        libjs/vendor/progressBar.min.js,
         libjs/vendor/tabcomplete.min.js,
         libjs/vendor/livefilter.min.js,
         libjs/vendor/src/bootstrap-select.js,
         libjs/vendor/filterlist.min.js,
         {baseadmin}/template/js/table-form.min.js,
-        {baseadmin}/template/js/img-drop.min.js,
         {baseadmin}/template/js/pages.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}
@@ -92,6 +91,8 @@
             }else{
                 //pages.run(controller);
                 pages.runAdd(controller);
+                var edit = "{$smarty.get.edit}";
+                pages.runEdit(globalForm,tableForm,edit);
             }
         });
     </script>

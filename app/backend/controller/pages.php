@@ -2,8 +2,8 @@
 class backend_controller_pages extends backend_db_pages
 {
     public $edit, $action, $tabs, $search, $plugin, $controller;
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl,$makeFiles,$finder;
-    public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset,$name_img,$menu_pages;
+    protected $message, $template, $progress, $header, $data, $modelLanguage, $collectionLanguage, $order, $order_img, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl,$makeFiles,$finder;
+    public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset,$name_img,$menu_pages,$id_img,$img_multiple,$imgData,$editimg;
 	public $tableconfig = array(
 		'all' => array(
 			'id_pages',
@@ -85,6 +85,18 @@ class backend_controller_pages extends backend_db_pages
             }
             $this->content = $array;
         }
+        if (http_request::isGet('editimg')) $this->editimg = $formClean->numeric($_GET['editimg']);
+        if (http_request::isPost('id_img')) $this->id_img = $formClean->simpleClean($_POST['id_img']);
+        if (isset($_FILES['img_multiple']["name"])) $this->img_multiple = ($_FILES['img_multiple']["name"]);
+        if (http_request::isPost('imgData')) {
+            $array = $_POST['imgData'];
+            foreach ($array as $key => $arr) {
+                foreach ($arr as $k => $v) {
+                    $array[$key][$k] = $formClean->simpleClean($v);
+                }
+            }
+            $this->imgData = $array;
+        }
         // --- Image Upload
         if (isset($_FILES['img']["name"])) $this->img = http_url::clean($_FILES['img']["name"]);
 		if (http_request::isPost('name_img')) $this->name_img = http_url::clean($_POST['name_img']);
@@ -94,6 +106,8 @@ class backend_controller_pages extends backend_db_pages
 
         # ORDER PAGE
         if (http_request::isPost('pages')) $this->order = $formClean->arrayClean($_POST['pages']);
+        # ORDER IMAGE
+        if (http_request::isPost('image')) $this->order_img = $formClean->arrayClean($_POST['image']);
         if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
 
         # JSON LINK (TinyMCE)
@@ -145,7 +159,7 @@ class backend_controller_pages extends backend_db_pages
 			$params['cClass'] = 'backend_controller_pages';
 		}
 
-		$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+		$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
 
 		return array(
 			'data' => $results,
@@ -199,12 +213,8 @@ class backend_controller_pages extends backend_db_pages
      * @return array
      */
     private function setItemData($data){
-        //return $this->getItems('page',$this->edit, 'all',false);
-        $imgPath = $this->upload->imgBasePath('upload/pages');
         $arr = array();
         $conf = array();
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
-        $imgPrefix = $this->imagesComponent->prefix();
 
         foreach ($data as $page) {
 
@@ -220,22 +230,6 @@ class backend_controller_pages extends backend_db_pages
                 $arr[$page['id_pages']] = array();
                 $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
                 $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
-				$img_pages = pathinfo($page['img_pages']);
-                $arr[$page['id_pages']]['img_pages'] = $img_pages['filename'];
-                if($page['img_pages'] != null) {
-                    if(file_exists($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages'])){
-                        $originalSize = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$page['img_pages']);
-                        $arr[$page['id_pages']]['imgSrc']['original']['img'] = $page['img_pages'];
-                        $arr[$page['id_pages']]['imgSrc']['original']['width'] = $originalSize[0];
-                        $arr[$page['id_pages']]['imgSrc']['original']['height'] = $originalSize[1];
-                    }
-                    foreach ($fetchConfig as $key => $value) {
-                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_pages'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_pages']);
-                        $arr[$page['id_pages']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_pages'];
-                        $arr[$page['id_pages']]['imgSrc'][$value['type_img']]['width'] = $size[0];
-                        $arr[$page['id_pages']]['imgSrc'][$value['type_img']]['height'] = $size[1];
-                    }
-                }
                 $arr[$page['id_pages']]['menu_pages'] = $page['menu_pages'];
                 $arr[$page['id_pages']]['date_register'] = $page['date_register'];
             }
@@ -246,9 +240,6 @@ class backend_controller_pages extends backend_db_pages
                 'url_pages'         => $page['url_pages'],
                 'resume_pages'      => $page['resume_pages'],
                 'content_pages'     => $page['content_pages'],
-                'alt_img'     		=> $page['alt_img'],
-                'title_img'     	=> $page['title_img'],
-                'caption_img'       => $page['caption_img'],
                 'seo_title_pages'   => $page['seo_title_pages'],
                 'seo_desc_pages'    => $page['seo_desc_pages'],
                 'published_pages'   => $page['published_pages'],
@@ -257,7 +248,36 @@ class backend_controller_pages extends backend_db_pages
         }
         return $arr;
     }
+    /**
+     * Load img Data
+     * @param $data
+     * @return array
+     */
+    private function setItemsImgData($data){
+        $arr = array();
 
+        foreach ($data as $page) {
+
+            if (!array_key_exists($page['id_img'], $arr)) {
+                $arr[$page['id_img']] = array();
+                $arr[$page['id_img']]['id_img'] = $page['id_img'];
+                $arr[$page['id_img']]['id_pages'] = $page['id_pages'];
+                $arr[$page['id_img']]['name_img'] = $page['name_img'];
+                $img_pages = pathinfo($page['name_img']);
+                $arr[$page['id_img']]['name_img_we'] = $img_pages['filename'];
+            }
+            if($page['id_lang'] != null) {
+                $arr[$page['id_img']]['content'][$page['id_lang']] = array(
+                    'id_lang' => $page['id_lang'],
+                    'iso_lang' => $page['iso_lang'],
+                    'alt_img' => $page['alt_img'],
+                    'title_img' => $page['title_img'],
+                    'caption_img' => $page['caption_img']
+                );
+            }
+        }
+        return $arr;
+    }
     /**
      * @param $id
      * @return array
@@ -335,6 +355,8 @@ class backend_controller_pages extends backend_db_pages
 		switch ($data['type']) {
 			case 'page':
 			case 'content':
+            case 'newImgContent':
+            case 'newImg':
 				parent::insert(
 					array(
 						'context' => $data['context'],
@@ -367,10 +389,25 @@ class backend_controller_pages extends backend_db_pages
                     );
                 }
                 break;
+            case 'order_img':
+                $p = $this->order_img;
+                for ($i = 0; $i < count($p); $i++) {
+                    parent::update(
+                        array(
+                            'type' => $data['type']
+                        ),
+                        array(
+                            'id_img'       => $p[$i],
+                            'order_img'    => $i
+                        )
+                    );
+                }
+                break;
 			case 'page':
 			case 'content':
-			case 'img':
-			case 'imgContent':
+            case 'img':
+            case 'imgContent':
+            case 'firstImageDefault':
 			case 'pageActiveMenu':
 				parent::update(
 					array(
@@ -379,6 +416,15 @@ class backend_controller_pages extends backend_db_pages
 					$data['data']
 				);
 				break;
+            case 'imageDefault':
+                parent::update(
+                    array(
+                        'type' => 'imageDefault'
+                    ),
+                    $data['data']
+                );
+                $this->message->json_post_response(true,'update');
+                break;
         }
     }
 
@@ -398,6 +444,103 @@ class backend_controller_pages extends backend_db_pages
                     $data['data']
                 );
                 $this->message->json_post_response(true,'delete',$data['data']);
+                break;
+            case 'delImages':
+                $makeFiles = new filesystem_makefile();
+                $newArr = array();
+                $imgArray = explode(',',$data['data']['id']);
+                $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
+                $imgPrefix = $this->imagesComponent->prefix();
+                $defaultErased = false;
+                $id_pages = false;
+                $extwebp = 'webp';
+
+                foreach($imgArray as $key => $value){
+                    $img = $this->getItems('img',$value,'one',false);
+                    $id_pages = $img['id_pages'];
+                    if($img['default_img']) $defaultErased = true;
+
+                    $imgPath = $this->upload->dirFileUpload(
+                        array_merge(
+                            array(
+                                'upload_root_dir' => 'upload/pages',
+                                'upload_dir' => $img['id_pages'])
+                            ,array(
+                                'fileBasePath'=>true
+                            )
+                        )
+                    );
+
+                    $newArr[$key]['img']['original'] = $imgPath.$img['name_img'];
+                    if(file_exists($newArr[$key]['img']['original'])) {
+                        $makeFiles->remove(array(
+                            $newArr[$key]['img']['original']
+                        ));
+                    }
+                    foreach ($fetchConfig as $configKey => $confiValue) {
+                        $newArr[$key]['img'][$confiValue['type_img']] = $imgPath.$imgPrefix[$confiValue['type_img']].$img['name_img'];
+                        $imgData = pathinfo($img['name_img']);
+                        $filename = $imgData['filename'];
+
+                        if(file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
+                            $makeFiles->remove(array(
+                                $newArr[$key]['img'][$confiValue['type_img']]
+                            ));
+                        }
+                        // Check if the image with webp extension exist
+                        if(file_exists($imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp)){
+                            $makeFiles->remove(array(
+                                $imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp
+                            ));
+                        }
+                    }
+                }
+
+                if($newArr) {
+                    parent::delete(
+                        array(
+                            'type' => $data['type']
+                        ),
+                        $data['data']
+                    );
+
+                    $imgs = $this->getItems('images',$id_pages,'all',false);
+                    if($imgs != null && $defaultErased) {
+                        $this->upd(array(
+                            'type' => 'firstImageDefault',
+                            'data' => array(
+                                ':id' => $id_pages
+                            )
+                        ));
+                    }
+                }
+                break;
+            case 'delImagesPages':
+                $makeFiles = new filesystem_makefile();
+                $imgArray = explode(',',$data['data']['id']);
+
+                foreach($imgArray as $key => $value){
+                    $imgPath = $this->upload->dirFileUpload(
+                        array_merge(
+                            array(
+                                'upload_root_dir' => 'upload/pages',
+                                'upload_dir' => $value
+                            ),
+                            array(
+                                'fileBasePath'=>true
+                            )
+                        )
+                    );
+
+                    if(file_exists($imgPath)) {
+                        try {
+                            $makeFiles->remove(array($imgPath));
+                        } catch(Exception $e) {
+                            $logger = new debug_logger(MP_LOG_DIR);
+                            $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+                        }
+                    }
+                }
                 break;
         }
     }
@@ -470,72 +613,142 @@ class backend_controller_pages extends backend_db_pages
                         }
                         break;
                     case 'edit':
-                        if(isset($this->img) || isset($this->name_img)){
-							$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-							$page = $this->getItems('pageLang', array('id' => $this->id_pages, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
-							$settings = array(
-								'name' => $this->name_img !== '' ? $this->name_img : $page['url_pages'],
-								'edit' => $page['img_pages'],
-								'prefix' => array('s_', 'm_', 'l_'),
-								'module_img' => 'pages',
-								'attribute_img' => 'page',
-								'original_remove' => false
-							);
-							$dirs = array(
-								'upload_root_dir' => 'upload/pages', //string
-								'upload_dir' => $this->id_pages //string ou array
-							);
-							$filename = '';
-							$update = false;
-
-							if(isset($this->img)) {
-								$resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
-								$filename = $resultUpload['file'];
-								$update = true;
-							}
-							elseif(isset($this->name_img)) {
-								$img_pages = pathinfo($page['img_pages']);
-								$img_name = $img_pages['filename'];
-
-								if($this->name_img !== $img_name && $this->name_img !== '') {
-									$result = $this->upload->renameImages($settings,$dirs);
-									$filename = $result;
-									$update = true;
-								}
-							}
-
-							if($filename !== '' && $update) {
-								$this->upd(array(
-									'type' => 'img',
-									'data' => array(
-										'id_pages' => $this->id_pages,
-										'img_pages' => $filename
-									)
-								));
-							}
-
-							foreach ($this->content as $lang => $content) {
-								$content['id_lang'] = $lang;
-								$content['id_pages'] = $this->id_pages;
-								$content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
-								$content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
-								$content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
-								$this->upd(array(
-									'type' => 'imgContent',
-									'data' => $content
-								));
-							}
-
-							$setEditData = $this->getItems('page',array('edit'=>$this->id_pages),'all',false);
-							$setEditData = $this->setItemData($setEditData);
-							$this->template->assign('page',$setEditData[$this->id_pages]);
-							$display = $this->template->fetch('pages/brick/img.tpl');
-							$this->message->json_post_response(true, 'update',$display);
-						}
-						elseif (isset($this->id_pages)) {
+                        if (isset($this->content)) {
 							$extendData = $this->saveContent($this->id_pages);
 							$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
 						}
+                        elseif (isset($this->img_multiple)) {
+                            $this->template->configLoad();
+                            $this->progress = new component_core_feedback($this->template);
+
+                            usleep(200000);
+                            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 10));
+
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                            $page = $this->getItems('pageLang', array('id' => $this->id_pages, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
+                            $newimg = $this->getItems('lastImgId', null, 'one', false);
+                            // If $newimg = NULL return 0
+                            $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
+
+                            $resultUpload = $this->upload->setMultipleImageUpload(
+                                'img_multiple',
+                                array(
+                                    'name' => $page['url_pages'],
+                                    'prefix_name' => $newimg['id_img'],
+                                    'prefix_increment' => true,
+                                    'prefix' => array('s_', 'm_', 'l_'),
+                                    'module_img' => 'pages',
+                                    'attribute_img' => 'page',
+                                    'original_remove' => false
+                                ),
+                                array(
+                                    'upload_root_dir' => 'upload/pages', //string
+                                    'upload_dir' => $this->id_pages //string ou array
+                                ),
+                                false
+                            );
+
+                            if ($resultUpload != null) {
+                                $preparePercent = 80 / count($resultUpload);
+                                $percent = 10;
+
+                                foreach ($resultUpload as $key => $value) {
+                                    if ($value['statut'] == '1') {
+                                        $percent = $percent + $preparePercent;
+
+                                        usleep(200000);
+                                        $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent));
+
+                                        $this->add(array(
+                                            'type' => 'newImg',
+                                            'data' => array(
+                                                'id_pages' => $this->id_pages,
+                                                'name_img' => $value['file']
+                                            )
+                                        ));
+                                    }
+                                }
+
+                                usleep(200000);
+                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'), 'progress' => 90));
+
+                                usleep(200000);
+                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success', 'result' => $display));
+                            } else {
+                                usleep(200000);
+                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'), 'progress' => 100, 'status' => 'error', 'error_code' => 'error_data'));
+                            }
+                        }elseif (isset($this->editimg)) {
+                            if (isset($this->id_img)) {
+                                foreach ($this->imgData as $lang => $content) {
+                                    $content['id_img'] = $this->id_img;
+                                    $content['id_lang'] = $lang;
+                                    $content['alt_img'] = (!empty($content['alt_img']) ? $content['alt_img'] : NULL);
+                                    $content['title_img'] = (!empty($content['title_img']) ? $content['title_img'] : NULL);
+                                    $content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
+
+                                    $checkLangData = parent::fetchData(
+                                        array('context' => 'one', 'type' => 'imgContent'),
+                                        array('id_img' => $this->id_img, 'id_lang' => $lang)
+                                    );
+
+                                    // Check language page content
+                                    if ($checkLangData != null) {
+                                        $this->upd(array(
+                                            'type' => 'imgContent',
+                                            'data' => $content
+                                        ));
+                                    } else {
+                                        $this->add(array(
+                                            'type' => 'newImgContent',
+                                            'data' => $content
+                                        ));
+                                    }
+                                }
+
+                                if (isset($this->name_img)) {
+                                    $page = $this->getItems('img', array('id' => $this->id_img), 'one', false);
+                                    $img_pages = pathinfo($page['name_img']);
+                                    $img_name = $img_pages['filename'];
+
+                                    if ($this->name_img !== $img_name && $this->name_img !== '') {
+                                        $result = $this->upload->renameImages(
+                                            array(
+                                                'name' => $this->name_img,
+                                                'edit' => $page['name_img'],
+                                                'prefix' => array('s_', 'm_', 'l_'),
+                                                'module_img' => 'pages',
+                                                'attribute_img' => 'page',
+                                                'original_remove' => false
+                                            ),
+                                            array(
+                                                'upload_root_dir' => 'upload/pages', //string
+                                                'upload_dir' => $page['id_pages'] //string ou array
+                                            )
+                                        );
+
+                                        $this->upd(array(
+                                            'type' => 'img',
+                                            'data' => array(
+                                                'id_img' => $this->id_img,
+                                                'name_img' => $result
+                                            )
+                                        ));
+                                    }
+                                }
+
+                                $this->message->json_post_response(true, 'add_redirect');
+                            } else {
+                                $this->modelLanguage->getLanguage();
+                                $setEditData = parent::fetchData(
+                                    array('context' => 'all', 'type' => 'imgData'),
+                                    array('edit' => $this->editimg)
+                                );
+                                $setEditData = $this->setItemsImgData($setEditData);
+                                $this->template->assign('img', $setEditData[$this->editimg]);
+                                $this->template->display('pages/edit-img.tpl');
+                            }
+                        }
                         else {
                             // Initialise l'API menu des plugins core
                             $this->modelPlugins->getItems(
@@ -548,10 +761,12 @@ class backend_controller_pages extends backend_db_pages
 							$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
                             $setEditData = $this->setItemData($setEditData);
                             $this->template->assign('page',$setEditData[$this->edit]);
-							$this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
-                            $this->getItems('pagesChild',$this->edit,'all');
+							$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
 							$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+                            $this->getItems('pagesChild',array('id'=>$this->edit,'default_lang'=>$defaultLanguage['id_lang']),'all');
 							$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
+                            // --- pages images
+                            $this->getItems('images', $this->edit, 'all');
 							$this->template->display('pages/edit.tpl');
                         }
                         break;
@@ -564,48 +779,70 @@ class backend_controller_pages extends backend_db_pages
                             );
                         }
                         break;
-                    case 'delete':
-                        if(isset($this->id_pages)) {
-                            $this->del(
+                    case 'setImgDefault':
+                        if (isset($this->id_img)) {
+                            $this->upd(array(
+                                'type' => 'imageDefault',
+                                'data' => array(':id' => $this->edit, ':id_img' => $this->id_img)
+                            ));
+                        }
+                        break;
+                    case 'getImgDefault':
+                        if (isset($this->edit)) {
+                            $imgDefault = $this->getItems('imgDefault', $this->edit, 'one', false);
+                            print $imgDefault['id_img'];
+                        }
+                        break;
+                    case 'getImages':
+                        if (isset($this->edit)) {
+                            $this->getItems('images', $this->edit, 'all');
+                            $display = $this->template->fetch('pages/brick/img.tpl');
+                            $this->message->json_post_response(true, '', $display);
+                        }
+                        break;
+                    case 'orderImages':
+                        if (isset($this->order_img)) {
+                            $this->upd(
                                 array(
-                                    'type'=>'delPages',
-                                    'data'=>array(
-                                        'id' => $this->id_pages
-                                    )
+                                    'type' => 'order_img'
                                 )
                             );
                         }
-                        elseif(isset($this->del_img)) {
-                            $this->upd(array(
-                                'type' => 'img',
-                                'data' => array(
-                                    'id_pages' => $this->del_img,
-                                    'img_pages' => NULL
-                                )
-                            ));
-
-                            $setEditData = $this->getItems('page',array('edit'=>$this->del_img),'all',false);
-                            $setEditData = $this->setItemData($setEditData);
-
-                            $setImgDirectory = $this->upload->dirImgUpload(
-                                array_merge(
-                                    array('upload_root_dir'=>'upload/pages/'.$this->del_img),
-                                    array('imgBasePath'=>true)
-                                )
-                            );
-
-                            if(file_exists($setImgDirectory)){
-                                $setFiles = $this->finder->scanDir($setImgDirectory);
-                                $clean = '';
-                                if($setFiles != null){
-                                    foreach($setFiles as $file){
-                                        $clean .= $this->makeFiles->remove($setImgDirectory.$file);
-                                    }
+                        break;
+                    case 'delete':
+                        if(isset($this->id_pages)) {
+                            if (isset($this->tabs)) {
+                                switch ($this->tabs) {
+                                    case 'image':
+                                        $this->del(
+                                            array(
+                                                'type' => 'delImages',
+                                                'data' => array(
+                                                    'id' => $this->id_pages
+                                                )
+                                            )
+                                        );
+                                        $this->message->json_post_response(true, 'delete', array('id' => $this->id_pages));
+                                        break;
                                 }
+                            }else{
+                                $this->del(
+                                    array(
+                                        'type'=>'delPages',
+                                        'data'=>array(
+                                            'id' => $this->id_pages
+                                        )
+                                    )
+                                );
+                                $this->del(
+                                    array(
+                                        'type' => 'delImagesPages',
+                                        'data' => array(
+                                            'id' => $this->id_pages
+                                        )
+                                    )
+                                );
                             }
-                            $this->template->assign('page',$setEditData[$this->del_img]);
-                            $display = $this->template->fetch('pages/brick/img.tpl');
-                            $this->message->json_post_response(true, 'update',$display);
                         }
                         break;
 					case 'getLink':
@@ -633,7 +870,7 @@ class backend_controller_pages extends backend_db_pages
 				$this->modelLanguage->getLanguage();
 				$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 				$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',true,true);
-                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
+                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
                 $this->template->display('pages/index.tpl');
             }
         }

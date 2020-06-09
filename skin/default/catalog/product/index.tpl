@@ -36,7 +36,7 @@
             </div>
             <div class="row row-center">
                 <div class="col-4 col-md-5 col-xl-4">
-                    {include file="catalog/loop/gallery.tpl"}
+                    {include file="img/loop/gallery.tpl" imgs=$product.imgs}
                 </div>
                 <div class="col-4 col-md-5 col-lg-7 col-xl-8">
                     {strip}{if $product.price !== 0}<div class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;{if $setting.price_display.value === 'tinc'}{#tax_included#}{else}{#tax_excluded#}{/if}</div>{/if}{/strip}

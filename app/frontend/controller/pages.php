@@ -80,7 +80,9 @@ class frontend_controller_pages extends frontend_db_pages {
      */
     private function getBuildItems()
     {
-		$collection = $this->getItems('page',array('id'=>$this->id,'iso'=>$this->getlang),'one',false);
+		$collection = $this->getItems('page',['id'=>$this->id,'iso'=>$this->getlang],'one',false);
+		$imgCollection = $this->getItems('imgs',['id'=>$this->id,'iso'=>$this->getlang],'all',false);
+		if($imgCollection != null) $collection['img'] = $imgCollection;
 		return $this->modelPages->setItemData($collection,null);
     }
 

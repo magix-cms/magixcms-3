@@ -5859,6 +5859,9 @@ ul.label-list > li:before {
     display: block;
   }
 }
+:root {
+  --footbar-h: 0;
+}
 @media (min-width: 75em) {
   /*#header {
 		justify-content: space-around;
