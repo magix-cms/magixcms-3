@@ -199,10 +199,10 @@ class frontend_db_pages
 									lang.iso_lang
 								FROM mc_cms_page AS h
 								JOIN mc_cms_page_content AS c ON(h.id_pages = c.id_pages) 
-								LEFT JOIN mc_cms_page_img AS img ON (h.id_pages = img.id_pages)
+								LEFT JOIN mc_cms_page_img AS img ON (h.id_pages = img.id_pages AND img.default_img = 1)
 								LEFT JOIN mc_cms_page_img_content AS imgc ON (imgc.id_img = img.id_img and c.id_lang = imgc.id_lang)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
-								WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1 AND img.default_img = 1';
+								WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1';
             	    	break;
             	    case 'root':
 						$sql = 'SELECT * FROM mc_cms_page ORDER BY id_pages DESC LIMIT 0,1';
