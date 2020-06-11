@@ -3,7 +3,10 @@
 {block name="description"}{seo_rewrite conf=['level'=>'root','type'=>'description','default'=>{#seo_desc_contact#}]}{/block}
 {block name='body:id'}contact{/block}
 {block name="webType"}ContactPage{/block}
-
+{* @todo décommenter cette ligne pour charger la CSS
+{block name="styleSheet"}
+    {include file="section/brick/formcss.tpl"}
+{/block}*}
 {block name="slider"}{/block}
 
 {block name='article'}
