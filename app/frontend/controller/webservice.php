@@ -2557,6 +2557,62 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     }
                 }
                 break;
+            case 'product':
+                if ($arrData['id'] != null) {
+                    $setImgDirectory = NULL;
+                    if (is_array($arrData['id'])) {
+                        // ----- Remove Image All for replace from Webservice
+                        $this->DBProduct->delete(array('type' => 'delImagesAll'), array('id' => implode(",", $arrData['id'])));
+                        $makeFiles = new filesystem_makefile();
+                        $finder = new file_finder();
+                        foreach ($arrData['id'] as $key => $value) {
+                            $setImgDirectory = $this->upload->dirImgUpload(
+                                array_merge(
+                                    array('upload_root_dir'=>'upload/catalog/p/'.$value),
+                                    array('imgBasePath'=>true)
+                                )
+                            );
+                        }
+
+                        $this->DBProduct->delete(
+                            array(
+                                'type' => 'delPages'
+                            ),
+                            array('id' => implode(",", $arrData['id'])
+                            )
+                        );
+                    }else{
+                        // ----- Remove Image All for replace from Webservice
+                        $this->DBProduct->delete(array('type' => 'delImagesAll'), array('id' => $arrData['id']));
+                        $makeFiles = new filesystem_makefile();
+                        $finder = new file_finder();
+
+                        $setImgDirectory = $this->upload->dirImgUpload(
+                            array_merge(
+                                array('upload_root_dir'=>'upload/catalog/p/'.$arrData['id']),
+                                array('imgBasePath'=>true)
+                            )
+                        );
+                        $this->DBProduct->delete(
+                            array(
+                                'type' => 'delPages'
+                            ),
+                            array('id' => $arrData['id'])
+                        );
+                    }
+
+                    if(file_exists($setImgDirectory) && $setImgDirectory != NULL){
+                        $setFiles = $finder->scanDir($setImgDirectory);
+                        $clean = '';
+                        if($setFiles != null){
+                            foreach($setFiles as $file){
+                                $clean .= $makeFiles->remove($setImgDirectory.$file);
+                            }
+                        }
+                    }
+                }
+
+                break;
         }
     }
     /**
@@ -2640,8 +2696,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
                             $arrData = json_decode(json_encode($this->parse()), true);
                             $this->getBuildSave($operations,$arrData);
 
-                        }
-                        elseif($getContentType === 'files'){
+                        }elseif($getContentType === 'files'){
 
                             if (isset($this->id)) {
 
@@ -3054,6 +3109,22 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 }
                             }
                         }
+
+                    }elseif($this->ws->setMethod() === 'DELETE'){
+                        //print_r($this->parse());
+
+                        if($getContentType === 'xml') {
+
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildRemove($operations,$arrData);
+
+                        }elseif($getContentType === 'json'){
+                            //{"id":[53,54]}
+                            $arrData = json_decode(json_encode($this->parse()), true);
+                            $this->getBuildRemove($operations,$arrData);
+                        }
+                        //$this->header->set_json_headers();
+                        //$this->message->json_post_response(true,'delete',$del);
 
                     }elseif($this->ws->setMethod() === 'GET'){
                         if (isset($this->id)) {
