@@ -70,7 +70,7 @@ class frontend_model_pages extends frontend_db_pages{
     	$string_format = new component_format_string();
         $data = null;
         $extwebp = 'webp';
-        $imagePlaceHolder = $this->logo->getImagePlaceholder();
+		if(!isset($this->imagePlaceHolder)) $this->imagePlaceHolder = $this->logo->getImagePlaceholder();
 
         if ($row != null) {
 			if (isset($row['name'])) {
@@ -128,6 +128,33 @@ class frontend_model_pages extends frontend_db_pages{
 							$data['imgs'][$item]['default'] = $val['default_img'];
 						}
 					}
+				}
+				else {
+					if(isset($row['name_img'])){
+						$imgPrefix = $this->imagesComponent->prefix();
+						$fetchConfig = $this->imagesComponent->getConfigItems(array(
+							'module_img' => 'pages',
+							'attribute_img' => 'page'
+						));
+						// # return filename without extension
+						$pathinfo = pathinfo($row['name_img']);
+						$filename = $pathinfo['filename'];
+
+						$data['img']['alt'] = $row['alt_img'];
+						$data['img']['title'] = $row['title_img'];
+						$data['img']['caption'] = $row['caption_img'];
+						$data['img']['name'] = $row['name_img'];
+						foreach ($fetchConfig as $key => $value) {
+							$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img']);
+							$data['img'][$value['type_img']]['src'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img'];
+							$data['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
+							$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
+							$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
+							$data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img']);
+						}
+					}
+					$data['img']['default'] = isset($this->imagePlaceHolder['pages']) ? $this->imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png';
 				}
 
 				$data['content'] = $row['content_pages'];
