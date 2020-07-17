@@ -124,8 +124,8 @@ class date_dateformat extends DateTime{
      * @return string
      * @throws Exception
      */
-	public function dateDefine($format='Y-m-d',$time=null){
-		return $this->_datetime($time)->format($format) ;
+	public function dateDefine($format='Y-m-d',$time=null,$tz=NULL){
+		return $this->_datetime($time,$tz)->format($format) ;
 	}
 
     /**
@@ -216,8 +216,8 @@ class date_dateformat extends DateTime{
      * @return string
      * @throws Exception
      */
-	public function SQLDateTime($time=null){
-		return $this->dateDefine("Y-m-d H:i:s",$time);
+	public function SQLDateTime($time=null,$tz=null){
+		return $this->dateDefine("Y-m-d H:i:s",$time,$tz);
 	}
 
     /**
