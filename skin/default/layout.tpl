@@ -26,8 +26,20 @@
     <meta name="apple-mobile-web-app-title" content="{$smarty.capture.title}">
     <link rel="apple-touch-icon" href="{if $homescreen != null}{if $homescreen.img[168]}{''|cat:{$url}|cat:$homescreen.img[168].src}{/if}{else}{''|cat:{$url}|cat:'/skin/'|cat:{$theme}|cat:'/img/touch/homescreen168.png'}{/if}">
     {if $variant !== null}{include file="{$variant}.tpl"}{/if}
-    {* Please try to use icomoon to create a small iconfont and reduce load work *}
-    {include file="section/brick/google-font.tpl" fonts=['Heebo'=>'300,500,700']}
+    {* use css2 only if you use font with variable weight or if the old api doesn't work *}
+    {* valid syntax exemple
+        old api
+        ['Raleway' => '300,500,700']            Raleway font family with 300, 500 and 700 weight
+        ['Raleway' => '300,500,500italic,700']  Raleway font family with 300, 500 normal and italic and 700 weight
+        new additionnal css2 api, css2=true needed
+        ['Raleway' => '300..700']               Raleway font family with 300 to 700 weight
+        ['Raleway' => '300..700italic']         Raleway font family with 300 to 700 weight italic
+        ['Raleway' => '300,400..700,400..700italic,900']    Raleway font family with 300 weight, 400 to 700 weight normal and italic, 900 weight
+    *}
+    {include file="section/brick/google-font.tpl" fonts=['Heebo'=>'300,500,700'] css2=false}
+    {* Please try to use icomoon to create a small iconfont and reduce load work, uncomment the next lines if you use icofont *}
+    <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.woff" as="font" type="font/woff" crossorigin="anonymous">
     {strip}{capture name="stylesheet"}/skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css{/capture}
         {$csspath = $smarty.capture.stylesheet}
         {if $setting.mode.value !== 'dev'}{$csspath = {'/min/?f='|cat:$csspath|cat:'&amp;'|cat:$smarty.now}}{else}{$csspath = {$url|cat:$csspath}}{/if}
@@ -45,6 +57,8 @@
     <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" async></script>
     {block name="styleSheet"}{/block}
     {if $setting['analytics']['value']}{include file="section/brick/analytics.tpl" aid=$setting['analytics']['value']}{/if}
+    <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
 </head>
 <body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
 {include file="section/brick/cookie-consent.tpl"}
@@ -69,7 +83,7 @@
 {/block}
 {block name="main:after"}{/block}
 {include file="section/footer.tpl" adjust="clip" blocks=['sitemap','about','socials','news','contact']}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+{*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>*}
 <script>
     window.lazyLoadOptions = {
         elements_selector: "[loading=lazy]",

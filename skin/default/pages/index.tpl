@@ -21,9 +21,9 @@
                                 </figure>
                             </a>
                         {/if*}
-                        <div class="col-4 col-md-5 col-xl-4">
+{*                        <div class="col-4 col-md-5 col-xl-4">*}
                             {include file="img/loop/gallery.tpl" imgs=$pages.imgs}
-                        </div>
+{*                        </div>*}
                         {$pages.content}
                     </div>
                 </div>
