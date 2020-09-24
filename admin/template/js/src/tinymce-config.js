@@ -61,12 +61,15 @@
         link_class_list: [
             {title: 'None', value: ''},
             {title: 'TargetBlank', value: 'targetblank'},
-            {title: 'btn-main-theme', value: 'btn-main-theme'},
-            {title: 'btn-sd-theme', value: 'btn-sd-theme'},
-            {title: 'btn-th-theme', value: 'btn-th-theme'},
-            {title: 'btn-fr-theme', value: 'btn-fr-theme'},
-            {title: 'btn-gray-theme', value: 'btn-gray-theme'},
-            {title: 'btn-dark-theme', value: 'btn-dark-theme'}
+            {title: 'btn-main', value: 'btn-main'},
+            {title: 'btn-main-outline', value: 'btn-main-outline'},
+            {title: 'btn-main-invert', value: 'btn-main-invert'},
+            {title: 'btn-sd', value: 'btn-sd'},
+            {title: 'btn-sd-outline', value: 'btn-sd-outline'},
+            {title: 'btn-sd-invert', value: 'btn-sd-invert'},
+            {title: 'btn-dark', value: 'btn-dark'},
+            {title: 'btn-dark-outline', value: 'btn-dark-outline'},
+            {title: 'btn-dark-invert', value: 'btn-dark-invert'}
         ],
         codesample_languages: [
             {text: 'HTML/XML', value: 'markup'},
