@@ -13,7 +13,7 @@ class Options
     /**
      * The location of a temporary directory.
      *
-     * The directory specified must be writeable by the webserver process.
+     * The directory specified must be writable by the webserver process.
      * The temporary directory is required to download remote images and when
      * using the PFDLib back end.
      *
@@ -36,7 +36,7 @@ class Options
      *
      * This directory contains the cached font metrics for the fonts used by DOMPDF.
      * This directory can be the same as $fontDir
-     * 
+     *
      * Note: This directory must exist and be writable by the webserver process.
      *
      * @var string
@@ -52,7 +52,7 @@ class Options
      * read any files on the server.  This should be an absolute path.
      *
      * ==== IMPORTANT ====
-     * This setting may increase the risk of system exploit. Do not change 
+     * This setting may increase the risk of system exploit. Do not change
      * this settings without understanding the consequences. Additional
      * documentation is available on the dompdf wiki at:
      * https://github.com/dompdf/dompdf/wiki
@@ -84,11 +84,20 @@ class Options
      * The default paper size.
      *
      * North America standard is "letter"; other countries generally "a4"
-     * @see Dompdf\Adapter\CPDF::PAPER_SIZES for valid sizes
+     * @see \Dompdf\Adapter\CPDF::PAPER_SIZES for valid sizes
      *
      * @var string
      */
     private $defaultPaperSize = "letter";
+
+    /**
+     * The default paper orientation.
+     *
+     * The orientation of the page (portrait or landscape).
+     *
+     * @var string
+     */
+    private $defaultPaperOrientation = "portrait";
 
     /**
      * The default font family
@@ -103,7 +112,7 @@ class Options
      * Image DPI setting
      *
      * This setting determines the default DPI setting for images and fonts.  The
-     * DPI may be overridden for inline images by explictly setting the
+     * DPI may be overridden for inline images by explicitly setting the
      * image's width & height style attributes (i.e. if the image's native
      * width is 600 pixels and you specify the image's width as 72 points,
      * the image will have a DPI of 600 in the rendered PDF.  The DPI of
@@ -141,7 +150,7 @@ class Options
      * system access available to dompdf. Set this option to false (recommended)
      * if you wish to process untrusted documents.
      *
-     * This setting may increase the risk of system exploit. Do not change 
+     * This setting may increase the risk of system exploit. Do not change
      * this settings without understanding the consequences. Additional
      * documentation is available on the dompdf wiki at:
      * https://github.com/dompdf/dompdf/wiki
@@ -163,7 +172,7 @@ class Options
      * tracing back appears to being downloaded by your server, or allows malicious php code
      * in remote html pages to be executed by your server with your account privileges.
      *
-     * This setting may increase the risk of system exploit. Do not change 
+     * This setting may increase the risk of system exploit. Do not change
      * this settings without understanding the consequences. Additional
      * documentation is available on the dompdf wiki at:
      * https://github.com/dompdf/dompdf/wiki
@@ -192,9 +201,9 @@ class Options
     /**
      * Whether to enable font subsetting or not.
      *
-     * @var is_bool
+     * @var bool
      */
-    private $isFontSubsettingEnabled = false;
+    private $isFontSubsettingEnabled = true;
 
     /**
      * @var bool
@@ -239,16 +248,16 @@ class Options
     /**
      * The PDF rendering backend to use
      *
-     * Valid settings are 'PDFLib', 'CPDF', 'GD', and 'auto'. 'auto' will 
-     * look for PDFLib and use it if found, or if not it will fall back on 
-     * CPDF. 'GD' renders PDFs to graphic files. {@link Dompdf\CanvasFactory} 
+     * Valid settings are 'PDFLib', 'CPDF', 'GD', and 'auto'. 'auto' will
+     * look for PDFLib and use it if found, or if not it will fall back on
+     * CPDF. 'GD' renders PDFs to graphic files. {@link Dompdf\CanvasFactory}
      * ultimately determines which rendering class to instantiate
      * based on this setting.
      *
      * @var string
      */
     private $pdfBackend = "CPDF";
-    
+
     /**
      * PDFlib license key
      *
@@ -258,13 +267,13 @@ class Options
      *
      * @link http://www.pdflib.com
      *
-     * If pdflib present in web server and auto or selected explicitely above,
+     * If pdflib present in web server and auto or selected explicitly above,
      * a real license code must exist!
      *
      * @var string
      */
     private $pdflibLicense = "";
-    
+
     /**
      * @var string
      * @deprecated
@@ -285,9 +294,9 @@ class Options
         $this->setChroot(realpath(__DIR__ . "/../"));
         $this->setRootDir($this->getChroot());
         $this->setTempDir(sys_get_temp_dir());
-        $this->setFontDir($this->chroot . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "fonts");
+        $this->setFontDir($this->chroot . "/lib/fonts");
         $this->setFontCache($this->getFontDir());
-        $this->setLogOutputFile($this->getTempDir() . DIRECTORY_SEPARATOR . "log.htm");
+        $this->setLogOutputFile($this->getTempDir() . "/log.htm");
 
         if (null !== $attributes) {
             $this->set($attributes);
@@ -302,7 +311,7 @@ class Options
     public function set($attributes, $value = null)
     {
         if (!is_array($attributes)) {
-            $attributes = array($attributes => $value);
+            $attributes = [$attributes => $value];
         }
         foreach ($attributes as $key => $value) {
             if ($key === 'tempDir' || $key === 'temp_dir') {
@@ -319,6 +328,8 @@ class Options
                 $this->setDefaultMediaType($value);
             } elseif ($key === 'defaultPaperSize' || $key === 'default_paper_size') {
                 $this->setDefaultPaperSize($value);
+            } elseif ($key === 'defaultPaperOrientation' || $key === 'default_paper_orientation') {
+                $this->setDefaultPaperOrientation($value);
             } elseif ($key === 'defaultFont' || $key === 'default_font') {
                 $this->setDefaultFont($value);
             } elseif ($key === 'dpi') {
@@ -384,6 +395,8 @@ class Options
             return $this->getDefaultMediaType();
         } elseif ($key === 'defaultPaperSize' || $key === 'default_paper_size') {
             return $this->getDefaultPaperSize();
+        } elseif ($key === 'defaultPaperOrientation' || $key === 'default_paper_orientation') {
+            return $this->getDefaultPaperOrientation();
         } elseif ($key === 'defaultFont' || $key === 'default_font') {
             return $this->getDefaultFont();
         } elseif ($key === 'dpi') {
@@ -481,7 +494,7 @@ class Options
     {
         return $this->pdfBackend;
     }
-    
+
     /**
      * @param string $pdflibLicense
      * @return $this
@@ -499,7 +512,7 @@ class Options
     {
         return $this->pdflibLicense;
     }
-    
+
     /**
      * @param string $chroot
      * @return $this
@@ -709,11 +722,29 @@ class Options
     }
 
     /**
+     * @param string $defaultPaperOrientation
+     * @return $this
+     */
+    public function setDefaultPaperOrientation($defaultPaperOrientation)
+    {
+        $this->defaultPaperOrientation = $defaultPaperOrientation;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDefaultPaperSize()
     {
         return $this->defaultPaperSize;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultPaperOrientation()
+    {
+        return $this->defaultPaperOrientation;
     }
 
     /**

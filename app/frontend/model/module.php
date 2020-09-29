@@ -33,7 +33,7 @@
  # needs please refer to http://www.magix-cms.com for more information.
  */
 class frontend_model_module extends frontend_db_module {
-    protected $data;
+    protected $template, $data;
 
 	/**
 	 * frontend_model_plugins constructor.
@@ -82,14 +82,15 @@ class frontend_model_module extends frontend_db_module {
 	 */
 	private function get_call_class($module){
 		try{
-			$class =  new $module;
+			$class =  new $module($this->template);
 			if($class instanceof $module){
 				return $class;
 			}else{
 				throw new Exception('not instantiate the class: '.$module);
 			}
 		}catch(Exception $e) {
-			magixglobal_model_system::magixlog("Error plugins execute", $e);
+            $logger = new debug_logger(MP_LOG_DIR);
+            $logger->log('php', 'error', 'Error plugins execute : ' . $e->getMessage(), debug_logger::LOG_MONTH);
 		}
 	}
 

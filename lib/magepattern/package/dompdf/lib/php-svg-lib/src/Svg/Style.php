@@ -2,8 +2,8 @@
 /**
  * @package php-svg-lib
  * @link    http://github.com/PhenX/php-svg-lib
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @author  Fabien Mï¿½nager <fabien.menager@gmail.com>
+ * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
 namespace Svg;
@@ -63,7 +63,7 @@ class Style
 
             'font-family'       => array('fontFamily', self::TYPE_NAME),
             'font-size'         => array('fontSize', self::TYPE_NUMBER),
-            'font-weight'       => array('fontWeight', self::TYPE_NUMBER),
+            'font-weight'       => array('fontWeight', self::TYPE_NAME),
             'font-style'        => array('fontStyle', self::TYPE_NAME),
             'text-anchor'       => array('textAnchor', self::TYPE_NAME),
         );
@@ -173,7 +173,7 @@ class Style
     {
         $color = strtolower(trim($color));
 
-        $parts = preg_split('/\s+/', $color, 2);
+        $parts = preg_split('/[^,]\s+/', $color, 2);
 
         if (count($parts) == 2) {
             $color = $parts[1];
@@ -302,7 +302,7 @@ class Style
 
             if ($percent) {
                 if ($triplet[$c][strlen($triplet[$c]) - 1] === "%") {
-                    $triplet[$c] = $triplet[$c] / 100;
+                    $triplet[$c] = floatval($triplet[$c]) / 100;
                 }
                 else {
                     $triplet[$c] = $triplet[$c] / 255;
@@ -310,7 +310,7 @@ class Style
             }
             else {
                 if ($triplet[$c][strlen($triplet[$c]) - 1] === "%") {
-                    $triplet[$c] = round($triplet[$c] * 2.55);
+                    $triplet[$c] = round(floatval($triplet[$c]) * 2.55);
                 }
             }
         }

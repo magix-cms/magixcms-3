@@ -24,10 +24,10 @@ class component_files_pdf{
     /**
      * component_files_pdf constructor.
      */
-    function __construct($template,$debug = false)
+    function __construct($t = null,$debug = false)
     {
         $this->header = new http_header();
-		$this->template = $template;
+		$this->template = $t;
         $this->message = new component_core_message($this->template);
         $formClean = new form_inputEscape();
         $this->filesystem = new filesystem_makefile();
@@ -77,7 +77,8 @@ class component_files_pdf{
 
         //print_r($config);
         if(is_array($config)){
-        	if($config['lang'] != '') $this->template->configLangLoad($config['lang']);
+        	//if($config['lang'] != '') $this->template->configLangLoad($config['lang']);
+            $config['lang'] = $this->template->lang;
             $fetch = $this->template->fetch($config['template']);
             $pdf = $this->dompdf;
             $pdf->output(['isRemoteEnabled' => true]);
