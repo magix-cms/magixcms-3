@@ -226,6 +226,48 @@ class component_collections_country{
         "ZM"=>"Zambia",
         "ZW"=>"Zimbabwe"
     );
+
+	/**
+	 * @param $config
+	 * @param bool $params
+	 * @return mixed|null
+	 * @throws Exception
+	 */
+	public function fetchData($config, $params = false)
+	{
+		if (!is_array($config)) return '$config must be an array';
+
+		$sql = '';
+
+		if ($config['context'] === 'all') {
+			switch ($config['type']) {
+				case 'countries':
+					$sql = 'SELECT * FROM mc_country ORDER BY name_country';
+					break;
+				case 'towns':
+					$sql = 'SELECT mt.*, mc.iso_country 
+							FROM mc_town mt
+							LEFT JOIN mc_country mc on mc.id_country = mt.id_country
+							ORDER BY name_tn';
+					break;
+			}
+
+			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+		}
+		elseif ($config['context'] === 'one') {
+			switch ($config['type']) {
+				case 'country':
+					$sql = 'SELECT * FROM mc_country WHERE id_country = :id';
+					break;
+				case 'town':
+					$sql = 'SELECT * FROM mc_town WHERE id_tn = :id';
+					break;
+			}
+
+			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+		}
+	}
+
     /**
      * @access public
      * @static
@@ -235,6 +277,32 @@ class component_collections_country{
         $country = $this->defaultCountry;
         asort($country,SORT_STRING);
         return $country;
+    }
+
+    /**
+     * @access public
+     * @static
+     * Retourne le tableau des pays
+     */
+    public function getAllowedCountries(){
+		$countries = $this->fetchData(['context'=>'all','type'=>'countries']);
+		if(!empty($countries)) {
+			$arr = [];
+			foreach ($countries as $c) {
+				$arr[$c['iso_country']] = $c['name_country'];
+			}
+			$countries = $arr;
+		}
+		return $countries;
+    }
+
+    /**
+     * @access public
+     * @static
+     * Retourne le tableau des pays
+     */
+    public function getTowns(){
+        return $this->fetchData(['context'=>'all','type'=>'towns']);
     }
 }
 ?>
