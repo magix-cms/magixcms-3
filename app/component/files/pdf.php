@@ -41,6 +41,7 @@ class component_files_pdf{
         }
         //$options->set('chroot', '/'); // Just for testing :)
         $options->set('isHtml5ParserEnabled', true);
+		$options->set("isPhpEnabled", true);
         $this->dompdf = new Dompdf($options);
         /**
          *
