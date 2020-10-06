@@ -205,7 +205,10 @@ class debug_logger {
             $row .= "\n";
         }
 
-        $this->write($logfile, $row);
+		//$bt = debug_backtrace();
+        //foreach ($bt as $i => $t) { $this->write($logfile, "$i : ".$t['file']." | line : ".$t['line']." | function : ".$t['function']."\r\t"); }
+
+		$this->write($logfile, $row);
 
         # Firephp
         if (defined('MP_FIREPHP') && MP_FIREPHP == false){

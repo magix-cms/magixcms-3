@@ -245,7 +245,6 @@ class component_routing_dispatcher {
 		}
 
 		if($this->access === 'backend') $this->template->assign('cClass',$controller_class);
-
 		if($controller_class && class_exists($controller_class)) {
 			try {
 				$class =  new $controller_class($this->template);
@@ -261,7 +260,7 @@ class component_routing_dispatcher {
 			}
         }
 		else {
-			$this->logger->log('php', 'error', 'An error has occured : the class '.$controller_class.' does not exist', debug_logger::LOG_MONTH);
+			$this->logger->log('php', 'error', 'An error has occured : controller '.$this->controller_name.' not found in '.$this->router, debug_logger::LOG_MONTH);
 		}
     }
 

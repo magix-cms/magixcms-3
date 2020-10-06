@@ -184,6 +184,73 @@ class component_files_images{
         }
     }
 
+	/**
+	 * @param array $conf
+	 * @param string $name
+	 * @param int|null $id
+	 * @return array|false
+	 * @throws Exception
+	 */
+	public function setModuleImage(array $conf,string $name,$id = null)
+	{
+		if(empty($conf)) return false;
+
+		$default = null;
+		$images = [];
+		if(in_array($conf['type']['module_img'],['category','product','news','pages'])) {
+			$logo = new frontend_model_logo();
+			$imagePlaceHolder = $logo->getImagePlaceholder();
+			$default = $imagePlaceHolder[$conf['type']['module_img']];
+		}
+		$images['default'] = $default;
+
+		if(!empty($name)) {
+			$imgPrefix = $this->prefix();
+			$config = $this->getConfigItems($conf['type']);
+
+			// # return filename without extension
+			$pathinfo = pathinfo($name);
+			$filename = $pathinfo['filename'];
+			$imgPath = 'upload/'.$conf['dir'].($id && $conf['subDir'] ? '/'.$id.'/' : '/');
+			$url = component_core_system::basePath();
+			$extwebp = 'webp';
+
+			foreach ($config as $v) {
+				$imginfo = $this->getImageInfos($url.$imgPath.$imgPrefix[$v['type_img']].$name);
+				$img = [
+					'src' => '/'.$imgPath.$imgPrefix[$v['type_img']].$name,
+					'src_webp' => '/'.$imgPath.$imgPrefix[$v['type_img']] . $filename. '.' .$extwebp,
+					'w' => $v['resize_img'] === 'basic' ? $imginfo['width'] : $v['width_img'],
+					'h' => $v['resize_img'] === 'basic' ? $imginfo['height'] : $v['height_img'],
+					'crop' => $v['resize_img'],
+					'ext' => mime_content_type($url.$imgPath.$imgPrefix[$v['type_img']].$name)
+				];
+				$images[$v['type_img']] = $img;
+			}
+			$images['name'] = $name;
+		}
+		return $images;
+    }
+
+	/**
+	 * @param array $conf
+	 * @param array $data
+	 * @param string $imgKey
+	 * @return array|false
+	 * @throws Exception
+	 */
+	public function setModuleImages(array $conf,array $data,string $imgKey)
+	{
+		if(empty($conf)) return false;
+
+		if(!empty($data) && $imgKey !== '') {
+			foreach ($data as &$row) {
+				$row['img'] = $this->setModuleImage($conf, $row[$imgKey], ($conf['subDir'] ? $row[$conf['subDir']] : null));
+			}
+		}
+		return $data;
+    }
+
     /**
      *
      *
@@ -395,4 +462,3 @@ class component_files_images{
         }
     }
 }
-?>
