@@ -83,6 +83,17 @@ class date_dateformat extends DateTime{
 		if ( $y === null || $m === null || $d === null ) return false ;
 		return checkdate( $m, $d, $y ) ;
 	}
+
+    /**
+     * @param $date
+     * @param string $format
+     * @return bool
+     * Test la validité de la date dans tous les formats
+     */
+    public function validateDate($date, $format = 'Y-m-d H:i:s'){
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
     /**
      * W3C date Format
      * @param $str
