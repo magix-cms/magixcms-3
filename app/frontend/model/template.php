@@ -46,6 +46,10 @@
  */
 class frontend_model_template{
 	/**
+	 * Variable statique permettant de porter l'instance unique
+	 */
+	static protected $instance;
+	/**
 	 * Constante pour le chemin vers le dossier de configuration des langues statiques pour le contenu
 	 * @var string
 	 */
@@ -69,12 +73,15 @@ class frontend_model_template{
 	 * Constructor
 	 */
     public function __construct(){
+		if (isset(self::$instance)) return self::$instance;
+
 		$this->ConfigFile = 'local_';
 		$this->collectionsSetting = new component_collections_setting();
 		$this->cLangs = new component_collections_language();
 		$this->DBDomain = new frontend_db_domain();
 
 		$this->init();
+		self::$instance = $this;
 	}
 
     public function init(){

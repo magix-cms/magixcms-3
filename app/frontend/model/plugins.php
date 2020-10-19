@@ -71,6 +71,7 @@ class frontend_model_plugins{
             }
         }
     }
+
     /**
      * @param $className
      * @return mixed

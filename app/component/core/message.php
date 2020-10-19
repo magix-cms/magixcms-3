@@ -26,6 +26,7 @@ class component_core_message{
     public function getNotify($notify,$options = array()){
         $options = $options + $this->default;
         $model = $this->template;
+        $this->template->configLoad();
 
         switch($options['method']) {
             case 'display':

@@ -261,8 +261,8 @@ class frontend_model_about extends frontend_db_about {
 				$data['menu'] = $row['menu_pages'];
 				$data['date']['update'] = isset($row['last_update']) ? $row['last_update'] : null;
 				$data['date']['register'] = isset($row['date_register']) ? $row['date_register'] : null;
-				$data['seo']['title'] = isset($row['seo_title_pages']) ? $row['seo_title_pages'] : $data['name'];
-				$data['seo']['description'] = isset($row['seo_desc_pages']) ? $row['seo_desc_pages'] : (isset($data['resume']) ? $data['resume'] : $data['seo']['title']);
+				$data['seo']['title'] = !empty($row['seo_title_pages']) ? $row['seo_title_pages'] : $data['name'];
+				$data['seo']['description'] = !empty($row['seo_desc_pages']) ? $row['seo_desc_pages'] : (isset($data['resume']) ? $data['resume'] : $data['seo']['title']);
 				// Plugin
 				if($newRow != false){
 					if(is_array($newRow)){

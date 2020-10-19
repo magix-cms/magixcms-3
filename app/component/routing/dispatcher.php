@@ -60,7 +60,6 @@ class component_routing_dispatcher {
     	$this->basepath = component_core_system::basePath();
         $this->formClean = new form_inputEscape();
 		$this->setRoutes();
-		$this->header = new component_httpUtils_header($this->template);
 		$this->pluginsCollection = new component_collections_plugins();
 		$this->settingCollection = new component_collections_setting();
 
@@ -82,6 +81,7 @@ class component_routing_dispatcher {
     	$model = $this->access.'_model_template';
 		$this->template = new $model;
 		$this->language = new component_core_language($this->template);
+		$this->header = new component_httpUtils_header($this->template);
 		if(http_request::isGet('controller')) $this->controller_name = $this->formClean->simpleClean($_GET['controller']);
 
 		if($this->access === 'frontend') {

@@ -94,10 +94,9 @@ class frontend_model_menu extends frontend_db_menu {
 	 * @param $params
 	 * @return bool
 	 */
-	public function getPluginMenuConf($params)
+	public function getPluginMenuConf($name)
 	{
-		$plugin = $this->getItems('plugin',array('id' => $params['id']),'one',false);
-		$plugin_class = 'plugins_'.$plugin['name'].'_public';
+		$plugin_class = 'plugins_'.$name.'_public';
 		$plugin = new $plugin_class($this->template);
 		return (method_exists($plugin,'is_amp')) ? $plugin->is_amp() : false;
 	}
@@ -158,7 +157,7 @@ class frontend_model_menu extends frontend_db_menu {
 				$link['amp_available'] = true;
 			}
 			elseif($link['type_link'] === 'plugin') {
-				$link['amp_available'] = $this->getPluginMenuConf(array('id' => $link['id_page']));
+				$link['amp_available'] = $this->getPluginMenuConf($link['plugin_name']);
 			}
 
 			if($link['mode_link'] !== 'simple') {
@@ -258,7 +257,7 @@ class frontend_model_menu extends frontend_db_menu {
 				if($this->id || $this->id_parent) $active['ids'] = $this->catalog->getParents($this->id_parent ? $this->id_parent : $this->id);
 				break;
 			default:
-				$active['ids'] = array($this->getControllerId(array('name' => $this->controller)));
+				if(!empty($this->controller)) $active['ids'] = array($this->getControllerId(array('name' => $this->controller)));
 		}
 
 		$this->template->assign('active_link',$active);
