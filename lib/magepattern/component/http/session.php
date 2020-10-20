@@ -160,6 +160,7 @@ class http_session extends sessionUtils{
 	 * @param string $session_name
 	 */
     public function close($session_name){
+        session_write_close();
     	session_name($session_name);
 		session_start();
 		session_unset();

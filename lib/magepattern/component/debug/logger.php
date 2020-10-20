@@ -201,12 +201,18 @@ class debug_logger {
         $row = $date->dateDefine('d/m/Y H:i:s').' '.$row;
 
         # Ajout du retour chariot de fin de ligne si il n'y en a pas
+		$row = preg_replace('/[ \r\n\t]+/',' ',$row);
         if( !preg_match('#\n$#',$row) ){
             $row .= "\n";
         }
 
 		//$bt = debug_backtrace();
         //foreach ($bt as $i => $t) { $this->write($logfile, "$i : ".$t['file']." | line : ".$t['line']." | function : ".$t['function']."\r\t"); }
+        //$this->write($logfile, $bt[5]['file']." | line : ".$bt[5]['line']." | function : ".$bt[5]['function']."\r\t");
+        //$this->write($logfile, $bt[4]['file']." | line : ".$bt[4]['line']." | function : ".$bt[4]['function']."\r\t");
+        //$this->write($logfile, $bt[3]['file']." | line : ".$bt[3]['line']." | function : ".$bt[3]['function']."\r\t");
+        //$this->write($logfile, $bt[2]['file']." | line : ".$bt[2]['line']." | function : ".$bt[2]['function']."\r\t");
+        //$this->write($logfile, $bt[1]['file']." | line : ".$bt[1]['line']." | function : ".$bt[1]['function']."\r\t");
 
 		$this->write($logfile, $row);
 

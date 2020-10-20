@@ -324,6 +324,8 @@ class db_layer{
             /**
              * Charge la configuration
              */
+			//$logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
+			//$logger->log('statement', 'select', $sql, debug_logger::LOG_MONTH);
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
@@ -360,6 +362,8 @@ class db_layer{
             /**
              * Charge la configuration
              */
+			//$logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
+			//$logger->log('statement', 'select', $sql, debug_logger::LOG_MONTH);
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
