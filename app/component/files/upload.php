@@ -263,8 +263,10 @@ class component_files_upload{
      */
     public function dirImgUploadCollection($data,$debug = false){
         $makeFiles = new filesystem_makefile();
-        if($debug){
-            print_r($data);
+
+        if ($debug) {
+            $log = new debug_logger(MP_LOG_DIR);
+            $log->tracelog(json_encode($data));
         }
         if(is_array($data)){
             if(array_key_exists('upload_root_dir',$data)){
@@ -461,14 +463,14 @@ class component_files_upload{
 
     /**
      * function fixe minsize
-     * @param $maxh hauteur minimum
-     * @param $maxw largeur minimum
+     * @param int $minh hauteur minimum
+     * @param int $minw largeur minimum
      * @param string $source
      * @return bool
      */
-    public function imgSizeMin($source,$maxw,$maxh){
+    public function imgSizeMin(string $source,int $minw,int $minh){
         list($width, $height) = @getimagesize($source);
-        if($width<$maxw || $height<$maxh){
+        if($width<$minw || $height<$minh){
             return false;
         }else{
             return true;
@@ -507,7 +509,10 @@ class component_files_upload{
     public function multiUploadImg($imgCollection,$path,$data=false,$debug=false){
         $msg = null;
         $response = null;
+        $result = null;
         //print_r($imgCollection);
+        $name = null;
+        $mimeContent = null;
         $setUpload = $this->reArrayFiles($_FILES[$imgCollection]);
         if (isset($setUpload)) {
             if(is_array($setUpload)) {
@@ -553,33 +558,6 @@ class component_files_upload{
 								}
 								$name = $prefix.$name;
 
-                                if($debug){
-                                    $result[] = array(
-                                        'statut'=> true,
-                                        'notify'=> 'upload',
-                                        'name'=> $item["name"],
-                                        'tmp_name'=> $item["tmp_name"],
-                                        'new_name'=> $name,
-                                        'mimecontent'=>
-                                            array(
-                                                'type'=> $mimeContent['type'],
-                                                'mime'=> $mimeContent['mime']
-                                            )
-                                    );
-                                }else{
-                                    $result[] = array(
-                                        'statut'=> true,
-                                        'notify'=> 'upload',
-                                        'name'=> $item["name"],
-                                        'tmp_name'=> $item["tmp_name"],
-                                        'new_name'=> $name,
-                                        'mimecontent'=>
-                                            array(
-                                                'type'=> $mimeContent['type'],
-                                                'mime'=> $mimeContent['mime']
-                                            )
-                                    );
-                                }
                             }else{
                                 $msg .= 'Disk write error';
                             }
@@ -591,14 +569,49 @@ class component_files_upload{
                     }elseif (UPLOAD_ERR_FORM_SIZE == true){
                         $msg .= 'the maximum size is 3000 x 3000';
                     }
+                    if($msg != null) {
+                        $result[] = array(
+                            'statut' => false,
+                            'notify' => 'upload',
+                            'name' => $item["name"],
+                            'tmp_name' => $item["tmp_name"],
+                            'new_name' => $name,
+                            'mimecontent' =>
+                                array(
+                                    'type' => $mimeContent['type'],
+                                    'mime' => $mimeContent['mime']
+                                ),
+                            'msg' => $msg
+                        );
+                    }else{
+                        $result[] = array(
+                            'statut'=> true,
+                            'notify'=> 'upload',
+                            'name'=> $item["name"],
+                            'tmp_name'=> $item["tmp_name"],
+                            'new_name'=> $name,
+                            'mimecontent'=>
+                                array(
+                                    'type'=> $mimeContent['type'],
+                                    'mime'=> $mimeContent['mime']
+                                )
+                        );
+                    }
                 }
-               return $result;
             }
-        }elseif (UPLOAD_ERR_NO_FILE == true){
+        }/*elseif (UPLOAD_ERR_NO_FILE == true){
             $msg .= 'No file';
         }else{
             $msg .= 'Disk write error';
+        }*/
+
+        if($debug){
+            $log = new debug_logger(MP_LOG_DIR);
+            //$trace = array_merge($result,array('msg'=>$msg));
+            $log->tracelog(json_encode($result));
+
         }
+        return $result;
     }
 
     /**
@@ -612,6 +625,7 @@ class component_files_upload{
     public function uploadImg($img,$path,$debug=false){
         $msg = null;
         $response = null;
+        $mimeContent = null;
         if (isset($_FILES[$img])) {
             if ($_FILES[$img]['error'] == UPLOAD_ERR_OK){
                 if($this->imageValid($_FILES[$img]['tmp_name']) === false){
@@ -630,16 +644,7 @@ class component_files_upload{
                         }else{
                             if (!move_uploaded_file($source, $target)) {
                                 $msg .= 'Temporary File Error';
-                            }else{
-                                if($debug != false){
-                                    $response = array('source'=>$source,'target'=>$target);
-                                }
                             }
-                        }
-                        if($debug){
-                            $result = array('title'=>'Upload result','statut'=>true,'notify'=>'upload','msg'=>'Upload success','debug'=>'Source: '.$response['source'].' Target: '.$response['target'],'mimecontent'=>array('type'=>$mimeContent['type'],'mime'=>$mimeContent['mime']));
-                        }else{
-                            $result = array('title'=>'Upload result','statut'=>true,'notify'=>'upload','msg'=>'Upload success','mimecontent'=>array('type'=>$mimeContent['type'],'mime'=>$mimeContent['mime']));
                         }
                     }else{
                         $msg .= 'Disk write error';
@@ -658,7 +663,28 @@ class component_files_upload{
             $msg .= 'Disk write error';
         }
         if($msg != null){
-            $result = array('title'=>'Upload result','statut'=>false,'notify'=>'upload_error','msg'=>$msg);
+            $result = array(
+                'title'=>'Upload result',
+                'statut'=>false,
+                'notify'=>'upload_error',
+                'msg' => $msg
+            );
+        }else{
+            $result = array(
+                'title'=>'Upload result',
+                'statut'=>true,
+                'notify'=>'upload',
+                'msg'=>'Upload success',
+                'mimecontent'=>
+                    array(
+                        'type'=>$mimeContent['type'],
+                        'mime'=>$mimeContent['mime']
+                    )
+            );
+        }
+        if($debug){
+            $log = new debug_logger(MP_LOG_DIR);
+            $log->tracelog(json_encode($result));
         }
         return $result;
     }
@@ -716,6 +742,10 @@ class component_files_upload{
                     )
                 );
                 //print_r($fetchConfig);
+                if ($debug) {
+                    $log = new debug_logger(MP_LOG_DIR);
+                    $log->tracelog('start upload');
+                }
                 if(!empty($this->$img)){
                     /**
                      * Envoi une image dans le dossier "racine" du module
@@ -730,13 +760,15 @@ class component_files_upload{
                         ),
                         $debug
                     );
-
-                    if($resultUpload['statut'] != null) {
+                    if($debug) $log->tracelog(json_encode($resultUpload));
+                    if($resultUpload['statut'] != false) {
                         /**
                          * Analyze l'extension du fichier en traitement
                          * @var $fileextends
                          */
+                        if($debug) $log->tracelog('statut : '.json_encode($resultUpload['statut']));
 
+                        $data['name'] = http_url::clean($data['name']);
                         //$fileExtends = $this->imageAnalyze($dirImg . $this->$img);
                         if ($this->imgSizeMin($dirImg . $this->$img, 25, 25)) {
                             /*if(file_exists($dirImg.$data['name'].$fileExtends)){
@@ -781,13 +813,6 @@ class component_files_upload{
                                             $suffix = '';
                                         }
 
-										/*if (file_exists($filesPath . $prefix . $data['edit'])) {
-											$makeFiles->remove(array($filesPath . $prefix . $data['edit']));
-										}
-										if (file_exists($filesPath . $data['edit'])) {
-											$makeFiles->remove(array($filesPath . $data['edit']));
-										}*/
-
                                         if (file_exists($filesPath . $prefix . $filename. $suffix.'.'.$mimeContent['type'])) {
                                             $makeFiles->remove(array($filesPath . $prefix . $filename. $suffix.'.'.$mimeContent['type']));
                                         }
@@ -797,7 +822,7 @@ class component_files_upload{
 									}
 								}
 							}
-
+                            if($debug) $log->tracelog('rename format');
                             // Renomme le fichier
                             $makeFiles->rename(
                                 array(
@@ -879,7 +904,7 @@ class component_files_upload{
                                         }
                                         $filesPathDebug[] = $filesPath . $prefix . $data['name']. $suffix . '.'.$resultUpload['mimecontent']['type'];
                                     }
-
+                                    if($debug) $log->tracelog('rename format');
                                     $makeFiles->rename(
                                         array(
                                             'origin' => $dirImg . $data['name'] . '.'.$resultUpload['mimecontent']['type'],
@@ -891,6 +916,7 @@ class component_files_upload{
                             }
 
                             if(isset($data['original_remove']) && $data['original_remove']){
+                                if($debug) $log->tracelog('delete original');
                                 if (is_array($imgCollection)) {
                                     $dirImgArray = $this->dirImgUploadCollection($imgCollection);
                                     //Supprime le fichier local
@@ -902,14 +928,16 @@ class component_files_upload{
                                 }
                             }
 
-                            if ($debug) {
+                            /*if ($debug) {
                                 $debugResult = '<pre>';
                                 $debugResult .= print_r($fetchConfig,true);
                                 $debugResult .= print_r($filesPathDebug,true);
                                 $debugResult .= print_r($resultUpload['mimecontent'],true);
                                 $debugResult .=  '</pre>';
-                            }
-                            return array('file' => $data['name'] . '.'.$resultUpload['mimecontent']['type'], 'statut' => $resultUpload['statut'], 'notify' => $resultUpload['notify'], 'msg' => $resultUpload['msg'],'debug'=>$debugResult);
+                            }*/
+                            $resultData = array('file' => $data['name'] . '.'.$resultUpload['mimecontent']['type'], 'statut' => $resultUpload['statut'], 'notify' => $resultUpload['notify'], 'msg' => $resultUpload['msg'],'debug'=>$debugResult);
+                            if ($debug)  $log->tracelog(json_encode($resultData));
+                            return $resultData;
 
 
                         } else {
@@ -920,10 +948,11 @@ class component_files_upload{
                                 throw new Exception('file: ' . $this->$img . ' is not found');
                             }
                         }
-                    }else{
-                        return array('file'=>null,'statut'=>$resultUpload['statut'],'notify'=>$resultUpload['notify'],'msg'=>$resultUpload['msg']);
-                    }
-                }else{
+                    }/*else{
+                        $resultData = array('file'=>null,'statut'=>$resultUpload['statut'],'notify'=>$resultUpload['notify'],'msg'=>$resultUpload['msg']);
+                        return $resultData;
+                    }*/
+                }/*else{
                     if(!empty($data['edit'])){
                         if(is_array($imgCollection)) {
                             $dirImgArray = $this->dirImgUploadCollection($imgCollection);
@@ -935,7 +964,7 @@ class component_files_upload{
                         }
                     }
                     return array('file'=>null,'statut'=>$resultUpload['statut'],'notify'=>$resultUpload['notify'],'msg'=>$resultUpload['msg']);
-                }
+                }*/
             }catch (Exception $e){
                 $logger = new debug_logger(MP_LOG_DIR);
                 $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
@@ -989,7 +1018,12 @@ class component_files_upload{
                 );
                 $fetchConfig = $this->config->fetchData(array('context'=>'all','type'=>'imgSize'),array('module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img']));
 
+                if ($debug) {
+                    $log = new debug_logger(MP_LOG_DIR);
+                    $log->tracelog('start upload');
+                }
                 if(!empty($this->$img_multiple)){
+                    $resultData = [];
                     /**
                      * Envoi une image dans le dossier "racine" catalogimg
                      */
@@ -1005,12 +1039,17 @@ class component_files_upload{
                         $debug
                     );
 
-                    foreach($resultUpload as $key => $value){
-                        if($value['statut'] != 0){
+                    //if($debug) $log->tracelog(json_encode($resultUpload));
 
-                            if ($this->imgSizeMin($dirImg . $value['name'], 25, 25)) {
+                    foreach($resultUpload as $key => $value){
+                        //if($debug) $log->tracelog('statut : '.json_encode($value['statut']));
+                        if($value['statut'] != false){
+                            $value['name'] = http_url::clean($value['name']);
+
+                            //if ($this->imgSizeMin($dirImg . $value['name'], 25, 25)) {
                                 //print $dirImg . $value['name'].'<br />';
                                 // Renomme le fichier
+                                if($debug) $log->tracelog('rename source');
                                 $makeFiles->rename(
                                     array(
                                         'origin' => $dirImg . $value['name'],
@@ -1076,6 +1115,7 @@ class component_files_upload{
                                             $filesPathDebug[] = $filesPath . $prefix . $value['new_name'] . '.'.$value['mimecontent']['type'];
                                         }
 
+                                        if($debug) $log->tracelog('rename format');
                                         $makeFiles->rename(
                                             array(
                                                 'origin' => $dirImg . $value['new_name'] . '.'.$value['mimecontent']['type'],
@@ -1086,6 +1126,7 @@ class component_files_upload{
                                 }
 
                                 if(isset($data['original_remove']) && $data['original_remove']){
+                                    if($debug) $log->tracelog('delete original');
                                     if (is_array($imgCollection)) {
                                         $dirImgArray = $this->dirImgUploadCollection($imgCollection,$debug);
                                         //Supprime le fichier local
@@ -1103,24 +1144,15 @@ class component_files_upload{
                                     'notify' => $value['notify'],
                                     'msg'    => 'Upload success'
                                 );
-
-                            }
+                            /*}
+                            else {
+                                if($debug) $log->tracelog('too small');
+                            }*/
                         }
                     }
 
-                    if ($debug) {
-                        print '<pre>';
-                        print_r($fetchConfig);
-                        print '</pre>';
-                        print '<pre>';
-                        print_r($resultUpload);
-                        print '</pre>';
-                        print '<pre>';
-                        print_r($resultData);
-                        print '</pre>';
-                    }else{
-                        return $resultData;
-                    }
+                    if ($debug)  $log->tracelog(json_encode($resultData));
+                    return $resultData;
                 }
             }catch (Exception $e){
                 $logger = new debug_logger(MP_LOG_DIR);
@@ -1256,6 +1288,10 @@ class component_files_upload{
                 $dirFiles = $this->dirFileUpload($dirconf);
 
                 if(!empty($this->file)) {
+                    if ($debug) {
+                        $log = new debug_logger(MP_LOG_DIR);
+                        $log->tracelog('start upload');
+                    }
                     $filename = $this->file;
                     $dirconf['fileBasePath'] = false;
 					$mimeContent = $this->mimeContentType(['mime'=>$_FILES[$file]['type']]);
@@ -1280,7 +1316,7 @@ class component_files_upload{
                         $debug
                     );
 
-                    if($resultUpload['statut'] === true) {
+                    if($resultUpload['statut'] != false) {
 						if(!empty($data)) {
 							// Renomme le fichier
 							if (!empty($data['name'])) {
@@ -1303,21 +1339,20 @@ class component_files_upload{
 						}
                     }
 
-					if ($debug) {
-						$debugResult = '<pre>';
-						$debugResult .= print_r($resultUpload['mimecontent'],true);
-						$debugResult .=  '</pre>';
-					}
-					return [
+                    $resultData = [
 						'file' => $filename,
 						'path' => $dirFiles,
 						'type' => $resultUpload['mimecontent']['type'],
 						'mime' => $resultUpload['mimecontent']['mime'],
 						'status' => $resultUpload['statut'],
 						'notify' => $resultUpload['notify'],
-						'msg' => $resultUpload['msg'],
-						'debug' => $debugResult
+						'msg' => $resultUpload['msg']
 					];
+                    if ($debug) {
+                        $log->tracelog(json_encode($resultData));
+                        $log->tracelog('end upload');
+                    }
+                    return $resultData;
                 }
             }
             catch (Exception $e) {
