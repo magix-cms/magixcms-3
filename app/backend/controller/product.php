@@ -12,7 +12,7 @@ class backend_controller_product extends backend_db_product
 		'reference_p' => ['title' => 'reference'],
 		'resume_p' => ['class' => 'fixed-td-lg text-center', 'type' => 'bin', 'input' => null],
 		'content_p' => ['class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
-		'default_img' => ['title' => 'img', 'class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
+		'img_p' => ['title' => 'img', 'class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
         'seo_title_p' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
         'seo_desc_p' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
 		'date_register'
