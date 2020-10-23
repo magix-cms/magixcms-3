@@ -160,8 +160,8 @@ class http_url{
         }
         /* stripcslashes backslash */
         $str = filter_escapeHtml::cleanQuote($str);
-        $tbl_o = array("@'@i",'@[[:blank:]]@i','[\|]','[\?]','[\#]','[\@]','[\,]','[\!]','[\:]','[\(]','[\)]');
-        $tbl_r = array ('-','-','-',"","","","","","","","");
+        $tbl_o = array("@'@i",'@[[:blank:]]@i','[\|]','[\?]','[\#]','[\@]','[\,]','[\!]','[\:]','[\(]','[\)]','/[\s\+]/');
+        $tbl_r = array ('-','-','-',"","","","","","","","","-");
         $cSpec = '';
         $rSpec = '';
         if(is_array($option)){
