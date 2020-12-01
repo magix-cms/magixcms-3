@@ -66,6 +66,11 @@ class component_collections_language{
 					   WHERE l.active_lang = 1
 					   ORDER BY l.default_lang DESC,l.id_lang ASC';
 			    	break;
+                case 'adminLangs':
+                    $sql = 'SELECT l.id_lang, l.iso_lang, l.name_lang, l.default_lang
+					   FROM mc_lang AS l
+					   ORDER BY l.default_lang DESC,l.id_lang ASC';
+                    break;
 			    case 'domain':
 					$sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
 						FROM mc_domain_language AS dl
