@@ -5,7 +5,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </span>
-        Menu
+        <span class="hidden-xs-down">Menu</span>
     </button>
     {if $dataLang != null && count($dataLang) > 1}
     <div class="select-lang">

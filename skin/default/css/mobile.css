@@ -7,6 +7,11 @@
   --smooth-grey: #ccc;
   --light-grey: #9e9e9e;
   --black: #000;
+  --main-color-h: 219;
+  --main-color-s: 48%;
+  --main-color-l: 45%;
+  --main-color-a: 1;
+  --main-color: hsla(var(--main-color-h), var(--main-color-s), var(--main-color-l), var(--main-color-a));
   --sd-color-h: 210;
   --sd-color-s: 2%;
   --sd-color-l: 51%;

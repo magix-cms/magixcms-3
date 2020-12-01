@@ -11,6 +11,11 @@
 	--smooth-grey: #ccc;
 	--light-grey: @light-grey;
 	--black: @black;
+	--main-color-h: extract(@main-color-hsla, 1);
+	--main-color-s: extract(@main-color-hsla, 2);
+	--main-color-l: extract(@main-color-hsla, 3);
+	--main-color-a: extract(@main-color-hsla, 4);
+	--main-color: hsla(var(--main-color-h),var(--main-color-s),var(--main-color-l),var(--main-color-a));
 	--sd-color-h: extract(@sd-color-hsla, 1);
 	--sd-color-s: extract(@sd-color-hsla, 2);
 	--sd-color-l: extract(@sd-color-hsla, 3);
