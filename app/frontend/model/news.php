@@ -115,7 +115,9 @@ class frontend_model_news extends frontend_db_news {
                 foreach ($fetchConfig as $key => $value) {
 					$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news']);
                     $data['img'][$value['type_img']]['src'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news'];
-                    $data['img'][$value['type_img']]['src_webp'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+                    if(file_exists(component_core_system::basePath().'/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)){
+                        $data['img'][$value['type_img']]['src_webp'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+                    }
 					//$data['img'][$value['type_img']]['w'] = $value['width_img'];
 					$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
 					//$data['img'][$value['type_img']]['h'] = $value['height_img'];

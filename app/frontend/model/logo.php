@@ -91,7 +91,9 @@ class frontend_model_logo extends frontend_db_logo {
                 foreach ($fetchConfig as $key => $value) {
                     $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extension);
                     $newData['img'][$value['type_img']]['src'] = '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extension;
-                    $newData['img'][$value['type_img']]['src_webp'] = '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extwebp;
+                    if(file_exists(component_core_system::basePath() .'/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extwebp)){
+                        $newData['img'][$value['type_img']]['src_webp'] = '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extwebp;
+                    }
                     $newData['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
                     $newData['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
                     $newData['img'][$value['type_img']]['crop'] = $value['resize_img'];

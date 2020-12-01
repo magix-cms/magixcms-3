@@ -117,7 +117,9 @@ class frontend_model_pages extends frontend_db_pages{
 							foreach ($fetchConfig as $key => $value) {
 								$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
 								$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+								if(file_exists(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)) {
+                                    $data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename . '.' . $extwebp;
+                                }
 								$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
 								//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
 								$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
@@ -147,7 +149,9 @@ class frontend_model_pages extends frontend_db_pages{
 						foreach ($fetchConfig as $key => $value) {
 							$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img']);
 							$data['img'][$value['type_img']]['src'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img'];
-							$data['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+							if(file_exists(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)) {
+                                $data['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename . '.' . $extwebp;
+                            }
 							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
 							$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
 							$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
