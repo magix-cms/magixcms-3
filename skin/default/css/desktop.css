@@ -2510,6 +2510,8 @@ figure > figcaption {
   --brd-l: var(--btn-brd-l, 100);
   --brd-a: var(--btn-brd-a, 1);
   --btn-brd: hsla(var(--brd-h), var(--brd-s), var(--brd-l), var(--brd-a));
+  position: relative;
+  z-index: 2;
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -4259,7 +4261,6 @@ h1,
   flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
-  z-index: 200;
   box-shadow:  0 2px 4px 0 rgba(0, 0, 0, 0.14),  0 4px 5px 0 rgba(0, 0, 0, 0.12),  0 1px 10px 0 rgba(0, 0, 0, 0.2);
   color: var(--white);
 }
