@@ -9,7 +9,7 @@
 ]}
 <form id="edit_setting_general" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=edit" method="post" class="validate_form edit_form">
     <div class="row">
-        <div class="col-ph-12 col-md-4">
+        <div class="col-ph-12 col-md-6 col-sm-6">
             <div class="form-group">
                 <label for="content_css">{#content_css#|ucfirst}</label>
                 <input type="text" id="content_css" name="setting[content_css]" class="form-control" placeholder="{#ph_content_css#}" value="{$settings.content_css}" />
@@ -50,6 +50,16 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-ph-12 col-md-4">
+                    <div class="form-group">
+                        <label for="amp">{#amp#|ucfirst}&nbsp;?</label>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="amp" name="setting[amp]" data-toggle="toggle" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if isset($settings.amp) && $settings.amp eq '1'} checked{/if}/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-ph-12 col-md-4">
                     <div class="form-group">
                         <label for="cache">{#cache#|ucfirst}</label>

@@ -202,6 +202,7 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `categ
 (NULL, 'service_worker', '0', 'int', 'Service Worker', 'general'),
 (NULL, 'vat_rate', '21', 'float', 'VAT Rate', 'catalog'),
 (NULL, 'price_display', 'tinc', 'string', 'Price display with or without tax included', 'catalog'),
+(NULL, 'amp', '0', 'int', 'amp', 'general'),
 (NULL, 'mail_sender', NULL, 'string', 'Mail sender', 'mail'),
 (NULL, 'smtp_enabled', '0', 'int', 'Smtp enabled', 'mail'),
 (NULL, 'set_host', NULL, 'string', 'Set host', 'mail'),

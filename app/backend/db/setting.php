@@ -102,8 +102,9 @@ class backend_db_setting{
 							WHEN 'service_worker' THEN :service_worker
 							WHEN 'cache' THEN :cache
 							WHEN 'mode' THEN :mode
+						    WHEN 'amp' THEN :amp
 						END
-						WHERE `name` IN ('content_css','concat','ssl','service_worker','cache','mode')";
+						WHERE `name` IN ('content_css','concat','ssl','service_worker','cache','mode','amp')";
 				break;
 			case 'css_inliner':
 				if($params['css_inliner'] != '0') {

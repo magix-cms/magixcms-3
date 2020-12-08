@@ -225,6 +225,7 @@ class backend_controller_setting extends backend_db_setting{
 				$concat = isset($this->setting['concat']) ? '1' : '0';
 				$ssl = isset($this->setting['ssl']) ? '1' : '0';
 				$service_worker = isset($this->setting['service_worker']) ? '1' : '0';
+                $amp = isset($this->setting['amp']) ? '1' : '0';
 
                 parent::update(
                     array(
@@ -235,7 +236,8 @@ class backend_controller_setting extends backend_db_setting{
                         'ssl'           => $ssl,
                         'service_worker'=> $service_worker,
                         'cache'         => $this->setting['cache'],
-                        'mode'          => $this->setting['mode']
+                        'mode'          => $this->setting['mode'],
+                        'amp'           => $amp
                     )
                 );
                 break;
