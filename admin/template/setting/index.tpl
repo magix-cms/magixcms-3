@@ -23,6 +23,7 @@
             <h2 class="panel-heading h5">{#setting_params#|ucfirst}</h2>
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#general" aria-controls="info" role="tab" data-toggle="tab">Informations générale</a></li>
+                <li role="presentation"><a href="#mail" aria-controls="mail" role="tab" data-toggle="tab">Mail</a></li>
                 <li role="presentation"><a href="#cssinliner" aria-controls="cssinliner" role="tab" data-toggle="tab">css inliner</a></li>
                 <li role="presentation"><a href="#google" aria-controls="google" role="tab" data-toggle="tab">Google</a></li>
                 <li role="presentation"><a href="#catalog" aria-controls="catalog" role="tab" data-toggle="tab">{#catalog#}</a></li>
@@ -35,6 +36,9 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="general">
                     {include file="setting/form/general.tpl" controller="setting"}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="mail">
+                    {include file="setting/form/mail.tpl" controller="setting"}
                 </div>
                 <div role="tabpanel" class="tab-pane" id="cssinliner">
                     {include file="setting/form/cssinliner.tpl" controller="setting"}

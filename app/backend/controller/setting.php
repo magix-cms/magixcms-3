@@ -296,6 +296,22 @@ class backend_controller_setting extends backend_db_setting{
                     )
                 );
                 break;
+            case 'mail':
+                $smtp_enabled = isset($this->setting['smtp_enabled']) ? '1' : '0';
+                parent::update(
+                    array(
+                        'type'=>$data['type']
+                    ),array(
+                        'mail_sender'       => $this->setting['mail_sender'],
+                        'smtp_enabled'      => $smtp_enabled,
+                        'set_host'          => $this->setting['set_host'],
+                        'set_port'          => $this->setting['set_port'],
+                        'set_encryption'    => !empty($this->setting['set_encryption']) ? $this->setting['set_encryption'] : NULL,
+                        'set_username'      => $this->setting['set_username'],
+                        'set_password'      => $this->setting['set_password'],
+                    )
+                );
+                break;
         }
         $this->message->json_post_response(true,'update',$data['type']);
     }
@@ -318,6 +334,8 @@ class backend_controller_setting extends backend_db_setting{
                             $this->upd(array('type'=>'google'));
                         }elseif($this->type === 'catalog'){
                             $this->upd(array('type'=>'catalog'));
+                        }elseif($this->type === 'mail'){
+                            $this->upd(array('type'=>'mail'));
                         }
                     }
                     break;

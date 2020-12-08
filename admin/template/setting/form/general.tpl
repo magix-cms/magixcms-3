@@ -12,7 +12,7 @@
         <div class="col-ph-12 col-md-4">
             <div class="form-group">
                 <label for="content_css">{#content_css#|ucfirst}</label>
-                <input type="text" id="content_css" name="setting[content_css]" class="form-control" value="{$settings.content_css}" />
+                <input type="text" id="content_css" name="setting[content_css]" class="form-control" placeholder="{#ph_content_css#}" value="{$settings.content_css}" />
             </div>
             <div class="row">
                 <div class="col-ph-12 col-md-4">

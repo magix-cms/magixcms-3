@@ -22,19 +22,47 @@ class frontend_model_mail {
 	 * @param null|frontend_model_template $t
 	 * @param $tpl_dir
 	 */
-	public function __construct($t = null, $tpl_dir, $type='mail', $options=null)
+	public function __construct($t = null, $tpl_dir)
 	{
+        $this->settings = new frontend_model_setting($this->template);
+	    $transport = $this->transport();
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->message = new component_core_message($this->template);
 		$this->lang = $this->template->currentLanguage();
 		$this->sanitize = new filter_sanitize();
-		$this->mail = new mail_swift($type, $options);
+		$this->mail = new mail_swift($transport['type'], $transport['options']);
 		$this->modelDomain = new frontend_model_domain($this->template);
-		$this->settings = new frontend_model_setting($this->template);
 
 		$this->tpl_dir = $tpl_dir;
 	}
 
+    /**
+     * Return transport for Mail (mail or smtp)
+     * @return array
+     */
+    private function transport(){
+        $config = $this->settings->getMail();
+        $newConfig = NULL;
+        $newData = NULL;
+        foreach ($config as $key => $value){
+            $newConfig[$value['name']] = $value['value'];
+        }
+        if($newConfig['smtp_enabled'] != '0'){
+            $newData['type'] = 'smtp';
+            $newData['options'] = array(
+                'setHost'		=> $newConfig['set_host'],
+                'setPort'		=> $newConfig['set_port'],
+                'setEncryption'	=> !empty($newConfig['set_encryption']) ? $newConfig['set_encryption'] : '',
+                'setUsername'	=> $newConfig['set_username'],
+                'setPassword'	=> $newConfig['set_password']
+            );
+
+        }else{
+            $newData['type'] = 'mail';
+            $newData['options'] = NULL;
+        }
+        return $newData;
+    }
 	/**
 	 * @param $type
 	 * @return string

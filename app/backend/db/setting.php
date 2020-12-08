@@ -161,6 +161,19 @@ class backend_db_setting{
 						END
 						WHERE `name` IN ('vat_rate','price_display')";
                 break;
+            case 'mail':
+                $sql = "UPDATE `mc_setting`
+						SET `value` = CASE `name`
+							WHEN 'mail_sender' THEN :mail_sender
+							WHEN 'smtp_enabled' THEN :smtp_enabled
+						    WHEN 'set_host' THEN :set_host
+						    WHEN 'set_port' THEN :set_port
+						    WHEN 'set_encryption' THEN :set_encryption
+						    WHEN 'set_username' THEN :set_username
+						    WHEN 'set_password' THEN :set_password
+						END
+						WHERE `name` IN ('mail_sender','smtp_enabled','set_host','set_port','set_encryption','set_username','set_password')";
+                break;
 		}
 
 		if($sql === '') return 'Unknown request asked';

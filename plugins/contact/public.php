@@ -241,19 +241,24 @@ class plugins_contact_public extends plugins_contact_db
 								];
 							}
 						}*/
+                        $from = $this->settings->getSetting('mail_sender');
+                        if($from != null){
+                            foreach ($contacts as $recipient) {
+                                $isSend = $this->mail->send_email(
+                                    $recipient['mail_contact'],
+                                    $tpl,
+                                    $this->msg,
+                                    $this->setTitleMail($error),
+                                    $sender,
+                                    $from['value'],//$this->config['mail_sender'],
+                                    $file
+                                );
+                                if(!$send) $send = $isSend;
+                            }
+                        }else{
+                            $send = false;
+                        }
 
-						foreach ($contacts as $recipient) {
-							$isSend = $this->mail->send_email(
-								$recipient['mail_contact'],
-								$tpl,
-								$this->msg,
-								$this->setTitleMail($error),
-								$sender,
-								$this->config['mail_sender'],
-								$file
-							);
-							if(!$send) $send = $isSend;
-						}
 						if($send)
 							$this->getNotify('success');
 						else

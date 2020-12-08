@@ -201,7 +201,14 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `categ
 (NULL, 'ssl', '0', 'int', 'SSL protocol', 'general'),
 (NULL, 'service_worker', '0', 'int', 'Service Worker', 'general'),
 (NULL, 'vat_rate', '21', 'float', 'VAT Rate', 'catalog'),
-(NULL, 'price_display', 'tinc', 'string', 'Price display with or without tax included', 'catalog');
+(NULL, 'price_display', 'tinc', 'string', 'Price display with or without tax included', 'catalog'),
+(NULL, 'mail_sender', NULL, 'string', 'Mail sender', 'mail'),
+(NULL, 'smtp_enabled', '0', 'int', 'Smtp enabled', 'mail'),
+(NULL, 'set_host', NULL, 'string', 'Set host', 'mail'),
+(NULL, 'set_port', NULL, 'string', 'Set port', 'mail'),
+(NULL, 'set_encryption', NULL, 'string', 'Set encryption', 'mail'),
+(NULL, 'set_username', NULL, 'string', 'Set username', 'mail'),
+(NULL, 'set_password', NULL, 'string', 'Set password', 'mail');
 
 CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,

@@ -60,6 +60,9 @@ class frontend_db_setting {
 			    case 'color':
 			    	$sql = 'SELECT color.* FROM mc_css_inliner as color';
 			    	break;
+                case 'mail':
+                    $sql = 'SELECT mail.name,mail.value FROM mc_setting as mail WHERE category = "mail"';
+                    break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;

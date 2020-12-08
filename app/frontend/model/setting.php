@@ -85,4 +85,10 @@ class frontend_model_setting extends frontend_db_setting {
 	public function fetchCSSIColor() {
 		return $this->getItems('color',null,'all',false);
 	}
+    /**
+     * @return mixed
+     */
+    public function getMail() {
+        return $this->getItems('mail',null,'all',false);
+    }
 }
