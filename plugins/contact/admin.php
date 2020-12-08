@@ -7,7 +7,7 @@ include_once ('db.php');
 class plugins_contact_admin extends plugins_contact_db {
     public $edit, $action, $tabs;
     protected $controller,$data,$template, $message, $plugins, $xml, $sitemap,$modelLanguage,$collectionLanguage,$header;
-    public $content,$id_contact,$mail_contact,$address_required,$address_enabled,$mail_sender,$id_config;
+    public $content,$id_contact,$mail_contact,$address_required,$address_enabled,/*$mail_sender,*/$id_config;
     /**
      * frontend_controller_home constructor.
      */
@@ -65,9 +65,9 @@ class plugins_contact_admin extends plugins_contact_db {
         if (http_request::isPost('address_required')) {
             $this->address_required = $formClean->simpleClean($_POST['address_required']);
         }
-        if (http_request::isPost('mail_sender')) {
+        /*if (http_request::isPost('mail_sender')) {
             $this->mail_sender = $formClean->simpleClean($_POST['mail_sender']);
-        }
+        }*/
     }
 
 	/**
@@ -257,7 +257,7 @@ class plugins_contact_admin extends plugins_contact_db {
     private function save($data){
         $data['address_enabled'] = (!isset($data['address_enabled']) ? 0 : 1);
         $data['address_required'] = (!isset($data['address_required']) ? 0 : 1);
-        $data['mail_sender'] = (!empty($data['mail_sender']) ? $data['mail_sender'] : NULL);
+        //$data['mail_sender'] = (!empty($data['mail_sender']) ? $data['mail_sender'] : NULL);
         $this->upd(
             array(
                 'context' => 'contact',
@@ -265,8 +265,8 @@ class plugins_contact_admin extends plugins_contact_db {
                 'data' => array(
                     'id_config' => $this->id_config,
                     'address_enabled'  => $data['address_enabled'],
-                    'address_required' => $data['address_required'],
-                    'mail_sender'      => $data['mail_sender']
+                    'address_required' => $data['address_required']/*,
+                    'mail_sender'      => $data['mail_sender']*/
                 )
             )
         );
@@ -350,7 +350,7 @@ class plugins_contact_admin extends plugins_contact_db {
 						$this->saveContent($this->id_contact);
 						$this->message->json_post_response(true, 'update', array('result' => $this->id_contact));
 					}elseif(isset($this->id_config)) {
-                        $this->save(array('address_enabled'=>$this->address_enabled,'address_required'=>$this->address_required,'mail_sender'=>$this->mail_sender));
+                        $this->save(array('address_enabled'=>$this->address_enabled,'address_required'=>$this->address_required/*,'mail_sender'=>$this->mail_sender*/));
                         $this->message->json_post_response(true, 'update', array('result'=>$this->id_config));
 
                     }else{

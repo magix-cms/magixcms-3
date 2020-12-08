@@ -73,9 +73,9 @@ class plugins_contact_db
 					case 'config':
 						$sql = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
 						break;
-					case 'sender':
+					/*case 'sender':
 						$sql = 'SELECT mail_sender FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
-						break;
+						break;*/
 				}
 
                 return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
@@ -110,8 +110,8 @@ class plugins_contact_db
 				  			VALUES (:id, :id_lang, :name_page, :content_page, :published_page)';
 					break;
 				case 'config':
-					$sql = 'INSERT INTO `mc_contact_config`(address_enabled,address_required,mail_sender) 
-				  			VALUES (:address_enabled,:address_required,:mail_sender)';
+					$sql = 'INSERT INTO `mc_contact_config`(address_enabled,address_required) 
+				  			VALUES (:address_enabled,:address_required)';
 					break;
 			}
 
@@ -156,8 +156,7 @@ class plugins_contact_db
 					$sql = 'UPDATE mc_contact_config 
 							SET 
 								address_enabled=:address_enabled,
-								address_required=:address_required,
-								mail_sender=:mail_sender
+								address_required=:address_required
 							WHERE id_config = :id_config';
 					break;
 			}

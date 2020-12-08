@@ -57,12 +57,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
+                                    {*<div>
                                         <div class="form-group">
                                             <label for="mail_sender">{#mail_sender#|ucfirst}&nbsp;</label>
                                             <input type="text" name="mail_sender" id="mail_sender" class="form-control" placeholder="{#mail_sender#}" value="{$config.mail_sender}" />
                                         </div>
-                                    </div>
+                                    </div>*}
                                     <div id="submit">
                                         <input type="hidden" id="id_config" name="id_config" value="{$config.id_config}">
                                         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
