@@ -61,15 +61,15 @@
         link_class_list: [
             {title: 'None', value: ''},
             {title: 'TargetBlank', value: 'targetblank'},
-            {title: 'btn-main', value: 'btn-main'},
-            {title: 'btn-main-outline', value: 'btn-main-outline'},
-            {title: 'btn-main-invert', value: 'btn-main-invert'},
-            {title: 'btn-sd', value: 'btn-sd'},
-            {title: 'btn-sd-outline', value: 'btn-sd-outline'},
-            {title: 'btn-sd-invert', value: 'btn-sd-invert'},
-            {title: 'btn-dark', value: 'btn-dark'},
-            {title: 'btn-dark-outline', value: 'btn-dark-outline'},
-            {title: 'btn-dark-invert', value: 'btn-dark-invert'}
+            {title: 'btn-main', value: 'btn btn-main'},
+            {title: 'btn-main-outline', value: 'btn btn-main-outline'},
+            {title: 'btn-main-invert', value: 'btn btn-main-invert'},
+            {title: 'btn-sd', value: 'btn btn-sd'},
+            {title: 'btn-sd-outline', value: 'btn btn-sd-outline'},
+            {title: 'btn-sd-invert', value: 'btn btn-sd-invert'},
+            {title: 'btn-dark', value: 'btn btn-dark'},
+            {title: 'btn-dark-outline', value: 'btn btn-dark-outline'},
+            {title: 'btn-dark-invert', value: 'btn btn-dark-invert'}
         ],
         codesample_languages: [
             {text: 'HTML/XML', value: 'markup'},
