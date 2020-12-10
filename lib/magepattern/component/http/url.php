@@ -43,7 +43,7 @@
  * Time: 15:54
  *
  */
-class http_url{
+class http_url {
 
     /**
      * Remove host in URL
@@ -108,91 +108,75 @@ class http_url{
         array('dot'=>'display','ampersand'=>'strict','cspec'=>array('[\/]'),'rspec'=>array(''))
         );
      */
-    public static function clean($str,$option = array('dot'=>false,'ampersand'=>'strict','cspec'=>'','rspec'=>'')){
+    public static function clean(string $str, $option = ['dot'=>false, 'ampersand'=>'none', 'cspec'=>'', 'rspec'=>'']){
         /**Clean accent*/
-        $Caracs = array("¥" => "Y", "µ" => "u", "À" => "A", "Á" => "A",
-            "Â" => "A", "Ã" => "A", "Ä" => "A", "Å" => "A",
-            "Æ" => "A", "Ç" => "C", "È" => "E", "É" => "E",
-            "Ê" => "E", "Ë" => "E", "Ì" => "I", "Í" => "I",
-            "Î" => "I", "Ï" => "I", "Ð" => "D", "Ñ" => "N",
-            "Ò" => "O", "Ó" => "O", "Ô" => "O", "Õ" => "O",
-            "Ö" => "O", "Ø" => "O", "Ù" => "U", "Ú" => "U",
-            "Û" => "U", "Ü" => "U", "Ý" => "Y", "ß" => "s",
-            "à" => "a", "á" => "a", "â" => "a", "ã" => "a",
-            "ä" => "a", "å" => "a", "æ" => "a", "ç" => "c",
-            "è" => "e", "é" => "e", "ê" => "e", "ë" => "e",
-            "ì" => "i", "í" => "i", "î" => "i", "ï" => "i",
-            "ð" => "o", "ñ" => "n", "ò" => "o", "ó" => "o",
-            "ô" => "o", "õ" => "o", "ö" => "o", "ø" => "o",
-            "ù" => "u", "ú" => "u", "û" => "u", "ü" => "u",
-            "ý" => "y", "ÿ" => "y");
-
-        $str = strtr("$str", $Caracs);
+        /*$characters = [
+            "¥" => "Y", "µ" => "u", "À" => "A", "Á" => "A", "Â" => "A", "Ã" => "A", "Ä" => "A", "Å" => "A",
+            "Æ" => "A", "Ç" => "C", "È" => "E", "É" => "E", "Ê" => "E", "Ë" => "E", "Ì" => "I", "Í" => "I",
+            "Î" => "I", "Ï" => "I", "Ð" => "D", "Ñ" => "N", "Ò" => "O", "Ó" => "O", "Ô" => "O", "Õ" => "O",
+            "Ö" => "O", "Ø" => "O", "Ù" => "U", "Ú" => "U", "Û" => "U", "Ü" => "U", "Ý" => "Y", "ß" => "s",
+            "à" => "a", "á" => "a", "â" => "a", "ã" => "a", "ä" => "a", "å" => "a", "æ" => "a", "ç" => "c",
+            "è" => "e", "é" => "e", "ê" => "e", "ë" => "e", "ì" => "i", "í" => "i", "î" => "i", "ï" => "i",
+            "ð" => "o", "ñ" => "n", "ò" => "o", "ó" => "o", "ô" => "o", "õ" => "o", "ö" => "o", "ø" => "o",
+            "ù" => "u", "ú" => "u", "û" => "u", "ü" => "u", "ý" => "y", "ÿ" => "y"
+        ];
+        $str = strtr($str, $characters);*/
+        /** Clean non Latin characters */
+        $transliterator = Transliterator::createFromRules(':: Any-Latin; :: Latin-ASCII; :: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;', \Transliterator::FORWARD);
+        $str = $transliterator->transliterate($str);
         $str = trim($str);
-        if(is_bool($option)){
-            if($option != false){
-                /*replace & => $amp (w3c convert)*/
-                $str = str_replace('&','&amp;',$str);
+
+        if(is_array($option)){
+            if(array_key_exists('dot', $option) && $option['dot'] == 'none'){
                 $str = str_replace('.','',$str);
             }
-        }elseif(is_array($option)){
-            if(array_key_exists('dot', $option)){
-                if($option['dot'] == 'none'){
-                    $str = str_replace('.','',$str);
+            if(array_key_exists('ampersand', $option) && is_string($option['ampersand'])){
+                /*
+                 * PHP 8
+                 * $str = match ($option['ampersand']) {
+                    'strict' => str_replace('&', '&amp;', $str), // replace & => $amp (w3c convert)
+                    'none' => str_replace('&', '', $str), // replace & => ''
+                    default => str_replace('&', (is_string($option['ampersand']) ? $option['ampersand'] : '&amp;'), $str), // replace & => $option['ampersand'] value
+                };*/
+                switch ($option['ampersand']) {
+                    case 'strict':
+                        // replace & => $amp (w3c convert)
+                        $str = str_replace('&', '&amp;', $str);
+                        break;
+                    case 'none':
+                        // replace & => ''
+                        $str = str_replace('&', '', $str);
+                        break;
+                    default:
+                        // replace & => $option['ampersand'] value
+                        $str = str_replace('&', (is_string($option['ampersand']) ? $option['ampersand'] : '&amp;'), $str);
                 }
             }
-            if(array_key_exists('ampersand', $option)){
-            	switch ($option['ampersand']) {
-					case 'strict':
-						/*replace & => $amp (w3c convert)*/
-						$str = str_replace('&','&amp;',$str);
-						break;
-					case 'none':
-						/*replace & => ''*/
-						$str = str_replace('&','',$str);
-						break;
-					default:
-						/*replace & => $option['ampersand'] value*/
-						$str = str_replace('&',(is_string($option['ampersand']) ? $option['ampersand'] : '&amp;'),$str);
-						break;
-				}
-            }
         }
-        /* stripcslashes backslash */
+        elseif(is_bool($option) && $option != false){
+            // replace & => $amp (w3c convert)
+            $str = str_replace('&','&amp;',$str);
+            $str = str_replace('.','',$str);
+        }
+
+        // Convert special characters
         $str = filter_escapeHtml::cleanQuote($str);
-        $tbl_o = array("@'@i",'@[[:blank:]]@i','[\|]','[\?]','[\#]','[\@]','[\,]','[\!]','[\:]','[\(]','[\)]','/[\s\+]/');
-        $tbl_r = array ('-','-','-',"","","","","","","","","-");
-        $cSpec = '';
-        $rSpec = '';
+        $cSpec = ['@["’|,+\'\\/[:blank:]\s]+@i', '@[?#!:()\[\]{}\@\X$€%]+@i'];
+        $rSpec = ['-', ''];
+
         if(is_array($option)){
-            if(array_key_exists('cspec', $option) AND array_key_exists('rspec', $option)){
-                if(is_array($option['cspec']) AND is_array($option['rspec'])){
-                    if($option['cspec'] != '' AND $option['rspec'] != ''){
-                        $cSpec = array_merge($tbl_o,$option['cspec']);
-                        $rSpec = array_merge($tbl_r,$option['rspec']);
-                    }else{
-                        throw new Exception('cspec or rspec option is NULL');
-                    }
-                }else{
-                    /*replace blank and special caractère*/
-                    $cSpec = $tbl_o;
-                    $rSpec = $tbl_r;
-                }
-            }else{
-                /*replace blank and special caractère*/
-                $cSpec = $tbl_o;
-                $rSpec = $tbl_r;
-            }
-        }else{
-            /*replace blank and special caractère*/
-            $cSpec = $tbl_o;
-            $rSpec = $tbl_r;
+            if(array_key_exists('cspec', $option) && is_array($option['cspec']) && !empty($option['cspec'])) $cSpec = array_merge($cSpec,$option['cspec']);
+            if(array_key_exists('rspec', $option) && is_array($option['rspec']) && !empty($option['rspec'])) $rSpec = array_merge($rSpec,$option['rspec']);
         }
-        /*Removes the indent if end of string*/
-        $str = rtrim(preg_replace($cSpec,$rSpec,$str),"-");
-        /*Convert UTF8 encode*/
+        $str = preg_replace($cSpec,$rSpec,$str);
+
+        // Convert following '-' to single '-'
+        $str = preg_replace("/[-]+/",'-',$str);
+        // Removes the indent if end of string
+        $str = rtrim($str,"-");
+        // Convert UTF8 encode
         $str = filter_htmlEntities::decode_utf8($str);
-        /*Convert lower case*/
+        // Convert lower case
         $str = filter_string::strtolower($str);
         return $str;
     }
@@ -290,4 +274,3 @@ class http_url{
         return substr(self::currentUri, 0, strrpos(self::currentUri, '/') + 1).$uri;
     }
 }
-?>
