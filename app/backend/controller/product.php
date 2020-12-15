@@ -416,44 +416,45 @@ class backend_controller_product extends backend_db_product
                     $img = $this->getItems('img',$value,'one',false);
 					$id_product = $img['id_product'];
 					if($img['default_img']) $defaultErased = true;
-
-                    $imgPath = $this->upload->dirFileUpload(
-                        array_merge(
-                            array(
-                                'upload_root_dir' => 'upload/catalog/p',
-                                'upload_dir' => $img['id_product'])
-                            ,array(
-                                'fileBasePath'=>true
+                    if(isset($id_product) && $id_product != '') {
+                        $imgPath = $this->upload->dirFileUpload(
+                            array_merge(
+                                array(
+                                    'upload_root_dir' => 'upload/catalog/p',
+                                    'upload_dir' => $img['id_product'])
+                                , array(
+                                    'fileBasePath' => true
+                                )
                             )
-                        )
-                    );
+                        );
 
-                    $newArr[$key]['img']['original'] = $imgPath.$img['name_img'];
-                    if(file_exists($newArr[$key]['img']['original'])) {
-                        $makeFiles->remove(array(
-                            $newArr[$key]['img']['original']
-                        ));
-                    }
-                    foreach ($fetchConfig as $configKey => $confiValue) {
-                        $newArr[$key]['img'][$confiValue['type_img']] = $imgPath.$imgPrefix[$confiValue['type_img']].$img['name_img'];
-                        $imgData = pathinfo($img['name_img']);
-                        $filename = $imgData['filename'];
-
-                        if(file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
+                        $newArr[$key]['img']['original'] = $imgPath . $img['name_img'];
+                        if (file_exists($newArr[$key]['img']['original'])) {
                             $makeFiles->remove(array(
-                                $newArr[$key]['img'][$confiValue['type_img']]
+                                $newArr[$key]['img']['original']
                             ));
                         }
-                        // Check if the image with webp extension exist
-                        if(file_exists($imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp)){
-                            $makeFiles->remove(array(
-                                $imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp
-                            ));
+                        foreach ($fetchConfig as $configKey => $confiValue) {
+                            $newArr[$key]['img'][$confiValue['type_img']] = $imgPath . $imgPrefix[$confiValue['type_img']] . $img['name_img'];
+                            $imgData = pathinfo($img['name_img']);
+                            $filename = $imgData['filename'];
+
+                            if (file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
+                                $makeFiles->remove(array(
+                                    $newArr[$key]['img'][$confiValue['type_img']]
+                                ));
+                            }
+                            // Check if the image with webp extension exist
+                            if (file_exists($imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp)) {
+                                $makeFiles->remove(array(
+                                    $imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp
+                                ));
+                            }
                         }
                     }
                 }
 
-                if($newArr) {
+                if($newArr && isset($data['data']['id'])) {
                     parent::delete(
                         array(
                             'type' => $data['type']
@@ -559,7 +560,7 @@ class backend_controller_product extends backend_db_product
                             $this->add(array(
                                 'type' => 'newPages',
                                 'data' => array(
-                                    'price_p' => $this->productData['price'],
+                                    'price_p' => !empty($this->productData['price']) ? number_format(str_replace(",", ".", $this->productData['price']), 6, '.', '') : '0',
                                     'reference_p' => $this->productData['reference']
                                 )
                             ));
@@ -614,7 +615,7 @@ class backend_controller_product extends backend_db_product
                     case 'edit':
                         if (isset($this->id_product)) {
                             if (isset($this->content)) {
-                                $this->productData['price'] = number_format(str_replace(",", ".", $this->productData['price']), 6, '.', '');
+                                $this->productData['price'] = !empty($this->productData['price']) ? number_format(str_replace(",", ".", $this->productData['price']), 6, '.', '') : '0';
                                 $this->productData['reference'] = !empty($this->productData['reference']) ? $this->productData['reference'] : NULL;
 
                                 $this->upd(array(

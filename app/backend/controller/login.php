@@ -146,7 +146,7 @@ class backend_controller_login extends backend_db_employee{
 	 */
 	public function getAdminProfile()
 	{
-		if(isset($_SESSION['keyuniqid_admin'])) {
+		if(isset($_SESSION['keyuniqid_admin']) && !empty($_SESSION['keyuniqid_admin'])) {
 			$adminProfile = $this->getItems('session',array('keyuniqid_admin' => $_SESSION['keyuniqid_admin']),'one',false);
 			$this->template->assign('adminProfile',$adminProfile);
 		}

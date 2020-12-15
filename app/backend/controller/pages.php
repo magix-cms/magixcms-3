@@ -460,50 +460,52 @@ class backend_controller_pages extends backend_db_pages
                     $id_pages = $img['id_pages'];
                     if($img['default_img']) $defaultErased = true;
 
-                    $imgPath = $this->upload->dirFileUpload(
-                        array_merge(
-                            array(
-                                'upload_root_dir' => 'upload/pages',
-                                'upload_dir' => $img['id_pages'])
-                            ,array(
-                                'fileBasePath'=>true
+                    if(isset($id_pages) && $id_pages != '') {
+                        $imgPath = $this->upload->dirFileUpload(
+                            array_merge(
+                                array(
+                                    'upload_root_dir' => 'upload/pages',
+                                    'upload_dir' => $img['id_pages'])
+                                , array(
+                                    'fileBasePath' => true
+                                )
                             )
-                        )
-                    );
+                        );
 
-                    $newArr[$key]['img']['original'] = $imgPath.$img['name_img'];
-                    if(file_exists($newArr[$key]['img']['original'])) {
-                        $makeFiles->remove(array(
-                            $newArr[$key]['img']['original']
-                        ));
-                    }
-                    foreach ($fetchConfig as $configKey => $confiValue) {
-                        $newArr[$key]['img'][$confiValue['type_img']] = $imgPath.$imgPrefix[$confiValue['type_img']].$img['name_img'];
-                        $imgData = pathinfo($img['name_img']);
-                        $filename = $imgData['filename'];
-
-                        if(file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
+                        $newArr[$key]['img']['original'] = $imgPath . $img['name_img'];
+                        if (file_exists($newArr[$key]['img']['original'])) {
                             $makeFiles->remove(array(
-                                $newArr[$key]['img'][$confiValue['type_img']]
+                                $newArr[$key]['img']['original']
                             ));
                         }
-                        // Check if the image with webp extension exist
-                        if(file_exists($imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp)){
-                            $makeFiles->remove(array(
-                                $imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp
-                            ));
+                        foreach ($fetchConfig as $configKey => $confiValue) {
+                            $newArr[$key]['img'][$confiValue['type_img']] = $imgPath . $imgPrefix[$confiValue['type_img']] . $img['name_img'];
+                            $imgData = pathinfo($img['name_img']);
+                            $filename = $imgData['filename'];
+
+                            if (file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
+                                $makeFiles->remove(array(
+                                    $newArr[$key]['img'][$confiValue['type_img']]
+                                ));
+                            }
+                            // Check if the image with webp extension exist
+                            if (file_exists($imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp)) {
+                                $makeFiles->remove(array(
+                                    $imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp
+                                ));
+                            }
                         }
                     }
                 }
 
-                if($newArr) {
+                if($newArr && isset($data['data']['id'])) {
                     parent::delete(
                         array(
                             'type' => $data['type']
                         ),
                         $data['data']
                     );
-
+                    $id_pages = $data['data']['id'];
                     $imgs = $this->getItems('images',$id_pages,'all',false);
                     if($imgs != null && $defaultErased) {
                         $this->upd(array(
