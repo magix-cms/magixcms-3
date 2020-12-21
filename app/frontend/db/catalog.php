@@ -277,7 +277,7 @@ class frontend_db_catalog
 						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
 						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang)
-						WHERE rel.id_product = :id AND lang.iso_lang = :iso AND catalog.default_c = 1 AND img.default_img = 1';
+						WHERE rel.id_product = :id AND lang.iso_lang = :iso AND catalog.default_c = 1 AND (img.default_img = 1 AND img.default_img IS NULL)';
 					break;
 			}
 
