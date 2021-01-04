@@ -228,7 +228,7 @@ class backend_controller_plugins extends backend_db_plugins{
      */
     private function setConfigFile($id){
 
-        $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
+        $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'adminLangs'));
         $arr = array();
         foreach ($data as $key) {
 
@@ -269,7 +269,7 @@ class backend_controller_plugins extends backend_db_plugins{
      */
     private function saveConfig($id){
 
-        $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'langs'));
+        $data = $this->collectionLanguage->fetchData(array('context'=>'all','type'=>'adminLangs'));
         foreach ($data as $lang) {
 
             $baseConfigPath = component_core_system::basePath().DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.'/i18n/public_local_'.$lang['iso_lang'].'.conf';
