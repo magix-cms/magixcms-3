@@ -3,7 +3,7 @@
 
 {* Home *}
 {if $icon}
-    {$hname = "<i class=\"material-icons ico ico-{$icon}\"></i>"}
+    {$hname = "<i class=\"material-icons ico ico-{$icon}\"></i><span class=\"hidden\">{#home#}</span>"}
 {else}
     {$hname = {#home#}}
 {/if}
