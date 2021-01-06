@@ -39,4 +39,30 @@
 			}
 		}
 	}
+	/*** controls ***/
+	.tns-controls{
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		button {
+			display: flex;
+			height: 100%;
+			padding: 1rem;
+			background: 0 0;
+			border: none;
+			position: relative;
+			.ico {
+				text-shadow: 0 0 1rem rgba(0,0,0,.3);
+			}
+			&:disabled {
+				color: transparent;
+				visibility: hidden;
+				z-index: -1;
+			}
+		}
+	}
 }

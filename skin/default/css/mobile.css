@@ -4724,6 +4724,7 @@ ul.label-list > li:before {
 }
 .image-gallery {
   /*** Big image ***/
+  /*** controls ***/
 }
 .image-gallery .big-image {
   margin: 0 0 1rem;
@@ -4751,6 +4752,31 @@ ul.label-list > li:before {
 }
 .image-gallery .big-image a img {
   width: 100%;
+}
+.image-gallery .tns-controls {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.image-gallery .tns-controls button {
+  display: flex;
+  height: 100%;
+  padding: 1rem;
+  background: 0 0;
+  border: none;
+  position: relative;
+}
+.image-gallery .tns-controls button .ico {
+  text-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+}
+.image-gallery .tns-controls button:disabled {
+  color: transparent;
+  visibility: hidden;
+  z-index: -1;
 }
 /* --------------------------------------------------------
                         News root(s)
