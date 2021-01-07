@@ -101,7 +101,7 @@
         <div class="col-ph-12 col-md-4">
             <div class="form-group">
                 <label for="reference_p">{#reference#|ucfirst}</label>
-                <input type="text" class="form-control" id="reference_p" name="productData[reference]" value="{$page.reference}" placeholder="{#ph_reference#|ucfirst}">
+                <input type="text" class="form-control" id="reference_p" name="productData[reference]" value="{$page.reference_p}" placeholder="{#ph_reference#|ucfirst}">
             </div>
             <h4>{#price#|ucfirst}</h4>
             <div class="row">
