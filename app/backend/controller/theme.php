@@ -405,7 +405,6 @@ class backend_controller_theme extends backend_db_theme{
                                         'data' => $link
                                     ));
                                 }
-								print_r($link);
 							}
 							else {
 								$link['id'] = $this->edit;
