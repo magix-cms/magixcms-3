@@ -3776,6 +3776,10 @@ article small.datePublished {
 article .description {
   margin-bottom: 2rem;
 }
+article ul,
+article ol {
+  overflow: hidden;
+}
 a {
   --link-font: "Roboto condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --link-weight: 400;
