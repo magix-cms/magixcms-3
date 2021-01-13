@@ -165,7 +165,7 @@ class http_url {
 
         // Convert special characters
         $str = filter_escapeHtml::cleanQuote($str);
-        $cSpec = ['@["’|,+\'\\/[:blank:]\s]+@i', '@[?#!:()\[\]{}\@\X$€%]+@i'];
+        $cSpec = ['@["’|,+\'\\/[:blank:]\s]+@i', '@[?#!:()\[\]{}\@\X$€%ʹ]+@i'];
         $rSpec = ['-', ''];
 
         if(is_array($option)){
