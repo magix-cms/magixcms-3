@@ -310,6 +310,15 @@ class backend_db_theme{
 					WHERE id_link = :id
 					AND id_lang = :id_lang';
 				break;
+            case 'link_content_url':
+                $sql = 'UPDATE mc_menu_content 
+					SET 
+						name_link = :name_link,
+						title_link = :title_link,
+					    url_link = :url_link
+					WHERE id_link = :id
+					AND id_lang = :id_lang';
+                break;
 			case 'order':
 				$sql = 'UPDATE mc_menu 
 					SET order_link = :order_link

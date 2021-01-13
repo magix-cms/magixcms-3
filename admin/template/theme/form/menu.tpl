@@ -13,6 +13,7 @@
                     <option value="category" class="optional-field" data-target="#specific" data-get="category" data-appendto="#pages">Catégorie</option>
                     <option value="news">Actualités (Root)</option>
                     <option value="plugin" class="optional-field" data-target="#specific" data-get="plugin" data-appendto="#pages">plugin</option>
+                    <option value="external">Externe</option>
                 </select>
                 <div id="specific" class="additional-fields collapse">
                     <div class="form-group">
@@ -50,6 +51,9 @@
             </div>
             <div class="form-group">
                 <button class="btn btn-main-theme" type="submit"><span class="fa fa-plus"></span> Ajouter</button>
+            </div>
+            <div class="help-block">
+                <p>Pour les liens externes, indiquer l'URL et le titre après ajout</p>
             </div>
         </fieldset>
     </form>

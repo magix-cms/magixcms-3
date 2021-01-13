@@ -256,6 +256,7 @@ class backend_controller_theme extends backend_db_theme{
 				break;
             case 'link':
             case 'link_content':
+            case 'link_content_url':
                 parent::update(
                     array(
                         'type' => $data['type']
@@ -392,10 +393,19 @@ class backend_controller_theme extends backend_db_theme{
 								$link['name_link'] = $l['name_link'] === '' ? NULL : $l['name_link'];
 								$link['title_link'] = $l['title_link'] === '' ? NULL : $l['title_link'];
 
-								$this->upd(array(
-									'type' => 'link_content',
-									'data' => $link
-								));
+								if(isset($l['url_link'])){
+                                    $link['url_link'] = $l['url_link'] === '' ? NULL : $l['url_link'];
+                                    $this->upd(array(
+                                        'type' => 'link_content_url',
+                                        'data' => $link
+                                    ));
+                                }else{
+                                    $this->upd(array(
+                                        'type' => 'link_content',
+                                        'data' => $link
+                                    ));
+                                }
+								print_r($link);
 							}
 							else {
 								$link['id'] = $this->edit;

@@ -59,7 +59,7 @@
             <div class="tab-content">
                 {foreach $langs as $id => $iso}
                 <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="l{$link.id_link}-lang-{$id}">
-                    {if $link.content[{$id}].active_link || in_array($link.type_link,array('home','about','catalog','plugin'))}
+                    {if $link.content[{$id}].active_link || in_array($link.type_link,array('home','about','catalog','plugin','external'))}
                     <div class="form-group">
                         <label for="link[{$link.id_link}][{$id}][name_link]">Texte affiché</label>
                         <input type="text" id="link[{$link.id_link}][{$id}][name_link]" name="link[{$link.id_link}][content][{$id}][name_link]" value="{$link.content[{$id}].name_link}" class="form-control"/>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="form-group">
                         <label for="link[{$link.id_link}][{$id}][url_link]">URL</label>
-                        <input type="text" id="link[{$link.id_link}][{$id}][url_link]" name="link[{$link.id_link}][content][{$id}][url_link]" value="{$link.content[{$id}].url_link}" class="form-control" disabled/>
+                        <input type="text" id="link[{$link.id_link}][{$id}][url_link]" name="link[{$link.id_link}][content][{$id}][url_link]" value="{$link.content[{$id}].url_link}" class="form-control" {if $link.type_link != "external"}disabled{/if}/>
                     </div>
                     {else}
                     <div class="alert alert-info">

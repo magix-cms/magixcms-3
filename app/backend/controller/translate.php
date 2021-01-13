@@ -93,6 +93,7 @@ class backend_controller_translate extends backend_db_theme{
 			if(is_array($value)) {
 				$sec = '###';
 				fwrite($fh, "{$sec} {$key}" . PHP_EOL);
+				// \r\n
 
 				foreach ($value as $k => $v) {
 					// Write to the file.

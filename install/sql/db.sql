@@ -689,7 +689,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product_rel` (
 
 CREATE TABLE IF NOT EXISTS `mc_menu` (
   `id_link` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type_link` enum('home','pages','about','about_page','catalog','category','news','plugin') NOT NULL,
+  `type_link` enum('home','pages','about','about_page','catalog','category','news','plugin','external') NOT NULL,
   `id_page` int(10) unsigned DEFAULT NULL,
   `mode_link` enum('simple','dropdown','mega') NOT NULL DEFAULT 'simple',
   `order_link` int(10) unsigned NOT NULL DEFAULT '0',
