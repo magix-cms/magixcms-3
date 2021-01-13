@@ -162,7 +162,7 @@ class backend_controller_setting extends backend_db_setting{
 	/**
 	 * Parcourt le dossier des snippets HTML dans le skin courant ou le dossier de base
 	 */
-	private function setSnippet(){
+	private function setSnippetFiles(){
 		$setPath = $this->setSnippetPath();
 		if(is_array($setPath)) {
 			$directory = new RecursiveDirectoryIterator($setPath['path'], RecursiveDirectoryIterator::SKIP_DOTS);
@@ -198,10 +198,11 @@ class backend_controller_setting extends backend_db_setting{
 							}
 						}
 
-						$files[] = /*$delimiter.*/'{'.'"title":"'.$fileinfo->getBasename('.'.$getExtension).'",'.'"description":""'.',"url":"'.$url.'"}';
+						$files[] = '{'.'"title":"'.$fileinfo->getBasename('.'.$getExtension).'",'.'"description":""'.',"url":"'.$url.'"}';
 					}
 				}
-				if (is_array($files)) {
+				return $files;
+				/*if (is_array($files)) {
 					asort($files, SORT_REGULAR);
 					//$ouput = 'templates = [';
 					$ouput = '['.implode(',', $files).']';
@@ -209,11 +210,38 @@ class backend_controller_setting extends backend_db_setting{
 					//$ouput .= $delimiter . ']';
 					$this->header->set_json_headers();
 					print $ouput;
-				}
+				}*/
 			}
 		}
 	}
 
+    /**
+     * Return json for Tinymce template
+     */
+    private function setSnippet(){
+        $newData = array();
+        $snippet = new backend_controller_snippet();
+        $stData = $snippet->getJsonData();
+        $files = $this->setSnippetFiles();
+
+        if($stData != null && $files != null){
+            $newData = array_merge($stData,$files);
+        }elseif($stData != null && is_null($files)){
+            $newData = $stData;
+        }else{
+            $newData = $files;
+        }
+        if ($newData != null && is_array($newData)) {
+            asort($newData, SORT_REGULAR);
+            //$ouput = 'templates = [';
+            $ouput = '[' . implode(',', $newData) . ']';
+            //$ouput .= implode(',', $files);
+            //$ouput .= $delimiter . ']';
+            $this->header->set_json_headers();
+            print $ouput;
+        }
+        //'{'.'"title":"'.$fileinfo->getBasename('.'.$getExtension).'",'.'"description":""'.',"url":"'.$url.'"}';
+    }
     /**
      * Mise a jour des données
      * @param $data

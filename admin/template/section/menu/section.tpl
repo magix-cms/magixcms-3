@@ -149,7 +149,7 @@
         {*<a href="{$url}/{baseadmin}/index.php?controller=theme">*}
         <span><span class="fa fa-desktop"></span> {#appearance#|ucfirst}</span>
         {*</a>*}
-        <nav id="nav-theme" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'theme' || $smarty.get.controller == 'logo'} in{/if}">
+        <nav id="nav-theme" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'theme' || $smarty.get.controller == 'logo' || $smarty.get.controller == 'snippet'} in{/if}">
             <ul class="nav list-unstyled">
                 <li>
                     <a href="{$url}/{baseadmin}/index.php?controller=theme&tab=theme">
@@ -170,6 +170,13 @@
                 <li{if $smarty.get.controller == 'logo'} class="active"{/if}>
                     <a href="{$url}/{baseadmin}/index.php?controller=logo">
                         <span class="far fa-window-maximize"></span> {#logo#|ucfirst}
+                    </a>
+                </li>
+                {/if}
+                {if {employee_access type="view" class_name="backend_controller_snippet"} eq 1}
+                <li>
+                    <a href="{$url}/{baseadmin}/index.php?controller=snippet">
+                        <span class="fa fa-cubes"></span> {#snippet#|ucfirst}
                     </a>
                 </li>
                 {/if}

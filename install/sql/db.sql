@@ -35,7 +35,8 @@ INSERT INTO `mc_module` (`id_module`, `class_name`, `name`) VALUES
 (NULL, 'backend_controller_theme', 'theme'),
 (NULL, 'backend_controller_plugins', 'plugins'),
 (NULL, 'backend_controller_translate', 'translate'),
-(NULL, 'backend_controller_logo', 'logo');
+(NULL, 'backend_controller_logo', 'logo'),
+(NULL, 'backend_controller_snippet', 'snippet');
 
 CREATE TABLE IF NOT EXISTS `mc_admin_access` (
   `id_access` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -70,7 +71,8 @@ INSERT INTO `mc_admin_access` (`id_access`, `id_role`, `id_module`, `view`, `app
 (NULL, 1, 18, 1, 1, 1, 1, 1),
 (NULL, 1, 19, 1, 1, 1, 1, 1),
 (NULL, 1, 20, 1, 1, 1, 1, 1),
-(NULL, 1, 21, 1, 1, 1, 1, 1);
+(NULL, 1, 21, 1, 1, 1, 1, 1),
+(NULL, 1, 22, 1, 1, 1, 1, 1);
 
 CREATE TABLE IF NOT EXISTS `mc_admin_employee` (
   `id_admin` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -736,3 +738,12 @@ INSERT INTO `mc_share_url` (`id_share_url`, `name_share`, `url_share`, `icon_sha
 (NULL, 'google', 'https://plus.google.com/share?url=%URL%', 'google-plus'),
 (NULL, 'linkedin', 'http://www.linkedin.com/shareArticle?mini=true&url=%URL%', 'linkedin'),
 (NULL, 'pinterest', 'http://pinterest.com/pin/create/link/?url=%URL%', 'pinterest-p');
+
+CREATE TABLE IF NOT EXISTS `mc_snippet` (
+    `id_snippet` int(7) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title_sp` varchar(30) DEFAULT NULL,
+    `description_sp` varchar(30) DEFAULT NULL,
+    `content_sp` text DEFAULT NULL,
+    `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id_snippet`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
