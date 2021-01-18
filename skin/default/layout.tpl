@@ -1,4 +1,4 @@
-{$variant = 'blue'}{if $setting.amp.value}{$amp = true}{else}{$amp = false}{/if}
+{$variant = 'blue'}{if $setting.amp.value}{$amp_setting = true}{else}{$amp_setting = false}{/if}
 <!DOCTYPE html>
 <!--[if lt IE 7]><html lang="{$lang}" class="lt-ie9 lt-ie8 lt-ie7" dir="ltr"><![endif]-->
 <!--[if IE 7]><html lang="{$lang}" class="lt-ie9 lt-ie8" dir="ltr"><![endif]-->
@@ -10,8 +10,8 @@
     <meta name="description" content="{capture name="description"}{block name="description"}{/block}{/capture}{$smarty.capture.description}">
     <meta itemprop="description" content="{$smarty.capture.description}">
     <meta name="robots" content="{$setting['robots']['value']}">
-    {strip}{include file="section/loop/lang.tpl" amp=$amp amp_active=$amp iso={$lang}}{/strip}
-    {strip}{include file="section/brick/canonical.tpl" amp=$amp amp_active=$amp}{/strip}
+    {strip}{include file="section/loop/lang.tpl" amp=$amp_setting amp_active=$amp_setting iso={$lang}}{/strip}
+    {strip}{include file="section/brick/canonical.tpl" amp=$amp_setting amp_active=$amp_setting}{/strip}
     {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">

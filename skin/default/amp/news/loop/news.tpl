@@ -8,7 +8,7 @@
         <div{if $classCol} class="{$classCol}"{/if} itemprop="itemListElement" itemscope itemtype="http://schema.org/CreativeWork">
             <link itemprop="additionalType" href="http://schema.org/Article" />
             <meta itemprop="position" content="{$item@index + 1}">
-            <time itemprop="datePublished" datetime="{$item.date.publish.date}"></time>
+            <time itemprop="datePublished" datetime="{$item.date.publish}"></time>
             <div class="tile">
                 <figure class="time-figure">
                 {if $item.img.medium.src}
@@ -38,7 +38,7 @@
                 {/if}
                 </figure>
                 <div itemprop="description" class="desc text-justify">
-                    {strip}<small class="date">{$item.date.publish.timestamp|date_format:"%e %b"}</small>
+                    {strip}<small class="date">{$item.date.publish|date_format:"%e<br>%b"}</small>
                         <h2 class="h4" itemprop="name">{$item.name}</h2>
                         <p>{if $truncate}{$item.resume|truncate:$truncate:'&hellip;'}{else}{$item.resume}{/if}</p>
                         {if !empty($item.tags)}
