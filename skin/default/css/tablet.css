@@ -3809,7 +3809,8 @@ h1,
 #header {
   z-index: 500;
   position: fixed;
-  width: 100%;
+  width: 100vw;
+  max-width: 100%;
   background: var(--header-bg);
   left: 0;
   -webkit-box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2), 0 5px 20px 0 rgba(0, 0, 0, 0.1);
@@ -4265,7 +4266,8 @@ h1,
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 100%;
+  width: 100vw;
+  max-width: 100%;
   box-shadow:  0 2px 4px 0 rgba(0, 0, 0, 0.14),  0 4px 5px 0 rgba(0, 0, 0, 0.12),  0 1px 10px 0 rgba(0, 0, 0, 0.2);
   color: var(--white);
 }
