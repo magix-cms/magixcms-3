@@ -2515,6 +2515,8 @@ figure > figcaption {
   --brd-l: var(--btn-brd-l, 100);
   --brd-a: var(--btn-brd-a, 1);
   --btn-brd: hsla(var(--brd-h), var(--brd-s), var(--brd-l), var(--brd-a));
+  position: relative;
+  z-index: 2;
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -3924,4 +3926,3 @@ ul.label-list > li:before {
 #cookies .material-icons {
   margin-right: 0.5rem;
 }
-/*# sourceMappingURL=tinymce.css.map */

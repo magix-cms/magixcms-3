@@ -95,15 +95,6 @@
 }
 
 #footbar {
-	position: fixed;
-	bottom: 0;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	width: 100vw;
-	max-width: 100%;
-	//z-index: @z-fixed;
-	.shadow(4);
 	color: @footbar-color;
 	
 	.btn {
@@ -250,5 +241,18 @@
 				display: none;
 			}
 		}
+	}
+}
+@media (max-width: @grid-float-breakpoint-max) {
+	#footbar {
+		position: fixed;
+		bottom: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		width: 100vw;
+		max-width: 100%;
+		//z-index: @z-fixed;
+		.shadow(4);
 	}
 }

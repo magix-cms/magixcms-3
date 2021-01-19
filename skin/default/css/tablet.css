@@ -4261,14 +4261,6 @@ h1,
   vertical-align: middle;
 }
 #footbar {
-  position: fixed;
-  bottom: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100vw;
-  max-width: 100%;
-  box-shadow:  0 2px 4px 0 rgba(0, 0, 0, 0.14),  0 4px 5px 0 rgba(0, 0, 0, 0.12),  0 1px 10px 0 rgba(0, 0, 0, 0.2);
   color: var(--white);
 }
 #footbar .btn {
@@ -4397,6 +4389,18 @@ h1,
   }
   #block-contact .icon {
     display: none;
+  }
+}
+@media (max-width: 61.999em) {
+  #footbar {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100vw;
+    max-width: 100%;
+    box-shadow:  0 2px 4px 0 rgba(0, 0, 0, 0.14),  0 4px 5px 0 rgba(0, 0, 0, 0.12),  0 1px 10px 0 rgba(0, 0, 0, 0.2);
   }
 }
 .dropdown:not(.open) .dropdown-toggle .show-less {
@@ -5683,18 +5687,25 @@ ul.label-list > li:before {
   }
 }
 @media (min-width: 62em) {
-  .desktop #footbar {
-    align-items: center;
-    box-shadow: none;
-    padding: 0 2rem;
+  .desktop #footbar > div {
+    position: fixed;
+    z-index: 501;
     bottom: 7rem;
+  }
+  .desktop #footbar > div:last-child {
+    right: 4rem;
+  }
+  .desktop #footbar .select-lang {
+    left: 4rem;
+  }
+  .desktop #footbar .select-lang + .dropup {
+    left: 50%;
+    transform: translateX(-50%);
   }
   .desktop #footbar .dropup {
     flex: 0 0 auto;
-    position: relative;
-  }
-  .desktop #footbar .dropup .dropdown-toggle {
-    padding: 1rem;
+    background-color: transparent;
+    left: 4rem;
   }
   .desktop #footbar .dropup .dropdown-toggle > span {
     position: absolute;
@@ -5759,11 +5770,6 @@ ul.label-list > li:before {
   }
   #block-contact {
     order: 5;
-  }
-}
-@media (min-width: 90em) {
-  .desktop #footbar {
-    padding: 0 4rem;
   }
 }
 @media (min-width: 48em) and (max-width: 61.999em) {

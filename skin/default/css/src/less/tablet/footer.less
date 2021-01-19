@@ -15,18 +15,30 @@
 @media (min-width: @grid-float-breakpoint) {
 	.desktop {
 		#footbar {
-			align-items: center;
-			box-shadow: none;
-			padding: 0 2rem;
-			bottom: 7rem;
+			> div {
+				position: fixed;
+				z-index: 501;
+				bottom: 7rem;
+				
+				&:last-child {
+					right: 4rem;
+				}
+			}
 			
+			.select-lang {
+				left: 4rem;
+				
+				+ .dropup {
+					left: 50%;
+					transform: translateX(-50%);
+				}
+			}
 			.dropup {
 				flex: 0 0 auto;
-				position: relative;
+				background-color: transparent;
+				left: 4rem;
 				
 				.dropdown-toggle {
-					padding: 1rem;
-					
 					> span {
 						.sr-only;
 					}
@@ -75,11 +87,4 @@
 	#block-last-news { order: 3; }
 	#block-socials { order: 4; }
 	#block-contact { order: 5; }
-}
-@media (min-width: @screen-xl-min) {
-	.desktop {
-		#footbar {
-			padding: 0 4rem;
-		}
-	}
 }
