@@ -287,7 +287,7 @@ const globalForm = (function ($) {
                         if(parent.hasClass('input-group')) {
                             parent.parent().removeClass(errorClass+" has-feedback");
                         } else {
-                            if(parent.hasClass(errorClass)) parent.find('.fas').remove();
+                            if(parent.hasClass(errorClass)) parent.find('.ico').remove();
                             parent.removeClass(errorClass+" has-feedback");
                         }
                     }
