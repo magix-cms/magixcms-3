@@ -102,11 +102,16 @@ class plugins_contact_public extends plugins_contact_db
 				$message = $this->template->getConfigVars('message_send_success');
 				break;
 			case 'error':
-				$error = array(
-					'installed'   =>  $this->template->getConfigVars('installed'),
-					'configured'  =>  $this->template->getConfigVars('configured')
-				);
-				$message = sprintf('plugin_error','contact',$error[$subContent]);
+			    if($subContent === 'captcha') {
+                    $message = $this->template->getConfigVars('error_captcha');
+                }
+			    else {
+                    $error = array(
+                        'installed'   =>  $this->template->getConfigVars('installed'),
+                        'configured'  =>  $this->template->getConfigVars('configured')
+                    );
+                    $message = sprintf('plugin_error','contact',$error[$subContent]);
+                }
 				break;
 		}
 
@@ -307,6 +312,9 @@ class plugins_contact_public extends plugins_contact_db
                 if($recaptchaData['published'] == 1) {
                     if ($recaptcha->getRecaptcha() == true) {
                         $this->send_email();
+                    }
+                    else {
+                        $this->getNotify('error','captcha');
                     }
                 }else{
                     $this->send_email();
