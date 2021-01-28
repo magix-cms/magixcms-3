@@ -37,6 +37,7 @@ Ressources
  * http://www.smarty.net
  * https://github.com/gtraxx/magepattern
  * http://image.intervention.io/
+ * https://mjml.io/
  
 Requirements
 ------------
@@ -56,7 +57,7 @@ Requirements
 <pre>
 error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 </pre>
-##### Note: Magix CMS 3.x.x est optimisé pour PHP 7 !!
+##### Note: Magix CMS 3.x.x est optimisé pour PHP 7 mais sera adapté pour PHP 8 !!
 
 
 ## Watchers PHP STORM
@@ -71,6 +72,7 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
  * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 *deprecated use terser-js*
  * [terser](https://github.com/terser-js/terser) >= 3.17.0 (ou terser-js à la place de Uglify)
  * [sass](https://sass-lang.com/install) >= 1.20.1
+ * [mjml](https://mjml.io/download)
  
 #### Script Plugins
 <pre>
