@@ -145,12 +145,12 @@ window.addEventListener('load', function() {
                 e.preventDefault();
                 document.querySelectorAll('.big-image a').forEach(function(main){
                     main.style.opacity = 0;
-                    main.style.zindex = -1;
+                    main.style.zIndex = -1;
                 });
 
                 let img = document.querySelectorAll(i.dataset.target)[0];
                 img.style.opacity = 1;
-                img.style.zindex = 1;
+                img.style.zIndex = 1;
                 return false;
             });
         });
