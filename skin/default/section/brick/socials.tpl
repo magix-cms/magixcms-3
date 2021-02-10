@@ -23,10 +23,14 @@
     {switch $smarty.get.controller}
     {case 'pages' break}
         {* Pages *}
-    {if $pages.img.medium}
-        {$meta["og:image"] = {''|cat:{$url}|cat:{$pages.img.medium.src}}}
-        {$meta["og:image:width"] = {$pages.img.medium.w}}
-        {$meta["og:image:height"] = {$pages.img.medium.h}}
+    {if !empty($pages.imgs)}
+        {foreach $pages.imgs as $img}
+            {if $img.default}
+                {$meta["og:image"] = {''|cat:{$url}|cat:{$img.img.medium.src}}}
+                {$meta["og:image:width"] = {$img.img.medium.w}}
+                {$meta["og:image:height"] = {$img.img.medium.h}}
+            {/if}
+        {/foreach}
     {/if}
         {* /Pages *}
 
