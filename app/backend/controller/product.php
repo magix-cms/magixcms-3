@@ -411,66 +411,60 @@ class backend_controller_product extends backend_db_product
                 $defaultErased = false;
                 $id_product = false;
                 $extwebp = 'webp';
+                // Array of images to erased at the end
+                $toRemove = [];
 
 			    foreach($imgArray as $key => $value){
+                    // Get images stored information
                     $img = $this->getItems('img',$value,'one',false);
-					$id_product = $img['id_product'];
-					if($img['default_img']) $defaultErased = true;
-                    if(isset($id_product) && $id_product != '') {
-                        $imgPath = $this->upload->dirFileUpload(
-                            array_merge(
-                                array(
-                                    'upload_root_dir' => 'upload/catalog/p',
-                                    'upload_dir' => $img['id_product'])
-                                , array(
-                                    'fileBasePath' => true
-                                )
-                            )
-                        );
 
-                        $newArr[$key]['img']['original'] = $imgPath . $img['name_img'];
-                        if (file_exists($newArr[$key]['img']['original'])) {
-                            $makeFiles->remove(array(
-                                $newArr[$key]['img']['original']
-                            ));
-                        }
+                    if(!empty($img) && !empty($img['id_product']) && !empty($img['name_img'])) {
+                        // Get the product's id
+                        $id_product = $img['id_product'];
+                        // Check if it's the default image that's going to be erased
+                        if($img['default_img']) $defaultErased = true;
+                        // Concat the image directory path
+                        $imgPath = $this->upload->dirFileUpload(['upload_root_dir' => 'upload/catalog/p', 'upload_dir' => $id_product, 'fileBasePath'=>true]);
+
+                        // Original file of the image
+                        $original = $imgPath.$img['name_img'];
+                        if(file_exists($original)) $toRemove[] = $original;
+
+                        // Loop over each version of the image
                         foreach ($fetchConfig as $configKey => $confiValue) {
-                            $newArr[$key]['img'][$confiValue['type_img']] = $imgPath . $imgPrefix[$confiValue['type_img']] . $img['name_img'];
+                            $image = $imgPath.$imgPrefix[$confiValue['type_img']].$img['name_img'];
+                            if(file_exists($image)) $toRemove[] = $image;
+
+                            // Check if the image with webp extension exist
                             $imgData = pathinfo($img['name_img']);
                             $filename = $imgData['filename'];
-
-                            if (file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
-                                $makeFiles->remove(array(
-                                    $newArr[$key]['img'][$confiValue['type_img']]
-                                ));
-                            }
-                            // Check if the image with webp extension exist
-                            if (file_exists($imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp)) {
-                                $makeFiles->remove(array(
-                                    $imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp
-                                ));
-                            }
+                            $webpImg = $imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp;
+                            if(file_exists($webpImg)) $toRemove[] = $webpImg;
                         }
                     }
                 }
 
-                if($newArr && isset($data['data']['id'])) {
+                // If files had been found
+                if(!empty($toRemove)) {
+                    // Erased images
+                    $makeFiles->remove($toRemove);
+
+                    // Remove from database
                     parent::delete(
-                        array(
-                            'type' => $data['type']
-                        ),
+                        ['type' => $data['type']],
                         $data['data']
                     );
 
-                    $imgs = $this->getItems('images',$id_product,'all',false);
-                    if($imgs != null && $defaultErased) {
-						$this->upd(array(
-							'type' => 'firstImageDefault',
-							'data' => array(
-								':id' => $id_product
-							)
-						));
-					}
+                    // Count the remaining images
+                    $imgs = $this->getItems('countImages',$id_product,'one',false);
+
+                    // If there is at leats one image left and the default image has been erased, set the first remaining image as default
+                    if($imgs['tot'] > 0 && $defaultErased) {
+                        $this->upd([
+                            'type' => 'firstImageDefault',
+                            'data' => ['id' => $id_product]
+                        ]);
+                    }
                 }
 				break;
 			case 'delImagesProducts':
@@ -478,25 +472,17 @@ class backend_controller_product extends backend_db_product
 			    $imgArray = explode(',',$data['data']['id']);
 
 			    foreach($imgArray as $key => $value){
-                    $imgPath = $this->upload->dirFileUpload(
-                        array_merge(
-                            array(
-                                'upload_root_dir' => 'upload/catalog/p',
-                                'upload_dir' => $value
-							),
-							array(
-                                'fileBasePath'=>true
-                            )
-                        )
-                    );
+			        if(isset($value) && $value > 0) {
+                        $imgPath = $this->upload->dirFileUpload(['upload_root_dir' => 'upload/catalog/p', 'upload_dir' => $value,'fileBasePath'=>true]);
 
-                    if(file_exists($imgPath)) {
-						try {
-							$makeFiles->remove(array($imgPath));
-						} catch(Exception $e) {
-							$logger = new debug_logger(MP_LOG_DIR);
-							$logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-						}
+                        if(file_exists($imgPath)) {
+                            try {
+                                $makeFiles->remove(array($imgPath));
+                            } catch(Exception $e) {
+                                $logger = new debug_logger(MP_LOG_DIR);
+                                $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+                            }
+                        }
                     }
                 }
 				break;
