@@ -160,14 +160,14 @@ class backend_controller_files extends backend_db_files{
                     }elseif(isset($this->module_name)){
                         switch($this->module_name){
                             case 'pages':
-                                $fetchImg = $this->DBpages->fetchData(array('context'=>'all','type'=>'img'));
+                                $fetchImg = $this->DBpages->fetchData(array('context'=>'all','type'=>'imagesAll'));
                                 $this->imagesComponent->getThumbnailItems(array(
                                     'type'              => $this->module_name,
                                     'upload_root_dir'   => 'upload/pages',
                                     'module_img'        => $this->module_name,
                                     'attribute_img'     => 'page',
                                     'id'                =>'id_pages',
-                                    'img'               =>'img_pages',
+                                    'img'               =>'name_img',
                                     'webp'              => true
                                 ),
                                     $fetchImg
