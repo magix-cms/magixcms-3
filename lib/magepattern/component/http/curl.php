@@ -72,7 +72,7 @@ class http_curl{
                 $ch = curl_init ($url);
                 curl_setopt($ch, CURLOPT_HEADER, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+                //curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
                 //curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 1);
                 //curl_setopt($ch, CURLOPT_NOBODY,true);
                 // The maximum number of seconds to allow cURL functions to execute.
@@ -80,16 +80,19 @@ class http_curl{
                 curl_setopt($ch, CURLOPT_TIMEOUT,30);
                 // Tell curl to stop when it encounters an error
                 curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 $data = curl_exec($ch);
                 if(!curl_errno($ch)){
                     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 }else{
                     return false;
                 }
+                $response = curl_exec($ch);
+                $curlInfo = curl_getinfo($ch);
                 curl_close ($ch);
-                if($debug){
-                    $firephp = new debug_firephp();
-                    $firephp->log($httpCode);
+                if ($debug) {
+                    var_dump($curlInfo);
+                    var_dump($response);
                 }
                 if($data != false){
                     if($status === null){
