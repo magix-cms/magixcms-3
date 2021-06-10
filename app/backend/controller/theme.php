@@ -464,7 +464,7 @@ class backend_controller_theme extends backend_db_theme{
 							$plugins = $this->getItems($this->content,null,'all',false);
 							foreach ($plugins as $k => $plugin) {
 								$pluginClass = 'plugins_'.$plugin['name'].'_public';
-								$frontrun =  class_exists($pluginClass) ? method_exists($pluginClass,'run') : false;
+								$frontrun =  class_exists($pluginClass) && method_exists($pluginClass,'run') && !property_exists($pluginClass,'menu_hidden');
 								if(!$frontrun) unset($plugins[$k]);
 							}
 							$this->template->assign('links',$plugins);
