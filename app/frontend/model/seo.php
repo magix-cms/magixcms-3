@@ -92,7 +92,7 @@ class frontend_model_seo extends frontend_db_seo {
 	 * @param string $type
 	 * @return mixed
 	 */
-	public function replace_var_rewrite($parent='', $record='', $type =''){
+	public function replace_var_rewrite($parent='', $record='', $type ='', $extend = false){
 		$content = null;
 		if($type === '') $type = $this->type;
 
@@ -117,6 +117,15 @@ class frontend_model_seo extends frontend_db_seo {
 			$search = array('[[PARENT]]','[[RECORD]]');
 			//Tableau des variables à remplacer
 			$replace = array($parent, $record);
+            //$extend = array('[[DATE]]'=>'06-01-2021','[[NAME]]'=>'my page');
+            if(isset($extend) AND is_array($extend)){
+                foreach($extend as $key => $value){
+                    $search_extend[] = $key;
+                    $replace_extend[] = $value;
+                }
+                $search = array_merge($search,$search_extend);
+                $replace = array_merge($replace,$replace_extend);
+            }
 			//texte générique à remplacer
 			$content = str_replace($search ,$replace, $string);
 		}
