@@ -113,8 +113,12 @@ class backend_model_plugins{
                             	$item['title'] = $item['name'];
 							}
                             if (method_exists($class, 'run') && !property_exists($class, 'hidden')) {
-                                $newsItems[] = $item;
+                                $item['admin'] = 1;
                             }
+                            else {
+                                $item['admin'] = 0;
+                            }
+                            $newsItems[] = $item;
                             $coreComponent = new component_format_array();
                             $coreComponent->array_sortBy('title', $newsItems);
                         }

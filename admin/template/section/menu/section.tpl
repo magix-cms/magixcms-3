@@ -308,7 +308,7 @@
         <nav id="nav-plugins" class="collapse{* navbar-collapse*}{if (!in_array($smarty.get.controller,array('dashboard','home','pages','news','catalog','category','product','about','theme','setting','files','webservice','domain','seo','language','country','translate','employee','access','logo')))} in{/if}">
             <ul class="nav list-unstyled">
                 {foreach $getItemsPlugins as $item}
-                {if {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
+                {if $item.admin === 1 && {employee_access type="view" class_name="plugins_{$item.name}_admin"} eq 1}
                 <li class="{if $smarty.get.controller == {$item.name}}active{/if}">
                     <a href="{$url}/{baseadmin}/index.php?controller={$item.name}">
                         <span class="fa {if $smarty.get.controller == {$item.name}}fa-angle-right{else}fa-angle-down{/if}"></span> {$item.title}

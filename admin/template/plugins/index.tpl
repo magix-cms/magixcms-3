@@ -24,10 +24,10 @@
                                     <p><a href="{$url}/{baseadmin}/index.php?controller={$item.name}&amp;action=translate"><span class="fa fa-language"></span> {#translate#}</a></p>
                                 {/if}
                                 </td>
-                                <td>
-                                    <p class="text-right"><a href="{$url}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a>
-                                    {if $item.uninstall eq '1'}&nbsp;<a href="#" data-id="uninstall" class="action_on_record modal_action" data-controller="{$item.name}" data-target="#uninstall_modal"><i class="fa fa-trash"></i><span class="sr-only">{#uninstall#}</span></a>{/if}</p>
-                                </td>
+                                <td><p class="text-right">
+                                    {if $item.admin eq '1'}<a href="{$url}/{baseadmin}/index.php?controller={$item.name}"><span class="fa fa-cog"></span> Administration</a>{/if}
+                                    {if $item.uninstall eq '1'}&nbsp;<a href="#" data-id="uninstall" class="action_on_record modal_action" data-controller="{$item.name}" data-target="#uninstall_modal"><i class="fa fa-trash"></i><span class="sr-only">{#uninstall#}</span></a>{/if}
+                                </p></td>
                             </tr>
                         </tbody>
                     </table>
