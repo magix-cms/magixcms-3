@@ -67,7 +67,7 @@ const globalForm = (function ($) {
         closeForm = typeof closeForm !== 'undefined' ? closeForm : false;
         const loader = $(document.createElement("div")).addClass("loader")
             .append(
-                $(document.createElement("i")).addClass("fa ico ico-spinner fa-pulse fa-fw"),
+                $(document.createElement("i")).addClass("fa fa-spinner fa-pulse fa-fw"),
                 $(document.createElement("span")).append("Chargement en cours...").addClass("sr-only")
             );
         if(closeForm) $(f).collapse();
@@ -159,12 +159,12 @@ const globalForm = (function ($) {
                 else if(d !== undefined && d !== '') {
                     initAlert(d,4000,sub);
                 }
-                window.reload();
+                window.location.reload();
             };
         }
         else if($(f).hasClass('button_feedback')) {
             options.beforeSend = function(){
-                $(f).find('button[type="submit"]').replaceWith('<i class="fa ico ico-spinner fa-pulse fa-fw"></i>');
+                $(f).find('button[type="submit"]').replaceWith('<i class="fa fa-spinner fa-pulse fa-fw"></i>');
             };
             options.success = function () {
                 $(f).hide().next('.success').removeClass('hide');
@@ -205,9 +205,14 @@ const globalForm = (function ($) {
                 onsubmit: true,
                 event: 'submit',
                 submitHandler: function(f,e) {
-                    e.preventDefault();
-                    successHandler(f);
-                    return false;
+                    if($(f).hasClass('classic_form')) {
+                        f.submit();
+                    }
+                    else {
+                        e.preventDefault();
+                        successHandler(f);
+                        return false;
+                    }
                 }
             });
 
@@ -273,7 +278,7 @@ const globalForm = (function ($) {
                         if(parent.hasClass('input-group')) {
                             parent.parent().addClass(errorClass+" has-feedback");
                         } else {
-                            if(!parent.hasClass(errorClass)) parent.append('<i class="material-icons ico ico-warning form-control-feedback" aria-hidden="true"></i>');
+                            if(!parent.hasClass(errorClass)) parent.append('<span class="fas fa-exclamation-triangle form-control-feedback" aria-hidden="true"></span>');
                             parent.addClass(errorClass+" has-feedback");
                         }
                     }
@@ -287,7 +292,7 @@ const globalForm = (function ($) {
                         if(parent.hasClass('input-group')) {
                             parent.parent().removeClass(errorClass+" has-feedback");
                         } else {
-                            if(parent.hasClass(errorClass)) parent.find('.ico').remove();
+                            if(parent.hasClass(errorClass)) parent.find('.fas').remove();
                             parent.removeClass(errorClass+" has-feedback");
                         }
                     }
@@ -306,8 +311,10 @@ const globalForm = (function ($) {
                         error.insertAfter(element.next());
                         $("<br />").insertBefore(error,null);
                     } else if ( element.next().is(":button,:file") ) {
+                        console.log(element);
+                        console.log(error);
                         error.insertAfter(element);
-                        $("<br />").insertBefore(error,null);
+                        //$("<br />").insertBefore(error,null);
                     } else if ( element.parent().hasClass('input-group') ) {
                         error.insertAfter(element.parent());
                     } else {
