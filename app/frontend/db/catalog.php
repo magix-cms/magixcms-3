@@ -262,7 +262,19 @@ class frontend_db_catalog
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang) $conditions";
 					break;
 				case 'similar':
-					$sql = 'SELECT cat.name_cat, cat.url_cat, catalog.id_cat, p.*, pc.name_p, pc.resume_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update, img.name_img,
+					$sql = 'SELECT 
+                            cat.name_cat, 
+                           cat.url_cat, 
+                           catalog.id_cat, 
+                           p.*, 
+                            pc.name_p,  
+                            pc.resume_p, 
+                            pc.content_p, 
+                           pc.url_p, 
+                           pc.id_lang,
+                           lang.iso_lang, 
+                           pc.last_update, 
+                           img.name_img,
        						COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
 							COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
 							COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img,

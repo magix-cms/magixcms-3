@@ -3,8 +3,8 @@ class backend_controller_catalog extends backend_db_catalog {
 
     public $edit, $action, $tabs, $search;
 
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
-    public $content;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $modelPlugins;
+    public $controller, $content;
 
     /**
 	 * @param stdClass $t
@@ -12,25 +12,25 @@ class backend_controller_catalog extends backend_db_catalog {
      */
     public function __construct($t = null)
     {
-        $this->template = $t ? $t : new backend_model_template;
+        $this->template = $t instanceof backend_model_template ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
         $formClean = new form_inputEscape();
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
+        $this->modelPlugins = new backend_model_plugins();
+
         // --- GET
-        if (http_request::isGet('edit')) {
-            $this->edit = $formClean->numeric($_GET['edit']);
-        }
+        if(http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
+        if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
         if (http_request::isGet('action')) {
             $this->action = $formClean->simpleClean($_GET['action']);
-        } elseif (http_request::isPost('action')) {
+        }
+        elseif (http_request::isPost('action')) {
             $this->action = $formClean->simpleClean($_POST['action']);
         }
-        if (http_request::isGet('tabs')) {
-            $this->tabs = $formClean->simpleClean($_GET['tabs']);
-        }
+        if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
 
         if (http_request::isPost('content')) {
             $array = $_POST['content'];
@@ -41,6 +41,7 @@ class backend_controller_catalog extends backend_db_catalog {
             }
             $this->content = $array;
         }
+        if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
     }
 
 	/**
@@ -102,18 +103,31 @@ class backend_controller_catalog extends backend_db_catalog {
      *
      */
     public function run(){
-        if(isset($this->action)) {
-            switch ($this->action) {
-                case 'edit':
-                    $this->save();
-                    break;
-            }
-        }
-        else {
+        // Initialise l'API menu des plugins core
+        $this->modelPlugins->getItems(
+            array(
+                'type'      =>  'tabs',
+                'controller'=>  $this->controller
+            )
+        );
+
+        if(isset($this->plugin)){
+            // Execute un plugin core
             $this->modelLanguage->getLanguage();
-            $this->template->assign('contentData',$this->setItemsData());
-            $this->template->display('catalog/index.tpl');
+            $this->modelPlugins->getCoreItem();
+        }else{
+            if(isset($this->action)) {
+                switch ($this->action) {
+                    case 'edit':
+                        $this->save();
+                        break;
+                }
+            }
+            else {
+                $this->modelLanguage->getLanguage();
+                $this->template->assign('contentData',$this->setItemsData());
+                $this->template->display('catalog/index.tpl');
+            }
         }
     }
 }
-?>

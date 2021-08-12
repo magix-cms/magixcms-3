@@ -28,14 +28,14 @@
         plugins: [
             'hr advlist autolink lists clists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen textpattern wordcount directionality codesample',
-            'insertdatetime media table paste template imagetools codesample youtube loremipsum responsivefilemanager mc_pages mc_cat mc_news mc_product lazyloadimage cryptmail'
+            'insertdatetime media table paste template imagetools codesample youtube loremipsum responsivefilemanager mc_pages mc_cat mc_news mc_product lazyloadimage cryptmail tabpanel'
         ],
         toolbar1: 'fullscreen | code | removeformat | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | link unlink | bullist numlist | blockquote | forecolor | mc_pages mc_cat mc_news mc_product',
         imagetools_toolbar: "imageoptions",
         menu : {
-            edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall | searchreplace'},
-            insert : {title : 'Insert', items : 'link anchor | image media youtube responsivefilemanager | template | table | hr | loremipsum | codesample'},
             view   : {title : 'View'  , items : 'code | visualaid visualblocks | preview fullscreen'},
+            edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall | searchreplace'},
+            insert : {title : 'Insert', items : 'link anchor | image media youtube responsivefilemanager | tabpanel | template | table | hr | loremipsum | codesample'},
             format : {title : 'Format', items : 'formats | lazyloadimage cryptmail'},
             table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
             tools  : {title : 'Tools' , items : 'code'}

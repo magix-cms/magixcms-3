@@ -21,14 +21,31 @@
             {if $debug}
                 {$debug}
             {/if}
-            <header class="panel-header">
+            <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#root_news#|ucfirst}</h2>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" {if !$smarty.get.plugin && !$smarty.get.tab}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}{if !$smarty.get.plugin}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#root_news#}</a></li>
+                    {foreach $setTabsPlugins as $key => $value}
+                        <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.title|ucfirst}</a></li>
+                    {/foreach}
+                </ul>
             </header>
-            <div class="panel-body">
+            <div class="panel-body panel-body-form">
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-news">{if isset($message)}{$message}{/if}</div>
                 </div>
-                {include file="section/form/table-form-3.tpl" data=$news idcolumn='id_news' activation=false controller="news" change_offset=true}
+                <div class="tab-content">
+                    {if !$smarty.get.plugin}
+                        <div role="tabpanel" class="tab-pane {if !$smarty.get.plugin}active{/if}" id="general">
+                            {include file="section/form/table-form-3.tpl" data=$news idcolumn='id_news' activation=false controller="news" change_offset=true}
+                        </div>
+                    {/if}
+                    {foreach $setTabsPlugins as $key => $value}{if $smarty.get.plugin eq $value.name}
+                    <div role="tabpanel" class="tab-pane active" id="plugins-{$value.name}">
+                        {if $smarty.get.plugin eq $value.name}{block name="plugin:content"}{/block}{/if}
+                        </div>{/if}
+                    {/foreach}
+                </div>
             </div>
         </section>
     </div>

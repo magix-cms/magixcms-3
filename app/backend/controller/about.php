@@ -3,8 +3,8 @@ class backend_controller_about extends backend_db_about{
 
     public $edit, $action, $tabs, $search;
 
-    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $country, $language, $languages, $id_pages ,$parent_id, $order;
-    public $content, $dataType, $enable_op, $send = array('openinghours' => ''),$ajax,$tableaction,$tableform,$menu_pages;
+    protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $country, $language, $languages, $id_pages ,$parent_id, $order, $modelPlugins;
+    public $content, $dataType, $enable_op, $send = array('openinghours' => ''),$ajax,$tableaction,$tableform,$menu_pages,$controller;
 	public $tableconfig = array(
 		'all' => array(
 			'id_pages',
@@ -174,10 +174,12 @@ class backend_controller_about extends backend_db_about{
         $formClean = new form_inputEscape();
         $this->modelLanguage = new backend_model_language($this->template);
         $this->collectionLanguage = new component_collections_language();
+        $this->modelPlugins = new backend_model_plugins();
         $this->language = new backend_controller_language();
         $this->languages = $this->language->setCollection();
 
         // --- GET
+        if(http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
         if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
         if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
         elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
@@ -237,6 +239,7 @@ class backend_controller_about extends backend_db_about{
 
 		# ORDER PAGE
 		if (http_request::isPost('pages')) $this->order = $formClean->arrayClean($_POST['pages']);
+        if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
 
         /* Opening Hours links edition */
         if (http_request::isPost('openinghours')) $this->send['openinghours'] = $formClean->arrayClean($_POST['openinghours']);
@@ -678,167 +681,196 @@ class backend_controller_about extends backend_db_about{
      *
      */
     public function run(){
-		if(isset($this->tableaction)) {
-			$this->tableform->run();
-		}
-		elseif(isset($this->action)) {
-            switch ($this->action) {
-                case 'addpage':
-					if(isset($this->content)) {
-						$this->add(
-							array(
-								'context' => 'page',
-								'type' => 'page',
-								'data' => array(
-									'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
-									'menu_pages' => isset($this->menu_pages) ? 1 : 0
-								)
-							)
-						);
-
-						$page = $this->getItems('root',null,'one',false);
-
-						if ($page['id_pages']) {
-							$this->saveContent($page['id_pages']);
-							$this->message->json_post_response(true,'add_redirect');
-						}
-					}
-					else {
-						$this->modelLanguage->getLanguage();
-						$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-						$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
-						$this->template->display('about/pages/add.tpl');
-					}
-                	break;
-                case 'edit':
-                	$msg = 'update';
-                	$data = array();
-
-                	if(isset($this->tabs) && $this->tabs = 'pages') {
-						if(isset($this->id_pages)) {
-							$extendData = $this->saveContent($this->id_pages);
-							$this->message->json_post_response(true, 'update', array('result'=>$this->id_pages,'extend'=>$extendData));
-						}
-						else {
-							$this->modelLanguage->getLanguage();
-							$setEditData = parent::fetchData(array('context'=>'all','type'=>'page'), array('edit'=>$this->edit));
-							$setEditData = $this->setItemData($setEditData);
-							$this->template->assign('page',$setEditData[$this->edit]);
-
-							/*$assign = array(
-								'id_pages',
-								'name_pages' => ['title' => 'name'],
-								'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-								'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-								'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
-								'menu_pages',
-								'date_register'
-							);*/
-							$this->data->getScheme(
-								array('mc_about_page','mc_about_page_content'),
-								array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
-								$this->tableconfig['parent']);
-							$pageChild = $this->getItems('pagesChild',$this->edit,'all');
-
-							$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-							$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
-							$this->template->display('about/pages/edit.tpl');
-						}
-					}
-					else {
-						switch ($this->dataType) {
-							case 'text':
-								foreach ($this->content as $lang => $content) {
-									$config = array(
-										'context' => 'about',
-										'type' => 'content',
-										'data' => array(
-											'desc'      => $content['company_desc'],
-											'slogan'    => $content['company_slogan'],
-											'content'   => $content['company_content'],
-											'seo_title' => $content['seo_title'],
-											'seo_desc'  => $content['seo_desc'],
-											'id_lang'   => $lang
-										)
-									);
-
-									if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang))) {
-										$this->upd($config);
-									}
-									else {
-										$this->add($config);
-									}
-								}
-								break;
-							case 'refesh_lang':
-								$data = array('languages' => $this->getActiveLang('iso'));
-								$msg = 'refresh_lang';
-								break;
-							case 'enable_op':
-								$data = array('enable_op' => $this->enable_op);
-								break;
-							case 'openinghours':
-								$this->parseOpHours();
-								$data = $this->company;
-								break;
-							case 'contact':
-							case 'company':
-							case 'socials':
-								$this->company['socials'] = array_map(function($v){ return empty($v) ? null : $v; },$this->company['socials']);
-								$data = $this->company;
-								break;
-						}
-
-						if(!empty($data)) {
-							$this->upd(
-								array(
-									'context' => 'about',
-									'type' => $this->dataType,
-									'data' => $data
-								)
-							);
-						}
-
-						$this->message->json_post_response(true, $msg);
-					}
-                    break;
-				case 'order':
-					if (isset($this->order)) {
-						$this->upd(
-							array(
-								'type' => 'order'
-							)
-						);
-					}
-					break;
-				case 'delete':
-					if(isset($this->id_pages)) {
-						$this->del(
-							array(
-								'type' => 'page',
-								'data' => array(
-									'id' => $this->id_pages
-								)
-							)
-						);
-					}
-					break;
-            }
+        if(isset($this->plugin)) {
+            // Initialise l'API menu des plugins core
+            $this->modelPlugins->getItems(
+                array(
+                    'type'      =>  'tabs',
+                    'controller'=>  $this->controller
+                )
+            );
+            $this->modelLanguage->getLanguage();
+            //$setEditData = $this->getItems('pages', array('edit'=>$this->edit),'all',false);
+            //$setEditData = $this->setItemData($setEditData);
+            //$this->template->assign('page',$setEditData[$this->edit]);
+            // Execute un plugin core
+            $this->modelPlugins->getCoreItem();
         }
         else {
-			$this->modelLanguage->getLanguage();
-			$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
+            if (isset($this->tableaction)) {
+                $this->tableform->run();
+            }
+            elseif (isset($this->action)) {
+                switch ($this->action) {
+                    case 'addpage':
+                        if (isset($this->content)) {
+                            $this->add(
+                                array(
+                                    'context' => 'page',
+                                    'type' => 'page',
+                                    'data' => array(
+                                        'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+                                        'menu_pages' => isset($this->menu_pages) ? 1 : 0
+                                    )
+                                )
+                            );
 
-			$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',true,true);
-			$this->data->getScheme(
-				array('mc_about_page','mc_about_page_content'),
-				array('id_pages','name_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),
-				$this->tableconfig['parent']);
+                            $page = $this->getItems('root', null, 'one', false);
 
-            $this->getTypes();
-            $this->template->assign('contentData',$this->getContentData());
-            $this->template->assign('companyData',$this->getCompanyData());
-            $this->template->display('about/index.tpl');
+                            if ($page['id_pages']) {
+                                $this->saveContent($page['id_pages']);
+                                $this->message->json_post_response(true, 'add_redirect');
+                            }
+                        } else {
+                            $this->modelLanguage->getLanguage();
+                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                            $this->getItems('pagesSelect', array('default_lang' => $defaultLanguage['id_lang']), 'all');
+                            $this->template->display('about/pages/add.tpl');
+                        }
+                        break;
+                    case 'edit':
+                        $msg = 'update';
+                        $data = array();
+
+                        if (isset($this->tabs) && $this->tabs = 'pages') {
+                            if (isset($this->id_pages)) {
+                                $extendData = $this->saveContent($this->id_pages);
+                                $this->message->json_post_response(true, 'update', array('result' => $this->id_pages, 'extend' => $extendData));
+                            }
+                            else {
+                                $this->modelPlugins->getItems(
+                                    array(
+                                        'type'      =>  'tabs',
+                                        'controller'=>  $this->controller
+                                    )
+                                );
+                                $this->modelLanguage->getLanguage();
+                                $setEditData = parent::fetchData(array('context' => 'all', 'type' => 'page'), array('edit' => $this->edit));
+                                $setEditData = $this->setItemData($setEditData);
+                                $this->template->assign('page', $setEditData[$this->edit]);
+
+                                /*$assign = array(
+                                    'id_pages',
+                                    'name_pages' => ['title' => 'name'],
+                                    'content_pages' => ['class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                                    'seo_title_pages' => ['title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                                    'seo_desc_pages' => ['title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null],
+                                    'menu_pages',
+                                    'date_register'
+                                );*/
+                                $this->data->getScheme(
+                                    array('mc_about_page', 'mc_about_page_content'),
+                                    array('id_pages', 'name_pages', 'resume_pages', 'content_pages', 'seo_title_pages', 'seo_desc_pages', 'menu_pages', 'date_register'),
+                                    $this->tableconfig['parent']);
+                                $pageChild = $this->getItems('pagesChild', $this->edit, 'all');
+
+                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                                $this->getItems('pagesSelect', array('default_lang' => $defaultLanguage['id_lang']), 'all');
+                                $this->template->display('about/pages/edit.tpl');
+                            }
+                        }
+                        else {
+                            switch ($this->dataType) {
+                                case 'text':
+                                    foreach ($this->content as $lang => $content) {
+                                        $config = array(
+                                            'context' => 'about',
+                                            'type' => 'content',
+                                            'data' => array(
+                                                'desc' => $content['company_desc'],
+                                                'slogan' => $content['company_slogan'],
+                                                'content' => $content['company_content'],
+                                                'seo_title' => $content['seo_title'],
+                                                'seo_desc' => $content['seo_desc'],
+                                                'id_lang' => $lang
+                                            )
+                                        );
+
+                                        if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang))) {
+                                            $this->upd($config);
+                                        } else {
+                                            $this->add($config);
+                                        }
+                                    }
+                                    break;
+                                case 'refesh_lang':
+                                    $data = array('languages' => $this->getActiveLang('iso'));
+                                    $msg = 'refresh_lang';
+                                    break;
+                                case 'enable_op':
+                                    $data = array('enable_op' => $this->enable_op);
+                                    break;
+                                case 'openinghours':
+                                    $this->parseOpHours();
+                                    $data = $this->company;
+                                    break;
+                                case 'contact':
+                                case 'company':
+                                case 'socials':
+                                    $this->company['socials'] = array_map(function ($v) {
+                                        return empty($v) ? null : $v;
+                                    }, $this->company['socials']);
+                                    $data = $this->company;
+                                    break;
+                            }
+
+                            if (!empty($data)) {
+                                $this->upd(
+                                    array(
+                                        'context' => 'about',
+                                        'type' => $this->dataType,
+                                        'data' => $data
+                                    )
+                                );
+                            }
+
+                            $this->message->json_post_response(true, $msg);
+                        }
+                        break;
+                    case 'order':
+                        if (isset($this->order)) {
+                            $this->upd(
+                                array(
+                                    'type' => 'order'
+                                )
+                            );
+                        }
+                        break;
+                    case 'delete':
+                        if (isset($this->id_pages)) {
+                            $this->del(
+                                array(
+                                    'type' => 'page',
+                                    'data' => array(
+                                        'id' => $this->id_pages
+                                    )
+                                )
+                            );
+                        }
+                        break;
+                }
+            }
+            else {
+                $this->modelPlugins->getItems(
+                    array(
+                        'type'      =>  'tabs',
+                        'controller'=>  $this->controller
+                    )
+                );
+                $this->modelLanguage->getLanguage();
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+
+                $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all', true, true);
+                $this->data->getScheme(
+                    array('mc_about_page', 'mc_about_page_content'),
+                    array('id_pages', 'name_pages', 'resume_pages', 'content_pages', 'seo_title_pages', 'seo_desc_pages', 'menu_pages', 'date_register'),
+                    $this->tableconfig['parent']);
+
+                $this->getTypes();
+                $this->template->assign('contentData', $this->getContentData());
+                $this->template->assign('companyData', $this->getCompanyData());
+                $this->template->display('about/index.tpl');
+            }
         }
     }
 }

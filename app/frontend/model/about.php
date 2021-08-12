@@ -316,7 +316,7 @@ class frontend_model_about extends frontend_db_about {
 	 */
 	public function setPagesTree($pages, $branch = 'root')
 	{
-		$childs = array();
+		$childs = [];
 		$id = 'id_pages';
 
 		foreach($pages as &$item) {
@@ -338,6 +338,7 @@ class frontend_model_about extends frontend_db_about {
 			}
 		}
 
+		if(empty($childs)) return $childs;
 		if($branch === 'root')
 			return $childs[$branch];
 		else

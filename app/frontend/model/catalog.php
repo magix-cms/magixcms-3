@@ -211,9 +211,9 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['associated'][$key]['id_lang']    = $value['id_lang'];
                         $data['associated'][$key]['iso']        = $value['iso_lang'];
                         $data['associated'][$key]['price']      = $value['price_p'];
-                        $data['associated'][$key]['content']    = $value['content_p'];
-                        $data['associated'][$key]['resume']     = ($value['resume_p'] != '') ? $value['resume_p'] : NULL;
-                        $data['associated'][$key]['order']      = $value['order_p'];
+                        $data['associated'][$key]['content']   = $row['content_p'];
+                        $data['associated'][$key]['resume']    = $row['resume_p'] ? $row['resume_p'] : ($row['content_p'] ? $string_format->truncate(strip_tags($row['content_p'])) : '');
+                        $data['associated'][$key]['order']     = isset($row['order_p']) ? $row['order_p'] : null;
                         if(isset($value['name_img'])){
                             $imgPrefix = $this->imagesComponent->prefix();
                             $fetchConfig = $this->imagesComponent->getConfigItems(array(

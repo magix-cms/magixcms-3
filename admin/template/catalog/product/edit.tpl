@@ -29,6 +29,7 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
+                    {if !$smarty.get.plugin}
                     <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && !$smarty.get.tab} active{/if}" id="general">
                         {include file="catalog/product/form/edit.tpl" controller="product"}
                     </div>
@@ -71,11 +72,13 @@
                         <hr>*}
                         {include file="section/form/list-form.tpl" controller="product" sub="similar" dir_controller="catalog/product" data=$productRel id=$page.id_product class_form="col-ph-12 col-lg-5" class_table="col-ph-12 col-lg-7"}
                     </div>
+                    {else}
                     {foreach $setTabsPlugins as $key => $value}
                         <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
                             {if $smarty.get.plugin eq $value.name}{block name="plugin:content"}{/block}{/if}
                         </div>
                     {/foreach}
+                    {/if}
                 </div>
                 {*<pre>{$page|print_r}</pre>*}
             </div>

@@ -217,12 +217,14 @@ CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `version` varchar(10) NOT NULL,
-  `home` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `pages` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `news` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `category` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `product` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `seo` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `home` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `about` smallint(3) unsigned NOT NULL DEFAULT '0'
+  `pages` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `news` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `catalog` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `category` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `product` smallint(3) unsigned NOT NULL DEFAULT '0',
+  `seo` smallint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_plugins`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

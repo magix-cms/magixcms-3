@@ -16,12 +16,15 @@
             <h2 class="panel-heading h5">{#root_about#|ucfirst}</h2>
             {$tab = $smarty.get.tab}
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation"{if $tab == 'company' || !$tab} class="active"{/if}><a href="#info_company" aria-controls="info_company" role="tab" data-toggle="tab">{#info_company#}</a></li>
+                <li role="presentation"{if !$smarty.get.plugin && ($tab == 'company' || !$tab)} class="active"{/if}><a href="#info_company" aria-controls="info_company" role="tab" data-toggle="tab">{#info_company#}</a></li>
                 <li role="presentation"{if $tab == 'contact'} class="active"{/if}><a href="#info_contact" aria-controls="info_contact" role="tab" data-toggle="tab">{#info_contact#}</a></li>
                 <li role="presentation"{if $tab == 'socials'} class="active"{/if}><a href="#info_socials" aria-controls="info_socials" role="tab" data-toggle="tab">{#info_socials#}</a></li>
                 <li role="presentation"{if $tab == 'opening'} class="active"{/if}><a href="#info_opening" aria-controls="info_opening" role="tab" data-toggle="tab">{#info_opening#}</a></li>
                 <li role="presentation"{if $tab == 'text'} class="active"{/if}><a href="#info_text" aria-controls="info_text" role="tab" data-toggle="tab">{#text#}</a></li>
                 <li role="presentation"{if $tab == 'page'} class="active"{/if}><a href="#info_page" aria-controls="info_page" role="tab" data-toggle="tab">{#info_page#}</a></li>
+                {foreach $setTabsPlugins as $key => $value}
+                    <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.title}</a></li>
+                {/foreach}
             </ul>
         </header>
         <div class="panel-body panel-body-form">
@@ -30,6 +33,7 @@
             </div>
             {*<pre>{$companyData|print_r}</pre>*}
             <div class="tab-content">
+                {if !$smarty.get.plugin}
                 <div role="tabpanel" class="tab-pane{if $tab == 'company' || !$tab} active{/if}" id="info_company">
                     {include file="about/form/company.tpl"}
                 </div>
@@ -55,6 +59,12 @@
                     {*{include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="pages"}*}
                     {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_pages' ajax_form=true activation=true sortable=$sortable controller="about" subcontroller="pages" change_offset=true}
                 </div>
+                {/if}
+                {foreach $setTabsPlugins as $key => $value}{if $smarty.get.plugin eq $value.name}
+                <div role="tabpanel" class="tab-pane active" id="plugins-{$value.name}">
+                    {if $smarty.get.plugin eq $value.name}{block name="plugin:content"}{/block}{/if}
+                </div>{/if}
+                {/foreach}
             </div>
         </div>
     </section>

@@ -78,7 +78,7 @@ class backend_controller_home extends backend_db_home{
             if (!array_key_exists($page['id_page'], $arr)) {
                 $arr[$page['id_page']] = array();
                 $arr[$page['id_page']]['id_page'] = $page['id_page'];
-                $arr[$page['idpage']]['date_register'] = $page['date_register'];
+                $arr[$page['id_page']]['date_register'] = $page['date_register'];
             }
             $arr[$page['id_page']]['content'][$page['id_lang']] = array(
                 'id_lang' => $page['id_lang'],

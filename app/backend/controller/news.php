@@ -422,8 +422,19 @@ class backend_controller_news extends backend_db_news
      */
     public function run()
     {
+        $this->modelPlugins->getItems(
+            array(
+                'type'      =>  'tabs',
+                'controller'=>  $this->controller
+            )
+        );
         if(isset($this->plugin)) {
-            if(isset($this->action)) {
+            // Execute un plugin core
+            $this->modelLanguage->getLanguage();
+            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+            $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
+
+            if(isset($this->action) && $this->edit !== '') {
                 switch ($this->action) {
                     case 'edit':
                         // Initialise l'API menu des plugins core
@@ -444,6 +455,9 @@ class backend_controller_news extends backend_db_news
                         $this->modelPlugins->getCoreItem();
                         break;
                 }
+            }
+            else {
+                $this->modelPlugins->getCoreItem();
             }
         }
         else {
