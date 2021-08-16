@@ -42,8 +42,22 @@
         <td class="actions text-center">
             {if {employee_access type="edit" class_name=$cClass} eq 1}
             {if $edit}
-            <a href="/{baseadmin}/index.php?controller={$editController}&action=edit&edit={$row[$editColumn]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="over-row"></a>
-            <a href="/{baseadmin}/index.php?controller={$editController}&action=edit&edit={$row[$editColumn]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="btn btn-link action_on_record"><i class="material-icons">edit</i></a>
+                {capture name="editurl"}{strip}
+                    /{baseadmin}/index.php?
+                    controller={$editController}
+                    &action=edit
+                    {if $plugin}
+                        &edit={$smarty.get.edit}
+                        &plugin={$plugin}
+                        &mod_edit={$row[$editColumn]}
+                        &mod_action=edit
+                    {else}
+                        &edit={$row[$editColumn]}
+                    {/if}
+                    {if $subcontroller}&tabs={$subcontroller}{/if}
+                {/strip}{/capture}
+            <a href="{$smarty.capture.editurl}" class="over-row"></a>
+            <a href="{$smarty.capture.editurl}" class="btn btn-link action_on_record"><i class="material-icons">edit</i></a>
             {/if}
             {/if}
             {if {employee_access type="del" class_name=$cClass} eq 1}
