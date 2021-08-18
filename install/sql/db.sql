@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `name` varchar(200) NOT NULL,
   `version` varchar(10) NOT NULL,
   `home` smallint(3) unsigned NOT NULL DEFAULT '0',
-  `about` smallint(3) unsigned NOT NULL DEFAULT '0'
+  `about` smallint(3) unsigned NOT NULL DEFAULT '0',
   `pages` smallint(3) unsigned NOT NULL DEFAULT '0',
   `news` smallint(3) unsigned NOT NULL DEFAULT '0',
   `catalog` smallint(3) unsigned NOT NULL DEFAULT '0',
