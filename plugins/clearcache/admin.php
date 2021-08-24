@@ -82,6 +82,7 @@ class plugins_clearcache_admin{
                     if(isset($this->clear)){
                         $this->setRemoveFiles(array('app'=>$this->clear,'dir'=>'templates_c'));
                         $this->setRemoveFiles(array('app'=>$this->clear,'dir'=>'minify'));
+                        $this->setRemoveFiles(array('app'=>$this->clear,'dir'=>'caches'));
                         $this->message->json_post_response(true, 'delete_multi');
                     }
                     break;
