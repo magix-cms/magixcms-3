@@ -79,9 +79,9 @@
         .hidden-lg { .responsive-invisibility(); }
     }
 }
-@media (min-width: (@screen-lg-min)) {
-    .visible-lg { .responsive-visibility(); }
-    .hidden-lg { .responsive-invisibility(); }
+@media (min-width: (@screen-xl-min)) {
+    .visible-xl-up { .responsive-visibility(); }
+    .hidden-xl-up { .responsive-invisibility(); }
 }
 
 // --- Pull block right or left on different breakpoint
@@ -95,7 +95,7 @@
 }
 
 // --- Pull block right or left on different breakpoint
-@media (max-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+@media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
     .pull-xs-left {
         float: left;
     }

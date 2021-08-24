@@ -411,7 +411,7 @@ select[multiple].input-lg {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #737373;
+  color: hsl(0, 0%, 45%);
 }
 @media (min-width: 48em) {
   .form-inline .form-group {
@@ -587,7 +587,7 @@ textarea.form-control {
 .nice-form select ~ label:after,
 .nice-form textarea ~ label:after,
 .nice-form div ~ label:after {
-  background-color: #3b61a9;
+  background-color: var(--main-color);
   bottom: 8px;
   content: '';
   height: 2px;
@@ -596,7 +596,6 @@ textarea.form-control {
   transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-transition-property: left, visibility, width;
-  /* Safari */
   transition-property: left, visibility, width;
   visibility: hidden;
   width: 10px;
@@ -606,7 +605,7 @@ textarea.form-control {
 .nice-form select ~ label:not(.is_empty),
 .nice-form textarea ~ label:not(.is_empty),
 .nice-form div ~ label:not(.is_empty) {
-  color: #3b61a9;
+  color: var(--main-color);
   font-size: 12px;
   top: 4px;
   visibility: visible;
@@ -649,7 +648,7 @@ textarea.form-control {
 .nice-form input[type="password"]:focus ~ label,
 .nice-form select:focus ~ label,
 .nice-form textarea:focus ~ label {
-  color: #3b61a9;
+  color: var(--main-color);
   font-size: 12px;
   top: 4px;
   visibility: visible;
@@ -889,12 +888,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-radius: 0;
   background-color: var(--alert-bg-c, transparent);
   color: var(--alert-c, var(--text-color));
-  /*hr {
-    border-top-color: darken(@border, 5%);
-  }*/
-  /*.alert-link {
-    color: darken(@text-color, 10%);
-  }*/
 }
 .alert h4 {
   margin-top: 0;

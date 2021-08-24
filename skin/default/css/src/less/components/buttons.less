@@ -131,9 +131,9 @@
 // --------------------------------------------------
 
 // Custom buttons based on theme colors (LESS use only)
-/*.btn-default {
-	.button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
-}*/
+//.btn-default {
+//	.button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+//}
 .btn-default {
 	//.button-variant(#fff, extract(@main-colors, 3), extract(@main-colors, 3));
 	.button-variant(
@@ -198,7 +198,7 @@
 
 // Make a button look and behave like a link
 .btn-link {
-	color: @link-color;
+	color: var(--link-color);
 	font-weight: normal;
 	border-radius: 0;
 
@@ -218,8 +218,8 @@
 	}
 	&:hover,
 	&:focus {
-		color: @link-hover-color;
-		text-decoration: @link-hover-decoration;
+		color: var(--link-hover-color);
+		text-decoration: var(--link-hover-deco);
 		background-color: transparent;
 	}
 	&[disabled],
@@ -277,7 +277,10 @@ input[type="button"] {
 .custom-button(dark);
 
 .btn-invert-white {
-	.button-invert(@white; @text-color; @white; @white);
+	.button-invert(var(--white); var(--dark-color); var(--white); var(--white));
+}
+.btn-invert {
+	.button-invert(var(--text-color); var(--bogy-bg); var(--text-color); var(--text-color));
 }
 
 .btn-box {

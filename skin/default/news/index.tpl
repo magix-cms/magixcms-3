@@ -4,6 +4,12 @@
 {block name="title"}{$rootSeo['title']}{/block}
 {block name="description"}{$rootSeo['description']}{/block}
 {block name="webType"}CollectionPage{/block}
+{block name="styleSheet"}
+    {$css_files = [
+    "/skin/{$theme}/css/newsRoot{if $setting.mode.value !== 'dev'}.min{/if}.css"
+    ]}
+{/block}
+
 {block name='article'}
     <article id="article"{block name="article:class"} class="container"{/block} itemprop="mainEntity" itemscope itemtype="http://schema.org/{block name='article:type'}Periodical{/block}">
         {block name='article:header'}
@@ -82,7 +88,7 @@
             {if $news}
             <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
                 <div class="tile-list row row-center">
-                    {include file="news/loop/news.tpl" data=$news classCol='news-tile col-4 col-xs-3 col-sm-4 col-md-th col-lg-4 col-xl-3'}
+                    {include file="news/loop/news.tpl" data=$news classCol='news-tile col-12 col-xs-6 col-md-4'}
                 </div>
             </div>
             {/if}

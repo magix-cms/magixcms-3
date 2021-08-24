@@ -5,6 +5,15 @@
 {block name="webType"}WebPage{/block}
 {block name='article:class'} class="container clearfix"{/block}
 {block name='article:type'}Article{/block}
+{block name="styleSheet"}
+    {$css_files = [
+    "/skin/{$theme}/css/newsRoot{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/news{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
+    ]}
+{/block}
+
 {block name='article:header'}
     <header id="header-news">
         <h1 itemprop="headline">{$news.name}</h1>

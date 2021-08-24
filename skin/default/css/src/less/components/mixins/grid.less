@@ -8,13 +8,63 @@
 	margin-left: ~"calc(var(--grid-gutter) / 2)";
 	margin-right: ~"calc(var(--grid-gutter) / 2)";
 }
-.make-rows(@class) {
+.make-rows(@class) when not(@class = ph) {
 	.row-@{class}-center {
 		justify-content: center;
 	}
 	.row-@{class}-reverse {
 		flex-direction: row-reverse;
 	}
+}
+.make-rows(@class) when (@class = ph) {
+	.row-center {
+		justify-content: center;
+	}
+	.row-reverse {
+		flex-direction: row-reverse;
+	}
+}
+
+.make-grid-columns() {
+	.col {
+		flex-basis: 0;
+		flex-grow: 1;
+		max-width: 100%;
+	}
+	.col,
+	[class*="col-"] {
+		position: relative;
+		left: auto;
+		right: auto;
+		// Prevent columns from collapsing when empty
+		min-height: 1px;
+		// Inner gutter via padding
+		padding-left: ~"calc(var(--grid-gutter) / 2)";
+		padding-right: ~"calc(var(--grid-gutter) / 2)";
+	}
+	[class*="col-"] {
+		--col-width: calc(var(--nbcol)/var(--grid-column));
+		flex: 0 0 ~"calc(100% * var(--col-width))";
+		max-width: ~"calc(100% * var(--col-width))";
+	}
+	[class*="push-"] {
+		left: ~"calc(100% * (var(--push)/var(--grid-column)))";
+	}
+	[class*="pull-"] {
+		right:  ~"calc(100% * (var(--pull)/var(--grid-column)))";
+	}
+	[class*="offset-"] {
+		margin-left:  ~"calc(100% * (var(--offset)/var(--grid-column)))";
+	}
+	each(@breakpoints,{
+		@media (min-width: @value) {
+			.col-@{key} {
+				flex-basis: 0;
+				flex-grow: 1;
+				max-width: 100%;
+			}
+		}
+	});
 }
 
 // Generate the phone columns
@@ -29,31 +79,6 @@
 }
 .make-column(@columns, @type) when (@type = offset){
 	--offset: @columns;
-}
-
-.make-grid-columns() {
-	[class*="col-"] {
-		--col-width: calc(var(--nbcol)/var(--grid-column));
-		position: relative;
-		// Prevent columns from collapsing when empty
-		min-height: 1px;
-		// Inner gutter via padding
-		padding-left: ~"calc(var(--grid-gutter) / 2)";
-		padding-right: ~"calc(var(--grid-gutter) / 2)";
-		left: auto;
-		right: auto;
-		flex: 0 0 ~"calc(100% * var(--col-width))";
-		max-width: ~"calc(100% * var(--col-width))";
-	}
-	[class*="push-"] {
-		left: ~"calc(100% * (var(--push)/var(--grid-column)))";
-	}
-	[class*="pull-"] {
-		right:  ~"calc(100% * (var(--pull)/var(--grid-column)))";
-	}
-	[class*="offset-"] {
-		margin-left:  ~"calc(100% * (var(--offset)/var(--grid-column)))";
-	}
 }
 
 .calc-grid-column(@class, @index, @type) when (@index > 0) and not(@class = ph) {
@@ -75,10 +100,14 @@
 }
 
 // Create grid for specific class
-.make-grid(@class) {
-	@grid-columns-var: "grid-columns-@{class}";
-	.loop-grid-columns(@@grid-columns-var, @class, col);
-	.loop-grid-columns(@@grid-columns-var, @class, pull);
-	.loop-grid-columns(@@grid-columns-var, @class, push);
-	.loop-grid-columns(@@grid-columns-var, @class, offset);
+.make-grid() {
+	each(@breakpoints,{
+		@media (min-width: @value) {
+			.make-rows(@key);
+			.loop-grid-columns(@grid-columns, @key, col);
+			.loop-grid-columns(@grid-columns, @key, pull);
+			.loop-grid-columns(@grid-columns, @key, push);
+			.loop-grid-columns(@grid-columns, @key, offset);
+		}
+	});
 }

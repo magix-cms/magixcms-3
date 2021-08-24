@@ -698,7 +698,7 @@ textarea.form-control {
 		transition-timing-function: cubic-bezier(.4,0,.2,1);
 
 		&:after {
-			background-color: @main-color;
+			background-color: var(--main-color);
 			bottom: @padb;
 			content: '';
 			height: 2px;
@@ -706,14 +706,14 @@ textarea.form-control {
 			position: absolute;
 			transition-duration: .2s;
 			transition-timing-function: cubic-bezier(.4,0,.2,1);
-			-webkit-transition-property: left, visibility, width; /* Safari */
+			-webkit-transition-property: left, visibility, width; // Safari
 			transition-property: left, visibility, width;
 			visibility: hidden;
 			width: 10px;
 		}
 
 		&:not(.is_empty) {
-			color: @main-color;
+			color: var(--main-color);
 			font-size: 12px;
 			top: 4px;
 			visibility: visible;
@@ -747,7 +747,7 @@ textarea.form-control {
 
 		&:focus {
 			~ label {
-				color: @main-color;
+				color: var(--main-color);
 				font-size: 12px;
 				top: 4px;
 				visibility: visible;

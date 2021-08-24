@@ -7,6 +7,11 @@
 		display: none;
 	}
 }
+@media (min-width: @screen-md-min) {
+	:root {
+		--toolbar-h: @toolbarH-md;
+	}
+}
 
 #header {
 	z-index: 500;
@@ -37,4 +42,9 @@
 	text-align: center;
 
 	a { display: block; }
+}
+@media (min-width: @screen-lg-min){
+	#header #navbar-brand {
+		padding-left: 50px;
+	}
 }

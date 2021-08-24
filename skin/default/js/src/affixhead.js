@@ -7,26 +7,48 @@
  * @author      Salvatore Di Salvo <disalvo.infographiste@gmail.com>
  */
 'use strict';
+function getPosition(element) {
+    var xPosition = 0;
+    var yPosition = 0;
+
+    while(element) {
+        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+        element = element.offsetParent;
+    }
+    return { x: xPosition, y: yPosition };
+}
 window.addEventListener('DOMContentLoaded', function () {
     // *** Auto-position of the affix header
-    let tar = window.innerHeight/2;
+    let header = document.getElementById('header'),
+        footbar = document.getElementById('footbar'),
+        //tar = getPosition(header).y,
+        tar = window.innerHeight/2;
+
+    /*function init() {
+        if(document.getElementsByTagName('body')[0].id === 'home') {
+            let headerH = window.getComputedStyle(header).getPropertyValue('--header-h').slice(0,-2),
+                rem = window.getComputedStyle(document.documentElement).getPropertyValue('font-size').slice(0,-2);
+            tar = document.documentElement.clientHeight - headerH - (10 * rem);
+        }
+    }*/
 
     function affixHead() {
         let pos = window.pageYOffset,
             header = document.getElementById('header'),
-            btn = document.querySelectorAll('.toTop'),
             atTop = header.classList.contains('at-top');
 
         if (pos > tar && atTop) {
             header.classList.remove('at-top');
-            btn.forEach( function(i) { i.classList.remove('at-top'); });
-        } else if(pos < tar && !atTop){
+            footbar.classList.remove('at-top');
+        } else if(pos <= tar && !atTop){
             header.classList.add('at-top');
-            btn.forEach( function(i) { i.classList.add('at-top'); });
+            footbar.classList.add('at-top');
         }
     }
 
+    //window.addEventListener('resize',init);
     window.addEventListener('scroll',affixHead);
-    window.addEventListener('resize',affixHead);
+    //init();
     affixHead();
 });

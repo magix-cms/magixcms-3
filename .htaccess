@@ -109,26 +109,31 @@
       ExpiresByType font/opentype                         "access plus 1 year"
       # TrueType
       ExpiresByType application/x-font-ttf                "access plus 1 year"
+      ExpiresByType font/ttf                              "access plus 1 year"
       # Web Open Font Format (WOFF) 1.0
       ExpiresByType application/font-woff                 "access plus 1 year"
       ExpiresByType application/x-font-woff               "access plus 1 year"
       ExpiresByType font/woff                             "access plus 1 year"
       # Web Open Font Format (WOFF) 2.0
       ExpiresByType application/font-woff2                "access plus 1 year"
-    # Other
+      ExpiresByType font/woff2                            "access plus 1 year"
+      # Other
       ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
 </IfModule>
 # END Expire headers
 # BEGIN Cache-Control Headers
 <IfModule mod_headers.c>
-  <FilesMatch "\\.(ico|jpe?g|png|gif|swf|gz)$">
-    Header set Cache-Control "max-age=2592000, public"
+  <FilesMatch "\\.(ttf|woff|woff2|eot)$">
+    Header set Cache-Control "max-age=31536000, public"
+  </FilesMatch>
+  <FilesMatch "\\.(ico|jpe?g|png|webp|gif|swf|gz)$">
+    Header set Cache-Control "max-age=31536000, public"
   </FilesMatch>
   <FilesMatch "\\.(css)$">
-    Header set Cache-Control "max-age=2592000, public"
+    Header set Cache-Control "max-age=31536000, public"
   </FilesMatch>
   <FilesMatch "\\.(js)$">
-    Header set Cache-Control "max-age=2592000, private"
+    Header set Cache-Control "max-age=31536000, private"
   </FilesMatch>
   <FilesMatch "\\.(x?html?|php)$">
     Header set Cache-Control "max-age=600, private, must-revalidate"

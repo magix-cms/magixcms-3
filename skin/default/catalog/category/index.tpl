@@ -2,6 +2,13 @@
 {block name='body:id'}category{/block}
 {block name="title"}{$cat.seo.title}{/block}
 {block name="description"}{$cat.seo.description}{/block}
+{block name="styleSheet"}
+    {$css_files = [
+    "/skin/{$theme}/css/catalog{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
+    ]}
+{/block}
 
 {block name='article'}
     <article class="catalog container" itemprop="mainContentOfPage">
@@ -24,7 +31,7 @@
             <p class="h2">{#subcategories#|ucfirst}</p>
             <div class="vignette-list">
                 <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-4 col-xs-3 col-sm-4 col-md-th col-lg-4 col-xl-3'}
+                    {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-12 col-xs-6 col-md-4'}
                 </div>
             </div>
             {/if}
@@ -32,7 +39,7 @@
             <p class="h2">{#products#|ucfirst}</p>
             <div class="vignette-list">
                 <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/product.tpl" data=$products classCol='vignette col-4 col-xs-3 col-sm-4 col-md-th col-lg-4 col-xl-3'}
+                    {include file="catalog/loop/product.tpl" data=$products classCol='vignette col-12 col-xs-6 col-md-4'}
                 </div>
             </div>
             {/if}

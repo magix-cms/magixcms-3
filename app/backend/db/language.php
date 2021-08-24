@@ -138,7 +138,7 @@ class backend_db_language{
 		$sql = '';
 
 		switch ($config['type']) {
-			case 'page':
+			case 'delLang':
 				$sql = 'DELETE FROM `mc_lang` WHERE `id_lang` IN ('.$params['id'].')';
 				$params = array();
 				break;

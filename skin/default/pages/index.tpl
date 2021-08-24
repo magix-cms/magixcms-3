@@ -2,6 +2,14 @@
 {block name='body:id'}pages{/block}
 {block name="title"}{$pages.seo.title}{/block}
 {block name="description"}{$pages.seo.description}{/block}
+{block name="styleSheet"}
+    {$css_files = [
+    "/skin/{$theme}/css/cms{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
+    ]}
+{/block}
+
 {block name='article'}
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content'}

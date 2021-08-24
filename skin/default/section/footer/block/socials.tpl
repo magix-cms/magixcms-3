@@ -1,4 +1,4 @@
-<div id="block-socials" class="col col-xs-2 col-sm block">
+<div id="block-socials" class="col-12 block">
     {if !empty($companyData.socials)}
     <div class="followbox">
         <p class="h4">{#follow#|ucfirst}</p>

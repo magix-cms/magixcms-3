@@ -146,7 +146,16 @@ class frontend_model_catalog extends frontend_db_catalog {
                                 $data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
                                 $data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
                             }
-                            $data['imgs'][$item]['default'] = $val['default_img'];
+                            //$data['imgs'][$item]['default'] = $val['default_img'];
+							$defaultimg = $this->imagesComponent->getConfigItems(array(
+								'module_img'    =>'logo',
+								'attribute_img' =>'product'
+							));
+							$data['imgs'][$item]['default'] = [
+								'src' => isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
+								'w' => $defaultimg[0]['width_img'],
+								'h' => $defaultimg[0]['height_img']
+							];
                         }
                     }
                 }
@@ -179,7 +188,15 @@ class frontend_model_catalog extends frontend_db_catalog {
                         $data['img']['caption'] = $row['caption_img'];
                         $data['img']['name'] = $row['name_img'];
                     }
-                    $data['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+					$defaultimg = $this->imagesComponent->getConfigItems(array(
+						'module_img'    =>'logo',
+						'attribute_img' =>'product'
+					));
+					$data['img']['default'] = [
+						'src' => isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
+						'w' => $defaultimg[0]['width_img'],
+						'h' => $defaultimg[0]['height_img']
+					];
                 }
 
                 // -- Similar / Associated product
@@ -242,7 +259,16 @@ class frontend_model_catalog extends frontend_db_catalog {
                             $data['associated'][$key]['img']['caption'] = $value['caption_img'];
                             $data['associated'][$key]['img']['name'] = $value['name_img'];
                         }
-                        $data['associated'][$key]['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+                        //$data['associated'][$key]['img']['default'] = isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png';
+						$defaultimg = $this->imagesComponent->getConfigItems(array(
+							'module_img'    =>'logo',
+							'attribute_img' =>'product'
+						));
+						$data['associated'][$key]['img']['default'] = [
+							'src' => isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
+							'w' => $defaultimg[0]['width_img'],
+							'h' => $defaultimg[0]['height_img']
+						];
                     }
                 }
                 // Plugin
@@ -304,7 +330,18 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['img']['alt'] = $row['alt_img'];
                 $data['img']['title'] = $row['title_img'];
                 $data['img']['caption'] = $row['caption_img'];
-                $data['img']['default'] = isset($this->imagePlaceHolder['category']) ? $this->imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
+                //$data['img']['default'] = isset($this->imagePlaceHolder['category']) ? $this->imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png';
+
+				$defaultimg = $this->imagesComponent->getConfigItems(array(
+					'module_img'    =>'logo',
+					'attribute_img' =>'category'
+				));
+				$data['img']['default'] = [
+					'src' => isset($imagePlaceHolder['category']) ? $imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png',
+					'w' => $defaultimg[0]['width_img'],
+					'h' => $defaultimg[0]['height_img']
+				];
+
                 $data['url'] = $this->routingUrl->getBuildUrl(array(
                     'type' => 'category',
                     'iso'  => $row['iso_lang'],

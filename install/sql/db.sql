@@ -201,6 +201,7 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `categ
 (NULL, 'css_inliner', '0', 'string', 'CSS inliner', 'general'),
 (NULL, 'mode', 'dev', 'string', 'Environment types', 'general'),
 (NULL, 'ssl', '0', 'int', 'SSL protocol', 'general'),
+(NULL, 'http2', '0', 'int', 'HTTP2 protocol', 'general'),
 (NULL, 'service_worker', '0', 'int', 'Service Worker', 'general'),
 (NULL, 'vat_rate', '21', 'float', 'VAT Rate', 'catalog'),
 (NULL, 'price_display', 'tinc', 'string', 'Price display with or without tax included', 'catalog'),
@@ -709,6 +710,11 @@ CREATE TABLE IF NOT EXISTS `mc_menu_content` (
   KEY `id_link` (`id_link`),
   KEY `id_lang` (`id_lang`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `mc_menu_content`
+    ADD CONSTRAINT `mc_menu_content_ibfk_1` FOREIGN KEY (`id_link`) REFERENCES `mc_menu`(`id_link`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `mc_menu_content_ibfk_2` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang`(`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 CREATE TABLE IF NOT EXISTS `mc_share_config` (
   `id_share` smallint(3) unsigned NOT NULL AUTO_INCREMENT,

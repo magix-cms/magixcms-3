@@ -252,6 +252,7 @@ class backend_controller_setting extends backend_db_setting{
             case 'general':
 				$concat = isset($this->setting['concat']) ? '1' : '0';
 				$ssl = isset($this->setting['ssl']) ? '1' : '0';
+				$http2 = isset($this->setting['http2']) ? '1' : '0';
 				$service_worker = isset($this->setting['service_worker']) ? '1' : '0';
                 $amp = isset($this->setting['amp']) ? '1' : '0';
 
@@ -262,6 +263,7 @@ class backend_controller_setting extends backend_db_setting{
                         'content_css'   => $this->setting['content_css'],
                         'concat'        => $concat,
                         'ssl'           => $ssl,
+                        'http2'         => $http2,
                         'service_worker'=> $service_worker,
                         'cache'         => $this->setting['cache'],
                         'mode'          => $this->setting['mode'],

@@ -79,26 +79,32 @@ class backend_db_theme{
 							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 							ORDER BY m.order_link ASC";*/
 						$sql = "SELECT 
-								m.id_link as id_link, 
-								m.id_page, 
-								m.type_link as type_link, 
-								m.mode_link as mode_link, 
-								lg.id_lang, 
-								COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
-								mc.title_link as title_link,
-								COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
-								COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
-							FROM mc_menu as m
-							LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
-                            RIGHT JOIN mc_lang as lg ON mc.id_lang = lg.id_lang
-							LEFT JOIN mc_cms_page as p ON (m.id_page = p.id_pages AND m.type_link = 'pages')
-							LEFT JOIN mc_cms_page_content as pc ON (p.id_pages = pc.id_pages AND lg.id_lang = pc.id_lang)
-							LEFT JOIN mc_about_page as ap ON (m.id_page = ap.id_pages AND m.type_link = 'about_page')
-							LEFT JOIN mc_about_page_content as apc ON (ap.id_pages = apc.id_pages AND lg.id_lang = apc.id_lang)
-							LEFT JOIN mc_catalog_cat as c ON (m.id_page = c.id_cat AND m.type_link = 'category')
-							LEFT JOIN mc_catalog_cat_content as cc ON (c.id_cat = cc.id_cat AND lg.id_lang = cc.id_lang)
-							LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
-                            ORDER BY m.order_link, lg.id_lang";
+	m.id_link, 
+	m.id_page, 
+	m.type_link as type_link, 
+	m.mode_link as mode_link, 
+	lg.id_lang, 
+	COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
+	mc.title_link as title_link,
+	COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
+	COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
+FROM mc_menu as m
+	LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
+	LEFT JOIN mc_cms_page as p ON (m.id_page = p.id_pages AND m.type_link = 'pages')
+	LEFT JOIN mc_cms_page_content as pc ON (p.id_pages = pc.id_pages)
+	LEFT JOIN mc_about_page as ap ON (m.id_page = ap.id_pages AND m.type_link = 'about_page')
+	LEFT JOIN mc_about_page_content as apc ON (ap.id_pages = apc.id_pages)
+	LEFT JOIN mc_catalog_cat as c ON (m.id_page = c.id_cat AND m.type_link = 'category')
+	LEFT JOIN mc_catalog_cat_content as cc ON (c.id_cat = cc.id_cat)
+    LEFT JOIN mc_lang as lg ON (
+    	mc.id_lang = lg.id_lang OR
+    	pc.id_lang = lg.id_lang OR
+    	apc.id_lang = lg.id_lang OR
+    	cc.id_lang = lg.id_lang
+    )
+	LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
+    WHERE lg.active_lang = 1
+ORDER BY m.order_link, lg.id_lang";
 						break;
 					case 'link':
 						$sql = "SELECT 
@@ -255,8 +261,8 @@ class backend_db_theme{
 					SELECT :type, :id_page, (IFNULL(MAX(order_link),0) + 1) FROM mc_menu";
 				break;
 			case 'link_content':
-				$sql = 'INSERT INTO `mc_menu_content`(id_link,id_lang,name_link,url_link) 
-					VALUES (:id,:id_lang,:name_link,:url_link)';
+				$sql = 'INSERT INTO `mc_menu_content`(id_link,id_lang,name_link,title_link,url_link) 
+					VALUES (:id,:id_lang,:name_link,:title_link,:url_link)';
 				break;
 		}
 

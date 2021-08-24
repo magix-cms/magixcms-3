@@ -292,3 +292,20 @@
 @smooth-white: extract(@grey, 3);
 @light-grey: extract(@grey, 7);
 @black: extract(@grey, 12);
+
+/**
+ * @color string base color
+ * @level int multiplier
+ * @fct string darken or lighten, default darken
+ * @step int amount used with the multiplier, defaut: 14%
+ */
+.color-variant(@color,@level: 1,@fct: darken,@step: 14%) {
+	@amount: @level * @step;
+	.getVariant(@color,@type,@amount) when (@type = darken){
+		@variant: darken(@color, @amount);
+	}
+	.getVariant(@color,@type,@amount) when (@type = lighten){
+		@variant: lighten(@color, @amount);
+	}
+	.getVariant(@color,@fct,@amount);
+}

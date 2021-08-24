@@ -486,7 +486,7 @@ var globalForm = (function ($, undefined) {
                     } else {
                         var selected = $('#table-'+(sub?sub:controller)).find('input[type="checkbox"]:checked');
                         if(selected.length) {
-                            var ids = $.map(selected, function (v){ return $(v).val(); });
+                            var ids = $.map(selected, function (v){ let val = $(v).val(); if(val !== '') return $(v).val(); });
                             id = ids.join();
                         }
                     }

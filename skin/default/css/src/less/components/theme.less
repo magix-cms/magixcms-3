@@ -15,22 +15,12 @@
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
 
-//== Scaffolding
-//
-//** Global textual link color.
-@link-color: @main-color;
-//** Link decoration.
-@link-decoration: none;
-//** Link hover color set via `darken()` function.
-@link-hover-color: darken(@link-color, 15%);
-//** Link hover decoration.
-@link-hover-decoration: underline;
-
 //
 //                      Define Sizes
 //--------------------------------------------------------
-@footbarH: 52px;
-@headerH: 70px;
+@footbarH: calc(1rem * var(--btn-line-height,var(--line-height)) + 2rem);
+@logo-height: 50px;
+@headerH: calc(var(--spacer) + @logo-height);
 @headerH-xs: @headerH;
 @headerH-sm: @headerH-xs;
 @headerH-md: @headerH-sm;
@@ -44,48 +34,14 @@
 // --------------------------------------------------
 
 // --- Theme Colors
-@main-color: #3b61a9;
-@main-color-hsla: 219, 48%, 45%, 1;
-@sd-color: #808284;
-@sd-color-hsla: 210, 2%, 51%, 1;
-@dark-color: #333;
-@dark-color-hsla: 0, 0%, 20%, 1;
-@text-color: @dark-color;
-@headings-color: var(--heading-color);
-
-//// --- Theme Colors Variant
-// --- Main Theme
-@main-colors:
-	darken(@main-color, 28%),
-	darken(@main-color, 14%),
-	@main-color,
-	lighten(@main-color, 14%),
-	lighten(@main-color, 28%);
-
-
-// --- Secondary Colors
-@sd-colors:
-	darken(@sd-color, 28%),
-	darken(@sd-color, 14%),
-	@sd-color,
-	lighten(@sd-color, 14%),
-	lighten(@sd-color, 28%);
-
-// --- Neutral Colors
-@grey-colors:
-	extract(@grey, 9),
-	extract(@grey, 8),
-	extract(@grey, 7),
-	extract(@grey, 6),
-	extract(@grey, 5);
-
-// --- Dark Color
-@dark-colors:
-	extract(@grey, 12),
-	#111,
-	extract(@grey, 11),
-	extract(@grey, 10),
-	extract(@grey, 9);
+@headings-color: var(--text-color);
+@theme-color: {
+	main: hsla(219, 48%, 45%, 1);
+	sd: hsla(210, 2%, 51%, 1);
+	dark: hsla(0, 0%, 20%, 1);
+	default: hsla(0, 0%, 100%, 1);
+};
+@text-color: @theme-color[dark];
 
 
 //
@@ -123,7 +79,7 @@
 @submenu-hover-bg:		transparent;
 @submenu-active-color: 	@menu-active-color;
 @submenu-active-bg: 	transparent;
-@arrow-color:			extract(@main-colors,4);
+@arrow-color:			.color-variant(@theme-color[main],1,lighten)[@variant];
 
 // --- Mega Dropdown
 @mg-link-color	: var(--text-color);
@@ -196,6 +152,19 @@
 @soundcloud: #f50, #ff621a;
 @github: #111111, #222222;
 @instagram: #913AC5, #D82F81;
+
+
+//== Scaffolding
+//
+//** Global textual link color.
+@link-color: var(--main-color);
+//** Link decoration.
+@link-decoration: none;
+//** Link hover color set via `darken()` function.
+@link-hover-color: .color-variant(@theme-color[main], 1)[@variant];
+//** Link hover decoration.
+@link-hover-decoration: underline;
+
 
 //== Pagination
 //

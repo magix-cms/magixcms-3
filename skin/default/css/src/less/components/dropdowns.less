@@ -39,7 +39,7 @@
   padding: 5px 0;
   margin: 2px 0 0; // override default ul
   list-style: none;
-  font-size: @font-size-base;
+  font-size: var(--font-size);
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   background-color: @dropdown-bg;
   border: 1px solid @dropdown-fallback-border; // IE8 fallback
@@ -153,8 +153,8 @@
 .dropdown-header {
   display: block;
   padding: 3px 20px;
-  font-size: @font-size-sm;
-  line-height: @line-height-base;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height);
   color: @dropdown-header-color;
   white-space: nowrap; // as with > li > a
 }

@@ -313,7 +313,7 @@ class backend_controller_theme extends backend_db_theme{
 							'type' => 'link',
 							'data' => array(
 								'type' => $this->type,
-								'id_page' => $this->id ? $this->id : null
+								'id_page' => $this->id ?: null
 							)
 						));
 
@@ -334,6 +334,7 @@ class backend_controller_theme extends backend_db_theme{
 										'id' => $link['id_link'],
 										'id_lang' => $lang['id_lang'],
 										'name_link' => $name,
+										'title_link' => $name,
 										'url_link' => $url
 									)
 								));
@@ -429,6 +430,7 @@ class backend_controller_theme extends backend_db_theme{
 
 								$link['url_link'] = $url ? $url : null;
 								$link['name_link'] = $l['name_link'] === '' ? $name : $l['name_link'];
+								$link['title_link'] = $l['title_link'] === '' ? null : $l['title_link'];
 
 								$this->add(array(
 									'type' => 'link_content',

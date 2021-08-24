@@ -127,7 +127,15 @@ class frontend_model_news extends frontend_db_news {
                 }
 				$data['img']['name'] = $row['img_news'];
             }
-            $data['img']['default'] = isset($imagePlaceHolder['news']) ? $imagePlaceHolder['news'] : '/skin/'.$this->template->theme.'/img/news/default.png';
+			$defaultimg = $this->imagesComponent->getConfigItems(array(
+				'module_img'    =>'logo',
+				'attribute_img' =>'news'
+			));
+            $data['img']['default'] = [
+            	'src' => isset($imagePlaceHolder['news']) ? $imagePlaceHolder['news'] : '/skin/'.$this->template->theme.'/img/news/default.png',
+				'w' => $defaultimg[0]['width_img'],
+				'h' => $defaultimg[0]['height_img']
+			];
 			$data['img']['alt'] = $row['alt_img'];
 			$data['img']['title'] = $row['title_img'];
 			$data['img']['caption'] = $row['caption_img'];

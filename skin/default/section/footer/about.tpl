@@ -1,4 +1,4 @@
-<div class="footer-colophon container" itemprop="isPartOf" itemscope itemtype="http://schema.org/WebSite">
+<div class="footer-colophon" itemprop="isPartOf" itemscope itemtype="http://schema.org/WebSite">
     <div class="row">
         <div id="cph" itemprop="copyrightHolder" itemscope itemtype="http://schema.org/{$companyData.type}"{if $smarty.get.magixmod == 'contact' && $companyData.openinghours} itemref="schedule"{/if}>
             <meta itemprop="name" content="{$companyData.name}"/>

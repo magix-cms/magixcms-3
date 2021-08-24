@@ -5,7 +5,7 @@
 
 .pager {
   padding-left: 0;
-  margin: @spacer 0;
+  margin: var(--spacer) 0;
   list-style: none;
   text-align: center;
   &:extend(.clearfix all);
@@ -50,5 +50,40 @@
       background-color: @pager-bg;
       cursor: @cursor-disabled;
     }
+  }
+}
+
+/* --------------------------------------------------------
+                        Pagination
+---------------------------------------------------------- */
+.pager {
+  > li > a {
+    border-radius: 0;
+    color:var(--text-color);
+    border: none;
+    padding: 10px;
+
+    &:active,
+    &:focus {
+      color: var(--main-color);
+      text-decoration: none;
+      background-color: transparent;
+    }
+  }
+
+  > li {
+    &.active,
+    &:focus {
+      a {
+        color: var(--main-color);
+        background-color: transparent;
+        font-weight: bold;
+        border-bottom: 1px solid var(--main-color);
+      }
+    }
+  }
+
+  .material-icons {
+    font-size: 1.4rem;
   }
 }

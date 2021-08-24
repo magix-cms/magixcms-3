@@ -16,8 +16,8 @@
             </div>
         </section>
     {/if}
-    <div id="colophon">
-        <div class="container-fluid">
+    <div id="colophon" class="container-fluid">
+        <div class="container">
             {include file="section/footer/about.tpl"}
         </div>
     </div>

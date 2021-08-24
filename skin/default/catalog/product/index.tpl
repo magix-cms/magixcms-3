@@ -4,6 +4,14 @@
 {block name='body:id'}product{/block}
 {block name="title"}{$product.seo.title}{/block}
 {block name="description"}{$product.seo.description}{/block}
+{block name="styleSheet"}
+    {$css_files = [
+    "/skin/{$theme}/css/product{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
+    ]}
+{/block}
+
 {block name='article'}
     {capture name="contact"}
         <form action="/{$lang}/contact/" method="get" class="interested-form">
@@ -52,7 +60,7 @@
             <p class="h2">{#similar_products#|ucfirst}</p>
             <div class="vignette-list">
                 <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/product.tpl" data=$product.associated classCol='vignette col-4 col-xs-3 col-sm-4 col-md-th col-lg-4 col-xl-3'}
+                    {include file="catalog/loop/product.tpl" data=$product.associated classCol='vignette col-12 col-xs-6 col-md-4'}
                 </div>
             </div>
             {/if}

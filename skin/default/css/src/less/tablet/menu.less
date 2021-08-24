@@ -4,10 +4,10 @@
 			> span {
 				width: 20px;
 				border-radius: 0;
-				background-color: @text-color;
+				background-color: var(--text-color);
 				.auto-transition(.2s);
 				.transform-origin(left center);
-				
+
 				&:last-child {
 					background: none;
 				}
@@ -28,18 +28,18 @@
 			}
 		}
 	}
-	
+
 	#sidebar {
 		min-height: 100vh;
 		flex-direction: column;
 		padding-top: 0;
-		
+
 		header {
 			position: relative;
 			height: var(--header-h);
 			margin-top: 0;
-			margin-bottom: @spacer;
-			
+			margin-bottom: var(--spacer);
+
 			button {
 				top: 50%;
 				transform: translateY(-50%);
@@ -50,14 +50,14 @@
 }
 @media (min-width: @grid-float-breakpoint) {
 	@import "../components/menu/dropdown";
-	
+
 	#sidebar {
 		header {
 			display: none;
 		}
 		#menul {
 			display: flex;
-			
+
 			button {
 				display: none;
 			}
@@ -65,18 +65,5 @@
 	}
 	#menu {
 		margin-left: auto;
-	}
-}
-@media (min-width: @screen-lg-min) {
-	#main-menu {
-		> ul {
-			> li {
-				&:last-child {
-					.dropdown {
-						right: 0;
-					}
-				}
-			}
-		}
 	}
 }

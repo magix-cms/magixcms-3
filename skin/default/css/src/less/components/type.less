@@ -217,22 +217,44 @@ dd {
 //
 // List
 //
+
 .link-bar {
+	padding-left: 0;
+	list-style: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	text-align: center;
-	.list-unstyled;
-	.list-inline;
-	//.normalize-link(@main-color);
+	flex-direction: column;
+	.normalize-link(var(--text-color),var(--main-color));
 
 	li {
-		border-right: 1px solid #959595;
-		margin: 5px 0;
+		margin: 0;
+		padding: 0;
 
 		a {
-			padding: 5px;
+			padding: .5rem 1rem;
+			display: block;
+			border-bottom: 1px solid var(--text-color);
 		}
 
-		&:last-child {
-			border-right: none;
+		&:last-child a {
+			border-bottom: none;
+		}
+	}
+
+	@media (min-width: @grid-float-breakpoint) {
+		flex-direction: row;
+
+		li {
+			a {
+				border-bottom: none;
+				border-right: 1px solid var(--text-color);
+			}
+
+			&:last-child a {
+				border-right: none;
+			}
 		}
 	}
 }
@@ -359,38 +381,38 @@ blockquote {
 	text-align: right;
 }
 
-/*@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max){
-	blockquote {
-		padding-left: 56px;
-		span.quote {
-			top: -13px;
-			&:before {
-				font-size: 84px;
-			}
-		}
-	}
-}
-
-@media (min-width: @screen-md-min) and (max-width: @screen-md-max){
-	blockquote {
-		padding-left: 70px;
-		span.quote {
-			top: -17px;
-			&:before {
-				font-size: 98px;
-			}
-		}
-	}
-}
-
-@media (min-width: @screen-lg-min) {
-	blockquote {
-		padding-left: 84px;
-		span.quote {
-			top: -20px;
-			&:before {
-				font-size: 112px;
-			}
-		}
-	}
-}*/
+//@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max){
+//	blockquote {
+//		padding-left: 56px;
+//		span.quote {
+//			top: -13px;
+//			&:before {
+//				font-size: 84px;
+//			}
+//		}
+//	}
+//}
+//
+//@media (min-width: @screen-md-min) and (max-width: @screen-md-max){
+//	blockquote {
+//		padding-left: 70px;
+//		span.quote {
+//			top: -17px;
+//			&:before {
+//				font-size: 98px;
+//			}
+//		}
+//	}
+//}
+//
+//@media (min-width: @screen-lg-min) {
+//	blockquote {
+//		padding-left: 84px;
+//		span.quote {
+//			top: -20px;
+//			&:before {
+//				font-size: 112px;
+//			}
+//		}
+//	}
+//}

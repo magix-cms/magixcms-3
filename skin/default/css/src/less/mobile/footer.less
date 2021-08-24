@@ -14,7 +14,7 @@
 	.normalize-link(@footer-link);
 
 	.block {
-		padding-bottom: @spacer*2;
+		padding-bottom: calc(var(--spacer) * 2);
 
 		&:last-child {
 			margin-bottom: 0;
@@ -106,7 +106,7 @@
 	}
 
 	.dropup {
-		position: static;
+		//position: static;
 		flex: 1 0 auto;
 		//justify-content: center;
 		text-align: center;
@@ -233,7 +233,7 @@
 				&.contact-number:not(:last-child):not(:nth-last-child(2)) {
 					&:after {
 						content: '–';
-						padding: @spacer/2;
+						padding: calc(var(--spacer)/2);
 					}
 				}
 			}

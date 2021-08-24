@@ -4,7 +4,7 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-		height: 100vh !important;
+		height: calc(var(--vh, 1vh) * 100) !important;
 		width: 100vw;
 		opacity: 0;
 		z-index: -1;
@@ -44,7 +44,7 @@
 		max-height: 100vh;
 		max-width: 20.8rem;
 		width: 65vw;
-		padding-top: @spacer;
+		padding-top: var(--spacer);
 		bottom: 0;
 		z-index: @z-drawer;
 		transform: translateX(-110%);
@@ -63,10 +63,10 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: @spacer;
+			padding: var(--spacer);
 			color: var(--white);
 			height: var(--footbar-h);
-			margin-top: @spacer;
+			margin-top: var(--spacer);
 			
 			button {
 				margin: 0;
@@ -75,7 +75,7 @@
 				border: none;
 				left: 0;
 				bottom: -1px;
-				padding: @spacer;
+				padding: var(--spacer);
 			}
 			
 			.material-icons {
@@ -192,6 +192,88 @@
 			.show-more > span,
 			.show-more > i {
 				transform: scale(1,0);
+			}
+		}
+	}
+}
+@media (min-width: @screen-sm-min) and (max-width: @grid-float-breakpoint-max) {
+	#header {
+		.toggle-menu {
+			> span {
+				width: 20px;
+				border-radius: 0;
+				background-color: var(--text-color);
+				.auto-transition(.2s);
+				.transform-origin(left center);
+
+				&:last-child {
+					background: none;
+				}
+			}
+			&.open {
+				span.icon-bar {
+					width: 21px;
+					&:first-child {
+						transform: rotate(45deg) translate(-1px, -1px);
+						& + span {
+							.opacity(0);
+						}
+					}
+					&:nth-child(3) {
+						transform: rotate(-45deg) translate(-1px,1px);
+					}
+				}
+			}
+		}
+	}
+
+	#sidebar {
+		min-height: 100vh;
+		flex-direction: column;
+		padding-top: 0;
+
+		header {
+			position: relative;
+			height: var(--header-h);
+			margin-top: 0;
+			margin-bottom: var(--spacer);
+
+			button {
+				top: 50%;
+				transform: translateY(-50%);
+				bottom: auto;
+			}
+		}
+	}
+}
+@media (min-width: @grid-float-breakpoint) {
+	@import "../components/menu/dropdown";
+
+	#sidebar {
+		header {
+			display: none;
+		}
+		#menul {
+			display: flex;
+
+			button {
+				display: none;
+			}
+		}
+	}
+	#menu {
+		margin-left: auto;
+	}
+}
+@media (min-width: @screen-lg-min) {
+	#main-menu {
+		> ul {
+			> li {
+				&:last-child {
+					.dropdown {
+						right: 0;
+					}
+				}
 			}
 		}
 	}

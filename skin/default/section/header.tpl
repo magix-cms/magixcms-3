@@ -9,8 +9,8 @@
         </button>
         {* Brand && Headline *}
         <div class="site-name">
-            {capture name="sizes"}229px{/capture}
             {if $logo && $logo.img.active eq 1}
+                {capture name="sizes"}229px{/capture}
                 <a href="{$url}/{$lang}/" title="{if !empty($logo.img.title)}{$logo.img.title|ucfirst}{else}{#logo_link_title#|ucfirst}{/if}">
                     {strip}
                         <picture>
@@ -22,6 +22,7 @@
                         </picture>{/strip}
                 </a>
                 {else}
+                {capture name="sizes"}229px{/capture}
                 <a href="{$url}/{$lang}/" title="{#logo_link_title#|ucfirst}">
                     {strip}
                         <picture>
@@ -29,7 +30,7 @@
                         <source type="image/webp" sizes="{$smarty.capture.sizes}" srcset="{$url}/skin/{$theme}/img/logo/webp/{#logo_img#}@229.webp 229w, {$url}/skin/{$theme}/img/logo/webp/{#logo_img#}@480.webp 480w">
                         <source type="image/png" sizes="{$smarty.capture.sizes}" srcset="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png 229w, {$url}/skin/{$theme}/img/logo/png/{#logo_img#}@480.png 480w">
                         <!--[if IE 9]></video><![endif]-->
-                        <img src="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png" sizes="{$smarty.capture.sizes}" srcset="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png 229w,{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@480.png 480w" alt="{#logo_img_alt#|ucfirst} {$companyData.name}" />
+                        <img src="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png" sizes="{$smarty.capture.sizes}" srcset="{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@229.png 229w,{$url}/skin/{$theme}/img/logo/png/{#logo_img#}@480.png 480w" alt="{#logo_img_alt#|ucfirst} {$companyData.name}" width="229" height="50"/>
                         </picture>{/strip}
                 </a>
             {/if}

@@ -61,7 +61,7 @@
                     <th class="text-center">
                         <div class="checkbox">
                             <label for="check-all">
-                                <input type="checkbox" id="check-all" name="check-all" class="check-all" data-table="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}"/>
+                                <input type="checkbox" id="check-all" name="check-all" value="" class="check-all" data-table="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}"/>
                             </label>
                         </div>
                     </th>

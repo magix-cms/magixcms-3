@@ -11,20 +11,18 @@
 }
 
 // Normalize link style for all state
-.normalize-link(@color: var(--main-color), @hover-color: same, @decoration: underline, @weight: @font-weight, @font: @font-family-sans-serif) {
+.normalize-link(@color: var(--main-color), @hover-color: same, @decoration: underline, @weight: var(--font-weight), @font: var(--font-family)) {
 	.set-hover(@color, @hover-color) when (@hover-color = same) {
 		--link-hover-color: @color;
 	};
-	.set-hover(@color, @hover-color) {
+	.set-hover(@color, @hover-color) when not (@hover-color = same) {
 		--link-hover-color: @hover-color;
 	};
-	a {
-		--link-font: @font;
-		--link-weight: @weight;
-		--link-color: @color;
-		--link-hover-deco: @decoration;
-		.set-hover(@color, @hover-color);
-	}
+	--link-font: @font;
+	--link-weight: @weight;
+	--link-color: @color;
+	--link-hover-deco: @decoration;
+	.set-hover(@color, @hover-color);
 }
 
 // set a link to cover all his relative parent
@@ -70,20 +68,19 @@
 }
 
 // --- Main title page
-.main-title(@color: @text-color, @brd: 1px solid var(--brd-default)) {
+.main-title() {
 	margin: var(--title-mg, .5rem auto 2rem);
 	padding: var(--title-pd, 0 0 1rem);
-	border-bottom: var(--title-brd, @brd);
-	--heading-color: var(--title-color, var(--text-color));
-	//color: var(--title-color, @color);
+	border-bottom: var(--title-brd, 1px solid var(--brd-default));
+	color: var(--title-color,--heading-color);
 }
 
 // Normalize content
-.normalize-content(@color: @main-color, @headingb: 1px solid var(--brd-default), @headingc: @text-color) {
+.normalize-content() {
 	article {
 		// Normalize the main title of the content
 		h1 {
-			.main-title(@headingc, @headingb);
+			.main-title();
 		}
 
 		p > img:not(.img-float) {

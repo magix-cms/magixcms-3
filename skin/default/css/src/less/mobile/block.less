@@ -66,19 +66,19 @@
 	}
 }
 
-/* --------------------------------------------------------
-                        Vignettes
----------------------------------------------------------- */
+//--------------------------------------------------------
+//                       Vignettes
+//--------------------------------------------------------
 .vignette-list {
-	padding-bottom: @spacer;
+	padding-bottom: var(--spacer);
 }
 .vignette {
 	&:not(:last-child) {
-		margin-bottom: @spacer;
+		margin-bottom: var(--spacer);
 	}
 
 	.h3 {
-		margin: @spacer 0;
+		margin: var(--spacer) 0;
 		--heading-color: var(--main-color);
 	}
 
@@ -104,115 +104,63 @@
 	}
 }
 
-/* --------------------------------------------------------
-                        Snippets
----------------------------------------------------------- */
-.cms-img-gallery {
-	display: flex;
-	justify-content: center;
-	flex-wrap: wrap;
-	margin-left: @spacer / -2;
-	margin-right: @spacer / -2;
-	
-	> div {
-		padding: @spacer/2;
-	}
-	
-	a.img-gallery {
-		display: block;
-	}
-}
+//--------------------------------------------------------
+//                     Custom lists
+//--------------------------------------------------------
+ul {
+	&.arrow-list,
+	&.bullet-list,
+	&.circle-list,
+	&.square-list,
+	&.label-list {
+		.list-unstyled;
 
-/* --------------------------------------------------------
-                       Custom lists
----------------------------------------------------------- */
-ul.arrow-list,
-ul.bullet-list,
-ul.circle-list,
-ul.square-list,
-ul.label-list {
-	.list-unstyled;
-	
-	> li {
-		padding-left: 1.5rem;
-		position: relative;
-		
-		&::before {
-			position: absolute;
-			top: ~"calc(((1rem * @{line-height-base}) - 1em ) / 2)";
-			.ico;
-			color: var(--main-color);
-			left: 0;
-		}
-	}
-}
+		> li {
+			padding-left: 1.5rem;
+			position: relative;
 
-ul.bullet-list,
-ul.circle-list {
-	> li:before {
-		font-size: 10px;
-	}
-}
-ul.bullet-list > li::before {
-	content: @ico-disk;
-}
-ul.circle-list > li::before {
-	content: @ico-circle;
-}
-ul.square-list {
-	> li:before {
-		content: @ico-square;
-		font-size: 12px;
-	}
-}
-ul.arrow-list {
-	> li:before {
-		content: @ico-keyboard_arrow_right;
-		font-size: 18px;
-	}
-}
-ul.label-list > li:before {
-	content: @ico-label;
-}
-
-/* --------------------------------------------------------
-                        Pagination
----------------------------------------------------------- */
-.pager {
-	> li > a {
-		border-radius: 0;
-		color:var(--text-color);
-		border: none;
-		padding: 10px;
-
-		&:active,
-		&:focus {
-			color: var(--main-color);
-			text-decoration: none;
-			background-color: transparent;
-		}
-	}
-
-	> li {
-		&.active,
-		&:focus {
-			a {
+			&::before {
+				position: absolute;
+				top: calc(((1rem * var(--line-height)) - 1em ) / 2);
+				.ico;
 				color: var(--main-color);
-				background-color: transparent;
-				font-weight: bold;
-				border-bottom: 1px solid var(--main-color);
+				left: 0;
 			}
 		}
 	}
 
-	.material-icons {
-		font-size: 1.4rem;
+	&.bullet-list,
+	&.circle-list {
+		> li:before {
+			font-size: 10px;
+		}
+	}
+	&.bullet-list > li::before {
+		content: @ico-disk;
+	}
+	&.circle-list > li::before {
+		content: @ico-circle;
+	}
+	&.square-list {
+		> li:before {
+			content: @ico-square;
+			font-size: 12px;
+		}
+	}
+	&.arrow-list {
+		> li:before {
+			content: @ico-keyboard_arrow_right;
+			font-size: 18px;
+		}
+	}
+	&.label-list > li:before {
+		content: @ico-label;
 	}
 }
 
-/* --------------------------------------------------------
-                    Cookie Consent Alert
----------------------------------------------------------- */
+//--------------------------------------------------------
+//                  Cookie Consent Alert
+//--------------------------------------------------------
 #cookies {
 	position: fixed;
 	bottom: var(--footbar-h);
