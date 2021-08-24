@@ -1966,7 +1966,6 @@ article ol {
   }
 }
 .breadcrumb {
-  font-size: 0.85rem;
   position: relative;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -1984,6 +1983,7 @@ article ol {
   padding: 4px 2px;
 }
 .breadcrumb li {
+  font-size: 0.85rem;
   display: flex;
   font-weight: 400;
   color: var(--main-color);

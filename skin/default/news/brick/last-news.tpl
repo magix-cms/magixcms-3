@@ -3,8 +3,7 @@ conf = [
 'context' => 'all',
 'limit' => 3
 ]
-assign="news"
-}
+assign="news"}
 {if $news}
     <section id="last-news" class="container" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
         <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">

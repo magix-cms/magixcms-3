@@ -1,9 +1,9 @@
 {extends file="catalog/index.tpl"}
 {if !empty($product.long_name)}{$product.name = $product.long_name}{/if}
+{block name="title" nocache}{$product.seo.title}{/block}
+{block name="description" nocache}{$product.seo.description}{/block}
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
-{block name="title"}{$product.seo.title}{/block}
-{block name="description"}{$product.seo.description}{/block}
 {block name="styleSheet"}
     {$css_files = [
     "/skin/{$theme}/css/product{if $setting.mode.value !== 'dev'}.min{/if}.css",
@@ -13,7 +13,7 @@
 {/block}
 
 {block name='article'}
-    {capture name="contact"}
+    {capture name="contact" nocache}
         <form action="/{$lang}/contact/" method="get" class="interested-form">
             <fieldset>
                 <p class="text-center">
@@ -24,7 +24,7 @@
         </form>
     {/capture}
     <article class="catalog container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Product">
-        {block name='article:content'}
+        {block name='article:content' nocache}
             {if $product.long_name !== ''}<meta itemprop="name" content="{$product.short_name}">{/if}
             {*<header>*}
                 <h1 itemprop="{if $product.long_name !== ''}alternateName{else}name{/if}">{$product.name}</h1>

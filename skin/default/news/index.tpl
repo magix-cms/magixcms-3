@@ -1,8 +1,8 @@
 {extends file="layout.tpl"}
+{block name="title" nocache}{$rootSeo['title']}{/block}
+{block name="description" nocache}{$rootSeo['description']}{/block}
 {block name='body:id'}news{/block}
 {block name='body:class'}news-page{/block}
-{block name="title"}{$rootSeo['title']}{/block}
-{block name="description"}{$rootSeo['description']}{/block}
 {block name="webType"}CollectionPage{/block}
 {block name="styleSheet"}
     {$css_files = [
@@ -17,7 +17,7 @@
             <div class="row">
                 {strip}
                 <div class="col-4 col-xs-6 col-sm-8 col-md-5 col-lg-6">
-                    {block name='article:title'}
+                    {block name='article:title' nocache}
                     {strip}<h1 itemprop="name">
                         {#news#|ucfirst}
                         {if isset($tag)}<small> - <span itemprop="about">{$tag.name|ucfirst}</span></small>{/if}
@@ -39,9 +39,11 @@
                                 </button>{/strip}
                                 <ul class="dropdown-menu">
                                     <li><a href="{$url}/{$lang}/news">{#all_news#}</a></li>
+                                    {nocache}
                                     {foreach $tags as $tag}
                                     <li{if $tag.id eq $smarty.get.tag} class="active"{/if}>{if $tag.id eq $smarty.get.tag}{$tag.name}{else}<a href="{$tag.url}">{$tag.name}</a>{/if}</li>
                                     {/foreach}
+                                    {/nocache}
                                 </ul>
                             </div>
                         </div>
@@ -57,6 +59,7 @@
                                     </button>{/strip}
                                 <ul class="dropdown-menu">
                                     <li><a href="{$url}/{$lang}/news">{#all_news#}</a></li>
+                                    {nocache}
                                     {foreach $archives as $year}
                                         <li class="panel">
 {*                                            <div class="header">*}
@@ -75,6 +78,7 @@
 {*                                            </div>*}
                                         </li>
                                     {/foreach}
+                                    {/nocache}
                                 </ul>
                             </div>
                         </div>
@@ -88,7 +92,7 @@
             {if $news}
             <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
                 <div class="tile-list row row-center">
-                    {include file="news/loop/news.tpl" data=$news classCol='news-tile col-12 col-xs-6 col-md-4'}
+                    {include file="news/loop/news.tpl" data=$news classCol='news-tile col-12 col-xs-6 col-md-4' nocache}
                 </div>
             </div>
             {/if}
@@ -96,7 +100,7 @@
     </article>
     {if $nbp > 1}
         <div class="container">
-            {include file="section/brick/pagination/number.tpl" nbp=$nbp}
+            {include file="section/brick/pagination/number.tpl" nbp=$nbp nocache}
             {*{include file="section/brick/pagination/pager.tpl" nbp=$nbp}*}
         </div>
     {/if}

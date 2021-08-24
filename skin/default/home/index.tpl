@@ -22,5 +22,5 @@
 {/block}
 
 {block name="main:after"}
-    {include file="news/brick/last-news.tpl"}
+    {include file="news/brick/last-news.tpl" nocache}
 {/block}

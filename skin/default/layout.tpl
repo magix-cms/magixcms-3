@@ -4,7 +4,7 @@
 <head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
     <title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>
-    <meta name="description" content="{capture name="description"}{block name="description"}{/block}{/capture}{$smarty.capture.description}">
+    <meta name="description" content="{capture name="description" nocache}{block name="description" nocache}{/block}{/capture}{$smarty.capture.description}">
     <meta itemprop="description" content="{$smarty.capture.description}">
     <meta name="robots" content="{$setting['robots']['value']}">
     {strip}{include file="section/loop/lang.tpl" amp=false amp_active=$amp_setting iso={$lang}}{/strip}
@@ -44,11 +44,11 @@
         {if $browser !== 'IE'}<link rel="preload" href="{$csspath}" as="style">{/if}
         <link rel="stylesheet" href="{$csspath}">{/strip}*}
     <meta name="theme-color" content="#3C62AA" />
-    {capture name="scriptHtml5"}{strip}
+    {*{capture name="scriptHtml5"}{strip}
         /min/?f=
         skin/{$theme}/js/vendor/html5shiv.min.js,
         skin/{$theme}/js/vendor/respond.min.js
-    {/strip}{/capture}{*
+    {/strip}{/capture}
     <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url:'js'}{else}{$smarty.capture.scriptHtml5}{/if}"></script><![endif]-->
     {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/modernizr.min.js,skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js&amp;{$smarty.now}{/capture}
     <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" async></script>*}
@@ -66,8 +66,8 @@
 </head>
 <body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
 {include file="section/brick/cookie-consent.tpl"}
-{include file="section/header.tpl"}
-{block name="breadcrumb"}
+{include file="section/header.tpl" nocache}
+{block name="breadcrumb" nocache}
     {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
         {include file="section/brick/breadcrumb.tpl" icon='home' amp=$amp scope="global"}
     {/if}

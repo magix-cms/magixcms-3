@@ -1,7 +1,7 @@
 {extends file="layout.tpl"}
+{block name="title" nocache}{$pages.seo.title}{/block}
+{block name="description" nocache}{$pages.seo.description}{/block}
 {block name='body:id'}about{/block}
-{block name="title"}{$pages.seo.title}{/block}
-{block name="description"}{$pages.seo.description}{/block}
 {block name="styleSheet"}
     {$css_files = [
     "/skin/{$theme}/css/cms{if $setting.mode.value !== 'dev'}.min{/if}.css",
@@ -13,7 +13,7 @@
 {block name="webType"}{if isset($parent)}WebPage{else}AboutPage{/if}{/block}
 {block name='article'}
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
-        {block name='article:content'}
+        {block name='article:content' nocache}
         <div class="row">
             <div class="col-4 col-xs-6 col-sm-8 col-md-7 col-lg-9 push-md-3 content">
                 <h1 itemprop="name">{$pages.name}</h1>

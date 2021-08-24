@@ -1,7 +1,7 @@
 {extends file="news/index.tpl"}
+{block name="title" nocache}{$news.seo.title}{/block}
+{block name="description" nocache}{$news.seo.description}{/block}
 {block name='body:id'}topicality{/block}
-{block name="title"}{$news.seo.title}{/block}
-{block name="description"}{$news.seo.description}{/block}
 {block name="webType"}WebPage{/block}
 {block name='article:class'} class="container clearfix"{/block}
 {block name='article:type'}Article{/block}
@@ -14,7 +14,7 @@
     ]}
 {/block}
 
-{block name='article:header'}
+{block name='article:header' nocache}
     <header id="header-news">
         <h1 itemprop="headline">{$news.name}</h1>
         <small>
@@ -23,7 +23,7 @@
         </small>
     </header>
 {/block}
-{block name='article:content'}
+{block name='article:content' nocache}
     <meta itemprop="mainEntityOfPage" content="{$url}{$news.uri}"/>
     <meta itemprop="wordCount" content="{$news.content|count_words}" />
     <meta itemprop="description" content="{$news.resume}"/>
@@ -84,7 +84,7 @@
         {/if}
     {/strip}
 {/block}
-{block name="article:after"}
+{block name="article:after" nocache}
     {if $news.next || $news.prev}
     <nav class="container">
         <ul class="pager">
