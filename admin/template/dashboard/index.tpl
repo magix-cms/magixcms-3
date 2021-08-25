@@ -6,7 +6,7 @@
     <h1 class="h2">Tableau de bord</h1>
 {/block}
 {block name='article:content'}
-    {if $setting['maintenance']}
+    {if $setting['maintenance']['value'] === '1'}
         <section>
             <header>
                 <h2 class="h5">Notifications</h2>

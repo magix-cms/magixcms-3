@@ -255,6 +255,7 @@ class backend_controller_setting extends backend_db_setting{
 				$http2 = isset($this->setting['http2']) ? '1' : '0';
 				$service_worker = isset($this->setting['service_worker']) ? '1' : '0';
                 $amp = isset($this->setting['amp']) ? '1' : '0';
+                $maintenance = isset($this->setting['maintenance']) ? '1' : '0';
 
                 parent::update(
                     array(
@@ -267,7 +268,8 @@ class backend_controller_setting extends backend_db_setting{
                         'service_worker'=> $service_worker,
                         'cache'         => $this->setting['cache'],
                         'mode'          => $this->setting['mode'],
-                        'amp'           => $amp
+                        'amp'           => $amp,
+                        'maintenance'           => $maintenance
                     )
                 );
                 break;
