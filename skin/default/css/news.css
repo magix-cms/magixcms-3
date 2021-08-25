@@ -1,13 +1,7 @@
-@media (min-width: 0em) {
-}@media (min-width: 33.5em) {
-}@media (min-width: 48em) {
-}@media (min-width: 62em) {
-}@media (min-width: 75em) {
-}@media (min-width: 90em) {
-}.pagination {
+.pagination {
   display: inline-block;
   padding-left: 0;
-  margin: 1rem 0;
+  margin: var(--spacer) 0;
   border-radius: 0;
 }
 .pagination > li {
@@ -18,7 +12,7 @@
   position: relative;
   float: left;
   padding: 6px 12px;
-  line-height: 1.61803399;
+  line-height: var(--line-height);
   text-decoration: none;
   color: var(--main-color);
   background-color: #fff;
@@ -102,7 +96,7 @@
 }
 .pager {
   padding-left: 0;
-  margin: 1rem 0;
+  margin: var(--spacer) 0;
   list-style: none;
   text-align: center;
 }
@@ -168,7 +162,7 @@
 ---------------------------------------------------------- */
 .tag-list {
   font-size: 80%;
-  --link-font: "Roboto condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --link-font: var(--font-family);
   --link-weight: 600;
   --link-color: var(--main-color);
   --link-hover-deco: underline;
@@ -204,7 +198,7 @@
   font-weight: 700;
 }
 #topicality .desc {
-  margin: 1.5rem 0;
+  margin: calc(var(--spacer) * 1.5) 0;
   line-height: 1.7;
 }
 #topicality figure {
@@ -224,7 +218,7 @@
     margin-left: 30px;
   }
 }
-@media (min-width: 33.5em) and (max-width: calc(62em - 0.001em)) {
+@media (min-width: 33.5em) and (max-width: 61.999em) {
   #topicality figure {
     max-width: 50vw;
   }

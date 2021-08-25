@@ -1,0 +1,71 @@
+@import (reference) "components/variables";
+@import (reference) "components/colors";
+@import (reference) "components/theme";
+
+// --- Theme Colors
+:root {
+	// --- Colors
+	--white: @white;
+	--smooth-white: @smooth-white;
+	--dark-white: #eee;
+	--smooth-grey: #ccc;
+	--light-grey: @light-grey;
+	--black: @black;
+	each(@theme-color, {
+		--@{key}-color-h: hue(@value);
+		--@{key}-color-s: saturation(@value);
+		--@{key}-color-l: lightness(@value);
+		--@{key}-color-a: alpha(@value);
+		--@{key}-color: hsla(var(~"--@{key}-color-h"),var(~"--@{key}-color-s"),var(~"--@{key}-color-l"),var(~"--@{key}-color-a"));
+	});
+	--default-brd-h: 0;
+	--default-brd-s: 0%;
+	--default-brd-l: 80%;
+	--default-brd-a: 1;
+	--default-brd: hsla(var(--dark-color-h),var(--dark-color-s),var(--dark-color-l),var(--dark-color-a));
+	--text-light: var(--white);
+	--text-dark: var(--dark-color);
+	--text-color: var(--text-dark);
+	--body-bg: var(--white);
+	--header-bg: var(--white);
+	--menu-bg: var(--white);
+	--footer-color: @footer-color;
+	--footer-bg: @footer-bg;
+	--brd-default: rgba(0,0,0,.15);
+	// --- Font
+	--heading-color: @headings-color;
+	--font-size-base: @font-size-base;
+	--font-size: @font-size;
+	--font-size-sm: @font-size-sm;
+	--font-size-lg: @font-size-lg;
+	--line-height: @gold_n;
+	--font-family: @font-family-base;
+	--font-weight: @font-weight-base;
+	--font-bold: 700;
+	--title-mg: 0 0 1rem;
+	--title-pd: 0;
+	--title-brd: none;
+	// --- Sizes
+	--toolbar-h: @toolbarH;
+	--header-h: @headerH;
+	--footbar-h: @footbarH;
+	--spacer: 1rem;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--dark-color: #222;
+		--body-bg: var(--dark-color);
+		--header-bg: var(--dark-color);
+		--menu-bg: var(--dark-color);
+		--footer-bg: rgba(0,0,0,.5);
+		--text-color: var(--text-light);
+		--brd-default: rgba(0,0,0,.5);
+		--main-color-l: 35%;
+		--heading-color:var(--dark-color);
+	}
+}
+@media (min-width: @screen-md-min) {
+	:root {
+		--toolbar-h: @toolbarH-md;
+	}
+}

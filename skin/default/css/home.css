@@ -35,7 +35,7 @@
   transform: translate(0, -50%);
   font-weight: 700;
 }
-@media (max-width: calc(48em - 0.001em)) {
+@media (max-width: 47.999em) {
   .news-tile figure {
     padding: 0;
   }

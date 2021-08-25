@@ -11,7 +11,7 @@ legend {
 	display: block;
 	width: 100%;
 	padding: 0;
-	margin-bottom: @spacer;
+	margin-bottom: var(--spacer);
 	font-size: (@font-size-base * 1.5);
 	line-height: inherit;
 	color: @legend-color;
@@ -205,7 +205,7 @@ output {
 	margin-bottom: 10px;
 
 	label {
-		min-height: @spacer; // Ensure the input doesn't jump when there is no text
+		min-height: var(--spacer); // Ensure the input doesn't jump when there is no text
 		padding-left: 20px;
 		margin-bottom: 0;
 		font-weight: normal;
@@ -286,7 +286,7 @@ input[type="checkbox"] {
 	padding-bottom: (@padding-base-vertical + 1);
 	// Remove default margin from `p`
 	margin-bottom: 0;
-	min-height: (@spacer + @font-size-base);
+	min-height: calc(var(--spacer) + @font-size-base);
 
 	&.input-lg,
 	&.input-sm {
@@ -325,7 +325,7 @@ input[type="checkbox"] {
 	}
 	.form-control-static {
 		height: @input-height-small;
-		min-height: (@spacer + @font-size-sm);
+		min-height: calc(var(--spacer) + @font-size-sm);
 		padding: (@padding-small-vertical + 1) @padding-small-horizontal;
 		font-size: @font-size-sm;
 		line-height: @line-height-sm;
@@ -353,7 +353,7 @@ input[type="checkbox"] {
 	}
 	.form-control-static {
 		height: @input-height-large;
-		min-height: (@spacer + @font-size-lg);
+		min-height: calc(var(--spacer) + @font-size-lg);
 		padding: (@padding-large-vertical + 1) @padding-large-horizontal;
 		font-size: @font-size-lg;
 		line-height: @line-height-lg;
@@ -417,7 +417,7 @@ input[type="checkbox"] {
 .has-feedback label {
 
 	& ~ .form-control-feedback {
-		top: calc(@spacer + 5px); // Height of the `label` and its margin
+		top: calc(var(--spacer) + 5px); // Height of the `label` and its margin
 	}
 	&.sr-only ~ .form-control-feedback {
 		top: 0;
@@ -542,7 +542,7 @@ input[type="checkbox"] {
 	// and other content below items
 	.radio,
 	.checkbox {
-		min-height: calc(@spacer + (@padding-base-vertical + 1));
+		min-height: calc(var(--spacer) + (@padding-base-vertical + 1));
 	}
 
 	// Make form groups behave like rows

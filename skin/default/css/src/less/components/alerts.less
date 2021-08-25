@@ -8,7 +8,7 @@
 
 .alert {
   padding: @alert-padding;
-  margin-bottom: @spacer;
+  margin-bottom: var(--spacer);
   border: 1px solid var(--alert-brd-c,transparent);
   border-radius: @alert-border-radius;
   background-color: var(--alert-bg-c,transparent);
@@ -50,7 +50,7 @@
 
 .alert-dismissable, // The misspelled .alert-dismissable was deprecated in 3.2.0.
 .alert-dismissible {
-  padding-right: (@alert-padding + 20);
+  padding-right: calc(@alert-padding + 20);
 
   // Adjust close link position
   .close {

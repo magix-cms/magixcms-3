@@ -1,5 +1,5 @@
 {if !isset($icon)}{$icon = true}{/if}
-<div id="block-contact" class="col-12 col-xs-6 col-sm-4 col-xl-3 block">
+<div id="block-contact" class="col-12 col-sm-4 col-lg-3 block">
     <p class="h4">{#contact_label_title#|ucfirst}</p>
     <ul class="list-unstyled">
         {if $companyData.contact.adress.street !== null}

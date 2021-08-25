@@ -3,7 +3,7 @@
 {/if}
 {if is_array($data) && !empty($data)}
     {foreach $data as $item}
-        <div class="news-footer col-4 col-xs-3 col-sm-4 col-md-5 col-lg-12">
+        <div class="news-footer col-12 col-xs-6 col-sm-12 col-lg-6">
             <p class="h5">{$item.name|ucfirst}</p>
             {if $item.resume || $item.content}
             <p>{if $item.resume}{$item.resume|truncate:100:'...'}{elseif $item.content}{$item.content|strip_tags|truncate:100:"..."}{/if}</p>

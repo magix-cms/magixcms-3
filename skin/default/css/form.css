@@ -2,7 +2,7 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacer);
   font-size: 1.5rem;
   line-height: inherit;
   color: #333333;
@@ -58,7 +58,7 @@ output {
   font-size: 1rem;
   line-height: 1.61803399;
   color: #555555;
-  background-color: #fff;
+  background-color: var(--body-bg);
   background-image: none;
   border: 1px solid #ccc;
   border-radius: 0;
@@ -130,7 +130,7 @@ textarea.form-control {
   }
 }
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacer);
 }
 .radio,
 .checkbox {
@@ -141,7 +141,7 @@ textarea.form-control {
 }
 .radio label,
 .checkbox label {
-  min-height: 1rem;
+  min-height: var(--spacer);
   padding-left: 20px;
   margin-bottom: 0;
   font-weight: normal;
@@ -198,7 +198,7 @@ fieldset[disabled] .checkbox label {
   padding-top: 7px;
   padding-bottom: 7px;
   margin-bottom: 0;
-  min-height: 2rem;
+  min-height: calc(var(--spacer) + 1rem);
 }
 .form-control-static.input-lg,
 .form-control-static.input-sm {
@@ -237,7 +237,7 @@ select[multiple].input-sm {
 }
 .form-group-sm .form-control-static {
   height: 1.25;
-  min-height: 1.875rem;
+  min-height: calc(var(--spacer) + 0.875rem);
   padding: 6px 10px;
   font-size: 0.875rem;
   line-height: 1.25;
@@ -274,7 +274,7 @@ select[multiple].input-lg {
 }
 .form-group-lg .form-control-static {
   height: 2;
-  min-height: 2.25rem;
+  min-height: calc(var(--spacer) + 1.25rem);
   padding: 11px 16px;
   font-size: 1.25rem;
   line-height: 2;
@@ -402,7 +402,7 @@ select[multiple].input-lg {
   color: #a94442;
 }
 .has-feedback label ~ .form-control-feedback {
-  top: calc(1rem + 5px);
+  top: calc(var(--spacer) + 5px);
 }
 .has-feedback label.sr-only ~ .form-control-feedback {
   top: 0;
@@ -473,7 +473,7 @@ select[multiple].input-lg {
 }
 .form-horizontal .radio,
 .form-horizontal .checkbox {
-  min-height: calc(1rem + (6px + 1));
+  min-height: calc(var(--spacer) + (6px + 1));
 }
 .form-horizontal .form-group {
   display: flex;
@@ -882,8 +882,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-left: -1px;
 }
 .alert {
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: var(--spacer);
+  margin-bottom: var(--spacer);
   border: 1px solid var(--alert-brd-c, transparent);
   border-radius: 0;
   background-color: var(--alert-bg-c, transparent);
@@ -905,7 +905,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .alert-dismissable,
 .alert-dismissible {
-  padding-right: 21rem;
+  padding-right: calc(var(--spacer) + 20);
 }
 .alert-dismissable .close,
 .alert-dismissible .close {
