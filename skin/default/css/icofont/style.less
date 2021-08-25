@@ -3,9 +3,9 @@
 @font-face {
   font-family: '@{icomoon-font-family}';
   src:
-    url('@{icomoon-font-path}/@{icomoon-font-family}.ttf?4vvstj') format('truetype'),
-    url('@{icomoon-font-path}/@{icomoon-font-family}.woff?4vvstj') format('woff'),
-    url('@{icomoon-font-path}/@{icomoon-font-family}.svg?4vvstj#@{icomoon-font-family}') format('svg');
+    url('@{icomoon-font-path}/@{icomoon-font-family}.ttf?phg2ol') format('truetype'),
+    url('@{icomoon-font-path}/@{icomoon-font-family}.woff?phg2ol') format('woff'),
+    url('@{icomoon-font-path}/@{icomoon-font-family}.svg?phg2ol#@{icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -14,7 +14,7 @@
 .ico {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: '@{icomoon-font-family}' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -26,6 +26,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ico-tools {
+  &:before {
+    content: @ico-tools; 
+  }
+}
 .ico-schedule {
   &:before {
     content: @ico-schedule; 

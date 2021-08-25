@@ -1,0 +1,68 @@
+// Compiler options
+@import (reference) "components/variables";
+@import (reference) "components/colors";
+@import (reference) "components/theme";
+//@import "components/theme-var";
+
+// Core variables and mixins
+@import (reference) "components/mixins";
+
+#maintenance {
+	main {
+		height: calc(var(--vh, 1vh) * 100);
+		width: 100vw;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	h1 {
+		margin-top: 2rem;
+		margin-bottom: 0;
+	}
+	.text-center {
+		text-align: center;
+	}
+}
+.maintenance {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	display: flex;
+	z-index: 1000;
+
+	&:before,
+	&:after {
+		 content: '';
+		 top: 0;
+		 left: 0;
+		 width: 100%;
+		 height: .5rem;
+		 border-bottom: 2px solid @alert-warning-border;
+		 background: @alert-warning-bg;
+	 }
+
+	.ico {
+		width: 3rem;
+		height: 2rem;
+		padding: .5rem;
+		background: @alert-warning-bg;
+		color: @alert-warning-text;
+		border: 2px solid @alert-warning-border;
+		border-radius: .25rem;
+		position: relative;
+
+		&:after {
+			position: absolute;
+			content: '';
+			top: -2px;
+			left: -2px;
+			width: calc(100% + 4px);
+			height: calc(.5rem + 2px);
+			// border: 2px solid @alert-warning-bg;
+			background: @alert-warning-bg;
+			z-index: 1;
+		}
+	}
+}

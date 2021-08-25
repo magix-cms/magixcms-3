@@ -6,6 +6,18 @@
     <h1 class="h2">Tableau de bord</h1>
 {/block}
 {block name='article:content'}
+    {if $setting['maintenance']}
+        <section>
+            <header>
+                <h2 class="h5">Notifications</h2>
+            </header>
+            <div>
+                <div class="alert alert-warning">
+                    <p><i class="fas fa-exclamation-triangle"></i>{#maintenance_alert#}</p>
+                </div>
+            </div>
+        </section>
+    {/if}
     <div class="row">
         <section id="quick-access" class="col-ph-12 col-lg-8 col-xl-6">
             <header>

@@ -1,0 +1,79 @@
+// Compiler options
+@import (reference) "components/variables";
+@import (reference) "components/colors";
+@import (reference) "components/theme";
+
+// Core variables and mixins
+@import (reference) "components/mixins";
+
+@import "components/pagination";
+@import "components/pager";
+
+// Magix blocks
+@import "news/tag";
+
+/* --------------------------------------------------------
+                           	News
+---------------------------------------------------------- */
+#topicality {
+	header {
+		min-height: 60px;
+
+		h1 {
+			float: left;
+		}
+
+		small {
+			text-align: right;
+			display: block;
+			//margin-bottom: 1.85em;
+			font-weight: 500;
+			color: var(--main-color);
+			letter-spacing: 2px;
+			//height: 60px;
+			line-height: 44px;
+			//font-size: 100%;
+		}
+	}
+
+	.resume {
+		//font-size: 1.1rem;
+		font-weight: 700;
+	}
+
+	.desc {
+		margin: @spacer *1.5 0;
+		line-height: 1.7;
+		//font-size: .9rem;
+	}
+
+	figure {
+		margin-bottom: 1em;
+	}
+
+	.tag-list {
+		padding: 7px 0;
+		border-top: 1px solid var(--smooth-grey);
+		border-bottom: 1px solid var(--smooth-grey);
+		//margin-top: 15px;
+
+		span:first-child {
+			margin-right: 7px;
+		}
+	}
+}
+
+@media (min-width: @screen-xs-min) {
+	#topicality {
+		figure {
+			float: right;
+			margin-left: 30px;
+		}
+	}
+
+	@media (max-width: @screen-sm-max) {
+		#topicality figure {
+			max-width: 50vw;
+		}
+	}
+}

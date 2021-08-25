@@ -20,13 +20,12 @@
             {$debug}
         {/if}
         <header class="panel-header panel-nav">
-            <h2 class="panel-heading h5">{#setting_params#|ucfirst}</h2>
+            <h2 class="panel-heading h5">{#setting_params#}</h2>
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#general" aria-controls="info" role="tab" data-toggle="tab">Informations générale</a></li>
-                <li role="presentation"><a href="#mail" aria-controls="mail" role="tab" data-toggle="tab">Mail</a></li>
-                <li role="presentation"><a href="#cssinliner" aria-controls="cssinliner" role="tab" data-toggle="tab">css inliner</a></li>
-                <li role="presentation"><a href="#google" aria-controls="google" role="tab" data-toggle="tab">Google</a></li>
-                <li role="presentation"><a href="#catalog" aria-controls="catalog" role="tab" data-toggle="tab">{#catalog#}</a></li>
+                <li role="presentation"{if (isset($smarty.get.tab) && $smarty.get.tab === 'general') || !isset($smarty.get.tab)} class="active"{/if}><a href="#general" aria-controls="info" role="tab" data-toggle="tab">{#general_setting#}</a></li>
+                <li role="presentation"{if isset($smarty.get.tab) && $smarty.get.tab === 'seo'} class="active"{/if}><a href="#seo" aria-controls="google" role="tab" data-toggle="tab">{#seo_setting#}</a></li>
+                <li role="presentation"{if isset($smarty.get.tab) && $smarty.get.tab === 'email'} class="active"{/if}><a href="#email" aria-controls="email" role="tab" data-toggle="tab">{#email_setting#}</a></li>
+                <li role="presentation"{if isset($smarty.get.tab) && $smarty.get.tab === 'advanced'} class="active"{/if}><a href="#advanced" aria-controls="advanced" role="tab" data-toggle="tab">{#advanced_setting#}</a></li>
             </ul>
         </header>
         <div class="panel-body panel-body-form">
@@ -34,20 +33,18 @@
                 <div class="mc-message"></div>
             </div>
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="general">
+                <div role="tabpanel" class="tab-pane{if (isset($smarty.get.tab) && $smarty.get.tab === 'general') || !isset($smarty.get.tab)} active{/if}" id="general">
                     {include file="setting/form/general.tpl" controller="setting"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="mail">
-                    {include file="setting/form/mail.tpl" controller="setting"}
+                <div role="tabpanel" class="tab-pane{if isset($smarty.get.tab) && $smarty.get.tab === 'seo'} active{/if}" id="seo">
+                    {include file="setting/form/seo.tpl" controller="setting"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="cssinliner">
+                <div role="tabpanel" class="tab-pane{if isset($smarty.get.tab) && $smarty.get.tab === 'email'} active{/if}" id="email">
+                    {include file="setting/form/email.tpl" controller="setting"}
                     {include file="setting/form/cssinliner.tpl" controller="setting"}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="google">
-                    {include file="setting/form/google.tpl" controller="setting"}
-                </div>
-                <div role="tabpanel" class="tab-pane" id="catalog">
-                    {include file="setting/form/catalog.tpl" controller="setting"}
+                <div role="tabpanel" class="tab-pane{if isset($smarty.get.tab) && $smarty.get.tab === 'advanced'} active{/if}" id="advanced">
+                    {include file="setting/form/advanced.tpl" controller="setting"}
                 </div>
             </div>
         </div>

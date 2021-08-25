@@ -1,0 +1,13 @@
+/* --------------------------------------------------------
+                         Product
+---------------------------------------------------------- */
+#product .interested-form {
+  margin: calc(var(--spacer) * 2) 0;
+}
+#product .price {
+  text-align: center;
+  margin-bottom: var(--spacer);
+  font-size: 3rem;
+  color: var(--main-color);
+}
+/*# sourceMappingURL=product.css.map */

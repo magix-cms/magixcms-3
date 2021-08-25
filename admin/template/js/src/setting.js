@@ -87,9 +87,25 @@ var setting = (function ($, undefined) {
             UpdateSkin(controller,btnData);
 
             $('#ssl').change(function(){
-                $('#service_worker').prop('disabled',!$(this).prop('checked'));
-                if($(this).prop('checked')) $('#service_worker').parent().removeAttr('disabled');
+                let checked = $(this).prop('checked');
+                $('#service_worker').prop('disabled',!checked);
+                if(checked) $('#service_worker').parent().removeAttr('disabled');
                 else $('#service_worker').parent().attr('disabled','disabled');
+                $('#amp').prop('disabled',!checked);
+                if(checked) $('#amp').parent().removeAttr('disabled');
+                else $('#amp').parent().attr('disabled','disabled');
+            });
+
+            $('.advanced-popover').each(function(){
+                let $this = $(this);
+                $(this).popover('destroy').popover({
+                    html: true,
+                    placement: 'bottom',
+                    content: function() {
+                        let type = $this.parent().attr('for');
+                        return $('#popover-content-' + type).html();
+                    }
+                });
             });
         }
     }

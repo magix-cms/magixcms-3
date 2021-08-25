@@ -1,0 +1,110 @@
+.menu-cms > ul {
+  padding: 0;
+  margin: 0.25rem 0 0;
+}
+.menu-cms > ul .material-icons {
+  color: var(--text-color);
+}
+.menu-cms > ul .dropdown-header {
+  color: var(--text-color);
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.menu-cms > ul .dropdown-header a {
+  font-size: 1rem;
+  white-space: normal;
+}
+.menu-cms > ul .active > a {
+  font-weight: bold;
+  color: var(--main-color);
+  background-color: transparent;
+}
+.menu-cms > ul > .dropdown-header {
+  font-size: inherit;
+  padding: 0.61rem 0;
+}
+.menu-cms > ul > li {
+  border-top: 1px solid var(--smooth-grey);
+}
+.menu-cms > ul > li:first-child {
+  border-top: none;
+}
+.menu-cms > ul li {
+  padding: 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+}
+.menu-cms > ul li.submenu {
+  padding: 0;
+  border: none;
+}
+.menu-cms > ul li.submenu li {
+  position: relative;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  /*&:not(.submenu):before {
+					content: ' ';
+					position: absolute;
+					left: 0;
+					top: 50%;
+					transform: translateY(-50%);
+					.square(4px);
+					background: @dark-color;
+					border-radius: 100%;
+				}*/
+}
+.menu-cms > ul li.submenu ul {
+  padding: 0.5rem 0;
+}
+.menu-cms > ul li a {
+  color: var(--text-color);
+  padding: 0;
+}
+.menu-cms > ul li:not(.dropdown-header) .material-icons {
+  width: 24px;
+  text-align: center;
+}
+.menu-cms > ul li.active > .btn-link a,
+.menu-cms > ul li.active > a {
+  font-weight: bold;
+  color: var(--main-color);
+  background-color: transparent;
+}
+.menu-cms > ul .btn-link {
+  padding: 0;
+  border: none;
+}
+.menu-cms > ul .btn-link a {
+  color: var(--text-color);
+}
+.menu-cms > ul .dropdown-menu {
+  position: relative;
+  top: auto;
+  border: none;
+  box-shadow: none;
+  margin: 4px 0 4px 8px;
+}
+.menu-cms > ul > .dropdown-menu {
+  display: block;
+}
+@media (min-width: 48em) {
+  #pages #gallery {
+    max-width: 50%;
+    float: left;
+    margin-right: 2rem;
+  }
+}
+@media (min-width: 62em) {
+  .content {
+    padding-left: 3rem;
+    border-left: 1px solid var(--smooth-grey);
+  }
+  .menu-cms {
+    padding-top: 5rem;
+    padding-right: 2rem;
+  }
+  #pages #gallery {
+    max-width: 33.33333333%;
+  }
+}
+/*# sourceMappingURL=cms.css.map */

@@ -273,14 +273,48 @@ class component_routing_dispatcher {
 		$this->template->assign('url',http_url::getUrl());
 		$lang = $this->template->lang;
 		$this->template->assign('lang',$lang);
-		$this->preloadComponents($lang);
 
-    	if($this->http_error) {
-			$this->getError($this->http_error);
+		$adminSession = false;
+		if (isset($_COOKIE['mc_admin'])) {
+			$sql = 'SELECT mas.id_admin_session,mas.id_admin,mae.pseudo_admin,maar.id_role
+				FROM mc_admin_session mas
+				JOIN mc_admin_employee mae ON (mas.keyuniqid_admin = mae.keyuniqid_admin)
+				JOIN mc_admin_access_rel maar ON (mas.id_admin = maar.id_admin)
+				WHERE id_admin_session = :id_admin_session';
+
+			$session = component_routing_db::layer()->fetch($sql, ['id_admin_session'=>$_COOKIE['mc_admin']]);
+
+			if( !empty($session) ){
+				$adminSession = true;
+			}
+		}
+
+		if(
+			($this->router === 'frontend' || ($this->router === 'plugins' && $this->plugins === 'public'))
+			&& $this->template->settings['maintenance']['value'] === '1'
+			&& !$adminSession) {
+			$this->template->assign('theme',$this->template->theme);
+			$this->template->assign('domain',$this->template->domain);
+			$this->template->assign('dataLang',$this->template->langs);
+			$this->template->assign('defaultLang',$this->template->defaultLang);
+			$this->template->assign('defaultDomain',$this->template->defaultDomain);
+			$modelLogo = new frontend_model_logo($this->template);
+			$this->template->assign('logo', $modelLogo->getLogoData());
+			$this->template->assign('favicon', $modelLogo->getFaviconData());
+			$this->template->assign('social', $modelLogo->getImageSocial());
+			$this->template->assign('homescreen', $modelLogo->getHomescreen());
+			$this->template->display('maintenance.tpl');
 		}
 		else {
-			$dispatcher = $this->getController();
-			if(gettype($dispatcher) === 'object' && method_exists($dispatcher,'run')) $dispatcher->run();
+			$this->preloadComponents($lang);
+
+			if($this->http_error) {
+				$this->getError($this->http_error);
+			}
+			else {
+				$dispatcher = $this->getController();
+				if(gettype($dispatcher) === 'object' && method_exists($dispatcher,'run')) $dispatcher->run();
+			}
 		}
     }
 }

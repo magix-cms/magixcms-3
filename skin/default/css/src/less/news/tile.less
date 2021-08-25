@@ -1,0 +1,49 @@
+/* --------------------------------------------------------
+                      News Tiles
+---------------------------------------------------------- */
+.news-tile {
+	margin-bottom: 22px;
+
+	.tile {
+		.shadow(1);
+	}
+	figure {
+		margin-bottom: 0;
+	}
+	.desc {
+		background-color: var(--body-bg);
+		position: relative;
+		border-top: 1px solid var(--main-color);
+		padding: 2rem 1.5rem 1.5rem;
+		font-size: .89rem;
+	}
+	h2 {
+		margin-top: 0;
+	}
+	.date {
+		position: absolute;
+		top: -2px;
+		background: var(--main-color);
+		color: var(--white);
+		padding: 1rem;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		right: 1.5rem;
+		transform: translate(0,-50%);
+		font-weight: 700;
+	}
+}
+
+@media (max-width: @screen-xs-max) {
+	.news-tile {
+		figure {
+			padding: 0;
+		}
+		.row {
+			margin: 0;
+		}
+	}
+}

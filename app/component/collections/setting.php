@@ -91,7 +91,7 @@ class component_collections_setting{
      */
     public function fetchData($config,$data = false){
         $sql = '';
-        $params = false;
+        $params = [];
 
         if(is_array($config)) {
             if($config['context'] === 'all') {

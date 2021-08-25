@@ -57,6 +57,7 @@
         "/skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css",
         "/skin/{$theme}/css/content{if $setting.mode.value !== 'dev'}.min{/if}.css"
     ]}
+    {if $setting['maintenance']['value'] === '1'}{$basecss[] = "/skin/{$theme}/css/maintenance{if $setting.mode.value !== 'dev'}.min{/if}.css"}{/if}
     {$css_files = []}
     {block name="styleSheet"}{/block}
     {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}
@@ -65,6 +66,7 @@
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
 </head>
 <body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
+{if $setting['maintenance']['value'] === '1'}{include file="section/brick/maintenance.tpl"}{/if}
 {include file="section/brick/cookie-consent.tpl"}
 {include file="section/header.tpl" nocache}
 {block name="breadcrumb" nocache}

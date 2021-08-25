@@ -1,0 +1,44 @@
+/* --------------------------------------------------------
+                      Block Last News
+---------------------------------------------------------- */
+#last-news {
+	padding-bottom: 0;
+	.h3 {
+		.main-title();
+	}
+}
+
+#block {
+	// --- Block last news
+	&-last-news {
+		.news-list-last {
+			border-bottom: 1px dotted @footer-border-color;
+
+			.h5 {
+				line-height: var(--line-height);
+				.text-overflow();
+			}
+			.date{
+				color: hsl(var(--main-color-h),var(--main-color-s),calc(var(--main-color-l) + 25%));
+			}
+
+			.news-footer {
+				position: relative;
+				border-top: 1px dotted @footer-border-color;
+				padding-top: @spacer;
+				padding-bottom: @spacer;
+			}
+			small {
+				display: block;
+				text-align: right;
+			}
+		}
+	}
+}
+@media (min-width: @grid-float-breakpoint) {
+	#header-news {
+		.navbar-toggle {
+			display: block;
+		}
+	}
+}
