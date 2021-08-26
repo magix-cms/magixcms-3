@@ -226,6 +226,14 @@ class backend_model_plugins{
 								$i++;
 							}
 						}
+                        if(isset($xml->data->bind->core)) {
+                            foreach ($xml->data->bind->core as $item) {
+                                if (isset($item->name)) {
+                                    $newData['bind']['core'][$i] = $item->name->__toString();
+                                }
+                                $i++;
+                            }
+                        }
                     }
                     foreach ($xml->{'data'}->{'release'}->children() as $item => $value) {
                         $newData['release'][$item] = $value->__toString();

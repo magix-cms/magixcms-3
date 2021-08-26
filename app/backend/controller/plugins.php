@@ -145,11 +145,21 @@ class backend_controller_plugins extends backend_db_plugins{
 					$this->setSQLProcess($id);
 					if(isset($config['bind']['plugin'])) {
 						foreach ($config['bind']['plugin'] as $plugin) {
-							$data = parent::fetchData(array('context'=>'one','type'=>'register'),array('id'=>$plugin));
+							//$data = parent::fetchData(array('context'=>'one','type'=>'register'),array('id'=>$plugin));
 							//$active = $data['id_plugins'] !== null ? 1 : 0;
 							$this->module->register($id,$plugin,0);
 						}
 					}
+                    if(isset($config['bind']['core'])) {
+                        $arColumn = ['home','about','pages','news','catalog','category','product','seo'];
+                        //$log = new debug_logger(MP_LOG_DIR);
+                        foreach ($config['bind']['core'] as $plugin) {
+                            if (in_array($plugin, $arColumn)) {
+                                //$log->tracelog(json_encode(array($plugin,$arColumn)));
+                                parent::update(array('type'=>'core','column'=>$plugin),array('id'=>$id));
+                            }
+                        }
+                    }
 					$this->module->toggle_register($id);
 					$this->message->getNotify('setup_success',array('method'=>'fetch','assignFetch'=>'message'));
                     $this->template->display('plugins/setup.tpl');

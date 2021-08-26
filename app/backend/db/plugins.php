@@ -138,6 +138,9 @@ class backend_db_plugins
 			case 'version':
 				$sql = 'UPDATE mc_plugins SET version = :version WHERE name = :name';
 				break;
+            case 'core':
+                $sql = 'UPDATE mc_plugins SET '.$config['column'].' = 1 WHERE name = :id';
+                break;
 		}
 
 		if($sql === '') return 'Unknown request asked';
