@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Less plugins" pattern="file:skin/*/css/src/less/plugins/*" />
+</component>
