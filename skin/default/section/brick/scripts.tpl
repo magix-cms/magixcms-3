@@ -7,12 +7,12 @@
     {foreach $js_files as $loading => $files}
         {if !$dev && !$http2}
             {assign var=files value=','|implode:$files}
-            {capture name="jssrc"}{'/min/?f='|cat:$files|cat:"{if !$dev}&amp;{$smarty.now}{/if}"}{/capture}
+            {capture name="jssrc"}{"/min/?{if $loading eq 'group'}g{else}f{/if}="|cat:$files|cat:"{if !$dev}&amp;{$smarty.now}{/if}"}{/capture}
             {capture name="jssrc"}{if $setting.concat.value}{$smarty.capture.jssrc|concat_url:'js'}{else}{$smarty.capture.jssrc}{/if}{/capture}
             <script src="{$smarty.capture.jssrc}"{if $loading eq 'async' || $loading eq 'defer'} {$loading}{/if}></script>
         {else}
             {foreach $files as $js}
-                {capture name="jssrc"}{'/min/?f='|cat:$js}{/capture}
+                {capture name="jssrc"}{"/min/?{if $loading eq 'group'}g{else}f{/if}="|cat:$js}{/capture}
                 {capture name="jssrc"}{if $setting.concat.value}{$smarty.capture.jssrc|concat_url:'js'}{else}{$smarty.capture.jssrc}{/if}{/capture}
                 <script src="{$smarty.capture.jssrc}"{if $loading eq 'async' || $loading eq 'defer'} {$loading}{/if}></script>
             {/foreach}

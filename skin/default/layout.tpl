@@ -98,6 +98,7 @@
 <script async src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js"></script>
 {$jquery = false}
 {$basejs = [
+'group' => [],
 'normal' => [],
 'async' => [],
 'defer' => [
