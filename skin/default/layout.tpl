@@ -113,7 +113,7 @@
 {if $touch}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}viewport{if !$dev}.min{/if}.js"}{/if}
 {$js_files = []}
 {block name="scripts"}{/block}
-{include file="section/brick/scripts.tpl" js_files=array_merge($basejs,$js_files) jquery=$jquery}
+{include file="section/brick/scripts.tpl" js_files=array_merge_recursive($basejs,$js_files) jquery=$jquery}
 {block name="foot"}{/block}
 {include file="section/brick/service_worker.tpl"}
 </body>
