@@ -89,7 +89,6 @@
 {/block}
 {block name="main:after"}{/block}
 {include file="section/footer.tpl" adjust="clip" blocks=['socials','sitemap','news','contact','legal_notice']}
-{*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>*}
 <script>
     window.lazyLoadOptions = {
         elements_selector: "[loading=lazy]",
@@ -97,7 +96,23 @@
     };
 </script>
 <script async src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js"></script>
-{include file="section/brick/scripts.tpl"}
+{$jquery = false}
+{$basejs = [
+'normal' => [],
+'async' => [],
+'defer' => [
+"/skin/{$theme}/js/vendor/bootstrap-native.min.js",
+"/skin/{$theme}/js/vendor/{if $dev}src/{/if}simpleLightbox{if !$dev}.min{/if}.js",
+"/skin/{$theme}/js/vendor/{if $dev}src/{/if}tiny-slider{if !$dev}.min{/if}.js",
+"/skin/{$theme}/js/{if $dev}src/{/if}polyfill{if !$dev}.min{/if}.js",
+"/skin/{$theme}/js/{if $dev}src/{/if}affixhead{if !$dev}.min{/if}.js",
+"/skin/{$theme}/js/{if $dev}src/{/if}global{if !$dev}.min{/if}.js"
+]
+]}
+{if $touch}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}viewport{if !$dev}.min{/if}.js"}{/if}
+{$js_files = []}
+{block name="scripts"}{/block}
+{include file="section/brick/scripts.tpl" js_files=array_merge($basejs,$js_files) jquery=$jquery}
 {block name="foot"}{/block}
 {include file="section/brick/service_worker.tpl"}
 </body>
