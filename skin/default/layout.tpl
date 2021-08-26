@@ -102,11 +102,11 @@
 'async' => [],
 'defer' => [
 "/skin/{$theme}/js/vendor/bootstrap-native.min.js",
-"/skin/{$theme}/js/vendor/{if $dev}src/{/if}simpleLightbox{if !$dev}.min{/if}.js",
-"/skin/{$theme}/js/vendor/{if $dev}src/{/if}tiny-slider{if !$dev}.min{/if}.js",
-"/skin/{$theme}/js/{if $dev}src/{/if}polyfill{if !$dev}.min{/if}.js",
-"/skin/{$theme}/js/{if $dev}src/{/if}affixhead{if !$dev}.min{/if}.js",
-"/skin/{$theme}/js/{if $dev}src/{/if}global{if !$dev}.min{/if}.js"
+"/skin/{$theme}/js/vendor/{if $setting.mode.value === 'dev'}src/{/if}simpleLightbox{if !$setting.mode.value === 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/vendor/{if $setting.mode.value === 'dev'}src/{/if}tiny-slider{if !$setting.mode.value === 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}polyfill{if !$setting.mode.value === 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}affixhead{if !$setting.mode.value === 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}global{if !$setting.mode.value === 'dev'}.min{/if}.js"
 ]
 ]}
 {if $touch}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}viewport{if !$dev}.min{/if}.js"}{/if}
