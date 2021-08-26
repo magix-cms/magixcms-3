@@ -1,6 +1,6 @@
 <TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="$FileDir$/$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -98,7 +98,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="$FileDir$/$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -144,7 +144,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="$FileDir$/$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -262,7 +262,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="$FileDir$/$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -322,7 +322,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="$FileDir$/$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -368,7 +368,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="$FileDir$/$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -408,7 +408,7 @@
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="$FileDir$\$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
+    <option name="arguments" value="$FileDir$/$FileName$ --comments -o $FileNameWithoutExtension$.min.js" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" />
     <option name="exitCodeBehavior" value="ERROR" />
