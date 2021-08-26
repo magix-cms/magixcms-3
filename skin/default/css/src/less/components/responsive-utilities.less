@@ -26,6 +26,7 @@
 @media (max-width: (@screen-ph-max)) {
     .visible-ph { .responsive-visibility(); }
     .hidden-ph { .responsive-invisibility(); }
+    .sr-ph { .sr-only(); }
 }
 @media (max-width: (@screen-xs-max)) {
     .visible-xs-down { .responsive-visibility(); }
@@ -79,9 +80,9 @@
         .hidden-lg { .responsive-invisibility(); }
     }
 }
-@media (min-width: (@screen-xl-min)) {
-    .visible-xl-up { .responsive-visibility(); }
-    .hidden-xl-up { .responsive-invisibility(); }
+@media (min-width: (@screen-lg-min)) {
+    .visible-lg { .responsive-visibility(); }
+    .hidden-lg { .responsive-invisibility(); }
 }
 
 // --- Pull block right or left on different breakpoint
@@ -95,7 +96,7 @@
 }
 
 // --- Pull block right or left on different breakpoint
-@media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+@media (max-width: @screen-xs-min) and (max-width: @screen-xs-max) {
     .pull-xs-left {
         float: left;
     }

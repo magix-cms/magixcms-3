@@ -35,7 +35,11 @@
                 </a>
             {/if}
         </div>
+        {if $dataLang != null && count($dataLang) > 1}
+            <div class="select-lang hidden-xs-down">
+                {include file="section/brick/lang.tpl" display='menu'}
+            </div>
+        {/if}
         {include file="section/menu/primary.tpl" menu="main" main=true mobile=false deepness=2}
     </div>
 </header>
-{*{include file="section/menu/primary.tpl" menu="side" main=false mobile=true deepness=2}*}

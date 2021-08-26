@@ -1,4 +1,4 @@
-<div id="block-about" class="col col-xs-2 col-sm block">
+<div id="block-about" class="col-ph col-xs-2 col-sm block">
     <div>
         {widget_about_data
             conf = [

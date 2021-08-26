@@ -290,11 +290,11 @@
 @screen-xl-min: @breakpoints[xl];
 
 // So media queries don't overlap when required, provide a maximum
-@screen-ph-max: calc(@breakpoints[xs] - .001em);
-@screen-xs-max: calc(@breakpoints[sm] - .001em);
-@screen-sm-max: calc(@breakpoints[md] - .001em);
-@screen-md-max: calc(@breakpoints[lg] - .001em);
-@screen-lg-max: calc(@breakpoints[xl] - .001em);
+@screen-ph-max: (@breakpoints[xs] - .001em);
+@screen-xs-max: (@breakpoints[sm] - .001em);
+@screen-sm-max: (@breakpoints[md] - .001em);
+@screen-md-max: (@breakpoints[lg] - .001em);
+@screen-lg-max: (@breakpoints[xl] - .001em);
 
 
 //== Grid system
@@ -308,9 +308,9 @@
 
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
-@grid-float-breakpoint: @breakpoints[md];
+@grid-float-breakpoint: @breakpoints[sm];
 //** Point at which the navbar begins collapsing.
-@grid-float-breakpoint-max: calc(@breakpoints[md] - .001em);
+@grid-float-breakpoint-max: (@breakpoints[sm] - .001em);
 
 
 //== Container sizes

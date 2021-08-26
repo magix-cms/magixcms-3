@@ -26,11 +26,6 @@
 }
 
 .make-grid-columns() {
-	.col {
-		flex-basis: 0;
-		flex-grow: 1;
-		max-width: 100%;
-	}
 	.col,
 	[class*="col-"] {
 		position: relative;
@@ -99,15 +94,25 @@
 	.loop-grid-columns((@index - 1), @class, @type);
 }
 
+.make-rules(@key) {
+	.make-rows(@key);
+	.loop-grid-columns(@grid-columns, @key, col);
+	.loop-grid-columns(@grid-columns, @key, pull);
+	.loop-grid-columns(@grid-columns, @key, push);
+	.loop-grid-columns(@grid-columns, @key, offset);
+}
+
 // Create grid for specific class
+.make-media(@value,@key) when not(@value = '0em') {
+	@media (min-width: @value) {
+		.make-rules(@key);
+	}
+}
+.make-media(@value,@key) when (@value = '0em') {
+	.make-rules(@value,@key);
+}
 .make-grid() {
 	each(@breakpoints,{
-		@media (min-width: @value) {
-			.make-rows(@key);
-			.loop-grid-columns(@grid-columns, @key, col);
-			.loop-grid-columns(@grid-columns, @key, pull);
-			.loop-grid-columns(@grid-columns, @key, push);
-			.loop-grid-columns(@grid-columns, @key, offset);
-		}
+		.make-media(@value,@key);
 	});
 }

@@ -128,7 +128,7 @@ th {
   overflow-x: auto;
   min-height: 0.01%;
 }
-@media screen and (max-width: calc(48em - 0.001em)) {
+@media screen and (max-width: 47.999em) {
   .table-responsive {
     width: 100%;
     margin-bottom: 1.21352549rem;
@@ -457,7 +457,7 @@ dd {
   margin-bottom: 0.5rem;
   margin-left: 0;
 }
-@media (min-width: 62em) {
+@media (min-width: 48em) {
   .dl-horizontal dt {
     float: left;
     width: 160px;
@@ -511,7 +511,7 @@ dd {
 .link-bar li:last-child a {
   border-bottom: none;
 }
-@media (min-width: 62em) {
+@media (min-width: 48em) {
   .link-bar {
     flex-direction: row;
   }
@@ -1300,7 +1300,7 @@ input[type="button"].btn-block {
 .display .container > .row {
   align-items: center;
 }
-@media (max-width: calc(48em - 0.001em)) {
+@media (max-width: 47.999em) {
   .display {
     padding: 1rem 0;
   }
@@ -1342,12 +1342,12 @@ input[type="button"].btn-block {
 .presentation .tns-controls {
   display: none;
 }
-@media (max-width: calc(48em - 0.001em)) {
+@media (max-width: 47.999em) {
   .presentation .main-img img {
     margin: 0 auto;
   }
 }
-@media (min-width: 62em) {
+@media (min-width: 48em) {
   .presentation .details {
     grid-template-columns: repeat(auto-fill, minmax(var(--details-cw), 25%));
   }

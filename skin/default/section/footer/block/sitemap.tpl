@@ -1,4 +1,4 @@
-<div id="block-sitemap" class="col col-xs-6 col-sm-4 col-xl-3 block">
+<div id="block-sitemap" class="col-ph col-xs-6 col-sm-3 block">
     <p class="h4"><a href="{$url}/{$lang}/" title="">{#site_navigation#|ucfirst}</a></p>
     <ul class="link-list list-unstyled">
         {foreach $links as $k => $link}
