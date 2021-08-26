@@ -5,6 +5,7 @@
 {block name="styleSheet"}
     {$css_files = [
     "/skin/{$theme}/css/cms{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/gallery{if $setting.mode.value !== 'dev'}.min{/if}.css",
     "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
     "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
     ]}
@@ -14,28 +15,16 @@
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content' nocache}
             <div class="row">
-                <div class="col-4 col-xs-6 col-sm-8 col-md-7 col-lg-9 push-md-3 content">
+                <div class="col-12 col-md-8 col-lg-9 push-md-4 push-lg-3 content">
                     <h1 itemprop="name">{$pages.name}</h1>
                     {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
                     {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
                     <div itemprop="text clearfix">
-                        {*if isset($pages.img.name)}
-                            <a href="{$pages.img.large.src}" class="img-zoom img-float float-right" title="{$pages.img.title}" data-caption="{$pages.img.caption}">
-                                <figure>
-                                    {include file="img/img.tpl" img=$pages.img lazy=true}
-                                    {if $pages.img.caption}
-                                        <figcaption>{$pages.img.caption}</figcaption>
-                                    {/if}
-                                </figure>
-                            </a>
-                        {/if*}
-{*                        <div class="col-4 col-md-5 col-xl-4">*}
-                            {include file="img/loop/gallery.tpl" imgs=$pages.imgs}
-{*                        </div>*}
+                        {include file="img/loop/gallery.tpl" imgs=$pages.imgs}
                         {$pages.content}
                     </div>
                 </div>
-                <div class="col-4 col-xs-6 col-sm-8 col-md-3 pull-md-7 pull-lg-9 menu-cms">
+                <div class="col-12 col-md-4 col-lg-3 pull-md-8 pull-lg-9 menu-cms">
                     {widget_about_data conf=['context' => 'all'] assign="aboutPages"}
                     <ul>
                         {if $aboutPages}

@@ -146,16 +146,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                                 $data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
                                 $data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
                             }
-                            //$data['imgs'][$item]['default'] = $val['default_img'];
-							$defaultimg = $this->imagesComponent->getConfigItems(array(
-								'module_img'    =>'logo',
-								'attribute_img' =>'product'
-							));
-							$data['imgs'][$item]['default'] = [
-								'src' => isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
-								'w' => $defaultimg[0]['width_img'],
-								'h' => $defaultimg[0]['height_img']
-							];
+                            $data['imgs'][$item]['default'] = $val['default_img'];
                         }
                     }
                 }

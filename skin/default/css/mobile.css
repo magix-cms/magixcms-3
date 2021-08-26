@@ -7,7 +7,7 @@
 }
 :root,
 html {
-  font-size: 14px;
+  font-size: max(1em, 10px);
 }
 body {
   margin: 0;
@@ -194,17 +194,17 @@ svg {
 }
 @media (min-width: 62em) {
   .container {
-    max-width: 62em;
+    max-width: 62rem;
   }
 }
 @media (min-width: 75em) {
   .container {
-    max-width: 75em;
+    max-width: 75rem;
   }
 }
 @media (min-width: 90em) {
   .container {
-    max-width: 90em;
+    max-width: 90rem;
   }
 }
 .row {
@@ -1250,7 +1250,7 @@ tbody.collapse.in {
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: 10;
   display: none;
   float: left;
   min-width: 160px;
@@ -1259,8 +1259,7 @@ tbody.collapse.in {
   list-style: none;
   font-size: var(--font-size);
   text-align: left;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: var(--body-bg);
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -1275,7 +1274,7 @@ tbody.collapse.in {
   height: 1px;
   margin: var(--spacer) 0;
   overflow: hidden;
-  background-color: #e5e5e5;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 .dropdown-menu > li > a {
   display: block;
@@ -1289,12 +1288,12 @@ tbody.collapse.in {
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
   text-decoration: none;
-  color: hsl(0, 0%, 15%);
-  background-color: #f5f5f5;
+  color: var(--text-color);
+  background-color: rgba(0, 0, 0, 0.15);
 }
-.dropdown-menu > .active > a,
-.dropdown-menu > .active > a:hover,
-.dropdown-menu > .active > a:focus {
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover,
+.dropdown-menu .active > a:focus {
   color: var(--white);
   text-decoration: none;
   outline: 0;
@@ -1341,7 +1340,7 @@ tbody.collapse.in {
   right: 0;
   bottom: 0;
   top: 0;
-  z-index: 990;
+  z-index: 0;
 }
 .pull-right > .dropdown-menu {
   right: 0;
@@ -1539,6 +1538,18 @@ tbody.collapse.in {
 [class*="visible-"] {
   display: none !important;
 }
+@media (max-width: 22.33266667em) {
+  .sr-small-ph {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+}
 @media (max-width: 33.499em) {
   .visible-ph {
     display: block !important;
@@ -1619,6 +1630,16 @@ tbody.collapse.in {
   }
   .hidden-xs {
     display: none !important;
+  }
+  .sr-xs {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
   }
 }
 @media (max-width: 61.999em) {
@@ -2850,6 +2871,7 @@ article ol {
     justify-content: space-between;
     width: 100vw;
     max-width: 100%;
+    z-index: 200;
     box-shadow:  0 2px 4px 0 rgba(0, 0, 0, 0.14),  0 4px 5px 0 rgba(0, 0, 0, 0.12),  0 1px 10px 0 rgba(0, 0, 0, 0.2);
   }
 }
@@ -2895,8 +2917,8 @@ article ol {
 .vignette-list {
   padding-bottom: var(--spacer);
 }
-.vignette:not(:last-child) {
-  margin-bottom: var(--spacer);
+.vignette {
+  margin-bottom: var(--grid-gutter);
 }
 .vignette .h3 {
   margin: var(--spacer) 0;
@@ -2904,6 +2926,7 @@ article ol {
 }
 .vignette .figure {
   position: relative;
+  min-height: 100%;
   box-shadow:  0 0 4px 0 rgba(0, 0, 0, 0.14),  0 3px 4px 0 rgba(0, 0, 0, 0.12),  0 1px 5px 0 rgba(0, 0, 0, 0.2);
 }
 .vignette .figure:hover .caption,
@@ -2912,11 +2935,16 @@ article ol {
 }
 .vignette .desc {
   padding: 1rem;
-  background-color: var(--white);
+  background-color: var(--body-bg);
   overflow: hidden;
 }
 .vignette .desc p {
   color: var(--light-grey);
+}
+@media (max-width: 47.999em) {
+  .vignette:last-child {
+    margin-bottom: 0;
+  }
 }
 ul.arrow-list,
 ul.bullet-list,

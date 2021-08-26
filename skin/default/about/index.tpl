@@ -15,7 +15,7 @@
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content' nocache}
         <div class="row">
-            <div class="col-4 col-xs-6 col-sm-8 col-md-7 col-lg-9 push-md-3 content">
+            <div class="col-12 col-md-8 col-lg-9 push-md-4 push-lg-3 content">
                 <h1 itemprop="name">{$pages.name}</h1>
                 {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
                 {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
@@ -23,7 +23,7 @@
                     {$pages.content}
                 </div>
             </div>
-            <div class="col-4 col-xs-6 col-sm-8 col-md-3 pull-md-7 pull-lg-9 menu-cms">
+            <div class="col-12 col-md-4 col-lg-3 pull-md-8 pull-lg-9 menu-cms">
                 {widget_cms_data conf = ['context' => 'all'] assign="pagesTree"}
                 {widget_about_data conf = ['context' => 'all'] assign="aboutPages"}
                 <ul>

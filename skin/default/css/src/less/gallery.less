@@ -18,15 +18,15 @@
 }
 
 .image-gallery {
-	/*** Big image ***/
+	// --- Big image
 	.big-image {
 		margin: 0 0 var(--spacer);
 		display: block;
 		width: 100%;
 		overflow: hidden;
 		position: relative;
-		border-top: 1px solid var(--smooth-white);
-		border-bottom: 1px solid var(--smooth-white);
+		//border-top: 1px solid var(--smooth-white);
+		//border-bottom: 1px solid var(--smooth-white);
 
 		a {
 			opacity: 0;
@@ -47,22 +47,18 @@
 			}
 		}
 	}
-	/*** controls ***/
+	// --- controls
 	.tns-controls{
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%,-50%);
-		width: 100%;
-		display: flex;
-		justify-content: space-between;
 		button {
+			position: absolute;
+			top: 50%;
 			display: flex;
-			height: 100%;
 			padding: 1rem;
 			background: 0 0;
 			border: none;
-			position: relative;
+			z-index: 1;
+			color: var(--text-color);
+
 			.ico {
 				text-shadow: 0 0 1rem rgba(0,0,0,.3);
 			}
@@ -71,12 +67,21 @@
 				visibility: hidden;
 				z-index: -1;
 			}
+
+			&:nth-child(1) {
+				left: 0;
+				transform: translate(-100%,-50%);
+			}
+			&:nth-child(2) {
+				right: 0;
+				transform: translate(100%,-50%);
+			}
 		}
 	}
 }
 @media (min-width: @screen-md-min) {
 	.image-gallery {
-		/*** Button ***/
+		// --- Button
 		.button {
 			opacity: 0;
 		}
@@ -86,7 +91,7 @@
 				opacity: 1;
 			}
 		}
-		/*** controls ***/
+		// --- controls
 		.tns-controls{
 			width: calc(100% + 6rem);
 		}

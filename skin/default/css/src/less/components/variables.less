@@ -21,7 +21,7 @@
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
-@font-size: 14px;
+@font-size: max(1em, 10px);
 @font-size-base: 1rem;
 @font-size-lg: 1.25rem;
 @font-size-sm: .875rem;
@@ -212,20 +212,18 @@
 //## Dropdown menu container and contents.
 
 //** Background for the dropdown menu.
-@dropdown-bg:                    #fff;
+@dropdown-bg:                    var(--body-bg);
 //** Dropdown menu `border-color`.
 @dropdown-border:                rgba(0,0,0,.15);
-//** Dropdown menu `border-color` **for IE8**.
-@dropdown-fallback-border:       #ccc;
 //** Divider color for between dropdown items.
-@dropdown-divider-bg:            #e5e5e5;
+@dropdown-divider-bg:            rgba(0,0,0,.15);
 
 //** Dropdown link text color.
-@dropdown-link-color:            @gray-dark;
+@dropdown-link-color:            var(--text-color);
 //** Hover color for dropdown links.
-@dropdown-link-hover-color:      darken(@gray-dark, 5%);
+@dropdown-link-hover-color:      var(--text-color);
 //** Hover background for dropdown links.
-@dropdown-link-hover-bg:         #f5f5f5;
+@dropdown-link-hover-bg:         rgba(0,0,0,.15);
 
 //** Active dropdown menu item text color.
 @dropdown-link-active-color:     @component-active-color;
@@ -252,13 +250,13 @@
 @z-allhover: 				100;
 @z-fixed:  					200;
 @z-drawer: 					300;
-@zindex-navbar:            1000;
-@zindex-dropdown:          1000;
-@zindex-popover:           1060;
-@zindex-tooltip:           1070;
-@zindex-navbar-fixed:      1030;
-@zindex-modal-background:  1040;
-@zindex-modal:             1050;
+@zindex-navbar:            	10;
+@zindex-dropdown:          	10;
+@zindex-popover:           	60;
+@zindex-tooltip:           	70;
+@zindex-navbar-fixed:      	30;
+@zindex-modal-background:  	40;
+@zindex-modal:             	50;
 
 
 //== Media queries breakpoints
@@ -321,13 +319,13 @@
 //@container-sm: ~"calc(53rem + var(--grid-gutter))";
 // Medium screen / desktop
 //@container-md: ~"calc(60rem + var(--grid-gutter))";
-@container-md: @screen-md-min;
+@container-md: (1rem * @screen-md-min);
 // Large screen / wide desktop
 //@container-lg: ~"calc(73rem + var(--grid-gutter))";
-@container-lg: @screen-lg-min;
+@container-lg: (1rem * @screen-lg-min);
 // Large screen / wide desktop
 //@container-xl: ~"calc(88rem + var(--grid-gutter))";
-@container-xl: @screen-xl-min;
+@container-xl: (1rem * @screen-xl-min);
 
 //== Navbar
 //

@@ -7,18 +7,12 @@
   position: static;
   float: left;
 }
-.image-gallery {
-  /*** Big image ***/
-  /*** controls ***/
-}
 .image-gallery .big-image {
   margin: 0 0 var(--spacer);
   display: block;
   width: 100%;
   overflow: hidden;
   position: relative;
-  border-top: 1px solid var(--smooth-white);
-  border-bottom: 1px solid var(--smooth-white);
 }
 .image-gallery .big-image a {
   opacity: 0;
@@ -38,22 +32,15 @@
 .image-gallery .big-image a img {
   width: 100%;
 }
-.image-gallery .tns-controls {
+.image-gallery .tns-controls button {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
   display: flex;
-  justify-content: space-between;
-}
-.image-gallery .tns-controls button {
-  display: flex;
-  height: 100%;
   padding: 1rem;
   background: 0 0;
   border: none;
-  position: relative;
+  z-index: 1;
+  color: var(--text-color);
 }
 .image-gallery .tns-controls button .ico {
   text-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
@@ -63,11 +50,15 @@
   visibility: hidden;
   z-index: -1;
 }
+.image-gallery .tns-controls button:nth-child(1) {
+  left: 0;
+  transform: translate(-100%, -50%);
+}
+.image-gallery .tns-controls button:nth-child(2) {
+  right: 0;
+  transform: translate(100%, -50%);
+}
 @media (min-width: 62em) {
-  .image-gallery {
-    /*** Button ***/
-    /*** controls ***/
-  }
   .image-gallery .button {
     opacity: 0;
   }

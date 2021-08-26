@@ -2,9 +2,10 @@
                       News Tiles
 ---------------------------------------------------------- */
 .news-tile {
-	margin-bottom: 22px;
+	margin-bottom: var(--grid-gutter);
 
 	.tile {
+		min-height: 100%;
 		.shadow(1);
 	}
 	figure {
@@ -39,6 +40,8 @@
 
 @media (max-width: @screen-xs-max) {
 	.news-tile {
+		&:last-child { margin-bottom: 0; }
+
 		figure {
 			padding: 0;
 		}

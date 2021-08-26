@@ -73,9 +73,7 @@
 	padding-bottom: var(--spacer);
 }
 .vignette {
-	&:not(:last-child) {
-		margin-bottom: var(--spacer);
-	}
+	margin-bottom: var(--grid-gutter);
 
 	.h3 {
 		margin: var(--spacer) 0;
@@ -84,6 +82,7 @@
 
 	.figure {
 		position: relative;
+		min-height: 100%;
 		.shadow(2);
 
 		&:hover, &:focus {
@@ -95,11 +94,18 @@
 
 	.desc {
 		padding: 1rem;
-		background-color: var(--white);
+		background-color: var(--body-bg);
 		overflow: hidden;
 
 		p {
 			color: var(--light-grey);
+		}
+	}
+}
+@media (max-width: @screen-xs-max) {
+	.vignette {
+		&:last-child {
+			margin-bottom: 0;
 		}
 	}
 }

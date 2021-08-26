@@ -7,6 +7,7 @@
 {block name="styleSheet"}
     {$css_files = [
     "/skin/{$theme}/css/product{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/gallery{if $setting.mode.value !== 'dev'}.min{/if}.css",
     "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
     "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
     ]}
@@ -43,10 +44,12 @@
                 <meta itemprop="url" content="{$parent.url}">
             </div>
             <div class="row row-center">
-                <div class="col-4 col-md-5 col-xl-4">
+                {if is_array($product.imgs) && count($product.imgs) > 0}
+                <div class="col-12 col-md-6 col-lg-5 col-xl-4">
                     {include file="img/loop/gallery.tpl" imgs=$product.imgs}
                 </div>
-                <div class="col-4 col-md-5 col-lg-7 col-xl-8">
+                {/if}
+                <div class="col-12{if is_array($product.imgs) && count($product.imgs) > 0} col-md-6 col-lg-7 col-xl-8{/if}">
                     {strip}{if $product.price !== 0}<div class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;{if $setting.price_display.value === 'tinc'}{#tax_included#}{else}{#tax_excluded#}{/if}</div>{/if}{/strip}
                     <div class="text" itemprop="description">
                         {$product.content}
@@ -59,7 +62,7 @@
             {if $product.associated}
             <p class="h2">{#similar_products#|ucfirst}</p>
             <div class="vignette-list">
-                <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                <div class="row" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
                     {include file="catalog/loop/product.tpl" data=$product.associated classCol='vignette col-12 col-xs-6 col-md-4'}
                 </div>
             </div>

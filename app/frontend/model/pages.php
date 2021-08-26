@@ -127,16 +127,7 @@ class frontend_model_pages extends frontend_db_pages{
 								$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
 								$data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
 							}
-							//$data['imgs'][$item]['default'] = $val['default_img'];
-							$defaultimg = $this->imagesComponent->getConfigItems(array(
-								'module_img'    =>'logo',
-								'attribute_img' =>'pages'
-							));
-							$data['imgs'][$item]['default'] = [
-								'src' => isset($imagePlaceHolder['pages']) ? $imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png',
-								'w' => $defaultimg[0]['width_img'],
-								'h' => $defaultimg[0]['height_img']
-							];
+							$data['imgs'][$item]['default'] = $val['default_img'];
 						}
 					}
 				}
@@ -169,7 +160,7 @@ class frontend_model_pages extends frontend_db_pages{
 					}
 					$defaultimg = $this->imagesComponent->getConfigItems(array(
 						'module_img'    =>'logo',
-						'attribute_img' =>'pages'
+						'attribute_img' =>'page'
 					));
 					$data['img']['default'] = [
 						'src' => isset($imagePlaceHolder['pages']) ? $imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png',

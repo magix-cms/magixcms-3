@@ -41,7 +41,7 @@
   --brd-default: rgba(0, 0, 0, 0.15);
   --heading-color: var(--text-color);
   --font-size-base: 1rem;
-  --font-size: 14px;
+  --font-size: 1rem;
   --font-size-sm: 0.875rem;
   --font-size-lg: 1.25rem;
   --line-height: 1.61803399;
@@ -65,7 +65,7 @@
     --footer-bg: rgba(0, 0, 0, 0.5);
     --text-color: var(--text-light);
     --brd-default: rgba(0, 0, 0, 0.5);
-    --main-color-l: 35%;
+    --main-color-l: 50%;
     --heading-color: var(--dark-color);
   }
 }

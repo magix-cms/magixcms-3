@@ -765,7 +765,7 @@ fieldset[disabled] a.btn {
   pointer-events: none;
 }
 .btn-default {
-  --btn-color: var(--text-dark);
+  --btn-color: var(--text-color);
   --btn-bg-h: var(--default-color-h);
   --btn-bg-s: var(--default-color-s);
   --btn-bg-l: var(--default-color-l);

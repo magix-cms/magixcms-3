@@ -16,7 +16,7 @@
         <header id="header-news">
             <div class="row">
                 {strip}
-                <div class="col-4 col-xs-6 col-sm-8 col-md-5 col-lg-6">
+                <div class="col-12 col-md-6">
                     {block name='article:title' nocache}
                     {strip}<h1 itemprop="name">
                         {#news#|ucfirst}
@@ -26,10 +26,10 @@
                     {/block}
                 </div>
                 {/strip}
-                <div class="col-4 col-xs-6 col-sm-8 col-md-5 col-lg-6">
+                <div class="col-12 col-md-6">
                     <div class="row">
                         {if !empty($tags)}
-                        <div class="col-2 col-xs-3 col-sm-4 col-md-5 col-lg-6">
+                        <div class="col-6">
                             {*<p class="label">{#news_by_theme#|ucfirst}</p>*}
                             <div class="dropdown filter">
                                 {strip}<button class="btn btn-block btn-box btn-default dropdown-toggle" type="button" data-toggle="dropdown">
@@ -41,7 +41,7 @@
                                     <li><a href="{$url}/{$lang}/news">{#all_news#}</a></li>
                                     {nocache}
                                     {foreach $tags as $tag}
-                                    <li{if $tag.id eq $smarty.get.tag} class="active"{/if}>{if $tag.id eq $smarty.get.tag}{$tag.name}{else}<a href="{$tag.url}">{$tag.name}</a>{/if}</li>
+                                    <li{if $tag.id eq $smarty.get.tag} class="active"{/if}><a href="{$tag.url}">{$tag.name}</a></li>
                                     {/foreach}
                                     {/nocache}
                                 </ul>
@@ -49,7 +49,7 @@
                         </div>
                         {/if}
                         {if $news}
-                        <div class="col-2 col-xs-3 col-sm-4 col-md-5 col-lg-6">
+                        <div class="col-6">
                             {*<p class="label">{#news_by_date#|ucfirst}</p>*}
                             <div class="dropdown filter">
                                 {strip}<button class="btn btn-block btn-box btn-default dropdown-toggle" type="button" data-toggle="dropdown">
@@ -61,16 +61,16 @@
                                     <li><a href="{$url}/{$lang}/news">{#all_news#}</a></li>
                                     {nocache}
                                     {foreach $archives as $year}
-                                        <li class="panel">
+                                        <li class="panel{if isset($smarty.get.year) && $smarty.get.year == $year.year} active{/if}">
 {*                                            <div class="header">*}
-                                            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#mth-{$year.year}">
+                                            <button class="btn" type="button" data-toggle="collapse" data-target="#mth-{$year.year}">
                                                 <span class="show-more"><i class="material-icons ico ico-arrow_drop_down"></i></span>
                                                 <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
                                             </button>
                                             <a href="{$year.url}" title="{$year.year}" {*data-toggle="collapse" data-target="#mth-{$year.year}"*}>{$year.year}</a>
                                             <ul id="mth-{$year.year}" class="collapse">
                                             {foreach $year.months as $month}
-                                                {strip}<li>
+                                                {strip}<li{if ($smarty.get.year && $smarty.get.year == $year.year) && $smarty.get.month && $smarty.get.month == '%02d'|sprintf:$month['month']} class="active"{/if}>
                                                     <a href="{$month.url}" title="{$year.year|cat:"-%02d-01"|sprintf:$month['month']|date_format:'%B'|ucfirst}">{$year.year|cat:"-%02d-01"|sprintf:$month['month']|date_format:'%B'|ucfirst} <small>(&thinsp;{$month['nbr']}&thinsp;)</small></a>
                                                 </li>{/strip}
                                             {/foreach}
@@ -91,7 +91,7 @@
         {block name='article:content'}
             {if $news}
             <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                <div class="tile-list row row-center">
+                <div class="tile-list row">
                     {include file="news/loop/news.tpl" data=$news classCol='news-tile col-12 col-xs-6 col-md-4' nocache}
                 </div>
             </div>

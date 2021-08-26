@@ -43,6 +43,8 @@ class component_core_language{
         $getLanguage,
         $setParams;
 
+    public static $locale;
+
 	/**
 	 * component_core_language constructor.
 	 * @param install_model_template|backend_model_template|frontend_model_template $t
@@ -158,36 +160,25 @@ class component_core_language{
         }
     }
 
-    /**
-     * Modification du setlocale suivant la langue courante pour les dates
-     */
-    private function setTimeLocal(){
-    	$conf = array('locale' => 'en_US','other' => 'en');
-    	switch ($this->template->lang) {
-			case 'nl':
-				$conf['locale'] = 'nl_NL';
-				$conf['other'] = 'nl';
-				break;
-			case 'fr':
-			case 'fr-ca':
-				$conf['locale'] = 'fr_FR';
-				$conf['other'] = 'fra';
-				break;
-			case 'de':
-				$conf['locale'] = 'de_DE';
-				$conf['other'] = 'de';
-				break;
-			case 'es':
-				$conf['locale'] = 'es_ES';
-				$conf['other'] = 'es';
-				break;
-			case 'it':
-				$conf['locale'] = 'it_IT';
-				$conf['other'] = 'it';
-				break;
-		}
-
-		setlocale(LC_TIME, $conf['locale'].'.UTF8',$conf['other']);
+	/**
+	 * Modification du setlocale suivant la langue courante pour les dates
+	 * @return false|string
+	 */
+    public function setTimeLocal(){
+    	// for more locale see https://docs.moodle.org/dev/Table_of_locales
+		$locales = [
+			'nl' => ['nl_NL.UTF8','Dutch_Netherlands.1252','nl'],
+			'fr' => ['fr_FR.UTF8','French_France.1252','fra'],
+			'fr-ch' => ['fr_CH.UTF8','French_France.1252','fra'],
+			'fr-be' => ['fr_BE.UTF8','French_France.1252','fra'],
+			'fr-ca' => ['fr_CA.UTF8','French_Canada.1252','fra'],
+			'de' => ['de_DE.UTF8','German_Germany.1252','de'],
+			'es' => ['es_ES.UTF8','Spanish_Spain.1252','es'],
+			'it' => ['it_IT.UTF8','Italian_Italy.1252','it'],
+			'en' => ['en_US.UTF8','en_utf8','en'],
+		];
+		$key = key_exists($this->template->lang,$locales) ? $this->template->lang : 'en';
+		self::$locale = setlocale(LC_TIME, $locales[$key]);
     }
 
     /**

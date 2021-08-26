@@ -23,29 +23,33 @@
     .responsive-invisibility();
 }
 
-@media (max-width: (@screen-ph-max)) {
+@media (max-width: (@screen-ph-max/1.5)) {
+    .sr-small-ph { .sr-only(); }
+}
+@media (max-width: @screen-ph-max) {
     .visible-ph { .responsive-visibility(); }
     .hidden-ph { .responsive-invisibility(); }
     .sr-ph { .sr-only(); }
 }
-@media (max-width: (@screen-xs-max)) {
+@media (max-width: @screen-xs-max) {
     .visible-xs-down { .responsive-visibility(); }
     .hidden-xs-down { .responsive-invisibility(); }
 }
-@media (min-width: (@screen-xs-min)) {
+@media (min-width: @screen-xs-min) {
     .visible-xs-up { .responsive-visibility(); }
     .hidden-xs-up { .responsive-invisibility(); }
 
     @media (max-width: @screen-xs-max) {
         .visible-xs { .responsive-visibility(); }
         .hidden-xs { .responsive-invisibility(); }
+        .sr-xs { .sr-only(); }
     }
 }
-@media (max-width: (@screen-sm-max)) {
+@media (max-width: @screen-sm-max) {
     .visible-sm-down { .responsive-visibility(); }
     .hidden-sm-down { .responsive-invisibility(); }
 }
-@media (min-width: (@screen-sm-min)) {
+@media (min-width: @screen-sm-min) {
     .visible-sm-up { .responsive-visibility(); }
     .hidden-sm-up { .responsive-invisibility(); }
 
@@ -54,11 +58,11 @@
         .hidden-sm { .responsive-invisibility(); }
     }
 }
-@media (max-width: (@screen-md-max)) {
+@media (max-width: @screen-md-max) {
     .visible-md-down { .responsive-visibility(); }
     .hidden-md-down { .responsive-invisibility(); }
 }
-@media (min-width: (@screen-md-min)) {
+@media (min-width: @screen-md-min) {
     .visible-md-up { .responsive-visibility(); }
     .hidden-md-up { .responsive-invisibility(); }
 
@@ -67,11 +71,11 @@
         .hidden-md { .responsive-invisibility(); }
     }
 }
-@media (max-width: (@screen-lg-max)) {
+@media (max-width: @screen-lg-max) {
     .visible-lg-down { .responsive-visibility(); }
     .hidden-lg-down { .responsive-invisibility(); }
 }
-@media (min-width: (@screen-lg-min)) {
+@media (min-width: @screen-lg-min) {
     .visible-lg-up { .responsive-visibility(); }
     .hidden-lg-up { .responsive-invisibility(); }
 
@@ -80,7 +84,7 @@
         .hidden-lg { .responsive-invisibility(); }
     }
 }
-@media (min-width: (@screen-lg-min)) {
+@media (min-width: @screen-lg-min) {
     .visible-lg { .responsive-visibility(); }
     .hidden-lg { .responsive-invisibility(); }
 }

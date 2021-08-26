@@ -20,7 +20,7 @@ class frontend_controller_news extends frontend_db_news
         $this->modelNews = new frontend_model_news($this->template);
         $this->dateFormat = new date_dateformat();
 		$this->routingUrl = new component_routing_url();
-		$this->offset = 5;
+		$this->offset = 6;
 
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);

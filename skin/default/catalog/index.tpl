@@ -22,7 +22,7 @@
             {if $categories}
             <p class="h2">{#categories#}</p>
             <div class="vignette-list">
-                <div class="row row-center" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                <div class="row" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
                     {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-12 col-xs-6 col-md-4' nocache}
                 </div>
             </div>
