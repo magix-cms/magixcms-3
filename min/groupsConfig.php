@@ -22,8 +22,8 @@ return array(
 	),
     'formAdvanced' => array(
 		'//libjs/vendor/jquery.form.4.2.1.min.js',
-		'//libjs/vendor/additional-methods.1.17.0.min.js',
 		'//libjs/vendor/jquery.validate.1.17.0.min.js',
+		'//libjs/vendor/additional-methods.1.17.0.min.js',
 		'//libjs/vendor/jimagine/plugins/jquery.jmRequest.js'//,
 		//'//libjs/vendor/redirect.min.js'
 	),
