@@ -303,6 +303,7 @@ class component_routing_dispatcher {
 			$this->template->assign('favicon', $modelLogo->getFaviconData());
 			$this->template->assign('social', $modelLogo->getImageSocial());
 			$this->template->assign('homescreen', $modelLogo->getHomescreen());
+			$this->header->set_503_header();
 			$this->template->display('maintenance.tpl');
 		}
 		else {

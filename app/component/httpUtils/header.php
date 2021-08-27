@@ -56,7 +56,22 @@ class component_httpUtils_header{
         if(http_request::isGet('getHeader')) $this->getHeader = form_inputFilter::isNumeric($_GET['getHeader']);
     }
 
-    /**
+	/**
+	 * Set header 503 for maintenance and tell search engine to comme back in $retry seconds
+	 * @param int $retry
+	 */
+    public function set_503_header($retry = 3600) {
+		$protocol = 'HTTP/1.0';
+
+		if ( $_SERVER['SERVER_PROTOCOL'] === 'HTTP/1.1' ) $protocol = 'HTTP/1.1';
+		if ( $_SERVER['SERVER_PROTOCOL'] === 'HTTP/2.0' ) $protocol = 'HTTP/2.0';
+
+		header( $protocol . ' 503 Service Unavailable', true, 503 );
+		header( 'Retry-After: '.$retry );
+	}
+
+
+	/**
      * @param $http_error
      * @return string
      */
