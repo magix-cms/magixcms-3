@@ -56,6 +56,6 @@
     <div class="mc-message"></div>
     <p id="btn-contact">
         <input type="hidden" name="msg[moreinfo]" value="" />
-        <button type="submit" class="btn btn-box btn-invert btn-main">{#pn_contact_send#|ucfirst}</button>
+        <button type="submit" class="btn btn-box btn-main-invert">{#pn_contact_send#|ucfirst}</button>
     </p>
 </form>
