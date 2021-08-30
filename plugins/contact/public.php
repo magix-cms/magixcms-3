@@ -285,10 +285,13 @@ class plugins_contact_public extends plugins_contact_db
 		$config['address_required'] = $this->config['address_required'];
 
         if(class_exists('plugins_recaptcha_public') && $this->amp == false){
-            $recaptcha = new plugins_recaptcha_public();
-            $recaptchaData = $recaptcha->setItemData();
-            if($recaptchaData['published'] == 1) {
-                $config['recaptcha'] = $recaptchaData;
+            $vplugin = $this->getItems('plugin',array('name' => 'recaptcha'),'one',false);
+            if($vplugin['name'] != null) {
+                $recaptcha = new plugins_recaptcha_public();
+                $recaptchaData = $recaptcha->setItemData();
+                if ($recaptchaData['published'] == 1) {
+                    $config['recaptcha'] = $recaptchaData;
+                }
             }
         }
 
@@ -300,21 +303,28 @@ class plugins_contact_public extends plugins_contact_db
      */
     public function run(){
         if(class_exists('plugins_recaptcha_public') && $this->amp == false){
-            $recaptcha = new plugins_recaptcha_public();
-            $recaptchaData = $recaptcha->setItemData();
-            if($recaptchaData['published'] == 1) {
-                $this->template->assign('recaptcha', $recaptchaData);
+            $vplugin = $this->getItems('plugin',array('name' => 'recaptcha'),'one',false);
+            if($vplugin['name'] != null) {
+                $recaptcha = new plugins_recaptcha_public();
+                $recaptchaData = $recaptcha->setItemData();
+                if ($recaptchaData['published'] == 1) {
+                    $this->template->assign('recaptcha', $recaptchaData);
+                }
             }
         }
         if(isset($this->msg)) {
 
             if(class_exists('plugins_recaptcha_public') && $this->amp == false){
-                if($recaptchaData['published'] == 1) {
-                    if ($recaptcha->getRecaptcha() == true) {
+                $vplugin = $this->getItems('plugin',array('name' => 'recaptcha'),'one',false);
+                if($vplugin['name'] != null) {
+                    if ($recaptchaData['published'] == 1) {
+                        if ($recaptcha->getRecaptcha() == true) {
+                            $this->send_email();
+                        } else {
+                            $this->getNotify('error', 'captcha');
+                        }
+                    } else {
                         $this->send_email();
-                    }
-                    else {
-                        $this->getNotify('error','captcha');
                     }
                 }else{
                     $this->send_email();

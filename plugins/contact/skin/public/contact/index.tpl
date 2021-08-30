@@ -6,7 +6,7 @@
 {block name="styleSheet"}
     {$css_files = [
     "/skin/{$theme}/css/contact{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/form{if $setting.mode.value !== 'dev'}.min{/if}.css",
+    "/skin/{$theme}/css/form{if $setting.mode.value !== 'dev'}.min{/if}.css"
     ]}
 {/block}
 {block name="slider"}{/block}
@@ -44,7 +44,7 @@
     ],
     'defer' => [
     "/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}form{if !$setting.mode.value === 'dev'}.min{/if}.js",
-    "/skin/{$theme}/js/vendor/localization/messages_{$lang}.js",
+    "/skin/{$theme}/js/vendor/localization/messages_{$lang}.js"
     ]
     ]}
     {if {$lang} !== "en"}{$js_files['defer'][] = "/libjs/vendor/localization/messages_{$lang}.js"}{/if}
