@@ -3,6 +3,8 @@ class component_core_feedback{
 	protected $template, $header;
 	protected $default = array('message' => '','progress' => 0);
 
+	public $progress = 0;
+
 	/**
 	 * component_core_feedback constructor.
 	 */
@@ -36,6 +38,8 @@ class component_core_feedback{
 			$feedback = $feedback + $this->default;
 		elseif ($feedback === null || !is_array($feedback))
 			$feedback = $this->default;
+
+		if($feedback['progress']) $this->progress = $feedback['progress'];
 
 		echo str_repeat(' ',1024*64); // fill the buffer if X-Accel-Buffering header is disabled
 		echo json_encode($feedback);

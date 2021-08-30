@@ -516,12 +516,22 @@ class component_files_upload{
         $setUpload = $this->reArrayFiles($_FILES[$imgCollection]);
         if (isset($setUpload)) {
             if(is_array($setUpload)) {
+				if ($data['progress'] instanceof component_core_feedback && $data['template']) {
+					$percent = $data['progress']->progress;
+					$preparePercent = (50 - $percent) / count($setUpload);
+				}
                 foreach ($setUpload as $item) {
+					if($data['progress'] instanceof component_core_feedback && $data['template']) {
+						$percent = $percent + $preparePercent;
+						usleep(100000);
+						$data['progress']->sendFeedback(['message' => $data['template']->getConfigVars('checking_images'), 'progress' => $percent]);
+					}
                     if ($setUpload['error'][$item] == UPLOAD_ERR_OK) {
                         //print_r($item);
                         if($this->imageValid($item['tmp_name']) === false){
                             $msg .= 'Bad file format (only gif,png,jpeg)';
-                        }else{
+                        }
+						else{
                             //print 'File Name: ' . $item['name'];
                             $tmpImg = $item["tmp_name"];
                             //Détecte le type mime du fichier
@@ -584,7 +594,8 @@ class component_files_upload{
                                 ),
                             'msg' => $msg
                         );
-                    }else{
+                    }
+					else{
                         $result[] = array(
                             'statut'=> true,
                             'notify'=> 'upload',
@@ -628,6 +639,10 @@ class component_files_upload{
         $response = null;
         $mimeContent = null;
         if (isset($_FILES[$img])) {
+			/*if($data['progress'] instanceof component_core_feedback && $data['template']) {
+				usleep(100000);
+				$data['progress']->sendFeedback(['message' => $data['template']->getConfigVars('checking_images'), 'progress' => 50]);
+			}*/
             if ($_FILES[$img]['error'] == UPLOAD_ERR_OK){
                 if($this->imageValid($_FILES[$img]['tmp_name']) === false){
                     $msg .= 'Bad file format (only gif,png,jpeg)';
@@ -704,7 +719,9 @@ class component_files_upload{
                 'module_img'        => 'pages',
                 'attribute_img'     => 'page',
                 'original_remove'   => false,
-                'webp'              => true
+                'webp'              => true,
+				'progress' 			=> $this->progress, // component_core_feedback
+				'template' 			=> $this->template
             ),
             array(
                 'upload_root_dir'   => 'upload/test', //string
@@ -763,7 +780,12 @@ class component_files_upload{
                         $debug
                     );
                     if($debug) $log->tracelog(json_encode($resultUpload));
+
                     if($resultUpload['statut'] != false) {
+						if($data['progress'] instanceof component_core_feedback && $data['template']) {
+							usleep(100000);
+							$data['progress']->sendFeedback(['message' => $data['template']->getConfigVars('resizing_images'), 'progress' => 80]);
+						}
                         /**
                          * Analyze l'extension du fichier en traitement
                          * @var $fileextends
@@ -988,7 +1010,9 @@ class component_files_upload{
             'module_img'        => 'pages',
             'attribute_img'     => 'page',
             'original_remove'   => false,
-            'webp'              => true
+            'webp'              => true,
+			'progress' 			=> $this->progress, // component_core_feedback
+			'template' 			=> $this->template
         ),
         array(
             'upload_root_dir'   => 'upload/pages', //string
@@ -1030,8 +1054,18 @@ class component_files_upload{
                     );
 
                     //if($debug) $log->tracelog(json_encode($resultUpload));
+					if ($data['progress'] instanceof component_core_feedback && $data['template']) {
+						$percent = $data['progress']->progress;
+						$preparePercent = (80 - $percent) / count($resultUpload);
+					}
 
                     foreach($resultUpload as $key => $value){
+						if($data['progress'] instanceof component_core_feedback && $data['template']) {
+							$percent = $percent + $preparePercent;
+							usleep(100000);
+							$data['progress']->sendFeedback(['message' => $data['template']->getConfigVars('resizing_images'), 'progress' => $percent]);
+						}
+
                         //if($debug) $log->tracelog('statut : '.json_encode($value['statut']));
                         if($value['statut'] != false){
                             $value['name'] = http_url::clean($value['name']);
@@ -1046,6 +1080,7 @@ class component_files_upload{
                                         'target' => $dirImg . $value['new_name'] . '.'.$value['mimecontent']['type']
                                     )
                                 );
+
                                 if ($fetchConfig != null) {
                                     if (is_array($imgCollection)) {
                                         // return array collection
@@ -1057,10 +1092,9 @@ class component_files_upload{
                                             } else {
                                                 $filesPath = $dirImgArray;
                                             }
-                                            /**
-                                             * init interventionImage
-                                             */
-											if($debug) $log->tracelog('interventionImage');
+                                            //
+                                            // init interventionImage
+                                            //
                                             try {
                                                 $thumb = $this->imageManager->make($dirImg . $value['new_name'] . '.'.$value['mimecontent']['type']);
                                             } catch (Exception $e) {
@@ -1068,7 +1102,7 @@ class component_files_upload{
                                                 $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
                                             }
 
-											//$thumb = $this->imageManager->make($dirImg . $value['new_name'] . '.'.$value['mimecontent']['type']);
+											// $thumb = $this->imageManager->make($dirImg . $value['new_name'] . '.'.$value['mimecontent']['type']);
 
                                             if (array_key_exists('prefix', $data)) {
                                                 if (is_array($data['prefix'])) {
@@ -1080,7 +1114,6 @@ class component_files_upload{
                                                 $prefix = '';
                                             }
 
-											if($debug) $log->tracelog('resize');
                                             switch ($valueConf['resize_img']) {
                                                 case 'basic':
                                                     $thumb->resize($valueConf['width_img'], $valueConf['height_img'], function ($constraint) {
