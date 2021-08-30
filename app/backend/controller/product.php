@@ -683,7 +683,9 @@ class backend_controller_product extends backend_db_product
                                         'prefix' => array('s_', 'm_', 'l_'),
                                         'module_img' => 'catalog',
                                         'attribute_img' => 'product',
-                                        'original_remove' => false
+                                        'original_remove' => false,
+										'progress' => $this->progress,
+										'template' => $this->template
                                     ),
                                     array(
                                         'upload_root_dir' => 'upload/catalog/p', //string
@@ -693,8 +695,8 @@ class backend_controller_product extends backend_db_product
                                 );
 
                                 if ($resultUpload != null) {
-                                    $preparePercent = 80 / count($resultUpload);
-                                    $percent = 10;
+									$percent = $this->progress->progress;
+									$preparePercent = (90 - $percent) / count($resultUpload);
 
                                     foreach ($resultUpload as $key => $value) {
                                         if ($value['statut'] == '1') {
