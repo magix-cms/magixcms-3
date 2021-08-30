@@ -232,7 +232,7 @@ class http_header{
 		$this->head_expires("Mon, 26 Jul 1997 05:00:00 GMT");
 		$this->head_last_modified(gmdate( "D, d M Y H:i:s" ) . "GMT");
 		$this->pragma();
-		$this->cache_control("nocache");
+		//header($this->cache_control("nocache"));
 		$this->getStatus('200');
 		$this->json_header("UTF-8");
 	}

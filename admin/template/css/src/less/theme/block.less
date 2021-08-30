@@ -157,7 +157,7 @@ section#quick-access {
 	}
 }
 
-.progress {
+/*.progress {
 	border-radius: 0;
 	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05) inset;
 	min-height: 28px;
@@ -201,6 +201,101 @@ section#quick-access {
 		min-height: 4px;
 		min-width: 10px;
 		text-align: left;
+	}
+}*/
+@progressColors: {
+	base: hsla(219, 48%, 45%, 1);
+	error: hsla(2, 64%, 58%, 1);
+	warning: hsla(35, 84%, 62%, 1);
+	success: hsla(121, 47%, 45%, 1);
+};
+
+.progressBar {
+	border-radius: 0;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05) inset;
+	min-height: calc((1em * @line-height-base) + 1rem);
+	padding: .5rem 0;
+	position: relative;
+	text-align: center;
+	width: 100%;
+	margin-bottom: 1rem;
+	background: hsla(219, 48%, 45%, .4);
+
+	&.hide {
+		margin-bottom: 0;
+	}
+
+	&.waiting {
+		.progress-bar {
+			width: 100%;
+			background: transparent;
+		}
+
+		.subline {
+			position: absolute;
+			top: 0;
+			height: 100%;
+			background: @progressColors[base];
+		}
+		.inc{
+			animation: increase 2s infinite;
+		}
+		.dec{
+			animation: decrease 2s 0.5s infinite;
+		}
+
+		@keyframes increase {
+			from { left: -5%; width: 5%; }
+			to { left: 130%; width: 100%;}
+		}
+		@keyframes decrease {
+			from { left: -80%; width: 80%; }
+			to { left: 110%; width: 10%;}
+		}
+	}
+
+	.progress {
+		&-bar {
+			position: absolute;
+			z-index: 1;
+			width: 0%;
+			font-size: .85rem;
+			padding: .5rem 0;
+			background-color: @progressColors[base];
+			top: 0;
+			left: 0;
+			overflow: hidden;
+			height: 100%;
+			.auto-transition(.25s);
+
+			&-success {
+				background-color: @progressColors[success];
+			}
+			&-warning {
+				background-color: @progressColors[warning];
+			}
+			&-danger {
+				background-color: @progressColors[error];
+			}
+
+			&-state {
+				position: relative;
+				z-index: 2;
+				height: 100%;
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+			}
+		}
+
+		.loader.etc {
+			display: inline-block;
+			min-height: 4px;
+			min-width: 10px;
+			text-align: left;
+		}
 	}
 }
 

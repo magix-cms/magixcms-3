@@ -18,9 +18,13 @@ class component_core_feedback{
 	public function init()
 	{
 		//ob_start();
-		ob_end_flush();
-		ob_implicit_flush(true);
+		//ob_end_flush();
+		@ob_end_clean();
+		set_time_limit(0);
+		ob_implicit_flush(1);
 		$this->header->set_json_headers();
+		header("X-Accel-Buffering: no");
+		header('Content-Encoding: none');
 	}
 
 	/**
@@ -33,9 +37,32 @@ class component_core_feedback{
 		elseif ($feedback === null || !is_array($feedback))
 			$feedback = $this->default;
 
+		echo str_repeat(' ',1024*64); // fill the buffer if X-Accel-Buffering header is disabled
 		echo json_encode($feedback);
-		//ob_flush();
-		//flush();
+		while (ob_get_level() > 0) {
+			ob_end_flush();
+		}
+		flush();
+	}
+
+	/**
+	 * Feedback using event-stream
+	 * @param $feedback
+	 */
+	public function send_message($feedback)
+	{
+		if (is_array($feedback))
+			$feedback = $feedback + $this->default;
+		elseif ($feedback === null || !is_array($feedback))
+			$feedback = $this->default;
+
+		echo "id: ".$feedback['progress'] . PHP_EOL;
+		echo "data: " . json_encode($feedback) . PHP_EOL;
+		echo PHP_EOL;
+
+		while (ob_get_level() > 0) {
+			ob_end_flush();
+		}
+		flush();
 	}
 }
-?>

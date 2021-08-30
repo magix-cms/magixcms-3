@@ -529,7 +529,7 @@ class component_files_upload{
                             if(is_uploaded_file($item["tmp_name"])){
                                 $source = $tmpImg;
                                 $target = component_core_system::basePath().$path.http_url::clean($item["name"]);
-                                if ($this->imgSizeMax($source,3000,3000) === false) {
+                                /*if ($this->imgSizeMax($source,3000,3000) === false) {
                                     $msg .= 'the maximum size is 2500';
                                 }elseif ($this->imgSizeMin($source,5,5) === false) {
                                     $msg .= 'the minimum size is 5';
@@ -537,7 +537,10 @@ class component_files_upload{
                                     if (!move_uploaded_file($source, $target)) {
                                         $msg .= 'Temporary File Error';
                                     }
-                                }
+                                }*/
+								if (!move_uploaded_file($source, $target)) {
+									$msg .= 'Temporary File Error';
+								}
 
                                 $prefix = '';$name = filter_rsa::randMicroUI();
 
@@ -562,12 +565,10 @@ class component_files_upload{
                                 $msg .= 'Disk write error';
                             }
                         }
-                    }elseif (UPLOAD_ERR_INI_SIZE == true){
+                    }elseif (UPLOAD_ERR_INI_SIZE == true || UPLOAD_ERR_FORM_SIZE == true){
                         $msg .=  'The file is too large';
                     }elseif (UPLOAD_ERR_CANT_WRITE == true){
                         $msg .= 'Disk write error';
-                    }elseif (UPLOAD_ERR_FORM_SIZE == true){
-                        $msg .= 'the maximum size is 3000 x 3000';
                     }
                     if($msg != null) {
                         $result[] = array(
@@ -637,7 +638,7 @@ class component_files_upload{
                     if(is_uploaded_file($_FILES[$img]["tmp_name"])){
                         $source = $tmpImg;
                         $target = component_core_system::basePath().$path.http_url::clean($_FILES[$img]["name"]);
-                        if ($this->imgSizeMax($source,3000,3000) === false) {
+                        /*if ($this->imgSizeMax($source,3000,3000) === false) {
                             $msg .= 'the maximum size is 2500';
                         }elseif ($this->imgSizeMin($source,5,5) === false) {
                             $msg .= 'the minimum size is 5';
@@ -645,18 +646,19 @@ class component_files_upload{
                             if (!move_uploaded_file($source, $target)) {
                                 $msg .= 'Temporary File Error';
                             }
-                        }
+                        }*/
+						if (!move_uploaded_file($source, $target)) {
+							$msg .= 'Temporary File Error';
+						}
                     }else{
                         $msg .= 'Disk write error';
                     }
                 }
-            }elseif (UPLOAD_ERR_INI_SIZE == true){
-                $msg .=  'The file is too large';
-            }elseif (UPLOAD_ERR_CANT_WRITE == true){
-                $msg .= 'Disk write error';
-            }elseif (UPLOAD_ERR_FORM_SIZE == true){
-                $msg .= 'the maximum size is 3000 x 3000';
-            }
+			}elseif (UPLOAD_ERR_INI_SIZE == true || UPLOAD_ERR_FORM_SIZE == true){
+				$msg .=  'The file is too large';
+			}elseif (UPLOAD_ERR_CANT_WRITE == true){
+				$msg .= 'Disk write error';
+			}
         }elseif (UPLOAD_ERR_NO_FILE == true){
             $msg .= 'No file';
         }else{
@@ -905,12 +907,14 @@ class component_files_upload{
                                         $filesPathDebug[] = $filesPath . $prefix . $data['name']. $suffix . '.'.$resultUpload['mimecontent']['type'];
                                     }
                                     if($debug) $log->tracelog('rename format');
-                                    $makeFiles->rename(
-                                        array(
-                                            'origin' => $dirImg . $data['name'] . '.'.$resultUpload['mimecontent']['type'],
-                                            'target' => $dirImgArray . $data['name'] . '.'.$resultUpload['mimecontent']['type']
-                                        )
-                                    );
+									if($imgCollection['upload_dir'] !== '') {
+										$makeFiles->rename(
+											array(
+												'origin' => $dirImg . $data['name'] . '.'.$resultUpload['mimecontent']['type'],
+												'target' => $dirImgArray . $data['name'] . '.'.$resultUpload['mimecontent']['type']
+											)
+										);
+									}
 
                                 }
                             }
@@ -1006,17 +1010,8 @@ class component_files_upload{
                 $resultUpload = null;
                 $debugResult = null;
                 $extwebp = 'webp';
-                $dirImg = $this->dirImgUpload(
-                    array_merge(
-                        array(
-                            'upload_root_dir'=>$imgCollection['upload_root_dir']
-                        ),
-                        array(
-                            'imgBasePath'=>true
-                        )
-                    )
-                );
-                $fetchConfig = $this->config->fetchData(array('context'=>'all','type'=>'imgSize'),array('module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img']));
+                $dirImg = $this->dirImgUpload(['upload_root_dir'=>$imgCollection['upload_root_dir'],'imgBasePath'=>true]);
+                $fetchConfig = $this->config->fetchData(['context'=>'all','type'=>'imgSize'],['module_img'=>$data['module_img'],'attribute_img'=>$data['attribute_img']]);
 
                 if ($debug) {
                     $log = new debug_logger(MP_LOG_DIR);
@@ -1029,12 +1024,7 @@ class component_files_upload{
                      */
                     $resultUpload = $this->multiUploadImg(
                         $img_multiple,
-                        $this->dirImgUpload(
-                            array_merge(
-                                array('upload_root_dir'=>$imgCollection['upload_root_dir']),
-                                array('imgBasePath'=>false)
-                            )
-                        ),
+                        $this->dirImgUpload(['upload_root_dir'=>$imgCollection['upload_root_dir'],'imgBasePath'=>false]),
                         $data,
                         $debug
                     );
@@ -1070,12 +1060,15 @@ class component_files_upload{
                                             /**
                                              * init interventionImage
                                              */
+											if($debug) $log->tracelog('interventionImage');
                                             try {
                                                 $thumb = $this->imageManager->make($dirImg . $value['new_name'] . '.'.$value['mimecontent']['type']);
                                             } catch (Exception $e) {
                                                 $logger = new debug_logger(MP_LOG_DIR);
                                                 $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
                                             }
+
+											//$thumb = $this->imageManager->make($dirImg . $value['new_name'] . '.'.$value['mimecontent']['type']);
 
                                             if (array_key_exists('prefix', $data)) {
                                                 if (is_array($data['prefix'])) {
@@ -1087,6 +1080,7 @@ class component_files_upload{
                                                 $prefix = '';
                                             }
 
+											if($debug) $log->tracelog('resize');
                                             switch ($valueConf['resize_img']) {
                                                 case 'basic':
                                                     $thumb->resize($valueConf['width_img'], $valueConf['height_img'], function ($constraint) {
@@ -1116,12 +1110,14 @@ class component_files_upload{
                                         }
 
                                         if($debug) $log->tracelog('rename format');
-                                        $makeFiles->rename(
-                                            array(
-                                                'origin' => $dirImg . $value['new_name'] . '.'.$value['mimecontent']['type'],
-                                                'target' => $dirImgArray . $value['new_name'] . '.'.$value['mimecontent']['type']
-                                            )
-                                        );
+										if($imgCollection['upload_dir'] !== '') {
+											$makeFiles->rename(
+												array(
+													'origin' => $dirImg . $value['new_name'] . '.'.$value['mimecontent']['type'],
+													'target' => $dirImgArray . $value['new_name'] . '.'.$value['mimecontent']['type']
+												)
+											);
+										}
                                     }
                                 }
 
