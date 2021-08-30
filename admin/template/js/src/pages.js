@@ -102,7 +102,7 @@ var pages = (function ($, undefined) {
             complete: function () {
                 progressBar.update({progress: 100});
                 progressBar.initHide();
-                progressBar.element.parent().next().removeClass('hide');
+                //progressBar.element.parent().next().removeClass('hide');
             }
         });
     }
