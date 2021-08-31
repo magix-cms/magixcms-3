@@ -19,13 +19,13 @@ var pages = (function ($, undefined) {
                 // Generation progress
                 xhr.upload.addEventListener("progress", function(e){
                     if (e.lengthComputable) {
-                        let percentComplete = (e.loaded / e.total)*100;
+                        let percentComplete = (e.loaded / e.total);
                         //Do something with upload progress
                         // let total = Math.round((e.total / (1024*1024))*10)/10;
                         // let loaded = Math.round((e.loaded / (1024*1024))*10)/10;
                         let options = {
-                            progress: percentComplete,
-                            state: 'upload complete at '+Math.round(percentComplete)+'%',
+                            progress: percentComplete*30,
+                            state: 'upload complete at '+Math.round(percentComplete*100)+'%',
                         }
                         progressBar.update(options);
                         if(percentComplete === 100) {

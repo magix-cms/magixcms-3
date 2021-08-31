@@ -624,7 +624,7 @@ class backend_controller_pages extends backend_db_pages
                             $this->progress = new component_core_feedback($this->template);
 
                             usleep(200000);
-                            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 10));
+                            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 30));
 
                             $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                             $page = $this->getItems('pageLang', array('id' => $this->id_pages, 'iso' => $defaultLanguage['iso_lang']), 'one', false);

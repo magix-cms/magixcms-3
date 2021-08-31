@@ -666,7 +666,7 @@ class backend_controller_product extends backend_db_product
                                 $this->progress = new component_core_feedback($this->template);
 
                                 usleep(200000);
-                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 10));
+                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 30));
 
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $product = $this->getItems('content', array('id_product' => $this->id_product, 'id_lang' => $defaultLanguage['id_lang']), 'one', false);
