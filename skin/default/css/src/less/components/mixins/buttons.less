@@ -51,10 +51,12 @@
 	--btn-ahf-bg-color: transparent;
 	--btn-hover-border-color: @hv-color;
 	--btn-focus-border-color: @hv-color;
+	@brd-width: 2px;
+	@outter-width: (@brd-width * 2);
 
 	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; 0);
 	position: relative;
-	border-width: 2px;
+	border-width: @brd-width;
 	z-index: 2;
 	.auto-transition(.25s);
 
@@ -62,10 +64,10 @@
 		content: '';
 		position: absolute;
 		display: inline-block;
-		height: 100%;
+		height: calc(100% + @outter-width);
 		width: 0;
-		top: 0;
-		left: 0;
+		top: (@brd-width * -1);
+		left: (@brd-width * -1);
 		background-color: @hv-color;
 		z-index: -1;
 		transition: 0.25s;
@@ -75,7 +77,7 @@
 		color: @hv-txt;
 
 		&:before {
-			width: 100%;
+			width: calc(100% + @outter-width);
 		}
 	}
 }

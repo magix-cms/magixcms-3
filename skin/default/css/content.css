@@ -874,10 +874,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--main-color);
   z-index: -1;
   transition: 0.25s;
@@ -886,7 +886,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-main-outline:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-main-invert {
   --btn-color: var(--text-color);
@@ -910,10 +910,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--main-color);
   z-index: -1;
   transition: 0.25s;
@@ -922,7 +922,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-main-invert:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-main-white {
   --btn-color: var(--white);
@@ -946,10 +946,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--main-color);
   z-index: -1;
   transition: 0.25s;
@@ -958,7 +958,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-main-white:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-sd {
   --btn-color: var(--white);
@@ -993,10 +993,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--sd-color);
   z-index: -1;
   transition: 0.25s;
@@ -1005,7 +1005,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-sd-outline:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-sd-invert {
   --btn-color: var(--text-color);
@@ -1029,10 +1029,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--sd-color);
   z-index: -1;
   transition: 0.25s;
@@ -1041,7 +1041,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-sd-invert:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-sd-white {
   --btn-color: var(--white);
@@ -1065,10 +1065,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--sd-color);
   z-index: -1;
   transition: 0.25s;
@@ -1077,7 +1077,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-sd-white:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-dark {
   --btn-color: var(--white);
@@ -1112,10 +1112,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--dark-color);
   z-index: -1;
   transition: 0.25s;
@@ -1124,7 +1124,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-dark-outline:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-dark-invert {
   --btn-color: var(--text-color);
@@ -1148,10 +1148,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--dark-color);
   z-index: -1;
   transition: 0.25s;
@@ -1160,7 +1160,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-dark-invert:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn.btn-dark-white {
   --btn-color: var(--white);
@@ -1184,10 +1184,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--dark-color);
   z-index: -1;
   transition: 0.25s;
@@ -1196,7 +1196,7 @@ input[type="button"].btn-block {
   color: var(--white);
 }
 .btn.btn-dark-white:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn-invert-white {
   --btn-color: var(--white);
@@ -1220,10 +1220,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--white);
   z-index: -1;
   transition: 0.25s;
@@ -1232,7 +1232,7 @@ input[type="button"].btn-block {
   color: var(--dark-color);
 }
 .btn-invert-white:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn-invert {
   --btn-color: var(--text-color);
@@ -1256,10 +1256,10 @@ input[type="button"].btn-block {
   content: '';
   position: absolute;
   display: inline-block;
-  height: 100%;
+  height: calc(100% + 4px);
   width: 0;
-  top: 0;
-  left: 0;
+  top: -2px;
+  left: -2px;
   background-color: var(--text-color);
   z-index: -1;
   transition: 0.25s;
@@ -1268,7 +1268,7 @@ input[type="button"].btn-block {
   color: var(--bogy-bg);
 }
 .btn-invert:hover:before {
-  width: 100%;
+  width: calc(100% + 4px);
 }
 .btn-box {
   --btn-border-radius: 0;
