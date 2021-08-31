@@ -31,6 +31,9 @@
 			}
 		}
 	}
+	.headings({
+		color: var(--footer-color);
+	});
 }
 
 .touchscreen {
@@ -68,6 +71,11 @@
 		&.material-icons{
 			width: 30px;
 			font-size: 20px;
+		}
+	}
+	&-legal {
+		ul.link-bar {
+			--link-color: @footer-link;
 		}
 	}
 }

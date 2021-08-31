@@ -2697,6 +2697,20 @@ article ol {
 #footer .block .h4 a {
   font-weight: bold;
 }
+#footer h1,
+#footer h2,
+#footer h3,
+#footer h4,
+#footer h5,
+#footer h6,
+#footer .h1,
+#footer .h2,
+#footer .h3,
+#footer .h4,
+#footer .h5,
+#footer .h6 {
+  color: var(--footer-color);
+}
 .touchscreen #footer {
   margin-bottom: var(--footbar-h);
 }
@@ -2716,6 +2730,9 @@ article ol {
 #block-contact.material-icons {
   width: 30px;
   font-size: 20px;
+}
+#block-legal ul.link-bar {
+  --link-color: var(--white);
 }
 #colophon {
   position: relative;
