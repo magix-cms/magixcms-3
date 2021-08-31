@@ -9,7 +9,7 @@ class backend_controller_pages extends backend_db_pages
 			'id_pages',
 			'name_pages' => array('title' => 'name'),
 			'parent_pages' => array('col' => 'name_pages', 'title' => 'name'),
-			'default_img' => array('title' => 'img','type' => 'bin', 'input' => null, 'class' => ''),
+			'img_pages' => array('title' => 'img','type' => 'bin', 'input' => null, 'class' => ''),
 			'resume_pages' => array('type' => 'bin', 'input' => null),
 			'content_pages' => array('type' => 'bin', 'input' => null),
 			'seo_title_pages' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
@@ -20,7 +20,7 @@ class backend_controller_pages extends backend_db_pages
 		'parent' => array(
 			'id_pages',
 			'name_pages' => array('title' => 'name'),
-			'default_img' => array('title' => 'img','type' => 'bin', 'input' => null, 'class' => ''),
+			'img_pages' => array('title' => 'img','type' => 'bin', 'input' => null, 'class' => ''),
 			'resume_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
 			'content_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
 			'seo_title_pages' => array('title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
@@ -159,7 +159,7 @@ class backend_controller_pages extends backend_db_pages
 			$params['cClass'] = 'backend_controller_pages';
 		}
 
-		$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','default_img','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+		$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
 
 		return array(
 			'data' => $results,
@@ -765,7 +765,7 @@ class backend_controller_pages extends backend_db_pages
 							$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
                             $setEditData = $this->setItemData($setEditData);
                             $this->template->assign('page',$setEditData[$this->edit]);
-							$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','default_img','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
+							$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
 							$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
                             $this->getItems('pagesChild',array('id'=>$this->edit,'default_lang'=>$defaultLanguage['id_lang']),'all');
 							$this->getItems('pagesSelect',array('default_lang'=>$defaultLanguage['id_lang']),'all');
@@ -874,7 +874,7 @@ class backend_controller_pages extends backend_db_pages
 				$this->modelLanguage->getLanguage();
 				$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
 				$this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',true,true);
-                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','default_img','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
+                $this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$this->tableconfig['parent']);
                 $this->template->display('pages/index.tpl');
             }
         }
