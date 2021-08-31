@@ -349,7 +349,8 @@ class backend_controller_theme extends backend_db_theme{
 									'data' => array(
 										'id' => $link['id_link'],
 										'id_lang' => $lang['id_lang'],
-										'name_link' => $page['name'] ? $page['name'] : null,
+										'name_link' => $page['name'] ?: null,
+										'title_link' => $page['name'] ?: null,
 										'url_link' => null
 									)
 								));
