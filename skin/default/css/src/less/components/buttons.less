@@ -272,9 +272,9 @@ input[type="button"] {
 
 
 // --- Auto Style (HTML use only)
-.custom-button(main);
-.custom-button(sd);
-.custom-button(dark);
+each(@theme-color, {
+	.custom-button(@key);
+});
 
 .btn-invert-white {
 	.button-invert(var(--white); var(--dark-color); var(--white); var(--white));
