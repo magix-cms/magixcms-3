@@ -45,6 +45,7 @@
 {block name="foot" append}
     {capture name="scriptForm"}{strip}
         /{baseadmin}/min/?f=
+        libjs/vendor/jquery-ui-1.12.min.js,
         libjs/vendor/progressBar.min.js,
         {baseadmin}/template/js/domain.min.js
     {/strip}{/capture}

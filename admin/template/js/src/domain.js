@@ -1,30 +1,55 @@
 var domain = (function ($, undefined) {
-    function initGen(){
-        var idDomain = $('#id_domain').val();
-        var dataType = $('#data_type').val();
-        var progressBar = new ProgressBar('#progress-thumbnail',{loader: {type:'text', icon:'etc'}});
+    function initGen(fd,globalForm,tableForm){
+        var progressBar = new ProgressBar({loader: {type:'text', icon:'etc', class: ''}});
         $.jmRequest({
             handler: "ajax",
             url: $('#create_sitemap').attr('action'),
             method: 'POST',
-            data: {data_type: dataType,id: idDomain},
+            data:  fd,
+            processData: false,
+            contentType: false,
             beforeSend: function () {
-                progressBar.init({progress: 5, state: 'Demande au serveur'});
+                progressBar.init();
             },
             xhr: function() {
                 var xhr = $.ajaxSettings.xhr();
+                //Upload progress
                 xhr.oldResponse = '';
                 // Generation progress
-                xhr.addEventListener("progress", function(e){
-                    var new_response = xhr.responseText.substring(xhr.oldResponse.length);
-                    if(new_response != '') {
-                        var result = JSON.parse(new_response);
-                        var loader = null;
-                        if(result.rendering) {
-                            loader = {type: 'fa', icon: 'cog', anim: 'spin'}
+                xhr.upload.addEventListener("progress", function(e){
+                    if (e.lengthComputable) {
+                        let percentComplete = (e.loaded / e.total);
+                        //Do something with upload progress
+                        // let total = Math.round((e.total / (1024*1024))*10)/10;
+                        // let loaded = Math.round((e.loaded / (1024*1024))*10)/10;
+                        let options = {
+                            progress: percentComplete*30,
+                            state: 'upload complete at '+Math.round(percentComplete*100)+'%',
                         }
-                        progressBar.update({progress: result.progress, state: result.message, loader: loader});
-                        xhr.oldResponse = xhr.responseText;
+                        progressBar.update(options);
+                        if(percentComplete === 100) {
+                            progressBar.init({state: ''});
+                        }
+                    }
+                });
+                xhr.addEventListener("progress", function(e){
+                    if(!(xhr.readyState === 4 && xhr.status === 200)) {
+                        let new_response = xhr.responseText.substring(xhr.oldResponse.length);
+                        if(new_response.trim() !== '') {
+                            let result = JSON.parse(new_response.trim());
+                            let options = {
+                                progress: result.progress,
+                                state: result.message,
+                            }
+                            if(result.loader !== null) {
+                                options['loader'] = result.loader;
+                            }
+                            /*if(result.rendering) {
+                                options['loader'] = {type: 'fa', icon: 'cog', anim: 'spin', class: 'fa fa-cog fa-spin fa-fw'};
+                            }*/
+                            progressBar.update(options);
+                            xhr.oldResponse = xhr.responseText;
+                        }
                     }
                 }, false);
                 return xhr;
@@ -62,16 +87,17 @@ var domain = (function ($, undefined) {
             complete: function () {
                 progressBar.update({progress: 100});
                 progressBar.initHide();
-                progressBar.element.parent().next().removeClass('hide');
+                //progressBar.element.parent().next().removeClass('hide');
             }
         });
     }
     return {
-        run: function(){
+        run: function(globalForm,tableForm){
             $('.progress').hide();
             $('.form-gen').on('submit', function(e) {
                 e.preventDefault();
-                initGen();
+                var fd = new FormData(this);
+                initGen(fd,globalForm,tableForm);
                 return false;
             });
         }
