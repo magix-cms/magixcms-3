@@ -90,15 +90,17 @@ class backend_controller_about extends backend_db_about{
 			'languages' => 'Français'
         ),
         'socials' => array(
-            'facebook' 	 => NULL,
-            'twitter' 	 => NULL,
-            'google' 	 => NULL,
-            'linkedin' 	 => NULL,
-            'viadeo' 	 => NULL,
+			'facebook' 	 => NULL,
+			'twitter' 	 => NULL,
+			'youtube' 	 => NULL,
+			'linkedin' 	 => NULL,
+			'viadeo' 	 => NULL,
 			'pinterest'  => NULL,
 			'instagram'  => NULL,
 			'github' 	 => NULL,
-			'soundcloud' => NULL
+			'soundcloud' => NULL,
+			'tumblr'     => NULL,
+			'tiktok'     => NULL
         ),
         'openinghours' => '0',
         'specifications' => array(

@@ -99,13 +99,15 @@ class frontend_model_about extends frontend_db_about {
 		'socials' => array(
 			'facebook' 	 => NULL,
 			'twitter' 	 => NULL,
-			'google' 	 => NULL,
+			'youtube' 	 => NULL,
 			'linkedin' 	 => NULL,
 			'viadeo' 	 => NULL,
 			'pinterest'  => NULL,
 			'instagram'  => NULL,
 			'github' 	 => NULL,
-			'soundcloud' => NULL
+			'soundcloud' => NULL,
+			'tumblr'     => NULL,
+			'tiktok'     => NULL
 		),
 		'openinghours' => '0',
 		'specifications' => array(
@@ -435,10 +437,11 @@ class frontend_model_about extends frontend_db_about {
 									//$link = (($this->touch) ? 'twitter://user?screen_name=' : 'https://twitter.com/') . $about[$social_name];
 									$link = 'https://twitter.com/'. $about[$social_name];
 									break;
-								case 'google':
+								case 'youtube':
 									//$link = (($this->touch) ? 'gplus://' : 'https://') . 'plus.google.com/'.$about[$social_name].'/posts';
 									//$link = ($this->touch) ? 'gplus://plus.google.com/app/basic/'.$about[$social_name].'/posts' : 'https://plus.google.com/'.$about[$social_name].'/posts';
-									$link = 'https://plus.google.com/'.$about[$social_name].'/posts';
+									//$link = 'https://plus.google.com/'.$about[$social_name].'/posts';
+									$link = 'https://www.youtube.com/channel/'.$about[$social_name];
 									break;
 								case 'linkedin':
 									//$link = (($this->touch) ? 'linkedin://profile?id=' : 'https://www.linkedin.com/in/') . $about[$social_name];
@@ -462,6 +465,14 @@ class frontend_model_about extends frontend_db_about {
 								case 'soundcloud':
 									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
 									$link = 'https://soundcloud.com/'.$about[$social_name];
+									break;
+								case 'tumblr':
+									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
+									$link = 'https://'.$about[$social_name].'.tumblr.com/';
+									break;
+								case 'tiktok':
+									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
+									$link = 'https://www.tiktok.com/@'.$about[$social_name];
 									break;
 							}
 						}

@@ -20,6 +20,11 @@
   --dark-color-l: 20%;
   --dark-color-a: 1;
   --dark-color: hsla(var(--dark-color-h), var(--dark-color-s), var(--dark-color-l), var(--dark-color-a));
+  --green-color-h: 120;
+  --green-color-s: 39%;
+  --green-color-l: 54%;
+  --green-color-a: 1;
+  --green-color: hsla(var(--green-color-h), var(--green-color-s), var(--green-color-l), var(--green-color-a));
   --default-color-h: 0;
   --default-color-s: 0%;
   --default-color-l: 100%;

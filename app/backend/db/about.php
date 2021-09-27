@@ -321,15 +321,17 @@ class backend_db_about
 				SET `value_info` = CASE `name_info`
 					WHEN 'facebook' THEN :facebook
 					WHEN 'twitter' THEN :twitter
-					WHEN 'google' THEN :google
+					WHEN 'youtube' THEN :youtube
 					WHEN 'linkedin' THEN :linkedin
 					WHEN 'viadeo' THEN :viadeo
 					WHEN 'pinterest' THEN :pinterest
 					WHEN 'instagram' THEN :instagram
 					WHEN 'github' THEN :github
 					WHEN 'soundcloud' THEN :soundcloud
+					WHEN 'tumblr' THEN :tumblr
+					WHEN 'tiktok' THEN :tiktok
 				END
-				WHERE `name_info` IN ('facebook','twitter','google','linkedin','viadeo','pinterest','instagram','github','soundcloud')";
+				WHERE `name_info` IN ('facebook','twitter','youtube','linkedin','viadeo','pinterest','instagram','github','soundcloud','tumblr','tiktok')";
 
 					$params = $params['socials'];
 					break;

@@ -16,9 +16,9 @@
         </div>
         <div class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
             <div class="form-group">
-                <label for="social_google">{#socials_google#|ucfirst}</label>
-                <input type="text" class="form-control" id="social_google" name="company_socials[google]" {if $companyData.socials.google}value="{$companyData.socials.google}" {/if}placeholder="{#socials_google_ph#|ucfirst}">
-                <small class="help-block">https://plus.google.com/<strong>google+ID</strong>/posts</small>
+                <label for="social_youtube">{#socials_youtube#|ucfirst}</label>
+                <input type="text" class="form-control" id="social_youtube" name="company_socials[youtube]" {if $companyData.socials.youtube}value="{$companyData.socials.youtube}" {/if}placeholder="{#socials_youtube_ph#|ucfirst}">
+                <small class="help-block">https://www.youtube.com/channel/<strong>youtube+ID</strong></small>
             </div>
         </div>
         <div class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -61,6 +61,20 @@
                 <label for="social_soundcloud">{#socials_soundcloud#|ucfirst}</label>
                 <input type="text" class="form-control" id="social_soundcloud" name="company_socials[soundcloud]" {if $companyData.socials.soundcloud}value="{$companyData.socials.soundcloud}" {/if}placeholder="{#socials_soundcloud_ph#|ucfirst}">
                 <small class="help-block">https://soundcloud.com/<strong>soundcloud-ID</strong></small>
+            </div>
+        </div>
+        <div class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+            <div class="form-group">
+                <label for="social_tumblr">{#socials_tumblr#|ucfirst}</label>
+                <input type="text" class="form-control" id="social_tumblr" name="company_socials[tumblr]" {if $companyData.socials.tumblr}value="{$companyData.socials.tumblr}" {/if}placeholder="{#socials_tumblr_ph#|ucfirst}">
+                <small class="help-block">https://<strong>tumblr+ID</strong>.tumblr.com/</small>
+            </div>
+        </div>
+        <div class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+            <div class="form-group">
+                <label for="social_tiktok">{#socials_tiktok#|ucfirst}</label>
+                <input type="text" class="form-control" id="social_tiktok" name="company_socials[tiktok]" {if $companyData.socials.tiktok}value="{$companyData.socials.tiktok}" {/if}placeholder="{#socials_tiktok_ph#|ucfirst}">
+                <small class="help-block">https://www.tiktok.com/@<strong>tiktok+ID</strong></small>
             </div>
         </div>
     </div>

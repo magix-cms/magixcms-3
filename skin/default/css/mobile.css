@@ -2227,6 +2227,125 @@ tbody.collapse.in {
 .btn.btn-dark-white:hover:before {
   width: calc(100% + 4px);
 }
+.btn.btn-green {
+  --btn-color: var(--white);
+  --btn-bg-h: var(--green-color-h);
+  --btn-bg-s: var(--green-color-s);
+  --btn-bg-l: var(--green-color-l);
+  --btn-bg-a: var(--green-color-a);
+  --btn-brd-h: var(--green-color-h);
+  --btn-brd-s: var(--green-color-s);
+  --btn-brd-l: var(--green-color-l);
+  --btn-brd-a: var(--green-color-a);
+}
+.btn.btn-green-outline {
+  --btn-color: var(--green-color);
+  --btn-bg: transparent;
+  --btn-brd: var(--green-color);
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-hover-border-color: var(--green-color);
+  --btn-focus-border-color: var(--green-color);
+  --btn-padding-vertical: 0.5rem;
+  --btn-padding-horizontal: 1rem;
+  --btn-font-size: 1rem;
+  --btn-line-height: 1.61803399;
+  --btn-border-radius: 0;
+  position: relative;
+  border-width: 2px;
+  z-index: 2;
+  transition: all 0.25s ease 0s;
+}
+.btn.btn-green-outline:before {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  height: calc(100% + 4px);
+  width: 0;
+  top: -2px;
+  left: -2px;
+  background-color: var(--green-color);
+  z-index: -1;
+  transition: 0.25s;
+}
+.btn.btn-green-outline:hover {
+  color: var(--white);
+}
+.btn.btn-green-outline:hover:before {
+  width: calc(100% + 4px);
+}
+.btn.btn-green-invert {
+  --btn-color: var(--text-color);
+  --btn-bg: transparent;
+  --btn-brd: var(--text-color);
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-hover-border-color: var(--green-color);
+  --btn-focus-border-color: var(--green-color);
+  --btn-padding-vertical: 0.5rem;
+  --btn-padding-horizontal: 1rem;
+  --btn-font-size: 1rem;
+  --btn-line-height: 1.61803399;
+  --btn-border-radius: 0;
+  position: relative;
+  border-width: 2px;
+  z-index: 2;
+  transition: all 0.25s ease 0s;
+}
+.btn.btn-green-invert:before {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  height: calc(100% + 4px);
+  width: 0;
+  top: -2px;
+  left: -2px;
+  background-color: var(--green-color);
+  z-index: -1;
+  transition: 0.25s;
+}
+.btn.btn-green-invert:hover {
+  color: var(--white);
+}
+.btn.btn-green-invert:hover:before {
+  width: calc(100% + 4px);
+}
+.btn.btn-green-white {
+  --btn-color: var(--white);
+  --btn-bg: transparent;
+  --btn-brd: var(--white);
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-hover-border-color: var(--green-color);
+  --btn-focus-border-color: var(--green-color);
+  --btn-padding-vertical: 0.5rem;
+  --btn-padding-horizontal: 1rem;
+  --btn-font-size: 1rem;
+  --btn-line-height: 1.61803399;
+  --btn-border-radius: 0;
+  position: relative;
+  border-width: 2px;
+  z-index: 2;
+  transition: all 0.25s ease 0s;
+}
+.btn.btn-green-white:before {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  height: calc(100% + 4px);
+  width: 0;
+  top: -2px;
+  left: -2px;
+  background-color: var(--green-color);
+  z-index: -1;
+  transition: 0.25s;
+}
+.btn.btn-green-white:hover {
+  color: var(--white);
+}
+.btn.btn-green-white:hover:before {
+  width: calc(100% + 4px);
+}
 @font-face {
   font-family: 'Icofont';
   src: url('../fonts/Icofont.ttf') format('truetype'), url('../fonts/Icofont.woff') format('woff'), url('../fonts/Icofont.svg#Icofont') format('svg');
@@ -2389,11 +2508,20 @@ tbody.collapse.in {
 .ico-soundcloud:before {
   content: "\e90f";
 }
+.ico-tiktok:before {
+  content: "\e915";
+}
+.ico-tumblr:before {
+  content: "\e916";
+}
 .ico-twitter:before {
   content: "\e910";
 }
 .ico-viadeo:before {
   content: "\e911";
+}
+.ico-youtube:before {
+  content: "\e917";
 }
 .ico-at:before {
   content: "\e900";
