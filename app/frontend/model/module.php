@@ -33,7 +33,7 @@
  # needs please refer to http://www.magix-cms.com for more information.
  */
 class frontend_model_module extends frontend_db_module {
-    protected $template, $data;
+    protected $template, $data, $pluginsCollection;
 
 	/**
 	 * frontend_model_plugins constructor.
@@ -41,6 +41,7 @@ class frontend_model_module extends frontend_db_module {
     public function __construct($t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->data = new frontend_model_data($this,$this->template);
+        $this->pluginsCollection = new component_collections_plugins();
 	}
 
 	/**
@@ -112,4 +113,39 @@ class frontend_model_module extends frontend_db_module {
 			);
 		}
 	}
+
+    /**
+     * @param $type
+     * @param $method
+     * @return array|mixed|void
+     */
+    public function getOverride($type,$method){
+        $newMethod = array();
+        $collection = $this->pluginsCollection->fetchAll();
+        $module = ['home','about','pages','news','catalog','category','product'];
+        if(in_array($type,$module)) {
+            //print_r($collection);
+            $newarr = array();
+            foreach ($collection as $key => $item) {
+                if ($item[$type] == 1) {
+                    $newarr[] = array(
+                        'name' => $item['name']
+                    );
+                }
+            }
+
+            foreach ($newarr as $item) {
+                $module_class = 'plugins_' . $item['name'] . '_public';
+                if (class_exists($module_class)) {
+                    $newMethod = $this->call_method(
+                        $this->get_call_class($module_class)
+                        , $method,
+                        array());
+                    //function_exists()
+                    //print $module_class. ' : '.$method;
+                }
+            }
+            return $newMethod;
+        }
+    }
 }
