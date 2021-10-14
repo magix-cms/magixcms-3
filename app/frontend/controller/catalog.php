@@ -3,7 +3,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
     /**
      * @var
      */
-    protected $template,$header,$data,$modelCatalog,$modelCore;
+    protected $template,$header,$data,$modelCatalog,$modelCore,$modelModule;
     public $getlang,$id,$id_parent;
 
     /**
@@ -17,6 +17,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();
         $this->modelCatalog = new frontend_model_catalog($this->template);
+        $this->modelModule = new frontend_model_module($this->template);
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
         }
@@ -36,7 +37,6 @@ class frontend_controller_catalog extends frontend_db_catalog {
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
-
 	/**
 	 * @return array|null
 	 */
@@ -59,16 +59,21 @@ class frontend_controller_catalog extends frontend_db_catalog {
      */
     private function getBuildCategoryList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent IS NULL ORDER BY p.order_cat';
-		$collection = parent::fetchData(
-			array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
-			array(':iso' => $this->getlang)
-		);
-        $newarr = array();
-		foreach ($collection as $item) {
-			$newarr[] = $this->modelCatalog->setItemData($item,null);
+        $override = $this->modelModule->getOverride('category',__FUNCTION__);
+        if(!$override) {
+            $conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent IS NULL ORDER BY p.order_cat';
+            $collection = parent::fetchData(
+                array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
+                array(':iso' => $this->getlang)
+            );
+            $newarr = array();
+            foreach ($collection as $item) {
+                $newarr[] = $this->modelCatalog->setItemData($item, null);
+            }
+            return $newarr;
+        }else{
+            return $override;
         }
-        return $newarr;
     }
 
 
@@ -79,16 +84,21 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 */
     private function getBuildSubCategoryList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent = :id_parent ORDER BY p.order_cat';
-		$collection = parent::fetchData(
-			array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
-			array('iso' => $this->getlang,'id_parent' => $this->id)
-		);
-        $newarr = array();
-		foreach ($collection as $item) {
-			$newarr[] = $this->modelCatalog->setItemData($item,null);
+        $override = $this->modelModule->getOverride('category',__FUNCTION__);
+        if(!$override) {
+            $conditions = ' WHERE lang.iso_lang = :iso AND c.published_cat = 1 AND p.id_parent = :id_parent ORDER BY p.order_cat';
+            $collection = parent::fetchData(
+                array('context' => 'all', 'type' => 'category', 'conditions' => $conditions),
+                array('iso' => $this->getlang, 'id_parent' => $this->id)
+            );
+            $newarr = array();
+            foreach ($collection as $item) {
+                $newarr[] = $this->modelCatalog->setItemData($item, null);
+            }
+            return $newarr;
+        }else{
+            return $override;
         }
-        return $newarr;
     }
 
 
@@ -99,21 +109,26 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 */
     private function getBuildProductList()
     {
-		$conditions = ' WHERE lang.iso_lang = :iso 
+        $override = $this->modelModule->getOverride('product',__FUNCTION__);
+        if(!$override) {
+            $conditions = ' WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL) 
 						AND catalog.default_c = 1 
 						AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat) 
 						ORDER BY catalog.order_p ASC';
-		$collection = parent::fetchData(
-			array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
-			array('iso' => $this->getlang,'id_cat' => $this->id)
-		);
-        $newarr = array();
-		foreach ($collection as $item) {
-			$newarr[] = $this->modelCatalog->setItemData($item,null);
+            $collection = parent::fetchData(
+                array('context' => 'all', 'type' => 'product', 'conditions' => $conditions),
+                array('iso' => $this->getlang, 'id_cat' => $this->id)
+            );
+            $newarr = array();
+            foreach ($collection as $item) {
+                $newarr[] = $this->modelCatalog->setItemData($item, null);
+            }
+            return $newarr;
+        }else{
+            return $override;
         }
-        return $newarr;
     }
 
 
@@ -123,8 +138,13 @@ class frontend_controller_catalog extends frontend_db_catalog {
      */
     private function getBuildCategoryItems()
     {
-        $collection = $this->getItems('cat',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
-        return $this->modelCatalog->setItemData($collection,null);
+        $override = $this->modelModule->getOverride('category',__FUNCTION__);
+        if(!$override) {
+            $collection = $this->getItems('cat', array(':id' => $this->id, ':iso' => $this->getlang), 'one', false);
+            return $this->modelCatalog->setItemData($collection, null);
+        }else{
+            return $override;
+        }
     }
 
     /**
@@ -133,18 +153,23 @@ class frontend_controller_catalog extends frontend_db_catalog {
      */
     private function getBuildProductItems()
     {
-        $collection = $this->getItems('product',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
-        $imgCollection = $this->getItems('images',array(':id'=>$this->id,':iso'=>$this->getlang),'all',false);
-        $associatedCollection = $this->getItems('similar',array(':id'=>$this->id,':iso'=>$this->getlang),'all',false);
-        if($imgCollection != null){
-            $collection['img'] = $imgCollection;
-        }
+        $override = $this->modelModule->getOverride('product',__FUNCTION__);
+        if(!$override) {
+            $collection = $this->getItems('product', array(':id' => $this->id, ':iso' => $this->getlang), 'one', false);
+            $imgCollection = $this->getItems('images', array(':id' => $this->id, ':iso' => $this->getlang), 'all', false);
+            $associatedCollection = $this->getItems('similar', array(':id' => $this->id, ':iso' => $this->getlang), 'all', false);
+            if ($imgCollection != null) {
+                $collection['img'] = $imgCollection;
+            }
 
-        if($associatedCollection != null){
-            $collection['associated'] = $associatedCollection;
-        }
+            if ($associatedCollection != null) {
+                $collection['associated'] = $associatedCollection;
+            }
 
-        return $this->modelCatalog->setItemData($collection,null);
+            return $this->modelCatalog->setItemData($collection, null);
+        }else{
+            return $override;
+        }
     }
 
     /**

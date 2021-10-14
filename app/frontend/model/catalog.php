@@ -260,6 +260,14 @@ class frontend_model_catalog extends frontend_db_catalog {
 							'w' => $defaultimg[0]['width_img'],
 							'h' => $defaultimg[0]['height_img']
 						];
+                        // Plugin
+                        if($newRow != false){
+                            if(is_array($newRow)){
+                                foreach($newRow as $newKey => $newValue){
+                                    $data['associated'][$key][$newKey] = $value[$newValue];
+                                }
+                            }
+                        }
                     }
                 }
                 // Plugin
