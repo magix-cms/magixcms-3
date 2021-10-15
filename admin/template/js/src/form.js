@@ -454,6 +454,9 @@ var globalForm = (function ($, undefined) {
             else {
                 url.replace('&tabs=([^&]*)','&tabs='+sub);
             }
+            if(controller !== '') {
+                url.replace('&controller=([^&]*)','&controller='+controller);
+            }
 
             $(modal).find('form').attr('action',url);
 
