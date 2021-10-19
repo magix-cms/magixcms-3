@@ -119,7 +119,7 @@ class frontend_model_module extends frontend_db_module {
      * @param $method
      * @return array|mixed|void
      */
-    public function getOverride($type,$method){
+    public function getOverride($type,$method,$param_arr= array()){
         $newMethod = array();
         $collection = $this->pluginsCollection->fetchAll();
         $module = ['home','about','pages','news','catalog','category','product'];
@@ -140,7 +140,7 @@ class frontend_model_module extends frontend_db_module {
                     $newMethod = $this->call_method(
                         $this->get_call_class($module_class)
                         , $method,
-                        array());
+                        $param_arr);
                     //function_exists()
                     //print $module_class. ' : '.$method;
                 }

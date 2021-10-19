@@ -43,7 +43,7 @@ class frontend_controller_pages extends frontend_db_pages {
     /**
      * @var
      */
-    protected $template,$header,$data,$modelPages,$modelCore;
+    protected $template,$header,$data,$modelPages,$modelCore,$modelModule;
     public $getlang,$http_error,$id;
 
 	/**
@@ -57,6 +57,7 @@ class frontend_controller_pages extends frontend_db_pages {
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->currentLanguage();
         $this->modelPages = new frontend_model_pages($this->template);
+        $this->modelModule = new frontend_model_module($this->template);
         if (http_request::isGet('id')) {
             $this->id = $formClean->numeric($_GET['id']);
         }
@@ -78,12 +79,18 @@ class frontend_controller_pages extends frontend_db_pages {
      * set Data from database
      * @access private
      */
-    private function getBuildItems()
+    private function getBuildPagesItems()
     {
-		$collection = $this->getItems('page',['id'=>$this->id,'iso'=>$this->getlang],'one',false);
-		$imgCollection = $this->getItems('imgs',['id'=>$this->id,'iso'=>$this->getlang],'all',false);
-		if($imgCollection != null) $collection['img'] = $imgCollection;
-		return $this->modelPages->setItemData($collection,null);
+        $override = $this->modelModule->getOverride('pages',__FUNCTION__);
+        if(!$override) {
+            $collection = $this->getItems('page', ['id' => $this->id, 'iso' => $this->getlang], 'one', false);
+            $imgCollection = $this->getItems('imgs', ['id' => $this->id, 'iso' => $this->getlang], 'all', false);
+            if ($imgCollection != null) $collection['img'] = $imgCollection;
+            return $this->modelPages->setItemData($collection, null);
+
+        }else{
+            return $override;
+        }
     }
 
     /**
@@ -110,14 +117,20 @@ class frontend_controller_pages extends frontend_db_pages {
      */
     private function getBuildParent($page)
     {
-        $collection = $this->getItems('page',array('id'=>$page['id_parent'],'iso'=>$this->getlang),'one',false);
-        return $this->modelPages->setItemData($collection,null);
+        $override = $this->modelModule->getOverride('pages',__FUNCTION__);
+        if(!$override) {
+            $collection = $this->getItems('page', array('id' => $page['id_parent'], 'iso' => $this->getlang), 'one', false);
+            return $this->modelPages->setItemData($collection, null);
+
+        }else{
+            return $override;
+        }
     }
 
     /**
      * @return array
      */
-    private function getBuildItemsTree(){
+    private function getBuildPagesItemsTree(){
         $modelSystem = new frontend_model_core();
 		$current = $modelSystem->setCurrentId();
 		$data = $this->modelPages->getData(
@@ -142,11 +155,11 @@ class frontend_controller_pages extends frontend_db_pages {
      */
     private function getData()
     {
-        $data = $this->getBuildItems();
+        $data = $this->getBuildPagesItems();
         $parent = $data['id_parent'] !== null ? $this->getBuildParent($data) : null;
         $childs = $this->getBuildChildItems();
         $hreflang = $this->getBuildLangItems();
-        $pagesTree = $this->getBuildItemsTree();
+        $pagesTree = $this->getBuildPagesItemsTree();
         $this->template->assign('pages',$data,true);
         $this->template->assign('parent',$parent,true);
         if(isset($childs[0]['subdata'])) $this->template->assign('childs',$childs[0]['subdata'],true);
