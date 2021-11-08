@@ -119,19 +119,19 @@ class http_session extends sessionUtils{
 						true
 					);
 
-					if(!isset($_COOKIE[$session_name])) {
-						session_name($session_name);
-						ini_set('session.hash_function',1);
-						session_start();
-						session_regenerate_id();
-						$ssid = session_id();
-					}
-					else {
-						$ssid = $_COOKIE[$session_name];
-						session_name($session_name);
-						session_id($ssid);
-						session_start();
-					}
+                    if(!isset($_COOKIE[$session_name])) ini_set('session.hash_function',1);
+                    session_name($session_name);
+                    $ssid = !isset($params['ssid']) ? ($_COOKIE[$session_name] ?? null) : $params['ssid'];
+
+                    if($ssid === null) {
+                        session_start();
+                        session_regenerate_id();
+                        $ssid = session_id();
+                    }
+                    else {
+                        session_id($ssid);
+                        session_start();
+                    }
 				}
 				return $ssid;
 			}
