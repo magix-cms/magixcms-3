@@ -428,23 +428,30 @@ class frontend_model_template{
             component_core_system::basePath() . "skin/" . $this->theme . '/i18n/'
         );
     }
+	
 	/**
 	 * Ajoute un ou plusieurs dossier de configuration et charge les fichiers associés ainsi que les variables
 	 * @access public
 	 * @param array $addConfigDir
 	 * @param array $load_files
 	 * @param bool $debug
-	 * @throws Exception
 	 */
 	public function addConfigFile(array $addConfigDir,array $load_files,$debug=false){
-		if(is_array($addConfigDir)){
-            $setDefaultConfigDir = $this->setDefaultConfigDir();
-            //frontend_model_smarty::getInstance()->addConfigDir($addConfigDir);
-            frontend_model_smarty::getInstance($this)->setConfigDir(array_merge($setDefaultConfigDir,$addConfigDir));
+		try {
+			if(is_array($addConfigDir)){
+				$setDefaultConfigDir = $this->setDefaultConfigDir();
+				//frontend_model_smarty::getInstance()->addConfigDir($addConfigDir);
+				frontend_model_smarty::getInstance($this)->setConfigDir(array_merge($setDefaultConfigDir,$addConfigDir));
+			}
+			else{
+				throw new Exception('Error: addConfigDir is not array');
+			}
 		}
-		else{
-			throw new Exception('Error: addConfigDir is not array');
+		catch(Exception $e) {
+			$logger = new debug_logger(MP_LOG_DIR);
+			$logger->log('php', 'conf', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
 		}
+
 		/*if(is_array($load_files)){
 			foreach ($load_files as $row=>$val){
 				if(is_string($row)){
@@ -456,19 +463,25 @@ class frontend_model_template{
 				}
 			}
 		}*/
-		if(is_array($load_files)){
-            foreach ($load_files as $row=>$val){
-                if(is_string($row)){
-                    if(array_key_exists($row, $load_files)){
-                        frontend_model_smarty::getInstance($this)->configLoad($row.$this->lang.'.conf',$val);
-                    }
-                }else{
-                    frontend_model_smarty::getInstance($this)->configLoad($load_files[$row].$this->lang.'.conf');
-                }
-            }
-        }
-		else{
-			throw new Exception('Error: load_files is not array');
+		try {
+			if(is_array($load_files)){
+				foreach ($load_files as $row=>$val){
+					if(is_string($row)){
+						if(array_key_exists($row, $load_files)){
+							frontend_model_smarty::getInstance($this)->configLoad($row.$this->lang.'.conf',$val);
+						}
+					}else{
+						frontend_model_smarty::getInstance($this)->configLoad($load_files[$row].$this->lang.'.conf');
+					}
+				}
+			}
+			else{
+				throw new Exception('Error: load_files is not array');
+			}
+		}
+		catch(Exception $e) {
+			$logger = new debug_logger(MP_LOG_DIR);
+			$logger->log('php', 'conf', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
 		}
 
 		if($debug!=false){
