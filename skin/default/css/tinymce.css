@@ -5,6 +5,8 @@
   --dark-white: #eee;
   --smooth-grey: #ccc;
   --light-grey: #9e9e9e;
+  --grey: #757575;
+  --dark-grey: #424242;
   --black: #000;
   --main-color-h: 219;
   --main-color-s: 48%;
@@ -61,6 +63,9 @@
   --header-h: calc(var(--spacer) + 50px);
   --footbar-h: calc(1rem * var(--btn-line-height, var(--line-height)) + 2rem);
   --spacer: 1rem;
+  --label-color: var(--text-color);
+  --ph-color: var(--smooth-grey);
+  --ph-brd-color: var(--smooth-grey);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -3575,6 +3580,9 @@ input[type="button"].btn-block {
 .ico-arrow_right:before {
   content: "\e91c";
 }
+.ico-assignment:before {
+  content: "\e932";
+}
 .ico-check:before {
   content: "\e91d";
 }
@@ -3583,6 +3591,9 @@ input[type="button"].btn-block {
 }
 .ico-copyright:before {
   content: "\e91e";
+}
+.ico-credit_card:before {
+  content: "\e92c";
 }
 .ico-directions:before {
   content: "\e91f";
@@ -3620,6 +3631,12 @@ input[type="button"].btn-block {
 .ico-label:before {
   content: "\e90a";
 }
+.ico-local_shipping:before {
+  content: "\e928";
+}
+.ico-shopping_cart:before {
+  content: "\e91a";
+}
 .ico-print:before {
   content: "\e901";
 }
@@ -3647,8 +3664,14 @@ input[type="button"].btn-block {
 .ico-square:before {
   content: "\e913";
 }
+.ico-storefront:before {
+  content: "\e92a";
+}
 .ico-toc:before {
   content: "\e930";
+}
+.ico-verified_user:before {
+  content: "\e931";
 }
 .ico-warning:before {
   content: "\e902";

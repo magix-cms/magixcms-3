@@ -253,7 +253,7 @@
 #4e342e,
 #3e2723;
 
-@grey: #fff,
+@greys: #fff,
 #fafafa,
 #f5f5f5,
 #eeeeee,
@@ -288,11 +288,13 @@
 #343a40,
 #212529;
 
-@white: extract(@grey, 1);
-@smooth-white: extract(@grey, 3);
-@light-grey: extract(@grey, 7);
-@black: extract(@grey, 12);
-
+@white: extract(@greys, 1);
+@smooth-white: extract(@greys, 3);
+@light-grey: extract(@greys, 7);
+@grey: extract(@greys, 8);
+@dark-grey: extract(@greys, 10);
+@black: extract(@greys, 12);
+ 
 /**
  * @color string base color
  * @level int multiplier

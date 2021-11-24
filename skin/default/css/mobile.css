@@ -2400,6 +2400,9 @@ tbody.collapse.in {
 .ico-arrow_right:before {
   content: "\e91c";
 }
+.ico-assignment:before {
+  content: "\e932";
+}
 .ico-check:before {
   content: "\e91d";
 }
@@ -2408,6 +2411,9 @@ tbody.collapse.in {
 }
 .ico-copyright:before {
   content: "\e91e";
+}
+.ico-credit_card:before {
+  content: "\e92c";
 }
 .ico-directions:before {
   content: "\e91f";
@@ -2445,6 +2451,12 @@ tbody.collapse.in {
 .ico-label:before {
   content: "\e90a";
 }
+.ico-local_shipping:before {
+  content: "\e928";
+}
+.ico-shopping_cart:before {
+  content: "\e91a";
+}
 .ico-print:before {
   content: "\e901";
 }
@@ -2472,8 +2484,14 @@ tbody.collapse.in {
 .ico-square:before {
   content: "\e913";
 }
+.ico-storefront:before {
+  content: "\e92a";
+}
 .ico-toc:before {
   content: "\e930";
+}
+.ico-verified_user:before {
+  content: "\e931";
 }
 .ico-warning:before {
   content: "\e902";
@@ -2508,20 +2526,11 @@ tbody.collapse.in {
 .ico-soundcloud:before {
   content: "\e90f";
 }
-.ico-tiktok:before {
-  content: "\e915";
-}
-.ico-tumblr:before {
-  content: "\e916";
-}
 .ico-twitter:before {
   content: "\e910";
 }
 .ico-viadeo:before {
   content: "\e911";
-}
-.ico-youtube:before {
-  content: "\e917";
 }
 .ico-at:before {
   content: "\e900";
