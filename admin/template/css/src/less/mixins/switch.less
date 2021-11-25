@@ -11,7 +11,7 @@
 @switch-unchecked-track-color-dark: #fff;
 @switch-unchecked-focus-ring-color-dark: #f1f1f1;
 @switch-disabled-knob-color: #bdbdbd;
-@switch-disabled-knob-color-dark: #424242;
+@switch-disabled-knob-color-dark: #424242; 
 
 // postcss-bem-linter: define switch
 .switch {
@@ -72,7 +72,7 @@
 			height: @switch-knob-diameter;
 			transform: translateX(0);
 			transition: transform 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
-			border-radius: @switch-knob-diameter / 2;
+			border-radius: (@switch-knob-diameter / 2);
 			background-color: @switch-unchecked-knob-color;
 			z-index: 1;
 
@@ -85,7 +85,7 @@
 				height: @switch-focus-ring-diameter;
 				transform: scale(0);
 				transition: transform 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
-				border-radius: @switch-focus-ring-diameter / 2;
+				border-radius: (@switch-focus-ring-diameter / 2);
 				background-color: transparent;
 				opacity: .2;
 				content: "";
@@ -102,7 +102,7 @@
 			height: @switch-focus-ring-diameter;
 			transform: scale(1);
 			transition: transform 90ms cubic-bezier(.4, 0, .2, 1), background-color 90ms cubic-bezier(.4, 0, .2, 1);
-			border-radius: @switch-focus-ring-diameter / 2;
+			border-radius: (@switch-focus-ring-diameter / 2);
 			background-color: @switch-unchecked-focus-ring-color;
 		}
 	}
