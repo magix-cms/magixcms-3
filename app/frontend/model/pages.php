@@ -163,7 +163,7 @@ class frontend_model_pages extends frontend_db_pages{
 						'attribute_img' =>'page'
 					));
 					$data['img']['default'] = [
-						'src' => isset($imagePlaceHolder['pages']) ? $imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png',
+						'src' => isset($this->imagePlaceHolder['pages']) ? $this->imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png',
 						'w' => $defaultimg[0]['width_img'],
 						'h' => $defaultimg[0]['height_img']
 					];

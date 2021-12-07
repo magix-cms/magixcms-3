@@ -184,7 +184,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 						'attribute_img' =>'product'
 					));
 					$data['img']['default'] = [
-						'src' => isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
+						'src' => isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
 						'w' => $defaultimg[0]['width_img'],
 						'h' => $defaultimg[0]['height_img']
 					];
@@ -256,7 +256,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 							'attribute_img' =>'product'
 						));
 						$data['associated'][$key]['img']['default'] = [
-							'src' => isset($imagePlaceHolder['product']) ? $imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
+							'src' => isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
 							'w' => $defaultimg[0]['width_img'],
 							'h' => $defaultimg[0]['height_img']
 						];
@@ -336,7 +336,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 					'attribute_img' =>'category'
 				));
 				$data['img']['default'] = [
-					'src' => isset($imagePlaceHolder['category']) ? $imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png',
+					'src' => isset($this->imagePlaceHolder['category']) ? $this->imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png',
 					'w' => $defaultimg[0]['width_img'],
 					'h' => $defaultimg[0]['height_img']
 				];

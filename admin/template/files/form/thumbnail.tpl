@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-ph-12">
+    {*<div class="col-ph-12">
         <div id="progress-thumbnail" class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar-state">
@@ -8,6 +8,9 @@
             </div>
             <span class="state">Connexion au serveur ...</span>
         </div>
+    </div>*}
+    <div class="col-ph-12">
+        {include file="section/form/progressBar.tpl"}
     </div>
     <form id="new_thumbnail" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="form-gen col-ph-12 col-sm-6 col-md-4">
         <div class="form-group">
