@@ -21,7 +21,9 @@ class frontend_db_plugins
             return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
         } elseif($config['context'] === 'one') {
             switch ($config['type']) {
-
+                case 'installed':
+                    $sql = 'SELECT * FROM mc_plugins WHERE name = :name';
+                    break;
             }
             return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
         }

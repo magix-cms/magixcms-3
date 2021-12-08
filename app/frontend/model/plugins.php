@@ -32,15 +32,14 @@
  # versions in the future. If you wish to customize MAGIX CMS for your
  # needs please refer to http://www.magix-cms.com for more information.
  */
-class frontend_model_plugins{
-    protected $template, $controller_name, $dbPlugins,$plugin ,$collectionLanguage,$DBPlugins;
+class frontend_model_plugins {
+    protected $template, $controller_name, $plugin ,$collectionLanguage, $DBPlugins;
 
 	/**
 	 * frontend_model_plugins constructor.
 	 * @param null|frontend_model_template $t
 	 */
-    public function __construct($t = null)
-    {
+    public function __construct($t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $formClean = new form_inputEscape();
         $this->DBPlugins = new frontend_db_plugins();
@@ -50,6 +49,17 @@ class frontend_model_plugins{
         //$this->data = new backend_model_data($this);
         $this->collectionLanguage = new component_collections_language();
     }
+
+    /**
+     * Check whenever the plugin is installed or not
+     * @param string $name
+     * @return mixed|string|null
+     * @throws Exception
+     */
+    public function isInstalled(string $name) {
+        return $this->DBPlugins->fetchData(['context' => 'one','type' => 'installed'],['name' => $name]);
+    }
+
     /**
      * @param $routes
      * @param $template
@@ -129,4 +139,3 @@ class frontend_model_plugins{
         return $newData;
     }
 }
-?>
