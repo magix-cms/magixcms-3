@@ -229,18 +229,20 @@ class frontend_model_data{
 	 * @return mixed
 	 */
 	private function setItems(&$context, $type, $id = null) {
-		if($id) {
-			if(is_array($id)) {
-				$params = $id;
-			}
-			else {
-				$params = array(':id' => $id);
-			}
-			$context = $context ? $context : 'one';
-		} else {
-			$params = [];
-			$context = $context ? $context : 'all';
-		}
+        $params = [];
+        if($id) {
+            if(is_array($id)) {
+                $params = $id;
+            }
+            else {
+                $params = ['id' => $id];
+            }
+            $context = $context ?: 'one';
+        }
+        else {
+
+            $context = $context ?: 'all';
+        }
 		return $this->db->fetchData(array('context'=>$context,'type'=>$type),$params);
 	}
 
