@@ -311,5 +311,24 @@ class backend_model_plugins{
             $this->template->display($template, $cache_id, $compile_id, $parent);
         }
     }
+    /**
+     * @param null $template
+     * @param null $plugin
+     * @param null $cache_id
+     * @param null $compile_id
+     * @param null $parent
+     */
+    public function fetch($template = null, $plugin = null, $cache_id = null, $compile_id = null, $parent = null){
+        if($plugin != null){
+            $this->template->addTemplateDir($this->template->pluginsBasePath().$plugin.'/skin/admin/');
+        }else{
+            $this->template->addTemplateDir($this->template->pluginsBasePath().$this->plugin.'/skin/admin/');
+        }
+        if(!$this->template->isCached($template, $cache_id, $compile_id, $parent)){
+            return $this->template->fetch($template, $cache_id, $compile_id, $parent);
+        }else{
+            return $this->template->fetch($template, $cache_id, $compile_id, $parent);
+        }
+    }
 }
 ?>
