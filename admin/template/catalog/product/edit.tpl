@@ -84,7 +84,9 @@
             </div>
         </section>
     </div>
+        {block name="modal"}
         {include file="modal/delete.tpl" data_type='product' title={#modal_delete_title#|ucfirst} info_text=true delete_message={#delete_img_message#}}
+        {/block}
     {/if}
 {/block}
 {block name="foot" append}
