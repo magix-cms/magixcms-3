@@ -565,7 +565,7 @@ textarea.form-control {
 .nice-form textarea ~ label,
 .nice-form div ~ label {
   bottom: 0;
-  color: var(--label-color);
+  color: rgba(0, 0, 0, 0.26);
   font-size: 16px;
   font-weight: 400;
   left: 0;
@@ -619,7 +619,7 @@ textarea.form-control {
 .nice-form select,
 .nice-form textarea {
   border: none;
-  border-bottom: 1px solid var(--ph-brd-color);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   box-shadow: none;
   font-size: 16px;
   font-family: "Helvetica", "Arial", sans-serif;
@@ -706,22 +706,22 @@ textarea.form-control {
 .nice-form input:focus::-webkit-input-placeholder,
 .nice-form textarea:focus::-webkit-input-placeholder,
 .nice-form select:focus::-webkit-input-placeholder {
-  color: var(--ph-color);
+  color: rgba(0, 0, 0, 0.26);
 }
 .nice-form input:focus::-moz-placeholder,
 .nice-form textarea:focus::-moz-placeholder,
 .nice-form select:focus::-moz-placeholder {
-  color: var(--ph-color);
+  color: rgba(0, 0, 0, 0.26);
 }
 .nice-form input:focus:-ms-input-placeholder,
 .nice-form textarea:focus:-ms-input-placeholder,
 .nice-form select:focus:-ms-input-placeholder {
-  color: var(--ph-color);
+  color: rgba(0, 0, 0, 0.26);
 }
 .nice-form input:focus:-moz-placeholder,
 .nice-form textarea:focus:-moz-placeholder,
 .nice-form select:focus:-moz-placeholder {
-  color: var(--ph-color);
+  color: rgba(0, 0, 0, 0.26);
 }
 .input-group {
   position: relative;

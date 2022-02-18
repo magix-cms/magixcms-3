@@ -19,10 +19,10 @@
                         </a>
                     </li>
                 {/if}
-                {if $companyData.socials.youtube != null}
-                    <li class="share-youtube">
-                        <a href="{$companyData.socials.youtube}" title="{#yt_follow_title#|ucfirst}" class="targetblank">
-                            <span class="fab ico ico-youtube"></span><span class="sr-only">{#yt_follow_label#|ucfirst}</span>
+                {if $companyData.socials.google != null}
+                    <li class="share-google">
+                        <a href="{$companyData.socials.google}" title="{#gg_follow_title#|ucfirst}" rel="publisher" class="targetblank">
+                            <span class="fab ico ico-google-plus-g"></span><span class="sr-only">{#gg_follow_label#|ucfirst}</span>
                         </a>
                     </li>
                 {/if}
@@ -65,20 +65,6 @@
                     <li class="share-soundcloud">
                         <a href="{$companyData.socials.soundcloud}" title="{#sc_follow_title#|ucfirst}" class="targetblank">
                             <span class="fab ico ico-soundcloud"></span><span class="sr-only">{#sc_follow_label#|ucfirst}</span>
-                        </a>
-                    </li>
-                {/if}
-                {if $companyData.socials.tumblr != null}
-                    <li class="share-tumblr">
-                        <a href="{$companyData.socials.tumblr}" title="{#tr_follow_title#|ucfirst}" class="targetblank">
-                            <span class="fab ico ico-tumblr"></span><span class="sr-only">{#tr_follow_label#|ucfirst}</span>
-                        </a>
-                    </li>
-                {/if}
-                {if $companyData.socials.tiktok != null}
-                    <li class="share-tiktok">
-                        <a href="{$companyData.socials.tiktok}" title="{#tk_follow_title#|ucfirst}" class="targetblank">
-                            <span class="fab ico ico-tiktok"></span><span class="sr-only">{#tk_follow_label#|ucfirst}</span>
                         </a>
                     </li>
                 {/if}

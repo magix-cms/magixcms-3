@@ -5,8 +5,6 @@
   --dark-white: #eee;
   --smooth-grey: #ccc;
   --light-grey: #9e9e9e;
-  --grey: #757575;
-  --dark-grey: #424242;
   --black: #000;
   --main-color-h: 219;
   --main-color-s: 48%;
@@ -23,11 +21,6 @@
   --dark-color-l: 20%;
   --dark-color-a: 1;
   --dark-color: hsla(var(--dark-color-h), var(--dark-color-s), var(--dark-color-l), var(--dark-color-a));
-  --green-color-h: 120;
-  --green-color-s: 39%;
-  --green-color-l: 54%;
-  --green-color-a: 1;
-  --green-color: hsla(var(--green-color-h), var(--green-color-s), var(--green-color-l), var(--green-color-a));
   --default-color-h: 0;
   --default-color-s: 0%;
   --default-color-l: 100%;
@@ -63,9 +56,6 @@
   --header-h: calc(var(--spacer) + 50px);
   --footbar-h: calc(1rem * var(--btn-line-height, var(--line-height)) + 2rem);
   --spacer: 1rem;
-  --label-color: var(--text-color);
-  --ph-color: var(--smooth-grey);
-  --ph-brd-color: var(--smooth-grey);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -3332,125 +3322,6 @@ input[type="button"].btn-block {
 .btn.btn-dark-white:hover:before {
   width: calc(100% + 4px);
 }
-.btn.btn-green {
-  --btn-color: var(--white);
-  --btn-bg-h: var(--green-color-h);
-  --btn-bg-s: var(--green-color-s);
-  --btn-bg-l: var(--green-color-l);
-  --btn-bg-a: var(--green-color-a);
-  --btn-brd-h: var(--green-color-h);
-  --btn-brd-s: var(--green-color-s);
-  --btn-brd-l: var(--green-color-l);
-  --btn-brd-a: var(--green-color-a);
-}
-.btn.btn-green-outline {
-  --btn-color: var(--green-color);
-  --btn-bg: transparent;
-  --btn-brd: var(--green-color);
-  --btn-hover-bg-color: transparent;
-  --btn-ahf-bg-color: transparent;
-  --btn-hover-border-color: var(--green-color);
-  --btn-focus-border-color: var(--green-color);
-  --btn-padding-vertical: 0.5rem;
-  --btn-padding-horizontal: 1rem;
-  --btn-font-size: 1rem;
-  --btn-line-height: 1.61803399;
-  --btn-border-radius: 0;
-  position: relative;
-  border-width: 2px;
-  z-index: 2;
-  transition: all 0.25s ease 0s;
-}
-.btn.btn-green-outline:before {
-  content: '';
-  position: absolute;
-  display: inline-block;
-  height: calc(100% + 4px);
-  width: 0;
-  top: -2px;
-  left: -2px;
-  background-color: var(--green-color);
-  z-index: -1;
-  transition: 0.25s;
-}
-.btn.btn-green-outline:hover {
-  color: var(--white);
-}
-.btn.btn-green-outline:hover:before {
-  width: calc(100% + 4px);
-}
-.btn.btn-green-invert {
-  --btn-color: var(--text-color);
-  --btn-bg: transparent;
-  --btn-brd: var(--text-color);
-  --btn-hover-bg-color: transparent;
-  --btn-ahf-bg-color: transparent;
-  --btn-hover-border-color: var(--green-color);
-  --btn-focus-border-color: var(--green-color);
-  --btn-padding-vertical: 0.5rem;
-  --btn-padding-horizontal: 1rem;
-  --btn-font-size: 1rem;
-  --btn-line-height: 1.61803399;
-  --btn-border-radius: 0;
-  position: relative;
-  border-width: 2px;
-  z-index: 2;
-  transition: all 0.25s ease 0s;
-}
-.btn.btn-green-invert:before {
-  content: '';
-  position: absolute;
-  display: inline-block;
-  height: calc(100% + 4px);
-  width: 0;
-  top: -2px;
-  left: -2px;
-  background-color: var(--green-color);
-  z-index: -1;
-  transition: 0.25s;
-}
-.btn.btn-green-invert:hover {
-  color: var(--white);
-}
-.btn.btn-green-invert:hover:before {
-  width: calc(100% + 4px);
-}
-.btn.btn-green-white {
-  --btn-color: var(--white);
-  --btn-bg: transparent;
-  --btn-brd: var(--white);
-  --btn-hover-bg-color: transparent;
-  --btn-ahf-bg-color: transparent;
-  --btn-hover-border-color: var(--green-color);
-  --btn-focus-border-color: var(--green-color);
-  --btn-padding-vertical: 0.5rem;
-  --btn-padding-horizontal: 1rem;
-  --btn-font-size: 1rem;
-  --btn-line-height: 1.61803399;
-  --btn-border-radius: 0;
-  position: relative;
-  border-width: 2px;
-  z-index: 2;
-  transition: all 0.25s ease 0s;
-}
-.btn.btn-green-white:before {
-  content: '';
-  position: absolute;
-  display: inline-block;
-  height: calc(100% + 4px);
-  width: 0;
-  top: -2px;
-  left: -2px;
-  background-color: var(--green-color);
-  z-index: -1;
-  transition: 0.25s;
-}
-.btn.btn-green-white:hover {
-  color: var(--white);
-}
-.btn.btn-green-white:hover:before {
-  width: calc(100% + 4px);
-}
 .btn-invert-white {
   --btn-color: var(--white);
   --btn-bg: transparent;
@@ -3580,9 +3451,6 @@ input[type="button"].btn-block {
 .ico-arrow_right:before {
   content: "\e91c";
 }
-.ico-assignment:before {
-  content: "\e932";
-}
 .ico-check:before {
   content: "\e91d";
 }
@@ -3591,9 +3459,6 @@ input[type="button"].btn-block {
 }
 .ico-copyright:before {
   content: "\e91e";
-}
-.ico-credit_card:before {
-  content: "\e92c";
 }
 .ico-directions:before {
   content: "\e91f";
@@ -3631,12 +3496,6 @@ input[type="button"].btn-block {
 .ico-label:before {
   content: "\e90a";
 }
-.ico-local_shipping:before {
-  content: "\e928";
-}
-.ico-shopping_cart:before {
-  content: "\e91a";
-}
 .ico-print:before {
   content: "\e901";
 }
@@ -3664,14 +3523,8 @@ input[type="button"].btn-block {
 .ico-square:before {
   content: "\e913";
 }
-.ico-storefront:before {
-  content: "\e92a";
-}
 .ico-toc:before {
   content: "\e930";
-}
-.ico-verified_user:before {
-  content: "\e931";
 }
 .ico-warning:before {
   content: "\e902";

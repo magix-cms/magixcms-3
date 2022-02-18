@@ -1,3 +1,7 @@
+@import (reference) "components/variables";
+@import (reference) "components/colors";
+@import (reference) "components/theme";
+
 // --- Theme Colors
 :root {
 	// --- Colors
@@ -6,8 +10,6 @@
 	--dark-white: #eee;
 	--smooth-grey: #ccc;
 	--light-grey: @light-grey;
-	--grey: @grey;
-	--dark-grey: @dark-grey;
 	--black: @black;
 	each(@theme-color, {
 		--@{key}-color-h: hue(@value);
@@ -48,10 +50,6 @@
 	--header-h: @headerH;
 	--footbar-h: @footbarH;
 	--spacer: 1rem;
-	// --- Form
-	--label-color: var(--text-color);
-	--ph-color: var(--smooth-grey);
-	--ph-brd-color: var(--smooth-grey);
 }
 @media (prefers-color-scheme: dark) {
 	:root {

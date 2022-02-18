@@ -4,8 +4,6 @@
   --dark-white: #eee;
   --smooth-grey: #ccc;
   --light-grey: #9e9e9e;
-  --grey: #757575;
-  --dark-grey: #424242;
   --black: #000;
   --main-color-h: 219;
   --main-color-s: 48%;
@@ -22,11 +20,6 @@
   --dark-color-l: 20%;
   --dark-color-a: 1;
   --dark-color: hsla(var(--dark-color-h), var(--dark-color-s), var(--dark-color-l), var(--dark-color-a));
-  --green-color-h: 120;
-  --green-color-s: 39%;
-  --green-color-l: 54%;
-  --green-color-a: 1;
-  --green-color: hsla(var(--green-color-h), var(--green-color-s), var(--green-color-l), var(--green-color-a));
   --default-color-h: 0;
   --default-color-s: 0%;
   --default-color-l: 100%;
@@ -62,9 +55,6 @@
   --header-h: calc(var(--spacer) + 50px);
   --footbar-h: calc(1rem * var(--btn-line-height, var(--line-height)) + 2rem);
   --spacer: 1rem;
-  --label-color: var(--text-color);
-  --ph-color: var(--smooth-grey);
-  --ph-brd-color: var(--smooth-grey);
 }
 @media (prefers-color-scheme: dark) {
   :root {
