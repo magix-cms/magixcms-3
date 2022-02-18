@@ -425,7 +425,7 @@ class frontend_model_about extends frontend_db_about {
 					else{*/
 					foreach ($value as $social_name => $link) {
 						//$this->company['socials'][$social_name] = $about[$social_name];
-						$link = null;
+						$social = [];
 
 						if($about[$social_name] !== null) {
 							switch ($social_name) {
@@ -475,9 +475,13 @@ class frontend_model_about extends frontend_db_about {
 									$link = 'https://www.tiktok.com/@'.$about[$social_name];
 									break;
 							}
+                            $social = [
+                                'id' => $about[$social_name],
+                                'url' => $link
+                            ];
 						}
 
-						$this->company['socials'][$social_name] = $link;
+						$this->company['socials'][$social_name] = $social;
 					}
 					$this->company['socials'] = $this->is_array_empty($this->company['socials']) ? array() : $this->company['socials'];
 					/*}*/

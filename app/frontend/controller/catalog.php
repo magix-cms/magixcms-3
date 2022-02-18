@@ -37,6 +37,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
     private function getItems($type, $id = null, $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
 	/**
 	 * @return array|null
 	 */

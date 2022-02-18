@@ -46,6 +46,15 @@
  */
 class http_request{
     /**
+     * @param string $method
+     * @return bool
+     */
+    public static function isMethod(string $method):bool
+    {
+        return $_SERVER['REQUEST_METHOD'] === $method;
+    }
+
+    /**
      * Checks if variable of POST type exists
      *
      * @param bool $str
