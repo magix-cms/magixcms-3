@@ -6,12 +6,7 @@
 {block name='article:class'} class="container clearfix"{/block}
 {block name='article:type'}Article{/block}
 {block name="styleSheet"}
-    {$css_files = [
-    "/skin/{$theme}/css/newsRoot{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/news{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
-    ]}
+    {$css_files = ["newsRoot","news","lightbox","slider"]}
 {/block}
 
 {block name='article:header' nocache}

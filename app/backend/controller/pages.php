@@ -6,7 +6,7 @@ class backend_controller_pages extends backend_db_pages
     public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset,$name_img,$menu_pages,$id_img,$img_multiple,$imgData,$editimg;
 	public $tableconfig = array(
 		'all' => array(
-			'id_pages',
+			'id_pages' => ['title' => 'id', 'type' => 'text', 'class' => 'fixed-td-md text-center'],
 			'name_pages' => array('title' => 'name'),
 			'parent_pages' => array('col' => 'name_pages', 'title' => 'name'),
 			'img_pages' => array('title' => 'img','type' => 'bin', 'input' => null, 'class' => ''),
@@ -18,7 +18,7 @@ class backend_controller_pages extends backend_db_pages
 			'date_register'
 		),
 		'parent' => array(
-			'id_pages',
+			'id_pages' => ['title' => 'id', 'type' => 'text', 'class' => 'fixed-td-md text-center'],
 			'name_pages' => array('title' => 'name'),
 			'img_pages' => array('title' => 'img','type' => 'bin', 'input' => null, 'class' => ''),
 			'resume_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
@@ -34,8 +34,7 @@ class backend_controller_pages extends backend_db_pages
 	 * backend_controller_pages constructor.
 	 * @param null|object $t
 	 */
-    public function __construct($t = null)
-    {
+    public function __construct($t = null) {
         $this->template = $t ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();

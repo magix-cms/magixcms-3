@@ -33,7 +33,7 @@
         ['Raleway' => '300..700italic']         Raleway font family with 300 to 700 weight italic
         ['Raleway' => '300,400..700,400..700italic,900']    Raleway font family with 300 weight, 400 to 700 weight normal and italic, 900 weight
     *}
-    {include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,400italic,700'] css2=false}
+    {if $smarty.cookies.ggWebfontCookies === 'true'}{include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,400italic,700'] css2=false}{/if}
     {* Please try to use icomoon to create a small iconfont and reduce load work, uncomment the next lines if you use icofont *}
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.woff" as="font" type="font/woff" crossorigin="anonymous">
@@ -53,17 +53,17 @@
     {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/modernizr.min.js,skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js&amp;{$smarty.now}{/capture}
     <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" async></script>*}
     {$basecss = [
-        "/skin/{$theme}/css/properties{if $setting.mode.value !== 'dev'}.min{/if}.css",
-        "/skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css",
-        "/skin/{$theme}/css/content{if $setting.mode.value !== 'dev'}.min{/if}.css"
+    "properties",
+    "{$viewport}",
+    "content"
     ]}
-    {if $setting['maintenance']['value'] === '1'}{$basecss[] = "/skin/{$theme}/css/maintenance{if $setting.mode.value !== 'dev'}.min{/if}.css"}{/if}
+    {if $setting['maintenance']['value'] === '1'}{$basecss[] = "maintenance"}{/if}
     {$css_files = []}
     {block name="styleSheet"}{/block}
     {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}
-    {if $setting['analytics']['value']}{include file="section/brick/analytics.tpl" aid=$setting['analytics']['value']}{/if}
-    <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
+    {if $setting['analytics']['value'] && $smarty.cookies.analyticCookies === 'true'}{include file="section/brick/analytics.tpl" aid=$setting['analytics']['value']}{/if}
+    {if in_array($browser,['Safari','Opera'])}<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>{/if}
 </head>
 <body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
 {if $setting['maintenance']['value'] === '1'}{include file="section/brick/maintenance.tpl"}{/if}
@@ -95,7 +95,7 @@
         use_native: true
     };
 </script>
-<script async src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js"></script>
+{if in_array($browser,['Safari','Opera'])}<script async src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.5.0/dist/lazyload.min.js"></script>{/if}
 {$jquery = false}
 {$basejs = [
 'group' => [],
@@ -111,6 +111,7 @@
 ]
 ]}
 {if $touch}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}viewport{if !$dev}.min{/if}.js"}{/if}
+{if $smarty.cookies.embedCookies === 'true'}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}ytplayer{if !$dev}.min{/if}.js"}{/if}
 {$js_files = []}
 {block name="scripts"}{/block}
 {include file="section/brick/scripts.tpl" js_files=array_merge_recursive($basejs,$js_files) jquery=$jquery}

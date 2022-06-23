@@ -42,18 +42,34 @@
 
 @paragraph-margin-bottom: 1rem;
 
-@font-size-h1: 2.5rem;
-@font-size-h2: 2rem;
-@font-size-h3: 1.75rem;
-@font-size-h4: 1.5rem;
-@font-size-h5: 1.25rem;
-@font-size-h6: 1rem;
+@headinds-font-sizes: {
+	h1: 2.5rem;
+	h2: 2rem;
+	h3: 1.75rem;
+	h4: 1.5rem;
+	h5: 1.25rem;
+	h6: 1rem;
+}
 
 @headings-font-family: @font-family-sans-serif;
-@headings-font-weight: 500;
+@headings-font-weight: 700;
 @headings-font-style: normal;
 @headings-line-height: 1.2;
-@headings-margin-bottom: calc(var(--spacer)/2);
+@headings-margin-bottom: var(--spacer);
+
+@display-font-sizes: {
+	d1: 5rem;
+	d2: 4.5rem;
+	d3: 4rem;
+	d4: 3.5rem;
+	d5: 3rem;
+	d6: 2.5rem;
+}
+@display-font-family: @headings-font-family;
+@display-font-weight: 700;
+@display-font-style: italic;
+@display-line-height: @headings-line-height;
+@display-margin-bottom: calc(var(--spacer) * 2);
 
 @lead-font-size: 1.15rem;
 @lead-font-weight: 300;
@@ -250,13 +266,13 @@
 @z-allhover: 				100;
 @z-fixed:  					200;
 @z-drawer: 					300;
-@zindex-navbar:            	10;
-@zindex-dropdown:          	10;
-@zindex-popover:           	60;
-@zindex-tooltip:           	70;
-@zindex-navbar-fixed:      	30;
-@zindex-modal-background:  	40;
-@zindex-modal:             	50;
+@zindex-navbar:            	1010;
+@zindex-dropdown:          	1010;
+@zindex-popover:           	1060;
+@zindex-tooltip:           	1070;
+@zindex-navbar-fixed:      	1030;
+@zindex-modal-background:  	1040;
+@zindex-modal:             	1050;
 
 
 //== Media queries breakpoints
@@ -277,7 +293,7 @@
 	// Large screen / wide desktop
 	lg: 75em; // 1200px
 	// Extra Large screen / extra wide desktop
-	xl: 90em; // 1440px
+	xl: 102.25em; // 1636px
 };
 
 // So media queries don't overlap when required, provide a maximum

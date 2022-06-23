@@ -5,9 +5,7 @@
 {block name='body:class'}news-page{/block}
 {block name="webType"}CollectionPage{/block}
 {block name="styleSheet"}
-    {$css_files = [
-    "/skin/{$theme}/css/newsRoot{if $setting.mode.value !== 'dev'}.min{/if}.css"
-    ]}
+    {$css_files = ["newsRoot"]}
 {/block}
 
 {block name='article'}

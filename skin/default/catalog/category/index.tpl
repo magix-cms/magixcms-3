@@ -3,11 +3,7 @@
 {block name="description" nocache}{$cat.seo.description}{/block}
 {block name='body:id'}category{/block}
 {block name="styleSheet"}
-    {$css_files = [
-    "/skin/{$theme}/css/catalog{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
-    ]}
+    {$css_files = ["catalog","lightbox","slider"]}
 {/block}
 
 {block name='article'}

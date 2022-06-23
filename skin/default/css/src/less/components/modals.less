@@ -33,6 +33,9 @@
 	outline: 0;
 
 	.close {
+		position: absolute;
+		top: 0;
+		right: 0;
 		//float: right;
 		//font-size: (@font-size-base * 1.5);
 		//font-weight: @close-font-weight;
@@ -40,7 +43,7 @@
 		color: @close-color;
 		//text-shadow: @close-text-shadow;
 		.opacity(.2);
-		padding: 0;
+		padding: 1.5rem;
 		cursor: pointer;
 		background: transparent;
 		border: 0;
@@ -56,7 +59,7 @@
 	}
 }
 
-.modal-open .modal {
+.modal-open .modal.in {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -87,8 +90,9 @@
 	-webkit-box-direction: normal;
 	-ms-flex-direction: column;
 	flex-direction: column;
-	width: ~"calc(100% - 30px)";
-	min-width: @screen-ph-min;
+	/*width: ~"calc(100% - 30px)";*/
+	width: ~"calc(100vw - (var(--spacer) * 2))";
+	min-width: 20em;
 	.auto-transition(.2s; @fct: ease-in-out);
 	-webkit-transform: translateY(150px) scale(0.8);
 	transform: translateY(150px) scale(0.8);
@@ -135,7 +139,7 @@
 	//height: 100vh;
 	//overflow: hidden;
 
-	.modal {
+	.modal.in {
 		visibility: visible;
 		opacity: 1;
 		z-index: @zindex-modal;
@@ -162,7 +166,7 @@
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
-	padding: 24px 24px 0;
+	padding: 1.5rem 1.5rem 0;
 	flex-flow: row-reverse;
 	justify-content: space-between;
 }
@@ -194,7 +198,7 @@
 	//text-decoration: inherit;
 	//text-transform: inherit;
 	margin-top: 20px;
-	padding: 0 24px 24px;
+	padding: 0 1.5rem 1.5rem;
 }
 
 // Footer (for actions)

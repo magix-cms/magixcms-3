@@ -98,7 +98,11 @@ class backend_db_plugins
 							':class_name'   => $className,
 							':name'         => $params['name']
 						)
-					)
+					),
+					[
+						'request'=>"INSERT INTO `mc_admin_access` (`id_role`, `id_module`, `view`, `append`, `edit`, `del`, `action`) SELECT 1, m.id_module, 1, 1, 1, 1, 1 FROM mc_module as m WHERE name = :name;",
+						'params'=> [':name' => $params['name']]
+					]
 				);
 
 				try {
@@ -176,7 +180,11 @@ class backend_db_plugins
 					array(
 						'request'=>"DELETE FROM mc_module WHERE name = :id",
 						'params'=>$params
-					)
+					),
+					[
+						'request' => "DELETE FROM `mc_admin_access` WHERE `id_module` IN (SELECT `id_module` FROM `mc_module` as m WHERE m.name = :name)",
+						'params' => $params
+					]
 				);
 
 				try {

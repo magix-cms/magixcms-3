@@ -10,26 +10,65 @@
 
 const C = {
     block: document.getElementById('cookies'),
-    btn: document.querySelector('#cookies button'),
-    createCookie: function() {
-        Cookie.createCookie('complianceCookie');
+    btn: document.querySelector('#acceptCookies'),
+    btnConfig: document.querySelector('#saveCookieParam'),
+    cookies: {
+        complianceCookie: true,
+        essentialCookies: true,
+        analyticCookies: true,
+        ggWebfontCookies: true,
+        adobeWebfontCookies: true,
+        ggMapCookies: true,
+        embedCookies: true
+    },
+    modal: null,
+    setCookies: function() {
+        for (var name in C.cookies) {
+            if (C.cookies.hasOwnProperty(name)){
+                let setting = document.querySelector('[name="'+name+'"]');
+                if(setting !== null) {
+                    C.cookies[name] = setting.checked;
+                }
+            }
+        }
+        C.modal.hide();
+        C.createCookies();
+    },
+    createCookies: function() {
+        for (var name in C.cookies) {
+            Cookie.createCookie(name,C.cookies[name]);
+        }
+        window.location.reload();
+    },
+    hideBox: function() {
         C.block.classList.remove('in');
         C.block.classList.add('hide');
     },
     init: function() {
-        if (Cookie.checkCookie('complianceCookie') !== 'on') C.block.classList.remove('hide');
-        C.btn.addEventListener('click',this.createCookie);
+        C.modal = new Modal('#cookiesModal',{backdrop: 'static',keyboard: false});
+        if (!Cookie.checkCookie('complianceCookie')) C.block.classList.remove('hide');
+        C.btn.addEventListener('click',this.createCookies);
+        C.btnConfig.addEventListener('click',this.setCookies);
     }
 };
 
 window.addEventListener('load', function() {
     if(Cookie !== undefined) {
         C.init();
+        if(Cookie.checkCookie('embedCookies') === 'true') {
+            // change iframe data-src to src
+            document.querySelectorAll('iframe.ytb').forEach((iytb) => {
+                iytb.src = iytb.dataset.src;
+                iytb.removeAttribute('data-src');
+            });
+        }
     }
 
-    let lazyLoadInstance = new LazyLoad({
-        elements_selector: ".lazyload"
-    });
+    if(typeof LazyLoad !== "undefined") {
+        let lazyLoadInstance = new LazyLoad({
+            elements_selector: ".lazyload"
+        });
+    }
 
     // *** target_blank
     document.querySelectorAll("a.targetblank").forEach( function(i) {

@@ -57,23 +57,48 @@ class frontend_model_module extends frontend_db_module {
 	}
 
 	/**
+	 * Get active modules and return a array of all active module
+	 * @return array
+	 */
+	public function get_active_module($name){
+		$mods = $this->getItems('mod',$name,'all',false);
+		$active_mods = [];
+
+		foreach ( $mods as $mod ) {
+			$active_mods[$mod['module_name']] = true;
+		}
+
+		return $active_mods;
+	}
+
+	/**
 	 * Get active modules and return a array of all active module instance
 	 *
 	 * the `extend_module` method should be executed before to ensure that
 	 * all compatible modules will be loaded
 	 *
-	 * @return array
+	 * @param string $plugin_name
+	 * @param string|null $module_name
+	 * @return array|object
 	 */
-	public function load_module($name){
-		$mods = $this->getItems('mod',$name,'all',false);
-		$active_mods = array();
-
-		foreach ( $mods as $mod ) {
-			$modClass = 'plugins_'.$mod['module_name'].'_public';
-			$active_mods[$mod['module_name']] = $this->get_call_class($modClass);
+	public function load_module(string $plugin_name,string $module_name = null){
+		$mods = $this->getItems('mod',$plugin_name,'all',false);
+		if($module_name === null) {
+			$active_mods = [];
+			foreach ( $mods as $mod ) {
+				$modClass = 'plugins_'.$mod['module_name'].'_public';
+				$active_mods[$mod['module_name']] = $this->get_call_class($modClass);
+			}
+			return $active_mods;
 		}
-
-		return $active_mods;
+		else {
+			foreach ( $mods as $mod ) {
+				if($mod['module_name'] === $module_name) {
+					$modClass = 'plugins_'.$mod['module_name'].'_public';
+					return $this->get_call_class($modClass);
+				}
+			}
+		}
 	}
 
 	/**

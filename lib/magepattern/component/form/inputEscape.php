@@ -130,9 +130,9 @@ class form_inputEscape{
      * Special function for clean array
      *
      * @param string $array
-     * @return string
+     * @return array
      */
-    public static function arrayClean($array){
+    public static function arrayClean($array): array {
         if(is_array($array)){
             foreach($array as $key => $val) {
                 if (!is_array($array[$key])) {

@@ -5,12 +5,7 @@
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
 {block name="styleSheet"}
-    {$css_files = [
-    "/skin/{$theme}/css/product{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/gallery{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
-    ]}
+    {$css_files = ["product","gallery","lightbox","slider"]}
 {/block}
 
 {block name='article'}

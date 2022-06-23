@@ -399,30 +399,22 @@ class backend_model_template{
 	 * @param array $addConfigDir
 	 * @param array $load_files
 	 * @param bool $debug
-	 * @throws Exception
 	 */
-	public function addConfigFile(array $addConfigDir,array $load_files,$debug=false){
-		if(is_array($addConfigDir)){
-			backend_model_smarty::getInstance()->addConfigDir($addConfigDir);
-		}else{
-			throw new Exception('Error: addConfigDir is not array');
-		}
-		if(is_array($load_files)){
-			foreach ($load_files as $row=>$val){
-				if(is_string($row)){
-					if(array_key_exists($row, $load_files)){
-                        //$this->configLoad($this->pathConfigLoad($row), $val);
-                        backend_model_smarty::getInstance()->configLoad($row.self::currentLanguage().'.conf',$val);
-					}
-				}else{
-                    //$this->configLoad($this->pathConfigLoad($load_files[$row]));
-                    backend_model_smarty::getInstance()->configLoad($load_files[$row].self::currentLanguage().'.conf');
+	public function addConfigFile(array $addConfigDir,array $load_files,bool $debug=false){
+		backend_model_smarty::getInstance()->addConfigDir($addConfigDir);
+		foreach ($load_files as $row=>$val){
+			if(is_string($row)){
+				if(array_key_exists($row, $load_files)){
+					//$this->configLoad($this->pathConfigLoad($row), $val);
+					backend_model_smarty::getInstance()->configLoad($row.self::currentLanguage().'.conf',$val);
 				}
+			}else{
+				//$this->configLoad($this->pathConfigLoad($load_files[$row]));
+				backend_model_smarty::getInstance()->configLoad($load_files[$row].self::currentLanguage().'.conf');
 			}
-		}else{
-			throw new Exception('Error: load_files is not array');
 		}
-		if($debug!=false){
+
+		if($debug){
 			$config_dir = $this->getConfigDir();
 			print '<pre>';
 			var_dump($config_dir);
@@ -436,4 +428,3 @@ class backend_model_template{
 		}
 	}
 }
-?>

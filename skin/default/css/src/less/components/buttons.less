@@ -276,6 +276,41 @@ each(@theme-color, {
 	.custom-button(@key);
 });
 
+.btn.btn-pdf {
+	--btn-color: var(--main-color);
+	--btn-bg: transparent;
+	--btn-brd: var(--main-color);
+	--btn-hover-bg-color: transparent;
+	--btn-ahf-bg-color: transparent;
+	--btn-hover-border-color: var(--main-color);
+	--btn-focus-border-color: var(--main-color);
+	margin-right: 1rem;
+
+	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; 0);
+	position: relative;
+	z-index: 2;
+	padding-left: 3.25rem;
+
+	&:before {
+		.ico;
+		color: var(--main-color);
+		position: absolute;
+		display: inline-flex;
+		align-items: center;
+		height: 100%;
+		width: 1.5rem;
+		top: 0;
+		left: 1rem;
+		z-index: -1;
+		font-size: 1.5rem;
+	}
+}
+.btn.btn-pdf {
+	&:before {
+		content: @ico-file-pdf;
+	}
+}
+
 .btn-invert-white {
 	.button-invert(var(--white); var(--dark-color); var(--white); var(--white));
 }

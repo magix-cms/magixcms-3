@@ -153,7 +153,8 @@ class backend_model_data extends backend_db_scheme{
 					$column['class'] =  'fixed-td-md text-center';
 
 					if(preg_match('/^id/i', $type)) {
-						$scheme[$col]['title'] = 'id';
+						//$scheme[$col]['title'] = 'id';
+						$column['title'] = 'id';
 					}
 				}
 				else {

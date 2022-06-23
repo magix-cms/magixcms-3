@@ -22,6 +22,21 @@ class backend_model_language{
     }
 
     /**
+     * @return array
+     */
+    public function getTableformLanguages(){
+        $data = $this->collectionLanguage->fetchData(['context'=>'all','type'=>'adminLangs']);
+		$langs = [];
+		foreach ($data as $key) {
+			$langs[] = [
+				'v' => $key['id_lang'],
+				'name' => $key['iso_lang']
+			];
+		}
+        return $langs;
+    }
+
+    /**
      *
      */
     public function getLanguage(){
@@ -29,4 +44,3 @@ class backend_model_language{
         $this->template->assign('langs',$newsData);
     }
 }
-?>

@@ -15,6 +15,14 @@
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
 
+@bs-color: {
+	primary: hsla(208, 56%, 46%, 1);
+	success: hsla(120, 39%, 54%, 1);
+	info: hsla(194, 66%, 61%, 1);
+	warning: hsla(35, 84%, 62%, 1);
+	danger: hsla(2, 64%, 58%, 1);
+};
+
 //
 //                      Define Sizes
 //--------------------------------------------------------
@@ -34,14 +42,16 @@
 // --------------------------------------------------
 
 // --- Theme Colors
-@headings-color: var(--text-color);
 @theme-color: {
 	main: hsla(219, 48%, 45%, 1);
 	sd: hsla(210, 2%, 51%, 1);
 	dark: hsla(0, 0%, 20%, 1);
+	green: hsla(120, 39%, 54%, 1);
 	default: hsla(0, 0%, 100%, 1);
 };
 @text-color: @theme-color[dark];
+@headings-color: var(--text-color);
+@display-color: var(--text-color);
 
 
 //

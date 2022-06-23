@@ -680,7 +680,7 @@ textarea.form-control {
 	textarea ~ label,
 	div ~label {
 		bottom: 0;
-		color: rgba(0,0,0,.26);
+		color: var(--label-color);
 		font-size: 16px;
 		font-weight: 400;
 		left: 0;
@@ -730,7 +730,7 @@ textarea.form-control {
 	select,
 	textarea {
 		border: none;
-		border-bottom: 1px solid rgba(0,0,0,.12);
+		border-bottom: 1px solid var(--ph-brd-color);
 		box-shadow: none;
 		font-size: 16px;
 		font-family: "Helvetica","Arial",sans-serif;
@@ -782,16 +782,16 @@ textarea.form-control {
 			outline: none;
 
 			&::-webkit-input-placeholder{
-				color: rgba(0,0,0,.26);
+				color: var(--ph-color);
 			}
 			&::-moz-placeholder{
-				color: rgba(0,0,0,.26);
+				color: var(--ph-color);
 			}
 			&:-ms-input-placeholder{
-				color: rgba(0,0,0,.26);
+				color: var(--ph-color);
 			}
 			&:-moz-placeholder {
-				color: rgba(0,0,0,.26);
+				color: var(--ph-color);
 			}
 		}
 	}

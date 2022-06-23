@@ -58,12 +58,18 @@ class frontend_model_template{
 		$settings,
 		$theme,
 		$defaultLang,
-		$lang,
 		$langs,
 		$domain,
 		$collectionsSetting,
 		$cLangs,
         $defaultDomain;
+
+	/**
+	 * @var string $lang
+	 */
+	public
+		$lang;
+
 	/**
 	 *
 	 * Constructor

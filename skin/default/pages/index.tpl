@@ -3,12 +3,7 @@
 {block name="description" nocache}{$pages.seo.description}{/block}
 {block name='body:id'}pages{/block}
 {block name="styleSheet"}
-    {$css_files = [
-    "/skin/{$theme}/css/cms{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/gallery{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/lightbox{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/slider{if $setting.mode.value !== 'dev'}.min{/if}.css"
-    ]}
+    {$css_files = ["cms","gallery","lightbox","slider"]}
 {/block}
 
 {block name='article'}

@@ -284,17 +284,31 @@ class component_collections_country{
      * @static
      * Retourne le tableau des pays
      */
-    public function getAllowedCountries(){
+	public function getAllowedCountries(){
 		$countries = $this->fetchData(['context'=>'all','type'=>'countries']);
 		if(!empty($countries)) {
 			$arr = [];
 			foreach ($countries as $c) {
-				$arr[$c['iso_country']] = $c['name_country'];
+				//$arr[$c['iso_country']] = $c['name_country'];
+				$arr[$c['id_country']] = [
+					'id' => $c['id_country'],
+					'iso' => $c['iso_country'],
+					'name' => strtolower($c['name_country'])
+				];
 			}
 			$countries = $arr;
 		}
 		return $countries;
-    }
+	}
+
+	/**
+	 * @access public
+	 * @static
+	 * Retourne le tableau des pays
+	 */
+	public function getTown($id){
+		return $this->fetchData(['context'=>'one','type'=>'town'],['id' => $id]);
+	}
 
     /**
      * @access public

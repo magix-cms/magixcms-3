@@ -7,7 +7,7 @@
     {$url = $img.default.src}
     {$urlset = "{$img.default.src}{if $setting.mode.value === 'dev'}?{$now}{/if}"}
 {/if}
-{if $lazy}{$prefix = 'data-'}{else}{$prefix = ''}{/if}
+{if $lazy && in_array($browser,['Safari','Opera'])}{$prefix = 'data-'}{else}{$prefix = ''}{/if}
 {$sizes = $prefix|cat:'sizes'}
 {$src = $prefix|cat:'src'}
 {$srcset = $prefix|cat:'srcset'}
@@ -36,7 +36,7 @@
          {elseif !isset($img.name)}width="{$img['default']['w']}" height="{$img['default']['h']}" {/if}
          alt="{$img.alt}"
          title="{$img.title}"
-         class="img-responsive{if $lazy}{if $lazyClass} {$lazyClass}{else} lazyload{/if}{/if}"
+         class="img-responsive{if $lazy && in_array($browser,['Safari','Opera'])}{if $lazyClass} {$lazyClass}{else} lazyload{/if}{/if}"
          {if $lazy}loading="lazy"{/if}/>
 </picture>
 {/strip}

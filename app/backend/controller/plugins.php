@@ -113,18 +113,14 @@ class backend_controller_plugins extends backend_db_plugins{
 	/**
 	 * set SQL Process Uninstall
 	 * @param $id
-	 * @return bool
-	 * @throws Exception
 	 */
-    private function unsetSQLProcess($id){
+    private function unsetSQLProcess($id) {
         $routingDB = new component_routing_db();
         $files = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.'uninstall.sql';
         if(file_exists($files)){
             $routingDB->setupSQL($files);
-			parent::delete(array('type'=>'unregister'),array('id'=>$id));
-			return true;
         }
-        return false;
+		parent::delete(array('type'=>'unregister'),array('id'=>$id));
     }
 
     /**
@@ -179,13 +175,11 @@ class backend_controller_plugins extends backend_db_plugins{
     public function unregister($id){
         $data = parent::fetchData(array('context'=>'one','type'=>'register'),array('id'=>$id));
         if($data['id_plugins'] != null){
-            if($this->unsetSQLProcess($id)) {
-				$msg = 'uninstall_success';
-				$this->module->toggle_register($id,true);
-			}
-            else
-				$msg = 'uninstall_error';
-        }else{
+			$this->unsetSQLProcess($id);
+			$msg = 'uninstall_success';
+			$this->module->toggle_register($id,true);
+        }
+		else{
 			$msg = 'uninstall_empty';
         }
 
