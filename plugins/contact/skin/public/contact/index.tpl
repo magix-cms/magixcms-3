@@ -4,10 +4,7 @@
 {block name='body:id'}contact{/block}
 {block name="webType"}ContactPage{/block}
 {block name="styleSheet"}
-    {$css_files = [
-    "/skin/{$theme}/css/contact{if $setting.mode.value !== 'dev'}.min{/if}.css",
-    "/skin/{$theme}/css/form{if $setting.mode.value !== 'dev'}.min{/if}.css"
-    ]}
+    {$css_files = ["contact","form"]}
 {/block}
 {block name="slider"}{/block}
 
