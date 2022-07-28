@@ -267,21 +267,29 @@ class plugins_contact_admin extends plugins_contact_db {
         if(empty($this->mods)) $this->mods = $this->module->load_module('contact');
     }
 
+    /**
+     * @return void
+     */
     private function getModuleTabs() {
         $newsItems = [];
         foreach ($this->mods as $name => $mod) {
-            $item['name'] = $name;
-            if (method_exists($mod, 'getExtensionName')) {
-                $this->template->addConfigFile(
-                    array(component_core_system::basePath() . 'plugins' . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR),
-                    array($name . '_admin_')
-                );
-                //$this->template->configLoad();
-                $item['title'] = $mod->getExtensionName();
-            } else {
-                $item['title'] = $name;
+            // Execute un plugin core
+            $class = 'plugins_' . $name . '_core';
+            if(file_exists(component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'core.php') && class_exists($class) && method_exists($class, 'run')) {
+
+                $item['name'] = $name;
+                if (method_exists($mod, 'getExtensionName')) {
+                    $this->template->addConfigFile(
+                        array(component_core_system::basePath() . 'plugins' . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR),
+                        array($name . '_admin_')
+                    );
+                    //$this->template->configLoad();
+                    $item['title'] = $mod->getExtensionName();
+                } else {
+                    $item['title'] = $name;
+                }
+                $newsItems[] = $item;
             }
-            $newsItems[] = $item;
         }
         $this->template->assign('setTabsPlugins', $newsItems);
     }
