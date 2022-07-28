@@ -6,7 +6,7 @@ include_once ('db.php');
  */
 class plugins_contact_admin extends plugins_contact_db {
     public $edit, $action, $tabs;
-    protected $controller,$data,$template, $message, $plugins, $xml, $sitemap,$modelLanguage,$collectionLanguage,$header;
+    protected $controller,$data,$template, $message, $plugins, $xml, $sitemap,$modelLanguage,$collectionLanguage,$header,$module,$mods;
     public $content,$id_contact,$mail_contact,$address_required,$address_enabled,/*$mail_sender,*/$id_config;
     /**
      * frontend_controller_home constructor.
@@ -23,20 +23,10 @@ class plugins_contact_admin extends plugins_contact_db {
         $this->data = new backend_model_data($this);
         $this->header = new http_header();
         // --- GET
-        if(http_request::isGet('controller')) {
-            $this->controller = $formClean->simpleClean($_GET['controller']);
-        }
-        if (http_request::isGet('edit')) {
-            $this->edit = $formClean->numeric($_GET['edit']);
-        }
-        if (http_request::isGet('action')) {
-            $this->action = $formClean->simpleClean($_GET['action']);
-        } elseif (http_request::isPost('action')) {
-            $this->action = $formClean->simpleClean($_POST['action']);
-        }
-        if (http_request::isGet('tabs')) {
-            $this->tabs = $formClean->simpleClean($_GET['tabs']);
-        }
+        if(http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
+        if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
+        if (http_request::isRequest('action')) $this->action = $formClean->simpleClean($_REQUEST['action']);
+        if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
 
 		if (http_request::isPost('content')) {
 			$array = $_POST['content'];
@@ -49,25 +39,13 @@ class plugins_contact_admin extends plugins_contact_db {
 		}
 
         // --- ADD or EDIT
-        if (http_request::isPost('id')) {
-            $this->id_contact = $formClean->simpleClean($_POST['id']);
-        }
-        if (http_request::isPost('mail_contact')) {
-            $this->mail_contact = $formClean->simpleClean($_POST['mail_contact']);
-        }
-
-        if (http_request::isPost('id_config')) {
-            $this->id_config = $formClean->simpleClean($_POST['id_config']);
-        }
-        if (http_request::isPost('address_enabled')) {
-            $this->address_enabled = $formClean->simpleClean($_POST['address_enabled']);
-        }
-        if (http_request::isPost('address_required')) {
-            $this->address_required = $formClean->simpleClean($_POST['address_required']);
-        }
-        /*if (http_request::isPost('mail_sender')) {
-            $this->mail_sender = $formClean->simpleClean($_POST['mail_sender']);
-        }*/
+        if (http_request::isPost('id')) $this->id_contact = $formClean->simpleClean($_POST['id']);
+        if (http_request::isPost('mail_contact')) $this->mail_contact = $formClean->simpleClean($_POST['mail_contact']);
+        if (http_request::isPost('id_config')) $this->id_config = $formClean->simpleClean($_POST['id_config']);
+        if (http_request::isPost('address_enabled')) $this->address_enabled = $formClean->simpleClean($_POST['address_enabled']);
+        if (http_request::isPost('address_required')) $this->address_required = $formClean->simpleClean($_POST['address_required']);
+        /*if (http_request::isPost('mail_sender')) $this->mail_sender = $formClean->simpleClean($_POST['mail_sender']);*/
+        if (http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
     }
 
 	/**
@@ -183,20 +161,9 @@ class plugins_contact_admin extends plugins_contact_db {
             case 'contact':
             case 'content':
             case 'content_page':
-                parent::update(
-                    array(
-                        'context' => $data['context'],
-                        'type' => $data['type']
-                    ),
-                    $data['data']
-                );
-                break;
             case 'config':
                 parent::update(
-                    array(
-                        'context' => $data['context'],
-                        'type' => $data['type']
-                    ),
+                   ['type' => $data['type']],
                     $data['data']
                 );
                 break;
@@ -295,104 +262,155 @@ class plugins_contact_admin extends plugins_contact_db {
     /**
      *
      */
+    private function loadModules() {
+        $this->module = $this->module instanceof backend_controller_module ? $this->module : new backend_controller_module();
+        if(empty($this->mods)) $this->mods = $this->module->load_module('contact');
+    }
+
+    private function getModuleTabs() {
+        $newsItems = [];
+        foreach ($this->mods as $name => $mod) {
+            $item['name'] = $name;
+            if (method_exists($mod, 'getExtensionName')) {
+                $this->template->addConfigFile(
+                    array(component_core_system::basePath() . 'plugins' . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR),
+                    array($name . '_admin_')
+                );
+                //$this->template->configLoad();
+                $item['title'] = $mod->getExtensionName();
+            } else {
+                $item['title'] = $name;
+            }
+            $newsItems[] = $item;
+        }
+        $this->template->assign('setTabsPlugins', $newsItems);
+    }
+
+    /**
+     *
+     */
     public function run(){
-        if(isset($this->action)) {
-            switch ($this->action) {
-                case 'add':
-                    if(isset($this->content)) {
-                        $this->add(
-                            array(
-                                'context' => 'contact',
-                                'type' => 'contact',
-                                'data' => array(
-                                    'mail_contact' => $this->mail_contact
-                                )
-                            )
-                        );
-
-                        $contact = $this->getItems('root',null,'one',false);
-
-                        if ($contact['id_contact']) {
-                            $this->saveContent($contact['id_contact']);
-                            $this->message->json_post_response(true,'add_redirect');
-                        }
-                    }else {
-                        $this->modelLanguage->getLanguage();
-                        $this->template->display('add.tpl');
-                    }
-                    break;
-                case 'edit':
-                	if(isset($this->tabs) && $this->tabs === 'content' && isset($this->content) && !empty($this->content)) {
-						$root = parent::fetchData(array('context' => 'one', 'type' => 'root_page'));
-						if (!$root) {
-							parent::insert(array('type' => 'root_page'));
-							$root = parent::fetchData(array('context' => 'one', 'type' => 'root_page'));
-						}
-						$id = $root['id_page'];
-
-						foreach ($this->content as $lang => $content) {
-							if(empty($content['id'])) $content['id'] = $id;
-							$rootLang = $this->getItems('content_page',array('id' => $id,'id_lang' => $lang),'one',false);
-
-							$content['id_lang'] = $lang;
-							$content['published_page'] = (!isset($content['published_page']) ? 0 : 1);
-
-							$config = array(
-								'type' => 'content_page',
-								'data' => $content
-							);
-
-							($rootLang) ? $this->upd($config) : $this->add($config);
-						}
-						$this->message->json_post_response(true,'update');
-					}
-                    elseif (isset($this->id_contact)) {
-						$this->saveContent($this->id_contact);
-						$this->message->json_post_response(true, 'update', array('result' => $this->id_contact));
-					}elseif(isset($this->id_config)) {
-                        $this->save(array('address_enabled'=>$this->address_enabled,'address_required'=>$this->address_required/*,'mail_sender'=>$this->mail_sender*/));
-                        $this->message->json_post_response(true, 'update', array('result'=>$this->id_config));
-
-                    }else{
-                        $this->modelLanguage->getLanguage();
-
-                        $setEditData = parent::fetchData(array('context'=>'all','type'=>'data'), array('edit'=>$this->edit));
-                        $setEditData = $this->setItemContentData($setEditData);
-                        $this->template->assign('contact',$setEditData[$this->edit]);
-                        $this->template->display('edit.tpl');
-                    }
-                    break;
-                case 'delete':
-                    if(isset($this->id_contact)) {
-                        $this->del(
-                            array(
-                                'type'=>'delMail',
-                                'data'=>array(
-                                    'id' => $this->id_contact
-                                )
-                            )
-                        );
-                    }
-                    break;
+        $this->loadModules();
+        if(isset($this->plugin)) {
+            $this->modelLanguage->getLanguage();
+            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+            $this->getItems('contact', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
+            $this->getModuleTabs();
+            // Initialise l'API menu des plugins core
+            $this->modelLanguage->getLanguage();
+            // Execute un plugin core
+            $class = 'plugins_' . $this->plugin . '_core';
+            if(file_exists(component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$this->plugin.DIRECTORY_SEPARATOR.'core.php') && class_exists($class) && method_exists($class, 'run')) {
+                $executeClass =  new $class;
+                if($executeClass instanceof $class){
+                    $executeClass->run();
+                }
             }
         }
         else {
-            $this->modelLanguage->getLanguage();
-            $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-            // Page content
-			$last = $this->getItems('root_page',null,'one',false);
-			$collection = $this->getItems('pages',$last['id_page'],'all',false);
-			$this->template->assign('pages', $this->setItemPageData($collection));
-			// Mails
-            $this->getItems('contact',array(':default_lang'=>$defaultLanguage['id_lang']),'all');
-            $assign = array(
-                'id_contact',
-                'mail_contact' => ['title' => 'name']
-            );
-            $this->data->getScheme(array('mc_contact','mc_contact_content'),array('id_contact','mail_contact'),$assign);
-            // Configuration
-            $this->getItems('config',null,'one','config');
-            $this->template->display('index.tpl');
+            if (isset($this->action)) {
+                switch ($this->action) {
+                    case 'add':
+                        if (isset($this->content)) {
+                            $this->add(
+                                array(
+                                    'context' => 'contact',
+                                    'type' => 'contact',
+                                    'data' => array(
+                                        'mail_contact' => $this->mail_contact
+                                    )
+                                )
+                            );
+
+                            $contact = $this->getItems('root', null, 'one', false);
+
+                            if ($contact['id_contact']) {
+                                $this->saveContent($contact['id_contact']);
+                                $this->message->json_post_response(true, 'add_redirect');
+                            }
+                        } else {
+                            $this->modelLanguage->getLanguage();
+                            $this->template->display('add.tpl');
+                        }
+                        break;
+                    case 'edit':
+                        if (isset($this->tabs) && $this->tabs === 'content' && isset($this->content) && !empty($this->content)) {
+                            $root = parent::fetchData(array('context' => 'one', 'type' => 'root_page'));
+                            if (!$root) {
+                                parent::insert(array('type' => 'root_page'));
+                                $root = parent::fetchData(array('context' => 'one', 'type' => 'root_page'));
+                            }
+                            $id = $root['id_page'];
+
+                            foreach ($this->content as $lang => $content) {
+                                if (empty($content['id'])) $content['id'] = $id;
+                                $rootLang = $this->getItems('content_page', array('id' => $id, 'id_lang' => $lang), 'one', false);
+
+                                $content['id_lang'] = $lang;
+                                $content['published_page'] = (!isset($content['published_page']) ? 0 : 1);
+
+                                $config = array(
+                                    'type' => 'content_page',
+                                    'data' => $content
+                                );
+
+                                ($rootLang) ? $this->upd($config) : $this->add($config);
+                            }
+                            $this->message->json_post_response(true, 'update');
+                        }
+						elseif (isset($this->id_contact)) {
+                            $this->saveContent($this->id_contact);
+                            $this->message->json_post_response(true, 'update', array('result' => $this->id_contact));
+                        }
+						elseif (isset($this->id_config)) {
+                            $this->save(array('address_enabled' => $this->address_enabled, 'address_required' => $this->address_required, 'mail_sender' => $this->mail_sender));
+                            $this->message->json_post_response(true, 'update', array('result' => $this->id_config));
+
+                        }
+						else {
+                            $this->modelLanguage->getLanguage();
+
+                            $setEditData = parent::fetchData(array('context' => 'all', 'type' => 'data'), array('edit' => $this->edit));
+                            $setEditData = $this->setItemContentData($setEditData);
+                            $this->template->assign('contact', $setEditData[$this->edit]);
+                            $this->template->display('edit.tpl');
+                        }
+                        break;
+                    case 'delete':
+                        if (isset($this->id_contact)) {
+                            $this->del(
+                                array(
+                                    'type' => 'delMail',
+                                    'data' => array(
+                                        'id' => $this->id_contact
+                                    )
+                                )
+                            );
+                        }
+                        break;
+                }
+            }
+            else {
+                $this->modelLanguage->getLanguage();
+                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+                // Page content
+                $last = $this->getItems('root_page', null, 'one', false);
+                $collection = $this->getItems('pages', $last['id_page'], 'all', false);
+                $this->template->assign('pages', $this->setItemPageData($collection));
+                // Mails
+                $this->getItems('contact', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
+                $assign = array(
+                    'id_contact',
+                    'mail_contact' => ['title' => 'name']
+                );
+                $this->data->getScheme(array('mc_contact', 'mc_contact_content'), array('id_contact', 'mail_contact'), $assign);
+                // Configuration
+                $this->getItems('config', null, 'one', 'config');
+
+                $this->getModuleTabs();
+
+                $this->template->display('index.tpl');
+            }
         }
     }
 

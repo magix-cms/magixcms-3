@@ -73,9 +73,6 @@ class plugins_contact_db
 					case 'config':
 						$sql = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
 						break;
-                    case 'plugin':
-                        $sql = 'SELECT * FROM mc_plugins WHERE name = :name';
-                        break;
 					/*case 'sender':
 						$sql = 'SELECT mail_sender FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
 						break;*/
@@ -91,8 +88,7 @@ class plugins_contact_db
 	 * @param array $params
 	 * @throws Exception
 	 */
-    public function insert($config, $params = array())
-    {
+    public function insert($config, $params = array()) {
         if (is_array($config)) {
             $sql = '';
 
@@ -127,8 +123,7 @@ class plugins_contact_db
 	 * @param array $data
 	 * @throws Exception
 	 */
-    public function update($config, $params = array())
-    {
+    public function update($config, $params = array()) {
         if (is_array($config)) {
             $sql = '';
 
