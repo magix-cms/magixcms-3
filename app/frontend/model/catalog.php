@@ -71,10 +71,10 @@ class frontend_model_catalog extends frontend_db_catalog {
      * @throws Exception
      * @todo revoir le nommage de 'current', lui préférant 'active'
      */
-    public function setItemData ($row,$current,$newRow = false)
+    public function setItemData ($row, $current, $newRow = false)
     {
 		$string_format = new component_format_string();
-        $data = null;
+        $data = [];
         $extwebp = 'webp';
         if(!isset($this->imagePlaceHolder)) $this->imagePlaceHolder = $this->logo->getImagePlaceholder();
 

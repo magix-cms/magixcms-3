@@ -5,7 +5,7 @@ class backend_controller_product extends backend_db_product
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory,$routingUrl;
 	public $controller,$id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img,$plugin,$modelPlugins;
 	public $tableconfig = array(
-		'id_product',
+		'id_product' => ['title' => 'id', 'type' => 'text', 'class' => 'fixed-td-md text-center'],
 		'name_p' => ['title' => 'name'],
 		'name_cat' => ['title' => 'main_cat'],
 		'price_p' => ['type' => 'price','input' => null],

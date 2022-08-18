@@ -130,7 +130,7 @@ class backend_controller_plugins extends backend_db_plugins{
      */
     public function register($id){
         $data = parent::fetchData(array('context'=>'one','type'=>'register'),array(':id'=>$id));
-        if($data['id_plugins'] != null){
+        if(!empty($data['id_plugins'])){
             $this->message->getNotify('setup_info',array('method'=>'fetch','assignFetch'=>'message'));
             $this->template->display('plugins/setup.tpl');
         }else{

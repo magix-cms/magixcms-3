@@ -29,20 +29,12 @@
     </div>
 {/block}
 
-{block name="foot"}
-    {script src="/min/?g=form" concat=$concat type="javascript"}
-    {script src="/min/?f=skin/{$theme}/js/form.min.js" concat=$concat type="javascript"}
-    {if {$lang} !== "en"}
-        {script src="/min/?f=libjs/vendor/localization/messages_{$lang}.js" concat=$concat type="javascript"}
-    {/if}
-    <script type="text/javascript">
-        $(function(){
-            if (typeof globalForm == "undefined")
-            {
-                console.log("globalForm is not defined");
-            }else{
-                globalForm.run();
-            }
-        });
-    </script>
+{block name="scripts"}
+    {$jquery = true}
+    {$js_files = [
+    'group' => ['form'],
+    'normal' => [],
+    'defer' => ["/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}form{if $setting.mode.value !== 'dev'}.min{/if}.js"]
+    ]}
+    {if {$lang} !== "en"}{$js_files['defer'][] = "/libjs/vendor/localization/messages_{$lang}.js"}{/if}
 {/block}

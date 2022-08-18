@@ -1,4 +1,4 @@
-{if is_array($dataLang) && !empty($dataLang)}
+{if is_array($dataLang) && !empty($dataLang) && count($dataLang) > 1}
     {*{if $domain.default_domain eq '0'}
         <link rel="canonical" href="{if $setting['ssl']['value'] eq 1}https://{else}http://{/if}{$defaultDomain}{$smarty.server.REQUEST_URI|replace:'amp/':''}" />
     {else}

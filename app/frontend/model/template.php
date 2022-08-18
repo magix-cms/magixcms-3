@@ -56,7 +56,6 @@ class frontend_model_template{
      */
     public
 		$settings,
-		$theme,
 		$defaultLang,
 		$langs,
 		$domain,
@@ -66,9 +65,11 @@ class frontend_model_template{
 
 	/**
 	 * @var string $lang
+	 * @var string $theme
 	 */
-	public
-		$lang;
+	public string
+		$lang,
+		$theme;
 
 	/**
 	 *

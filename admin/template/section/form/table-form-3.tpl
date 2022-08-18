@@ -43,7 +43,7 @@
         <form action="/{baseadmin}/index.php" method="get"{if $ajax_form} class="validate_form search_form"{/if}>
             <input type="hidden" name="controller" value="{$smarty.get.controller}" />
             <input type="hidden" name="tableaction" value="true" />
-            <input type="hidden" name="edit" value="{$smarty.get.edit}" />
+            {if $smarty.get.edit}<input type="hidden" name="edit" value="{$smarty.get.edit}" />{/if}
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>

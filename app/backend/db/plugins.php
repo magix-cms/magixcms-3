@@ -84,26 +84,26 @@ class backend_db_plugins
 		switch ($config['type']) {
 			case 'register':
 				$className = 'plugins_'.$params['name'].'_admin';
-				$queries = array(
-					array(
-						'request'=>"INSERT INTO mc_plugins (name,version) VALUE (:name,:version)",
-						'params'=>array(
-							':name'     => $params['name'],
-							':version'  => $params['version']
-						)
-					),
-					array(
-						'request'=>"INSERT INTO mc_module (class_name,name) VALUE (:class_name,:name)",
-						'params'=>array(
-							':class_name'   => $className,
-							':name'         => $params['name']
-						)
-					),
+				$queries = [
 					[
-						'request'=>"INSERT INTO `mc_admin_access` (`id_role`, `id_module`, `view`, `append`, `edit`, `del`, `action`) SELECT 1, m.id_module, 1, 1, 1, 1, 1 FROM mc_module as m WHERE name = :name;",
-						'params'=> [':name' => $params['name']]
+						'request' => "INSERT INTO `mc_plugins` (`name`,`version`) VALUE (:name,:version)",
+						'params' => [
+							'name' => $params['name'],
+							'version' => $params['version']
+						]
+					],
+					[
+						'request' => "INSERT INTO `mc_module` (`class_name`,`name`) VALUE (:class_name,:name)",
+						'params' => [
+							'class_name' => $className,
+							'name' => $params['name']
+						]
+					],
+					[
+						'request'=>"INSERT INTO `mc_admin_access` (`id_role`, `id_module`, `view`, `append`, `edit`, `del`, `action`) SELECT 1, `mm`.`id_module`, 1, 1, 1, 1, 1 FROM `mc_module` `mm` WHERE `name` = :name;",
+						'params'=> ['name' => $params['name']]
 					]
-				);
+				];
 
 				try {
 					component_routing_db::layer()->transaction($queries);
@@ -177,12 +177,16 @@ class backend_db_plugins
 						'request'=>"DELETE FROM mc_plugins WHERE name = :id",
 						'params'=>$params
 					),
+					[
+						'request' => "DELETE FROM `mc_admin_access` WHERE `id_module` IN (SELECT `id_module` FROM `mc_module` as m WHERE m.name = :id)",
+						'params' => $params
+					],
 					array(
 						'request'=>"DELETE FROM mc_module WHERE name = :id",
 						'params'=>$params
 					),
 					[
-						'request' => "DELETE FROM `mc_admin_access` WHERE `id_module` IN (SELECT `id_module` FROM `mc_module` as m WHERE m.name = :name)",
+						'request' => "DELETE FROM `mc_config_img` WHERE `module_img` = 'plugins' AND `attribute_img` = :id",
 						'params' => $params
 					]
 				);
