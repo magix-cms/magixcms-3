@@ -3,8 +3,10 @@ class backend_controller_product extends backend_db_product
 {
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory,$routingUrl;
-	public $controller,$id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img,$plugin,$modelPlugins;
-	public $tableconfig = array(
+	public $controller,$id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img,$plugin,$tables,
+        $columns, $module, $assign;
+
+	/*public $tableconfig = array(
 		'id_product' => ['title' => 'id', 'type' => 'text', 'class' => 'fixed-td-md text-center'],
 		'name_p' => ['title' => 'name'],
 		'name_cat' => ['title' => 'main_cat'],
@@ -16,7 +18,7 @@ class backend_controller_product extends backend_db_product
         'seo_title_p' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
         'seo_desc_p' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
 		'date_register'
-	);
+	);*/
 
     /**
      * backend_controller_catalog constructor.
@@ -113,7 +115,109 @@ class backend_controller_product extends backend_db_product
 	private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
 		return $this->data->getItems($type, $id, $context, $assign, $pagination);
 	}
+    /**
+     *
+     */
+    private function loadModules() {
+        $this->module = $this->module ?? new backend_model_plugins();
+        if(empty($this->mods)) $this->mods = $this->module->loadExtendCore('product');
+    }
+    /**
+     * @return void
+     */
+    private function setTablesArray() {
+        if(!isset($this->tables)) {
+            $this->tables = ['mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img','mc_lang'];
+            $this->loadModules();
+            if(!empty($this->mods)) {
+                foreach ($this->mods as $mod){
+                    if(method_exists($mod,'extendTablesArray')) {
+                        $this->tables = array_merge($this->tables,$mod->extendTablesArray());
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * @return void
+     */
+    private function setColumnsArray() {
+        if(!isset($this->columns)) {
+            $this->columns = ['id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'img_p', 'seo_title_p', 'seo_desc_p', 'date_register'];
+            $this->loadModules();
+            if(!empty($this->mods)) {
+                foreach ($this->mods as $mod){
+                    if(method_exists($mod,'extendColumnsArray')) {
+                        $this->columns = array_merge($this->columns,$mod->extendColumnsArray());
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * @return void
+     */
+    private function setAssignArray() {
+        if(!isset($this->assign)) {
+            $this->assign = [
+                'id_product' =>
+                    ['title' => 'id', 'type' => 'text', 'class' => 'fixed-td-md text-center'],
+                'name_p' => ['title' => 'name'],
+                'name_cat' => ['title' => 'main_cat'],
+                'price_p' => ['type' => 'price','input' => null],
+                'reference_p' => ['title' => 'reference'],
+                'resume_p' => ['class' => 'fixed-td-lg text-center', 'type' => 'bin', 'input' => null],
+                'content_p' => ['class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
+                'img_p' => ['title' => 'img', 'class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
+                'seo_title_p' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
+                'seo_desc_p' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
+                'date_register'
+            ];
+            $this->loadModules();
+            if(!empty($this->mods)) {
+                $unsetArray = [];
+                $extendArray = [];
+                foreach ($this->mods as $name => $mod){
+                    if(method_exists($mod,'unsetAssignArray')) {
+                        $unsetArray[] = $mod->unsetAssignArray();
+                    }
+                    if(method_exists($mod,'extendAssignArray')) {
+                        $extendArray[] = $mod->extendAssignArray();
+                    }
+                }
+                $newAssignArray = [];
+                $newUnsetArray = [];
+                if(is_array($unsetArray)) {
 
+                    foreach ($unsetArray as $key => $value) {
+                        foreach ($value as $item){
+                            $newUnsetArray[] = $item;
+                        }
+
+                    }
+                    foreach ($newUnsetArray as $cols) {
+                        unset($this->assign[$cols]);
+                    }
+                }
+                foreach ($extendArray as $cols) {
+                    foreach ($cols as $pos => $item) {
+                        $i = 1;
+                        foreach ($this->assign as $key => $col) {
+                            if($i === $pos) {
+                                if(is_array($item)) $newAssignArray = array_merge($newAssignArray,$item);
+                                else $newAssignArray[] = $item;
+                            }
+                            if(is_string($key)) $newAssignArray[$key] = $col;
+                            else $newAssignArray[] = $col;
+                            $i++;
+                        }
+                        $this->assign = $newAssignArray;
+						$newAssignArray = [];
+                    }
+                }
+            }
+        }
+    }
 	/**
 	 * @param $ajax
 	 * @return mixed
@@ -121,10 +225,38 @@ class backend_controller_product extends backend_db_product
 	 */
 	public function tableSearch($ajax = false)
 	{
-		$this->modelLanguage->getLanguage();
+		/*$this->modelLanguage->getLanguage();
 		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 		$results = $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',false,true);
-		$params = array();
+		$params = array();*/
+        //$this->setAssignArray();
+        $this->modelLanguage->getLanguage();
+        $this->setTablesArray();
+        $this->setColumnsArray();
+        $this->setAssignArray();
+        $params = [];
+        $this->loadModules();
+        if(!empty($this->mods)) {
+            $extendQueryParams = [];
+            foreach ($this->mods as $mod){
+                if(method_exists($mod,'extendListingQuery')) {
+                    $extendQueryParams[] = $mod->extendListingQuery();
+                }
+            }
+            if(!empty($extendQueryParams)) {
+                foreach ($extendQueryParams as $extendParams) {
+                    if(isset($extendParams['select']) && !empty($extendParams['select'])) $params['select'][] = $extendParams['select'];
+                    if(isset($extendParams['join']) && !empty($extendParams['join'])) $params['join'][] = $extendParams['join'];
+                    if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
+                    if(isset($extendParams['search']) && !empty($extendParams['search'])) $params['search'][] = $extendParams['search'];
+                }
+            }
+        }
+        //print_r($params);
+        //$this->getItems('accounts',$params,'all',true,true);
+        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+
+        $results = $this->getItems('pages', array_merge(array('default_lang' => $defaultLanguage['id_lang']),$params), 'all', true, true);
 
 		if($ajax) {
 			$params['section'] = 'pages';
@@ -138,16 +270,51 @@ class backend_controller_product extends backend_db_product
 			$params['cClass'] = 'backend_controller_product';
 		}
 
-		$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'img_p','seo_title_p','seo_desc_p', 'date_register'), $this->tableconfig);
-
+		//$this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img', 'mc_lang'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'img_p','seo_title_p','seo_desc_p', 'date_register'), $this->assign);
+        $this->data->getScheme($this->tables,$this->columns,$this->assign);
 		return array(
-			'data' => $results,
+			'data' => empty($results) ? [] : $results,
 			'var' => 'pages',
 			'tpl' => 'catalog/product/index.tpl',
 			'params' => $params
 		);
 	}
+    /**
+     * @return void
+     */
+    private function setTableformData() {
+        $this->modelLanguage->getLanguage();
+        $this->setTablesArray();
+        $this->setColumnsArray();
+        $this->setAssignArray();
+        $params = [];
+        $this->loadModules();
+        if(!empty($this->mods)) {
+            $extendQueryParams = [];
+            foreach ($this->mods as $mod){
+                if(method_exists($mod,'extendListingQuery')) {
+                    $extendQueryParams[] = $mod->extendListingQuery();
+                }
+            }
+            if(!empty($extendQueryParams)) {
+                foreach ($extendQueryParams as $extendParams) {
+                    if(isset($extendParams['select']) && !empty($extendParams['select'])) $params['select'][] = $extendParams['select'];
+                    if(isset($extendParams['join']) && !empty($extendParams['join'])) $params['join'][] = $extendParams['join'];
+                    if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
+                }
+            }
+        }
+        //$this->getItems('accounts',$params,'all',true,true);
+        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 
+        $this->getItems('pages', array_merge(array('default_lang' => $defaultLanguage['id_lang']),$params), 'all', true, true);
+
+        $this->data->getScheme($this->tables,$this->columns,$this->assign);
+    }
+
+    /**
+     * @return void
+     */
 	public function tinymce()
 	{
 		$langs = $this->modelLanguage->setLanguage();
@@ -965,10 +1132,20 @@ class backend_controller_product extends backend_db_product
                         break;
                 }
             } else {
-                $this->modelLanguage->getLanguage();
+                /*$this->modelLanguage->getLanguage();
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                 $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all', true, true);
                 $this->data->getScheme(array('mc_catalog_product', 'mc_catalog_product_content', 'mc_catalog_cat_content', 'mc_catalog_product_img'), array('id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'img_p', 'seo_title_p', 'seo_desc_p', 'date_register'), $this->tableconfig);
+                */
+                $this->setTableformData();
+                $this->loadModules();
+                if(!empty($this->mods)) {
+                    foreach ($this->mods as $name => $mod){
+                        if(method_exists($mod,'extendAssignArray')) {
+                            $this->template->addConfigFile([component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR], [$name.'_admin_']);
+                        }
+                    }
+                }
                 $this->template->display('catalog/product/index.tpl');
             }
         }

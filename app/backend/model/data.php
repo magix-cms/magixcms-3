@@ -107,7 +107,7 @@ class backend_model_data extends backend_db_scheme{
 		}
 		if(isset($this->page) || $pagination) {
 			$data = $this->setItems($context, $type, $id);
-			$this->template->assign('nbp',ceil(count($data) / $this->offset));
+			$this->template->assign('nbp',!empty($data) ? ceil(count($data) / $this->offset) : 1);
 			$this->template->assign('offset',$this->offset * (isset($this->page) && $this->page > 1 ? $this->page - 1 : 1));
 		}
 		return $data;

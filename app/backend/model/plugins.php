@@ -33,7 +33,7 @@
  # needs please refer to http://www.magix-cms.com for more information.
  */
 class backend_model_plugins{
-    protected $template, $controller_name, $dbPlugins,$plugin ,$collectionLanguage;
+    protected $template, $controller_name, $dbPlugins,$plugin ,$collectionLanguage, $pluginsCollection;
 
 	/**
 	 * backend_model_plugins constructor.
@@ -52,6 +52,7 @@ class backend_model_plugins{
         $this->dbPlugins = new backend_db_plugins();
         //$this->data = new backend_model_data($this);
         $this->collectionLanguage = new component_collections_language();
+        $this->pluginsCollection = new component_collections_plugins();
     }
 
     /**
@@ -181,6 +182,33 @@ class backend_model_plugins{
      */
     public function getItems($config){
         return $this->setItems($config);
+    }
+
+    /**
+     * @param string $plugin
+     * @return array
+     */
+    public function getModuleTabs(string $plugin): array {
+        $tabs = [];
+        $mods = $this->dbPlugins->fetchData(['context'=>'all','type'=>'mod'],['plugin_name' => $plugin]);
+        foreach ($mods as $mod) {
+            $class = 'plugins_'.$mod['module_name'].'_core';
+            if (class_exists($class)) {
+                $item['name'] = $item['title'] = $mod['module_name'];
+                if (method_exists($class, 'getExtensionName')) {
+                    $this->template->addConfigFile([component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$mod['module_name'].DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR], [$mod['module_name'].'_admin_']);
+                    $ext = new $class();
+                    $item['title'] = $ext->getExtensionName();
+                }
+                $tabs[] = $item;
+            }
+        }
+        if(!empty($tabs)) {
+            $coreComponent = new component_format_array();
+            $coreComponent->array_sortBy('title', $tabs);
+        }
+        $this->template->assign('setTabsPlugins', $tabs);
+        return $tabs;
     }
 
     /**
@@ -328,6 +356,54 @@ class backend_model_plugins{
             return $this->template->fetch($template, $cache_id, $compile_id, $parent);
         }else{
             return $this->template->fetch($template, $cache_id, $compile_id, $parent);
+        }
+    }
+
+    /**
+     * @param $type
+     * @return array|void
+     */
+    public function loadExtendCore($type){
+        $newMethod = array();
+        $collection = $this->pluginsCollection->fetchAll();
+        $module = ['home','about','pages','news','catalog','category','product'];
+        $active_mods = array();
+        if(in_array($type,$module)) {
+            //print_r($collection);
+            foreach ($collection as $key => $item) {
+                if ($item[$type] == 1) {
+                    //$mods[] = $item['name'];
+                    $modClass = 'plugins_' . $item['name'] . '_core';
+
+                    if(class_exists($modClass)) $active_mods[$item['name']] = $this->getCallClass($modClass);
+                }
+            }
+            return $active_mods;
+        }
+    }
+    /**
+     * @param $type
+     * @param $method
+     * @param array $params
+     * @return array
+     */
+    public function extendDataArray($type,$method,array $params = []) : array{
+        $this->mods = $this->loadExtendCore($type);
+        $loadMethod = [];
+        if(!empty($this->mods)) {
+            foreach ($this->mods as $mod){
+                //print $mod;
+                if(method_exists($mod,$method)){
+                    $loadMethod[] = call_user_func_array(
+                        array(
+                            $mod,
+                            $method
+                        ),
+                        $params
+                    );
+                }
+            }
+            return $loadMethod;
         }
     }
 }

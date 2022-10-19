@@ -76,7 +76,7 @@ class backend_controller_tableform
 					if(isset($this->items) && is_array($this->items) && !empty($this->items)) {
 						$this->data->tableActive(array(
 							'active' => ($this->action == 'active-selected'?1:0),
-							'ids' => implode($this->items, ',')
+							'ids' => implode(',',$this->items)
 						));
 
 						$results = $this->data->tableSearch($this->ajax);

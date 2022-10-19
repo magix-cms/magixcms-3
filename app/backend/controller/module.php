@@ -103,7 +103,7 @@ class backend_controller_module extends backend_db_module {
 
 		foreach ( $mods as $mod ) {
 			$modClass = 'plugins_'.$mod['module_name'].'_admin';
-			$active_mods[$mod['module_name']] = $this->get_call_class($modClass);
+			if(class_exists($modClass)) $active_mods[$mod['module_name']] = $this->get_call_class($modClass);
 		}
 
 		return $active_mods;

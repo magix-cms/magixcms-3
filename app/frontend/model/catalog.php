@@ -358,6 +358,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $data['resume']    = $row['resume_cat'] ? $row['resume_cat'] : ($row['content_cat'] ? $string_format->truncate(strip_tags($row['content_cat'])) : '');
                 $data['menu']      = $row['menu_cat'];
                 $data['order']     = $row['order_cat'];
+                $data['nb_product']= $row['nb_product'];
                 // Plugin
                 if($newRow != false){
                     if(is_array($newRow)){
@@ -642,7 +643,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 	 * @return int|null
 	 * @throws Exception
 	 */
-	public function getPages($custom,$current,$override = false)
+	/*public function getPages($custom,$current,$override = false)
 	{
 		$limit = $custom['limit'];
 		if(isset($custom['limit'])) unset($custom['limit']);
@@ -654,7 +655,7 @@ class frontend_model_catalog extends frontend_db_catalog {
 			$nbp = ceil((count($data)/ $limit));
 		}
 		return $nbp;
-	}
+	}*/
 
     /**
      * Retourne les données sql sur base des paramètres passés en paramète
@@ -664,7 +665,7 @@ class frontend_model_catalog extends frontend_db_catalog {
      * @return array|null
      * @throws Exception
      */
-    public function getData($custom,$current,$override = false)
+    /*public function getData($custom,$current,$override = false)
     {
 		if (!(is_array($custom))) return null;
 
@@ -701,9 +702,9 @@ class frontend_model_catalog extends frontend_db_catalog {
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.published_cat = 1';
 
                 if( (isset($custom['select']) && $custom['select'] !== 'all') || !isset($custom['select']) ){
-					/*if (isset($custom['select'])) {
-						$conditions .= ' AND (p.id_cat IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
-					}*/
+					//if (isset($custom['select'])) {
+					//	$conditions .= ' AND (p.id_cat IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
+					//}
 
 					if (isset($custom['exclude'])) {
 						$conditions .= ' AND p.id_cat NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
@@ -858,10 +859,10 @@ class frontend_model_catalog extends frontend_db_catalog {
 						}
 					}
 
-                    /*if($data != null) {
-                        $branch = isset($custom['select']) ? $conf['id'] : 'root';
-                        $data = $this->setPagesTree($data,$branch);
-                    }*/
+                    //if($data != null) {
+                      //  $branch = isset($custom['select']) ? $conf['id'] : 'root';
+                        //$data = $this->setPagesTree($data,$branch);
+                    //}
                 }
             }
         }
@@ -885,12 +886,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
             }
             else {
-                /*$conditions .= ' WHERE lang.iso_lang = :iso
-                				AND cat.published_cat =1 
-                				AND pc.published_p =1 
-                				AND catalog.default_c = 1 
-                				AND img.default_img = 1 
-                				AND catalog.id_cat = '.$current['id'];*/
+
 
                 $conditions .= ' WHERE lang.iso_lang = :iso 
                 				AND cat.published_cat = 1 
@@ -899,9 +895,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 				AND (img.default_img = 1 
                 				OR img.default_img IS NULL)
 								GROUP BY catalog.id_product';
-                /*if(isset($current['id'])){
-                    $conditions .= ' AND p.id_parent = '.$current['id'];
-                }*/
+
 
                 if (isset($custom['exclude'])) {
                     $conditions .= ' AND catalog.id_product NOT IN (' . $conf['id'] . ') ';
@@ -927,16 +921,13 @@ class frontend_model_catalog extends frontend_db_catalog {
                         )
                     );
 
-                    /*if($data != null) {
-                        $branch = isset($custom['select']) ? $conf['id'] : 'root';
-                        $data = $this->setPagesTree($data,$branch);
-                    }*/
+
                 }
             }
         }
 
         return $data;
-    }
+    }*/
 
 	/**
 	 * Retourne les données sql sur base des paramètres donnés

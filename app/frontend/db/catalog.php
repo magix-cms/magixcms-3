@@ -7,7 +7,7 @@ class frontend_db_catalog
 	 * @return mixed|null
 	 * @throws Exception
 	 */
-	public function fetchData($config, $params = false)
+	public function fetchData(array $config, array $params = [])
 	{
 		if (!is_array($config)) return '$config must be an array';
 
@@ -90,25 +90,92 @@ class frontend_db_catalog
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
 					break;*/
 				case 'category':
-					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT p.*,
-								   c.name_cat,
-								   c.url_cat,
-								   c.resume_cat,
-								   c.content_cat,
-								   c.published_cat,
-       								COALESCE(c.alt_img, c.name_cat) as alt_img,
-									COALESCE(c.title_img, c.alt_img, c.name_cat) as title_img,
-									COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_cat) as caption_img,
-								   c.seo_title_cat,
-								   c.seo_desc_cat,
+					//$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                    /*$sql = "SELECT cat.*,
+								   catc.name_cat,
+								   catc.url_cat,
+								   catc.resume_cat,
+								   catc.content_cat,
+								   catc.published_cat,
+       								COALESCE(catc.alt_img, catc.name_cat) as alt_img,
+									COALESCE(catc.title_img, catc.alt_img, catc.name_cat) as title_img,
+									COALESCE(catc.caption_img, catc.title_img, catc.alt_img, catc.name_cat) as caption_img,
+								   catc.seo_title_cat,
+								   catc.seo_desc_cat,
 								   lang.id_lang,
 								   lang.iso_lang,
 								   lang.default_lang
-							FROM mc_catalog_cat AS p
-							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
-							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
-					break;
+							FROM mc_catalog_cat AS cat
+							JOIN mc_catalog_cat_content AS catc ON(cat.id_cat = catc.id_cat) 
+							JOIN mc_lang AS lang ON(catc.id_lang = lang.id_lang) $conditions";*/
+
+                    $where = '';
+                    if(isset($params['where']) && is_array($params['where'])) {
+                        foreach ($params['where'] as $item) {
+                            $where .= ' '.$item['type'].' '.$item['condition'].' ';
+                        }
+                        unset($params['where']);
+                    }
+                    $select = [
+                           'cat.*',
+                           'catc.name_cat',
+                           'catc.url_cat',
+                           'catc.resume_cat',
+                           'catc.content_cat',
+                           'catc.published_cat',
+                            'COALESCE(catc.alt_img, catc.name_cat) as alt_img',
+                            'COALESCE(catc.title_img, catc.alt_img, catc.name_cat) as title_img',
+                            'COALESCE(catc.caption_img, catc.title_img, catc.alt_img, catc.name_cat) as caption_img',
+                           'catc.seo_title_cat',
+                           'catc.seo_desc_cat',
+                           'lang.id_lang',
+                           'lang.iso_lang',
+                           'lang.default_lang',
+                            '(SELECT count(catalog.id_product) FROM mc_catalog AS catalog WHERE catalog.id_cat = cat.id_cat) as nb_product'
+                    ];
+                    if(isset($params['select'])) {
+                        foreach ($params['select'] as $extendSelect) {
+                            $select = array_merge($select, $extendSelect);
+                        }
+                        unset($params['select']);
+                    }
+
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+
+                        unset($params['join']);
+                    }
+                    $order = ' ORDER BY cat.order_cat';
+                    if(isset($params['order']) && is_array($params['order'])){
+
+                        $order .= ', '.implode(',', $params['order']);
+
+                        unset($params['order']);
+                    }
+
+                    $limit = '';
+                    if(isset($params['limit']) && is_array($params['limit'])){
+
+                        foreach ($params['limit'] as $item) {
+                            $limit = ' LIMIT '.$item;
+                        }
+                        unset($params['limit']);
+                    }
+                    $sql = 'SELECT '.implode(',', $select).'
+						FROM mc_catalog_cat AS cat
+							JOIN mc_catalog_cat_content AS catc ON(cat.id_cat = catc.id_cat) 
+							JOIN mc_lang AS lang ON(catc.id_lang = lang.id_lang)'.$joins.$where
+                        .$order.$limit;
+
+                    break;
 				case 'rand_category':
 					$queries = array(
 						array('request'=>'CREATE TEMPORARY TABLE cat_map (row_id int not NULL primary key, random_id int not null)'),
@@ -156,26 +223,78 @@ class frontend_db_catalog
 								GROUP BY t.id_cat";
 					break;
 				case 'product':
-					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT 
-								catalog.* ,
-								cat.name_cat, 
-								cat.url_cat, 
-								p.*, 
-								pc.name_p, 
-								pc.longname_p, 
-								pc.resume_p, 
-								pc.content_p, 
-								pc.url_p, 
-								pc.id_lang,
-								lang.iso_lang, 
-								pc.last_update, 
-								img.name_img,
-								COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img,
-								COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img,
-								COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img,
-								pc.seo_title_p,
-								pc.seo_desc_p
+					//$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+                    $where = '';
+                    if(isset($params['where']) && is_array($params['where'])) {
+                        foreach ($params['where'] as $item) {
+                            $where .= ' '.$item['type'].' '.$item['condition'].' ';
+                        }
+                        unset($params['where']);
+                    }
+
+                    $select = ['catalog.*',
+                        'cat.name_cat',
+                        'cat.url_cat',
+                        'p.*',
+                        'pc.name_p',
+                        'pc.longname_p',
+                        'pc.resume_p',
+                        'pc.content_p',
+                        'pc.url_p',
+                        'pc.id_lang',
+                        'lang.iso_lang',
+                        'pc.last_update',
+                        'img.name_img',
+                        'COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img',
+                        'COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img',
+                        'COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as caption_img',
+                        'pc.seo_title_p',
+                        'pc.seo_desc_p'];
+
+                    if(isset($params['select'])) {
+                        foreach ($params['select'] as $extendSelect) {
+                            $select = array_merge($select, $extendSelect);
+                        }
+                        unset($params['select']);
+                    }
+
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+
+                        unset($params['join']);
+                    }
+                    if($params['id_cat']){
+                        $cat = 'AND catalog.default_c = 1 AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat)';
+                    }else{
+                        $cat = '';
+                    }
+
+                    $order = ' ORDER BY catalog.order_p ASC';
+                    if(isset($params['order']) && is_array($params['order'])){
+
+                        $order .= ', '.implode(',', $params['order']);
+
+                        unset($params['order']);
+                    }
+
+                    $limit = '';
+                    if(isset($params['limit']) && is_array($params['limit'])){
+
+                        foreach ($params['limit'] as $item) {
+                            $limit = ' LIMIT '.$item;
+                        }
+                        unset($params['limit']);
+                    }
+
+                    $sql = 'SELECT '.implode(',', $select).'
 						FROM mc_catalog AS catalog
 						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
 						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
@@ -183,8 +302,14 @@ class frontend_db_catalog
 						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
 						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
 						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
-						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang) $conditions";
+						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang)'.$joins.'
+						 WHERE lang.iso_lang = :iso 
+						AND pc.published_p = 1 
+						AND (img.default_img = 1 OR img.default_img IS NULL) 
+						 '.$cat.$where
+                        .$order.$limit;
 					break;
+
 				case 'rand_product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$queries = array(
@@ -315,29 +440,106 @@ class frontend_db_catalog
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 						WHERE p.id_cat = :id AND lang.iso_lang = :iso AND c.published_cat = 1';
 					break;
+                case 'category':
+                    $cond = '';
+                    if(isset($params['where'])) {
+                        unset($params['where']);
+                    }
+
+                    $select = ['cat.*',
+                               'catc.name_cat',
+                               'catc.url_cat',
+                               'catc.resume_cat',
+                               'catc.content_cat',
+                               'catc.published_cat',
+                                'COALESCE(catc.alt_img, catc.name_cat) as alt_img',
+                                'COALESCE(catc.title_img, catc.alt_img, catc.name_cat) as title_img',
+                                'COALESCE(catc.caption_img, catc.title_img, catc.alt_img, catc.name_cat) as caption_img',
+                               'catc.seo_title_cat',
+                               'catc.seo_desc_cat',
+                               'lang.*'
+                    ];
+                    if(isset($params['select'])) {
+                        foreach ($params['select'] as $extendSelect) {
+                            $select = array_merge($select, $extendSelect);
+                        }
+                        unset($params['select']);
+                    }
+
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+
+                        unset($params['join']);
+                    }
+
+                    $sql = 'SELECT '.implode(',', $select).
+                        ' FROM mc_catalog_cat AS cat
+						JOIN mc_catalog_cat_content AS catc ON (cat.id_cat = catc.id_cat)
+						JOIN mc_lang AS lang ON(catc.id_lang = lang.id_lang)
+						'.$joins.
+                        ' WHERE cat.id_cat = :id AND lang.iso_lang = :iso AND catc.published_cat = 1 '.$cond;
+
+                    break;
 				case 'product':
-					$sql = 'SELECT 
-							   c.* ,
-							   cat.name_cat, 
-							   cat.url_cat, 
-							   p.*, 
-							   pc.name_p, 
-							   pc.longname_p, 
-							   pc.resume_p, 
-							   pc.content_p, 
-							   pc.url_p, 
-							   pc.id_lang,
-							   pc.seo_title_p,
-							   pc.seo_desc_p,
-							   lang.iso_lang, 
-							   pc.last_update
-							FROM mc_catalog AS c
+                    $cond = '';
+                    if(isset($params['where'])) {
+                        unset($params['where']);
+                    }
+
+                    $select = ['c.*' ,
+							   'cat.name_cat',
+							   'cat.url_cat',
+							   'p.*',
+							   'pc.name_p',
+							   'pc.longname_p',
+							   'pc.resume_p',
+							   'pc.content_p',
+							   'pc.url_p',
+							   'pc.id_lang',
+							   'pc.seo_title_p',
+							   'pc.seo_desc_p',
+							   'lang.iso_lang',
+							   'pc.last_update'
+                    ];
+                    if(isset($params['select'])) {
+                        foreach ($params['select'] as $extendSelect) {
+                            $select = array_merge($select, $extendSelect);
+                        }
+                        unset($params['select']);
+                    }
+
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+
+                        unset($params['join']);
+                    }
+
+                    $sql = 'SELECT '.implode(',', $select).
+
+							' FROM mc_catalog AS c
 							JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
 							JOIN mc_catalog_product AS p ON ( c.id_product = p.id_product )
 							JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
-							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
-							WHERE p.id_product = :id AND c.default_c =1 AND cat.published_cat =1 AND pc.published_p =1 AND lang.iso_lang = :iso';
-					break;
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )'.$joins.
+							' WHERE p.id_product = :id AND c.default_c =1 AND cat.published_cat =1 AND pc.published_p =1 AND lang.iso_lang = :iso'.$cond;
+
+                    break;
 				case 'root':
 					$sql = 'SELECT * FROM `mc_catalog_data` WHERE `id_lang` = :id_lang';
 					break;

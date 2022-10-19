@@ -55,6 +55,9 @@ class backend_db_plugins
 				case 'seo':
 					$sql = 'SELECT name FROM mc_plugins WHERE seo = 1';
 					break;
+                case 'mod':
+                    $sql = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :plugin_name AND active = 1';
+                    break;
 			}
 
 			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
@@ -177,14 +180,14 @@ class backend_db_plugins
 						'request'=>"DELETE FROM mc_plugins WHERE name = :id",
 						'params'=>$params
 					),
-					[
-						'request' => "DELETE FROM `mc_admin_access` WHERE `id_module` IN (SELECT `id_module` FROM `mc_module` as m WHERE m.name = :id)",
-						'params' => $params
-					],
 					array(
 						'request'=>"DELETE FROM mc_module WHERE name = :id",
 						'params'=>$params
 					),
+					[
+						'request' => "DELETE FROM `mc_admin_access` WHERE `id_module` IN (SELECT `id_module` FROM `mc_module` as m WHERE m.name = :id)",
+						'params' => $params
+					],
 					[
 						'request' => "DELETE FROM `mc_config_img` WHERE `module_img` = 'plugins' AND `attribute_img` = :id",
 						'params' => $params

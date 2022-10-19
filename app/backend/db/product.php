@@ -30,7 +30,7 @@ class backend_db_product{
 							$nbc = 0;
 							foreach ($config['search'] as $key => $q) {
 								if ($q !== '') {
-									$cond .= 'AND ';
+									$cond .= ' AND ';
 									$p = 'p'.$nbc;
 									switch ($key) {
 										case 'id_product':
@@ -45,20 +45,39 @@ class backend_db_product{
 										case 'name_cat':
 											$cond .= "cc.".$key." LIKE CONCAT('%', :".$p.", '%') ";
 											break;
-										case 'date_register':
-											$q = $dateFormat->date_to_db_format($q);
 										case 'reference_p':
 											$cond .= "p.".$key." LIKE CONCAT('%', :".$p.", '%') ";
 											break;
+                                        case 'date_register':
+                                            $q = $dateFormat->date_to_db_format($q);
+                                            $cond .= "p.".$key." LIKE CONCAT('%', :".$p.", '%') ";
+                                            break;
+
 									}
+
+                                    if(isset($params['search']) && is_array($params['search'])) {
+                                        $newSearch = [];
+                                        foreach ($params['search'] as $newKey => $value) {
+                                            $newSearch = array_merge($newSearch, $value);
+                                        }
+                                        foreach ($newSearch as $search) {
+                                            if($key == $search['key']){
+                                                switch ($search['type']) {
+                                                    case 'string':
+                                                        $cond .= $search['as'] . "." . $key . " LIKE CONCAT('%', :" . $p . ", '%') ";
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }
 									$params[$p] = $q;
 									$nbc++;
 								}
 							}
+
 						}
 					}
-
-					$sql = "SELECT 
+					/*$sql = "SELECT
 								p.id_product, 
 								pc.name_p, 
 								cc.name_cat, 
@@ -78,8 +97,65 @@ class backend_db_product{
 							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
 							WHERE pc.id_lang = :default_lang $cond
 							GROUP BY p.id_product 
-							ORDER BY p.id_product DESC".$limit;
-					break;
+							ORDER BY p.id_product DESC".$limit;*/
+
+                    $where = '';
+                    if(isset($params['where']) && is_array($params['where'])) {
+                        foreach ($params['where'] as $item) {
+                            $where .= ' '.$item['type'].' '.$item['condition'].' ';
+                        }
+                        unset($params['where']);
+                    }
+
+                    $select = [
+                        'p.id_product',
+                        'pc.name_p',
+                        'cc.name_cat',
+                        'p.reference_p',
+                        'p.price_p',
+                        'pc.resume_p' ,
+                        'pc.content_p',
+                        'pc.seo_title_p',
+                        'pc.seo_desc_p',
+                        'IFNULL(pi.default_img,0) as img_p',
+                        'p.date_register'];
+
+                    if(isset($params['select'])) {
+                        foreach ($params['select'] as $extendSelect) {
+                            $select = array_merge($select, $extendSelect);
+                        }
+                        unset($params['select']);
+                    }
+
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+                        unset($params['join']);
+                    }
+
+                    if(isset($params['search']) && is_array($params['search'])) {
+                        unset($params['search']);
+                    }
+
+                    $sql = 'SELECT '.implode(',', $select).'
+							FROM mc_catalog_product AS p
+							JOIN mc_catalog_product_content AS pc USING ( id_product )
+							LEFT JOIN mc_catalog AS c ON ( p.id_product = c.id_product AND c.default_c = 1 )
+							LEFT JOIN mc_catalog_cat_content AS cc ON ( c.id_cat = cc.id_cat )
+							LEFT JOIN mc_catalog_product_img AS pi ON ( p.id_product = pi.id_product AND pi.default_img = 1 )
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
+							
+							'.$joins. 'WHERE pc.id_lang = :default_lang '.$cond.$where.' GROUP BY p.id_product 
+							ORDER BY p.id_product DESC'. $limit;
+
+                    break;
 				case 'page':
 					$sql = 'SELECT p.*,c.*,lang.*
 							FROM mc_catalog_product AS p
