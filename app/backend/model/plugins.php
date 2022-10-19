@@ -143,10 +143,21 @@ class backend_model_plugins{
                             } else {
                                 $item['title'] = $item['name'];
                             }
-                            $newsItems[] = $item;
-                            $this->template->assign('setTabsPlugins', $newsItems);
-                            $coreComponent = new component_format_array();
-                            $coreComponent->array_sortBy('title', $newsItems);
+                            if (method_exists($class, 'getTabsAvailable')) {
+                                $ext = new $class();
+                                if(in_array($this->controller_name,$ext->getTabsAvailable())){
+                                    $newsItems[] = $item;
+                                    $this->template->assign('setTabsPlugins', $newsItems);
+                                    $coreComponent = new component_format_array();
+                                    $coreComponent->array_sortBy('title', $newsItems);
+                                }
+                            }else{
+                                $newsItems[] = $item;
+                                $this->template->assign('setTabsPlugins', $newsItems);
+                                $coreComponent = new component_format_array();
+                                $coreComponent->array_sortBy('title', $newsItems);
+                            }
+
                         }
                     }
                     break;

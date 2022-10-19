@@ -110,12 +110,19 @@ class frontend_db_catalog
 							JOIN mc_lang AS lang ON(catc.id_lang = lang.id_lang) $conditions";*/
 
                     $where = '';
+
                     if(isset($params['where']) && is_array($params['where'])) {
-                        foreach ($params['where'] as $item) {
+                        $newWhere = [];
+
+                        foreach ($params['where'] as $key => $value) {
+                            $newWhere[] = array_merge($newWhere, $value);
+                        }
+                        foreach ($newWhere as $item) {
                             $where .= ' '.$item['type'].' '.$item['condition'].' ';
                         }
                         unset($params['where']);
                     }
+
                     $select = [
                            'cat.*',
                            'catc.name_cat',
@@ -226,7 +233,12 @@ class frontend_db_catalog
 					//$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
                     $where = '';
                     if(isset($params['where']) && is_array($params['where'])) {
-                        foreach ($params['where'] as $item) {
+                        $newWhere = [];
+
+                        foreach ($params['where'] as $key => $value) {
+                            $newWhere = array_merge($newWhere, $value);
+                        }
+                        foreach ($newWhere as $item) {
                             $where .= ' '.$item['type'].' '.$item['condition'].' ';
                         }
                         unset($params['where']);
@@ -445,8 +457,34 @@ class frontend_db_catalog
                     FROM mc_catalog_cat AS cat WHERE cat.id_parent = :id_parent OR cat.id_cat = :id";
                     break;
                 case 'nbProduct':
-                    $sql = 'SELECT count(id_catalog) AS nb_product
-                    FROM `mc_catalog` WHERE id_cat IN ('.$params['id_cat'].')';
+                    $where = '';
+                    //print_r($params['where']);
+                    if(isset($params['where']) && is_array($params['where'])) {
+                        $newWhere = [];
+
+                        foreach ($params['where'] as $key => $value) {
+                            $newWhere = array_merge($newWhere, $value);
+                        }
+                        foreach ($newWhere as $item) {
+                            $where .= ' '.$item['type'].' '.$item['condition'].' ';
+                        }
+                        unset($params['where']);
+                    }
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+
+                        unset($params['join']);
+                    }
+                    print $sql = 'SELECT count(catalog.id_catalog) AS nb_product
+                    FROM mc_catalog AS catalog '.$joins.' WHERE catalog.id_cat IN ('.$params['id_cat'].') '.$where;
                     $params = array();
                     break;
                 case 'category':
