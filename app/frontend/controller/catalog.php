@@ -176,6 +176,17 @@ class frontend_controller_catalog extends frontend_db_catalog {
             $collection = $this->getItems('product', array_merge($defaultParams,$params), 'all', false);
         }
 
+        foreach ($collection as $key => $value){
+            $childCat = $this->getItems('childCat', ['id_parent'=>$value['id_cat'],'id'=>$value['id_cat']], 'one', false);
+            if(!is_null($childCat)){
+                $nbProduct = $this->getItems('nbProduct', ['id_cat'=>$childCat['child']], 'one', false);
+                $collection[$key]['nb_product'] = $nbProduct['nb_product'];
+            }
+        }
+
+        /*print '<pre>';
+        print_r($collection);
+        print '</pre>';*/
         $newSetArray = [];
         if(!$newtableArray){
             foreach ($collection as &$item) {
@@ -512,6 +523,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
                     $collection[$extendFormArray[$key]] = $value;
                 }
             }
+
             $extendProductData = $this->modelModule->extendDataArray('product','extendProductData', $collection);
             //print_r($extendProductData);
             if($extendProductData) {

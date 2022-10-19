@@ -130,8 +130,8 @@ class frontend_db_catalog
                            'catc.seo_desc_cat',
                            'lang.id_lang',
                            'lang.iso_lang',
-                           'lang.default_lang',
-                            '(SELECT count(catalog.id_product) FROM mc_catalog AS catalog WHERE catalog.id_cat = cat.id_cat) as nb_product'
+                           'lang.default_lang'/*,
+                            '(SELECT count(catalog.id_product) FROM mc_catalog AS catalog WHERE catalog.id_cat = cat.id_cat) as nb_product'*/
                     ];
                     if(isset($params['select'])) {
                         foreach ($params['select'] as $extendSelect) {
@@ -422,7 +422,7 @@ class frontend_db_catalog
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
-				case 'cat':
+				/*case 'cat':
 					$sql = 'SELECT p.*,
        							   c.name_cat,
 								   c.url_cat,
@@ -439,7 +439,16 @@ class frontend_db_catalog
 						JOIN mc_catalog_cat_content AS c USING(id_cat)
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 						WHERE p.id_cat = :id AND lang.iso_lang = :iso AND c.published_cat = 1';
-					break;
+					break;*/
+                case 'childCat':
+                    $sql = "SELECT GROUP_CONCAT( cat.id_cat SEPARATOR ',' ) AS child
+                    FROM mc_catalog_cat AS cat WHERE cat.id_parent = :id_parent OR cat.id_cat = :id";
+                    break;
+                case 'nbProduct':
+                    $sql = 'SELECT count(id_catalog) AS nb_product
+                    FROM `mc_catalog` WHERE id_cat IN ('.$params['id_cat'].')';
+                    $params = array();
+                    break;
                 case 'category':
                     $cond = '';
                     if(isset($params['where'])) {
