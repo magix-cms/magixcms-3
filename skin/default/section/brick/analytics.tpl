@@ -1,5 +1,5 @@
 {if $aid}
-    <link rel="preconnect" href="https://ssl.google-anaytics.com"/>
+    {*<link rel="preconnect" href="https://ssl.google-anaytics.com"/>
     <link rel="dns-prefetch" href="https://ssl.google-anaytics.com"/>
     <script type="text/javascript">
     //<![CDATA[
@@ -15,4 +15,17 @@
         s.parentNode.insertBefore(ga, s);
     })();
     //]]>
-</script>{/if}
+</script>*}
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <script async src="https://www.googletagmanager.com/gtag/js?id={$aid}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', "{$aid}");
+    </script>
+{/if}
