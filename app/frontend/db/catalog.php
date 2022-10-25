@@ -483,7 +483,7 @@ class frontend_db_catalog
 
                         unset($params['join']);
                     }
-                    print $sql = 'SELECT count(catalog.id_catalog) AS nb_product
+                    $sql = 'SELECT count(catalog.id_catalog) AS nb_product
                     FROM mc_catalog AS catalog '.$joins.' WHERE catalog.id_cat IN ('.$params['id_cat'].') '.$where;
                     $params = array();
                     break;
