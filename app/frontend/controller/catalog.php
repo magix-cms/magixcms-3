@@ -647,6 +647,14 @@ class frontend_controller_catalog extends frontend_db_catalog {
             case 'root':
                 $cats = $this->getCategoryList();//$this->getBuildCategoryList();
                 $this->template->assign('categories',$cats,true);
+				//$products = $this->getBuildProductList();
+                if(isset($this->filter)){
+                    $products = $this->getProductList(NULL,$this->filter);
+                }else{
+                    $products = $this->getProductList(NULL,$this->filter = []);
+                }
+
+				$this->template->assign('products',$products,true);
                 break;
             case 'cat':
                 $data = $this->getCategoryData();
