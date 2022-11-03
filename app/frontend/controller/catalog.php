@@ -208,7 +208,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
         foreach ($collection as $key => $value){
             $childCat = $this->getItems('childCat', ['id_parent'=>$value['id_cat'],'id'=>$value['id_cat']], 'one', false);
             if(!is_null($childCat)){
-                $nbProduct = $this->getItems('nbProduct', isset($params) ? array_merge(['id_cat'=>$childCat['child']],$params) : ['id_cat'=>$childCat['child']], 'one', false);
+                $nbProduct = $this->getItems('nbProduct', isset($params) ? array_merge(['id_cat'=>$childCat['child'],'iso' => $this->getlang],$params) : ['id_cat'=>$childCat['child'],'iso' => $this->getlang], 'one', false);
                 $collection[$key]['nb_product'] = $nbProduct['nb_product'];
             }
         }
