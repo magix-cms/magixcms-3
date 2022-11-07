@@ -488,7 +488,7 @@ class frontend_db_catalog
                     JOIN mc_catalog_product AS mcp ON(catalog.id_product = mcp.id_product) 
                     JOIN mc_catalog_product_content AS mcpc ON(mcp.id_product = mcpc.id_product)
                     JOIN mc_lang AS lang ON(lang.id_lang = mcpc.id_lang)
-                    '.$joins.' WHERE catalog.id_cat IN ('.$params['id_cat'].') AND lang.iso_lang = "'.$params['iso'].'" AND mcpc.published_p = 1 '.$where;
+                    '.$joins.' WHERE catalog.id_cat IN ('.$params['id_cat'].') AND lang.iso_lang = "'.$params['iso'].'" AND catalog.default_c = 1 AND mcpc.published_p = 1 '.$where;
                     $params = array();
                     break;
                 case 'category':
