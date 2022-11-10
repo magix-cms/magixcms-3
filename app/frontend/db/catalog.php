@@ -160,10 +160,26 @@ class frontend_db_catalog
 
                         unset($params['join']);
                     }
-                    $order = ' ORDER BY cat.order_cat';
+                    /*$order = ' ORDER BY cat.order_cat';
                     if(isset($params['order']) && is_array($params['order'])){
 
                         $order .= ', '.implode(',', $params['order']);
+
+                        unset($params['order']);
+                    }*/
+                    if(!isset($params['order']) && !is_array($params['order'])) {
+                        $order = ' ORDER BY cat.order_cat';
+                    }
+
+                    if(isset($params['order']) && is_array($params['order'])){
+                        $order = ' ORDER BY ';
+                        $orders = [];
+
+                        foreach ($params['order'] as $extendOrder) {
+                            $orders = array_merge($orders, $extendOrder);
+                        }
+
+                        $order .= ' '.implode(',', $orders);
 
                         unset($params['order']);
                     }
@@ -288,11 +304,19 @@ class frontend_db_catalog
                     }else{
                         $cat = '';
                     }
+                    if(!isset($params['order']) && !is_array($params['order'])) {
+                        $order = ' ORDER BY catalog.order_p ASC';
+                    }
 
-                    $order = ' ORDER BY catalog.order_p ASC';
                     if(isset($params['order']) && is_array($params['order'])){
+                        $order = ' ORDER BY ';
+						$orders = [];
 
-                        $order .= ', '.implode(',', $params['order']);
+						foreach ($params['order'] as $extendOrder) {
+							$orders = array_merge($orders, $extendOrder);
+						}
+
+                        $order .= ' '.implode(',', $orders);
 
                         unset($params['order']);
                     }
@@ -316,7 +340,7 @@ class frontend_db_catalog
 						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
 						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang)'.$joins.'
 						 WHERE lang.iso_lang = :iso 
-						AND pc.published_p = 1 
+						AND pc.published_p = 1 AND cat.published_cat = 1 AND catalog.default_c = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL) 
 						 '.$cat.$where
                         .$order.$limit;
@@ -485,11 +509,15 @@ class frontend_db_catalog
                     }
                     $sql = 'SELECT count(catalog.id_catalog) AS nb_product
                     FROM mc_catalog AS catalog 
+                    JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
+                    JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
                     JOIN mc_catalog_product AS mcp ON(catalog.id_product = mcp.id_product) 
                     JOIN mc_catalog_product_content AS mcpc ON(mcp.id_product = mcpc.id_product)
                     JOIN mc_lang AS lang ON(lang.id_lang = mcpc.id_lang)
-                    '.$joins.' WHERE catalog.id_cat IN ('.$params['id_cat'].') AND lang.iso_lang = "'.$params['iso'].'" AND catalog.default_c = 1 AND mcpc.published_p = 1 '.$where;
-                    $params = array();
+                    '.$joins.' WHERE catalog.id_cat IN ('.$params['id_cat'].') AND lang.iso_lang = :iso AND catalog.default_c = 1 AND cat.published_cat = 1 AND mcpc.published_p = 1 '.$where;
+                    //"'.$params['iso'].'"
+                    //$params = array();
+                    unset($params['id_cat']);
                     break;
                 case 'category':
                     $cond = '';
