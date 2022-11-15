@@ -53,7 +53,8 @@ class install_controller_installer extends install_db_installer {
 		$data = array(
 			'php' => array(
 				'v' => phpversion(),
-                'version' => is_valid(version_compare(phpversion(),'7','<') || version_compare(phpversion(),'7.5','>')),
+                //'version' => is_valid(version_compare(phpversion(),'7','<') || version_compare(phpversion(),'7.5','>')),
+                'version' => is_valid(version_compare(phpversion(),'7.4','==')),
 				'encoding' => is_valid(!function_exists('mb_detect_encoding')),
 				'iconv' => is_valid(!function_exists('iconv')),
 				'ob' => is_valid(!function_exists('ob_start')),

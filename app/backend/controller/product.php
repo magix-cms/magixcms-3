@@ -131,8 +131,8 @@ class backend_controller_product extends backend_db_product
             $this->loadModules();
             if(!empty($this->mods)) {
                 foreach ($this->mods as $mod){
-                    if(method_exists($mod,'extendTablesArray')) {
-                        $this->tables = array_merge($this->tables,$mod->extendTablesArray());
+                    if(method_exists($mod,'extendTablesArrayProduct')) {
+                        $this->tables = array_merge($this->tables,$mod->extendTablesArrayProduct());
                     }
                 }
             }
@@ -147,8 +147,8 @@ class backend_controller_product extends backend_db_product
             $this->loadModules();
             if(!empty($this->mods)) {
                 foreach ($this->mods as $mod){
-                    if(method_exists($mod,'extendColumnsArray')) {
-                        $this->columns = array_merge($this->columns,$mod->extendColumnsArray());
+                    if(method_exists($mod,'extendColumnsArrayProduct')) {
+                        $this->columns = array_merge($this->columns,$mod->extendColumnsArrayProduct());
                     }
                 }
             }
@@ -178,11 +178,11 @@ class backend_controller_product extends backend_db_product
                 $unsetArray = [];
                 $extendArray = [];
                 foreach ($this->mods as $name => $mod){
-                    if(method_exists($mod,'unsetAssignArray')) {
-                        $unsetArray[] = $mod->unsetAssignArray();
+                    if(method_exists($mod,'unsetAssignArrayProduct')) {
+                        $unsetArray[] = $mod->unsetAssignArrayProduct();
                     }
-                    if(method_exists($mod,'extendAssignArray')) {
-                        $extendArray[] = $mod->extendAssignArray();
+                    if(method_exists($mod,'extendAssignArrayProduct')) {
+                        $extendArray[] = $mod->extendAssignArrayProduct();
                     }
                 }
                 $newAssignArray = [];
@@ -239,8 +239,8 @@ class backend_controller_product extends backend_db_product
         if(!empty($this->mods)) {
             $extendQueryParams = [];
             foreach ($this->mods as $mod){
-                if(method_exists($mod,'extendListingQuery')) {
-                    $extendQueryParams[] = $mod->extendListingQuery();
+                if(method_exists($mod,'extendListingQueryProduct')) {
+                    $extendQueryParams[] = $mod->extendListingQueryProduct();
                 }
             }
             if(!empty($extendQueryParams)) {
@@ -292,8 +292,8 @@ class backend_controller_product extends backend_db_product
         if(!empty($this->mods)) {
             $extendQueryParams = [];
             foreach ($this->mods as $mod){
-                if(method_exists($mod,'extendListingQuery')) {
-                    $extendQueryParams[] = $mod->extendListingQuery();
+                if(method_exists($mod,'extendListingQueryProduct')) {
+                    $extendQueryParams[] = $mod->extendListingQueryProduct();
                 }
             }
             if(!empty($extendQueryParams)) {

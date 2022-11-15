@@ -57,4 +57,49 @@ class component_format_date {
 		}
 		return $date;
 	}
+
+	/**
+	 * @param string $date date
+	 * @param DateTimeZone $timezone
+	 * @return array
+	 */
+	public function setTzDateTimeArray(string $date,DateTimeZone $timezone): array {
+		try {
+			$datetime = new DateTime($date);
+		} catch (Exception $e) {
+			return [];
+		}
+
+		/*$time = [
+			'h' => $datetime->format('G'),
+			'm' => $datetime->format('i'),
+			'text' => $datetime->format('G').':'.$datetime->format('i')
+		];*/
+		$tzDatetime = $datetime->setTimezone($timezone);
+		date_default_timezone_set($timezone->getName());
+		$timestamp = $tzDatetime->getTimestamp();
+
+		$date = [
+			'timestamp' => $timestamp,
+			'time' => strftime('%R',$timestamp),
+			'date' => $datetime->format('Y-m-d'),
+			'year' => $datetime->format('Y'),
+			'month' => [
+				'num' => $datetime->format('m'),
+				'name' => strftime('%B',$timestamp),
+				'abv' => strftime('%b',$timestamp)
+			],
+			'week' => $datetime->format('W'),
+			'day' => [
+				'num' => $datetime->format('j'),
+				'name' => strftime('%A',$timestamp),
+				'abv' => strftime('%a',$timestamp)
+			],
+			'suffix' => $datetime->format('S'),
+		];
+
+		date_default_timezone_set('UTC');
+
+		return $date;
+	}
 }
