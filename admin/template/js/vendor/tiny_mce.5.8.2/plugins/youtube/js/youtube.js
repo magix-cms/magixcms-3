@@ -73,8 +73,8 @@ class Youtube {
         };
         let html = '<div class="embed-responsive embed-responsive-'+this.ratio+'">';
         html += '<img src="'+this.placeholder+'" alt="Accept embed video cookie to display the video" class="embed-responsive-item img-responsive ytb-video-preview" data-ytb=\''+JSON.stringify(params)+'\' />';
-        html += '</div>'
-        return html;
+        html += '</div><p></p>'
+        return html; 
     }
 }
 

@@ -301,6 +301,11 @@ var product = (function ($, undefined) {
                     initSortable(edit);
                 }
             });
+            if($('#images').hasClass('active')) {
+                initDropZone();
+                initDefaultImg(edit);
+                initSortable(edit);
+            }
 
             $('.catlisting input[type="checkbox"]').change(function(){
                 var radio = $(this).next().next().find('input[type="radio"]');

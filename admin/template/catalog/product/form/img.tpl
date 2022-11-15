@@ -33,7 +33,7 @@
             <div id="drop-buttons" class="form-group">
                 <label id="clickHere" class="btn btn-default">
                     ou cliquez ici.. <span class="fa fa-upload"></span>
-                    <input type="hidden" name="MAX_FILE_SIZE" value="4048576" />
+                    <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
                     <input type="file" id="img_multiple" name="img_multiple[]" value="" multiple />
                     <input type="hidden" id="id_product" name="id" value="{$page.id_product}">
                 </label>
