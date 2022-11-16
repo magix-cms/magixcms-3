@@ -54,11 +54,11 @@
                     </div>
                 </div>
             </div>
-            {if $product.associated}
+            {if $associated}
             <p class="h2">{#similar_products#|ucfirst}</p>
             <div class="vignette-list">
                 <div class="row" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/product.tpl" data=$product.associated classCol='vignette col-12 col-xs-6 col-md-4'}
+                    {include file="catalog/loop/product.tpl" data=$associated classCol='vignette col-12 col-xs-6 col-md-4'}
                 </div>
             </div>
             {/if}
