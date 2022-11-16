@@ -191,7 +191,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                 }
 
                 // -- Similar / Associated product
-                if(isset($row['associated'])){
+                /*if(isset($row['associated'])){
                     foreach($row['associated'] as $key => $value){
                         $data['associated'][$key]['name'] = $value['name_p'];
                         $data['associated'][$key]['url'] = $this->routingUrl->getBuildUrl(array(
@@ -269,7 +269,7 @@ class frontend_model_catalog extends frontend_db_catalog {
                             }
                         }
                     }
-                }
+                }*/
                 // Plugin
                 if($newRow != false){
                     if(is_array($newRow)){

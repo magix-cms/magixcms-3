@@ -11,9 +11,12 @@ class backend_controller_tableform
 		$action,
 		$controller;
 
-	public
-		$items,
-		$ajax;
+	public $items;
+
+	/**
+	 * @var bool $ajax
+	 */
+	public bool	$ajax;
 
 	/**
 	 * backend_controller_tableform constructor.
@@ -31,7 +34,7 @@ class backend_controller_tableform
         if (http_request::isGet('controller')) $this->controller = $formClean->simpleClean($_GET['controller']);
         if (http_request::isGet('edit')) $this->edit = $formClean->numeric($_GET['edit']);
         if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
-        if (http_request::isGet('ajax')) $this->ajax = $formClean->simpleClean($_GET['ajax']);
+        $this->ajax = http_request::isGet('ajax');
 
         // --- EDIT
 		if (http_request::isGet('items')) $this->items = (array) $formClean->arrayClean($_GET['items']);
