@@ -569,11 +569,14 @@ class frontend_controller_catalog extends frontend_db_catalog {
         }
         return $newSetArray;
     }
+
     /**
+     * @param int|null $id
      * @return array
      * @throws Exception
      */
-    private function getProductData() : array{
+    public function getProductData(int $id = null) : array {
+        if($id !== null) $this->id = $id;
         // $override = $this->modelModule->getOverride('product',__FUNCTION__);
         $newtableArray = [];
         $override = $this->modelModule->extendDataArray('product',__FUNCTION__);
@@ -585,7 +588,8 @@ class frontend_controller_catalog extends frontend_db_catalog {
         //print_r($newtableArray);
         if(!$newtableArray){
             $collection = $this->getItems('product', array('id' => $this->id, 'iso' => $this->getlang), 'one', false);
-        }else{
+        }
+        else{
             $extendQueryParams = [];
             $extendQueryParams[] = $newtableArray['extendQueryParams'];
             //print_r($extendQueryParams);
@@ -610,11 +614,9 @@ class frontend_controller_catalog extends frontend_db_catalog {
             $collection['associated'] = $associatedCollection;
         }*/
         if(!$newtableArray){
-
             $extendProductData = $this->modelModule->extendDataArray('product','extendProductData', $collection);
 
             if($extendProductData) {
-
                 $extendRow = [];
                 foreach ($extendProductData as $value) {
                     foreach ($value['newRow'] as $key => $item) {
@@ -623,18 +625,16 @@ class frontend_controller_catalog extends frontend_db_catalog {
                         $extendRow['data'][$key] = $value['data'];
                         $collection[$value['collection']] = $value['data'];
                     }
-
                 }
                 $newRow = $extendRow['newRow'];
 
                 return $this->modelCatalog->setItemData($collection, null, $newRow);
-
-            }else{
-
+            }
+            else{
                 return $this->modelCatalog->setItemData($collection, null);
             }
-
-        }else{
+        }
+        else{
             if(isset($newtableArray['collection'])){
                 $extendFormArray = [];
                 foreach ($newtableArray['collection'] as $key => $value){
@@ -657,12 +657,12 @@ class frontend_controller_catalog extends frontend_db_catalog {
                         $extendRow['data'][$key] = $value['data'];
                         $collection[$value['collection']] = $value['data'];
                     }
-
                 }
 
                 //print_r($extendRow);
                 $newRow = array_merge($newtableArray['newRow'], $extendRow['newRow']);
-            }else{
+            }
+            else{
                 $newRow = $newtableArray['newRow'];
             }
 
