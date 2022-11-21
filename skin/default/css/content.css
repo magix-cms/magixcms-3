@@ -1363,6 +1363,52 @@ input[type="button"].btn-block {
 .btn.btn-green-white:hover:before {
   width: calc(100% + 4px);
 }
+.btn.btn-pdf {
+  --btn-color: var(--main-color);
+  --btn-bg: transparent;
+  --btn-brd: var(--main-color);
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-hover-border-color: var(--main-color);
+  --btn-focus-border-color: var(--main-color);
+  margin-right: 1rem;
+  --btn-padding-vertical: 0.5rem;
+  --btn-padding-horizontal: 1rem;
+  --btn-font-size: 1rem;
+  --btn-line-height: 1.61803399;
+  --btn-border-radius: 0;
+  position: relative;
+  z-index: 2;
+  padding-left: 3.25rem;
+}
+.btn.btn-pdf:before {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Icofont' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  speak: none;
+  display: inline-block;
+  color: var(--main-color);
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  width: 1.5rem;
+  top: 0;
+  left: 1rem;
+  z-index: -1;
+  font-size: 1.5rem;
+}
+.btn.btn-pdf:before {
+  content: "\e933";
+}
 .btn-invert-white {
   --btn-color: var(--white);
   --btn-bg: transparent;
@@ -1515,6 +1561,249 @@ input[type="button"].btn-block {
 @media (min-width: 48em) {
   .presentation .details {
     grid-template-columns: repeat(auto-fill, minmax(var(--details-cw), 25%));
+  }
+}
+@font-face {
+  font-family: 'Icofont';
+  src: url('../fonts/Icofont.ttf?64p4bc') format('truetype'), url('../fonts/Icofont.woff?64p4bc') format('woff'), url('../fonts/Icofont.svg?64p4bc#Icofont') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+.ico {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Icofont' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.ico-tools:before {
+  content: "\e914";
+}
+.ico-schedule:before {
+  content: "\e90c";
+}
+.ico-add:before {
+  content: "\e934";
+}
+.ico-arrow_drop_down:before {
+  content: "\e918";
+}
+.ico-arrow_drop_up:before {
+  content: "\e919";
+}
+.ico-arrow_left:before {
+  content: "\e91b";
+}
+.ico-arrow_right:before {
+  content: "\e91c";
+}
+.ico-assignment:before {
+  content: "\e932";
+}
+.ico-check:before {
+  content: "\e91d";
+}
+.ico-close:before {
+  content: "\e935";
+}
+.ico-copyright:before {
+  content: "\e91e";
+}
+.ico-edit:before {
+  content: "\e937";
+}
+.ico-credit_card:before {
+  content: "\e92c";
+}
+.ico-directions:before {
+  content: "\e91f";
+}
+.ico-email:before {
+  content: "\e920";
+}
+.ico-error_outline:before {
+  content: "\e921";
+}
+.ico-disk:before {
+  content: "\e904";
+}
+.ico-fullscreen:before {
+  content: "\e903";
+}
+.ico-home:before {
+  content: "\e922";
+}
+.ico-info_outline:before {
+  content: "\e923";
+}
+.ico-keyboard_arrow_down:before {
+  content: "\e924";
+}
+.ico-keyboard_arrow_left:before {
+  content: "\e925";
+}
+.ico-keyboard_arrow_right:before {
+  content: "\e926";
+}
+.ico-keyboard_arrow_up:before {
+  content: "\e927";
+}
+.ico-label:before {
+  content: "\e90a";
+}
+.ico-shopping_cart:before {
+  content: "\e91a";
+}
+.ico-print:before {
+  content: "\e901";
+}
+.ico-shipping:before {
+  content: "\e928";
+}
+.ico-location:before {
+  content: "\e929";
+}
+.ico-circle:before {
+  content: "\e912";
+}
+.ico-phone:before {
+  content: "\e92b";
+}
+.ico-remove:before {
+  content: "\e936";
+}
+.ico-search:before {
+  content: "\e92d";
+}
+.ico-share:before {
+  content: "\e92e";
+}
+.ico-smartphone:before {
+  content: "\e92f";
+}
+.ico-square:before {
+  content: "\e913";
+}
+.ico-storefront:before {
+  content: "\e92a";
+}
+.ico-toc:before {
+  content: "\e930";
+}
+.ico-verified_user:before {
+  content: "\e931";
+}
+.ico-warning:before {
+  content: "\e902";
+}
+.ico-at:before {
+  content: "\e900";
+}
+.ico-file-pdf:before {
+  content: "\e933";
+}
+.ico-spinner:before {
+  content: "\e905";
+}
+.ico-tag:before {
+  content: "\e906";
+}
+.ico-tags:before {
+  content: "\e907";
+}
+.ico-tiktok:before {
+  content: "\e915";
+}
+.ico-facebook:before {
+  content: "\e908";
+}
+.ico-github:before {
+  content: "\e909";
+}
+.ico-instagram:before {
+  content: "\e90b";
+}
+.ico-linkedin:before {
+  content: "\e90d";
+}
+.ico-pinterest:before {
+  content: "\e90e";
+}
+.ico-soundcloud:before {
+  content: "\e90f";
+}
+.ico-tumblr:before {
+  content: "\e916";
+}
+.ico-twitter:before {
+  content: "\e910";
+}
+.ico-viadeo:before {
+  content: "\e911";
+}
+.ico-youtube:before {
+  content: "\e917";
+}
+@font-face {
+  font-family: 'Icofont';
+  src: url('../fonts/Icofont.ttf') format('truetype'), url('../fonts/Icofont.woff') format('woff'), url('../fonts/Icofont.svg#Icofont') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+.ico {
+  speak: none;
+  display: inline-block;
+}
+.material-icons {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+.fa,
+.fab,
+.fas,
+.far {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+.fa-spin {
+  animation: fa-spin 2s infinite linear;
+}
+.fa-pulse {
+  animation: fa-spin 1s infinite steps(8);
+}
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 /*# sourceMappingURL=content.css.map */

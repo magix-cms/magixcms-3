@@ -8,7 +8,9 @@
 	--light-grey: @light-grey;
 	--grey: @grey;
 	--dark-grey: @dark-grey;
+	--smooth-black: @smooth-black;
 	--black: @black;
+	--deep-black: @deep-black;
 	each(@theme-color, {
 		--@{key}-color-h: hue(@value);
 		--@{key}-color-s: saturation(@value);
@@ -53,6 +55,7 @@
 	--title-brd: none;
 	// --- Sizes
 	--toolbar-h: @toolbarH;
+	--logo-h: @logo-height;
 	--header-h: @headerH;
 	--footbar-h: @footbarH;
 	--spacer: 1rem;
@@ -64,6 +67,7 @@
 	--btn-line-height: 1.1;
 	--btn-padding-vertical: 1rem;
 	--btn-padding-horizontal: 1rem;
+	--range-color: var(--main-color);
 }
 @media (prefers-color-scheme: dark) {
 	:root {

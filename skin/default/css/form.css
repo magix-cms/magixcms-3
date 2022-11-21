@@ -503,9 +503,13 @@ select[multiple].input-lg {
     font-size: 0.875rem;
   }
 }
-.validate_form .form-control {
-  border-radius: 0;
+/*
+.validate_form {
+	.form-control {
+		border-radius: 0;
+	}
 }
+*/
 .help-block {
   display: block;
   margin-bottom: 10px;
@@ -559,11 +563,14 @@ textarea.form-control {
   margin: 0;
   padding: 20px 0 8px;
 }
+.nice-form .form-control {
+  border-radius: 0;
+}
 .nice-form .error ~ label,
-.nice-form input ~ label,
+.nice-form input:not([type="checkbox"],[type="radio"]) ~ label,
 .nice-form select ~ label,
 .nice-form textarea ~ label,
-.nice-form div ~ label {
+.nice-form div:not(.switch) ~ label {
   bottom: 0;
   color: var(--label-color);
   font-size: 16px;
@@ -583,10 +590,10 @@ textarea.form-control {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 .nice-form .error ~ label:after,
-.nice-form input ~ label:after,
+.nice-form input:not([type="checkbox"],[type="radio"]) ~ label:after,
 .nice-form select ~ label:after,
 .nice-form textarea ~ label:after,
-.nice-form div ~ label:after {
+.nice-form div:not(.switch) ~ label:after {
   background-color: var(--main-color);
   bottom: 8px;
   content: '';
@@ -601,10 +608,10 @@ textarea.form-control {
   width: 10px;
 }
 .nice-form .error ~ label:not(.is_empty),
-.nice-form input ~ label:not(.is_empty),
+.nice-form input:not([type="checkbox"],[type="radio"]) ~ label:not(.is_empty),
 .nice-form select ~ label:not(.is_empty),
 .nice-form textarea ~ label:not(.is_empty),
-.nice-form div ~ label:not(.is_empty) {
+.nice-form div:not(.switch) ~ label:not(.is_empty) {
   color: var(--main-color);
   font-size: 12px;
   top: 4px;
@@ -880,6 +887,93 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .input-group-btn:last-child > .btn-group {
   z-index: 2;
   margin-left: -1px;
+}
+.range_slider {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.range_slider .label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.range_slider .range_control {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 24px;
+  color: #635a5a;
+}
+.range_slider .sliders_control {
+  position: relative;
+  margin-bottom: 1rem;
+}
+.range_slider input[type=range] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background-color: var(--grey);
+  pointer-events: none;
+}
+.range_slider input[type=range]:focus {
+  outline: none;
+}
+.range_slider input[type=range]:focus::-webkit-slider-runnable-track {
+  outline: none;
+}
+.range_slider input[type=range]:focus::-ms-fill-lower {
+  outline: none;
+}
+.range_slider input[type=range]:focus::-ms-fill-upper {
+  outline: none;
+}
+.range_slider input[type=range]::-webkit-slider-thumb {
+  z-index: 2;
+  position: relative;
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--grey);
+  cursor: pointer;
+}
+.range_slider input[type=range]::-moz-range-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--grey);
+  cursor: pointer;
+}
+.range_slider input[type=range]::-webkit-slider-thumb:hover {
+  background: #f7f7f7;
+}
+.range_slider input[type=range]::-webkit-slider-thumb:active {
+  box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+  -webkit-box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+}
+.range_slider input[type="number"] {
+  color: #8a8383;
+  width: 50px;
+  height: 30px;
+  font-size: 20px;
+  border: none;
+}
+.range_slider input[type="number"]::-webkit-inner-spin-button,
+.range_slider input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 .alert {
   padding: var(--spacer);

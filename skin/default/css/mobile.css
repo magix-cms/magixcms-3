@@ -136,7 +136,7 @@ a:active {
 a:hover,
 a:focus {
   text-decoration: var(--link-hover-deco, underline);
-  color: var(--link-hover-color, hsl(219, 48%, 31%));
+  color: var(--link-hover-color, #335086);
 }
 a:not([href]),
 a:not([href]):hover {
@@ -1641,7 +1641,7 @@ button.close {
 }*/
 .modal-content {
   position: relative;
-  background-color: #fff;
+  background-color: var(--body-bg);
   border-radius: 2px;
   box-shadow:  0 24px 38px 3px rgba(0, 0, 0, 0.14),  0 9px 46px 8px rgba(0, 0, 0, 0.12),  0 11px 15px -7px rgba(0, 0, 0, 0.2);
   outline: 0;
@@ -1720,6 +1720,7 @@ button.close {
   justify-content: space-between;
 }
 .modal-title {
+  --heading-color: var(--text-color);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.02em;
@@ -1729,7 +1730,7 @@ button.close {
   margin: 0;
 }
 .modal-body {
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--text-color);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.04em;
@@ -2673,39 +2674,26 @@ button.close {
 }
 @font-face {
   font-family: 'Icofont';
-  src: url('../fonts/Icofont.ttf') format('truetype'), url('../fonts/Icofont.woff') format('woff'), url('../fonts/Icofont.svg#Icofont') format('svg');
+  src: url('../fonts/Icofont.ttf?64p4bc') format('truetype'), url('../fonts/Icofont.woff?64p4bc') format('woff'), url('../fonts/Icofont.svg?64p4bc#Icofont') format('svg');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 .ico {
+  /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'Icofont' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: inline-block;
+  /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 .ico-tools:before {
   content: "\e914";
-}
-.material-icons {
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
 }
 .ico-schedule:before {
   content: "\e90c";
@@ -2736,6 +2724,9 @@ button.close {
 }
 .ico-copyright:before {
   content: "\e91e";
+}
+.ico-edit:before {
+  content: "\e937";
 }
 .ico-credit_card:before {
   content: "\e92c";
@@ -2776,14 +2767,14 @@ button.close {
 .ico-label:before {
   content: "\e90a";
 }
-.ico-shipping:before {
-  content: "\e928";
-}
 .ico-shopping_cart:before {
   content: "\e91a";
 }
 .ico-print:before {
   content: "\e901";
+}
+.ico-shipping:before {
+  content: "\e928";
 }
 .ico-location:before {
   content: "\e929";
@@ -2821,17 +2812,23 @@ button.close {
 .ico-warning:before {
   content: "\e902";
 }
-.fa,
-.fab,
-.fas,
-.far {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  display: inline-block;
-  font-style: normal;
-  font-variant: normal;
-  text-rendering: auto;
-  line-height: 1;
+.ico-at:before {
+  content: "\e900";
+}
+.ico-file-pdf:before {
+  content: "\e933";
+}
+.ico-spinner:before {
+  content: "\e905";
+}
+.ico-tag:before {
+  content: "\e906";
+}
+.ico-tags:before {
+  content: "\e907";
+}
+.ico-tiktok:before {
+  content: "\e915";
 }
 .ico-facebook:before {
   content: "\e908";
@@ -2851,26 +2848,54 @@ button.close {
 .ico-soundcloud:before {
   content: "\e90f";
 }
+.ico-tumblr:before {
+  content: "\e916";
+}
 .ico-twitter:before {
   content: "\e910";
 }
 .ico-viadeo:before {
   content: "\e911";
 }
-.ico-at:before {
-  content: "\e900";
+.ico-youtube:before {
+  content: "\e917";
 }
-.ico-file-pdf:before {
-  content: "\e933";
+@font-face {
+  font-family: 'Icofont';
+  src: url('../fonts/Icofont.ttf') format('truetype'), url('../fonts/Icofont.woff') format('woff'), url('../fonts/Icofont.svg#Icofont') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
-.ico-spinner:before {
-  content: "\e905";
+.ico {
+  speak: none;
+  display: inline-block;
 }
-.ico-tag:before {
-  content: "\e906";
+.material-icons {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
-.ico-tags:before {
-  content: "\e907";
+.fa,
+.fab,
+.fas,
+.far {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
 }
 .fa-fw {
   text-align: center;
@@ -3851,6 +3876,18 @@ article ol {
     box-shadow:  0 2px 4px 0 rgba(0, 0, 0, 0.14),  0 4px 5px 0 rgba(0, 0, 0, 0.12),  0 1px 10px 0 rgba(0, 0, 0, 0.2);
   }
 }
+.grid {
+  display: grid;
+  grid-gap: var(--grid-gutter);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.list-grid {
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  grid-gap: var(--grid-gutter);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
 .dropdown:not(.open) .dropdown-toggle .show-less {
   display: none;
 }
@@ -3917,6 +3954,21 @@ article ol {
 .vignette .desc p {
   color: var(--light-grey);
 }
+.product-list {
+  /**
+	 * User input values.
+	 */
+  --grid-column-count: 4;
+  --grid-gap: var(--grid-gutter);
+  --grid-item--min-width: 300px;
+  /**
+	 * Calculated values.
+	 */
+  --gap-count: calc(var(--grid-column-count) - 1);
+  --total-gap-width: calc(var(--gap-count) * var(--grid-gap));
+  --grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+}
 @media (max-width: 47.999em) {
   .vignette:last-child {
     margin-bottom: 0;
@@ -3945,16 +3997,19 @@ ul.square-list > li::before,
 ul.label-list > li::before {
   position: absolute;
   top: calc(((1rem * var(--line-height)) - 1em) / 2);
+  /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'Icofont' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: inline-block;
+  /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  speak: none;
+  display: inline-block;
   color: var(--main-color);
   left: 0;
 }
@@ -3988,8 +4043,6 @@ ul.label-list > li:before {
   color: var(--white);
   padding: 1rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   --link-font: var(--font-family);
   --link-weight: var(--font-weight);
   --link-color: var(--white);
@@ -3998,9 +4051,32 @@ ul.label-list > li:before {
 }
 #cookies p {
   margin: 0;
+  display: flex;
+}
+#cookies .btns {
+  display: flex;
+  gap: 0.5rem;
+}
+#cookies .btns .btn {
+  flex: 1 0 calc(50% - 0.25rem);
 }
 #cookies .material-icons {
-  margin-right: 0.5rem;
+  margin-right: 0.25rem;
+}
+@media (max-width: 47.999em) {
+  #cookies {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+@media (min-width: 48em) {
+  #cookies {
+    align-items: center;
+    justify-content: space-between;
+  }
+  #cookies .btns {
+    margin-left: auto;
+  }
 }
 #error #contact-form button[type="submit"] .material-icons,
 #error .success .material-icons {

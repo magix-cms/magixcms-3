@@ -6,7 +6,9 @@
   --light-grey: #cccccc;
   --grey: #777777;
   --dark-grey: #424242;
+  --smooth-black: #212121;
   --black: #151515;
+  --deep-black: #000;
   --main-color-h: 219;
   --main-color-s: 48%;
   --main-color-l: 45%;
@@ -66,8 +68,9 @@
   --title-pd: 0;
   --title-brd: none;
   --toolbar-h: 0px;
-  --header-h: calc(var(--spacer) + 50px);
-  --footbar-h: calc(1rem * var(--btn-line-height, var(--line-height)) + 2rem);
+  --logo-h: 50px;
+  --header-h: calc(var(--spacer) + var(--logo-h));
+  --footbar-h: calc(1.5rem * var(--btn-line-height, var(--line-height)) + 2rem);
   --spacer: 1rem;
   --label-color: var(--text-color);
   --ph-color: var(--dark-white);
@@ -76,6 +79,7 @@
   --btn-line-height: 1.1;
   --btn-padding-vertical: 1rem;
   --btn-padding-horizontal: 1rem;
+  --range-color: var(--main-color);
 }
 @media (prefers-color-scheme: dark) {
   :root {

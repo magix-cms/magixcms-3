@@ -1,0 +1,170 @@
+.nice-placeholder() {
+	color: transparent;
+	transition-duration: .2s;
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
+	font-size: 80%;
+}
+
+.nice-form {
+	@padb: 8px;
+
+	.form-group.has-error {
+		label,
+		label.control-label {
+			color: @state-danger-text !important;
+
+			&:after {
+				left: 0;
+				visibility: visible;
+				width: 100%;
+				background-color: @state-danger-text;
+				bottom: 32px + @padb;
+			}
+		}
+
+		.error {
+			font-size: 80%;
+		}
+
+		input:focus {
+			box-shadow: none;
+		}
+	}
+
+	.has-feedback label~.form-control-feedback {
+		top: 20px;
+	}
+
+	.form-group {
+		position: relative;
+		font-size: 16px;
+		margin: 0;
+		padding: 20px 0 @padb;
+	}
+
+	.form-control {
+		border-radius: 0;
+	}
+
+	.error ~ label,
+	input:not([type="checkbox"],[type="radio"]) ~ label,
+	select ~ label,
+	textarea ~ label,
+	div:not(.switch) ~label {
+		bottom: 0;
+		color: var(--label-color);
+		font-size: 16px;
+		font-weight: 400;
+		left: 0;
+		right: 0;
+		pointer-events: none;
+		position: absolute;
+		display: block;
+		top: 24px;
+		width: 100%;
+		overflow: hidden;
+		white-space: nowrap;
+		text-align: left;
+		margin: 0;
+		transition-duration: .2s;
+		transition-timing-function: cubic-bezier(.4,0,.2,1);
+
+		&:after {
+			background-color: var(--main-color);
+			bottom: @padb;
+			content: '';
+			height: 2px;
+			left: 45%;
+			position: absolute;
+			transition-duration: .2s;
+			transition-timing-function: cubic-bezier(.4,0,.2,1);
+			-webkit-transition-property: left, visibility, width; // Safari
+			transition-property: left, visibility, width;
+			visibility: hidden;
+			width: 10px;
+		}
+
+		&:not(.is_empty) {
+			color: var(--main-color);
+			font-size: 12px;
+			top: 4px;
+			visibility: visible;
+		}
+	}
+
+	// Test
+	input[type="text"],
+	input[type="search"],
+	input[type="email"],
+	input[type="tel"],
+	input[type="number"],
+	input[type="password"],
+	select,
+	textarea {
+		border: none;
+		border-bottom: 1px solid var(--ph-brd-color);
+		box-shadow: none;
+		font-size: 16px;
+		font-family: "Helvetica","Arial",sans-serif;
+		margin: 0;
+		padding: 4px 0;
+		background: 0 0;
+		text-align: left;
+		color: inherit;
+
+		&.hint {
+			border-bottom: none;
+			color: #cccccc;
+		}
+
+		&:focus {
+			~ label {
+				color: var(--main-color);
+				font-size: 12px;
+				top: 4px;
+				visibility: visible;
+
+				&:after {
+					left: 0;
+					visibility: visible;
+					width: 100%;
+				}
+			}
+		}
+	}
+
+	input,
+	textarea,
+	select {
+		&::-webkit-input-placeholder{
+			.nice-placeholder();
+		}
+		&::-moz-placeholder{
+			.nice-placeholder();
+		}
+		&:-ms-input-placeholder{
+			.nice-placeholder();
+		}
+		&:-moz-placeholder {
+			.nice-placeholder();
+		}
+
+		&:focus {
+			box-shadow: none;
+			outline: none;
+
+			&::-webkit-input-placeholder{
+				color: var(--ph-color);
+			}
+			&::-moz-placeholder{
+				color: var(--ph-color);
+			}
+			&:-ms-input-placeholder{
+				color: var(--ph-color);
+			}
+			&:-moz-placeholder {
+				color: var(--ph-color);
+			}
+		}
+	}
+}

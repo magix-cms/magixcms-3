@@ -51,15 +51,14 @@
                     </div>
                     <div class="row-center">
                         {$smarty.capture.contact}
+                        {include file="cartpay/brick/add-to-cart.tpl"}
                     </div>
                 </div>
             </div>
-            {if $associated}
+            {if $product.associated}
             <p class="h2">{#similar_products#|ucfirst}</p>
-            <div class="vignette-list">
-                <div class="row" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/product.tpl" data=$associated classCol='vignette col-12 col-xs-6 col-md-4'}
-                </div>
+            <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                {include file="catalog/loop/product.tpl" data=$product.associated classCol='vignette' nocache}
             </div>
             {/if}
         {/block}

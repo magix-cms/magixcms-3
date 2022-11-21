@@ -16,6 +16,7 @@
                 {include file="img/img.tpl" img=$item.img lazy=$lazy}
                 <div itemprop="description" class="desc">
                     <h2 itemprop="name">{$item.name}</h2>
+                    {*<pre>{$item|var_dump}</pre>*}
                     <p class="text-justify">{if $truncate}
                             {$item.resume|truncate:$truncate:'&hellip;'}
                         {else}

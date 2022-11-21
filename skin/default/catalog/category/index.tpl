@@ -26,20 +26,16 @@
             </div>
             {/nocache}
             {if $categories}
-            <p class="h2">{#subcategories#|ucfirst}</p>
-            <div class="vignette-list">
-                <div class="row" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/category.tpl" data=$categories classCol='vignette col-12 col-xs-6 col-md-4' nocache}
+                <p class="h2">{#categories#}</p>
+                <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    {include file="catalog/loop/category.tpl" data=$categories classCol='vignette' nocache}
                 </div>
-            </div>
             {/if}
             {if $products}
-            <p class="h2">{#products#|ucfirst}</p>
-            <div class="vignette-list">
-                <div class="row" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/product.tpl" data=$products classCol='vignette col-12 col-xs-6 col-md-4' nocache}
+                <p class="h2">{#products#|ucfirst}</p>
+                <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    {include file="catalog/loop/product.tpl" data=$products classCol='vignette' nocache}
                 </div>
-            </div>
             {/if}
         {/block}
     </article>

@@ -311,12 +311,24 @@
  * @step int amount used with the multiplier, defaut: 14%
  */
 .color-variant(@color,@level: 1,@fct: darken,@step: 14%) {
-	@amount: @level * @step;
+	@amount: (@level * @step);
 	.getVariant(@color,@type,@amount) when (@type = darken){
-		@variant: darken(@color, @amount);
+		//@variant: darken(@color, @amount);
+		//@variant: darken(saturate(@color, @amount), @amount);
+		@hue: hue(@color);
+		@sat: saturation(@color);
+		//@lig: lightness(@color);
+		@val: hsvvalue(@color);
+		@variant: hsv(@hue,min((@sat + @amount),100%),max((@val - @amount),5%));
 	}
 	.getVariant(@color,@type,@amount) when (@type = lighten){
-		@variant: lighten(@color, @amount);
+		//@variant: lighten(@color, @amount);
+		//@variant: lighten(desaturate(@color, @amount), @amount);
+		@hue: hue(@color);
+		@sat: saturation(@color);
+		//@lig: lightness(@color);
+		@val: hsvvalue(@color);
+		@variant: hsv(@hue,max((@sat - @amount),5%),min((@val + @amount),100%));
 	}
 	.getVariant(@color,@fct,@amount);
 }

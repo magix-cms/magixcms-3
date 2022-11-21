@@ -208,7 +208,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc.cmd" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Less" />
     <option name="trackOnlyRoot" value="true" />
@@ -234,7 +234,7 @@
       </array>
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/lessc.cmd" />
+    <option name="program" value="lessc.cmd" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Less plugins" />
     <option name="trackOnlyRoot" value="true" />
@@ -254,7 +254,7 @@
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/cleancss" />
+    <option name="program" value="cleancss" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="CSS" />
     <option name="trackOnlyRoot" value="true" />
@@ -274,7 +274,7 @@
       <array />
     </option>
     <option name="outputFromStdout" value="false" />
-    <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
+    <option name="program" value="terser" />
     <option name="runOnExternalChanges" value="true" />
     <option name="scopeName" value="Script" />
     <option name="trackOnlyRoot" value="true" />
@@ -382,7 +382,7 @@
     <option name="outputFromStdout" value="false" />
     <option name="program" value="$USER_HOME$/AppData/Roaming/npm/terser" />
     <option name="runOnExternalChanges" value="true" />
-    <option name="scopeName" value="tinyMCE Plugins" />
+    <option name="scopeName" value="TinyMCE Plugins" />
     <option name="trackOnlyRoot" value="true" />
     <option name="workingDir" value="$FileDir$" />
     <envs />

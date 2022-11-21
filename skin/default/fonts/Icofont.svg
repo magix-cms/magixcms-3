@@ -62,4 +62,5 @@
 <glyph unicode="&#xe934;" glyph-name="add" d="M1620 940h-512v-512h-168v512h-512v168h512v512h168v-512h512v-168z" />
 <glyph unicode="&#xe935;" glyph-name="close" d="M1620 1500l-476-476 476-476-120-120-476 476-476-476-120 120 476 476-476 476 120 120 476-476 476 476z" />
 <glyph unicode="&#xe936;" glyph-name="remove" d="M1620 940h-1192v168h1192v-168z" />
+<glyph unicode="&#xe937;" glyph-name="edit" d="M1768 1448l-156-156-320 320 156 156q24 24 60 24t60-24l200-200q24-24 24-60t-24-60zM256 576l944 944 320-320-944-944h-320v320z" />
 </font></defs></svg>
