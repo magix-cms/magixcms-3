@@ -211,7 +211,14 @@ class backend_model_plugins{
                     $ext = new $class();
                     $item['title'] = $ext->getExtensionName();
                 }
-                $tabs[] = $item;
+                if (method_exists($class, 'getTabsAvailable')) {
+                    $ext = new $class();
+                    if(in_array($this->controller_name,$ext->getTabsAvailable())){
+                        $tabs[] = $item;
+                    }
+                }else{
+                    $tabs[] = $item;
+                }
             }
         }
         if(!empty($tabs)) {
