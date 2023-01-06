@@ -1,78 +1,88 @@
 <?php
-class backend_db_logo
-{
+class backend_db_logo {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
                 case 'page':
-                    $sql = 'SELECT p.*,c.*,lang.*
+                    $query = 'SELECT p.*,c.*,lang.*
 							FROM mc_logo AS p
 							JOIN mc_logo_content AS c USING(id_logo)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE p.id_logo = :edit';
                     break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
                 case 'root':
-                    $sql = 'SELECT * FROM mc_logo ORDER BY id_logo DESC LIMIT 0,1';
+                    $query = 'SELECT * FROM mc_logo ORDER BY id_logo DESC LIMIT 0,1';
                     break;
                 case 'content':
-                    $sql = 'SELECT * FROM `mc_logo_content` WHERE `id_logo` = :id_logo AND `id_lang` = :id_lang';
+                    $query = 'SELECT * FROM `mc_logo_content` WHERE `id_logo` = :id_logo AND `id_lang` = :id_lang';
                     break;
 				case 'page':
-					$sql = 'SELECT p.img_logo,p.active_logo,c.alt_logo,c.title_logo,lang.iso_lang,lang.id_lang
+					$query = 'SELECT p.img_logo,p.active_logo,c.alt_logo,c.title_logo,lang.iso_lang,lang.id_lang
 							FROM mc_logo AS p
 							JOIN mc_logo_content AS c USING(id_logo)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE lang.iso_lang = :iso LIMIT 0,1';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
-        switch ($config['type']) {
+	public function insert(array $config, array $params = []) {
+		switch ($config['type']) {
             case 'img':
-                $sql = "INSERT INTO `mc_logo`(img_logo,active_logo,date_register) 
+                $query = "INSERT INTO `mc_logo`(img_logo,active_logo,date_register) 
 						VALUES (:img_logo,:active_logo,NOW())";
                 break;
             case 'imgContent':
-                $sql = 'INSERT INTO `mc_logo_content`(id_logo,id_lang,alt_logo,title_logo,last_update) 
+                $query = 'INSERT INTO `mc_logo_content`(id_logo,id_lang,alt_logo,title_logo,last_update) 
 				  		VALUES (:id_logo,:id_lang,:alt_logo,:title_logo,NOW())';
                 break;
+			default:
+				return false;
         }
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -81,42 +91,37 @@ class backend_db_logo
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
             case 'img':
-                $sql = 'UPDATE mc_logo
+                $query = 'UPDATE mc_logo
 						SET img_logo = :img_logo,
 						    active_logo = :active_logo
                 		WHERE id_logo = :id_logo';
                 break;
             case 'active':
-                $sql = 'UPDATE mc_logo
+                $query = 'UPDATE mc_logo
 						SET active_logo = :active_logo
                 		WHERE id_logo = :id_logo';
                 break;
             case 'imgContent':
-                $sql = 'UPDATE mc_logo_content 
+                $query = 'UPDATE mc_logo_content 
 						SET 
 							alt_logo = :alt_logo,
 							title_logo = :title_logo
                 		WHERE id_logo = :id_logo 
                 		AND id_lang = :id_lang';
                 break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

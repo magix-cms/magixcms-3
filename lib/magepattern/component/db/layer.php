@@ -36,7 +36,7 @@
 # needs please refer to http://www.magepattern.com for more information.
 #
 # -- END LICENSE BLOCK -----------------------------------
-class db_layer{
+class db_layer {
     /**
      * @access protected
      * DRIVER SGBD
@@ -54,67 +54,47 @@ class db_layer{
     /**
      * The connection configuration array.
      *
-     * @var array
+     * @var array $config
      */
-    public $config;
-    /**
-     * @var array
-     */
-    protected static $setOption = array(
-        'mode'          =>  'assoc',
-        'closeCursor'   =>  true,
-        'debugParams'   =>  false
-    );
+    public array $config = [
+		'charset' => 'utf8',
+		'port' => '3306'
+	];
 
     /**
-     * @var bool
+     * @var array $setOption
      */
-    protected $inTransaction = false;
+    protected static array $setOption = [
+		'mode'        => 'assoc',
+		'closeCursor' => true,
+		'debugParams' => false
+	];
+
     /**
-     *
-     * @var boolean
+     * @var bool $inTransaction
+     * @var bool $isPrepared
      */
-    protected $isPrepared = false;
-    protected $logger;
+    protected bool
+		$inTransaction = false,
+		$isPrepared = false;
+
+	/**
+	 * @var debug_logger $logger
+	 */
+    protected debug_logger $logger;
 
     /**
      * db_layer constructor.
-     * @param bool $config
-     * @throws Exception
+     * @param array $config
      */
-    public function __construct($config = false){
+    public function __construct(array $config = []) {
     	$this->logger = new debug_logger(MP_LOG_DIR);
-        try{
-            if($config != false){
-                if(is_array($config)){
-                    if(array_key_exists('charset', $config)){
-                        $this->config['charset'] = $config['charset'];
-                    }else{
-                        $this->config['charset'] = 'utf8';
-                    }
-                    if(array_key_exists('port', $config)){
-                        $this->config['port'] = $config['port'];
-                    }else{
-                        $this->config['port'] = '3306';
-                    }
-                    //$this->config['options'] = array(PDO::ATTR_AUTOCOMMIT=>0);
-                    /*if(array_key_exists('unix_socket', $config)){
-                        $this->config['unix_socket'] = $config['unix_socket'];
-                    }else{
-                        $this->config['unix_socket'] = '3306';
-                    }*/
-                }
-            }else{
-                //$this->config['options'] = array(PDO::ATTR_AUTOCOMMIT=>0);
-                $this->config['charset'] = 'utf8';
-                $this->config['port'] = '3306';
-                //$this->config['unix_socket'] = '3306';
-            }
-            //$this->connection()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        }catch (PDOException $e){
-            $this->logger->log('statement', 'db', 'An Exception PDO has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-        }
+		if(!empty($config)){
+			if(array_key_exists('charset', $config)) $this->config['charset'] = $config['charset'];
+			if(array_key_exists('port', $config)) $this->config['port'] = $config['port'];
+			//$this->config['options'] = array(PDO::ATTR_AUTOCOMMIT=>0);
+			//if(array_key_exists('unix_socket', $config)) $this->config['unix_socket'] = $config['unix_socket'];
+		}
     }
 
     /**
@@ -151,17 +131,15 @@ class db_layer{
      * @param $mode
      * @return int
      */
-    private function setMode($mode){
+    private function setMode($mode) {
         switch($mode){
-            case 'assoc':
-                $fetchmode = PDO::FETCH_ASSOC;
-                break;
             case 'class':
                 $fetchmode = PDO::FETCH_CLASS;
                 break;
             case 'column':
                 $fetchmode = PDO::FETCH_NUM;
                 break;
+			case 'assoc':
             default:
                 $fetchmode = PDO::FETCH_ASSOC;
                 break;
@@ -170,73 +148,59 @@ class db_layer{
     }
 
     /**
-     * @param bool $option
+     * @param array $option
      * @return array
      */
-    private function setConfig($option = false){
-        if($option != false){
-            if(is_array($option)){
-                $optionDB = $option;
-            }
-        }else{
-            $optionDB = self::$setOption;
-        }
-        if(array_key_exists('mode', $optionDB)){
-            $setConfig['mode'] = $optionDB['mode'];
-        }else{
-            $setConfig['mode'] = self::$setOption['mode'];
-        }
-        if(array_key_exists('closeCursor', $optionDB)){
-            $setConfig['closeCursor'] = $optionDB['closeCursor'];
-        }else{
-            $setConfig['closeCursor'] = self::$setOption['closeCursor'];
-        }
-        if(array_key_exists('debugParams', $optionDB)){
-            $setConfig['debugParams'] = $optionDB['debugParams'];
-        }else{
-            $setConfig['debugParams'] = self::$setOption['debugParams'];
-        }
+    private function setConfig(array $option): array {
+        $optionDB = empty($option) ? self::$setOption : $option;
+
+		$setConfig['mode'] = array_key_exists('mode', $optionDB) ? $optionDB['mode'] : self::$setOption['mode'];
+		$setConfig['closeCursor'] = array_key_exists('closeCursor', $optionDB) ? $optionDB['closeCursor'] : self::$setOption['closeCursor'];
+		$setConfig['debugParams'] = array_key_exists('debugParams', $optionDB) ? $optionDB['debugParams'] : self::$setOption['debugParams'];
+
         return $setConfig;
     }
+
     /**
      *  Executes an SQL statement, returning a result set as a PDOStatement object
      *
-     * @param request $query
-     * @return void
+     * @param string $query
+	 * @return false|PDOStatement
      */
-    public function query($query)
-    {
+    public function query(string $query) {
         try{
             return $this->connection()->query($query);
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
+		catch (PDOException $e){
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		return false;
     }
 
     /**
      *  Prepares a statement for execution and returns a statement object
      *
-     * @param request containt $sql
-     * @return PDOStatement
-     * @throws Exception
+     * @param string $sql
+     * @return false|PDOStatement
      */
-    public function prepare($sql){
+    public function prepare(string $sql) {
     	//$log = preg_replace('~[\r\n]+~', '', $sql);
     	//$log = preg_replace('~([\t]+)~', ' ', $log);
     	//$log = preg_replace('~([ ]+)~', ' ', $log);
 		//$this->logger->log('statement', 'requests', trim($log), debug_logger::LOG_VOID);
-        try{
-            if ($this->isPrepared) {
-                throw new Exception('This statement has been prepared already');
-            }
+        try {
+            if($this->isPrepared) {
+				$this->logger->log('statement', 'db', 'An error has occured : This statement has been prepared already : '.$sql, debug_logger::LOG_MONTH);
+			};
 
-            return $this->connection()->prepare($sql);
-            $this->isPrepared = true;
+			$this->isPrepared = true;
+			return $this->connection()->prepare($sql);
 
-        }catch (PDOException $e){
+        }
+		catch (PDOException $e) {
 			$this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
+		return false;
     }
 
     /**
@@ -262,6 +226,7 @@ class db_layer{
         }
         $this->inTransaction = true;
     }
+
     /**
      * instance exec
      *
@@ -270,6 +235,7 @@ class db_layer{
     public function exec($sql){
         $this->connection()->exec($sql);
     }
+
     /**
      * instance commit
      *
@@ -278,6 +244,7 @@ class db_layer{
         $this->connection()->commit();
         $this->inTransaction = false;
     }
+
     /**
      * instance rollback
      *
@@ -286,19 +253,18 @@ class db_layer{
         if($this->connection()->inTransaction()){
             $this->connection()->rollBack();
             $this->inTransaction = false;
-        }else{
-            // throw new Exception('Must call beginTransaction() before you can rollback');
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'Must call beginTransaction() before you can rollback', debug_logger::LOG_MONTH);
+        }
+		else{
+            $this->logger->log('statement', 'db', 'Must call beginTransaction() before you can rollback', debug_logger::LOG_MONTH);
         }
     }
+
     /**
      * Retourne un tableau contenant toutes les lignes du jeu d'enregistrements
-     * @param $sql
-     * @param bool $execute
-     * @param bool $setOption
-     * @throws Exception
-     * @return mixed
+     * @param string $sql
+     * @param array $execute
+     * @param array $setOption
+     * @return array|bool
      * @example :
      * #### No params ###
      * $color = '';
@@ -319,255 +285,249 @@ class db_layer{
         }
         print $color.'<br />';
      */
-    public function fetchAll($sql,$execute=false,$setOption=false){
-        try{
-            /**
-             * Charge la configuration
-             */
-			//$logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-			//$logger->log('statement', 'select', $sql, debug_logger::LOG_MONTH);
+    public function fetchAll(string $sql, array $execute = [], array $setOption = []) {
+        try {
+			//$this->logger->log('statement', 'db', 'fetchAll : '.$sql, debug_logger::LOG_MONTH);
+
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
-            if(is_object($prepare)){
+            if(is_object($prepare)) {
                 $prepare->setFetchMode($this->setMode($setConfig['mode']));
-                $execute ? $prepare->execute($execute) : $prepare->execute();
-                $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
+                !empty($execute) ? $prepare->execute($execute) : $prepare->execute();
+                if($setConfig['debugParams']) $prepare->debugDumpParams();
                 $result = $prepare->fetchAll();
-                $setConfig['closeCursor'] ? $prepare->closeCursor():'';
+                if($setConfig['closeCursor']) $prepare->closeCursor();
+				$this->isPrepared = false;
                 return $result;
-            }else{
-                throw new Exception('fetchAll Error with SQL prepare');
             }
-
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else {
+				$this->logger->log('statement', 'db', 'fetchAll Error with SQL prepare', debug_logger::LOG_MONTH);
+            }
         }
+		catch (PDOException $e) {
+			$this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		return false;
     }
 
     /**
      * Récupère la ligne suivante d'un jeu de résultats
-     * @param $sql
-     * @param bool $execute
-     * @param bool $setOption
-     * @return mixed
-     * @throws Exception
+     * @param string $sql
+     * @param array $execute
+     * @param array $setOption
+     * @return array|bool
      * @example:
      *
      * $select =  $db->fetch('SELECT id, color,name FROM fruit');
      * print $select['name'];
      */
-    public function fetch($sql,$execute=false,$setOption=false){
-        try{
-            /**
-             * Charge la configuration
-             */
-			//$logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-			//$logger->log('statement', 'select', $sql, debug_logger::LOG_MONTH);
+    public function fetch(string $sql, array $execute = [], array $setOption = []) {
+        try {
+			//$this->logger->log('statement', 'db', 'fetch : '.$sql, debug_logger::LOG_MONTH);
+
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
-            if(is_object($prepare)){
+            if(is_object($prepare)) {
                 $prepare->setFetchMode($this->setMode($setConfig['mode']));
-                $execute ? $prepare->execute($execute) : $prepare->execute();
-                $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
+				!empty($execute) ? $prepare->execute($execute) : $prepare->execute();
+                if($setConfig['debugParams']) $prepare->debugDumpParams();
                 $result = $prepare->fetch();
-                $setConfig['closeCursor'] ? $prepare->closeCursor():'';
+                if($setConfig['closeCursor']) $prepare->closeCursor();
+				$this->isPrepared = false;
                 return $result;
-            }else{
-                throw new Exception('fetch Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else {
+				$this->logger->log('statement', 'db', 'fetch Error with SQL prepare', debug_logger::LOG_MONTH);
+            }
         }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		return false;
     }
 
     /**
      * Récupère la prochaine ligne et la retourne en tant qu'objet
-     * @param $sql
-     * @param bool $execute
-     * @param bool $setOption
+     * @param string $sql
+     * @param array $execute
+     * @param array $setOption
      * @return mixed
-     * @throws Exception
      */
-    public function fetchObject($sql,$execute=false,$setOption=false){
-        try{
-            /**
-             * Charge la configuration
-             */
+    public function fetchObject(string $sql, array $execute = [], array $setOption = []){
+        try {
+			//$this->logger->log('statement', 'db', 'fetchObject : '.$sql, debug_logger::LOG_MONTH);
+
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
                 $execute ? $prepare->execute($execute) : $prepare->execute();
-                $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
+                if($setConfig['debugParams']) $prepare->debugDumpParams();
                 $result = $prepare->fetchObject();
-                $setConfig['closeCursor'] ? $prepare->closeCursor():'';
+                if($setConfig['closeCursor']) $prepare->closeCursor();
+				$this->isPrepared = false;
                 return $result;
-            }else{
-                throw new Exception('fetchObject Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else {
+				$this->logger->log('statement', 'db', 'fetchObject Error with SQL prepare', debug_logger::LOG_MONTH);
+            }
+        }
+		catch (PDOException $e) {
+			$this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
     /**
      * Insertion d'une ligne
-     * @param $sql
-     * @param bool $execute
-     * @param bool $setOption
-     * @throws Exception
+     * @param string $sql
+     * @param array $execute
+     * @param array $setOption
      */
-    public function insert($sql,$execute=false,$setOption=false){
-        try{
-            /**
-             * Charge la configuration
-             */
+    public function insert(string $sql, array $execute = [], array $setOption = []){
+        try {
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
                 $prepare->execute($execute);
-                $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
-                $setConfig['closeCursor'] ? $prepare->closeCursor():'';
-            }else{
-                throw new Exception('insert Error with SQL prepare');
+                if($setConfig['debugParams']) $prepare->debugDumpParams();
+                if($setConfig['closeCursor']) $prepare->closeCursor();
+				$this->isPrepared = false;
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else {
+				$this->logger->log('statement', 'db', 'insert Error with SQL prepare', debug_logger::LOG_MONTH);
+            }
+        }
+		catch (PDOException $e) {
+			$this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
     /**
      * Modification d'une ligne
-     * @param $sql
-     * @param bool $execute
-     * @param bool $setOption
-     * @throws Exception
+     * @param string $sql
+     * @param array $execute
+     * @param array $setOption
      */
-    public function update($sql,$execute=false,$setOption=false){
-        try{
-            /**
-             * Charge la configuration
-             */
+    public function update(string $sql, array $execute = [], array $setOption = []){
+        try {
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
                 $prepare->execute($execute);
-                $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
-                $setConfig['closeCursor'] ? $prepare->closeCursor():'';
-            }else{
-                throw new Exception('update Error with SQL prepare');
+				if($setConfig['debugParams']) $prepare->debugDumpParams();
+				if($setConfig['closeCursor']) $prepare->closeCursor();
+				$this->isPrepared = false;
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else {
+				$this->logger->log('statement', 'db', 'update Error with SQL prepare', debug_logger::LOG_MONTH);
+            }
+        }
+		catch (PDOException $e) {
+			$this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
     /**
      * Suppression d'une ligne
-     * @param $sql
-     * @param bool $execute
-     * @param bool $setOption
-     * @throws Exception
+     * @param string $sql
+     * @param array $execute
+     * @param array $setOption
      */
-    public function delete($sql,$execute=false,$setOption=false){
-        try{
-            /**
-             * Charge la configuration
-             */
+    public function delete(string $sql, array $execute = [], array $setOption = []){
+        try {
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
                 $prepare->execute($execute);
-                $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
-                $setConfig['closeCursor'] ? $prepare->closeCursor():'';
-            }else{
-                throw new Exception('delete Error with SQL prepare');
+				if($setConfig['debugParams']) $prepare->debugDumpParams();
+				if($setConfig['closeCursor']) $prepare->closeCursor();
+				$this->isPrepared = false;
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else {
+				$this->logger->log('statement', 'db', 'delete Error with SQL prepare', debug_logger::LOG_MONTH);
+            }
+        }
+		catch (PDOException $e) {
+			$this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
-    /**
-     * Effectuer une Transaction prépare
-     *
-     * @param $queries
-     * @param array $config
-     *
-     * Example (prepare request with named parameters)
-     * $queries = array(
-     *   array('request'=>'DELETE FROM mytable WHERE id =:id','params'=>array(':id' => $id))
-     * );
-     *
-     * OR (prepare request with question mark parameters)
-     *
-     * $queries = array(
-     *   array('request'=>'DELETE FROM mytable WHERE id = ?','params'=>array($id))
-     * );
-     * component_routing_db::layer()->transaction($queries,array('type'=>'prepare'));
-     *
-     * Example (exec request)
-     * $sql = array(
-     *   'DELETE FROM mytable WHERE id ='.$id
-     * );
-     * component_routing_db::layer()->transaction($queries,array('type'=>'exec'));
-     */
-    public function transaction($queries,$config = array('type'=>'prepare')){
-        try{
+	/**
+	 * Effectuer une Transaction prépare
+	 *
+	 * @param array $queries
+	 * @param array $config
+	 *
+	 * Example (prepare request with named parameters)
+	 * $queries = array(
+	 *   array('request'=>'DELETE FROM mytable WHERE id =:id','params'=>array(':id' => $id))
+	 * );
+	 *
+	 * OR (prepare request with question mark parameters)
+	 *
+	 * $queries = array(
+	 *   array('request'=>'DELETE FROM mytable WHERE id = ?','params'=>array($id))
+	 * );
+	 * component_routing_db::layer()->transaction($queries,array('type'=>'prepare'));
+	 *
+	 * Example (exec request)
+	 * $sql = array(
+	 *   'DELETE FROM mytable WHERE id ='.$id
+	 * );
+	 * component_routing_db::layer()->transaction($queries,array('type'=>'exec'));
+	 * @return array|bool
+	 */
+    public function transaction(array $queries, array $config = ['type' => 'prepare']) {
+        try {
             $transaction = $this->beginTransaction();
-            if($transaction->inTransaction()){
-                if(is_array($queries)){
-					$rslt = array();
-                    foreach ($queries as $key => $value){
-                        if($config['type'] === 'prepare'){
-                            if(is_array($value)) {
-                                if (isset($value['request'])) {
-									$this->isPrepared = true;
-									$setConfig = $this->setConfig(false);
-									$prepare = $transaction->prepare($value['request']);
-                                    if(is_object($prepare)) {
-                                        if(isset($value['fetch']) && $value['fetch']) {
-											$prepare->setFetchMode($this->setMode($setConfig['mode']));
-											$value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
-											$setConfig['debugParams'] ? $prepare->debugDumpParams():'';
-											$result = $prepare->fetchAll();
-											$setConfig['closeCursor'] ? $prepare->closeCursor():'';
-											$rslt[$key] = $result;
-										}
-                                    	else {
-											$value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
-										}
-                                    }else{
-                                        throw new Exception('delete Error with SQL prepare transaction');
-                                    }
-                                }
-                            }
-                        }elseif($config['type'] === 'exec'){
-                            if(!is_array($value)){
-                                $this->isPrepared = false;
-                                $transaction->exec($value);
-                            }
-                        }
-                    }
-                    $transaction->commit();
-                    return $rslt;
-                }else{
-                    throw new Exception("queries params is not array");
-                }
-            }else{
-                $logger = new debug_logger(MP_LOG_DIR);
-                $logger->log('statement', 'db', 'inTransaction : false', debug_logger::LOG_MONTH);
+            if($transaction->inTransaction()) {
+				$results = [];
+				foreach ($queries as $key => $value){
+					if($config['type'] === 'prepare'){
+						if(is_array($value)) {
+							if (isset($value['request'])) {
+								$this->isPrepared = true;
+								$setConfig = $this->setConfig([]);
+								$prepare = $transaction->prepare($value['request']);
+								if(is_object($prepare)) {
+									if(isset($value['fetch']) && $value['fetch']) {
+										$prepare->setFetchMode($this->setMode($setConfig['mode']));
+										$value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
+										if($setConfig['debugParams']) $prepare->debugDumpParams();
+										$result = $prepare->fetchAll();
+										if($setConfig['closeCursor']) $prepare->closeCursor();
+										$this->isPrepared = false;
+										$results[$key] = $result;
+									}
+									else {
+										$value['params'] ? $prepare->execute($value['params']) : $prepare->execute();
+										$this->isPrepared = false;
+									}
+								}
+								else {
+									throw new Exception('delete Error with SQL prepare transaction');
+								}
+							}
+						}
+					}
+					elseif($config['type'] === 'exec') {
+						if(!is_array($value)){
+							$this->isPrepared = false;
+							$transaction->exec($value);
+						}
+					}
+				}
+				$transaction->commit();
+				return $results;
             }
-        }catch(Exception $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else{
+                $this->logger->log('statement', 'db', 'inTransaction : false', debug_logger::LOG_MONTH);
+            }
+        }
+		catch(Exception $e){
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
             $this->rollBack();
         }
+		return false;
     }
 
     /**
@@ -579,10 +539,7 @@ class db_layer{
      * @return mixed
      */
     public function fetchColumn($sql,$column,$setOption=false){
-        try{
-            /**
-             * Charge la configuration
-             */
+        try {
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)){
@@ -590,13 +547,15 @@ class db_layer{
                 $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
                 $result = $prepare->fetchColumn($column);
                 $setConfig['closeCursor'] ? $prepare->closeCursor():'';
+				$this->isPrepared = false;
                 return $result;
-            }else{
+            }
+			else {
                 throw new Exception('fetchColumn Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
@@ -619,13 +578,15 @@ class db_layer{
                 $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
                 $result = $prepare->columnCount();
                 //$setConfig['closeCursor'] ? $prepare->closeCursor():'';
+				$this->isPrepared = false;
                 return $result;
-            }else{
+            }
+			else {
                 throw new Exception('ColumnCount Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
@@ -648,39 +609,42 @@ class db_layer{
                 $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
                 $result = $prepare->rowCount();
                 //$setConfig['closeCursor'] ? $prepare->closeCursor():'';
+				$this->isPrepared = false;
                 return $result;
-            }else{
+            }
+			else {
                 throw new Exception('rowCount Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
     /**
      * Create simple table
-     * @param $sql
-     * @param bool $setOption
-     * @throws Exception
+     * @param string $sql
+     * @param array $setOption
      */
-    public function createTable($sql,$setOption=false){
-        try{
+    public function createTable(string $sql, array $setOption = []) {
+        try {
             /**
              * Charge la configuration
              */
             $setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
-            if(is_object($prepare)){
+            if(is_object($prepare)) {
                 $prepare->execute();
-                $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
-                $setConfig['closeCursor'] ? $prepare->closeCursor():'';
-            }else{
-                throw new Exception('createTable Error with SQL prepare');
+                if($setConfig['debugParams']) $prepare->debugDumpParams();
+                if($setConfig['closeCursor']) $prepare->closeCursor();
+				$this->isPrepared = false;
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+			else {
+				$this->logger->log('statement', 'db', 'An error has occured : createTable Error with SQL prepare', debug_logger::LOG_MONTH);
+			}
+        }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
@@ -704,13 +668,15 @@ class db_layer{
                 $result = $prepare->rowCount();
                 $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
                 $setConfig['closeCursor'] ? $prepare->closeCursor():'';
+				$this->isPrepared = false;
                 return $result;
-            }else{
+            }
+			else {
                 throw new Exception('showTable Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
@@ -734,13 +700,15 @@ class db_layer{
                 $result = $prepare->rowCount();
                 $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
                 $setConfig['closeCursor'] ? $prepare->closeCursor():'';
+				$this->isPrepared = false;
                 return $result;
-            }else{
+            }
+			else {
                 throw new Exception('showTable Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
 
@@ -763,14 +731,17 @@ class db_layer{
                 $prepare->execute();
                 $setConfig['debugParams'] ? $prepare->debugDumpParams():'';
                 $setConfig['closeCursor'] ? $prepare->closeCursor():'';
-            }else{
+				$this->isPrepared = false;
+            }
+			else {
                 throw new Exception('showTable Error with SQL prepare');
             }
-        }catch (PDOException $e){
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		catch (PDOException $e) {
+            $this->logger->log('statement', 'db', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
+
     /**
      * Instance getColumnMeta
      * @param integer $column
@@ -778,6 +749,7 @@ class db_layer{
     public function getColumnMeta($column){
         return $this->connection()->getColumnMeta($column);
     }
+
     /**
      * Return an array of available PDO drivers
      * @return array(void)
@@ -785,12 +757,14 @@ class db_layer{
     public function availableDrivers(){
         return $this->connection()->getAvailableDrivers();
     }
+
     /**
      * Returns the ID of the last inserted row or sequence value
      */
     public function lastInsertId(){
         return $this->connection()->lastInsertId();
     }
+
     /**
      * Quotes a string for use in a query.
      * @param string $string
@@ -799,6 +773,7 @@ class db_layer{
     public function quote($string){
         return $this->connection()->quote($string);
     }
+
     /**
      * Advances to the next rowset in a multi-rowset statement handle
      * @return void
@@ -807,4 +782,3 @@ class db_layer{
         return $this->connection()->nextRowset();
     }
 }
-?>

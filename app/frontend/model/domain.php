@@ -33,36 +33,61 @@
 # needs please refer to http://www.magix-cms.com for more information.
 */
 class frontend_model_domain extends frontend_db_domain {
-
-	protected $template, $data;
+	/**
+	 * @var frontend_db_domain $instance
+	 */
+	static protected frontend_db_domain $instance;
 
 	/**
-	 * frontend_model_domain constructor.
-	 * @param stdClass $t
+	 * @var frontend_model_template $template
+	 * @var frontend_model_data $data
 	 */
-	public function __construct($t = null)
-	{
-		$this->template = $t ? $t : new frontend_model_template();
-		$this->data = new frontend_model_data($this,$this->template);
+	protected frontend_model_template $template;
+	protected frontend_model_data $data;
+
+	/**
+	 * @var array $validDomains
+	 */
+	public array $validDomains;
+
+	/**
+	 * @param frontend_model_template|null $t
+	 */
+	public function __construct(frontend_model_template$t = null) {
+		if (isset(self::$instance) && self::$instance !== null) {
+			foreach (get_object_vars(self::$instance) as $prop=>$value) {
+				$this->{$prop} = $value;
+			}
+		}
+		else {
+			$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+			$this->data = new frontend_model_data($this,$this->template);
+		}
 	}
 
 	/**
 	 * Assign data to the defined variable or return the data
 	 * @param string $type
-	 * @param string|int|null $id
-	 * @param string $context
-	 * @param boolean $assign
-	 * @return mixed
+	 * @param array|int|null $id
+	 * @param string|null $context
+	 * @param bool|string $assign
+	 * @return array|bool
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true) {
+	private function getItems(string $type, $id = null, string $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
 
 	/**
 	 * Return the valid domains
 	 */
-	public function getValidDomains()
-	{
-		return $this->getItems('domain',null,'all',false);
+	public function getValidDomains(): array {
+		if(!isset($this->validDomains)) {
+			$validDomains = $this->getItems('domain',null,'all',false);
+			$this->validDomains = empty($validDomains) ? [] : $validDomains;
+		}
+		else {
+			$validDomains = $this->validDomains;
+		}
+		return $validDomains;
 	}
 }

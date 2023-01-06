@@ -1,30 +1,29 @@
 <?php
-class frontend_db_about
-{
+class frontend_db_about {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		$dateFormat = new component_format_date();
 
 		if($config['context'] === 'all') {
 			switch ($config['type']){
 				case 'root':
-					$sql = 'SELECT d.name_info,d.value_info 
+					$query = 'SELECT d.name_info,d.value_info 
 							FROM mc_about_data AS d
 							JOIN mc_lang AS lang ON(d.id_lang = lang.id_lang)
 							WHERE lang.iso_lang = :iso';
 					break;
 				case 'pages':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT
+					$query = "SELECT
 								p.*,
 								c.name_pages,
 								c.url_pages,
@@ -42,7 +41,7 @@ class frontend_db_about
 					break;
 				case 'pages_short':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT
+					$query = "SELECT
 								p.id_pages,
 								p.id_parent,
 								c.name_pages,
@@ -55,14 +54,14 @@ class frontend_db_about
 							$conditions";
 					break;
 				case 'parents':
-					$sql = "SELECT t.id_pages AS parent, GROUP_CONCAT(f.id_pages) AS children
+					$query = "SELECT t.id_pages AS parent, GROUP_CONCAT(f.id_pages) AS children
 								FROM mc_about_page t
 								JOIN mc_about_page f ON t.id_pages=f.id_parent
 								GROUP BY t.id_pages";
 					break;
 				case 'child':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-					$sql = "SELECT
+					$query = "SELECT
 								p.id_pages,
        							p.id_parent,
        							p.menu_pages,
@@ -83,39 +82,47 @@ class frontend_db_about
 							$conditions";
 					break;
 				case 'info':
-					$sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
+					$query = "SELECT a.name_info,a.value_info FROM mc_about AS a";
 					break;
 				case 'content':
-					$sql = 'SELECT a.*
+					$query = 'SELECT a.*
 							FROM mc_about_data AS a
 							JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
 					break;
 				case 'languages':
-					$sql = "SELECT `name_lang` FROM `mc_lang`";
+					$query = "SELECT `name_lang` FROM `mc_lang`";
 					break;
 				case 'op':
-					$sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
+					$query = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
 					break;
 				case 'op_content':
-					$sql = "SELECT * FROM `mc_about_op_content` 
+					$query = "SELECT * FROM `mc_about_op_content` 
 							JOIN mc_lang AS lang USING(id_lang)";
 					break;
 				case 'langs':
-					$sql = 'SELECT
+					$query = 'SELECT
 							h.id_pages,c.url_pages,c.id_lang,lang.iso_lang
 							FROM mc_about_page AS h
 							JOIN mc_about_page_content AS c ON(h.id_pages = c.id_pages) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
 							WHERE h.id_pages = :id AND c.published_pages = 1';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']){
 				case 'page':
-					$sql = 'SELECT
+					$query = 'SELECT
 								h.*,
 								c.name_pages,
 								c.url_pages,
@@ -130,9 +137,18 @@ class frontend_db_about
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
 							WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
 	}
 }

@@ -33,12 +33,12 @@
  # needs please refer to http://www.magix-cms.com for more information.
  */
 class frontend_model_module extends frontend_db_module {
-    protected $template, $data, $pluginsCollection,$mods;
+    protected $template, $data, $pluginsCollection, $mods, $installedPlugins;
 
 	/**
-	 * frontend_model_plugins constructor.
+	 * @param frontend_model_template|null $t
 	 */
-    public function __construct($t = null) {
+    public function __construct(frontend_model_template $t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->data = new frontend_model_data($this,$this->template);
         $this->pluginsCollection = new component_collections_plugins();
@@ -185,35 +185,31 @@ class frontend_model_module extends frontend_db_module {
     }
 
     /**
-     * @param $type
-     * @return array|void
+     * @param string $type
+     * @return array
      */
-    private function loadExtendCore($type){
-        $newMethod = array();
-        $collection = $this->pluginsCollection->fetchAll();
+    private function loadExtendCore(string $type): array {
+        if(!isset($this->installedPlugins)) $this->installedPlugins = $this->pluginsCollection->fetchAll();
         $module = ['home','about','pages','news','catalog','category','product'];
-        $active_mods = array();
+        $active_mods = [];
         if(in_array($type,$module)) {
-            //print_r($collection);
-            foreach ($collection as $key => $item) {
+            foreach ($this->installedPlugins as $item) {
                 if ($item[$type] == 1) {
-                    //$mods[] = $item['name'];
                     $modClass = 'plugins_' . $item['name'] . '_public';
-
                     if(class_exists($modClass)) $active_mods[$item['name']] = $this->get_call_class($modClass);
                 }
             }
-            return $active_mods;
         }
+		return $active_mods;
     }
 
     /**
-     * @param $type
-     * @param $method
+     * @param string $type
+     * @param string $method
      * @param array $params
      * @return array
      */
-    public function extendDataArray($type,$method,array $params = []) : array{
+    public function extendDataArray(string $type, string $method, array $params = []) : array {
         $this->mods = $this->loadExtendCore($type);
         $loadMethod = [];
         if(!empty($this->mods)) {
@@ -221,10 +217,7 @@ class frontend_model_module extends frontend_db_module {
                 //print $mod;
                 if(method_exists($mod,$method)){
                     $loadMethod[] = call_user_func_array(
-                        array(
-                            $mod,
-                            $method
-                        ),
+                        [$mod, $method],
                         [$params]
                     );
                 }

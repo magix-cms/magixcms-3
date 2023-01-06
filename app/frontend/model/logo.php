@@ -41,7 +41,7 @@ class frontend_model_logo extends frontend_db_logo {
      * frontend_model_domain constructor.
      * @param null|frontend_model_template $t
      */
-    public function __construct($t = null)
+    public function __construct(frontend_model_template $t = null)
     {
         $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $this->data = new frontend_model_data($this,$this->template);
@@ -69,15 +69,17 @@ class frontend_model_logo extends frontend_db_logo {
     {
         return $this->getItems('domain',null,'all',false);
     }*/
-    public function getLogoData(){
-        $data = $this->getItems('page', array(':iso'=>$this->iso),'one',false);
-        $newData = array();
-        if($data != null && $data['img_logo'] != '') {
-
-            $fetchConfig = $this->imagesComponent->getConfigItems(array(
-                'module_img' => 'logo',
-                'attribute_img' => 'logo'
-            ));
+	/**
+	 * @return array
+	 */
+    public function getLogoData(): array {
+        $data = $this->getItems('page', ['iso'=>$this->iso],'one',false);
+        $newData = [];
+        if(!empty($data) && $data['img_logo'] != '') {
+            $fetchConfig = $this->imagesComponent->getConfigItems([
+				'module_img' => 'logo',
+				'attribute_img' => 'logo'
+			]);
             if(file_exists(component_core_system::basePath().'/img/logo/'.$data['img_logo'])) {
                 $extwebp = 'webp';
                 // # return filename without extension
@@ -100,10 +102,8 @@ class frontend_model_logo extends frontend_db_logo {
                     $newData['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extension);
                 }
             }
-
-            return $newData;
         }
-
+		return $newData;
     }
 
     /**

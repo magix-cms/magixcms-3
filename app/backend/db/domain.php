@@ -1,18 +1,16 @@
 <?php
-class backend_db_domain
-{
+class backend_db_domain {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'domain':
@@ -36,63 +34,75 @@ class backend_db_domain
 							}
 						}
 					}
-					$sql = "SELECT d.* FROM mc_domain AS d $cond";
+					$query = "SELECT d.* FROM mc_domain AS d $cond";
 					break;
 				case 'langs':
-					$sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
+					$query = 'SELECT dl.*,lang.iso_lang, lang.name_lang
 							FROM mc_domain_language AS dl
 							JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
 							WHERE id_domain = :id';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'domain':
-					$sql = 'SELECT * FROM mc_domain WHERE id_domain = :id';
+					$query = 'SELECT * FROM mc_domain WHERE id_domain = :id';
 					break;
 				case 'count':
-					$sql = 'SELECT count(id_domain) AS nb FROM mc_domain';
+					$query = 'SELECT count(id_domain) AS nb FROM mc_domain';
 					break;
 				case 'lastLanguage':
-					$sql = 'SELECT dl.*,lang.iso_lang, lang.name_lang
+					$query = 'SELECT dl.*,lang.iso_lang, lang.name_lang
 						FROM mc_domain_language AS dl
 						JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
 						WHERE dl.id_domain = :id
 						ORDER BY dl.id_domain_lg DESC LIMIT 0,1';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newDomain':
-				$sql = 'INSERT INTO mc_domain (url_domain,default_domain,canonical_domain) VALUE (:url_domain,:default_domain,:canonical_domain)';
+				$query = 'INSERT INTO mc_domain (url_domain,default_domain,canonical_domain) VALUE (:url_domain,:default_domain,:canonical_domain)';
 				break;
 			case 'newLanguage':
-				$sql = 'INSERT INTO `mc_domain_language` (id_domain,id_lang,default_lang) VALUES (:id_domain,:id_lang,:default_lang)';
+				$query = 'INSERT INTO `mc_domain_language` (id_domain,id_lang,default_lang) VALUES (:id_domain,:id_lang,:default_lang)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -101,19 +111,14 @@ class backend_db_domain
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'domain':
-				$sql = 'UPDATE mc_domain 
+				$query = 'UPDATE mc_domain 
 						SET
 							url_domain = :url_domain,
 							tracking_domain = :tracking_domain, 
@@ -122,7 +127,7 @@ class backend_db_domain
                 		WHERE id_domain = :id_domain';
 				break;
 			case 'modules':
-				$sql = "UPDATE `mc_config`
+				$query = "UPDATE `mc_config`
 						SET `status` = CASE `attr_name`
 							WHEN 'pages' THEN :pages
 							WHEN 'news' THEN :news
@@ -131,12 +136,12 @@ class backend_db_domain
 						END
 						WHERE `attr_name` IN ('pages','news','catalog','about')";
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -145,30 +150,26 @@ class backend_db_domain
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function delete($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
+	public function delete(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'delDomain':
-				$sql = 'DELETE FROM mc_domain WHERE id_domain IN ('.$params['id'].')';
+				$query = 'DELETE FROM mc_domain WHERE id_domain IN ('.$params['id'].')';
 				$params = array();
 				break;
 			case 'delLanguage':
-				$sql = 'DELETE FROM mc_domain_language WHERE id_domain_lg IN ('.$params['id'].')';
+				$query = 'DELETE FROM mc_domain_language WHERE id_domain_lg IN ('.$params['id'].')';
 				$params = array();
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

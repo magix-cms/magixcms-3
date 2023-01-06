@@ -39,86 +39,88 @@
  * Time: 00:29
  * License: Dual licensed under the MIT or GPL Version
  */
-class component_collections_setting{
+class component_collections_setting {
 	/**
-	 * @return mixed|null
+	 * @var debug_logger $logger
 	 */
-	public function getSetting(){
-		$data = $this->fetchData(array('context'=>'all','type'=>'setting'));
-		$arr = array();
-		if($data != null) {
-			foreach ($data as $item) {
-				$arr[$item['name']] = array();
-				$arr[$item['name']]['value'] = $item['value'];
-				$arr[$item['name']]['category'] = $item['category'];
+	protected debug_logger $logger;
+
+	/**
+	 * @return array
+	 */
+	public function getSetting(): array {
+		$settingsData = $this->fetchData(['context'=>'all','type'=>'setting']);
+		$settings = [];
+		if(!empty($settingsData)) {
+			$settings = array_column($settingsData,'value','name');
+			/*foreach ($settingsData as $setting) {
+				$settings[$setting['name']] = $setting['value'];
+			}*/
+		}
+		return $settings;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSettingData(): array {
+		$settingsData = $this->fetchData(['context'=>'all','type'=>'setting']);
+		$settings = [];
+		if(!empty($settingsData)) {
+			foreach ($settingsData as $setting) {
+				$settings[$setting['name']] = [
+					'value' => $setting['value'],
+					'category' => $setting['category']
+				];
 			}
 		}
-		return $arr;
+		return $settings;
 	}
 
     /**
-     * @param $name
-     * @return mixed
-     * @throws Exception
-     * @deprecated
+     * @param array $config
+     * @param array $params
+     * @return array|bool
      */
-    public function fetch($name){
-        $sql = 'SELECT *
-    	FROM mc_setting WHERE name = :name';
-        return component_routing_db::layer()->fetch($sql,
-            array(
-                ':name'	=>	$name
-            )
-        );
-    }
+    public function fetchData(array $config,array $params = []) {
+        if($config['context'] === 'all') {
+			switch ($config['type']) {
+			    case 'setting':
+					$query = 'SELECT st.name,st.value,st.category FROM mc_setting AS st';
+					break;
+			    case 'cssInliner':
+					$query = 'SELECT color.* FROM mc_css_inliner as color';
+					break;
+				default:
+					return false;
+			}
 
-    /**
-     * @return mixed
-     * @throws Exception
-     * @deprecated
-     */
-    public function fetchAll(){
-        $sql = 'SELECT st.id_setting,st.value 
-        FROM mc_setting AS st';
-        return component_routing_db::layer()->fetchAll($sql);
-    }
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
+		}
+		elseif($config['context'] === 'one') {
+			switch ($config['type']) {
+				case 'setting':
+					$query = 'SELECT * FROM mc_setting WHERE name = :name';
+					break;
+				default:
+					return false;
+			}
 
-    /**
-     * @param $config
-     * @param bool $data
-     * @return mixed|null
-     * @throws Exception
-     */
-    public function fetchData($config,$data = false){
-        $sql = '';
-        $params = [];
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
+		}
 
-        if(is_array($config)) {
-            if($config['context'] === 'all') {
-                if ($config['type'] === 'setting') {
-                    $sql = 'SELECT st.name,st.value,st.category
-                    FROM mc_setting AS st';
-                    //$params = $data;
-                }
-                elseif ($config['type'] === 'cssInliner') {
-                    $sql = 'SELECT color.*
-    	            FROM mc_css_inliner as color';
-                    //$params = $data;
-                }
-
-                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-
-            }
-            elseif($config['context'] === 'one') {
-                if ($config['type'] === 'setting') {
-                    //Return current skin
-                    $sql = 'SELECT *
-    	            FROM mc_setting WHERE name = :name';
-                    $params = $data;
-                }
-
-                return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
-            }
-        }
+		return false;
     }
 }

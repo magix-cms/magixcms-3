@@ -47,76 +47,84 @@
  *  Time: 17:18
  * @license Dual licensed under the MIT or GPL Version 3 licenses.
  */
-class component_routing_db{
+class component_routing_db {
     /**
-     * @var
+     * @var db_layer $layer
      */
-    private static $layer;
+    private static db_layer $layer;
 
-    /**
-     * @static
-     * @throws Exception
-     * @return db_layer
-     */
-    public static function layer(){
-        if(class_exists('db_layer')){
-            self::$layer = new db_layer();
-            if(self::$layer instanceof db_layer){
-                return self::$layer;
-            }else{
-                throw new Exception('Error Layer Database connect');
+	/**
+	 * @var debug_logger $logger
+	 */
+	protected debug_logger $logger;
+
+	/**
+	 * @static
+	 * @return db_layer
+	 * @throws Exception
+	 */
+    public static function layer() {
+        if(class_exists('db_layer')) {
+            if(!isset(self::$layer)) {
+				self::$layer = new db_layer();
             }
-        }else{
+			return self::$layer;
+        }
+		else {
             throw new Exception('Class db_layer is not exist');
         }
     }
 
     /**
      * Chargement du fichier SQL pour la lecture du fichier
-     * @param $sqlfile
-     * @throws Exception
-     * @return array|bool|string
+     * @param string $file
+     * @return array|bool
      */
-    private function importSQLFile($sqlfile){
-        try{
-            $db_structure = "";
-            $structureFile = $sqlfile;
-            if(!file_exists($structureFile)){
-                throw new Exception("Error : Not File exist .sql");
-            }else{
-                $db_structure = preg_split("/;\\s*[\r\n]+/",file_get_contents($structureFile));
-                if(file_get_contents($structureFile) != ''){
-                    if($db_structure != ''){
-                        $tables = $db_structure;
-                    }else{
-                        throw new Exception("Error : SQL File is empty");
-                        return false;
+    private function importSQLFile(string $file) {
+		if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+
+        try {
+            if(!file_exists($file)) {
+				$this->logger->log('php', 'error', 'Error : Not File exist .sql', debug_logger::LOG_MONTH);
+            }
+			else {
+				$sql = file_get_contents($file);
+                if($sql !== '') {
+					$sql_queries = preg_split("/;\\s*[\r\n]+/",$sql);
+
+                    if(!empty($sql_queries)){
+                        return $sql_queries;
                     }
-                }else{
-                    throw new Exception("Error : SQL File is empty");
-                    return false;
+					else {
+						$this->logger->log('php', 'error', 'Error : SQL File contains no query', debug_logger::LOG_MONTH);
+                    }
+                }
+				else {
+					$this->logger->log('php', 'error', 'Error : SQL File is empty', debug_logger::LOG_MONTH);
                 }
             }
-            return $tables;
-        }catch(Exception $e) {
-            $logger = new debug_logger(MP_LOG_DIR);
-            $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+            return false;
         }
+		catch(Exception $e) {
+            $this->logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+        }
+		return false;
     }
 
     /**
      * @param $files
      * @return bool
      * Création des tables avec la lecture du fichier SQL
-     * @throws Exception
      */
-    public function setupSQL($files){
-        if($this->importSQLFile($files) != false){
-            foreach($this->importSQLFile($files) as $query){
+    public function setupSQL($files): bool{
+        if($this->importSQLFile($files)) {
+            foreach($this->importSQLFile($files) as $query) {
                 $query = filter_escapeHtml::trim($query);
                 self::layer()->createTable($query);
             }
             return true;
         }
+        //$this->logger->log('php', 'error', 'An error has occured : setupSQL', debug_logger::LOG_MONTH);
+        return false;
     }
 }

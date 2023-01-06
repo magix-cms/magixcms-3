@@ -237,7 +237,7 @@ class backend_model_template{
         if (!self::frontendTheme() instanceof backend_model_template){
             throw new Exception('template instance is not found');
         }else{
-            $config = self::$collectionsSetting->fetch('cache');
+            $config = self::$collectionsSetting->fetchData(['context' => 'one','type' => 'setting'],['name' => 'cache']);
             switch($config['setting_value']){
                 case 'none':
                     $smarty->setCaching(false);

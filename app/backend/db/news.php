@@ -1,23 +1,22 @@
 <?php
-class backend_db_news
-{
+class backend_db_news {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		$dateFormat = new component_format_date();
 
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'page':
-					$sql = "SELECT p.* , c.* , lang.* , rel.tags_news
+					$query = "SELECT p.* , c.* , lang.* , rel.tags_news
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING ( id_news )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -32,7 +31,7 @@ class backend_db_news
 							ORDER BY p.id_news DESC";
 					break;
 				case 'pagesPublishedSelect':
-					$sql = "SELECT p.id_news, c.name_news
+					$query = "SELECT p.id_news, c.name_news
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING ( id_news )
 							WHERE c.id_lang = :lang
@@ -73,7 +72,7 @@ class backend_db_news
 							}
 						}
 					}
-					$sql = "SELECT c.id_news,c.name_news,c.content_news,p.img_news,c.seo_title_news, c.seo_desc_news,c.last_update,c.date_publish,c.published_news
+					$query = "SELECT c.id_news,c.name_news,c.content_news,p.img_news,c.seo_title_news, c.seo_desc_news,c.last_update,c.date_publish,c.published_news
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -81,30 +80,30 @@ class backend_db_news
 							ORDER BY id_news DESC".$limit;
 					break;
 				case 'img':
-					$sql = 'SELECT p.id_news, p.img_news FROM mc_news AS p WHERE p.img_news IS NOT NULL';
+					$query = 'SELECT p.id_news, p.img_news FROM mc_news AS p WHERE p.img_news IS NOT NULL';
 					break;
 				case 'tags':
-					$sql = 'SELECT tag.id_tag,tag.name_tag
+					$query = 'SELECT tag.id_tag,tag.name_tag
 							FROM mc_news_tag AS tag
 							JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang)
 							WHERE tag.id_lang = :id_lang';
 					break;
 				case 'tags_rel':
-					$sql = 'SELECT tag.id_tag
+					$query = 'SELECT tag.id_tag
 							FROM mc_news_tag AS tag
 							LEFT JOIN mc_news_tag_rel AS tr ON(tag.id_tag = tr.id_tag)
 							JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang)
 							WHERE tr.id_news = :id';
 					break;
 				case 'sitemap':
-					$sql = "SELECT p.id_news,p.img_news,c.name_news,c.url_news,c.last_update,c.date_publish,c.published_news,lang.iso_lang
+					$query = "SELECT p.id_news,p.img_news,c.name_news,c.url_news,c.last_update,c.date_publish,c.published_news,lang.iso_lang
 						FROM mc_news AS p
 						JOIN mc_news_content AS c USING(id_news)
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 						WHERE c.published_news = 1 AND c.id_lang = :id_lang";
 					break;
 				case 'lastNews':
-					$sql = 'SELECT p.id_news,c.name_news,c.last_update,c.date_publish,c.published_news, p.date_register
+					$query = 'SELECT p.id_news,c.name_news,c.last_update,c.date_publish,c.published_news, p.date_register
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -112,54 +111,66 @@ class backend_db_news
 							ORDER BY p.id_news DESC
 							LIMIT 5';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'root':
-					$sql = 'SELECT * FROM mc_news ORDER BY id_news DESC LIMIT 0,1';
+					$query = 'SELECT * FROM mc_news ORDER BY id_news DESC LIMIT 0,1';
 					break;
 				case 'page':
-					$sql = 'SELECT * FROM mc_news WHERE `id_news` = :id_news';
+					$query = 'SELECT * FROM mc_news WHERE `id_news` = :id_news';
 					break;
 				case 'content':
-					$sql = 'SELECT * FROM `mc_news_content` WHERE `id_news` = :id_news AND `id_lang` = :id_lang';
+					$query = 'SELECT * FROM `mc_news_content` WHERE `id_news` = :id_news AND `id_lang` = :id_lang';
 					break;
 				case 'tag':
-					$sql = 'SELECT tag.*, (SELECT id_rel FROM mc_news_tag_rel WHERE id_news = :id_news AND id_tag = tag.id_tag) AS rel_tag
+					$query = 'SELECT tag.*, (SELECT id_rel FROM mc_news_tag_rel WHERE id_news = :id_news AND id_tag = tag.id_tag) AS rel_tag
 							FROM mc_news_tag AS tag
 							WHERE tag.id_lang = :id_lang AND tag.name_tag LIKE :name_tag';
 					break;
 				case 'countTags':
-					$sql = 'SELECT count(id_tag) AS tags FROM mc_news_tag_rel WHERE id_tag = :id_tag';
+					$query = 'SELECT count(id_tag) AS tags FROM mc_news_tag_rel WHERE id_tag = :id_tag';
 					break;
 				case 'pageLang':
-					$sql = 'SELECT p.*,c.*,lang.*
+					$query = 'SELECT p.*,c.*,lang.*
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE p.id_news = :id
 							AND lang.iso_lang = :iso';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newTagComb':
 				$queries = array(
@@ -176,26 +187,25 @@ class backend_db_news
 				catch (Exception $e) {
 					return 'Exception reçue : '.$e->getMessage();
 				}
-				break;
 			case 'page':
-				$sql = 'INSERT INTO `mc_news`(date_register) VALUE (NOW())';
+				$query = 'INSERT INTO `mc_news`(date_register) VALUE (NOW())';
 				break;
 			case 'content':
-				$sql = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,seo_title_news, seo_desc_news,date_publish,published_news) 
+				$query = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,seo_title_news, seo_desc_news,date_publish,published_news) 
 				  		VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:seo_title_news, :seo_desc_news,:date_publish,:published_news)';
 				break;
 			case 'newTag':
-				$sql = 'INSERT INTO mc_news_tag (id_lang,name_tag) VALUES (:id_lang,:name_tag)';
+				$query = 'INSERT INTO mc_news_tag (id_lang,name_tag) VALUES (:id_lang,:name_tag)';
 				break;
 			case 'newTagRel':
-				$sql = 'INSERT INTO mc_news_tag_rel (id_news,id_tag) VALUES (:id_news,:id_tag)';
+				$query = 'INSERT INTO mc_news_tag_rel (id_news,id_tag) VALUES (:id_news,:id_tag)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -204,19 +214,14 @@ class backend_db_news
 	}
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'content':
-				$sql = 'UPDATE mc_news_content 
+				$query = 'UPDATE mc_news_content 
 						SET 
 							name_news = :name_news,
 							url_news = :url_news,
@@ -229,10 +234,10 @@ class backend_db_news
 						WHERE id_news = :id_news AND id_lang = :id_lang';
 				break;
 			case 'img':
-				$sql = 'UPDATE mc_news SET img_news = :img_news WHERE id_news = :id_news';
+				$query = 'UPDATE mc_news SET img_news = :img_news WHERE id_news = :id_news';
 				break;
 			case 'imgContent':
-				$sql = 'UPDATE mc_news_content 
+				$query = 'UPDATE mc_news_content 
 						SET 
 							alt_img = :alt_img,
 							title_img = :title_img,
@@ -240,15 +245,12 @@ class backend_db_news
                 		WHERE id_news = :id_news 
                 		AND id_lang = :id_lang';
 				break;
-			case 'order':
-				$sql = 'UPDATE mc_news SET order_news = :order_news WHERE id_news = :id_news';
-				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -257,32 +259,28 @@ class backend_db_news
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function delete($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
+	public function delete(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'delPages':
-				$sql = 'DELETE FROM `mc_news` WHERE `id_news` IN ('.$params['id'].')';
+				$query = 'DELETE FROM `mc_news` WHERE `id_news` IN ('.$params['id'].')';
 				$params = array();
 				break;
 			case 'tagRel':
-				$sql = 'DELETE FROM mc_news_tag_rel WHERE id_rel = :id_rel';
+				$query = 'DELETE FROM mc_news_tag_rel WHERE id_rel = :id_rel';
 				break;
 			case 'tags':
-				$sql = 'DELETE FROM mc_news_tag WHERE id_tag = :id_tag';
+				$query = 'DELETE FROM mc_news_tag WHERE id_tag = :id_tag';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

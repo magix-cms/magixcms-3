@@ -1,76 +1,85 @@
 <?php
-class backend_db_access{
+class backend_db_access {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-    public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+    public function fetchData(array $config, array $params = []) {
 		if($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'roles':
-					$sql = 'SELECT * FROM mc_admin_role_user
+					$query = 'SELECT * FROM mc_admin_role_user
                     		ORDER BY id_role DESC';
 					break;
 				case 'access':
-					$sql = 'SELECT ace.*,module.class_name,module.name
+					$query = 'SELECT ace.*,module.class_name,module.name
 							FROM mc_admin_access AS ace
 							JOIN mc_module as module ON(ace.id_module = module.id_module)
 							WHERE ace.id_role = :id';
 					break;
 				case 'module':
-					$sql = 'SELECT * FROM mc_module';
+					$query = 'SELECT * FROM mc_module';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'role':
-					$sql = 'SELECT * FROM mc_admin_role_user
-                    		WHERE id_role = :id';
+					$query = 'SELECT * FROM mc_admin_role_user WHERE id_role = :id';
 					break;
 				case 'lastRole':
-					$sql = 'SELECT * FROM mc_admin_role_user
-                    		ORDER BY id_role DESC LIMIT 0,1';
+					$query = 'SELECT * FROM mc_admin_role_user ORDER BY id_role DESC LIMIT 0,1';
 					break;
 				case 'lastAccess':
-					$sql = "SELECT ace.*,module.class_name,module.name
+					$query = "SELECT ace.*,module.class_name,module.name
 							FROM mc_admin_access as ace
 							JOIN mc_module as module ON(ace.id_module = module.id_module)
 							WHERE ace.id_role = :id
 							ORDER BY ace.id_access DESC LIMIT 0,1";
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
-	 * @return bool|string
+	 * @return bool
 	 */
-    public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+    public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newRole':
-				$sql = 'INSERT INTO mc_admin_role_user (role_name) VALUE (:role_name)';
+				$query = 'INSERT INTO mc_admin_role_user (role_name) VALUE (:role_name)';
 				break;
 			case 'newAccess':
-				$sql = 'INSERT INTO mc_admin_access (id_role,id_module,view,append,edit,del,action)
+				$query = 'INSERT INTO mc_admin_access (id_role,id_module,view,append,edit,del,action)
                 		VALUE (:id_role,:id_module,:view,:append,:edit,:del,:action)';
 				$params = array(
 					'id_role'   => $params['id_role'],
@@ -82,12 +91,12 @@ class backend_db_access{
 					'action'    => $params['action_access']
 				);
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -96,24 +105,19 @@ class backend_db_access{
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-    public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+    public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'role':
-				$sql = 'UPDATE mc_admin_role_user 
+				$query = 'UPDATE mc_admin_role_user 
 						SET role_name = :role_name
 						WHERE id_role = :id_role';
 				break;
 			case 'access':
-				$sql = 'UPDATE mc_admin_access
+				$query = 'UPDATE mc_admin_access
 						SET view = :view,
 							append = :append,
 							edit = :edit,
@@ -129,12 +133,12 @@ class backend_db_access{
 					'action'=> $params['action_access']
 				);
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -143,15 +147,11 @@ class backend_db_access{
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-    public function delete($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
+    public function delete(array $config, array $params = []) {
 		if($config['context'] === 'role'){
 			if($config['type'] === 'delRole') {
 				$queries = array(
@@ -168,16 +168,8 @@ class backend_db_access{
 					return 'Exception reçue : '.$e->getMessage();
 				}
 			}
+			return false;
 		}
-
-		if($sql === '') return 'Unknown request asked';
-
-		try {
-			component_routing_db::layer()->delete($sql,$params);
-			return true;
-		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+		return false;
     }
 }

@@ -1,18 +1,16 @@
 <?php
-class backend_db_files
-{
+class backend_db_files {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'sizes':
@@ -38,48 +36,60 @@ class backend_db_files
 							}
 						}
 					}
-					$sql = "SELECT conf.* FROM mc_config_img AS conf $cond";
+					$query = "SELECT conf.* FROM mc_config_img AS conf $cond";
 					break;
 				case 'size':
-					$sql = 'SELECT * FROM mc_config_img WHERE module_img = :module_img AND attribute_img = :attribute_img';
+					$query = 'SELECT * FROM mc_config_img WHERE module_img = :module_img AND attribute_img = :attribute_img';
 					break;
+			default:
+				return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'size':
-					$sql = 'SELECT * FROM mc_config_img WHERE id_config_img = :id';
+					$query = 'SELECT * FROM mc_config_img WHERE id_config_img = :id';
 					break;
+			default:
+				return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newResize':
-				$sql = 'INSERT INTO `mc_config_img`(module_img,attribute_img,width_img,height_img,type_img,resize_img) 
+				$query = 'INSERT INTO `mc_config_img`(module_img,attribute_img,width_img,height_img,type_img,resize_img) 
                 		VALUE(:module_img,:attribute_img,:width_img,:height_img,:type_img,:resize_img)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -88,19 +98,14 @@ class backend_db_files
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'resize':
-				$sql = 'UPDATE mc_config_img 
+				$query = 'UPDATE mc_config_img 
 						SET 
 							module_img = :module_img,
 							attribute_img = :attribute_img, 
@@ -110,12 +115,12 @@ class backend_db_files
 							resize_img = :resize_img
 						WHERE id_config_img = :id_config_img';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -124,26 +129,22 @@ class backend_db_files
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function delete($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
+	public function delete(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'delResize':
-				$sql = 'DELETE FROM `mc_config_img` WHERE `id_config_img` IN ('.$params['id'].')';
+				$query = 'DELETE FROM `mc_config_img` WHERE `id_config_img` IN ('.$params['id'].')';
 				$params = array();
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

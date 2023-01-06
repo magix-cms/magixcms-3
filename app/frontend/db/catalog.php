@@ -1,18 +1,11 @@
 <?php
-class frontend_db_catalog
-{
+class frontend_db_catalog {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
 	 */
-	public function fetchData(array $config, array $params = [])
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function fetchData(array $config, array $params = []) {
 		if($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'root':
@@ -263,15 +256,16 @@ class frontend_db_catalog
                     $select = ['catalog.*',
                         'cat.name_cat',
                         'cat.url_cat',
-                        'p.*',
+                        'p.id_product',
+                        'p.price_p',
                         'pc.name_p',
-                        'pc.longname_p',
+                        //'pc.longname_p',
                         'pc.resume_p',
                         'pc.content_p',
                         'pc.url_p',
                         'pc.id_lang',
                         'lang.iso_lang',
-                        'pc.last_update',
+                        //'pc.last_update',
                         'img.name_img',
                         'COALESCE(imgc.alt_img, pc.longname_p, pc.name_p) as alt_img',
                         'COALESCE(imgc.title_img, imgc.alt_img, pc.longname_p, pc.name_p) as title_img',
@@ -345,7 +339,6 @@ class frontend_db_catalog
 						 '.$cat.$where
                         .$order.$limit;
 					break;
-
 				case 'rand_product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$queries = array(
@@ -520,9 +513,17 @@ class frontend_db_catalog
 						 '.$where
                         .$order.$limit;
                     break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($sql, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
@@ -710,23 +711,27 @@ class frontend_db_catalog
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($sql, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newContent':
                 $queries = array(
@@ -754,9 +759,9 @@ class frontend_db_catalog
 					return 'Exception reçue : '.$e->getMessage();
 				}
 				break;
+			default:
+				return false;
 		}
-
-		if($sql === '') return 'Unknown request asked';
 
 		try {
 			component_routing_db::layer()->insert($sql,$params);
@@ -768,16 +773,11 @@ class frontend_db_catalog
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'content':
 				$sql = "UPDATE `mc_catalog_data`
@@ -796,9 +796,9 @@ class frontend_db_catalog
 					'id_lang'   => $params['id_lang']
 				);
 				break;
+			default:
+				return false;
 		}
-
-		if($sql === '') return 'Unknown request asked';
 
 		try {
 			component_routing_db::layer()->update($sql,$params);

@@ -1,54 +1,63 @@
 <?php
-class backend_db_webservice{
+class backend_db_webservice {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if($config['context'] === 'all') {
 			//switch ($config['type']) {}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			/*try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}*/
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'ws':
-					$sql = 'SELECT ws.* FROM mc_webservice AS ws LIMIT 1';
+					$query = 'SELECT ws.* FROM mc_webservice AS ws LIMIT 1';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newWs':
-				$sql = 'INSERT INTO mc_webservice (key_ws,status_ws) VALUE(:key_ws,:status_ws)';
+				$query = 'INSERT INTO mc_webservice (key_ws,status_ws) VALUE(:key_ws,:status_ws)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -57,30 +66,25 @@ class backend_db_webservice{
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'ws':
-				$sql = 'UPDATE mc_webservice 
+				$query = 'UPDATE mc_webservice 
 					SET 
 						key_ws = :key_ws,
 						status_ws = :status_ws 
 					WHERE id_ws = :id_ws';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

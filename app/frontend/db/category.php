@@ -1,24 +1,21 @@
 <?php
-class frontend_db_category
-{
+class frontend_db_category {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	protected debug_logger $logger;
+	
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if ($config['context'] === 'all') {
-
             switch ($config['type']) {
                 case 'pages':
                     $config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-                    $sql = "SELECT p.*,
+                    $query = "SELECT p.*,
 								   c.name_cat,
 								   c.url_cat,
 								   c.resume_cat,
@@ -36,68 +33,80 @@ class frontend_db_category
 							JOIN mc_catalog_cat_content AS c ON(p.id_cat = c.id_cat) 
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
                     break;
+				default:
+					return false;
             }
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'root':
-					$sql = 'SELECT * FROM mc_catalog_cat ORDER BY id_cat DESC LIMIT 0,1';
+					$query = 'SELECT * FROM mc_catalog_cat ORDER BY id_cat DESC LIMIT 0,1';
 					break;
 				case 'content':
-					$sql = 'SELECT * FROM `mc_catalog_cat_content` WHERE `id_cat` = :id_cat AND `id_lang` = :id_lang';
+					$query = 'SELECT * FROM `mc_catalog_cat_content` WHERE `id_cat` = :id_cat AND `id_lang` = :id_lang';
 					break;
 				case 'wsEdit':
-					$sql = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id';
+					$query = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id';
 					break;
 				case 'image':
-					$sql = 'SELECT img_cat FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
+					$query = 'SELECT img_cat FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
 					break;
 				case 'page':
-					$sql = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
+					$query = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
 					break;
                 case 'pageLang':
-                    $sql = 'SELECT p.*,c.*,lang.*
+                    $query = 'SELECT p.*,c.*,lang.*
 							FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c USING(id_cat)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE p.id_cat = :id
 							AND lang.iso_lang = :iso';
                     break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'page':
 				$cond = $params['id_parent'] != NULL ? 'IN ('.$params['id_parent'].')' : 'IS NULL' ;
-				$sql = "INSERT INTO `mc_catalog_cat`(id_parent,order_cat,date_register) 
+				$query = "INSERT INTO `mc_catalog_cat`(id_parent,order_cat,date_register) 
 						SELECT :id_parent,COUNT(id_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond";
 				break;
 			case 'content':
-				$sql = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 
+				$query = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 
 			  			VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:seo_title_cat,:seo_desc_cat,:published_cat)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -106,26 +115,21 @@ class frontend_db_category
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'page':
-				$sql = 'UPDATE mc_catalog_cat 
+				$query = 'UPDATE mc_catalog_cat 
 						SET 
 							id_parent = :id_parent,
 							menu_cat = :menu_cat
 						WHERE id_cat = :id_cat';
 				break;
 			case 'content':
-				$sql = 'UPDATE mc_catalog_cat_content 
+				$query = 'UPDATE mc_catalog_cat_content 
 						SET 
 							name_cat = :name_cat, 
 							url_cat = :url_cat, 
@@ -137,17 +141,17 @@ class frontend_db_category
 						WHERE id_cat = :id_cat AND id_lang = :id_lang';
 				break;
 			case 'img':
-				$sql = 'UPDATE mc_catalog_cat SET img_cat = :img_cat WHERE id_cat = :id_cat';
+				$query = 'UPDATE mc_catalog_cat SET img_cat = :img_cat WHERE id_cat = :id_cat';
 				break;
 			case 'order':
-				$sql = 'UPDATE mc_catalog_cat SET order_cat = :order_cat WHERE id_cat = :id_cat';
+				$query = 'UPDATE mc_catalog_cat SET order_cat = :order_cat WHERE id_cat = :id_cat';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -156,30 +160,26 @@ class frontend_db_category
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function delete($config, $params = array())
-    {
-        if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
+	public function delete(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'delPages':
-				$sql = 'DELETE FROM `mc_catalog_cat` WHERE `id_cat` IN ('.$params['id'].')';
+				$query = 'DELETE FROM `mc_catalog_cat` WHERE `id_cat` IN ('.$params['id'].')';
 				$params = array();
 				break;
 			case 'delProduct':
-				$sql = 'DELETE FROM `mc_catalog` WHERE `id_catalog` IN ('.$params['id'].')';
+				$query = 'DELETE FROM `mc_catalog` WHERE `id_catalog` IN ('.$params['id'].')';
 				$params = array();
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

@@ -24,7 +24,7 @@
             <header class="panel-header">
                 <h2 class="panel-heading h5">{#root_language#|ucfirst}</h2>
             </header>
-            <div class="panel-body">
+            <div class="panel-body panel-body-form">
                 <div class="mc-message-container clearfix">
                     <div class="mc-message mc-message-language">{if isset($message)}{$message}{/if}</div>
                 </div>

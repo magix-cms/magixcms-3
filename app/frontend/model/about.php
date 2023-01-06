@@ -33,176 +33,191 @@
 # needs please refer to http://www.magix-cms.com for more information.
 */
 class frontend_model_about extends frontend_db_about {
-
-	protected $template, $data, $routingUrl, $modelPlugins, $language, $languages, $touch, $mOS;
+	/**
+	 * @var frontend_model_template $template
+	 * @var frontend_model_data $data
+	 * @var component_routing_url $routingUrl
+	 * @var frontend_model_plugins $modelPlugins
+	 * @var frontend_controller_language $language
+	 */
+	protected frontend_model_template $template;
+	protected frontend_model_data $data;
+	protected component_routing_url $routingUrl;
+	protected frontend_model_plugins $modelPlugins;
+	protected frontend_controller_language $language;
+	protected array $languages;
+	protected bool $touch;
+	protected string $mOS;
 
 	/**
-	 * @var array, type of website allowed
+	 * @var array $type type of website allowed
 	 */
-	public $type = array(
-		'org' 		=> array(
+	public array $type = [
+		'org' => [
 			'schema' => 'Organization',
 			'label' => 'Organisation'
-		),
-		'locb' 		=> array(
+		],
+		'locb' => [
 			'schema' => 'LocalBusiness',
 			'label' => 'Entreprise locale'
-		),
-		'corp' 		=> array(
+		],
+		'corp' => [
 			'schema' => 'Corporation',
 			'label' => 'Société'
-		),
-		'store' 	=> array(
+		],
+		'store' => [
 			'schema' => 'Store',
 			'label' => 'Magasin'
-		),
-		'food' 		=> array(
+		],
+		'food' => [
 			'schema' => 'FoodEstablishment',
 			'label' => 'Restaurant'
-		),
-		'place' 	=> array(
+		],
+		'place' => [
 			'schema' => 'Place',
 			'label' => 'Lieu'
-		),
-		'person' 	=> array(
+		],
+		'person' => [
 			'schema' => 'Person',
 			'label' => 'Personne physique'
-		)
-	);
+		]
+	];
 
 	/**
 	 * @var array, Company informations
 	 */
-	public $company = array(
-		'name' 		=> NULL,
-		'desc'	    => NULL,
-		'slogan'	=> NULL,
-		'type' 		=> NULL,
-		'eshop' 	=> '0',
-		'tva' 		=> NULL,
-		'contact' 	=> array(
-			'mail' 			=> NULL,
+	public array $company = [
+		'name' => NULL,
+		'desc' => NULL,
+		'slogan' => NULL,
+		'type' => NULL,
+		'eshop' => '0',
+		'tva' => NULL,
+		'contact' => [
+			'mail' => NULL,
 			'click_to_mail' => '0',
-			'crypt_mail' 	=> '1',
-			'phone' 		=> NULL,
-			'mobile' 		=> NULL,
+			'crypt_mail' => '1',
+			'phone' => NULL,
+			'mobile' => NULL,
 			'click_to_call' => '1',
-			'fax' 			=> NULL,
-			'adress' 		=> array(
-				'adress' 		=> NULL,
-				'street' 		=> NULL,
-				'postcode' 		=> NULL,
-				'city' 			=> NULL
-			),
+			'fax' => NULL,
+			'adress' => [
+				'adress' => NULL,
+				'street' => NULL,
+				'postcode' => NULL,
+				'city' => NULL
+			],
 			'languages' => 'Français'
-		),
-		'socials' => array(
-			'facebook' 	 => NULL,
-			'twitter' 	 => NULL,
-			'youtube' 	 => NULL,
-			'linkedin' 	 => NULL,
-			'viadeo' 	 => NULL,
-			'pinterest'  => NULL,
-			'instagram'  => NULL,
-			'github' 	 => NULL,
+		],
+		'socials' => [
+			'facebook' => NULL,
+			'twitter' => NULL,
+			'youtube' => NULL,
+			'linkedin' => NULL,
+			'viadeo' => NULL,
+			'pinterest' => NULL,
+			'instagram' => NULL,
+			'github' => NULL,
 			'soundcloud' => NULL,
-			'tumblr'     => NULL,
-			'tiktok'     => NULL
-		),
+			'tumblr' => NULL,
+			'tiktok' => NULL
+		],
 		'openinghours' => '0',
-		'specifications' => array(
-			'Mo' => array(
-				'open_day' 		=> '0',
-				'open_time' 	=> NULL,
-				'close_time' 	=> NULL,
-				'noon_time' 	=> '0',
-				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL,
-				'close_txt'		=> NULL
-			),
-			'Tu' => array(
-				'open_day' 		=> '0',
-				'open_time' 	=> NULL,
-				'close_time'	=> NULL,
-				'noon_time' 	=> '0',
-				'noon_start'	=> NULL,
-				'noon_end'		=> NULL,
-				'close_txt'		=> NULL
-			),
-			'We' => array(
-				'open_day' 		=> '0',
-				'open_time' 	=> NULL,
-				'close_time' 	=> NULL,
-				'noon_time' 	=> '0',
-				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL,
-				'close_txt'		=> NULL
-			),
-			'Th' => array(
-				'open_day' 		=> '0',
-				'open_time' 	=> NULL,
-				'close_time' 	=> NULL,
-				'noon_time' 	=> '0',
-				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL,
-				'close_txt'		=> NULL
-			),
-			'Fr' => array(
-				'open_day' 		=> '0',
-				'open_time' 	=> NULL,
-				'close_time' 	=> NULL,
-				'noon_time' 	=> '0',
-				'noon_start' 	=> NULL,
-				'noon_end'		=> NULL,
-				'close_txt'		=> NULL
-			),
-			'Sa' => array(
-				'open_day' 		=> '0',
-				'open_time' 	=> NULL,
-				'close_time' 	=> NULL,
-				'noon_time' 	=> '0',
-				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL,
-				'close_txt'		=> NULL
-			),
-			'Su' => array(
-				'open_day' 		=> '0',
-				'open_time' 	=> NULL,
-				'close_time' 	=> NULL,
-				'noon_time' 	=> '0',
-				'noon_start' 	=> NULL,
-				'noon_end' 		=> NULL,
-				'close_txt'		=> NULL
-			)
-		)
-	);
-
-	public $amp = false;
+		'specifications' => [
+			'Mo' => [
+				'open_day' => '0',
+				'open_time' => NULL,
+				'close_time' => NULL,
+				'noon_time' => '0',
+				'noon_start' => NULL,
+				'noon_end' => NULL,
+				'close_txt' => NULL
+			],
+			'Tu' => [
+				'open_day' => '0',
+				'open_time' => NULL,
+				'close_time' => NULL,
+				'noon_time' => '0',
+				'noon_start' => NULL,
+				'noon_end' => NULL,
+				'close_txt' => NULL
+			],
+			'We' => [
+				'open_day' => '0',
+				'open_time' => NULL,
+				'close_time' => NULL,
+				'noon_time' => '0',
+				'noon_start' => NULL,
+				'noon_end' => NULL,
+				'close_txt' => NULL
+			],
+			'Th' => [
+				'open_day' => '0',
+				'open_time' => NULL,
+				'close_time' => NULL,
+				'noon_time' => '0',
+				'noon_start' => NULL,
+				'noon_end' => NULL,
+				'close_txt' => NULL
+			],
+			'Fr' => [
+				'open_day' => '0',
+				'open_time' => NULL,
+				'close_time' => NULL,
+				'noon_time' => '0',
+				'noon_start' => NULL,
+				'noon_end' => NULL,
+				'close_txt' => NULL
+			],
+			'Sa' => [
+				'open_day' => '0',
+				'open_time' => NULL,
+				'close_time' => NULL,
+				'noon_time' => '0',
+				'noon_start' => NULL,
+				'noon_end' => NULL,
+				'close_txt' => NULL
+			],
+			'Su' => [
+				'open_day' => '0',
+				'open_time' => NULL,
+				'close_time' => NULL,
+				'noon_time' => '0',
+				'noon_start' => NULL,
+				'noon_end' => NULL,
+				'close_txt' => NULL
+			]
+		]
+	];
 
 	/**
-	 * frontend_model_about constructor.
-	 * @param stdClass $t
+	 * @var bool $amp
 	 */
-	public function __construct($t = null)
-	{
+	public bool $amp = false;
+
+	/**
+	 * @param frontend_model_template|null $t
+	 */
+	public function __construct(frontend_model_template $t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$this->data = new frontend_model_data($this,$this->template);
 		$this->routingUrl = new component_routing_url();
 		$this->modelPlugins = new frontend_model_plugins($this->template);
-		$this->data = new frontend_model_data($this,$this->template);
 		$this->language = new frontend_controller_language($this->template);
 		$this->languages = $this->language->setCollection();
-		$this->amp = http_request::isGet('amp') ? true : false;
+		$this->amp = http_request::isGet('amp');
 
 		$detect = new Mobile_Detect;
 		$this->touch = false;
-		$this->mOS = false;
+		$this->mOS = '';
 
-		if( $detect->isMobile() || $detect->isTablet() ){
+		if($detect->isMobile() || $detect->isTablet()){
 			$this->touch = true;
 
-			if( $detect->isiOS() ){
+			if($detect->isiOS()){
 				$this->mOS = 'IOS';
-			}elseif( $detect->isAndroidOS() ){
+			}
+			elseif($detect->isAndroidOS()){
 				$this->mOS = 'Android';
 			}
 		}
@@ -211,47 +226,43 @@ class frontend_model_about extends frontend_db_about {
 	/**
 	 * Assign data to the defined variable or return the data
 	 * @param string $type
-	 * @param string|int|null $id
-	 * @param string $context
-	 * @param boolean $assign
-	 * @return mixed
+	 * @param array|int|null $id
+	 * @param string|null $context
+	 * @param bool|string $assign
+	 * @return array|bool
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true)
-	{
+	private function getItems(string $type, $id = null, string $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
 
 	/**
 	 * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
-	 * @param $row
-	 * @param $current
-	 * @param bool $newRow
-	 * @return array|null
+	 * @param array $row
+	 * @param array $current
+	 * @param array $newRow
+	 * @return array
 	 */
-	public function setItemData($row,$current,$newRow = false)
-	{
+	public function setItemData(array $row, array $current, array $newRow = []): array {
 		$string_format = new component_format_string();
-		$data = null;
-
-		if ($row != null) {
+		$data = [];
+		if (!empty($row)) {
 			if (isset($row['name'])) {
 				$data['name'] = $row['name'];
 				$data['content'] = $row['content'];
-				$data['seo']['title'] = $row['seo_title'] ? $row['seo_title'] : ($row['name'] ? $row['name'] : $this->template->getConfigVars('about'));
-				$data['seo']['description'] = $row['seo_desc'] ? $row['seo_desc'] : ($row['content'] ? substr(strip_tags($row['content']),300) : $row['seo_title']);
+				$data['seo']['title'] = $row['seo_title'] ?: ($row['name'] ?: $this->template->getConfigVars('about'));
+				$data['seo']['description'] = $row['seo_desc'] ?: ($row['content'] ? substr(strip_tags($row['content']),300) : $row['seo_title']);
 			}
 			elseif (isset($row['name_pages'])) {
 				$data['id'] = $row['id_pages'];
 				$data['id_parent'] = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
 				$data['name'] = $row['name_pages'];
 				$data['iso'] = $row['iso_lang'];
-				$data['url']  =
-					$this->routingUrl->getBuildUrl(array(
-						'type' => 'about',
-						'iso' => $row['iso_lang'],
-						'id' => $row['id_pages'],
-						'url' => $row['url_pages']
-					));
+				$data['url'] = $this->routingUrl->getBuildUrl([
+					'type' => 'about',
+					'iso' => $row['iso_lang'],
+					'id' => $row['id_pages'],
+					'url' => $row['url_pages']
+				]);
 
 				$data['active'] = false;
 
@@ -261,21 +272,19 @@ class frontend_model_about extends frontend_db_about {
 				$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
 				$data['content'] = $row['content_pages'];
 				$data['menu'] = $row['menu_pages'];
-				$data['date']['update'] = isset($row['last_update']) ? $row['last_update'] : null;
-				$data['date']['register'] = isset($row['date_register']) ? $row['date_register'] : null;
+				$data['date']['update'] = $row['last_update'] ?? null;
+				$data['date']['register'] = $row['date_register'] ?? null;
 				$data['seo']['title'] = !empty($row['seo_title_pages']) ? $row['seo_title_pages'] : $data['name'];
-				$data['seo']['description'] = !empty($row['seo_desc_pages']) ? $row['seo_desc_pages'] : (isset($data['resume']) ? $data['resume'] : $data['seo']['title']);
+				$data['seo']['description'] = !empty($row['seo_desc_pages']) ? $row['seo_desc_pages'] : ($data['resume'] ?? $data['seo']['title']);
 				// Plugin
-				if($newRow != false){
-					if(is_array($newRow)){
-						foreach($newRow as $key => $value){
-							$data[$key] = $row[$value];
-						}
+				if(!empty($newRow)){
+					foreach($newRow as $key => $value){
+						$data[$key] = $row[$value];
 					}
 				}
 			}
-			return $data;
 		}
+		return $data;
 	}
 
 	/**
@@ -373,18 +382,13 @@ class frontend_model_about extends frontend_db_about {
 	/**
 	 * @return string
 	 */
-	private function getActiveLang()
-	{
-		$langs = $this->getItems('languages',null,'all',false);
-
-		$list = array();
-		foreach ($langs as $lang) {
+	private function getActiveLang() {
+		//$langs = $this->getItems('languages',null,'all',false);
+		$list = [];
+		foreach ($this->template->langs as $lang) {
 			$list[] = 'languages' === 'iso' ? ucfirst($this->languages[$lang['iso_lang']]) : ucfirst($lang['name_lang']);
 		}
-
-		$langs = implode(', ',$list);
-
-		return $langs;
+		return implode(', ',$list);
 	}
 
 	/**
@@ -392,12 +396,12 @@ class frontend_model_about extends frontend_db_about {
 	 */
 	public function getCompanyData()
 	{
-		$infoData = parent::fetchData(array('context'=>'all','type'=>'info'));
-		$about = array();
+		$infoData = parent::fetchData(['context'=>'all','type'=>'info']);
+		$about = [];
 		foreach ($infoData as $item) {
 			$about[$item['name_info']] = $item['value_info'];
 		}
-		$schedule = array();
+		$schedule = [];
 
 		foreach ($this->company as $info => $value) {
 			switch ($info) {
@@ -520,8 +524,8 @@ class frontend_model_about extends frontend_db_about {
 	 * @return array
 	 */
 	public function getContentData(){
-		$data = parent::fetchData(array('context'=>'all','type'=>'content'));
-		$newArr = array();
+		$data = parent::fetchData(['context'=>'all','type'=>'content']);
+		$newArr = [];
 		foreach ($data as $item) {
 			$newArr[$item['id_lang']][$item['name_info']] = $item['value_info'];
 		}
@@ -529,20 +533,20 @@ class frontend_model_about extends frontend_db_about {
 	}
 
 	/**
-	 * @param $row
+	 * @param array $row
 	 * @return array
 	 */
-	public function setHrefLangData($row)
-	{
-		$arr = array();
-
-		foreach ($row as $item) {
-			$arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
-                'type' =>  'about',
-                'iso'  =>  $item['iso_lang'],
-                'id'   =>  $item['id_pages'],
-                'url'  =>  $item['url_pages']
-            ));
+	public function setHrefLangData(array $row): array {
+		$arr = [];
+		if(!empty($row)) {
+			foreach ($row as $item) {
+				$arr[$item['id_lang']] = $this->routingUrl->getBuildUrl([
+					'type' =>  'about',
+					'iso'  =>  $item['iso_lang'],
+					'id'   =>  $item['id_pages'],
+					'url'  =>  $item['url_pages']
+				]);
+			}
 		}
 		return $arr;
 	}

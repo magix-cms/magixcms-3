@@ -1,23 +1,20 @@
 <?php
-class frontend_db_menu
-{
+class frontend_db_menu {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-		$dateFormat = new component_format_date();
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if($config['context'] === 'all') {
 			switch ($config['type']) {
 			    case 'links':
-					$sql = "SELECT 
+					$query = "SELECT 
 							m.id_link as id_link, 
 							m.type_link as type_link, 
 							m.mode_link as mode_link, 
@@ -40,23 +37,40 @@ class frontend_db_menu
 						LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
 						LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 						WHERE l.iso_lang = :iso
-						ORDER BY m.order_link ASC";
+						ORDER BY m.order_link";
 			    	break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 			    case 'plugin':
-					$sql = 'SELECT id_plugins as id, name FROM mc_plugins WHERE id_plugins = :id';
+					$query = 'SELECT id_plugins as id, name FROM mc_plugins WHERE id_plugins = :id';
 			    	break;
 			    case 'plugin_id':
-					$sql = 'SELECT id_plugins as id, name FROM mc_plugins WHERE name = :name';
+					$query = 'SELECT id_plugins as id, name FROM mc_plugins WHERE name = :name';
 			    	break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
 	}
 }

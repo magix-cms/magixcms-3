@@ -1,16 +1,16 @@
 <?php
-class backend_db_category
-{
+class backend_db_category {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false){
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []){
 		$dateFormat = new component_format_date();
 
 		if ($config['context'] === 'all') {
@@ -24,7 +24,7 @@ class backend_db_category
 						}
 					}
 
-					$sql = "SELECT p.id_cat, c.name_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
+					$query = "SELECT p.id_cat, c.name_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
 							FROM mc_catalog_cat AS p
 								JOIN mc_catalog_cat_content AS c USING ( id_cat )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -64,7 +64,7 @@ class backend_db_category
 								}
 							}
 
-							$sql = "SELECT p.id_cat, c.name_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat, ca.name_cat AS parent_cat
+							$query = "SELECT p.id_cat, c.name_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat, ca.name_cat AS parent_cat
 									FROM mc_catalog_cat AS p
 										JOIN mc_catalog_cat_content AS c USING ( id_cat )
 										JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -102,18 +102,17 @@ class backend_db_category
 							}
 						}
 					}
-					$sql = "SELECT p.id_cat, c.name_cat, c.resume_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
+					$query = "SELECT p.id_cat, c.name_cat, c.resume_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
 						FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c USING ( id_cat )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_catalog_cat AS pa ON ( p.id_parent = pa.id_cat )
 							LEFT JOIN mc_catalog_cat_content AS ca ON ( pa.id_cat = ca.id_cat ) 
 							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond
-							GROUP BY p.id_cat 
-						ORDER BY p.order_cat";
+							GROUP BY p.id_cat";
 					break;
 				case 'pagesSelect':
-					$sql = "SELECT p.id_parent,p.id_cat, c.name_cat , ca.name_cat AS parent_cat
+					$query = "SELECT p.id_parent,p.id_cat, c.name_cat , ca.name_cat AS parent_cat
 						FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c USING ( id_cat )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -124,7 +123,7 @@ class backend_db_category
 						ORDER BY p.id_cat DESC";
 					break;
 				case 'pagesPublishedSelect':
-					$sql = "SELECT p.id_parent,p.id_cat, c.name_cat , ca.name_cat AS parent_cat
+					$query = "SELECT p.id_parent,p.id_cat, c.name_cat , ca.name_cat AS parent_cat
 							FROM mc_catalog_cat AS p
 								JOIN mc_catalog_cat_content AS c USING ( id_cat )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -136,18 +135,18 @@ class backend_db_category
 							ORDER BY p.id_cat DESC";
 					break;
 				case 'page':
-					$sql = 'SELECT p.*,c.*,lang.*
+					$query = 'SELECT p.*,c.*,lang.*
 						FROM mc_catalog_cat AS p
 						JOIN mc_catalog_cat_content AS c USING(id_cat)
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 						WHERE p.id_cat = :edit';
 					break;
 				case 'img':
-					$sql = 'SELECT p.id_cat, p.img_cat
+					$query = 'SELECT p.id_cat, p.img_cat
 						FROM mc_catalog_cat AS p WHERE p.img_cat IS NOT NULL';
 					break;
 				case 'catRoot':
-					$sql = 'SELECT DISTINCT c.id_cat, c.id_parent, cont.name_cat, cc.id_parent AS parent_id
+					$query = 'SELECT DISTINCT c.id_cat, c.id_parent, cont.name_cat, cc.id_parent AS parent_id
 						FROM mc_catalog_cat AS c
 						LEFT JOIN mc_catalog_cat AS cc ON ( cc.id_parent = c.id_cat )
 						LEFT JOIN mc_catalog_cat_content AS cont ON ( c.id_cat = cont.id_cat )
@@ -155,14 +154,14 @@ class backend_db_category
 						WHERE cont.id_lang = :default_lang AND c.id_parent IS NULL';
 					break;
 				case 'cats':
-					$sql = 'SELECT DISTINCT c.id_cat, c.id_parent, cont.name_cat
+					$query = 'SELECT DISTINCT c.id_cat, c.id_parent, cont.name_cat
 						FROM mc_catalog_cat AS c
 						LEFT JOIN mc_catalog_cat_content AS cont ON ( c.id_cat = cont.id_cat )
 						LEFT JOIN mc_lang AS lang ON ( cont.id_lang = lang.id_lang )
 						WHERE cont.id_lang = :default_lang';
 					break;
 				case 'subcat':
-					$sql = 'SELECT c.id_parent,c.id_cat, cont.name_cat, cc.id_parent AS parent_id
+					$query = 'SELECT c.id_parent,c.id_cat, cont.name_cat, cc.id_parent AS parent_id
 						FROM mc_catalog_cat AS c
 						LEFT JOIN mc_catalog_cat AS cc ON ( cc.id_parent = c.id_cat )
 						LEFT JOIN mc_catalog_cat_content AS cont ON ( c.id_cat = cont.id_cat )
@@ -170,7 +169,7 @@ class backend_db_category
 						WHERE cont.id_lang = :default_lang AND c.id_parent = :id';
 					break;
 				case 'catalog':
-					$sql = 'SELECT catalog.id_catalog, catalog.id_product, p_cont.name_p, catalog.order_p, lang.id_lang,lang.iso_lang
+					$query = 'SELECT catalog.id_catalog, catalog.id_product, p_cont.name_p, catalog.order_p, lang.id_lang,lang.iso_lang
 						FROM mc_catalog AS catalog
 						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
 						JOIN mc_catalog_product_content AS p_cont ON ( p_cont.id_product = p.id_product )
@@ -179,7 +178,7 @@ class backend_db_category
 						ORDER BY catalog.order_p';
 					break;
 				case 'lastCats':
-					$sql = "SELECT p.id_cat, c.name_cat, p.date_register
+					$query = "SELECT p.id_cat, c.name_cat, p.date_register
 						FROM mc_catalog_cat AS p
 						JOIN mc_catalog_cat_content AS c USING ( id_cat )
 						JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -188,62 +187,74 @@ class backend_db_category
 						ORDER BY p.id_cat DESC
 						LIMIT 5";
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'root':
-					$sql = 'SELECT * FROM mc_catalog_cat ORDER BY id_cat DESC LIMIT 0,1';
+					$query = 'SELECT * FROM mc_catalog_cat ORDER BY id_cat DESC LIMIT 0,1';
 					break;
 				case 'content':
-					$sql = 'SELECT * FROM `mc_catalog_cat_content` WHERE `id_cat` = :id_cat AND `id_lang` = :id_lang';
+					$query = 'SELECT * FROM `mc_catalog_cat_content` WHERE `id_cat` = :id_cat AND `id_lang` = :id_lang';
 					break;
 				case 'page':
-					$sql = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
+					$query = 'SELECT * FROM mc_catalog_cat WHERE `id_cat` = :id_cat';
 					break;
 				case 'pageLang':
-					$sql = 'SELECT p.*,c.*,lang.*
+					$query = 'SELECT p.*,c.*,lang.*
 							FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c USING(id_cat)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE p.id_cat = :id
 							AND lang.iso_lang = :iso';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'page':
 				$cond = $params['id_parent'] != NULL ? 'IN ('.$params['id_parent'].')' : 'IS NULL' ;
-				$sql = "INSERT INTO `mc_catalog_cat`(id_parent,menu_cat,order_cat,date_register) 
+				$query = "INSERT INTO `mc_catalog_cat`(id_parent,menu_cat,order_cat,date_register) 
 						SELECT :id_parent,:menu_cat,COUNT(id_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond";
 				break;
 			case 'content':
-				$sql = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 
+				$query = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 
 				  		VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:seo_title_cat,:seo_desc_cat,:published_cat)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -252,26 +263,21 @@ class backend_db_category
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'page':
-				$sql = 'UPDATE mc_catalog_cat 
+				$query = 'UPDATE mc_catalog_cat 
 						SET 
 							id_parent = :id_parent,
 						    menu_cat = :menu_cat
 						WHERE id_cat = :id_cat';
 				break;
 			case 'content':
-				$sql = 'UPDATE mc_catalog_cat_content 
+				$query = 'UPDATE mc_catalog_cat_content 
                         SET 
                             name_cat = :name_cat, 
                             url_cat = :url_cat, 
@@ -283,11 +289,11 @@ class backend_db_category
 						WHERE id_cat = :id_cat AND id_lang = :id_lang';
 				break;
 			case 'img':
-				$sql = 'UPDATE mc_catalog_cat SET img_cat = :img_cat
+				$query = 'UPDATE mc_catalog_cat SET img_cat = :img_cat
                 		WHERE id_cat = :id_cat';
 				break;
 			case 'imgContent':
-				$sql = 'UPDATE mc_catalog_cat_content 
+				$query = 'UPDATE mc_catalog_cat_content 
 						SET 
 							alt_img = :alt_img,
 							title_img = :title_img,
@@ -296,27 +302,27 @@ class backend_db_category
                 		AND id_lang = :id_lang';
 				break;
 			case 'order':
-				$sql = 'UPDATE mc_catalog_cat SET order_cat = :order_cat
+				$query = 'UPDATE mc_catalog_cat SET order_cat = :order_cat
                 		WHERE id_cat = :id_cat';
 				break;
 			case 'order_p':
-				$sql = 'UPDATE mc_catalog SET order_p = :order_p
+				$query = 'UPDATE mc_catalog SET order_p = :order_p
                 		WHERE id_catalog = :id_catalog';
 				break;
 			case 'pageActiveMenu':
-				$sql = 'UPDATE mc_catalog_cat 
+				$query = 'UPDATE mc_catalog_cat 
 						SET menu_cat = :menu_cat 
 						WHERE id_cat IN ('.$params['id_cat'].')';
 				$params = array(
 					'menu_cat' => $params['menu_cat']
 				);
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -325,30 +331,26 @@ class backend_db_category
 	}
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function delete($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
+	public function delete(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'delPages':
-				$sql = 'DELETE FROM mc_catalog_cat WHERE id_cat IN ('.$params['id'].')';
+				$query = 'DELETE FROM mc_catalog_cat WHERE id_cat IN ('.$params['id'].')';
 				$params = array();
 				break;
 			case 'delProduct':
-				$sql = 'DELETE FROM mc_catalog WHERE id_catalog IN ('.$params['id'].')';
+				$query = 'DELETE FROM mc_catalog WHERE id_catalog IN ('.$params['id'].')';
 				$params = array();
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

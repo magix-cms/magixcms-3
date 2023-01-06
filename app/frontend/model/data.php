@@ -5,9 +5,9 @@ class frontend_model_data{
 	/**
 	 * backend_model_data constructor.
 	 * @param object $caller - object class of the class that called the model
-	 * @param object $t - object class of the template class from the caller
+	 * @param frontend_model_template|null $t - object class of the template class from the caller
 	 */
-	public function __construct($caller, $t = null)
+	public function __construct($caller, frontend_model_template $t = null)
 	{
 		$this->caller = $caller;
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();

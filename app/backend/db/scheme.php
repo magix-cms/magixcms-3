@@ -44,28 +44,34 @@
  */
 class backend_db_scheme {
 	/**
-	 * @param $config
-	 * @param bool $data
-	 * @return mixed
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-    public function fetchData($config,$data = false){
-        $sql = '';
-        $params = false;
+	protected debug_logger $logger;
 
-        if(is_array($config)) {
-            if($config['context'] === 'all') {
-				if ($config['type'] === 'scheme') {
-					$sql = "SELECT COLUMN_NAME as `column`, COLUMN_TYPE as `type`
-							FROM INFORMATION_SCHEMA.COLUMNS
-							WHERE TABLE_SCHEMA = :dbname
-							AND TABLE_NAME IN(".$data['table'].") 
-							AND COLUMN_NAME IN(".$data['columns'].")";
-					$params = array(':dbname' => $data[':dbname']);
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+    public function fetchData(array $config, array $params = []) {
+		if($config['context'] === 'all') {
+			if ($config['type'] === 'scheme') {
+				$query = "SELECT COLUMN_NAME as `column`, COLUMN_TYPE as `type`
+						FROM INFORMATION_SCHEMA.COLUMNS
+						WHERE TABLE_SCHEMA = :dbname
+						AND TABLE_NAME IN(".$params['table'].") 
+						AND COLUMN_NAME IN(".$params['columns'].")";
+				$params = array(':dbname' => $params[':dbname']);
+
+				try {
+					return component_routing_db::layer()->fetchAll($query, $params);
 				}
-
-                return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-            }
-        }
+				catch (Exception $e) {
+					if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+					$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+				}
+			}
+		}
+		return false;
     }
 }

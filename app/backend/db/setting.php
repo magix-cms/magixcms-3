@@ -42,59 +42,70 @@
  * @author Gérits Aurélien <aurelien@magix-cms.com> <aurelien@magix-dev.be>
  *
  */
-class backend_db_setting{
+class backend_db_setting {
+	/**
+	 * @var debug_logger $logger
+	 */
+	protected debug_logger $logger;
+
     /**
-     * @param $config
-     * @param bool $params
-     * @return mixed
-     * @throws Exception
+     * @param array $config
+     * @param array $params
+     * @return array|bool
      */
-    public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-        $sql = '';
-
+    public function fetchData(array $config, array $params = []) {
 		if($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'settings':
-					$sql = 'SELECT * FROM mc_setting';
+					$query = 'SELECT * FROM mc_setting';
 					break;
 				case 'cssinliner':
-					$sql = 'SELECT * FROM mc_cssinliner';
+					$query = 'SELECT * FROM mc_css_inliner';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'skin':
-					$sql = 'SELECT * FROM mc_setting WHERE name = "theme"';
+					$query = "SELECT * FROM mc_setting WHERE name = 'theme'";
 					break;
 				case 'setting':
-					$sql = 'SELECT * FROM mc_setting WHERE name = :setting';
+					$query = 'SELECT * FROM mc_setting WHERE name = :setting';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'general':
-				$sql = "UPDATE `mc_setting`
+				$query = "UPDATE `mc_setting`
 						SET `value` = CASE `name`
 							WHEN 'content_css' THEN :content_css
 							WHEN 'concat' THEN :concat
@@ -142,14 +153,14 @@ class backend_db_setting{
 					}
 				}
 				else {
-					$sql = "UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'";
+					$query = "UPDATE mc_setting SET value = :css_inliner WHERE name = 'css_inliner'";
 				}
 				break;
 			case 'theme':
-				$sql = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
+				$query = "UPDATE mc_setting SET value = :theme WHERE name = 'theme'";
 				break;
 			case 'google':
-				$sql = "UPDATE `mc_setting`
+				$query = "UPDATE `mc_setting`
 						SET `value` = CASE `name`
 							WHEN 'analytics' THEN :analytics
 							WHEN 'robots' THEN :robots
@@ -157,7 +168,7 @@ class backend_db_setting{
 						WHERE `name` IN ('analytics','robots')";
 				break;
             case 'catalog':
-                $sql = "UPDATE `mc_setting`
+                $query = "UPDATE `mc_setting`
 						SET `value` = CASE `name`
 							WHEN 'vat_rate' THEN :vat_rate
 							WHEN 'price_display' THEN :price_display
@@ -165,7 +176,7 @@ class backend_db_setting{
 						WHERE `name` IN ('vat_rate','price_display')";
                 break;
             case 'mail':
-                $sql = "UPDATE `mc_setting`
+                $query = "UPDATE `mc_setting`
 						SET `value` = CASE `name`
 							WHEN 'mail_sender' THEN :mail_sender
 							WHEN 'smtp_enabled' THEN :smtp_enabled
@@ -177,60 +188,16 @@ class backend_db_setting{
 						END
 						WHERE `name` IN ('mail_sender','smtp_enabled','set_host','set_port','set_encryption','set_username','set_password')";
                 break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
 			return 'Exception reçue : '.$e->getMessage();
 		}
     }
-
-	/**
-	 * singleton dbnews
-	 * @access public
-	 * @var void
-	 */
-	/*static public $publicdbsetting;
-	/**
-	 * instance backend_db_home with singleton
-	 */
-	/*public static function publicDbSetting(){
-        if (!isset(self::$publicdbsetting)){
-         	self::$publicdbsetting = new backend_db_setting();
-        }
-    	return self::$publicdbsetting;
-    }
-
-	/**
-	 * Retourne le setting selectionner
-	 * @param $setting_id (string) identifiant du setting
-	 * @return mixed
-	 */
-    /*public function s_uniq_setting_value($setting_id){
-    	$sql = 'SELECT setting_value FROM ap_setting WHERE setting_id = :setting_id';
-		return component_routing_db::layer()->fetch($sql,array(':setting_id'	=>	$setting_id));
-    }
-
-    /**
-	 * Return all settings
-	 * @return mixed
-	 */
-    /*public function s_all_settings(){
-    	$sql = 'SELECT setting_id,setting_value FROM ap_setting';
-		return component_routing_db::layer()->fetchAll($sql);
-    }
-
-    /**
-     * @return array
-     */
-    /*public function fetchCSSIColor(){
-        $sql = 'SELECT color.*
-    	FROM ap_css_inliner_color as color';
-        return component_routing_db::layer()->fetchAll($sql);
-    }*/
 }

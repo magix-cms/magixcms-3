@@ -63,7 +63,7 @@ class frontend_model_seo extends frontend_db_seo {
 	 * @param string $type
 	 * @param null|frontend_model_template $t
 	 */
-	public function __construct($attribute, $level, $type, $t = null){
+	public function __construct($attribute, $level, $type, frontend_model_template $t = null){
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->data = new frontend_model_data($this,$this->template);
 		$this->attribute = $attribute;

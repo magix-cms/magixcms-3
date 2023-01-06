@@ -1,43 +1,42 @@
 <?php
-class backend_db_about
-{
+class backend_db_about {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-    public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-        $sql = '';
+	protected debug_logger $logger;
+	
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+    public function fetchData(array $config, array $params = []) {
 		$dateFormat = new component_format_date();
 
 		if($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'info':
-					$sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
+					$query = "SELECT a.name_info,a.value_info FROM mc_about AS a";
 					break;
 				case 'content':
-					$sql = 'SELECT a.*
+					$query = 'SELECT a.*
 						FROM mc_about_data AS a
 						JOIN mc_lang AS lang ON(a.id_lang = lang.id_lang)';
 					break;
 				case 'op':
-					$sql = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
+					$query = "SELECT `day_abbr`,`open_day`,`noon_time`,`open_time`,`close_time`,`noon_start`,`noon_end` FROM `mc_about_op`";
 					break;
 				case 'op_content':
-					$sql = "SELECT * FROM `mc_about_op_content`";
+					$query = "SELECT * FROM `mc_about_op_content`";
 					break;
 				case 'languages':
-					$sql = "SELECT `name_lang` FROM `mc_lang`";
+					$query = "SELECT `name_lang` FROM `mc_lang`";
 					break;
 				case 'iso':
-					$sql = "SELECT `iso_lang` FROM `mc_lang`";
+					$query = "SELECT `iso_lang` FROM `mc_lang`";
 					break;
 				case 'page':
-					$sql = 'SELECT p.*,c.*,lang.*
+					$query = 'SELECT p.*,c.*,lang.*
 							FROM mc_about_page AS p
 							JOIN mc_about_page_content AS c USING(id_pages)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -52,7 +51,7 @@ class backend_db_about
 						}
 					}
 
-					$sql = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
+					$query = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
 							FROM mc_about_page AS p
 								JOIN mc_about_page_content AS c USING ( id_pages )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -92,7 +91,7 @@ class backend_db_about
 								}
 							}
 
-							$sql = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
+							$query = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, ca.name_pages AS parent_pages
 									FROM mc_about_page AS p
 										JOIN mc_about_page_content AS c USING ( id_pages )
 										JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -131,18 +130,17 @@ class backend_db_about
 						}
 					}
 
-					$sql = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
+					$query = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
 							FROM mc_about_page AS p
 								JOIN mc_about_page_content AS c USING ( id_pages )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
 								LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
 								WHERE p.id_parent = :id $cond
-								GROUP BY p.id_pages 
-							ORDER BY p.order_pages";
+								GROUP BY p.id_pages";
 					break;
 				case 'pagesSelect':
-					$sql = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
+					$query = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
 						FROM mc_about_page AS p
 							JOIN mc_about_page_content AS c USING ( id_pages )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -152,44 +150,56 @@ class backend_db_about
 							GROUP BY p.id_pages 
 						ORDER BY p.id_pages DESC";
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'info':
-					$sql = "SELECT a.name_info,a.value_info FROM mc_about AS a";
+					$query = "SELECT a.name_info,a.value_info FROM mc_about AS a";
 					break;
 				case 'content':
-					$sql = 'SELECT * FROM `mc_about_data` WHERE `id_lang` = :id_lang';
+					$query = 'SELECT * FROM `mc_about_data` WHERE `id_lang` = :id_lang';
 					break;
 				case 'contentPage':
-					$sql = 'SELECT * FROM `mc_about_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
+					$query = 'SELECT * FROM `mc_about_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
 					break;
 				case 'root':
-					$sql = 'SELECT * FROM mc_about_page ORDER BY id_pages DESC LIMIT 0,1';
+					$query = 'SELECT * FROM mc_about_page ORDER BY id_pages DESC LIMIT 0,1';
 					break;
 				case 'close_txt':
-					$sql = 'SELECT * FROM mc_about_op_content WHERE id_lang = :id_lang';
+					$query = 'SELECT * FROM mc_about_op_content WHERE id_lang = :id_lang';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
-	 * @return bool|string
+	 * @return bool
 	 */
-    public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+    public function insert(array $config, array $params = []) {
 		if($config['context'] === 'about') {
 			switch ($config['type']) {
 				case 'content':
@@ -220,7 +230,7 @@ class backend_db_about
 					}
 					break;
 				case 'close_txt':
-					$sql = 'INSERT INTO `mc_about_op_content`(id_lang,'.$params['column'].') 
+					$query = 'INSERT INTO `mc_about_op_content`(id_lang,'.$params['column'].') 
 							VALUES (:id_lang,:value)';
 					unset($params['column']);
 					break;
@@ -230,20 +240,18 @@ class backend_db_about
 			switch ($config['type']) {
 				case 'page':
 					$cond = $params['id_parent'] != NULL ? ' IN ('.$params['id_parent'].')' : ' IS NULL';
-					$sql = "INSERT INTO `mc_about_page`(id_parent,menu_pages,order_pages,date_register) 
+					$query = "INSERT INTO `mc_about_page`(id_parent,menu_pages,order_pages,date_register) 
 						SELECT :id_parent,:menu_pages,COUNT(id_pages),NOW() FROM mc_about_page WHERE id_parent".$cond;
 					break;
 				case 'content':
-					$sql = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
+					$query = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
 						VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
 					break;
 			}
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -252,20 +260,15 @@ class backend_db_about
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
-	 * @return bool|string
+	 * @return bool
 	 */
-    public function update($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+    public function update(array $config, array $params = []) {
 		if($config['context'] === 'about') {
 			switch ($config['type']) {
 				case 'company':
-					$sql = "UPDATE `mc_about`
+					$query = "UPDATE `mc_about`
 						SET `value_info` = CASE `name_info`
 							WHEN 'name' THEN :nme
 							WHEN 'type' THEN :tpe
@@ -281,7 +284,7 @@ class backend_db_about
 					);
 					break;
 				case 'contact':
-					$sql = "UPDATE `mc_about`
+					$query = "UPDATE `mc_about`
 						SET `value_info` = CASE `name_info`
 							WHEN 'mail' THEN :mail
 							WHEN 'click_to_mail' THEN :click_to_mail
@@ -312,12 +315,12 @@ class backend_db_about
 					);
 					break;
 				case 'refesh_lang':
-					$sql = "UPDATE `mc_about` 
+					$query = "UPDATE `mc_about` 
 					SET `value_info` = :languages 
 					WHERE `name_info` = 'languages'";
 					break;
 				case 'socials':
-					$sql = "UPDATE `mc_about`
+					$query = "UPDATE `mc_about`
 				SET `value_info` = CASE `name_info`
 					WHEN 'facebook' THEN :facebook
 					WHEN 'twitter' THEN :twitter
@@ -336,7 +339,7 @@ class backend_db_about
 					$params = $params['socials'];
 					break;
 				case 'content':
-					$sql = "UPDATE `mc_about_data`
+					$query = "UPDATE `mc_about_data`
 					SET `value_info` = CASE `name_info`
 						WHEN 'desc' THEN :dsc
 						WHEN 'slogan' THEN :slogan
@@ -356,13 +359,13 @@ class backend_db_about
 					);
 					break;
 				case 'enable_op':
-					$sql = "UPDATE mc_about 
+					$query = "UPDATE mc_about 
 					SET value_info = :enable_op 
 					WHERE name_info = 'openinghours'";
 					break;
 				case 'openinghours':
 					foreach ($params['specifications'] as $day => $opt) {
-						$sql = "UPDATE `mc_about_op`
+						$query = "UPDATE `mc_about_op`
 								SET `open_day` = :open_day,
 								`noon_time` = CASE `open_day`
 												WHEN '1' THEN :noon_time
@@ -395,7 +398,7 @@ class backend_db_about
 								WHERE `day_abbr` = :cday";
 
 						try {
-							component_routing_db::layer()->update($sql, array(
+							component_routing_db::layer()->update($query, array(
 								'cday' => $day,
 								'open_day' => $opt['open_day'],
 								'noon_time' => $opt['noon_time'],
@@ -413,7 +416,7 @@ class backend_db_about
 					return true;
 					break;
 				case 'close_txt':
-					$sql = "UPDATE mc_about_op_content SET ".$params['column']." = :value WHERE id_content = :id";
+					$query = "UPDATE mc_about_op_content SET ".$params['column']." = :value WHERE id_content = :id";
 					unset($params['column']);
 					break;
 			}
@@ -421,14 +424,14 @@ class backend_db_about
 		elseif ($config['context'] === 'page') {
 			switch ($config['type']) {
 				case 'page':
-					$sql = 'UPDATE mc_about_page 
+					$query = 'UPDATE mc_about_page 
 						SET 
 							id_parent = :id_parent,
 						    menu_pages = :menu_pages
 						WHERE id_pages = :id_pages';
 					break;
 				case 'content':
-					$sql = 'UPDATE mc_about_page_content 
+					$query = 'UPDATE mc_about_page_content 
 						SET 
 							name_pages = :name_pages,
 							url_pages = :url_pages,
@@ -441,12 +444,12 @@ class backend_db_about
 						AND id_lang = :id_lang';
 					break;
 				case 'order':
-					$sql = 'UPDATE mc_about_page 
+					$query = 'UPDATE mc_about_page 
 						SET order_pages = :order_pages
 						WHERE id_pages = :id_pages';
 					break;
 				case 'pageActiveMenu':
-					$sql = 'UPDATE mc_about_page 
+					$query = 'UPDATE mc_about_page 
 						SET menu_pages = :menu_pages 
 						WHERE id_pages IN ('.$params['id_pages'].')';
 					$params = array('menu_pages' => $params['menu_pages']);
@@ -454,10 +457,8 @@ class backend_db_about
 			}
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -466,26 +467,20 @@ class backend_db_about
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
-	 * @return bool|string
+	 * @return bool
 	 */
-	public function delete($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
+	public function delete(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'page':
-				$sql = 'DELETE FROM `mc_about_page` WHERE `id_pages` IN ('.$params['id'].')';
+				$query = 'DELETE FROM `mc_about_page` WHERE `id_pages` IN ('.$params['id'].')';
 				$params = array();
 				break;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

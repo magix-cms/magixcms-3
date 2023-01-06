@@ -1,65 +1,75 @@
 <?php
-class backend_db_module
-{
-    /**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+class backend_db_module {
+	/**
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+    /**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'bonds':
-					$sql = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :plugin OR module_name = :module';
+					$query = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :plugin OR module_name = :module';
 					break;
 				case 'mod':
-					$sql = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :id';
+					$query = 'SELECT * FROM mc_plugins_module WHERE plugin_name = :id';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'mod':
-					$sql = 'SELECT * FROM mc_plugins_module WHERE module_name = :mname AND plugin_name = :pname';
+					$query = 'SELECT * FROM mc_plugins_module WHERE module_name = :mname AND plugin_name = :pname';
 					break;
 				case 'register':
-					$sql = 'SELECT * FROM mc_plugins WHERE name = :id';
+					$query = 'SELECT * FROM mc_plugins WHERE name = :id';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'mod':
-				$sql = "INSERT INTO `mc_plugins_module` (plugin_name,module_name,active) VALUES (:pname,:mname,:active)";
+				$query = "INSERT INTO `mc_plugins_module` (plugin_name,module_name,active) VALUES (:pname,:mname,:active)";
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -68,27 +78,21 @@ class backend_db_module
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
-		switch ($config['type'])
-		{
+	public function update(array $config, array $params = []) {
+		switch ($config['type']) {
 			case 'mod':
-				$sql = 'UPDATE mc_plugins_module SET active = :active WHERE module_name = :mname AND plugin_name = :pname';
+				$query = 'UPDATE mc_plugins_module SET active = :active WHERE module_name = :mname AND plugin_name = :pname';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -97,27 +101,21 @@ class backend_db_module
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function delete($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
-		switch ($config['type'])
-		{
+	public function delete(array $config, array $params = []) {
+		switch ($config['type']) {
 			case 'mod':
-				$sql = 'DELETE FROM mc_plugins_module WHERE module_name = :mname AND plugin_name = :pname';
+				$query = 'DELETE FROM mc_plugins_module WHERE module_name = :mname AND plugin_name = :pname';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

@@ -1,31 +1,50 @@
 <?php
-class frontend_db_plugins
-{
-    /**
-     * @param $config
-     * @param bool $params
-     * @return mixed|null
-     * @throws Exception
-     */
-    public function fetchData($config, $params = false)
-    {
-        if (!is_array($config)) return '$config must be an array';
+class frontend_db_plugins {
+	/**
+	 * @var debug_logger $logger
+	 */
+	protected debug_logger $logger;
 
-        $sql = '';
+    /**
+     * @param array $config
+     * @param array $params
+     * @return array|bool
+     */
+    public function fetchData(array $config, array $params = []) {
         if($config['context'] === 'all') {
             switch ($config['type']){
                 case 'list':
-                    $sql = 'SELECT * FROM mc_plugins';
+                    $query = 'SELECT * FROM mc_plugins';
                     break;
+				default:
+					return false;
             }
-            return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
-        } elseif($config['context'] === 'one') {
+
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
+        }
+		elseif($config['context'] === 'one') {
             switch ($config['type']) {
                 case 'installed':
-                    $sql = 'SELECT * FROM mc_plugins WHERE name = :name';
+                    $query = 'SELECT * FROM mc_plugins WHERE name = :name';
                     break;
+				default:
+					return false;
             }
-            return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
         }
+		return false;
     }
 }

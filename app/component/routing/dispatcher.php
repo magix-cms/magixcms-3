@@ -146,10 +146,9 @@ class component_routing_dispatcher {
 
 	/**
 	 * Preload components
-	 * @param $lang
+	 * @param string $lang
 	 */
-	private function preloadComponents($lang)
-	{
+	private function preloadComponents(string $lang) {
 		$this->template->assign('setting', $this->template->settings);
 
 		if ($this->router === 'frontend' || ($this->router === 'plugins' && $this->plugins === 'public')) {
@@ -284,14 +283,14 @@ class component_routing_dispatcher {
 
 			$session = component_routing_db::layer()->fetch($sql, ['id_admin_session'=>$_COOKIE['mc_admin']]);
 
-			if( !empty($session) ){
+			if(!empty($session) ){
 				$adminSession = true;
 			}
 		}
 
 		if(
 			($this->router === 'frontend' || ($this->router === 'plugins' && $this->plugins === 'public'))
-			&& $this->template->settings['maintenance']['value'] === '1'
+			&& $this->template->settings['maintenance'] === '1'
 			&& !$adminSession) {
 			$this->template->assign('theme',$this->template->theme);
 			$this->template->assign('domain',$this->template->domain);

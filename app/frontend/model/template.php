@@ -44,128 +44,153 @@
  * @name template
  *
  */
-class frontend_model_template{
+class frontend_model_template {
 	/**
-	 * Constante pour le chemin vers le dossier de configuration des langues statiques pour le contenu
-	 * @var string
+	 * @var frontend_model_template $instance
 	 */
-	private $ConfigFile;
-	protected $amp,$DBDomain,$ssl;
+	static protected frontend_model_template $instance;
+
+	/**
+	 * @var component_collections_setting $collectionsSetting
+	 * @var component_collections_language $collectionsLanguage
+	 * @var frontend_db_domain $DBDomain
+	 */
+	protected component_collections_setting $collectionsSetting;
+	protected component_collections_language $collectionsLanguage;
+	protected frontend_db_domain $DBDomain;
+
+	/**
+	 * @var bool $amp
+	 */
+	protected bool $amp;
+
+	/**
+	 * @var string $ConfigFile
+	 */
+	private string $ConfigFile = 'local_';
+
     /**
-     * @var component_collections_setting
+     * @var array $settings
+     * @var array $domain
+     * @var array $langs
      */
-    public
+    public array
 		$settings,
-		$defaultLang,
-		$langs,
 		$domain,
-		$collectionsSetting,
-		$cLangs,
-        $defaultDomain;
+		$langs;
 
 	/**
 	 * @var string $lang
+	 * @var string $defaultLang
+	 * @var string $defaultDomain
 	 * @var string $theme
 	 */
 	public string
 		$lang,
+		$defaultLang,
+		$defaultDomain,
 		$theme;
 
 	/**
-	 *
-	 * Constructor
+	 * @var bool $ssl
 	 */
-    public function __construct(){
-		$this->ConfigFile = 'local_';
-		$this->collectionsSetting = new component_collections_setting();
-		$this->cLangs = new component_collections_language();
-		$this->DBDomain = new frontend_db_domain();
+	public bool $ssl;
 
-		$this->init();
+	/**
+	 *
+	 */
+    public function __construct() {
+		if (isset(self::$instance) && self::$instance !== null) {
+			foreach (get_object_vars(self::$instance) as $prop=>$value) {
+				$this->{$prop} = $value;
+			}
+		}
+		else {
+			//$logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
+			//$logger->log('statement', 'db', 'Frontend template instance  called on '.$_SERVER['SCRIPT_NAME'].$_SERVER['REQUEST_URI'], debug_logger::LOG_MONTH);
+			$this->collectionsSetting = new component_collections_setting();
+			$this->collectionsLanguage = new component_collections_language();
+			$this->DBDomain = new frontend_db_domain();
+
+			if(!isset($this->settings)) $this->init();
+			self::$instance = $this;
+		}
 	}
 
-    public function init(){
+	/**
+	 * @return void
+	 */
+    public function init() {
         $this->settings = $this->collectionsSetting->getSetting();
-		$this->ssl = $this->settings['ssl'];
-		$this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(array('context'=>'one','type'=>'currentDomain'),array('url'=>$_SERVER['HTTP_HOST'])) : null;
-		$this->langs = $this->langsAvailable();
+		$this->ssl = (bool)$this->settings['ssl'];
+		$this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(['context' => 'one','type' => 'currentDomain'],['url' => $_SERVER['HTTP_HOST']]) : null;
+		$this->langs = $this->languagesAvailable();
 		$this->lang = $this->currentLanguage();
-		$this->theme = $this->themeSelected();
-		$this->amp = (http_request::isGet('amp') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') && $this->ssl['value'])? true : false;
+		$this->theme = $this->loadTheme();
+		$this->amp = http_request::isGet('amp') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') && $this->ssl;
         $this->defaultDomain = $this->setDefaultDomain();
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function is_amp()
-	{
+	public function is_amp(): bool {
 		return $this->amp;
 	}
 
     /**
-     * @return mixed
-     * @throws Exception
+     * @return string
      */
-    public function setDefaultDomain(){
-        $data = $this->DBDomain->fetchData(array('context' => 'one', 'type' => 'defaultDomain'));
-        return $data['url_domain'];
+    public function setDefaultDomain(): string {
+		$defaultDomain = '';
+        $data = $this->DBDomain->fetchData(['context' => 'one', 'type' => 'defaultDomain']);
+		if(!empty($data)) $defaultDomain = $data['url_domain'];
+        return $defaultDomain;
     }
 
 	/**
 	 * Get the available languages
+	 * @return array
 	 */
-	public function langsAvailable()
-	{
-		$langs = null;
+	public function languagesAvailable(): array {
+		$languages = [];
+		$languagesData = [];
 		if(!empty($this->domain)) {
-			$data = $this->DBDomain->fetchData(array('context' => 'all', 'type' => 'languages'), array('id' => $this->domain['id_domain']));
-			if(!empty($data)) $langs = $data;
+			$data = $this->DBDomain->fetchData(['context' => 'all', 'type' => 'languages'], ['id' => $this->domain['id_domain']]);
+			if(!empty($data)) $languagesData = $data;
 		}
-		if(!$langs) $langs = $this->cLangs->fetchData(array('context'=>'all','type'=>'active'));
+		if(!$languagesData) $languagesData = $this->collectionsLanguage->fetchData(['context' => 'all','type' => 'active']);
 
-		$arr = array();
-		foreach ($langs as $lang) {
-			$arr[$lang['iso_lang']] = $lang;
+		foreach ($languagesData as $lang) {
+			$languages[$lang['iso_lang']] = $lang;
 		}
-		return $arr;
+		return $languages;
     }
 
     /**
      * Return the default language
+	 * @return string
      */
-    public function setDefaultLanguage(){
-    	$lang = null;
+    public function setDefaultLanguage(): string {
+    	$lang = '';
         if($this->domain['id_domain'] != null) {
-			$data = $this->DBDomain->fetchData(array('context' => 'one', 'type' => 'language'), array('id' => $this->domain['id_domain']));
+			$data = $this->DBDomain->fetchData(['context' => 'one', 'type' => 'language'], ['id' => $this->domain['id_domain']]);
 			if(!empty($data)) $lang = $data['iso_lang'];
 		}
 
         if(!$lang) {
-			$data = $this->cLangs->fetchData(array('context'=>'one','type'=>'default'));
-			$lang = $data['iso_lang'];
+			$data = $this->collectionsLanguage->fetchData(['context' => 'one','type' => 'default']);
+			if(!empty($data)) $lang = $data['iso_lang'];
 		}
         return $lang;
     }
 
-    /**
-     * @access public static
-     * Paramètre de langue get
-     */
-	/*public function getLanguage(){
-        if(http_request::isGet('strLangue')){
-            return $_GET['strLangue'];//form_inputFilter::isAlphaNumericMax($_GET['strLangue'],3);
-        }
-	}*/
-
 	/**
 	 * Retourne la langue en cours de session sinon retourne fr par défaut
 	 * @return string
-	 * @access public 
-	 * @static
 	 */
-	public function currentLanguage(){
-		$lang = null;
+	public function currentLanguage(): string {
+		$lang = '';
 		$user_langs = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
 		foreach($user_langs as $ul) {
@@ -179,7 +204,7 @@ class frontend_model_template{
 
 		if(!$lang) {
 			$default = $this->setDefaultLanguage();
-			$default = $default ? $default : (http_request::isSession('strLangue') ? $_SESSION['strLangue'] : null);
+			$default = $default ?: (http_request::isSession('strLangue') ? $_SESSION['strLangue'] : null);
 
 			if($default) {
 				$this->defaultLang = $default;
@@ -210,7 +235,7 @@ class frontend_model_template{
 	 */
 	private function pathConfigLoad($configfile){
 		try {
-			return $configfile.$this->currentLanguage().'.conf';
+			return $configfile.$this->lang.'.conf';
 		}catch(Exception $e) {
             $logger = new debug_logger(MP_LOG_DIR);
             $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
@@ -236,36 +261,31 @@ class frontend_model_template{
 
 	/**
 	 * Charge le theme selectionné ou le theme par défaut
+	 * @return string
 	 */
-	public function loadTheme(){
-		//$db = $this->collectionsSetting->fetch('theme');
-		$db = $this->settings['theme'];
-		if($db['value'] != null){
-			if($db['value'] == 'default'){
-				$theme =  $db['value'];
-			}elseif(file_exists(component_core_system::basePath().'/skin/'.$db['value'].'/')){
-				$theme =  $db['value'];
-			}else{
-				try {
-					$theme = 'default';
-	        		throw new Exception('template '.$db['value'].' is not found');
-				}catch(Exception $e) {
-                    $logger = new debug_logger(MP_LOG_DIR);
-                    $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
-                }
+	public function loadTheme(): string {
+		$theme = 'default';
+		$selectedTheme = $this->settings['theme'];
+		if(!empty($selectedTheme)) {
+			if($selectedTheme !== 'default') {
+				if(file_exists(component_core_system::basePath().'/skin/'.$selectedTheme.'/')) {
+					$theme = $selectedTheme;
+				}
+				else {
+					$logger = new debug_logger(MP_LOG_DIR);
+					$logger->log('php', 'error', 'An error has occured : template '.$selectedTheme.' is not found', debug_logger::LOG_MONTH);
+				}
 			}
-		}else{
-			$theme = 'default';
 		}
 		return $theme;
 	}
 
 	/**
 	 * Function load public theme
-	 * @see frontend_config_theme
+	 * @return string
 	 */
-	public function themeSelected(){
-        return $this->loadTheme();
+	public function themeSelected(): string {
+        return $this->theme;
 	}
 
     /**
@@ -274,10 +294,10 @@ class frontend_model_template{
      * @throws Exception
      * @return void
      */
-    public function setCache($smarty){
-        //$config = $this->collectionsSetting->fetch('cache');
-        $config = $this->collectionsSetting->fetchData(array('context'=>'one','type'=>'setting'),array('name'=>'cache'));
-        switch($config['value']){
+    public function setCache($smarty) {
+		$config = empty($this->settings) ? $this->collectionsSetting->fetchData(['context'=>'one','type'=>'setting'],['name'=>'cache']) : $this->settings['cache'];
+
+        switch($config){
             case 'none':
                 $smarty->setCaching(false);
                 break;

@@ -20,15 +20,13 @@ class frontend_model_mail {
 	/**
 	 * frontend_model_mail constructor.
 	 * @param null|frontend_model_template $t
-	 * @param $tpl_dir
+	 * @param string $tpl_dir
 	 */
-	public function __construct($t = null, $tpl_dir)
-	{
-        $this->settings = new frontend_model_setting($this->template);
-	    $transport = $this->transport();
+	public function __construct(frontend_model_template $t = null, string $tpl_dir) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
+		$transport = $this->transport();
 		$this->message = new component_core_message($this->template);
-		$this->lang = $this->template->currentLanguage();
+		$this->lang = $this->template->lang;
 		$this->sanitize = new filter_sanitize();
 		$this->mail = new mail_swift($transport['type'], $transport['options']);
 		$this->modelDomain = new frontend_model_domain($this->template);
@@ -40,29 +38,24 @@ class frontend_model_mail {
      * Return transport for Mail (mail or smtp)
      * @return array
      */
-    private function transport(){
-        $config = $this->settings->getMail();
-        $newConfig = NULL;
-        $newData = NULL;
-        foreach ($config as $key => $value){
-            $newConfig[$value['name']] = $value['value'];
-        }
-        if($newConfig['smtp_enabled'] != '0'){
+    private function transport(): array {
+        $newData = [
+			'type' => 'mail',
+			'options' => NULL
+		];
+        if($this->template->settings['smtp_enabled']){
             $newData['type'] = 'smtp';
             $newData['options'] = array(
-                'setHost'		=> $newConfig['set_host'],
-                'setPort'		=> $newConfig['set_port'],
-                'setEncryption'	=> !empty($newConfig['set_encryption']) ? $newConfig['set_encryption'] : '',
-                'setUsername'	=> $newConfig['set_username'],
-                'setPassword'	=> $newConfig['set_password']
+                'setHost' => $this->template->settings['set_host'],
+                'setPort' => $this->template->settings['set_port'],
+                'setEncryption'	=> !empty($this->template->settings['set_encryption']) ? $this->template->settings['set_encryption'] : '',
+                'setUsername' => $this->template->settings['set_username'],
+                'setPassword' => $this->template->settings['set_password']
             );
-
-        }else{
-            $newData['type'] = 'mail';
-            $newData['options'] = NULL;
         }
         return $newData;
     }
+
 	/**
 	 * @param $type
 	 * @return string
@@ -84,13 +77,14 @@ class frontend_model_mail {
 	 * @param bool $debug
 	 * @return string
 	 */
-	private function getBodyMail($tpl, $data = array(), $debug = false){
-		$cssInliner = $this->settings->getSetting('css_inliner');
-		$this->template->assign('getDataCSSIColor',$this->settings->fetchCSSIColor());
+	private function getBodyMail($tpl, $data = array(), $debug = false) {
+		$cssInliner = $this->template->settings['css_inliner'];
 		$this->template->assign('data',$data);
 
 		$bodyMail = $this->template->fetch($this->tpl_dir.'/mail/'.$tpl.'.tpl');
-		if ($cssInliner['value']) {
+		if ($cssInliner) {
+			$this->settings = new frontend_model_setting($this->template);
+			$this->template->assign('getDataCSSIColor',$this->settings->fetchCSSIColor());
 			$bodyMail = $this->mail->plugin_css_inliner($bodyMail,array(component_core_system::basePath().'skin/'.$this->template->theme.'/mail/css' => 'mail.min.css'));
 			//$bodyMail = $this->mail->plugin_css_inliner($bodyMail);
 		}

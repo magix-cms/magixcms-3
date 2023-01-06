@@ -44,37 +44,53 @@
  */
 class frontend_db_setting {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 			    case 'color':
-			    	$sql = 'SELECT color.* FROM mc_css_inliner as color';
+			    	$query = 'SELECT color.* FROM mc_css_inliner as color';
 			    	break;
                 case 'mail':
-                    $sql = 'SELECT mail.name,mail.value FROM mc_setting as mail WHERE category = "mail"';
+                    $query = "SELECT ms.name, ms.value FROM mc_setting as ms WHERE ms.category = 'mail'";
                     break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
 			    case 'setting':
-			    	$sql = 'SELECT value FROM mc_setting WHERE name = :setting';
+			    	$query = 'SELECT value FROM mc_setting WHERE name = :setting';
 			    	break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
 	}
 }

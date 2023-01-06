@@ -20,134 +20,135 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -- END LICENSE BLOCK -----------------------------------
-
+#
 # DISCLAIMER
-
+#
 # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
 # versions in the future. If you wish to customize MAGIX CMS for your
 # needs please refer to http://www.magix-cms.com for more information.
 */
-/**
- * Author: Gerits Aurelien <aurelien[at]magix-cms[point]com>
- * Copyright: MAGIX CMS
- * Date: 11/12/13
- * Time: 00:19
- * License: Dual licensed under the MIT or GPL Version
- */
 class frontend_controller_about extends frontend_db_about {
     /**
-     * @var
+     * @var frontend_model_template $template
+     * @var component_httpUtils_header $header
+     * @var frontend_model_data $data
+     * @var frontend_model_about $modelPages
      */
-    protected $template,$header,$data,$modelPages,$modelCore;
-    public $getlang,$id;
+	protected frontend_model_template $template;
+	protected component_httpUtils_header $header;
+	protected frontend_model_data $data;
+	protected frontend_model_about $modelPages;
 
-    /**
-	 * @param stdClass $t
-     * frontend_controller_pages constructor.
-     */
-    public function __construct($t = null){
-        $formClean = new form_inputEscape();
-        $this->template = $t ? $t : new frontend_model_template();
+	/**
+	 * @var int $id
+	 */
+    public int $id;
+	/**
+	 * @var string $lang
+	 */
+    public string $lang;
+
+	/**
+	 * @param frontend_model_template|null $t
+	 */
+    public function __construct(frontend_model_template $t = null) {
+        $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $this->header = new component_httpUtils_header($this->template);
         $this->data = new frontend_model_data($this,$this->template);
 		$this->modelPages = new frontend_model_about($this->template);
-		$this->getlang = $this->template->lang;
+		$this->lang = $this->template->lang;
 
-        if (http_request::isGet('id')) {
-            $this->id = $formClean->numeric($_GET['id']);
-        }
+        if (http_request::isGet('id')) $this->id = form_inputEscape::numeric($_GET['id']);
     }
 
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
-     * @param string|int|null $id
-     * @param string $context
-     * @param boolean $assign
-     * @return mixed
+     * @param array|int|null $id
+     * @param string|null $context
+     * @param bool|string $assign
+     * @return array|bool
      */
-    private function getItems($type, $id = null, $context = null, $assign = true) {
+    private function getItems(string $type, $id = null, string $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
 
 	/**
-	 * @return array|null
+	 * @return array
 	 */
-	private function getBuildRootItems()
-	{
-		$collection = $this->getItems('root',array('iso'=>$this->getlang),'all',false);
-
-		$newData = array();
-		foreach ($collection as $item) {
-			if ($item['name_info'] === 'desc') {
-				$newData['name'] = $item['value_info'];
+	private function getBuildRootItems(): array {
+		$collection = $this->getItems('root',['iso'=>$this->lang],'all',false);
+		$newData = [];
+		if(!empty($collection)) {
+			foreach ($collection as $item) {
+				if ($item['name_info'] === 'desc') {
+					$newData['name'] = $item['value_info'];
+				}
+				else {
+					$newData[$item['name_info']] = $item['value_info'];
+				}
 			}
-			else {
-				$newData[$item['name_info']] = $item['value_info'];
-			}
+			$newData = $this->modelPages->setItemData($newData,[]);
 		}
-
-		return $this->modelPages->setItemData($newData,null);
+		return $newData;
 	}
 
 	/**
-	 * @return array|null
+	 * @return array
 	 */
-	private function getBuildPagesTree()
-	{
+	private function getBuildPagesTree(): array {
 		$conditions = ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND p.menu_pages = 1';
 		$collection = parent::fetchData(
-			array('context' => 'all', 'type' => 'pages', 'conditions' => $conditions),
-			array('iso' => $this->getlang)
+			['context' => 'all', 'type' => 'pages', 'conditions' => $conditions],
+			['iso' => $this->lang]
 		);
 
-		$newarr = array();
-		foreach ($collection as $item) {
-			$newarr[] = $this->modelPages->setItemData($item,null);
+		$arr = [];
+		if(!empty($collection)) {
+			foreach ($collection as $item) {
+				$arr[] = $this->modelPages->setItemData($item,[]);
+			}
+			$arr = $this->modelPages->setPagesTree($arr);
 		}
-		$newarr = $this->modelPages->setPagesTree($newarr);
-
-		return $newarr;
+		return $arr;
 	}
 
     /**
      * set Data from database
      * @access private
      */
-    private function getBuildItems()
-    {
-        $collection = $this->getItems('page',array(':id'=>$this->id,':iso'=>$this->getlang),'one',false);
-        return $this->modelPages->setItemData($collection,null);
+    private function getBuildItems(): array {
+        $collection = $this->getItems('page',['id' => $this->id,'iso' => $this->lang],'one',false);
+        return $this->modelPages->setItemData($collection,[]);
     }
 
     /**
      * set Data from database
      * @access private
      */
-    private function getBuildParent($page)
-    {
-        $collection = $this->getItems('page',array(':id'=>$page['id_parent'],':iso'=>$this->getlang),'one',false);
-        return $this->modelPages->setItemData($collection,null);
+    private function getBuildParent($page): array {
+        $collection = $this->getItems('page',['id' => $page['id_parent'],'iso' => $this->lang],'one',false);
+        return $this->modelPages->setItemData($collection,[]);
     }
 
     /**
      * @return array
      */
-    private function getBuildLangItems(){
-        $collection = $this->getItems('langs',array('id'=>$this->id),'all',false);
+    private function getBuildLangItems(): array {
+        $collection = $this->getItems('langs',['id'=>$this->id],'all',false);
         return $this->modelPages->setHrefLangData($collection);
     }
+
     /**
      * Assign page's data to smarty
      * @access private
      */
-    private function getData()
-    {
+    private function getData() {
 		$pages = $this->getBuildPagesTree();
 		$this->template->assign('pagesTree',$pages,true);
 		$data = $this->getBuildRootItems();
@@ -164,11 +165,10 @@ class frontend_controller_about extends frontend_db_about {
 		$this->template->assign('pages',$data,true);
     }
 
-    /**
-     * @access public
-     * run app
-     */
-    public function run(){
+	/**
+	 * @return void
+	 */
+    public function run() {
 		$this->getData();
         $this->template->display('about/index.tpl');
     }

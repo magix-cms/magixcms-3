@@ -6,8 +6,9 @@
 {/block}
 {block name='article:content'}
     {assign var="collectionformCache" value=[
-        "public"=>"public",
-        "admin"=>"admin"
+        "public"=>"Les fichiers caches public",
+        "admin"=>"Les fichiers caches admin",
+        "log"=>"Les fichiers de log"
     ]}
     <div class="panels row">
     <section class="panel col-xs-12 col-md-8">
@@ -15,7 +16,7 @@
         {$debug}
     {/if}
     <header class="panel-header">
-        <h2 class="panel-heading h5">Effacer les fichiers caches</h2>
+        <h2 class="panel-heading h5">Effacer les fichiers</h2>
     </header>
     <div class="panel-body panel-body-form">
         <div class="mc-message-container clearfix">

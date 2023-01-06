@@ -1,28 +1,27 @@
 <?php
-class plugins_contact_db
-{
+class plugins_contact_db {
 	/**
-	 * @param $config
-	 * @$params bool $data
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-    public function fetchData($config, $params = false)
-    {
-        $sql = '';
+	protected debug_logger $logger;
 
-        if (is_array($config)) {
-            if ($config['context'] === 'all') {
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config,array $params = []) {
+		if ($config['context'] === 'all') {
             	switch ($config['type']) {
 					case 'pages':
-						$sql = 'SELECT h.*,c.*
+						$query = 'SELECT h.*,c.*
                     			FROM mc_contact_page AS h
                     			JOIN mc_contact_page_content AS c USING(id_page)
                     			JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
                     			WHERE h.id_page = :id';
 						break;
 					case 'contact':
-						$sql = 'SELECT p.*,c.*,lang.*
+						$query = 'SELECT p.*,c.*,lang.*
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -30,7 +29,7 @@ class plugins_contact_db
 								GROUP BY p.id_contact';
 						break;
 					case 'contacts':
-						$sql = 'SELECT p.id_contact, p.mail_contact
+						$query = 'SELECT p.id_contact, p.mail_contact
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -38,149 +37,173 @@ class plugins_contact_db
 								GROUP BY p.id_contact';
 						break;
 					case 'data':
-						$sql = 'SELECT p.*,c.*,lang.*
+						$query = 'SELECT p.*,c.*,lang.*
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 								WHERE p.id_contact = :edit';
 						break;
+					default:
+						return false;
 				}
 
-                return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-            }
-            elseif ($config['context'] === 'one') {
-				switch ($config['type']) {
-					case 'root':
-						$sql = 'SELECT * FROM mc_contact ORDER BY id_contact DESC LIMIT 0,1';
-						break;
-					case 'root_page':
-						$sql = 'SELECT * FROM mc_contact_page ORDER BY id_page DESC LIMIT 0,1';
-						break;
-					case 'content':
-						$sql = 'SELECT * FROM `mc_contact_content` WHERE `id_contact` = :id_contact AND `id_lang` = :id_lang';
-						break;
-					case 'content_page':
-						$sql = 'SELECT * FROM mc_contact_page_content WHERE id_page = :id AND id_lang = :id_lang';
-						break;
-					case 'page':
-						$sql = 'SELECT *
-								FROM mc_contact_page as g
-								JOIN mc_contact_page_content as gc USING(id_page)
-								JOIN mc_lang as l USING(id_lang)
-								WHERE iso_lang = :lang
-								LIMIT 0,1';
-						break;
-					case 'config':
-						$sql = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
-						break;
-					/*case 'sender':
-						$sql = 'SELECT mail_sender FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
-						break;*/
-				}
-
-                return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
-            }
-        }
-    }
-
-	/**
-	 * @param $config
-	 * @param array $params
-	 * @throws Exception
-	 */
-    public function insert($config, $params = array()) {
-        if (is_array($config)) {
-            $sql = '';
-
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
+		}
+		elseif ($config['context'] === 'one') {
 			switch ($config['type']) {
+				case 'root':
+					$query = 'SELECT * FROM mc_contact ORDER BY id_contact DESC LIMIT 0,1';
+					break;
 				case 'root_page':
-					$sql = 'INSERT INTO mc_contact_page(date_register) VALUES (NOW())';
-					break;
-				case 'contact':
-					$sql = 'INSERT INTO mc_contact (mail_contact)
-                			VALUE (:mail_contact)';
+					$query = 'SELECT * FROM mc_contact_page ORDER BY id_page DESC LIMIT 0,1';
 					break;
 				case 'content':
-					$sql = 'INSERT INTO `mc_contact_content`(id_contact,id_lang,published_contact) 
-				  			VALUES (:id_contact,:id_lang,:published_contact)';
+					$query = 'SELECT * FROM `mc_contact_content` WHERE `id_contact` = :id_contact AND `id_lang` = :id_lang';
 					break;
 				case 'content_page':
-					$sql = 'INSERT INTO mc_contact_page_content(id_page, id_lang, name_page, content_page, published_page) 
-				  			VALUES (:id, :id_lang, :name_page, :content_page, :published_page)';
+					$query = 'SELECT * FROM mc_contact_page_content WHERE id_page = :id AND id_lang = :id_lang';
+					break;
+				case 'page':
+					$query = 'SELECT *
+							FROM mc_contact_page as g
+							JOIN mc_contact_page_content as gc USING(id_page)
+							JOIN mc_lang as l USING(id_lang)
+							WHERE iso_lang = :lang
+							LIMIT 0,1';
 					break;
 				case 'config':
-					$sql = 'INSERT INTO `mc_contact_config`(address_enabled,address_required) 
-				  			VALUES (:address_enabled,:address_required)';
+					$query = 'SELECT * FROM mc_contact_config ORDER BY id_config DESC LIMIT 0,1';
 					break;
+				default:
+					return false;
 			}
 
-            if($sql !== '') component_routing_db::layer()->insert($sql,$params);
-        }
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
+		}
+		return false;
     }
 
 	/**
-	 * @param $config
-	 * @param array $data
-	 * @throws Exception
-	 */
-    public function update($config, $params = array()) {
-        if (is_array($config)) {
-            $sql = '';
-
-			switch ($config['type']) {
-				case 'contact':
-					$sql = 'UPDATE mc_contact 
-							SET 
-								mail_contact = :mail_contact
-							WHERE id_contact = :id_contact';
-					break;
-				case 'content':
-					$sql = 'UPDATE mc_contact_content 
-							SET 
-								published_contact=:published_contact
-							WHERE id_contact = :id_contact 
-							AND id_lang = :id_lang';
-					break;
-				case 'content_page':
-					$sql = 'UPDATE mc_contact_page_content 
-							SET 
-								name_page = :name_page,
-							 	content_page = :content_page,
-							  	published_page = :published_page
-                			WHERE id_page = :id 
-                			AND id_lang = :id_lang';
-					break;
-				case 'config':
-					$sql = 'UPDATE mc_contact_config 
-							SET 
-								address_enabled=:address_enabled,
-								address_required=:address_required
-							WHERE id_config = :id_config';
-					break;
-			}
-
-            if($sql !== '') component_routing_db::layer()->update($sql,$params);
-        }
-    }
-
-	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
-	 * @throws Exception
+	 * @return bool|string
 	 */
-    public function delete($config, $params = array())
-    {
-        if (is_array($config)) {
-			$sql = '';
+    public function insert(array $config, array $params = []) {
+        switch ($config['type']) {
+			case 'root_page':
+				$query = 'INSERT INTO mc_contact_page(date_register) VALUES (NOW())';
+				break;
+			case 'contact':
+				$query = 'INSERT INTO mc_contact (mail_contact)
+						VALUE (:mail_contact)';
+				break;
+			case 'content':
+				$query = 'INSERT INTO `mc_contact_content`(id_contact,id_lang,published_contact) 
+						VALUES (:id_contact,:id_lang,:published_contact)';
+				break;
+			case 'content_page':
+				$query = 'INSERT INTO mc_contact_page_content(id_page, id_lang, name_page, content_page, published_page) 
+						VALUES (:id, :id_lang, :name_page, :content_page, :published_page)';
+				break;
+			case 'config':
+				$query = 'INSERT INTO `mc_contact_config`(address_enabled,address_required) 
+						VALUES (:address_enabled,:address_required)';
+				break;
+			default:
+				return false;
+		}
 
-			switch ($config['type']) {
-				case 'delMail':
-					$sql = 'DELETE FROM mc_contact WHERE id_contact IN ('.$params['id'].')';
-					$params = array();
-					break;
-			}
+		try {
+			component_routing_db::layer()->insert($query,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
+		}
+    }
 
-			if ($sql !== '') component_routing_db::layer()->delete($sql,$params);
-        }
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return bool|string
+	 */
+    public function update(array $config, array $params = []) {
+		switch ($config['type']) {
+			case 'contact':
+				$query = 'UPDATE mc_contact 
+						SET 
+							mail_contact = :mail_contact
+						WHERE id_contact = :id_contact';
+				break;
+			case 'content':
+				$query = 'UPDATE mc_contact_content 
+						SET 
+							published_contact=:published_contact
+						WHERE id_contact = :id_contact 
+						AND id_lang = :id_lang';
+				break;
+			case 'content_page':
+				$query = 'UPDATE mc_contact_page_content 
+						SET 
+							name_page = :name_page,
+							content_page = :content_page,
+							published_page = :published_page
+						WHERE id_page = :id 
+						AND id_lang = :id_lang';
+				break;
+			case 'config':
+				$query = 'UPDATE mc_contact_config 
+						SET 
+							address_enabled=:address_enabled,
+							address_required=:address_required
+						WHERE id_config = :id_config';
+				break;
+			default:
+				return false;
+		}
+
+		try {
+			component_routing_db::layer()->update($query,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
+		}
+    }
+
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return bool|string
+	 */
+    public function delete(array $config, array $params = []) {
+		switch ($config['type']) {
+			case 'delMail':
+				$query = 'DELETE FROM mc_contact WHERE id_contact IN ('.$params['id'].')';
+				$params = array();
+				break;
+			default:
+				return false;
+		}
+
+		try {
+			component_routing_db::layer()->delete($query,$params);
+			return true;
+		}
+		catch (Exception $e) {
+			return 'Exception reçue : '.$e->getMessage();
+		}
     }
 }

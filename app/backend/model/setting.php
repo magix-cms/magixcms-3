@@ -1,5 +1,5 @@
 <?php
-class backend_model_setting extends component_collections_setting{
+class backend_model_setting extends component_collections_setting {
 	/**
 	 * Constructor
 	 */
@@ -12,7 +12,7 @@ class backend_model_setting extends component_collections_setting{
 	 */
 	public function select_uniq_setting($setting_id){
 		if(!is_null($setting_id));
-		return parent::fetch($setting_id);
+		return parent::fetchData(['context' => 'one','type' => 'setting'],['name' => $setting_id]);
 	}
 
 	/**
@@ -27,14 +27,15 @@ class backend_model_setting extends component_collections_setting{
 		}
 		return $settings;
 	}
-	public function getSetting(){
+
+	/*public function getSetting(){
         $data = parent::fetchData(array('context'=>'all','type'=>'setting'));
         $settings = array();
         foreach($data as $r) {
             $settings[$r['name']] = $r['value'];
         }
         return $settings;
-    }
+    }*/
 
 	/**
 	 * @return mixed

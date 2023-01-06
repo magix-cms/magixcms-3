@@ -1,17 +1,16 @@
 <?php
-class backend_db_language{
+class backend_db_language {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
 				case 'langs':
@@ -38,48 +37,60 @@ class backend_db_language{
 							}
 						}
 					}
-					$sql = "SELECT lang.* FROM mc_lang AS lang $cond";
+					$query = "SELECT lang.* FROM mc_lang AS lang $cond";
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetchAll($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 				case 'lang':
-					$sql = 'SELECT * FROM mc_lang WHERE id_lang = :id';
+					$query = 'SELECT * FROM mc_lang WHERE id_lang = :id';
 					break;
 				case 'count':
-					$sql = 'SELECT count(id_lang) AS nb FROM mc_lang';
+					$query = 'SELECT count(id_lang) AS nb FROM mc_lang';
 					break;
+				default:
+					return false;
 			}
 
-			return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
 		}
+		return false;
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function insert($config, $params = array())
-    {
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newLang':
-				$sql = 'INSERT INTO mc_lang (iso_lang,name_lang,default_lang,active_lang)
+				$query = 'INSERT INTO mc_lang (iso_lang,name_lang,default_lang,active_lang)
                 		VALUE (:iso_lang,:name_lang,:default_lang,:active_lang)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -88,19 +99,14 @@ class backend_db_language{
     }
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function update($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'lang':
-				$sql = 'UPDATE mc_lang 
+				$query = 'UPDATE mc_lang 
 						SET
 							iso_lang = :iso_lang,
 							name_lang = :name_lang,
@@ -109,17 +115,17 @@ class backend_db_language{
 						WHERE id_lang = :id_lang';
 				break;
 			case 'langActive':
-				$sql = 'UPDATE mc_lang SET active_lang = :active_lang WHERE id_lang IN ('.$params['id_lang'].')';
+				$query = 'UPDATE mc_lang SET active_lang = :active_lang WHERE id_lang IN ('.$params['id_lang'].')';
 				$params = array(
 					'active_lang' => $params['active_lang']
 				);
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -128,26 +134,22 @@ class backend_db_language{
 	}
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-	public function delete($config, $params = array())
-    {
-        if (!is_array($config)) return '$config must be an array';
-		$sql = '';
-
-		switch ($config['type']) {
+	public function delete(array $config, array $params = []) {
+        switch ($config['type']) {
 			case 'delLang':
-				$sql = 'DELETE FROM `mc_lang` WHERE `id_lang` IN ('.$params['id'].')';
+				$query = 'DELETE FROM `mc_lang` WHERE `id_lang` IN ('.$params['id'].')';
 				$params = array();
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->delete($sql,$params);
+			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

@@ -1,53 +1,67 @@
 <?php
-class frontend_db_domain
-{
+class frontend_db_domain {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed|null
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-    {
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
+	
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
+		if ($config['context'] === 'all') {
+			switch ($config['type']) {
+				case 'domain':
+					$query = "SELECT d.* FROM mc_domain AS d";
+					break;
+				case 'languages':
+					$query = 'SELECT dl.id_lang,lang.iso_lang, lang.name_lang
+						FROM mc_domain_language AS dl
+						JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
+						WHERE dl.id_domain = :id
+						ORDER BY dl.default_lang DESC,dl.id_lang';
+					break;
+				default:
+					return false;
+			}
 
-		$sql = '';
+			try {
+				return component_routing_db::layer()->fetchAll($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
+		}
+		elseif ($config['context'] === 'one') {
+			switch ($config['type']) {
+				case 'currentDomain':
+					$query = 'SELECT d.* FROM mc_domain AS d WHERE d.url_domain = :url';
+					break;
+				case 'defaultDomain':
+					$query = 'SELECT d.* FROM mc_domain AS d WHERE d.default_domain = 1';
+					break;
+				case 'language':
+					$query = 'SELECT dl.id_lang,lang.iso_lang, lang.name_lang
+							FROM mc_domain_language AS dl
+							JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
+							WHERE dl.id_domain = :id AND dl.default_lang = 1';
+					break;
+				default:
+					return false;
+			}
 
-        if (is_array($config)) {
-            if ($config['context'] === 'all') {
-            	switch ($config['type']) {
-					case 'domain':
-						$sql = "SELECT d.* FROM mc_domain AS d";
-						break;
-					case 'languages':
-						$sql = 'SELECT dl.id_lang,lang.iso_lang, lang.name_lang
-                            FROM mc_domain_language AS dl
-                            JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
-                            WHERE dl.id_domain = :id
-                            ORDER BY dl.default_lang DESC,dl.id_lang ASC';
-						break;
-				}
+			try {
+				return component_routing_db::layer()->fetch($query, $params);
+			}
+			catch (Exception $e) {
+				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			}
+		}
 
-                return $sql ? component_routing_db::layer()->fetchAll($sql, $params) : null;
-            }
-            elseif ($config['context'] === 'one') {
-            	switch ($config['type']) {
-					case 'currentDomain':
-						$sql = 'SELECT d.* FROM mc_domain AS d WHERE d.url_domain = :url';
-						break;
-                    case 'defaultDomain':
-                        $sql = 'SELECT d.* FROM mc_domain AS d WHERE d.default_domain = 1';
-                        break;
-					case 'language':
-						$sql = 'SELECT dl.id_lang,lang.iso_lang, lang.name_lang
-								FROM mc_domain_language AS dl
-								JOIN mc_lang AS lang ON ( dl.id_lang = lang.id_lang )
-								WHERE dl.id_domain = :id AND dl.default_lang = 1';
-						break;
-				}
-
-                return $sql ? component_routing_db::layer()->fetch($sql, $params) : null;
-            }
-        }
+		return false;
     }
 }

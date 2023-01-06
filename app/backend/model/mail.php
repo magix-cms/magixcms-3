@@ -56,7 +56,7 @@ class backend_model_mail {
 	 * @return string
 	 */
 	private function getBodyMail($tpl, $data = array(), $debug = false){
-		$settings = $this->settings->getSetting();
+		$settings = $this->template->settings;
 		$this->template->assign('getDataCSSIColor',$this->settings->fetchCSSIColor());
 		$this->template->assign('data',$data);
 

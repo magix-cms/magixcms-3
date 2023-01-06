@@ -87,7 +87,7 @@ class backend_controller_login extends backend_db_employee{
 		$this->mail = new mail_swift('mail');
 		$this->modelDomain = new backend_controller_domain($t);
 		$this->setting = new backend_model_setting();
-		$this->settings = $this->setting->getSetting();
+		$this->settings = $this->template->settings;
 		$formClean = new form_inputEscape();
 
         // --- LOGIN
