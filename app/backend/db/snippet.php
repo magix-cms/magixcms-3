@@ -54,7 +54,7 @@ class backend_db_snippet {
             }
 
 			try {
-				return component_routing_db::layer()->fetchAll($query, $params);
+				return component_routing_db::layer()->fetch($query, $params);
 			}
 			catch (Exception $e) {
 				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
