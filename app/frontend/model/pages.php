@@ -4,7 +4,7 @@
 #
 # This file is part of MAGIX CMS.
 # MAGIX CMS, The content management system optimized for users
-# Copyright (C) 2008 - 2013 sc-box.com <support@magix-cms.com>
+# Copyright (C) 2008 - 2023 sc-box.com <support@magix-cms.com>
 #
 # OFFICIAL TEAM :
 #
@@ -25,29 +25,36 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -- END LICENSE BLOCK -----------------------------------
-
+#
 # DISCLAIMER
-
+#
 # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
 # versions in the future. If you wish to customize MAGIX CMS for your
 # needs please refer to http://www.magix-cms.com for more information.
 */
-/**
- * Author: Sire Sam (www.sire-sam.be)
- * Copyright: MAGIX CMS
- * Date: 29/12/12
- * License: Dual licensed under the MIT or GPL Version
- */
-class frontend_model_pages extends frontend_db_pages{
-
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$math,$data,$logo;
+class frontend_model_pages extends frontend_db_pages {
+	/**
+	 * @var frontend_model_template $template
+	 * @var frontend_model_data $data
+	 * @var frontend_model_plugins $modelPlugins
+	 * @var frontend_model_seo $seo
+	 * @var frontend_model_logo $logo
+	 * @var component_routing_url $routingUrl
+	 * @var component_files_images $imagesComponent
+	 * @var component_format_math $math
+	 */
+	protected frontend_model_template $template;
+	protected frontend_model_data $data;
+	protected frontend_model_plugins $modelPlugins;
+	protected frontend_model_logo $logo;
+	protected component_routing_url $routingUrl;
+	protected component_files_images $imagesComponent;
+	protected component_format_math $math;
 
 	/**
-	 * frontend_model_pages constructor.
 	 * @param null|frontend_model_template $t
 	 */
-    public function __construct($t = null)
-    {
+    public function __construct($t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
 		$this->imagesComponent = new component_files_images($this->template);
@@ -57,131 +64,84 @@ class frontend_model_pages extends frontend_db_pages{
         $this->logo = new frontend_model_logo($this->template);
     }
 
-    /**
-     * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
-     * @param $row
-     * @param $current
-     * @param bool $newRow
-     * @return array|null
-     * @throws Exception
-     */
-    public function setItemData($row,$current,$newRow = false)
-    {
-    	$string_format = new component_format_string();
-        $data = null;
-        $extwebp = 'webp';
-		if(!isset($this->imagePlaceHolder)) $this->imagePlaceHolder = $this->logo->getImagePlaceholder();
+	/**
+	 * @return void
+	 */
+	private function initImageComponent() {
+		if(!isset($this->imagesComponent)) $this->imagesComponent = new component_files_images($this->template);
+	}
 
-        if ($row != null) {
+    /**
+	 * @param array $row
+	 * @param array $current
+	 * @param array $newRow
+	 * @return array
+     */
+    public function setItemData(array $row, array $current, array $newRow = []) {
+    	$string_format = new component_format_string();
+        $data = [];
+
+		if (isset($row['id_pages'])) {
 			if (isset($row['name'])) {
-				$data['name']       = $row['name'];
-				$data['content']    = $row['content'];
+				$data['name'] = $row['name'];
+				$data['content'] = $row['content'];
 			}
 			elseif (isset($row['name_pages'])) {
-				$data['id']         = $row['id_pages'];
-				$data['id_parent']  = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
-				$data['name']       = $row['name_pages'];
-				$data['iso']        = $row['iso_lang'];
-				$data['url']  =
-					$this->routingUrl->getBuildUrl(array(
-						'type'      =>  'pages',
-						'iso'       =>  $row['iso_lang'],
-						'id'        =>  $row['id_pages'],
-						'url'       =>  $row['url_pages']
-					)
-				);
-
+				$this->initImageComponent();
+				$data['id'] = $row['id_pages'];
+				$data['id_parent'] = $row['id_parent'];
+                if(!empty($row['id_parent'])) {
+                    $parentData = [
+                        'id_pages' => $row['id_parent'],
+                        'name_pages' => $row['parent_name'],
+                        'iso_lang' => $row['iso_lang'],
+                        'url_pages' => $row['parent_url'],
+                        'seo_title_pages' => $row['seo_title_parent'],
+                    ];
+                    $data['parent'] = $this->setItemShortData($parentData);
+                }
+				$data['name'] = $row['name_pages'];
+				$data['iso'] = $row['iso_lang'];
+				$data['url'] = $this->routingUrl->getBuildUrl([
+					'type' => 'pages',
+					'iso' => $row['iso_lang'],
+					'id' => $row['id_pages'],
+					'url' => $row['url_pages']
+				]);
 				$data['active'] = false;
-
-				if ($row['id_pages'] == $current['controller']['id']) {
-					$data['active'] = true;
-				}
+				if ($row['id_pages'] == $current['controller']['id']) $data['active'] = true;
 
 				if (isset($row['img'])) {
-					$imgPrefix = $this->imagesComponent->prefix();
-					$fetchConfig = $this->imagesComponent->getConfigItems(array(
-						'module_img' => 'pages',
-						'attribute_img' => 'page'
-					));
-
 					if(is_array($row['img'])) {
-						foreach ($row['img'] as $item => $val) {
-							// # return filename without extension
-							$pathinfo = pathinfo($val['name_img']);
-							$filename = $pathinfo['filename'];
-
-							$data['imgs'][$item]['img']['alt'] = $val['alt_img'];
-							$data['imgs'][$item]['img']['title'] = $val['title_img'];
-							$data['imgs'][$item]['img']['caption'] = $val['caption_img'];
-							$data['imgs'][$item]['img']['name'] = $val['name_img'];
-							foreach ($fetchConfig as $key => $value) {
-								$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
-								$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img'];
-								if(file_exists(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)) {
-                                    $data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename . '.' . $extwebp;
-                                }
-								$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
-								//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-								//$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-								$data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/pages/' . $val['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $val['name_img']);
+						foreach ($row['img'] as $val) {
+							$image = $this->imagesComponent->setModuleImage('pages','pages',$val['name_img'],$row['id_pages']);
+							if($val['default_img']) {
+								$data['img'] = $image;
+								$image['default'] = 1;
 							}
-							$data['imgs'][$item]['default'] = $val['default_img'];
+							$data['imgs'][] = $image;
 						}
+						$data['img']['default'] = $this->imagesComponent->setModuleImage('pages','pages');
 					}
 				}
 				else {
-					if(isset($row['name_img'])){
-						$imgPrefix = $this->imagesComponent->prefix();
-						$fetchConfig = $this->imagesComponent->getConfigItems(array(
-							'module_img' => 'pages',
-							'attribute_img' => 'page'
-						));
-						// # return filename without extension
-						$pathinfo = pathinfo($row['name_img']);
-						$filename = $pathinfo['filename'];
-
-						$data['img']['alt'] = $row['alt_img'];
-						$data['img']['title'] = $row['title_img'];
-						$data['img']['caption'] = $row['caption_img'];
-						$data['img']['name'] = $row['name_img'];
-						foreach ($fetchConfig as $key => $value) {
-							$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img']);
-							$data['img'][$value['type_img']]['src'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img'];
-							if(file_exists(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)) {
-                                $data['img'][$value['type_img']]['src_webp'] = '/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $filename . '.' . $extwebp;
-                            }
-							$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
-							$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-							$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-							$data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/pages/' . $row['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $row['name_img']);
-						}
+					if(isset($row['name_img'])) {
+						$data['img'] = $this->imagesComponent->setModuleImage('pages','pages',$row['name_img'],$row['id_pages']);
 					}
-					$defaultimg = $this->imagesComponent->getConfigItems(array(
-						'module_img'    =>'logo',
-						'attribute_img' =>'page'
-					));
-					$data['img']['default'] = [
-						'src' => isset($this->imagePlaceHolder['pages']) ? $this->imagePlaceHolder['pages'] : '/skin/'.$this->template->theme.'/img/pages/default.png',
-						'w' => $defaultimg[0]['width_img'],
-						'h' => $defaultimg[0]['height_img']
-					];
+					$data['img']['default'] = $this->imagesComponent->setModuleImage('pages','pages');
 				}
 
 				$data['content'] = $row['content_pages'];
-				$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
+				$data['resume'] = $row['resume_pages'] ?: ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
 				$data['menu'] = $row['menu_pages'];
-				$data['date']['update'] = isset($row['last_update']) ? $row['last_update'] : null;
-				$data['date']['register'] = isset($row['date_register']) ? $row['date_register'] : null;
-				$data['seo']['title'] = isset($row['seo_title_pages']) ? $row['seo_title_pages'] : $data['name'];
-				$data['seo']['description'] = isset($row['seo_desc_pages']) ? $row['seo_desc_pages'] : (isset($data['resume']) ? $data['resume'] : $data['seo']['title']);
+				$data['date']['update'] = $row['last_update'] ?? null;
+				$data['date']['register'] = $row['date_register'] ?? null;
+				$data['seo']['title'] = $row['seo_title_pages'] ?? $data['name'];
+				$data['seo']['description'] = $row['seo_desc_pages'] ?? ($data['resume'] ?? $data['seo']['title']);
 				// Plugin
-				if($newRow != false){
-					if(is_array($newRow)){
-						foreach($newRow as $key => $value){
-							$data[$key] = $row[$value];
-						}
+				if(!empty($newRow)){
+					foreach($newRow as $key => $value){
+						$data[$key] = $row[$value];
 					}
 				}
 			}
@@ -191,50 +151,45 @@ class frontend_model_pages extends frontend_db_pages{
 
 	/**
 	 * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
-	 * @param $row
-	 * @return array|null
-	 * @throws Exception
+	 * @param array $row
+	 * @return array
 	 */
-	public function setItemShortData($row)
-	{
-		$data = null;
-		if ($row != null) {
+	public function setItemShortData(array $row): array {
+		$data = [];
+		if (!empty($row)) {
 			if (isset($row['name'])) {
 				$data['name'] = $row['name'];
 			}
 			elseif (isset($row['name_pages'])) {
-                $data['id']   = $row['id_pages'];
+                $data['id'] = $row['id_pages'];
 				$data['name'] = $row['name_pages'];
 				$data['url'] =
-					$this->routingUrl->getBuildUrl(array(
+					$this->routingUrl->getBuildUrl([
 						'type' => 'pages',
-						'iso'  => $row['iso_lang'],
-						'id'   => $row['id_pages'],
-						'url'  => $row['url_pages']
-					));
+						'iso' => $row['iso_lang'],
+						'id' => $row['id_pages'],
+						'url' => $row['url_pages']
+					]);
 				$data['seo']['title'] = $row['seo_title_pages'];
 			}
-			return $data;
 		}
+		return $data;
 	}
 
     /**
-     * @param $row
+     * @param array $row
      * @return array
      */
-    public function setHrefLangData($row)
-    {
-        $arr = array();
-
+    public function setHrefLangData(array $row): array {
+        $arr = [];
         foreach ($row as $item) {
-            $arr[$item['id_lang']] = $this->routingUrl->getBuildUrl(array(
-                'type'      =>  'pages',
-                'iso'       =>  $item['iso_lang'],
-                'id'        =>  $item['id_pages'],
-                'url'       =>  $item['url_pages']
-            ));
+            $arr[$item['id_lang']] = $this->routingUrl->getBuildUrl([
+				'type' => 'pages',
+				'iso' => $item['iso_lang'],
+				'id' => $item['id_pages'],
+				'url' => $item['url_pages']
+			]);
         }
-
         return $arr;
     }
 

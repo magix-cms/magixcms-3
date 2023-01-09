@@ -63,7 +63,7 @@
 	}
 }
 
-@media (min-width: @screen-xs-min) {
+@media (min-width: .breakpoint(xs)[min]) {
 	#topicality {
 		figure {
 			float: right;
@@ -71,7 +71,7 @@
 		}
 	}
 
-	@media (max-width: @screen-sm-max) {
+	@media (max-width: .breakpoint(md)[max]) {
 		#topicality figure {
 			max-width: 50vw;
 		}

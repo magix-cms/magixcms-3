@@ -248,7 +248,7 @@ class backend_db_product {
 					$query = 'SELECT * FROM mc_catalog_product_img WHERE `id_img` = :id';
 					break;
 				case 'lastImgId':
-					$query = 'SELECT id_img FROM mc_catalog_product_img ORDER BY id_img DESC LIMIT 0,1';
+					$query = 'SELECT count(id_img) as `index` FROM mc_catalog_product_img WHERE id_product = :id_product';
 					break;
 				case 'imgDefault':
 					$query = 'SELECT id_img FROM mc_catalog_product_img WHERE id_product = :id AND default_img = 1';
@@ -281,6 +281,9 @@ class backend_db_product {
 							JOIN mc_lang AS lang ON(pc.id_lang = lang.id_lang)
 							WHERE p.id_product = :id
 							AND lang.iso_lang = :iso';
+					break;
+				case 'countImages':
+					$query = 'SELECT count(id_img) as tot FROM mc_catalog_product_img WHERE id_product = :id';
 					break;
 				default:
 					return false;

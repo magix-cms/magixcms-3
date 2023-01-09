@@ -32,12 +32,16 @@
  # versions in the future. If you wish to customize MAGIX CMS for your
  # needs please refer to http://www.magix-cms.com for more information.
  */
-class component_routing_url{
+class component_routing_url {
 
-    protected $dateFormat,$setBuildUrl,$amp;
+    protected $dateFormat, $setBuildUrl, $amp;
 
-    public function __construct(){
-        $this->dateFormat = new date_dateformat();
+	/**
+	 * @var filesystem_makefile $makeFile
+	 */
+	protected filesystem_makefile $makeFile;
+
+    public function __construct() {
         $this->setBuildUrl = new http_url();
 		$this->amp = http_request::isGet('amp') ? true : false;
     }
@@ -47,7 +51,8 @@ class component_routing_url{
      * @return string
      * @throws Exception
      */
-	public function getBuildUrl($data){
+	public function getBuildUrl($data) {
+        if(isset($this->dateFormat)) $this->dateFormat = new date_dateformat();
         if(is_array($data)) {
             $iso = $data['iso'];
             $type = $data['type'];
@@ -77,4 +82,44 @@ class component_routing_url{
             return $url;
         }
     }
+
+	/**
+	 * Retourne le chemin depuis la racine
+	 * @param string $pathUpload
+	 * @return string
+	 */
+	public function basePath(string $pathUpload): string {
+		return component_core_system::basePath().$pathUpload;
+	}
+
+	/**
+	 * Return path string for upload
+	 * @param string $path
+	 * @param bool $basePath
+	 * @return string
+	 */
+	public function dirUpload(string $path, bool $basePath): string {
+        if(!isset($this->makeFile)) $this->makeFile = new filesystem_makefile();
+		$path = rtrim($path,DS).DS;
+		if(!file_exists($this->basePath($path))) $this->makeFile->mkdir($this->basePath($path));
+		return $basePath ? $this->basePath($path) : $path;
+	}
+
+	/**
+	 * Return path collection for upload
+	 * @param string $root
+	 * @param array $directories
+	 * @param bool $basePath
+	 * @return array
+	 */
+	public function dirUploadCollection(string $root, array $directories = [], bool $basePath = true): array {
+		$url = [];
+		if(!empty($directories)) {
+			foreach($directories as $dir) {
+				$path = rtrim($root,DS).DS;
+				$url[] = $this->dirUpload($path.$dir,$basePath);
+			}
+		}
+		return $url;
+	}
 }

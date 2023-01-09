@@ -37,15 +37,15 @@
         </li>
         {$prevform = false}
         {$nextform = false}
-        {for $i = 2 to $nbp - 1}
-            {if $nbp > 10}
+        {for $i = 2 to $nbp.nbp - 1}
+            {if $nbp.nbp > 10}
                 {if ($current - 2) < 1}
                     {$limit2 = ($current + 2) + (3 - $current) }
                 {else}
                     {$limit2 = ($current + 2) }
                 {/if}
-                {if ($current + 2) > $nbp}
-                    {$limit1 = ($current - 2) - ($current + 2 - $nbp) }
+                {if ($current + 2) > $nbp.nbp}
+                    {$limit1 = ($current - 2) - ($current + 2 - $nbp.nbp) }
                 {else}
                     {$limit1 = ($current - 2) }
                 {/if}
@@ -77,18 +77,18 @@
                 </li>
             {/if}
         {/for}
-        <li{if $current == $nbp} class="active"{/if}>
-            <a href="{$url}{$request}page/{$nbp}">{$nbp}</a>
+        <li{if $current == $nbp.nbp} class="active"{/if}>
+            <a href="{$url}{$request}page/{$nbp.nbp}">{$nbp.nbp}</a>
         </li>
-        {if $nbp > 10}
+        {if $nbp.nbp > 10}
         <li>
             <a class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" title="Rechercher une page" data-html="true" data-content='{$smarty.capture.searchform}'>
                 <i class="material-icons ico ico-search"></i>
             </a>
         </li>
         {/if}
-        <li{if $current == $nbp} class="disabled"{/if}>
-            <a href="{$url}{$request}{if $smarty.get.page != $nbp}page/{if $smarty.get.page}{$smarty.get.page + 1}{else}2{/if}{/if}" aria-label="Next">
+        <li{if $current == $nbp.nbp} class="disabled"{/if}>
+            <a href="{$url}{$request}{if $smarty.get.page != $nbp.nbp}page/{if $smarty.get.page}{$smarty.get.page + 1}{else}2{/if}{/if}" aria-label="Next">
                 <i class="material-icons ico ico-arrow_right" aria-hidden="true"></i>
             </a>
         </li>

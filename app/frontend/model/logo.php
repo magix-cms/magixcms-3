@@ -33,16 +33,27 @@
 # needs please refer to http://www.magix-cms.com for more information.
 */
 class frontend_model_logo extends frontend_db_logo {
+    /**
+     * @var frontend_model_template $template
+     * @var frontend_model_data $data
+     * @var component_files_images $imagesComponent
+     * @var file_finder $finder
+     */
+    protected frontend_model_template $template;
+    protected frontend_model_data $data;
+    protected component_files_images $imagesComponent;
+    protected file_finder $finder;
 
-    protected $template, $data, $imagesComponent,$finder;
-    public $iso;
+    /**
+     * @var string $iso
+     */
+    public string $iso;
 
     /**
      * frontend_model_domain constructor.
      * @param null|frontend_model_template $t
      */
-    public function __construct(frontend_model_template $t = null)
-    {
+    public function __construct(frontend_model_template $t = null) {
         $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $this->data = new frontend_model_data($this,$this->template);
         $this->iso = $this->template->lang;
@@ -53,22 +64,15 @@ class frontend_model_logo extends frontend_db_logo {
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
-     * @param string|int|null $id
-     * @param string $context
-     * @param boolean $assign
+     * @param array|int|null $id
+     * @param string|null $context
+     * @param bool|string $assign
      * @return mixed
      */
-    private function getItems($type, $id = null, $context = null, $assign = true) {
+    private function getItems(string $type, $id = null, string $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
 
-    /**
-     * Return the valid domains
-     */
-    /*public function getValidDomains()
-    {
-        return $this->getItems('domain',null,'all',false);
-    }*/
 	/**
 	 * @return array
 	 */
@@ -76,10 +80,7 @@ class frontend_model_logo extends frontend_db_logo {
         $data = $this->getItems('page', ['iso'=>$this->iso],'one',false);
         $newData = [];
         if(!empty($data) && $data['img_logo'] != '') {
-            $fetchConfig = $this->imagesComponent->getConfigItems([
-				'module_img' => 'logo',
-				'attribute_img' => 'logo'
-			]);
+            $fetchConfig = $this->imagesComponent->getConfigItems('logo','logo');
             if(file_exists(component_core_system::basePath().'/img/logo/'.$data['img_logo'])) {
                 $extwebp = 'webp';
                 // # return filename without extension
@@ -90,16 +91,16 @@ class frontend_model_logo extends frontend_db_logo {
                 $newData['img']['alt'] = $data['alt_logo'];
                 $newData['img']['title'] = $data['title_logo'];
 
-                foreach ($fetchConfig as $key => $value) {
-                    $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extension);
-                    $newData['img'][$value['type_img']]['src'] = '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extension;
-                    if(file_exists(component_core_system::basePath() .'/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extwebp)){
-                        $newData['img'][$value['type_img']]['src_webp'] = '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extwebp;
+                foreach ($fetchConfig as $value) {
+                    $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extension);
+                    $newData['img'][$value['type']]['src'] = '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extension;
+                    if(file_exists(component_core_system::basePath() .'/img/logo/' . $filename . '@' . $value['width'] . '.' . $extwebp)){
+                        $newData['img'][$value['type']]['src_webp'] = '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extwebp;
                     }
-                    $newData['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-                    $newData['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-                    $newData['img'][$value['type_img']]['crop'] = $value['resize_img'];
-                    $newData['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width_img'] . '.' . $extension);
+                    $newData['img'][$value['type']]['w'] = $value['resize'] === 'basic' ? $imginfo['width'] : $value['width'];
+                    $newData['img'][$value['type']]['h'] = $value['resize'] === 'basic' ? $imginfo['height'] : $value['height'];
+                    $newData['img'][$value['type']]['crop'] = $value['resize'];
+                    $newData['img'][$value['type']]['ext'] = mime_content_type(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extension);
                 }
             }
         }
@@ -109,14 +110,11 @@ class frontend_model_logo extends frontend_db_logo {
     /**
      * @return array
      */
-    public function getFaviconData(){
-        $newData = array();
-        /* ##### favicon ######*/
+    public function getFaviconData(): array {
+        $newData = [];
         $favCollection = $this->finder->scanDir(component_core_system::basePath().'/img/favicon/','.gitignore');
-        $favicon = null;
         if(is_array($favCollection)) {
-            $favicon = array();
-            foreach ($favCollection as $key => $value) {
+            foreach ($favCollection as $value) {
                 if($value != 'fav.png' && $value != 'fav.jpg') {
                     $pathinfo = pathinfo($value);
                     $index = $pathinfo['extension'];
@@ -134,14 +132,13 @@ class frontend_model_logo extends frontend_db_logo {
     /**
      * @return array
      */
-    public function getHomescreen(){
-        $newData = array();
-        /* ##### homescreen ######*/
+    public function getHomescreen(): array {
+        $newData = [];
         $collection = $this->finder->scanDir(component_core_system::basePath().'/img/touch/','.gitignore');
         if(is_array($collection)) {
-            foreach ($collection as $key => $value) {
-                $size = $this->imagesComponent->getImageInfos(component_core_system::basePath() . '/img/touch/' . $value);
-                $newData['img'][$size['width']]['src'] = '/img/touch/' . $value;
+            foreach ($collection as $value) {
+                $size = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/img/touch/'.$value);
+                $newData['img'][$size['width']]['src'] = '/img/touch/'.$value;
                 $newData['img'][$size['width']]['w'] = $size['width'];
                 $newData['img'][$size['width']]['h'] = $size['height'];
             }
@@ -170,14 +167,14 @@ class frontend_model_logo extends frontend_db_logo {
     /**
      * @return array
      */
-    public function getImageSocial(){
-        $newData = array();
+    public function getImageSocial(): array {
+        $newData = [];
         if(file_exists(component_core_system::basePath() . '/img/social/' . 'social.jpg')) {
-            $size = $this->imagesComponent->getImageInfos(component_core_system::basePath() . '/img/social/' . 'social.jpg');
-            $newData['img']['src'] = '/img/social/' . 'social.jpg';
+            $size = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/img/social/'.'social.jpg');
+            $newData['img']['src'] = '/img/social/'.'social.jpg';
             $newData['img']['w'] = $size['width'];
             $newData['img']['h'] = $size['height'];
-            return $newData;
         }
+        return $newData;
     }
 }

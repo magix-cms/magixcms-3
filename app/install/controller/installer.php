@@ -61,6 +61,7 @@ class install_controller_installer extends install_db_installer {
 				'xml' => is_valid(!function_exists('simplexml_load_string')),
 				'dom' => is_valid(!function_exists('dom_import_simplexml')),
 				'spl' => is_valid(!function_exists('spl_classes')),
+				'webp' => is_valid(!function_exists('imagewebp')),
 			),
 			'access' => array(
 				'writable_config' => is_valid(!is_writable(component_core_system::basePath().'app'.DIRECTORY_SEPARATOR.'init'.DIRECTORY_SEPARATOR)),
@@ -310,7 +311,8 @@ class install_controller_installer extends install_db_installer {
 					$config_in = '../app/init/common.inc.php';
 					if (file_exists($config_in)) {
 						require $config_in;
-					}else{
+					}
+                    else{
 						throw new Exception('Error Ini Common Files');
 						exit;
 					}

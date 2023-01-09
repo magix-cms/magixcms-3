@@ -48,9 +48,13 @@ class frontend_db_news {
 								c.seo_desc_news,
 								lang.id_lang,
 								lang.iso_lang,
-								lang.default_lang
+								lang.default_lang,
+								tagrel.tags_ids
 							FROM mc_news AS p
 							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+							    LEFT JOIN (
+							        SELECT mn.id_news, GROUP_CONCAT(mntr.id_tag SEPARATOR ',') as tags_ids FROM mc_news as mn LEFT JOIN mc_news_tag_rel as mntr on (mn.id_news = mntr.id_news) GROUP BY mn.id_news
+								) tagrel ON(tagrel.id_news = p.id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							$conditions";
 			    	break;
@@ -75,6 +79,12 @@ class frontend_db_news {
 						JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang)
 						WHERE tagrel.id_news = :id AND lang.iso_lang = :iso';
 			    	break;
+			    case 'tagsLang':
+					$query = "SELECT tag.id_tag,tag.name_tag,lang.iso_lang
+						FROM mc_news_tag AS tag
+						JOIN mc_lang AS lang ON(tag.id_lang = lang.id_lang)
+						WHERE lang.iso_lang = :iso";
+			    	break;
 			    case 'tags':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
 					$query = "SELECT tag.id_tag,tag.name_tag,lang.iso_lang
@@ -83,14 +93,25 @@ class frontend_db_news {
 						$conditions";
 			    	break;
 			    case 'archives':
-					$query = "SELECT GROUP_CONCAT(DISTINCT MONTH(`date_publish`)) AS mths, YEAR(`date_publish`) AS yr
+					/*$query = "SELECT GROUP_CONCAT(DISTINCT MONTH(`date_publish`)) AS mths, YEAR(`date_publish`) AS yr
 						FROM mc_news AS news
 						JOIN mc_news_content AS c USING(id_news)
 						JOIN mc_lang AS lang USING(id_lang)
 						WHERE c.published_news = 1
 						AND lang.iso_lang = :iso
 						GROUP BY YEAR(date_publish)
-						ORDER BY date_publish DESC";
+						ORDER BY date_publish DESC";*/
+                    $query = "SELECT
+                                MONTH(`date_publish`) AS month, 
+                                YEAR(`date_publish`) AS year,
+                                COUNT(`id_news`) AS number
+                            FROM mc_news AS news
+                            JOIN mc_news_content AS c USING(id_news)
+                            JOIN mc_lang AS lang USING(id_lang)
+                            WHERE c.published_news = 1
+                                AND lang.iso_lang = :iso
+                            GROUP BY YEAR(date_publish), MONTH(date_publish)
+                            ORDER BY date_publish DESC";
 			    	break;
 			    case 'ws':
 					$query = 'SELECT p.img_news,c.*,lang.iso_lang,lang.default_lang
@@ -99,6 +120,147 @@ class frontend_db_news {
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
 						WHERE p.id_news = :id';
 			    	break;
+				case 'news':
+					$where = '';
+					if(isset($params['where']) && is_array($params['where'])) {
+						$newWhere = [];
+
+						foreach ($params['where'] as $value) {
+							$newWhere = array_merge($newWhere, $value);
+						}
+						foreach ($newWhere as $item) {
+							$where .= ' '.$item['type'].' '.$item['condition'].' ';
+						}
+						unset($params['where']);
+					}
+
+					$select = [
+						'mn.*',
+						'mnc.name_news',
+						'mnc.url_news',
+						'mnc.resume_news',
+						'mnc.content_news',
+						'mnc.published_news',
+						'mnc.date_publish',
+						'COALESCE(mnc.alt_img, mnc.name_news) as alt_img',
+						'COALESCE(mnc.title_img, mnc.alt_img, mnc.name_news) as title_img',
+						'COALESCE(mnc.caption_img, mnc.title_img, mnc.alt_img, mnc.name_news) as caption_img',
+						'mnc.seo_title_news',
+						'mnc.seo_desc_news',
+						'ml.id_lang',
+						'ml.iso_lang',
+						'ml.default_lang',
+                        'tagrel.tags_ids'
+					];
+
+					if(isset($params['select'])) {
+						foreach ($params['select'] as $extendSelect) {
+							$select = array_merge($select, $extendSelect);
+						}
+						unset($params['select']);
+					}
+
+					$joins = '';
+					if(isset($params['join']) && is_array($params['join'])) {
+						$newJoin = [];
+
+						foreach ($params['join'] as $value) {
+							$newJoin = array_merge($newJoin, $value);
+						}
+						foreach ($newJoin as $join) {
+							//$joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+							if(is_array($join)) {
+								$joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'];
+								if(isset($join['on'])) {
+									if(is_array($join['on'])) {
+										$joins .= ' ON '.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'];
+									}
+									if(is_string($join['on'])) {
+										$joins .= ' ON '.$join['on'];
+									}
+								}
+								if(isset($join['using']) && is_string($join['using'])) {
+									$joins .= ' USING ('.$join['using'].')';
+								}
+							}
+							if(is_string($join)) $joins .= ' '.$join;
+						}
+
+						unset($params['join']);
+					}
+
+					$group = '';
+					if(isset($params['group']) && is_array($params['group'])) {
+						$group = ' GROUP BY ';
+						$groups = [];
+
+						foreach ($params['group'] as $extendGroup) {
+							if(!is_array($extendGroup)) {
+								if(!in_array($extendGroup,$groups)) $groups[] = $extendGroup;
+							}
+							else {
+								foreach ($extendGroup as $extendGroupValue) {
+									if(!in_array($extendGroupValue,$groups)) $groups[] = $extendGroupValue;
+								}
+							}
+							//if(!in_array($extendGroup,$groups)) $groups = array_merge($groups, $extendGroup);
+						}
+
+						$group .= ' '.implode(',', $groups);
+
+						if(isset($params['having']) && is_array($params['having'])) {
+							$having = ' HAVING ';
+							$havings = [];
+							foreach ($params['having'] as $extendHaving) {
+								$havings = array_merge($havings, $extendHaving);
+							}
+							$group .= $having.' '.implode(' AND ', $havings);
+							unset($params['having']);
+						}
+
+						unset($params['group']);
+					}
+
+					$order = '';
+					if(isset($params['order']) && is_array($params['order'])) {
+						$order = ' ORDER BY ';
+						$orders = [];
+
+						foreach ($params['order'] as $extendOrder) {
+							$orders = array_merge($orders, $extendOrder);
+						}
+
+						$order .= ' '.implode(',', $orders);
+
+						unset($params['order']);
+					}
+					elseif(!isset($params['order']) && !is_array($params['order'])) {
+						$order = ' ORDER BY mnc.date_publish DESC, mn.id_news DESC';
+					}
+
+					$limit = '';
+					if(isset($params['limit']) && is_array($params['limit'])) {
+						foreach ($params['limit'] as $item) {
+							$limit = ' LIMIT '.$item;
+						}
+						unset($params['limit']);
+					}
+
+					$query = "SELECT ".implode(',', $select)."
+						FROM mc_news mn
+							JOIN mc_news_content mnc ON mn.id_news = mnc.id_news
+							LEFT JOIN (
+							        SELECT mn.id_news, GROUP_CONCAT(mntr.id_tag SEPARATOR ',') as tags_ids FROM mc_news as mn LEFT JOIN mc_news_tag_rel as mntr on (mn.id_news = mntr.id_news) GROUP BY mn.id_news
+								) tagrel ON(tagrel.id_news = mn.id_news)
+							JOIN mc_lang ml ON mnc.id_lang = ml.id_lang
+							".$joins."
+						WHERE ml.iso_lang = :iso 
+							AND mnc.published_news = 1
+						 ".$where
+						.$group
+						.$order
+						.$limit;
+					break;
 				default:
 					return false;
 			}
@@ -114,7 +276,7 @@ class frontend_db_news {
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 			    case 'page':
-					$query = 'SELECT 
+					$query = "SELECT 
 								p.id_news,
 								p.img_news,
 								c.name_news,
@@ -129,11 +291,15 @@ class frontend_db_news {
 								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
 								c.seo_title_news,
 								c.seo_desc_news,
-								lang.iso_lang
+								lang.iso_lang,
+								tagrel.tags_ids
 							FROM mc_news AS p
 							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+                            LEFT JOIN (
+                                SELECT mn.id_news, GROUP_CONCAT(mntr.id_tag SEPARATOR ',') as tags_ids FROM mc_news as mn LEFT JOIN mc_news_tag_rel as mntr on (mn.id_news = mntr.id_news) GROUP BY mn.id_news
+                            ) tagrel ON(tagrel.id_news = p.id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
-							WHERE p.id_news = :id AND lang.iso_lang = :iso AND c.published_news = 1';
+							WHERE p.id_news = :id AND lang.iso_lang = :iso AND c.published_news = 1";
 			    	break;
 			    case 'nb_archives':
 					$query = "SELECT COUNT(`id_news`) AS nbr
@@ -209,13 +375,114 @@ class frontend_db_news {
 							ORDER BY c.date_publish LIMIT 1";
 			    	break;
 				case 'count_news':
-					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
+					$where = '';
+					if(isset($params['where']) && is_array($params['where'])) {
+						$newWhere = [];
 
-					$query = "SELECT COUNT(p.id_news) as nbp
-						FROM mc_news AS p
-						JOIN mc_news_content AS c ON(c.id_news = p.id_news)
-						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-						$conditions";
+						foreach ($params['where'] as $value) {
+							$newWhere = array_merge($newWhere, $value);
+						}
+						foreach ($newWhere as $item) {
+							$where .= ' '.$item['type'].' '.$item['condition'].' ';
+						}
+						unset($params['where']);
+					}
+
+					$joins = '';
+					if(isset($params['join']) && is_array($params['join'])) {
+						$newJoin = [];
+
+						foreach ($params['join'] as $value) {
+							$newJoin = array_merge($newJoin, $value);
+						}
+						foreach ($newJoin as $join) {
+							//$joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+							if(is_array($join)) {
+								$joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'];
+								if(isset($join['on'])) {
+									if(is_array($join['on'])) {
+										$joins .= ' ON '.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'];
+									}
+									if(is_string($join['on'])) {
+										$joins .= ' ON '.$join['on'];
+									}
+								}
+								if(isset($join['using']) && is_string($join['using'])) {
+									$joins .= ' USING ('.$join['using'].')';
+								}
+							}
+							if(is_string($join)) $joins .= ' '.$join;
+						}
+
+						unset($params['join']);
+					}
+
+					$group = '';
+					if(isset($params['group']) && is_array($params['group'])) {
+						$group = ' GROUP BY ';
+						$groups = [];
+
+						foreach ($params['group'] as $extendGroup) {
+							if(!is_array($extendGroup)) {
+								if(!in_array($extendGroup,$groups)) $groups[] = $extendGroup;
+							}
+							else {
+								foreach ($extendGroup as $extendGroupValue) {
+									if(!in_array($extendGroupValue,$groups)) $groups[] = $extendGroupValue;
+								}
+							}
+							//if(!in_array($extendGroup,$groups)) $groups = array_merge($groups, $extendGroup);
+						}
+
+						$group .= ' '.implode(',', $groups);
+
+						if(isset($params['having']) && is_array($params['having'])) {
+							$having = ' HAVING ';
+							$havings = [];
+							foreach ($params['having'] as $extendHaving) {
+								$havings = array_merge($havings, $extendHaving);
+							}
+							$group .= $having.' '.implode(' AND ', $havings);
+							unset($params['having']);
+						}
+
+						unset($params['group']);
+					}
+
+					if(!isset($params['order']) && !is_array($params['order'])) $order = ' ORDER BY mnc.date_publish DESC, mn.id_news DESC';
+
+					if(isset($params['order']) && is_array($params['order'])) {
+						$order = ' ORDER BY ';
+						$orders = [];
+
+						foreach ($params['order'] as $extendOrder) {
+							$orders = array_merge($orders, $extendOrder);
+						}
+
+						$order .= ' '.implode(',', $orders);
+
+						unset($params['order']);
+					}
+
+					$limit = '';
+					if(isset($params['limit']) && is_array($params['limit'])) {
+						foreach ($params['limit'] as $item) {
+							$limit = ' LIMIT '.$item;
+						}
+						unset($params['limit']);
+					}
+
+					$query = 'SELECT COUNT(mn.id_news) as total
+						FROM mc_news mn
+							JOIN mc_news_content mnc ON mn.id_news = mnc.id_news
+							JOIN mc_lang ml ON mnc.id_lang = ml.id_lang
+							'.$joins.'
+						WHERE ml.iso_lang = :iso 
+							AND mnc.published_news = 1
+						 '.$where
+						.$group
+						.$order
+						.$limit;
 					break;
                 case 'pageLang':
                     $query = 'SELECT p.*,c.*,lang.*
@@ -270,6 +537,7 @@ class frontend_db_news {
 				catch (Exception $e) {
 					return 'Exception reçue : '.$e->getMessage();
 				}
+		    	break;
 		    case 'newTag':
 		    	$query = 'INSERT INTO mc_news_tag (id_lang,name_tag) VALUES (:id_lang,:name_tag)';
 		    	break;

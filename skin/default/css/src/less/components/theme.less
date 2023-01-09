@@ -16,11 +16,11 @@
 @brand-danger:          #d9534f;
 
 @bs-color: {
-	primary: hsla(208, 56%, 46%, 1);
-	success: hsla(120, 39%, 54%, 1);
-	info: hsla(194, 66%, 61%, 1);
-	warning: hsla(35, 84%, 62%, 1);
-	danger: hsla(2, 64%, 58%, 1);
+	primary: #347ab7;
+	success: #5cb75c;
+	info: #5abfdd;
+	warning: #efac4d;
+	danger: #d8544f;
 };
 
 //
@@ -42,12 +42,14 @@
 // --------------------------------------------------
 
 // --- Theme Colors
+@main: #3D7C81;
+//@main: .rgb_to_hsva(rgb(61, 124, 129))[@hsva];
 @theme-color: {
-	main: hsla(219, 48%, 45%, 1);
-	sd: hsla(210, 2%, 51%, 1);
-	dark: hsla(0, 0%, 20%, 1);
-	green: hsla(120, 39%, 54%, 1);
-	default: hsla(0, 0%, 100%, 1);
+	main: #3c62aa;
+	sd: #808285;
+	dark: #333333;
+	green: #5cb75c;
+	default: #ffffff;
 };
 @text-color: @theme-color[dark];
 @headings-color: var(--text-color);
@@ -89,7 +91,7 @@
 @submenu-hover-bg:		transparent;
 @submenu-active-color: 	@menu-active-color;
 @submenu-active-bg: 	transparent;
-@arrow-color:			.color-variant(@theme-color[main],1,lighten)[@variant];
+@arrow-color:			var(--main-color-light);
 
 // --- Mega Dropdown
 @mg-link-color	: var(--text-color);
@@ -163,7 +165,7 @@
 //** Link decoration.
 @link-decoration: none;
 //** Link hover color set via `darken()` function.
-@link-hover-color: .color-variant(@theme-color[main], 1)[@variant];
+@link-hover-color: var(--main-color-dark);
 //** Link hover decoration.
 @link-hover-decoration: underline;
 

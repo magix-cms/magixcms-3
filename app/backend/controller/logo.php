@@ -1,6 +1,5 @@
 <?php
-class backend_controller_logo extends backend_db_logo
-{
+class backend_controller_logo extends backend_db_logo {
     public $edit, $action, $tabs, $search, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder,$about;
     public $id_logo,$content,$img,$iso,$del_img,$del_holder,$ajax,$name_img,$color,$fav,$del_favicon,$active_logo;
@@ -74,6 +73,7 @@ class backend_controller_logo extends backend_db_logo
     private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
         return $this->data->getItems($type, $id, $context, $assign, $pagination);
     }
+
     /**
      * scans the directory and returns one files with size
      * @param string $directory
@@ -107,10 +107,11 @@ class backend_controller_logo extends backend_db_logo
         $arr = array();
         $imgPath = $this->upload->imgBasePath('img/logo');
         //$imgPrefix = $this->imagesComponent->prefix();
-        $fetchConfig = $this->imagesComponent->getConfigItems(array(
+        /*$fetchConfig = $this->imagesComponent->getConfigItems(array(
             'module_img'    =>'logo',
             'attribute_img' =>'logo'
-        ));
+        ));*/
+        $fetchConfig = $this->imagesComponent->getConfigItems('logo','logo');
 
         foreach ($data as $page) {
 
@@ -129,21 +130,21 @@ class backend_controller_logo extends backend_db_logo
                         $arr[$page['id_logo']]['imgSrc']['original']['width'] = $originalSize[0];
                         $arr[$page['id_logo']]['imgSrc']['original']['height'] = $originalSize[1];
                     }
-                    foreach ($fetchConfig as $key => $value) {
-                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$img_pages['filename']. '@'.$value['width_img'].'.'.$mimeContent['type']);
-                        $arr[$page['id_logo']]['imgSrc'][$value['type_img']]['img'] = $img_pages['filename']. '@'.$value['width_img'].'.'.$mimeContent['type'];
-                        $arr[$page['id_logo']]['imgSrc'][$value['type_img']]['width'] = $size[0];
-                        $arr[$page['id_logo']]['imgSrc'][$value['type_img']]['height'] = $size[1];
+                    foreach ($fetchConfig as $value) {
+                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$img_pages['filename']. '@'.$value['width'].'.'.$mimeContent['type']);
+                        $arr[$page['id_logo']]['imgSrc'][$value['type']]['img'] = $img_pages['filename']. '@'.$value['width'].'.'.$mimeContent['type'];
+                        $arr[$page['id_logo']]['imgSrc'][$value['type']]['width'] = $size[0];
+                        $arr[$page['id_logo']]['imgSrc'][$value['type']]['height'] = $size[1];
                     }
                 }
                 $arr[$page['id_logo']]['active_logo'] = $page['active_logo'];
                 $arr[$page['id_logo']]['date_register'] = $page['date_register'];
             }
             $arr[$page['id_logo']]['content'][$page['id_lang']] = array(
-                'id_lang'           => $page['id_lang'],
-                'iso_lang'          => $page['iso_lang'],
-                'alt_logo'     		=> $page['alt_logo'],
-                'title_logo'     	=> $page['title_logo']
+                'id_lang' => $page['id_lang'],
+                'iso_lang' => $page['iso_lang'],
+                'alt_logo' => $page['alt_logo'],
+                'title_logo' => $page['title_logo']
             );
         }
         return $arr;
@@ -229,21 +230,22 @@ class backend_controller_logo extends backend_db_logo
             }
         }
     }
+
     /**
      * Mise a jour des données
      */
-    private function save()
-    {
+    private function save() {
         $about =  $this->about->getCompanyData();
         $company = !empty($about['name']) ? '-'.http_url::clean($about['name']) : '';
-        $fetchConfig = $this->imagesComponent->getConfigItems(array(
+        /*$fetchConfig = $this->imagesComponent->getConfigItems(array(
             'module_img'    =>'logo',
             'attribute_img' =>'logo'
-        ));
+        ));*/
+		$fetchConfig = $this->imagesComponent->getConfigItems('logo','logo');
 
         $newSuffix = array();
-        foreach ($fetchConfig as $key => $value) {
-            $newSuffix[] = '@'.$value['width_img'];
+        foreach ($fetchConfig as $value) {
+            $newSuffix[] = '@'.$value['width'];
         }
 
         $fetchRootData = $this->getItems('root', NULL,'one',false);
@@ -278,7 +280,8 @@ class backend_controller_logo extends backend_db_logo
                 $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
                 $filename = $resultUpload['file'];
                 $update = true;
-            } elseif (isset($this->name_img)) {
+            }
+			elseif (isset($this->name_img)) {
                 $img_pages = pathinfo($fetchRootData['img_logo']);
                 $img_name = $img_pages['filename'];
 
@@ -298,7 +301,8 @@ class backend_controller_logo extends backend_db_logo
                         'active_logo' => $active_logo
                     )
                 ));
-            }else{
+            }
+			else{
                 $this->upd(array(
                     'type' => 'active',
                     'data' => array(
@@ -307,7 +311,8 @@ class backend_controller_logo extends backend_db_logo
                     )
                 ));
             }
-        }else{
+        }
+		else{
             $settings = array(
                 'name' => $this->name_img !== '' ? $this->name_img : 'logo'.$company,
                 'edit' => '',
@@ -386,89 +391,73 @@ class backend_controller_logo extends backend_db_logo
     /**
      * @throws Exception
      */
-    private function setImagePlaceHolder(){
-        if($this->color['canvas'] === 'transparent'){
-            $color = 'rgba(0, 0, 0, 0)';
-            $ext = '.png';
-        }else{
-            $color = $this->color['canvas'];
-            $ext = '.jpg';
-        }
-
+    private function setImagePlaceHolder() {
         $fetchRootData = $this->getItems('root', NULL, 'one', false);
+		$defaultDir = $this->upload->imgBasePath('img/default/');
+		$directories = $this->finder->scanRecursiveDir($defaultDir);
+		$fetchConfig = $this->imagesComponent->getConfigImages();
 
-        if ($fetchRootData != null) {
-            $fetchConfig = $this->imagesComponent->getConfigItems(
-                array(
-                    'module_img' => 'logo',
-                    'attribute_img' => 'logo'
-                ),
-                array(
-                    'context' => 'all',
-                    'type' => 'attribute'
-                )
-            );
-            /*print '<pre>';
-            print_r($fetchConfig);
-            print '</pre>';*/
-            foreach ($fetchConfig as $key => $value) {
-                switch ($value['attribute_img']) {
-                    case 'page':
-                        $dirImgArray = $this->upload->dirImgUploadCollection(array(
-                            'upload_root_dir' => 'img/default', //string
-                            'upload_dir' => 'pages' //string ou array
-                        ));
-                        break;
-                    default:
-                        $dirImgArray = $this->upload->dirImgUploadCollection(array(
-                            'upload_root_dir' => 'img/default', //string
-                            'upload_dir' => $value['attribute_img'] //string ou array
-                        ));
-                        break;
-                }
-                //print $value['width_img'];
+        if(!empty($fetchRootData)) {
+			if(!empty($directories)) {
+				foreach ($directories as $directory) {
+					$setFiles = $this->finder->scanDir($defaultDir.$directory,['.htaccess','.gitignore']);
+					if(!empty($setFiles)){
+						foreach($setFiles as $file){
+							try {
+								$this->makeFiles->remove($defaultDir.$directory.'/'.$file);
+							}
+							catch(Exception $e) {
+								if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+								$this->logger->log('php','clearcache',$e->getMessage(),$this->logger::LOG_MONTH);
+							}
+						}
+					}
+				}
+			}
 
-                $logo = $this->imagesComponent->imageManager->make(
-                    $this->upload->imgBasePath('img/logo/') . $fetchRootData['img_logo']
-                );
-                $percentage = 50;
-                $width = ($percentage / 100) * $value['width_img'];
-                $height = ($percentage / 100) * $value['height_img'];
+			$color = $this->color['canvas'] === 'transparent' ? 'rgba(0, 0, 0, 0)' : $this->color['canvas'];
+			$ext = $this->color['canvas'] === 'transparent' ? '.png' : '.jpg';
+			$logo = $this->imagesComponent->imageManager->make(
+				$this->upload->imgBasePath('img/logo/') . $fetchRootData['img_logo']
+			);
+			$percentage = 50;
 
-                $logo->resize($width, $height, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                });
+            foreach ($fetchConfig as $module => $attributes) {
+				if($module !== 'logo') {
+					foreach ($attributes as $attribute => $images) {
+						$dirImgArray = $this->upload->dirImgUploadCollection([
+							'upload_root_dir' => 'img/default',
+							'upload_dir' => ($attribute == $module ? $attribute : $module.'/'.$attribute)
+						]);
 
-                $logo->save($dirImgArray . 'logo.png');
-
-                //$mimeContent = $this->upload->mimeContentType(array('filename'=>$dirImgArray.$data['edit']));
-                $image = $this->imagesComponent->imageManager->canvas($value['width_img'], $value['height_img'], $color);
-                $image->save($dirImgArray . 'default'.$ext);
-                // create a new Image instance for inserting
-                $watermark = $this->imagesComponent->imageManager->make($dirImgArray . 'logo.png');
-                $image->insert($watermark, 'center');
-                $image->save($dirImgArray . 'default'.$ext);
-                if (file_exists($dirImgArray . 'logo.png')) {
-                    $this->makeFiles->remove($dirImgArray . 'logo.png');
-                }
+						foreach ($images as $imageConfig) {
+							$width = ($percentage / 100) * $imageConfig['width'];
+							$height = ($percentage / 100) * $imageConfig['height'];
+							$logo->resize($width, $height, function ($constraint) {
+								$constraint->aspectRatio();
+								$constraint->upsize();
+							});
+							$logo->save($dirImgArray . 'logo.png');
+							$image = $this->imagesComponent->imageManager->canvas($imageConfig['width'], $imageConfig['height'], $color);
+							// create a new Image instance for inserting
+							$watermark = $this->imagesComponent->imageManager->make($dirImgArray . 'logo.png');
+							$image->insert($watermark, 'center');
+							$image->save($dirImgArray . $imageConfig['prefix'].'_'.'default'.$ext);
+							if(function_exists('imagewebp')) $image->save($dirImgArray . $imageConfig['prefix'].'_'.'default.webp', 80);
+							//$image->save($dirImgArray . 'default'.$ext, 80);
+							//if(function_exists('imagewebp')) $image->save($dirImgArray . 'default.webp', 80);
+							if(file_exists($dirImgArray . 'logo.png')) $this->makeFiles->remove($dirImgArray . 'logo.png');
+						}
+					}
+				}
             }
         }
-        $dirImgArray = $this->upload->imgBasePath('img/default/');
-        $scanRecursiveDir = $this->finder->scanRecursiveDir($dirImgArray);
 
-        if(is_array($scanRecursiveDir)) {
-            $newItems = array();
-            foreach ($scanRecursiveDir as $items) {
-
-                $newItems[$items] = $this->scanDir($this->upload->imgBasePath('img/default/' . $items));
-
-            }
-            $this->template->assign('holder',$newItems);
+        if(!empty($directories)) {
+            $this->template->assign('holders',$fetchConfig);
             $display = $this->template->fetch('logo/brick/holder.tpl');
             $this->message->json_post_response(true, 'update',$display);
         }
-
     }
 
     /**
@@ -575,6 +564,7 @@ class backend_controller_logo extends backend_db_logo
             }
         }
     }
+
     /**
      * @throws Exception
      */
@@ -584,9 +574,11 @@ class backend_controller_logo extends backend_db_logo
                  case 'edit':
                      if(isset($this->img) || isset($this->name_img)){
                          $this->save();
-                     }elseif(isset($this->color['canvas'])){
+                     }
+					 elseif(isset($this->color['canvas'])){
                          $this->setImagePlaceHolder();
-                     }elseif(isset($this->fav)){
+                     }
+					 elseif(isset($this->fav)){
                          $resultUpload = $this->setImageFavicon(false);
                          $filename = $resultUpload['file'];
                          $update = true;
@@ -731,20 +723,16 @@ class backend_controller_logo extends backend_db_logo
                      }
                      break;
              }
-         }else{
+         }
+		 else{
              $fetchRootData = $this->getItems('root', NULL,'one',false);
              /* ##### image placeholder ######*/
              $dirImgArray = $this->upload->imgBasePath('img/default/');
              $scanRecursiveDir = $this->finder->scanRecursiveDir($dirImgArray);
 
              if(is_array($scanRecursiveDir)) {
-                 $newItems = array();
-                 foreach ($scanRecursiveDir as $items) {
-
-                     $newItems[$items] = $this->scanDir($this->upload->imgBasePath('img/default/' . $items));
-
-                 }
-                 $this->template->assign('holder',$newItems);
+				 $fetchConfig = $this->imagesComponent->getConfigImages();
+                 $this->template->assign('holder',$fetchConfig);
              }
              /* ##### favicon ######*/
              $favCollection = $this->finder->scanDir($this->upload->imgBasePath('img/favicon/'),'.gitignore');
@@ -786,4 +774,3 @@ class backend_controller_logo extends backend_db_logo
          }
     }
 }
-?>

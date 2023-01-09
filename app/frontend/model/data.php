@@ -23,13 +23,14 @@ class frontend_model_data{
 
 	/**
 	 * Parse data for frontend use
-	 * @param $data
+	 * @param array $data
 	 * @param $model
-	 * @param $current
-	 * @param bool $newRow
+	 * @param array $current
+	 * @param array $newRow
+	 * @param bool $short
 	 * @return mixed|null
 	 */
-	public function parseData($data,$model,$current,$newRow = false,$short = false)
+	public function parseData(array $data,$model,array $current,array $newRow = [],bool $short = false)
 	{
 		if($data && $model && $current){
 			// ** Loop management var
@@ -128,15 +129,18 @@ class frontend_model_data{
 	}
 
 	/**
-	 * @param $data
-	 * @param $type
+	 * @param array $data
+	 * @param string $type
 	 * @param string $branch
+	 * @param string|int $deepness
+	 * @param bool|object $parser
+	 * @param bool|object $shortParser
+	 * @param array $newRow
 	 * @return array|mixed
 	 */
-	public function setPagesTree($data, $type, $branch = 'root', $deepness = 'all', $parser = false, $shortParser = false)
-	{
-		$childs = array();
-		$kept = array();
+	public function setPagesTree(array $data, string $type, string $branch = 'root', $deepness = 'all', $parser = false, $shortParser = false, array $newRow = []) {
+		$childs = [];
+		$kept = [];
 		$id = 'id_'.$type;
 
 		foreach ($data as &$item) {
@@ -145,16 +149,16 @@ class frontend_model_data{
 			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all'){
 				if($parser !== false) {
 					if($shortParser) $item = method_exists($parser, 'setItemShortData') ? $parser->setItemShortData($item) : $item;
-					else $item = method_exists($parser, 'setItemData') ? $parser->setItemData($item) : $item;
+					else $item = method_exists($parser, 'setItemData') ? $parser->setItemData($item,[],$newRow) : $item;
 				}
 
 				$childs[$item[$id]] = &$item;
-				$childs[$item[$id]]['subdata'] = array();
+				$childs[$item[$id]]['subdata'] = [];
 				$childs[$item[$id]]['deepness'] = !isset($childs[$item['id_parent']]) ? 0 : $childs[$item['id_parent']]['deepness'] +1;
 				$kept[] = &$item;
 			}
 		}
-		unset($item);
+		//unset($item);
 
 		foreach($kept as &$item) {
 			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all') {
@@ -167,7 +171,7 @@ class frontend_model_data{
 					$childs[$k]['subdata'][] = &$item;
 			}
 		}
-		unset($item);
+		//unset($item);
 
 		foreach($kept as &$item) {
 			if (isset($childs[$item[$id]])) {

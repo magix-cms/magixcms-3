@@ -1,22 +1,21 @@
-{if $setting.amp.value}{$amp_setting = true}{else}{$amp_setting = false}{/if}
+{if $setting.amp}{$amp_setting = true}{else}{$amp_setting = false}{/if}
 <!DOCTYPE html>
 <html lang="{$lang}" dir="ltr">
 <head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
-    <title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>
-    <meta name="description" content="{capture name="description" nocache}{block name="description" nocache}{/block}{/capture}{$smarty.capture.description}">
-    <meta itemprop="description" content="{$smarty.capture.description}">
-    <meta name="robots" content="{$setting['robots']['value']}">
+    {nocache}<title itemprop="headline">{capture name="title" nocache}{block name="title" nocache}{/block}{/capture}{$smarty.capture.title}</title>{/nocache}
+    {nocache}<meta name="description" content="{capture name="description" nocache}{block name="description" nocache}{/block}{/capture}{$smarty.capture.description}">{/nocache}
+    {nocache}<meta itemprop="description" content="{$smarty.capture.description}">{/nocache}
+    <meta name="robots" content="{$setting['robots']}">
     {strip}{include file="section/loop/lang.tpl" amp=false amp_active=$amp_setting iso={$lang}}{/strip}
     {strip}{include file="section/brick/canonical.tpl" amp=false amp_active=$amp_setting}{/strip}
-    {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5.0">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
     {if $googleTools_webmaster !== ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
     {if $domain != null && $domain.tracking_domain != ''}{$domain.tracking_domain}{/if}
     <link rel="icon" type="image/png" href="{if $favicon != null}{$url}{$favicon.img.png.src}{else}{$url}/skin/{$theme}/img/favicon.png{/if}" />
-    <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{if $favicon != null}{$url}{$favicon.img.ico.src}{else}{$url}/skin/{$theme}/img/favicon.ico{/if}" /><![endif]-->
+    {*<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{if $favicon != null}{$url}{$favicon.img.ico.src}{else}{$url}/skin/{$theme}/img/favicon.ico{/if}" /><![endif]-->*}
     <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -37,41 +36,28 @@
     {* Please try to use icomoon to create a small iconfont and reduce load work, uncomment the next lines if you use icofont *}
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.woff" as="font" type="font/woff" crossorigin="anonymous">
-    {*{strip}{capture name="stylesheet"}/skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css{/capture}
-        {$csspath = $smarty.capture.stylesheet}
-        {if $setting.mode.value !== 'dev'}{$csspath = {'/min/?f='|cat:$csspath|cat:'&amp;'|cat:$smarty.now}}{else}{$csspath = {$url|cat:$csspath}}{/if}
-        {if $setting.concat.value}{$csspath = {$csspath|concat_url:'css'}}{/if}
-        {if $browser !== 'IE'}<link rel="preload" href="{$csspath}" as="style">{/if}
-        <link rel="stylesheet" href="{$csspath}">{/strip}*}
+    <link rel="preload" href="{$url}/img/cookie.svg" as="image" type="image/svg+xml">
     <meta name="theme-color" content="#3C62AA" />
-    {*{capture name="scriptHtml5"}{strip}
-        /min/?f=
-        skin/{$theme}/js/vendor/html5shiv.min.js,
-        skin/{$theme}/js/vendor/respond.min.js
-    {/strip}{/capture}
-    <!--[if lt IE 9]><script src="{if $setting.concat.value}{$smarty.capture.scriptHtml5|concat_url:'js'}{else}{$smarty.capture.scriptHtml5}{/if}"></script><![endif]-->
-    {capture name="picturefill"}/min/?f=skin/{$theme}/js/vendor/modernizr.min.js,skin/{$theme}/js/vendor/picturefill.min.js,skin/{$theme}/js/vendor/intersection-observer.min.js&amp;{$smarty.now}{/capture}
-    <script src="{if $setting.concat.value}{$smarty.capture.picturefill|concat_url:'js'}{else}{$smarty.capture.picturefill}{/if}" async></script>*}
-    {$basecss = [
+    {nocache}{$basecss = [
     "properties",
     "{$viewport}",
     "content"
     ]}
-    {if $setting['maintenance']['value'] === '1'}{$basecss[] = "maintenance"}{/if}
+    {if $setting['maintenance'] === '1'}{$basecss[] = "maintenance"}{/if}
     {$css_files = []}
     {block name="styleSheet"}{/block}
-    {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}
-    {if $setting['analytics']['value'] && $smarty.cookies.analyticCookies === 'true'}{include file="section/brick/analytics.tpl" aid=$setting['analytics']['value']}{/if}
+    {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}{/nocache}
+    {if $setting['analytics'] && $smarty.cookies.analyticCookies === 'true'}{include file="section/brick/analytics.tpl" aid=$setting['analytics']}{/if}
     {if in_array($browser,['Safari','Opera'])}<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>{/if}
 </head>
-<body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
-{if $setting['maintenance']['value'] === '1'}{include file="section/brick/maintenance.tpl"}{/if}
+{nocache}<body id="{block name='body:id'}layout{/block}" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">{/nocache}
+{if $setting['maintenance'] === '1'}{include file="section/brick/maintenance.tpl"}{/if}
 {include file="section/brick/cookie-consent.tpl"}
-{include file="section/header.tpl" nocache}
+{include file="section/header.tpl"}
 {block name="breadcrumb" nocache}
     {if isset($smarty.get.controller) && $smarty.get.controller !== 'home'}
-        {include file="section/brick/breadcrumb.tpl" icon='home' amp=$amp scope="global"}
+        {include file="section/nav/breadcrumb.tpl" icon='home' amp=$amp scope="global"}
     {/if}
 {/block}
 {block name="main:before"}{/block}
@@ -89,13 +75,14 @@
 {/block}
 {block name="main:after"}{/block}
 {include file="section/footer.tpl" adjust="clip" blocks=['socials','sitemap','news','contact','legal_notice']}
+{*{include file="section/footer.tpl" adjust="clip" blocks=['socials','contact','legal_notice']}*}
 <script>
     window.lazyLoadOptions = {
         elements_selector: "[loading=lazy]",
         use_native: true
     };
 </script>
-{if in_array($browser,['Safari','Opera'])}<script async src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.5.0/dist/lazyload.min.js"></script>{/if}
+{nocache}{if in_array($browser,['Safari'])}<script async src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.5.0/dist/lazyload.min.js"></script>{/if}
 {$jquery = false}
 {$basejs = [
 'group' => [],
@@ -103,18 +90,19 @@
 'async' => [],
 'defer' => [
 "/skin/{$theme}/js/vendor/bootstrap-native.min.js",
-"/skin/{$theme}/js/vendor/{if $setting.mode.value === 'dev'}src/{/if}simpleLightbox{if $setting.mode.value !== 'dev'}.min{/if}.js",
-"/skin/{$theme}/js/vendor/{if $setting.mode.value === 'dev'}src/{/if}tiny-slider{if $setting.mode.value !== 'dev'}.min{/if}.js",
-"/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}polyfill{if $setting.mode.value !== 'dev'}.min{/if}.js",
-"/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}affixhead{if $setting.mode.value !== 'dev'}.min{/if}.js",
-"/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}global{if $setting.mode.value !== 'dev'}.min{/if}.js"
+"/skin/{$theme}/js/vendor/{if $setting.mode === 'dev'}src/{/if}simpleLightbox{if $setting.mode !== 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/vendor/{if $setting.mode === 'dev'}src/{/if}tiny-slider{if $setting.mode !== 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}polyfill{if $setting.mode !== 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}affixhead{if $setting.mode !== 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}global{if $setting.mode !== 'dev'}.min{/if}.js"
 ]
 ]}
 {if $touch}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}viewport{if !$dev}.min{/if}.js"}{/if}
-{if $smarty.cookies.embedCookies === 'true'}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}ytplayer{if !$dev}.min{/if}.js"}{/if}
+{*if $smarty.cookies.embedCookies === 'true'}<script type="module" src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.4.0/lite-youtube.js"></script>{/if*}
+{if $smarty.cookies.embedCookies === 'true'}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}liteytplayer{if !$dev}.min{/if}.js"}{/if}
 {$js_files = []}
 {block name="scripts"}{/block}
-{include file="section/brick/scripts.tpl" js_files=array_merge_recursive($basejs,$js_files) jquery=$jquery}
+{include file="section/brick/scripts.tpl" js_files=array_merge_recursive($basejs,$js_files) jquery=$jquery}{/nocache}
 {block name="foot"}{/block}
 {include file="section/brick/service_worker.tpl"}
 </body>

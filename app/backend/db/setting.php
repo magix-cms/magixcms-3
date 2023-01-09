@@ -104,7 +104,7 @@ class backend_db_setting {
 	 */
 	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
-			case 'general':
+			case 'advanced':
 				$query = "UPDATE `mc_setting`
 						SET `value` = CASE `name`
 							WHEN 'content_css' THEN :content_css
@@ -170,10 +170,18 @@ class backend_db_setting {
             case 'catalog':
                 $query = "UPDATE `mc_setting`
 						SET `value` = CASE `name`
+							WHEN 'product_per_page' THEN :product_per_page
 							WHEN 'vat_rate' THEN :vat_rate
 							WHEN 'price_display' THEN :price_display
 						END
-						WHERE `name` IN ('vat_rate','price_display')";
+						WHERE `name` IN ('product_per_page','vat_rate','price_display')";
+                break;
+            case 'news':
+                $query = "UPDATE `mc_setting`
+						SET `value` = CASE `name`
+							WHEN 'news_per_page' THEN :news_per_page
+						END
+						WHERE `name` IN ('news_per_page')";
                 break;
             case 'mail':
                 $query = "UPDATE `mc_setting`

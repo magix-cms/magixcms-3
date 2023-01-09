@@ -41,7 +41,7 @@
  * @license    Dual licensed under the MIT or GPL Version 3 licenses.
  * @version    1.0
  * @author Gérits Aurélien <aurelien@magix-cms.com> | <gerits.aurelien@gmail.com>
- * @name template
+ * @name frontend_model_template
  *
  */
 class frontend_model_template {
@@ -58,6 +58,10 @@ class frontend_model_template {
 	protected component_collections_setting $collectionsSetting;
 	protected component_collections_language $collectionsLanguage;
 	protected frontend_db_domain $DBDomain;
+	protected frontend_model_logo $logoModel;
+	protected frontend_model_share $shareModel;
+    public frontend_model_about $aboutModel;
+	public frontend_model_breadcrumb $breadcrumb;
 
 	/**
 	 * @var bool $amp
@@ -77,7 +81,10 @@ class frontend_model_template {
     public array
 		$settings,
 		$domain,
-		$langs;
+		$langs,
+        $logo,
+        $share,
+        $companyData;
 
 	/**
 	 * @var string $lang
@@ -106,29 +113,80 @@ class frontend_model_template {
 			}
 		}
 		else {
-			//$logger = new debug_logger(MP_LOG_DIR);//__DIR__.'/test'
-			//$logger->log('statement', 'db', 'Frontend template instance  called on '.$_SERVER['SCRIPT_NAME'].$_SERVER['REQUEST_URI'], debug_logger::LOG_MONTH);
 			$this->collectionsSetting = new component_collections_setting();
 			$this->collectionsLanguage = new component_collections_language();
 			$this->DBDomain = new frontend_db_domain();
+            $this->shareModel = new frontend_model_share($this);
+            $this->aboutModel = new frontend_model_about($this);
 
 			if(!isset($this->settings)) $this->init();
 			self::$instance = $this;
 		}
+        $this->amp = http_request::isGet('amp') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') && $this->ssl;
 	}
+
+    private function getCacheData(string $file) {
+        $system = json_decode(file_get_contents($file),true);
+        $this->settings = $system['settings'];
+        $this->ssl = $system['ssl'];
+        $this->defaultDomain = $system['defaultDomain'];
+        $this->langs = $system['langs'];
+        $this->theme = $system['theme'];
+        $this->logo = $system['logo'];
+        $this->share = $system['share'];
+        $this->companyData = $system['companyData'];
+    }
 
 	/**
 	 * @return void
 	 */
     public function init() {
-        $this->settings = $this->collectionsSetting->getSetting();
-		$this->ssl = (bool)$this->settings['ssl'];
-		$this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(['context' => 'one','type' => 'currentDomain'],['url' => $_SERVER['HTTP_HOST']]) : null;
-		$this->langs = $this->languagesAvailable();
-		$this->lang = $this->currentLanguage();
-		$this->theme = $this->loadTheme();
-		$this->amp = http_request::isGet('amp') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') && $this->ssl;
-        $this->defaultDomain = $this->setDefaultDomain();
+        $systemCacheFile = component_core_system::basePath().'/var/caches/.system';
+        if(file_exists($systemCacheFile)) $this->getCacheData($systemCacheFile);
+        if(!file_exists($systemCacheFile) || !isset($this->settings) || $this->settings['cache'] !== 'files') {
+            $this->settings = $this->collectionsSetting->getSetting();
+            $this->ssl = (bool)$this->settings['ssl'];
+            $this->langs = $this->languagesAvailable();
+            $this->theme = $this->loadTheme();
+            $this->defaultDomain = $this->setDefaultDomain();
+            $this->share = [
+                'urls' => $this->shareModel->getShareUrl(),
+                'config' => $this->shareModel->getShareConfig()
+            ];
+            $this->companyData = $this->aboutModel->getCompanyData();
+        }
+
+        $this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(['context' => 'one','type' => 'currentDomain'],['url' => $_SERVER['HTTP_HOST']]) : null;
+        $this->lang = $this->currentLanguage();
+        $this->breadcrumb = new frontend_model_breadcrumb($this->lang);
+
+        if(!file_exists($systemCacheFile) || $this->settings['cache'] !== 'files') {
+            $this->logoModel = new frontend_model_logo($this);
+            $this->logo = [
+                'logo' => $this->logoModel->getLogoData(),
+                'favicon' => $this->logoModel->getFaviconData(),
+                'social' => $this->logoModel->getImageSocial(),
+                'homescreen' => $this->logoModel->getHomescreen()
+            ];
+
+            if(!file_exists($systemCacheFile)) {
+                $system = [
+                    'settings' => $this->settings,
+                    'ssl' => (bool)$this->settings['ssl'],
+                    'defaultDomain' => $this->defaultDomain,
+                    'langs' => $this->langs,
+                    'theme' => $this->settings['theme'],
+                    'logo' => $this->logo,
+                    'share' => $this->share,
+                    'companyData' => $this->companyData
+                ];
+                $fh = fopen($systemCacheFile, 'x+');
+                if(is_writable($systemCacheFile)) {
+                    fwrite($fh, json_encode($system) . PHP_EOL);
+                    fclose($fh);
+                }
+            }
+        }
 	}
 
 	/**
@@ -349,11 +407,9 @@ class frontend_model_template {
 			}
 		}
     	$this->assign('modelTemplate',$this);
-        if(!self::isCached($template, $cache_id, $compile_id, $parent)){
-            frontend_model_smarty::getInstance($this)->display($template, $cache_id, $compile_id, $parent);
-        }else{
-            frontend_model_smarty::getInstance($this)->display($template, $cache_id, $compile_id, $parent);
-        }
+    	$this->assign('breadcrumbs',$this->breadcrumb->getBreadcrumb());
+        //$this->configLoad();
+        frontend_model_smarty::getInstance($this)->display($template, $cache_id, $compile_id, $parent);
     }
 
     /**
@@ -369,11 +425,7 @@ class frontend_model_template {
      * @return string rendered template output
      */
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false){
-        if(!self::isCached($template, $cache_id, $compile_id, $parent)){
-            return frontend_model_smarty::getInstance()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
-        }else{
-            return frontend_model_smarty::getInstance()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
-        }
+        return frontend_model_smarty::getInstance()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
     }
 
     /**
@@ -411,7 +463,7 @@ class frontend_model_template {
 	 * @param object $parent
 	 */
 	public function isCached($template = null, $cache_id = null, $compile_id = null, $parent = null){
-		frontend_model_smarty::getInstance()->isCached($template, $cache_id, $compile_id, $parent);
+		return frontend_model_smarty::getInstance()->isCached($template, $cache_id, $compile_id, $parent);
 	}
 
     /**

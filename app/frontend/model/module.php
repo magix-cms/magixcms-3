@@ -185,39 +185,46 @@ class frontend_model_module extends frontend_db_module {
     }
 
     /**
-     * @param string $type
-     * @return array
+     * @param $type
+     * @return array|void
      */
-    private function loadExtendCore(string $type): array {
-        if(!isset($this->installedPlugins)) $this->installedPlugins = $this->pluginsCollection->fetchAll();
+    private function loadExtendCore($type){
+        $newMethod = array();
+        $collection = $this->pluginsCollection->fetchAll();
         $module = ['home','about','pages','news','catalog','category','product'];
-        $active_mods = [];
+        $active_mods = array();
         if(in_array($type,$module)) {
-            foreach ($this->installedPlugins as $item) {
+            //print_r($collection);
+            foreach ($collection as $key => $item) {
                 if ($item[$type] == 1) {
+                    //$mods[] = $item['name'];
                     $modClass = 'plugins_' . $item['name'] . '_public';
+
                     if(class_exists($modClass)) $active_mods[$item['name']] = $this->get_call_class($modClass);
                 }
             }
+            return $active_mods;
         }
-		return $active_mods;
     }
 
     /**
-     * @param string $type
-     * @param string $method
+     * @param $type
+     * @param $method
      * @param array $params
      * @return array
      */
-    public function extendDataArray(string $type, string $method, array $params = []) : array {
-        $this->mods = $this->loadExtendCore($type);
+    public function extendDataArray($type,$method,array $params = []) : array{
+        if(!isset($this->mods)) $this->mods = $this->loadExtendCore($type);
         $loadMethod = [];
         if(!empty($this->mods)) {
             foreach ($this->mods as $mod){
                 //print $mod;
                 if(method_exists($mod,$method)){
                     $loadMethod[] = call_user_func_array(
-                        [$mod, $method],
+                        array(
+                            $mod,
+                            $method
+                        ),
                         [$params]
                     );
                 }

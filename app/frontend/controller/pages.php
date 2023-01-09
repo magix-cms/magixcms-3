@@ -41,17 +41,27 @@
  */
 class frontend_controller_pages extends frontend_db_pages {
     /**
-     * @var
+     * @var frontend_model_template $template
+     * @var frontend_model_data $data
+     * @var frontend_model_pages $modelPages
+     * @var frontend_model_module $modelModule
+     * @var component_httpUtils_header $header
      */
-    protected $template,$header,$data,$modelPages,$modelCore,$modelModule;
-    public $getlang,$http_error,$id;
+    protected frontend_model_template $template;
+    protected frontend_model_data $data;
+    protected frontend_model_pages $modelPages;
+    protected frontend_model_module $modelModule;
+    protected component_httpUtils_header $header;
+
+    public
+        $getlang,
+        $id;
 
 	/**
 	 * @param frontend_model_template|null $t
 	 */
     public function __construct(frontend_model_template $t = null){
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
-        $this->header = new component_httpUtils_header($this->template);
         $this->data = new frontend_model_data($this);
         $this->getlang = $this->template->lang;
         $this->modelPages = new frontend_model_pages($this->template);
@@ -63,11 +73,11 @@ class frontend_controller_pages extends frontend_db_pages {
      * Assign data to the defined variable or return the data
      * @param string $type
      * @param string|int|null $id
-     * @param string $context
-     * @param boolean $assign
+     * @param string|null $context
+     * @param bool|string $assign
      * @return mixed
      */
-    private function getItems($type, $id = null, $context = null, $assign = true) {
+    private function getItems(string $type, $id = null, string $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
 
@@ -75,50 +85,15 @@ class frontend_controller_pages extends frontend_db_pages {
      * set Data from database
      * @access private
      */
-    private function getBuildPagesItems()
-    {
+    private function getBuildPagesItems(): array {
         $override = $this->modelModule->getOverride('pages',__FUNCTION__);
         if(!$override) {
             $collection = $this->getItems('page', ['id' => $this->id, 'iso' => $this->getlang], 'one', false);
             $imgCollection = $this->getItems('imgs', ['id' => $this->id, 'iso' => $this->getlang], 'all', false);
             if ($imgCollection != null) $collection['img'] = $imgCollection;
-            return $this->modelPages->setItemData($collection, null);
-
-        }else{
-            return $override;
+            return $this->modelPages->setItemData($collection, []);
         }
-    }
-
-    /**
-     * set Data from database
-     * @access private
-     */
-    private function getBuildChildItems()
-    {
-		$modelSystem = new frontend_model_core();
-		$current = $modelSystem->setCurrentId();
-		$data = $this->modelPages->getData(
-			array(
-				'context' => 'all',
-				'select' => $this->id
-			),
-			$current
-		);
-		return $this->data->parseData($data,$this->modelPages,$current);
-    }
-
-    /**
-     * set Data from database
-     * @access private
-     */
-    private function getBuildParent($page)
-    {
-        $override = $this->modelModule->getOverride('pages',__FUNCTION__);
-        if(!$override) {
-            $collection = $this->getItems('page', array('id' => $page['id_parent'], 'iso' => $this->getlang), 'one', false);
-            return $this->modelPages->setItemData($collection, null);
-
-        }else{
+        else {
             return $override;
         }
     }
@@ -126,68 +101,48 @@ class frontend_controller_pages extends frontend_db_pages {
     /**
      * @return array
      */
-    private function getBuildPagesItemsTree(){
+    private function getBuildPagesItemsTree(): array {
         $modelSystem = new frontend_model_core();
 		$current = $modelSystem->setCurrentId();
-		$data = $this->modelPages->getData(
-			array(
-				'context' => 'all',
-			),
-			$current
-		);
-		return $this->data->parseData($data,$this->modelPages,$current);
+		$data = $this->modelPages->getData(['context' => 'all'], $current);
+		return !empty($data) ? $this->data->parseData($data, $this->modelPages, $current) : [];
     }
 
     /**
      * @return array
      */
-    private function getBuildLangItems(){
-        $collection = $this->getItems('langs',array('id'=>$this->id),'all',false);
+    private function getBuildLangItems(): array {
+        $collection = $this->getItems('langs',['id'=>$this->id],'all',false);
         return $this->modelPages->setHrefLangData($collection);
-    }
-    /**
-     * Assign page's data to smarty
-     * @access private
-     */
-    private function getData()
-    {
-        $data = $this->getBuildPagesItems();
-        $parent = $data['id_parent'] !== null ? $this->getBuildParent($data) : null;
-        $childs = $this->getBuildChildItems();
-        $hreflang = $this->getBuildLangItems();
-        $pagesTree = $this->getBuildPagesItemsTree();
-        $this->template->assign('pages',$data,true);
-        $this->template->assign('parent',$parent,true);
-        if(isset($childs[0]['subdata'])) $this->template->assign('childs',$childs[0]['subdata'],true);
-        $this->template->assign('pagesTree',$pagesTree,true);
-        $this->template->assign('hreflang',$hreflang,true);
     }
 
     /**
      * @access public
      * run app
      */
-    public function run(){
+    public function run() {
         if(isset($this->id)) {
-            $this->getData();
+            $data = $this->getBuildPagesItems();
+            $hreflang = $this->getBuildLangItems();
+            $pagesTree = $this->getBuildPagesItemsTree();
+            $childs = $pagesTree[$this->id];
+            $this->template->assign('pages',$data,true);
+            if(!empty($data['id_parent'])) $this->template->breadcrumb->addItem(
+                $data['parent']['name'],
+                $data['parent']['url'],
+                $this->template->getConfigVars('show_page').': '.$data['parent']['name']
+            );
+            $this->template->breadcrumb->addItem($data['name']);
+            if(isset($childs[0]['subdata'])) $this->template->assign('childs',$childs[0]['subdata'],true);
+            $this->template->assign('pagesTree',$pagesTree,true);
+            $this->template->assign('hreflang',$hreflang,true);
+
             $this->template->display('pages/index.tpl');
         }
         else {
-            $this->template->assign(
-                'getTitleHeader',
-                $this->header->getTitleHeader(
-                    404
-                ),
-                true
-            );
-            $this->template->assign(
-                'getTxtHeader',
-                $this->header->getTxtHeader(
-                    404
-                ),
-                true
-            );
-
+            $this->header = new component_httpUtils_header($this->template);
+            $this->template->assign('getTitleHeader', $this->header->getTitleHeader(404), true);
+            $this->template->assign('getTxtHeader', $this->header->getTxtHeader(404), true);
             $this->template->display('error/index.tpl');
         }
     }

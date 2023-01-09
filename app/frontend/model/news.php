@@ -20,40 +20,52 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -- END LICENSE BLOCK -----------------------------------
-
+#
 # DISCLAIMER
-
+#
 # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
 # versions in the future. If you wish to customize MAGIX CMS for your
 # needs please refer to http://www.magix-cms.com for more information.
 */
-/**
- * Author: Gerits Aurelien <aurelien[at]magix-cms[point]com>
- * @author Sire Sam <samuel.lesire@gmail.com>
- * Copyright: MAGIX CMS
- * Date: 29/12/12
- * Time: 15:04
- * License: Dual licensed under the MIT or GPL Version
- */
 class frontend_model_news extends frontend_db_news {
+	/**
+	 * @var frontend_model_template $template
+	 * @var frontend_model_data $data
+	 * @var frontend_model_plugins $modelPlugins
+	 * @var frontend_model_seo $seo
+	 * @var frontend_model_logo $logo
+	 * @var component_routing_url $routingUrl
+	 * @var component_files_images $imagesComponent
+	 * @var date_dateformat $dateFormat
+	 */
+	protected frontend_model_template $template;
+	protected frontend_model_data $data;
+	protected frontend_model_plugins $modelPlugins;
+	protected frontend_model_seo $seo;
+	protected frontend_model_logo $logo;
+	protected component_routing_url $routingUrl;
+	protected component_files_images $imagesComponent;
+	protected date_dateformat $dateFormat;
 
-    protected $routingUrl,$imagesComponent,$modelPlugins,$template,$data,$dateFormat,$seo,$logo;
+	/**
+	 * @var array $imgPrefix
+	 * @var array $fetchConfig
+	 */
+	protected array
+		$imgPrefix,
+		$fetchConfig;
 
     /**
-     * frontend_model_news constructor.
-     * @param stdClass $t
-     * @throws Exception
-     */
-    public function __construct($t = null)
-    {
+	 * @param null|frontend_model_template $t
+	 */
+    public function __construct(frontend_model_template $t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
-		$this->imagesComponent = new component_files_images($this->template);
 		$this->modelPlugins = new frontend_model_plugins($this->template);
         $this->dateFormat = new date_dateformat();
 		$this->data = new frontend_model_data($this,$this->template);
@@ -61,11 +73,17 @@ class frontend_model_news extends frontend_db_news {
         $this->logo = new frontend_model_logo($this->template);
     }
 
+	/**
+	 * @return void
+	 */
+	private function initImageComponent() {
+		if(!isset($this->imagesComponent)) $this->imagesComponent = new component_files_images($this->template);
+	}
+
     /**
      * @return array
      */
-	public function rootSeo()
-	{
+	public function rootSeo() {
 		$rootSeo = array();
 		$this->seo->level = 'root';
 		$seoTitle = $this->seo->replace_var_rewrite('','','title');
@@ -76,74 +94,39 @@ class frontend_model_news extends frontend_db_news {
     }
 
     /**
-     * Formate les valeurs principales d'un élément suivant la ligne passées en paramètre
-     * @param $row
-     * @param $current
-     * @param bool $newRow
-     * @return null|array
-     * @throws Exception
+     * @param array $row
+     * @param array $current
+     * @param array $newRow
+     * @return array
      */
-    public function setItemData($row,$current,$newRow = false)
-    {
-		$string_format = new component_format_string();
-        $data = null;
-        $extwebp = 'webp';
-        $imagePlaceHolder = $this->logo->getImagePlaceholder();
+    public function setItemData(array $row, array $current, array $newRow = []) {
+        $data = [];
 
         if (isset($row['id_news'])) {
+            $string_format = new component_format_string();
+            $date_format = new component_format_date();
+			$this->initImageComponent();
             $data['id'] = $row['id_news'];
             $data['name'] = $row['name_news'];
-            $data['url'] = $this->routingUrl->getBuildUrl(array(
+            $data['url'] = $this->routingUrl->getBuildUrl([
 				'type' => 'news',
-				'iso'  => $row['iso_lang'],
+				'iso' => $row['iso_lang'],
 				'date' => $row['date_publish'],
-				'id'   => $row['id_news'],
-				'url'  => $row['url_news']
-			));
+				'id' => $row['id_news'],
+				'url' => $row['url_news']
+			]);
 
             if (isset($row['img_news'])) {
-                $imgPrefix = $this->imagesComponent->prefix();
-                $fetchConfig = $this->imagesComponent->getConfigItems(array(
-                    'module_img'    =>'news',
-                    'attribute_img' =>'news'
-                ));
-
-                // # return filename without extension
-                $pathinfo = pathinfo($row['img_news']);
-                $filename = $pathinfo['filename'];
-
-                foreach ($fetchConfig as $key => $value) {
-					$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news']);
-                    $data['img'][$value['type_img']]['src'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news'];
-                    if(file_exists(component_core_system::basePath().'/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)){
-                        $data['img'][$value['type_img']]['src_webp'] = '/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
-                    }
-					//$data['img'][$value['type_img']]['w'] = $value['width_img'];
-					$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-					//$data['img'][$value['type_img']]['h'] = $value['height_img'];
-					$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-					$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
-                    $data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/news/'.$row['id_news'].'/'.$imgPrefix[$value['type_img']] . $row['img_news']);
-                }
-				$data['img']['name'] = $row['img_news'];
+				$data['img'] = $this->imagesComponent->setModuleImage('news','news',$row['img_news'],$row['id_news']);
             }
-			$defaultimg = $this->imagesComponent->getConfigItems(array(
-				'module_img'    =>'logo',
-				'attribute_img' =>'news'
-			));
-            $data['img']['default'] = [
-            	'src' => isset($imagePlaceHolder['news']) ? $imagePlaceHolder['news'] : '/skin/'.$this->template->theme.'/img/news/default.png',
-				'w' => $defaultimg[0]['width_img'],
-				'h' => $defaultimg[0]['height_img']
-			];
+			$data['img']['default'] = $this->imagesComponent->setModuleImage('news','news');
 			$data['img']['alt'] = $row['alt_img'];
 			$data['img']['title'] = $row['title_img'];
 			$data['img']['caption'] = $row['caption_img'];
             $data['active'] = ($row['id_news'] == $current['controller']['id']) ? true : false;
 
-            $dr = new DateTime($row['date_register']);
+            /*$dr = new DateTime($row['date_register']);
             $drt = $dr->getTimestamp();
-
             $data['date'] = array(
                 'register' => array(
                     'timestamp' => $drt,
@@ -162,11 +145,12 @@ class frontend_model_news extends frontend_db_news {
                     ),
                     'suffix' => $dr->format('S'),
                 )
-            );
-            if(isset($row['last_update'])) {
-                $du = new DateTime($row['last_update']);
-                $dut = $du->getTimestamp();
+            );*/
+            $data['date']['register'] = $date_format->setTzDateTimeArray($row['date_register']);
 
+            if(isset($row['last_update'])) {
+                /*$du = new DateTime($row['last_update']);
+                $dut = $du->getTimestamp();
                 $data['date']['update'] = array(
                     'timestamp' => $dut,
                     'date' => $du->format('Y-m-d'),
@@ -183,12 +167,12 @@ class frontend_model_news extends frontend_db_news {
                         'abv' => strftime('%a')
                     ),
                     'suffix' => $du->format('S'),
-                );
+                );*/
+                $data['date']['update'] = $date_format->setTzDateTimeArray($row['last_update']);
             }
             if(isset($row['date_publish'])) {
-                $dp = new DateTime($row['date_publish']);
+                /*$dp = new DateTime($row['date_publish']);
                 $dpt = $dp->getTimestamp();
-
                 $data['date']['publish'] = array(
                     'timestamp' => $dpt,
                     'date' => $dp->format('Y-m-d'),
@@ -205,7 +189,8 @@ class frontend_model_news extends frontend_db_news {
                         'abv' => strftime('%a')
                     ),
                     'suffix' => $dp->format('S'),
-                );
+                );*/
+                $data['date']['publish'] = $date_format->setTzDateTimeArray($row['date_publish']);
             }
 
             $data['content'] = $row['content_news'];
@@ -218,24 +203,17 @@ class frontend_model_news extends frontend_db_news {
                     foreach ($row['tags'] as $key => $value) {
                         $data['tags'][$key]['id'] = $value['id_tag'];
                         $data['tags'][$key]['name'] = $value['name_tag'];
-                        $data['tags'][$key]['url'] = $this->routingUrl->getBuildUrl(array(
-                                'type' => 'tag',
-                                'iso' => $value['iso_lang'],
-                                'id' => $value['id_tag'],
-                                'url' => http_url::clean(html_entity_decode($value['name_tag']),
-									array(
-										'dot' => false,
-										'ampersand' => 'and',
-										'cspec' => '', 'rspec' => ''
-									)
-								)
-                            )
-                        );
+                        $data['tags'][$key]['url'] = $this->routingUrl->getBuildUrl([
+                            'type' => 'tag',
+                            'iso' => $value['iso_lang'],
+                            'id' => $value['id_tag'],
+                            'url' => http_url::clean(html_entity_decode($value['name_tag']),['dot' => false, 'ampersand' => 'and', 'cspec' => '', 'rspec' => ''])
+                        ]);
                     }
                 }
             }
             // Plugin
-            if($newRow != false){
+            if(!empty($newRow)){
                 if(is_array($newRow)){
                     foreach($newRow as $key => $value){
                         $data[$key] = $row[$value];
@@ -243,6 +221,7 @@ class frontend_model_news extends frontend_db_news {
                 }
             }
 
+			// @ToDo faire en sorte que les listing utilise une fonction short data pour limiter le nombre de donnée à récup + utiliser COALESCE plutôt que récup plusieurs colonnes
 			$this->seo->level = 'record';
 			if (!isset($row['seo_title_news']) || empty($row['seo_title_news'])) {
 				$seoTitle = $this->seo->replace_var_rewrite('',$data['name'],'title');
@@ -265,19 +244,12 @@ class frontend_model_news extends frontend_db_news {
         else if(isset($row['id_tag'])) {
             $data['id'] = $row['id_tag'];
             $data['name'] = $row['name_tag'];
-            $data['url'] = $this->routingUrl->getBuildUrl(array(
-                    'type' => 'tag',
-                    'iso' => $row['iso_lang'],
-                    'id' => $row['id_tag'],
-                    'url' => http_url::clean(html_entity_decode($row['name_tag']),
-						array(
-							'dot' => false,
-							'ampersand' => 'and',
-							'cspec' => '', 'rspec' => ''
-						)
-					)
-                )
-            );
+            $data['url'] = $this->routingUrl->getBuildUrl([
+                'type' => 'tag',
+                'iso' => $row['iso_lang'],
+                'id' => $row['id_tag'],
+                'url' => http_url::clean(html_entity_decode($row['name_tag']),['dot' => false, 'ampersand' => 'and', 'cspec' => '', 'rspec' => ''])
+            ]);
         }
 
         return $data;
@@ -289,8 +261,7 @@ class frontend_model_news extends frontend_db_news {
      * @return null|array
      * @throws Exception
      */
-    public function setItemShortData($row)
-    {
+    public function setItemShortData($row) {
         $data = null;
 
         if (isset($row['id_news'])) {
@@ -496,18 +467,21 @@ class frontend_model_news extends frontend_db_news {
                             ':date' => $this->dateFormat->SQLDate()
                         )
                     );
-                    foreach($data as $key => $value){
-                        $collectionTags = parent::fetchData(
-                            array('context' => 'all', 'type' => 'tagsRel'),
-                            array(
-                                ':iso' => $value['iso_lang'],
-                                ':id'  => $value['id_news']
-                            )
-                        );
-                        if($collectionTags != null) {
-                            $data[$key]['tags'] = $collectionTags;
-                        }
-                    }
+					$tagsData = parent::fetchData(['context' => 'all','type' => 'tagsLang'],['iso' => $conf['lang']]);
+					if(!empty($tagsData)) {
+						$tags = [];
+						foreach ($tagsData as $tag) {
+							$tags[$tag['id_tag']] = $tag;
+						}
+						foreach($data as $key => $value){
+							$tags_ids = explode(',',$value['tags_ids']);
+							$itemTags = array_intersect_key($tags,array_flip($tags_ids));
+							//$itemTags = array_intersect_ukey($tags,array_flip($tags_ids),function($a,$b){ return $a == $b; });
+							if(!empty($itemTags)) {
+								$data[$key]['tags'] = $itemTags;
+							}
+						}
+					}
 
                     /*if($data != null) {
                         $branch = isset($custom['select']) ? $conf['id'] : 'root';
@@ -692,60 +666,39 @@ class frontend_model_news extends frontend_db_news {
                     $conf['data'] = 'all';
                     $conf['controller'] = $current;
                     $data = call_user_func_array(
-                        array(
-                            $getCallClass,
-                            'override'
-                        ),
-                        array(
-                            $conf,
-                            $custom
-                        )
+                        [$getCallClass, 'override'],
+                        [$conf, $custom]
                     );
                 }
             }
             else {
                 $conditions .= ' WHERE lang.iso_lang = :iso AND c.date_publish <=:date AND c.published_news = 1 ';
 
-                if (isset($custom['exclude'])) {
-                    $conditions .= ' AND p.id_news NOT IN (' . $conf['id'] . ') ';
-                }
+                if (isset($custom['exclude'])) $conditions .= ' AND p.id_news NOT IN (' . $conf['id'] . ') ';
 
                 if ($conf['filter'] != null) {
-                    if(isset($conf['filter']['year'])) {
-                        $conditions .= ' AND YEAR(c.date_publish) = ' . $conf['filter']['year'];
-                    }
-                    if(isset($conf['filter']['month']) && $conf['filter']['month'] != null) {
-                        $conditions .= ' AND MONTH(c.date_publish) = ' . $conf['filter']['month'];
-                    }
+                    if(isset($conf['filter']['year'])) $conditions .= ' AND YEAR(c.date_publish) = ' . $conf['filter']['year'];
+                    if(isset($conf['filter']['month']) && $conf['filter']['month'] != null) $conditions .= ' AND MONTH(c.date_publish) = ' . $conf['filter']['month'];
                 }
 
                 $conditions .= ' ORDER BY c.date_publish DESC';
 
-                if ($conf['limit'] != null) {
-                    $conditions .= ' LIMIT ' . $conf['limit'];
-                }
+                if ($conf['limit'] != null) $conditions .= ' LIMIT ' . $conf['limit'];
 
                 if ($conditions != '') {
                     $data = parent::fetchData(
-                        array('context' => 'all', 'type' => 'pages_short', 'conditions' => $conditions),
-                        array(
-                            ':iso' => $conf['lang'],
-                            ':date' => $this->dateFormat->SQLDate()
-                        )
+                        ['context' => 'all', 'type' => 'pages_short', 'conditions' => $conditions],
+                        ['iso' => $conf['lang'], 'date' => $this->dateFormat->SQLDate()]
                     );
-                    foreach($data as $key => $value){
+                    /*foreach($data as $key => $value){
                         $collectionTags = parent::fetchData(
-                            array('context' => 'all', 'type' => 'tagsRel'),
-                            array(
-                                ':iso' => $value['iso_lang'],
-                                ':id'  => $value['id_news']
-                            )
+                            ['context' => 'all', 'type' => 'tagsRel'],
+                            ['iso' => $value['iso_lang'], 'id'  => $value['id_news']]
                         );
                         if($collectionTags != null) {
                             $data[$key]['tags'] = $collectionTags;
                         }
-                    }
-
+                    }*/
                     /*if($data != null) {
                         $branch = isset($custom['select']) ? $conf['id'] : 'root';
                         $data = $this->setPagesTree($data,$branch);

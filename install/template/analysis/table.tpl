@@ -11,25 +11,29 @@
         <td>mbstring</td>
         <td>{if $results.php.encoding}{#is_installed#}{else}{#is_not_installed#}{/if}</td>
     </tr>
-    <tr class="{if $results.php.encoding}success{else}warning{/if}">
+    <tr class="{if $results.php.iconv}success{else}warning{/if}">
         <td>iconv</td>
         <td>{if $results.php.iconv}{#is_installed#}{else}{#is_not_installed#}{/if}</td>
     </tr>
-    <tr class="{if $results.php.encoding}success{else}warning{/if}">
+    <tr class="{if $results.php.ob}success{else}warning{/if}">
         <td>ob_start</td>
         <td>{if $results.php.ob}{#is_installed#}{else}{#is_not_installed#}{/if}</td>
     </tr>
-    <tr class="{if $results.php.encoding}success{else}warning{/if}">
+    <tr class="{if $results.php.xml}success{else}warning{/if}">
         <td>simplexml</td>
         <td>{if $results.php.xml}{#is_installed#}{else}{#is_not_installed#}{/if}</td>
     </tr>
-    <tr class="{if $results.php.encoding}success{else}warning{/if}">
+    <tr class="{if $results.php.dom}success{else}warning{/if}">
         <td>dom_xml</td>
         <td>{if $results.php.dom}{#is_installed#}{else}{#is_not_installed#}{/if}</td>
     </tr>
-    <tr class="{if $results.php.encoding}success{else}warning{/if}">
+    <tr class="{if $results.php.spl}success{else}warning{/if}">
         <td>spl</td>
         <td>{if $results.php.spl}{#is_installed#}{else}{#is_not_installed#}{/if}</td>
+    </tr>
+    <tr class="{if $results.php.webp}success{else}warning{/if}">
+        <td>webp</td>
+        <td>{if $results.php.webp}{#is_installed#}{else}{#is_not_installed#}{/if}</td>
     </tr>
     </tbody>
 </table>

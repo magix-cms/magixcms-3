@@ -1,14 +1,16 @@
 <div id="cookies" class="fade in hide" role="alert">
 {*    <button type="button" class="btn btn-box btn-invert-white pull-right">{#close_cookie#|ucfirst}</button>*}
     <p>
-        <i class="material-icons ico ico-info_outline"></i>{#cookie_text#}
+        {*<i class="material-icons ico ico-info_outline"></i>*}{#cookie_text#}
     </p>
-    <button class="btn btn-invert-white" type="button" id="paramCookies" data-toggle="modal" data-target="#cookiesModal">
-        <span class="sr-ph sr-xs">{#param_cookies#|ucfirst}</span>
-    </button>
-    <button class="btn btn-invert-white" type="button" id="acceptCookies">
-        <span class="sr-ph sr-xs">{#accept_cookies#|ucfirst}</span>
-    </button>
+    <div class="btns">
+        <button class="btn btn-default" type="button" id="paramCookies" data-toggle="modal" data-target="#cookiesModal">
+            <span>{#param_cookies#|ucfirst}</span>
+        </button>
+        <button class="btn btn-main-outline" type="button" id="acceptCookies">
+            <span>{#accept_cookies#|ucfirst}</span>
+        </button>
+    </div>
 </div>
 <div class="modal" id="cookiesModal" role="dialog" aria-labelledby="cookieModalTitle" aria-hidden="true">
     <div class="modal-dialog">
@@ -43,7 +45,7 @@
                                         <div class="switch-knob"></div>
                                     </div>
                                 </div>
-                                <label for="essentialCookies">Accepter/Refuser les essentialCookies</label>
+                                <label for="essentialCookies">{#accept_essential_cookies#}</label>
                             </div>
                         </div>
                         <div id="analytic_cookies" class="tab-pane" role="tabpanel">
@@ -55,7 +57,7 @@
                                         <div class="switch-knob"></div>
                                     </div>
                                 </div>
-                                <label for="analyticCookies">Accepter/Refuser les analyticCookies</label>
+                                <label for="analyticCookies">{#accept_analytic_cookies#}</label>
                             </div>
                         </div>
                         <div id="other_cookies" class="tab-pane" role="tabpanel">
@@ -67,7 +69,7 @@
                                         <div class="switch-knob"></div>
                                     </div>
                                 </div>
-                                <label for="ggWebfontCookies">Accepter/Refuser les ggWebfontCookies</label>
+                                <label for="ggWebfontCookies">{#accept_ggwebfontcookies#}</label>
                             </div>
                             {*<div class="form-group">
                                 <div class="switch">
@@ -85,7 +87,7 @@
                                         <div class="switch-knob"></div>
                                     </div>
                                 </div>
-                                <label for="ggMapCookies">Accepter/Refuser les ggMapCookies</label>
+                                <label for="ggMapCookies">{#accept_ggmapcookies#}</label>
                             </div>
                             <div class="form-group">
                                 <div class="switch">
@@ -94,7 +96,7 @@
                                         <div class="switch-knob"></div>
                                     </div>
                                 </div>
-                                <label for="embedCookies">Accepter/Refuser les embedCookies</label>
+                                <label for="embedCookies">{#accept_embedcookies#}</label>
                             </div>
                         </div>
                     </div>

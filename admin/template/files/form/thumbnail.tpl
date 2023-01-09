@@ -15,7 +15,7 @@
     <form id="new_thumbnail" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="form-gen col-ph-12 col-sm-6 col-md-4">
         <div class="form-group">
             <label for="module_name">{#config_module_available#}</label>
-            <select name="module_name" id="module_name" class="form-control has-optional-fields required" required>
+            <select name="module" id="module_name" class="form-control has-optional-fields required" required>
                 <option value="">{#ph_config#|ucfirst}</option>
                 {foreach $setConfig as $key => $val}
                     {if $val.attr_name != 'about'}
@@ -29,7 +29,7 @@
         <div id="subcat" class="additional-fields collapse">
             <div class="form-group">
                 <label for="attr_name">{#config_attribute_available#}</label>
-                <select name="attr_name" id="attr_name" class="form-control has-optional-fields">
+                <select name="attribute" id="attr_name" class="form-control has-optional-fields">
                     <option value="" class="default" selected>{#ph_attribute#|ucfirst}</option>
                     <option value="category">{#categories#|ucfirst}</option>
                     <option value="product">{#products#|ucfirst}</option>

@@ -1,5 +1,5 @@
 <div id="footbar" class="at-top">
-    <button type="button" class="btn toggle-menu navbar-toggle hidden-sm-up" data-toggle="collapse" data-target="#menu">
+    <button type="button" class="btn btn-box toggle-menu navbar-toggle hidden-sm-up" data-toggle="collapse" data-target="#menu">
         <span class="icon">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>

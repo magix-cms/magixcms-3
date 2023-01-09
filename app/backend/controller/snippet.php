@@ -1,6 +1,5 @@
 <?php
-class backend_controller_snippet extends backend_db_snippet
-{
+class backend_controller_snippet extends backend_db_snippet {
     public $edit, $action, $tabs, $search, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage,
         $config, $routingUrl,$tableaction,$tableform;
@@ -15,12 +14,10 @@ class backend_controller_snippet extends backend_db_snippet
     );
     /**
      * backend_controller_logo constructor.
-     * @param null|object $t
-     * @throws Exception
+     * @param null|backend_model_template $t
      */
-    public function __construct($t = null)
-    {
-        $this->template = $t ? $t : new backend_model_template;
+    public function __construct(backend_model_template $t = null) {
+        $this->template = $t instanceof backend_model_template ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);

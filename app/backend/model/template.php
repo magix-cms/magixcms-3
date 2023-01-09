@@ -294,11 +294,7 @@ class backend_model_template{
      * @param object $parent
      */
     public function display($template = null, $cache_id = null, $compile_id = null, $parent = null){
-        if(!self::isCached($template, $cache_id, $compile_id, $parent)){
-            backend_model_smarty::getInstance()->display($template, $cache_id, $compile_id, $parent);
-        }else{
-            backend_model_smarty::getInstance()->display($template, $cache_id, $compile_id, $parent);
-        }
+        backend_model_smarty::getInstance()->display($template, $cache_id, $compile_id, $parent);
     }
 
     /**

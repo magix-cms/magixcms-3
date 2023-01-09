@@ -3,6 +3,7 @@
 
 {* Home *}
 {if $icon}
+    {$breadcrumbs[0]['name'] = "<i class=\"material-icons ico ico-{$icon}\"></i><span class=\"hidden\">{$breadcrumbs[0]['name']}</span>"}
     {$hname = "<i class=\"material-icons ico ico-{$icon}\"></i><span class=\"hidden\">{#home#}</span>"}
 {else}
     {$hname = {#home#}}

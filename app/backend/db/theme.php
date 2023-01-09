@@ -136,8 +136,8 @@ ORDER BY m.order_link, lg.id_lang";
 						LEFT JOIN mc_cms_page_content AS pc
 						USING ( id_pages ) 
 						LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
-						WHERE p.menu_pages =1
-						AND pc.published_pages =1
+						WHERE p.menu_pages = 1
+						AND pc.published_pages = 1
 						ORDER BY p.id_pages, l.default_lang DESC
 						) as pt
 						GROUP BY pt.id';

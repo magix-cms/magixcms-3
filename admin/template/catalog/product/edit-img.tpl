@@ -25,7 +25,7 @@
                             <label for="name_img_{$id}">{#name_img#|ucfirst} :</label>
                             <input type="text" class="form-control" placeholder="{#ph_name_img#}" id="name_img_{$id}" name="name_img" value="{$img.name_img_we}" />
                         </div>
-                        <img src="/upload/catalog/p/{$img.id_product}/m_{$img.name_img}" class="img-responsive" />
+                        <img src="/upload/catalog/product/{$img.id_product}/m_{$img.name_img}" class="img-responsive" />
                         {include file="language/brick/dropdown-lang.tpl"}
                         <div class="tab-content">
                             {foreach $langs as $id => $iso}

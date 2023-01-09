@@ -1,18 +1,17 @@
 <?php
-class backend_controller_theme extends backend_db_theme{
-    public $edit, $action, $tabs;
+class backend_controller_theme extends backend_db_theme {
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage;
+    public $edit, $action, $tabs;
     public $theme, $content, $type, $id, $link, $order, $share, $twitter_id;
 
-    public $roots = array('home','about','catalog','news','plugin');
+    public $roots = ['home','about','catalog','news','plugin'];
 
     /**
 	 * backend_controller_theme constructor.
-	 * @param stdClass $t
+	 * @param backend_model_template|null $t
 	 */
-    public function __construct($t = null)
-    {
-        $this->template = $t ? $t : new backend_model_template;
+    public function __construct(backend_model_template $t = null) {
+        $this->template = $t instanceof backend_model_template ? $t : new backend_model_template;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
         $this->data = new backend_model_data($this);
@@ -21,50 +20,24 @@ class backend_controller_theme extends backend_db_theme{
         $formClean = new form_inputEscape();
 
         // --- GET
-        if (http_request::isGet('edit')) {
-            $this->edit = $formClean->numeric($_GET['edit']);
-        } elseif (http_request::isPost('edit')) {
-			$this->edit = $formClean->numeric($_POST['edit']);
-		}
-        if (http_request::isGet('action')) {
-            $this->action = $formClean->simpleClean($_GET['action']);
-        } elseif (http_request::isPost('action')) {
-            $this->action = $formClean->simpleClean($_POST['action']);
-        }
-        if (http_request::isGet('tabs')) {
-            $this->tabs = $formClean->simpleClean($_GET['tabs']);
-        }
-        if (http_request::isGet('content')) {
-            $this->content = $formClean->simpleClean($_GET['content']);
-        }
+        if (http_request::isRequest('edit')) $this->edit = $formClean->numeric($_REQUEST['edit']);
+        if (http_request::isRequest('action')) $this->action = $formClean->simpleClean($_REQUEST['action']);
+        if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
+        if (http_request::isGet('content')) $this->content = $formClean->simpleClean($_GET['content']);
 
         // --- POST
-		$this->theme = http_request::isPost('theme') ? $formClean->simpleClean($_POST['theme']) : array() ;
+		$this->theme = http_request::isPost('theme') ? $formClean->simpleClean($_POST['theme']) : [] ;
 
-		if (http_request::isPost('type')) {
-			$this->type = $formClean->simpleClean($_POST['type']);
-		}
-		if (http_request::isPost('pages_id')) {
-			$this->id = intval($formClean->numeric($_POST['pages_id']));
-		}
-		if (http_request::isPost('id')) {
-			$this->id = intval($formClean->simpleClean($_POST['id']));
-		}
+		if (http_request::isPost('type')) $this->type = $formClean->simpleClean($_POST['type']);
+		if (http_request::isPost('pages_id')) $this->id = intval($formClean->numeric($_POST['pages_id']));
+		if (http_request::isPost('id')) $this->id = intval($formClean->simpleClean($_POST['id']));
 
-		if(http_request::isPost('link')){
-			$this->link = $formClean->arrayClean($_POST['link']);
-		}
+		if(http_request::isPost('link')) $this->link = $formClean->arrayClean($_POST['link']);
 
-		if(http_request::isPost('order')){
-			$this->order = $formClean->arrayClean($_POST['order']);
-		}
+		if(http_request::isPost('order')) $this->order = $formClean->arrayClean($_POST['order']);
 
-		if(http_request::isPost('share')){
-			$this->share = $formClean->arrayClean($_POST['share']);
-		}
-		if (http_request::isPost('twitter_id')) {
-			$this->twitter_id = $formClean->simpleClean($_POST['twitter_id']);
-		}
+		if(http_request::isPost('share')) $this->share = $formClean->arrayClean($_POST['share']);
+		if (http_request::isPost('twitter_id')) $this->twitter_id = $formClean->simpleClean($_POST['twitter_id']);
     }
 
 	/**
@@ -125,9 +98,8 @@ class backend_controller_theme extends backend_db_theme{
 	/**
 	 * @return array
 	 */
-	private function setPagesTree($pages)
-	{
-		$childs = array();
+	private function setPagesTree($pages) {
+		$childs = [];
 
 		foreach($pages as &$item) {
 			$k = $item['parent'] == null ? 'root' : $item['parent'];
@@ -304,7 +276,7 @@ class backend_controller_theme extends backend_db_theme{
     /**
      *
      */
-    public function run(){
+    public function run() {
         if(isset($this->action)) {
             switch ($this->action) {
                 case 'add':
@@ -473,8 +445,9 @@ class backend_controller_theme extends backend_db_theme{
 							$this->template->assign('links',$plugins);
 						}
 						else {
-							$defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-							$this->setPagesTree($this->getItems($this->content,array('idlang'=>$defaultLanguage['id_lang']),'all',false));
+							$defaultLanguage = $this->collectionLanguage->fetchData(['context'=>'one','type'=>'default']);
+							//$this->setPagesTree($this->getItems($this->content,['idlang'=>$defaultLanguage['id_lang']],'all',false));
+							$this->setPagesTree($this->getItems($this->content,[],'all',false));
 						}
 						$this->template->display('theme/loop/page.tpl');
 					}

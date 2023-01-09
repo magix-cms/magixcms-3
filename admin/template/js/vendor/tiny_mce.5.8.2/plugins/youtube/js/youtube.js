@@ -52,7 +52,10 @@ class Youtube {
     }
 
     setPlaceholderUrl() {
-        return "https://i.ytimg.com/vi/"+this.id+"/maxresdefault.jpg";
+        return {
+            jpeg: "https://i.ytimg.com/vi/"+this.id+"/",
+            webp: "https://i.ytimg.com/vi_webp/"+this.id+"/"
+        };
     }
 
     createIframe(width = 750, height = 315) {
@@ -72,9 +75,21 @@ class Youtube {
             }
         };
         let html = '<div class="embed-responsive embed-responsive-'+this.ratio+'">';
-        html += '<img src="'+this.placeholder+'" alt="Accept embed video cookie to display the video" class="embed-responsive-item img-responsive ytb-video-preview" data-ytb=\''+JSON.stringify(params)+'\' />';
+        html += '<picture class="ytb-video-preview" data-ytb=\''+JSON.stringify(params)+'\'>';
+        html += '<source type="image/webp" size="(min-width: 640px) 1280px" srcset="'+this.placeholder.webp+'maxresdefault.webp 1280w">';
+        html += '<source type="image/webp" size="(min-width: 480px) 640px" srcset="'+this.placeholder.webp+'hqdefault.webp 640w">';
+        html += '<source type="image/webp" size="(min-width: 320px) 480px" srcset="'+this.placeholder.webp+'mqdefault.webp 480w">';
+        html += '<source type="image/webp" size="(min-width: 120px) 320px" srcset="'+this.placeholder.webp+'sddefault.webp 320w">';
+        html += '<source type="image/webp" size="120px" srcset="'+this.placeholder.webp+'default.webp 120w">';
+        html += '<source type="image/jpeg" size="(min-width: 640px) 1280px" srcset="'+this.placeholder.jpeg+'maxresdefault.jpg 1280w">';
+        html += '<source type="image/jpeg" size="(min-width: 480px) 640px" srcset="'+this.placeholder.jpeg+'hqdefault.jpg 640w">';
+        html += '<source type="image/jpeg" size="(min-width: 320px) 480px" srcset="'+this.placeholder.jpeg+'mqdefault.jpg 480w">';
+        html += '<source type="image/jpeg" size="(min-width: 120px) 320px" srcset="'+this.placeholder.jpeg+'sddefault.jpg 320w">';
+        html += '<source type="image/jpeg" size="120px" srcset="'+this.placeholder.jpeg+'default.jpg 120w">';
+        html += '<img src="'+this.placeholder.jpeg+'default.jpg" srcset="'+this.placeholder.jpeg+'maxresdefault.webp 1280w, '+this.placeholder.jpeg+'maxresdefault.webp 640w, '+this.placeholder.jpeg+'maxresdefault.webp 480w, '+this.placeholder.jpeg+'maxresdefault.webp 320w, '+this.placeholder.jpeg+'maxresdefault.webp 120w" size="(min-width: 640px) 1280px, (min-width: 480px) 640px, (min-width: 320px) 480px, (min-width: 120px) 320px, 120px" alt="Accept embed video cookie to display the video" loading="lazy" class="embed-responsive-item img-responsive lazyload" data-ytb=\''+JSON.stringify(params)+'\' />';
+        html += '</picture>';
         html += '</div><p></p>'
-        return html;
+        return html; 
     }
 }
 

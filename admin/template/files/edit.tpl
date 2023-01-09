@@ -25,3 +25,22 @@
 </div>
 {/if}
 {/block}
+{block name="foot" append}
+    {capture name="scriptForm"}{strip}
+        /{baseadmin}/min/?f=
+        libjs/vendor/progressBar.min.js,
+        {baseadmin}/template/js/files.min.js
+    {/strip}{/capture}
+    {script src=$smarty.capture.scriptForm type="javascript"}
+
+    <script type="text/javascript">
+        $(function(){
+            if (typeof files == "undefined")
+            {
+                console.log("files is not defined");
+            }else{
+                files.run();
+            }
+        });
+    </script>
+{/block}

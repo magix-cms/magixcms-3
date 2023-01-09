@@ -1,6 +1,11 @@
 <?php
 class frontend_db_catalog {
-	/**
+    /**
+     * @var debug_logger $logger
+     */
+    protected debug_logger $logger;
+
+    /**
 	 * @param array $config
 	 * @param array $params
 	 * @return array|bool
@@ -83,114 +88,90 @@ class frontend_db_catalog {
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) $conditions";
 					break;*/
 				case 'category':
-					//$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
-                    /*$sql = "SELECT cat.*,
-								   catc.name_cat,
-								   catc.url_cat,
-								   catc.resume_cat,
-								   catc.content_cat,
-								   catc.published_cat,
-       								COALESCE(catc.alt_img, catc.name_cat) as alt_img,
-									COALESCE(catc.title_img, catc.alt_img, catc.name_cat) as title_img,
-									COALESCE(catc.caption_img, catc.title_img, catc.alt_img, catc.name_cat) as caption_img,
-								   catc.seo_title_cat,
-								   catc.seo_desc_cat,
-								   lang.id_lang,
-								   lang.iso_lang,
-								   lang.default_lang
-							FROM mc_catalog_cat AS cat
-							JOIN mc_catalog_cat_content AS catc ON(cat.id_cat = catc.id_cat) 
-							JOIN mc_lang AS lang ON(catc.id_lang = lang.id_lang) $conditions";*/
-
                     $where = '';
-
                     if(isset($params['where']) && is_array($params['where'])) {
                         $newWhere = [];
-
-                        foreach ($params['where'] as $key => $value) {
-                            $newWhere[] = array_merge($newWhere, $value);
-                        }
-                        foreach ($newWhere as $item) {
-                            $where .= ' '.$item['type'].' '.$item['condition'].' ';
-                        }
+                        foreach ($params['where'] as $value) { $newWhere[] = array_merge($newWhere, $value); }
+                        foreach ($newWhere as $item) { $where .= ' '.$item['type'].' '.$item['condition'].' '; }
                         unset($params['where']);
                     }
-
                     $select = [
-                           'cat.*',
-                           'catc.name_cat',
-                           'catc.url_cat',
-                           'catc.resume_cat',
-                           'catc.content_cat',
-                           'catc.published_cat',
+                            'cat.*',
+                            'catc.name_cat',
+                            'catc.url_cat',
+                            'catc.resume_cat',
+                            'catc.content_cat',
+                            'catc.published_cat',
                             'COALESCE(catc.alt_img, catc.name_cat) as alt_img',
                             'COALESCE(catc.title_img, catc.alt_img, catc.name_cat) as title_img',
                             'COALESCE(catc.caption_img, catc.title_img, catc.alt_img, catc.name_cat) as caption_img',
-                           'catc.seo_title_cat',
-                           'catc.seo_desc_cat',
-                           'lang.id_lang',
-                           'lang.iso_lang',
-                           'lang.default_lang'/*,
-                            '(SELECT count(catalog.id_product) FROM mc_catalog AS catalog WHERE catalog.id_cat = cat.id_cat) as nb_product'*/
+                            'catc.seo_title_cat',
+                            'catc.seo_desc_cat',
+                            'childs.childs',
+                            'lang.id_lang',
+                            'lang.iso_lang',
+                            'lang.default_lang'
                     ];
                     if(isset($params['select'])) {
-                        foreach ($params['select'] as $extendSelect) {
-                            $select = array_merge($select, $extendSelect);
-                        }
+                        foreach ($params['select'] as $extendSelect) { $select = array_merge($select, $extendSelect); }
                         unset($params['select']);
                     }
-
                     $joins = '';
                     if(isset($params['join']) && is_array($params['join'])) {
                         $newJoin = [];
-
-                        foreach ($params['join'] as $key => $value) {
-                            $newJoin = array_merge($newJoin, $value);
-                        }
-                        foreach ($newJoin as $join) {
-                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
-                        }
-
+                        foreach ($params['join'] as $value) { $newJoin = array_merge($newJoin, $value); }
+                        foreach ($newJoin as $join) { $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') '; }
                         unset($params['join']);
                     }
-                    /*$order = ' ORDER BY cat.order_cat';
-                    if(isset($params['order']) && is_array($params['order'])){
-
-                        $order .= ', '.implode(',', $params['order']);
-
-                        unset($params['order']);
-                    }*/
-                    if(!isset($params['order']) && !is_array($params['order'])) {
-                        $order = ' ORDER BY cat.order_cat';
-                    }
-
+                    if(!isset($params['order']) && !is_array($params['order'])) $order = ' ORDER BY cat.order_cat';
                     if(isset($params['order']) && is_array($params['order'])){
                         $order = ' ORDER BY ';
                         $orders = [];
-
-                        foreach ($params['order'] as $extendOrder) {
-                            $orders = array_merge($orders, $extendOrder);
-                        }
-
+                        foreach ($params['order'] as $extendOrder) { $orders = array_merge($orders, $extendOrder); }
                         $order .= ' '.implode(',', $orders);
-
                         unset($params['order']);
                     }
-
                     $limit = '';
                     if(isset($params['limit']) && is_array($params['limit'])){
-
-                        foreach ($params['limit'] as $item) {
-                            $limit = ' LIMIT '.$item;
-                        }
+                        foreach ($params['limit'] as $item) { $limit = ' LIMIT '.$item; }
                         unset($params['limit']);
                     }
-                    $sql = 'SELECT '.implode(',', $select).'
+
+                    $nbwhere = '';
+                    if(isset($params['nbParams']['where']) && is_array($params['nbParams']['where'])) {
+                        $newWhere = [];
+                        foreach ($params['nbParams']['where'] as $value) { $newWhere = array_merge($newWhere, $value); }
+                        foreach ($newWhere as $item) { $nbwhere .= ' '.$item['type'].' '.$item['condition'].' '; }
+                        unset($params['nbParams']['where']);
+                    }
+                    $nbjoins = '';
+                    if(isset($params['nbParams']['join']) && is_array($params['nbParams']['join'])) {
+                        $newJoin = [];
+                        foreach ($params['nbParams']['join'] as $value) { $newJoin = array_merge($newJoin, $value); }
+                        foreach ($newJoin as $join) { $nbjoins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') '; }
+                        unset($params['nbParams']['join']);
+                    }
+                    unset($params['nbParams']);
+
+                    $sql = 'SELECT '.implode(',', $select)."
 						FROM mc_catalog_cat AS cat
 							JOIN mc_catalog_cat_content AS catc ON(cat.id_cat = catc.id_cat) 
-							JOIN mc_lang AS lang ON(catc.id_lang = lang.id_lang)'.$joins.$where
+							LEFT JOIN (
+                                SELECT GROUP_CONCAT( id_cat SEPARATOR ',' ) AS childs, id_parent FROM mc_catalog_cat WHERE id_parent IS NOT NULL GROUP BY id_parent
+                            ) as childs ON (cat.id_cat = childs.id_parent)
+							JOIN mc_lang AS lang ON(catc.id_lang = lang.id_lang) 
+                            LEFT JOIN (
+                                SELECT count(catalog.id_catalog) AS nb_product, catalog.id_cat, mcpc.id_lang
+                                FROM mc_catalog AS catalog 
+                                JOIN mc_catalog_product AS mcp ON(catalog.id_product = mcp.id_product) 
+                                JOIN mc_catalog_product_content AS mcpc ON(mcp.id_product = mcpc.id_product) 
+                                ".$nbjoins."
+                                WHERE catalog.default_c = 1 
+                                AND mcpc.published_p = 1
+                                ".$nbwhere."
+                                GROUP BY id_cat, id_lang
+                            ) as products ON (cat.id_cat = products.id_cat AND products.id_lang = lang.id_lang)".$joins.$where
                         .$order.$limit;
-
                     break;
 				case 'rand_category':
 					$queries = array(
@@ -257,11 +238,9 @@ class frontend_db_catalog {
                         'cat.name_cat',
                         'cat.url_cat',
                         'p.id_product',
-                        'p.price_p',
                         'pc.name_p',
                         //'pc.longname_p',
-                        'pc.resume_p',
-                        'pc.content_p',
+                        'IFNULL(pc.resume_p,pc.content_p) as resume_p',
                         'pc.url_p',
                         'pc.id_lang',
                         'lang.iso_lang',

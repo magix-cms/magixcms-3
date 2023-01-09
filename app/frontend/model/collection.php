@@ -28,8 +28,8 @@ class frontend_model_collection{
         $imgPath = $this->upload->imgBasePath('upload/pages');
         $arr = array();
         $conf = array();
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
-        $imgPrefix = $this->imagesComponent->prefix();
+        $fetchConfig = $this->imagesComponent->getConfigItems('pages','page');
+        //$imgPrefix = $this->imagesComponent->prefix();
 
         foreach ($data as $page) {
 
@@ -63,7 +63,7 @@ class frontend_model_collection{
                             $arr[$page['id_pages']]['images'][$img['id_img']]['default_img'] = $img['default_img'];
                             $arr[$page['id_pages']]['images'][$img['id_img']]['imgSrc']['original'] = '/upload/pages/' . $page['id_pages'] . '/' . $img['name_img'];
                             foreach ($fetchConfig as $key => $value) {
-                                $arr[$page['id_pages']]['images'][$img['id_img']]['imgSrc'][$value['type_img']] = '/upload/pages/' . $page['id_pages'] . '/' . $imgPrefix[$value['type_img']] . $img['name_img'];
+                                $arr[$page['id_pages']]['images'][$img['id_img']]['imgSrc'][$value['type']] = '/upload/pages/' . $page['id_pages'] . '/' . $value['prefix'] . '_' . $img['name_img'];
                             }
                         }
 
@@ -115,8 +115,8 @@ class frontend_model_collection{
         $arr = array();
         $conf = array();
 
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'news','attribute_img'=>'news'));
-        $imgPrefix = $this->imagesComponent->prefix();
+        $fetchConfig = $this->imagesComponent->getConfigItems('news','news');
+        //$imgPrefix = $this->imagesComponent->prefix();
 
         foreach ($data as $page) {
             $dateFormat = new date_dateformat();
@@ -136,7 +136,7 @@ class frontend_model_collection{
                 if($page['img_news'] != null) {
                     $arr[$page['id_news']]['imgSrc']['original'] = '/upload/news/' . $page['id_news'] . '/' . $page['img_news'];
                     foreach ($fetchConfig as $key => $value) {
-                        $arr[$page['id_news']]['imgSrc'][$value['type_img']] = '/upload/news/'.$page['id_news'].'/'.$imgPrefix[$value['type_img']] . $page['img_news'];
+                        $arr[$page['id_news']]['imgSrc'][$value['type']] = '/upload/news/'.$page['id_news'].'/'.$value['prefix'] . '_' . $page['img_news'];
                     }
                 }
 
@@ -193,18 +193,16 @@ class frontend_model_collection{
         $arr = array();
         $conf = array();
         $extwebp = 'webp';
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'category'));
-        $imgPrefix = $this->imagesComponent->prefix();
+        $fetchConfig = $this->imagesComponent->getConfigItems('catalog','category');
+        //$imgPrefix = $this->imagesComponent->prefix();
 
         foreach ($data as $page) {
-
-            $publicUrl = !empty($page['url_cat']) ? $this->routingUrl->getBuildUrl(array(
-                    'type'      =>  'category',
-                    'iso'       =>  $page['iso_lang'],
-                    'id'        =>  $page['id_cat'],
-                    'url'       =>  $page['url_cat']
-                )
-            ) : '';
+            $publicUrl = !empty($page['url_cat']) ? $this->routingUrl->getBuildUrl([
+				'type' => 'category',
+				'iso' => $page['iso_lang'],
+				'id' => $page['id_cat'],
+				'url' => $page['url_cat']
+			]) : '';
 
             if (!array_key_exists($page['id_cat'], $arr)) {
                 $arr[$page['id_cat']] = array();
@@ -217,8 +215,8 @@ class frontend_model_collection{
                 if($page['img_cat'] != null) {
                     $arr[$page['id_cat']]['imgSrc']['original'] = '/upload/catalog/c/' . $page['id_cat'] . '/' . $page['img_cat'];
                     foreach ($fetchConfig as $key => $value) {
-                        $arr[$page['id_cat']]['imgSrc'][$value['type_img']] = '/upload/catalog/c/'.$page['id_cat'].'/'.$imgPrefix[$value['type_img']] . $page['img_cat'];
-                        //$data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$imgPrefix[$value['type_img']] . $filename. '.' .$extwebp;
+                        $arr[$page['id_cat']]['imgSrc'][$value['type']] = '/upload/catalog/c/'.$page['id_cat'].'/'.$value['prefix'] . '_' . $page['img_cat'];
+                        //$data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$value['prefix'] . '_' . $filename. '.' .$extwebp;
                     }
                 }
                 $arr[$page['id_cat']]['date_register'] = $page['date_register'];
@@ -247,8 +245,8 @@ class frontend_model_collection{
     public function getBuildProductItems($data){
         $arr = array();
         $conf = array();
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'product'));
-        $imgPrefix = $this->imagesComponent->prefix();
+        $fetchConfig = $this->imagesComponent->getConfigItems('catalog','product');
+        //$imgPrefix = $this->imagesComponent->prefix();
         foreach ($data as $page) {
 
             //$publicUrl = !empty($page['url_p']) ? '/' . $page['iso_lang'] . '/' . $page['id_product'] . '-' . $page['url_p'] . '/' : '';
@@ -281,7 +279,7 @@ class frontend_model_collection{
                             $arr[$page['id_product']]['images'][$img['id_img']]['default_img'] = $img['default_img'];
                             $arr[$page['id_product']]['images'][$img['id_img']]['imgSrc']['original'] = '/upload/catalog/p/' . $page['id_product'] . '/' . $img['name_img'];
                             foreach ($fetchConfig as $key => $value) {
-                                $arr[$page['id_product']]['images'][$img['id_img']]['imgSrc'][$value['type_img']] = '/upload/catalog/p/' . $page['id_product'] . '/' . $imgPrefix[$value['type_img']] . $img['name_img'];
+                                $arr[$page['id_product']]['images'][$img['id_img']]['imgSrc'][$value['type']] = '/upload/catalog/p/' . $page['id_product'] . '/' . $value['prefix'] . '_' . $img['name_img'];
                             }
                         }
 
@@ -327,8 +325,8 @@ class frontend_model_collection{
     public function getBuildProduct($data){
         $arr = array();
         $conf = array();
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'product'));
-        $imgPrefix = $this->imagesComponent->prefix();
+        $fetchConfig = $this->imagesComponent->getConfigItems('catalog','product');
+        //$imgPrefix = $this->imagesComponent->prefix();
         foreach ($data as $page) {
 
             //$publicUrl = !empty($page['url_p']) ? '/' . $page['iso_lang'] . '/' . $page['id_product'] . '-' . $page['url_p'] . '/' : '';
@@ -361,7 +359,7 @@ class frontend_model_collection{
                             $arr[$page['id_product']]['images'][$img['id_img']]['default_img'] = $img['default_img'];
                             $arr[$page['id_product']]['images'][$img['id_img']]['imgSrc']['original'] = '/upload/catalog/p/' . $page['id_product'] . '/' . $img['name_img'];
                             foreach ($fetchConfig as $key => $value) {
-                                $arr[$page['id_product']]['images'][$img['id_img']]['imgSrc'][$value['type_img']] = '/upload/catalog/p/' . $page['id_product'] . '/' . $imgPrefix[$value['type_img']] . $img['name_img'];
+                                $arr[$page['id_product']]['images'][$img['id_img']]['imgSrc'][$value['type']] = '/upload/catalog/p/' . $page['id_product'] . '/' . $value['prefix'] . '_' . $img['name_img'];
                             }
                         }
 
@@ -411,7 +409,7 @@ class frontend_model_collection{
                                 $imgRel['images']['default_img']        = $img['default_img'];
                                 $imgRel['images']['imgSrc']['original'] = '/upload/catalog/p/' . $page['id_product'] . '/' . $img['name_img'];
                                 foreach ($fetchConfig as $key => $value) {
-                                    $imgRel['images']['imgSrc'][$value['type_img']] = '/upload/catalog/p/' . $page['id_product'] . '/' . $imgPrefix[$value['type_img']] . $img['name_img'];
+                                    $imgRel['images']['imgSrc'][$value['type_img']] = '/upload/catalog/p/' . $page['id_product'] . '/' . $value['prefix'] . '_' . $img['name_img'];
                                 }
                             }
                             // Image content by languages

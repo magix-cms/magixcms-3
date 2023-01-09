@@ -49,18 +49,6 @@ class frontend_model_category {
 	protected component_routing_url $routingUrl;
 	protected component_files_images $imagesComponent;
 	protected component_format_math $math;
-	
-    /**
-     * @var array $imagePlaceHolder
-     * @var array $defaultImage
-     * @var array $imgPrefix
-     * @var array $fetchConfig
-     */
-    protected array 
-		$imagePlaceHolder,
-		$defaultImage,
-		$imgPrefix,
-		$fetchConfig;
 
 	/**
 	 * @param null|frontend_model_template $t
@@ -68,7 +56,6 @@ class frontend_model_category {
     public function __construct(frontend_model_template $t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->routingUrl = new component_routing_url();
-		$this->imagesComponent = new component_files_images($this->template);
 		$this->modelPlugins = new frontend_model_plugins($this->template);
 		$this->math = new component_format_math();
 		$this->seo = new frontend_model_seo('catalog', 'parent', '',$this->template);
@@ -79,16 +66,7 @@ class frontend_model_category {
 	 * @return void
 	 */
 	private function initImageComponent() {
-		if(!isset($this->imagePlaceHolder)) $this->imagePlaceHolder = $this->logo->getImagePlaceholder();
-		if(!isset($this->imgPrefix)) $this->imgPrefix = $this->imagesComponent->prefix();
-		if(!isset($this->fetchConfig)) $this->fetchConfig = $this->imagesComponent->getConfigItems([
-			'module_img' => 'catalog',
-			'attribute_img' => 'category'
-		]);
-		if(!isset($this->defaultImage)) $this->defaultImage = $this->imagesComponent->getConfigItems([
-			'module_img' => 'logo',
-			'attribute_img' => 'category'
-		]);
+		if(!isset($this->imagesComponent)) $this->imagesComponent = new component_files_images($this->template);
 	}
 
     /**
@@ -100,46 +78,25 @@ class frontend_model_category {
     public function setItemData (array $row, array $active, array $newRow = []): array {
 		$string_format = new component_format_string();
         $data = [];
-        $extwebp = 'webp';
-        $this->initImageComponent();
 
         if(!empty($row)) {
+			$this->initImageComponent();
 			$data['active'] = false;
 			if ($row['id_cat'] == $active['controller']['id'] OR $row['id_cat'] == $active['controller']['id_parent'] ) {
 				$data['active'] = true;
 			}
 			if (isset($row['img_cat'])) {
-				// # return filename without extension
-				$pathinfo = pathinfo($row['img_cat']);
-				$filename = $pathinfo['filename'];
-				foreach ($this->fetchConfig as $value) {
-					$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$this->imgPrefix[$value['type_img']] . $row['img_cat']);
-					$data['img'][$value['type_img']]['src'] = '/upload/catalog/c/'.$row['id_cat'].'/'.$this->imgPrefix[$value['type_img']] . $row['img_cat'];
-					if(file_exists(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$this->imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)) {
-						$data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/c/' . $row['id_cat'] . '/' . $this->imgPrefix[$value['type_img']] . $filename . '.' . $extwebp;
-					}
-					//$data['img'][$value['type_img']]['w'] = $value['width_img'];
-					$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-					//$data['img'][$value['type_img']]['h'] = $value['height_img'];
-					$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-					$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
-					$data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/c/'.$row['id_cat'].'/'.$this->imgPrefix[$value['type_img']] . $row['img_cat']);
-				}
-				$data['img']['name'] = $row['img_cat'];
+				$data['img'] = $this->imagesComponent->setModuleImage('catalog','category',$row['img_cat'],$row['id_cat']);
 			}
+			$data['img']['default'] = $this->imagesComponent->setModuleImage('catalog','category');
 			$data['img']['alt'] = $row['alt_img'];
 			$data['img']['title'] = $row['title_img'];
 			$data['img']['caption'] = $row['caption_img'];
-			$data['img']['default'] = [
-				'src' => isset($this->imagePlaceHolder['category']) ? $this->imagePlaceHolder['category'] : '/skin/'.$this->template->theme.'/img/catalog/c/default.png',
-				'w' => $this->defaultImage[0]['width_img'],
-				'h' => $this->defaultImage[0]['height_img']
-			];
 			$data['url'] = $this->routingUrl->getBuildUrl([
 				'type' => 'category',
-				'iso'  => $row['iso_lang'],
-				'id'   => $row['id_cat'],
-				'url'  => $row['url_cat']
+				'iso' => $row['iso_lang'],
+				'id' => $row['id_cat'],
+				'url' => $row['url_cat']
 			]);
 			// Base url for category
 			$data['baseUrl']   = $row['url_cat'];

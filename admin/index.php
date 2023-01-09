@@ -7,4 +7,6 @@ if(file_exists($baseadmin)){
     }
 }
 require('../lib/backend.inc.php');
-$dispatcher = new component_routing_dispatcher('backend');
+//$dispatcher = new component_routing_dispatcher('backend');
+$dispatcher = new component_routing_backend();
+$dispatcher->setRoutes()->dispatch();

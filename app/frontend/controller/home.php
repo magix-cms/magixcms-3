@@ -50,12 +50,11 @@ class frontend_controller_home extends frontend_db_home
      */
     public $lang;
 
-    /**
-	 * @param stdClass $t
-     * frontend_controller_home constructor.
-     */
-    public function __construct($t = null){
-        $this->template = $t ? $t : new frontend_model_template();
+	/**
+	 * @param frontend_model_template|null $t
+	 */
+    public function __construct(frontend_model_template $t = null){
+        $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $this->data = new frontend_model_data($this, $this->template);
 		$this->lang = $this->template->lang;
     }

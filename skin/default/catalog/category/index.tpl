@@ -2,7 +2,7 @@
 {block name="title" nocache}{$cat.seo.title}{/block}
 {block name="description" nocache}{$cat.seo.description}{/block}
 {block name='body:id'}category{/block}
-{block name="styleSheet"}
+{block name="styleSheet" nocache}
     {$css_files = ["catalog","lightbox","slider"]}
 {/block}
 

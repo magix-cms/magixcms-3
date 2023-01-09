@@ -1,13 +1,13 @@
 {extends file="layout.tpl"}
-{block name="title" nocache}{$home.seo.title}{/block}
-{block name="description" nocache}{$home.seo.description}{/block}
+{block name="title"}{$home.seo.title}{/block}
+{block name="description"}{$home.seo.description}{/block}
 {block name='body:id'}home{/block}
 {block name="styleSheet"}
     {$css_files = ["home","lightbox","slider"]}
 {/block}
 
 {block name="main:before"}
-    {include file="home/brick/carousel.tpl"}
+    {include file="home/brick/carousel.tpl" lazy=false}
 {/block}
 
 {block name='article:content' nocache}
@@ -18,5 +18,5 @@
 {/block}
 
 {block name="main:after"}
-    {include file="news/brick/last-news.tpl" nocache}
+    {include file="news/brick/last-news.tpl" scope="global" nocache}
 {/block}

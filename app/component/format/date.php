@@ -60,21 +60,17 @@ class component_format_date {
 
 	/**
 	 * @param string $date date
-	 * @param DateTimeZone $timezone
+	 * @param DateTimeZone|null $timezone
 	 * @return array
 	 */
-	public function setTzDateTimeArray(string $date,DateTimeZone $timezone): array {
+	public function setTzDateTimeArray(string $date,DateTimeZone $timezone = null): array {
 		try {
 			$datetime = new DateTime($date);
 		} catch (Exception $e) {
 			return [];
 		}
 
-		/*$time = [
-			'h' => $datetime->format('G'),
-			'm' => $datetime->format('i'),
-			'text' => $datetime->format('G').':'.$datetime->format('i')
-		];*/
+		if($timezone === null) $timezone = $datetime->getTimezone();
 		$tzDatetime = $datetime->setTimezone($timezone);
 		date_default_timezone_set($timezone->getName());
 		$timestamp = $tzDatetime->getTimestamp();

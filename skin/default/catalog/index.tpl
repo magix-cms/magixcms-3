@@ -3,7 +3,7 @@
 {block name="description" nocache}{$root.seo.description}{/block}
 {block name='body:id'}catalog{/block}
 {block name="webType"}CollectionPage{/block}
-{block name="styleSheet"}
+{block name="styleSheet" nocache}
     {$css_files = ["catalog","lightbox","slider"]}
 {/block}
 {block name='article'}

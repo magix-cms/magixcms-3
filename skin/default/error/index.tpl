@@ -34,7 +34,7 @@
     {$js_files = [
     'group' => ['form'],
     'normal' => [],
-    'defer' => ["/skin/{$theme}/js/{if $setting.mode.value === 'dev'}src/{/if}form{if $setting.mode.value !== 'dev'}.min{/if}.js"]
+    'defer' => ["/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}form{if $setting.mode !== 'dev'}.min{/if}.js"]
     ]}
     {if {$lang} !== "en"}{$js_files['defer'][] = "/libjs/vendor/localization/messages_{$lang}.js"}{/if}
 {/block}

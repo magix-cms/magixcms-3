@@ -54,7 +54,7 @@
 	@brd-width: 2px;
 	@outter-width: (@brd-width * 2);
 
-	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; 0);
+	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; @btn-border-radius-base);
 	position: relative;
 	border-width: @brd-width;
 	z-index: 2;
@@ -71,6 +71,7 @@
 		background-color: @hv-color;
 		z-index: -1;
 		transition: 0.25s;
+		border-radius: @btn-border-radius-base;
 	}
 
 	&:hover {
@@ -90,17 +91,23 @@
 //
 // Requires a @{name}-colors list of colors
 .custom-button(@name,@txt-color: var(--white),@invert-base: var(--text-color)){
-	@var: ~'--@{name}-color';
 	@class: ~".btn-@{name}";
-	@ch: ~"--@{name}-color-h";
-	@cs: ~"--@{name}-color-s";
-	@cl: ~"--@{name}-color-l";
-	@ca: ~"--@{name}-color-a";
+
+	@var: ~'--@{name}-color';
+	//@ch: ~"--@{name}-color-h";
+	//@cs: ~"--@{name}-color-s";
+	//@cl: ~"--@{name}-color-l";
+	//@ca: ~"--@{name}-color-a";
+	@color: @theme-color[$@name];
+	@ch: hue(@color);
+	@cs: saturation(@color);
+	@cl: lightness(@color);
+	@ca: alpha(@color);
 
 	.create-btn-set(@name) when not (@name = default) {
 		.btn {
 			&@{class} {
-				.button-variant(@txt-color,var(@ch),var(@cs),var(@cl),var(@ca),var(@ch),var(@cs),var(@cl),var(@ca));
+				.button-variant(@txt-color,@ch,@cs,@cl,@ca,@ch,@cs,@cl,@ca);
 
 				//&-gradient {
 				//	.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));

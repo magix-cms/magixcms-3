@@ -96,7 +96,7 @@ final class magepattern_bootstrap{
     /**
      * @var string
      */
-    private static $path_css_Mobile_Detect = '/package/mobiledetect/Mobile_Detect.php';
+    private static $path_Mobile_Detect = '/package/mobiledetect/Mobile_Detect.php';
     /**
      * @access private
      * @return array
@@ -104,12 +104,12 @@ final class magepattern_bootstrap{
     private function arrayLibFiles(){
         return array(
             'autoloader' => __DIR__.self::$path_autoloader,
-            'firephp'    => __DIR__.self::$path_firephp,
+            //'firephp'    => __DIR__.self::$path_firephp,
             'chromephp'  => __DIR__.self::$path_chrome_logger,
             'swift'      => __DIR__.self::$path_swiftmailer,
             'dompdf'     => __DIR__.self::$path_dompdf,
             'cssinliner' => __DIR__.self::$path_css_inliner,
-            'mobiledetect' => __DIR__.self::$path_css_Mobile_Detect
+            'mobiledetect' => __DIR__.self::$path_Mobile_Detect
         );
     }
     /**

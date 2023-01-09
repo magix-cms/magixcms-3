@@ -153,7 +153,7 @@
         </div>
     </fieldset>
     <div id="submit">
-        <input type="hidden" id="type" name="type" value="general">
+        <input type="hidden" id="type" name="type" value="advanced">
         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
     </div>
 </form>

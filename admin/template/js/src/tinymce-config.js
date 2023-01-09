@@ -214,7 +214,7 @@
         templates : '/'+baseadmin+'/index.php?controller=setting&action=getSnippet',
         language : tinyLanguage,
         schema: "html5",
-        extended_valid_elements: "+img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
+        extended_valid_elements: "+img[class|src|srcset|sizes|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
         content_css : content_css
     });
 })( jQuery, window, document );

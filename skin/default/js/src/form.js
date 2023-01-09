@@ -195,9 +195,11 @@ const globalForm = (function ($) {
     /**
      * Initialise the rules of validation for the form(s) matching the selector passed throught the form parameter
      */
-    function initValidation() {
+    function initValidation(form) {
+        form = typeof form !== 'undefined' ? form : '.validate_form';
+
         // --- Global validation rules
-        $('.validate_form').each(function(){
+        $(form).each(function(){
             $(this).removeData();
             $(this).off();
             $(this).validate({
@@ -221,7 +223,7 @@ const globalForm = (function ($) {
                 let recaptcha = $(this).find(".hiddenRecaptcha");
                 //console.log($(recaptcha[0]));
                 if ( recaptcha.length && typeof grecaptcha !== "undefined") {
-                    $(recaptcha[0]).rules('add',{
+                    /*$(recaptcha[0]).rules('add',{
                         required: function() {
                             if(grecaptcha.getResponse() == '') {
                                 return true;
@@ -229,7 +231,15 @@ const globalForm = (function ($) {
                                 return false;
                             }
                         }
+                    });*/
+                    recaptcha.each((rc) => {
+                        $(this).rules('add',{
+                            required: function() {
+                                return grecaptcha.getResponse() == '';
+                            }
+                        });
                     });
+
                 }
             };
         });

@@ -21,6 +21,16 @@ class frontend_db_seo {
 						WHERE c.id_lang = :default_lang
 						GROUP BY s.id_seo";
 			    	break;
+				case 'replace':
+					$query = 'SELECT * 
+						FROM mc_seo 
+						JOIN mc_seo_content USING(id_seo)
+						LEFT JOIN mc_lang USING(id_lang)
+						WHERE iso_lang = :iso
+						AND level_seo = :lvl
+						AND attribute_seo = :attribute
+						ORDER BY id_seo';
+					break;
 				default:
 					return false;
 			}

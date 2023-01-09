@@ -557,8 +557,7 @@ class backend_controller_product extends backend_db_product
      * @param $data
      * @throws Exception
      */
-	private function del($data)
-	{
+	private function del($data) {
 		switch ($data['type']) {
 			case 'delPages':
 				parent::delete(
@@ -571,17 +570,15 @@ class backend_controller_product extends backend_db_product
 				break;
 			case 'delImages':
                 $makeFiles = new filesystem_makefile();
-			    $newArr = array();
 			    $imgArray = explode(',',$data['data']['id']);
-                $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'product'));
-                $imgPrefix = $this->imagesComponent->prefix();
+                $fetchConfig = $this->imagesComponent->getConfigItems('catalog','product');
                 $defaultErased = false;
                 $id_product = false;
                 $extwebp = 'webp';
                 // Array of images to erased at the end
                 $toRemove = [];
 
-			    foreach($imgArray as $key => $value){
+			    foreach($imgArray as $value){
                     // Get images stored information
                     $img = $this->getItems('img',$value,'one',false);
 
@@ -591,7 +588,8 @@ class backend_controller_product extends backend_db_product
                         // Check if it's the default image that's going to be erased
                         if($img['default_img']) $defaultErased = true;
                         // Concat the image directory path
-                        $imgPath = $this->upload->dirFileUpload(['upload_root_dir' => 'upload/catalog/p', 'upload_dir' => $id_product, 'fileBasePath'=>true]);
+                        //$imgPath = $this->upload->dirFileUpload(['upload_root_dir' => 'upload/catalog/product', 'upload_dir' => $id_product, 'fileBasePath'=>true]);
+                        $imgPath = $this->routingUrl->dirUpload('upload/catalog/product/'.$id_product, true);
 
                         // Original file of the image
                         $original = $imgPath.$img['name_img'];
@@ -599,13 +597,13 @@ class backend_controller_product extends backend_db_product
 
                         // Loop over each version of the image
                         foreach ($fetchConfig as $configKey => $confiValue) {
-                            $image = $imgPath.$imgPrefix[$confiValue['type_img']].$img['name_img'];
+                            $image = $imgPath.$confiValue['prefix'].'_'.$img['name_img'];
                             if(file_exists($image)) $toRemove[] = $image;
 
                             // Check if the image with webp extension exist
                             $imgData = pathinfo($img['name_img']);
                             $filename = $imgData['filename'];
-                            $webpImg = $imgPath.$imgPrefix[$confiValue['type_img']].$filename.'.'.$extwebp;
+                            $webpImg = $imgPath.$confiValue['prefix'].'_'.$filename.'.'.$extwebp;
                             if(file_exists($webpImg)) $toRemove[] = $webpImg;
                         }
                     }
@@ -638,9 +636,10 @@ class backend_controller_product extends backend_db_product
                 $makeFiles = new filesystem_makefile();
 			    $imgArray = explode(',',$data['data']['id']);
 
-			    foreach($imgArray as $key => $value){
+			    foreach($imgArray as $value){
 			        if(isset($value) && $value > 0) {
-                        $imgPath = $this->upload->dirFileUpload(['upload_root_dir' => 'upload/catalog/p', 'upload_dir' => $value,'fileBasePath'=>true]);
+                        //$imgPath = $this->upload->dirFileUpload(['upload_root_dir' => 'upload/catalog/product', 'upload_dir' => $value,'fileBasePath'=>true]);
+                        $imgPath = $this->routingUrl->dirUpload('upload/catalog/product/'.$value,true);
 
                         if(file_exists($imgPath)) {
                             try {
@@ -676,8 +675,7 @@ class backend_controller_product extends backend_db_product
 	/**
 	 *
 	 */
-	public function run()
-	{
+	public function run() {
         if(isset($this->plugin)) {
             if(isset($this->action)) {
                 switch ($this->action) {
@@ -703,10 +701,12 @@ class backend_controller_product extends backend_db_product
                         break;
                 }
             }
-        }else {
+        }
+		else {
             if (isset($this->tableaction)) {
                 $this->tableform->run();
-            } elseif (isset($this->action)) {
+            }
+			elseif (isset($this->action)) {
                 switch ($this->action) {
                     case 'add':
                         if (isset($this->content)) {
@@ -828,7 +828,8 @@ class backend_controller_product extends backend_db_product
                                     $extendData[$lang] = $setEditData[$this->id_product]['content'][$lang]['public_url'];*/
                                 }
                                 $this->message->json_post_response(true, 'update', array('result' => $this->id_product, 'extend' => $extendData));
-                            } elseif (isset($this->img_multiple)) {
+                            }
+							elseif (isset($this->img_multiple)) {
                                 $this->template->configLoad();
                                 $this->progress = new component_core_feedback($this->template);
 
@@ -837,17 +838,17 @@ class backend_controller_product extends backend_db_product
 
                                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $product = $this->getItems('content', array('id_product' => $this->id_product, 'id_lang' => $defaultLanguage['id_lang']), 'one', false);
-                                $newimg = $this->getItems('lastImgId', null, 'one', false);
+                                $newimg = $this->getItems('lastImgId', ['id_product' => $this->id_product], 'one', false);
                                 // If $newimg = NULL return 0
-                                $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
+                                //$newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
 
-                                $resultUpload = $this->upload->setMultipleImageUpload(
+                                /*$resultUpload = $this->upload->setMultipleImageUpload(
                                     'img_multiple',
                                     array(
                                         'name' => $product['url_p'],
                                         'prefix_name' => $newimg['id_img'],
                                         'prefix_increment' => true,
-                                        'prefix' => array('s_', 'm_', 'l_'),
+                                        //'prefix' => array('s_', 'm_', 'l_'),
                                         'module_img' => 'catalog',
                                         'attribute_img' => 'product',
                                         'original_remove' => false,
@@ -855,44 +856,58 @@ class backend_controller_product extends backend_db_product
 										'template' => $this->template
                                     ),
                                     array(
-                                        'upload_root_dir' => 'upload/catalog/p', //string
+                                        'upload_root_dir' => 'upload/catalog/product', //string
                                         'upload_dir' => $this->id_product //string ou array
                                     ),
                                     false
-                                );
+                                );*/
 
-                                if ($resultUpload != null) {
+								$resultUpload = $this->upload->multipleImageUpload(
+									'catalog','product','upload/catalog/product',["$this->id_product"],[
+									'name' => $product['url_p'],
+									'suffix' => (int)$newimg['index'],
+									'suffix_increment' => true,
+									'progress' => $this->progress,
+									'template' => $this->template
+								],false);
+
+                                if(!empty($resultUpload)) {
+									$totalUpload = count($resultUpload);
 									$percent = $this->progress->progress;
-									$preparePercent = (90 - $percent) / count($resultUpload);
+									$preparePercent = (90 - $percent) / $totalUpload;
+									$i = 1;
 
-                                    foreach ($resultUpload as $key => $value) {
-                                        if ($value['statut'] == '1') {
+                                    foreach ($resultUpload as $value) {
+                                        if($value['status']) {
                                             $percent = $percent + $preparePercent;
 
                                             usleep(200000);
-                                            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent));
+                                            $this->progress->sendFeedback(['message' => sprintf($this->template->getConfigVars('creating_records'),$i,$totalUpload), 'progress' => $percent]);
 
-                                            $this->add(array(
-                                                'type' => 'newImg',
-                                                'data' => array(
-                                                    'id_product' => $this->id_product,
-                                                    'name_img' => $value['file']
-                                                )
-                                            ));
+                                            $this->add([
+												'type' => 'newImg',
+												'data' => [
+													'id_product' => $this->id_product,
+													'name_img' => $value['file']
+												]
+											]);
                                         }
+										$i++;
                                     }
 
                                     usleep(200000);
-                                    $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'), 'progress' => 90));
+                                    $this->progress->sendFeedback(['message' => $this->template->getConfigVars('creating_thumbnails_success'), 'progress' => 90]);
 
                                     usleep(200000);
-                                    $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success', 'result' => $display));
-                                } else {
+                                    $this->progress->sendFeedback(['message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success']);
+                                }
+								else {
                                     usleep(200000);
-                                    $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'), 'progress' => 100, 'status' => 'error', 'error_code' => 'error_data'));
+                                    $this->progress->sendFeedback(['message' => $this->template->getConfigVars('creating_thumbnails_error'), 'progress' => 100, 'status' => 'error', 'error_code' => 'error_data']);
                                 }
                             }
-                        } elseif (isset($this->editimg)) {
+                        }
+						elseif (isset($this->editimg)) {
                             if (isset($this->id_img)) {
                                 foreach ($this->imgData as $lang => $content) {
                                     $content['id_img'] = $this->id_img;
@@ -902,57 +917,48 @@ class backend_controller_product extends backend_db_product
                                     $content['caption_img'] = (!empty($content['caption_img']) ? $content['caption_img'] : NULL);
 
                                     $checkLangData = parent::fetchData(
-                                        array('context' => 'one', 'type' => 'imgContent'),
-                                        array('id_img' => $this->id_img, 'id_lang' => $lang)
+                                        ['context' => 'one', 'type' => 'imgContent'],
+                                        ['id_img' => $this->id_img, 'id_lang' => $lang]
                                     );
 
                                     // Check language page content
                                     if ($checkLangData != null) {
-                                        $this->upd(array(
-                                            'type' => 'imgContent',
-                                            'data' => $content
-                                        ));
-                                    } else {
-                                        $this->add(array(
-                                            'type' => 'newImgContent',
-                                            'data' => $content
-                                        ));
+                                        $this->upd([
+											'type' => 'imgContent',
+											'data' => $content
+										]);
+                                    }
+									else {
+                                        $this->add([
+											'type' => 'newImgContent',
+											'data' => $content
+										]);
                                     }
                                 }
 
                                 if (isset($this->name_img)) {
-                                    $page = $this->getItems('img', array('id' => $this->id_img), 'one', false);
+                                    $page = $this->getItems('img', ['id' => $this->id_img], 'one', false);
                                     $img_pages = pathinfo($page['name_img']);
                                     $img_name = $img_pages['filename'];
 
                                     if ($this->name_img !== $img_name && $this->name_img !== '') {
-                                        $result = $this->upload->renameImages(
-                                            array(
-                                                'name' => $this->name_img,
-                                                'edit' => $page['name_img'],
-                                                'prefix' => array('s_', 'm_', 'l_'),
-                                                'module_img' => 'catalog',
-                                                'attribute_img' => 'product',
-                                                'original_remove' => false
-                                            ),
-                                            array(
-                                                'upload_root_dir' => 'upload/catalog/p', //string
-                                                'upload_dir' => $page['id_product'] //string ou array
-                                            )
-                                        );
+										$result = $this->upload->renameImages('catalog','product',$page['name_img'],$this->name_img,'upload/catalog/product',[$page['id_product']]);
 
-                                        $this->upd(array(
-                                            'type' => 'img',
-                                            'data' => array(
-                                                'id_img' => $this->id_img,
-                                                'name_img' => $result
-                                            )
-                                        ));
+										if($result) {
+											$this->upd([
+												'type' => 'img',
+												'data' => [
+													'id_img' => $this->id_img,
+													'name_img' => $this->name_img.'.'.$img_pages['extension']
+												]
+											]);
+										}
                                     }
                                 }
 
                                 $this->message->json_post_response(true, 'add_redirect');
-                            } else {
+                            }
+							else {
                                 $this->modelLanguage->getLanguage();
                                 $setEditData = parent::fetchData(
                                     array('context' => 'all', 'type' => 'imgData'),
@@ -962,7 +968,8 @@ class backend_controller_product extends backend_db_product
                                 $this->template->assign('img', $setEditData[$this->editimg]);
                                 $this->template->display('catalog/product/edit-img.tpl');
                             }
-                        } elseif (isset($this->product_cat)) {
+                        }
+						elseif (isset($this->product_cat)) {
                             if (isset($this->parent)) {
                                 $ids = array();
 
@@ -998,7 +1005,8 @@ class backend_controller_product extends backend_db_product
                                 ));
                             }
                             $this->message->json_post_response(true, 'update');
-                        } else {
+                        }
+						else {
                             // Initialise l'API menu des plugins core
                             $this->modelPlugins->getItems(
                                 array(
@@ -1068,45 +1076,30 @@ class backend_controller_product extends backend_db_product
                             if (isset($this->tabs)) {
                                 switch ($this->tabs) {
                                     case 'image':
-                                        $this->del(
-                                            array(
-                                                'type' => 'delImages',
-                                                'data' => array(
-                                                    'id' => $this->id_product
-                                                )
-                                            )
-                                        );
-                                        $this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
+                                        $this->del([
+											'type' => 'delImages',
+											'data' => ['id' => $this->id_product]
+										]);
+                                        $this->message->json_post_response(true, 'delete', ['id' => $this->id_product]);
                                         break;
                                     case 'similar':
-                                        $this->del(
-                                            array(
-                                                'type' => 'productRel',
-                                                'data' => array(
-                                                    'id' => $this->id_product
-                                                )
-                                            )
-                                        );
-                                        $this->message->json_post_response(true, 'delete', array('id' => $this->id_product));
+                                        $this->del([
+											'type' => 'productRel',
+											'data' => ['id' => $this->id_product]
+										]);
+                                        $this->message->json_post_response(true, 'delete', ['id' => $this->id_product]);
                                         break;
                                 }
-                            } else {
-                                $this->del(
-                                    array(
-                                        'type' => 'delImagesProducts',
-                                        'data' => array(
-                                            'id' => $this->id_product
-                                        )
-                                    )
-                                );
-                                $this->del(
-                                    array(
-                                        'type' => 'delPages',
-                                        'data' => array(
-                                            'id' => $this->id_product
-                                        )
-                                    )
-                                );
+                            }
+							else {
+                                $this->del([
+									'type' => 'delImagesProducts',
+									'data' => ['id' => $this->id_product]
+								]);
+                                $this->del([
+									'type' => 'delPages',
+									'data' => ['id' => $this->id_product]
+								]);
                             }
                         }
                         break;
@@ -1131,7 +1124,8 @@ class backend_controller_product extends backend_db_product
                         }
                         break;
                 }
-            } else {
+            }
+			else {
                 /*$this->modelLanguage->getLanguage();
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                 $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all', true, true);

@@ -224,11 +224,14 @@ class backend_db_pages {
                     $query = 'SELECT * FROM mc_cms_page_img WHERE `id_img` = :id';
                     break;
                 case 'lastImgId':
-                    $query = 'SELECT id_img FROM mc_cms_page_img ORDER BY id_img DESC LIMIT 0,1';
+                    $query = 'SELECT count(id_img) as `index` FROM mc_cms_page_img WHERE id_pages = :id_pages';
                     break;
                 case 'imgDefault':
                     $query = 'SELECT id_img FROM mc_cms_page_img WHERE id_pages = :id AND default_img = 1';
                     break;
+				case 'countImages':
+					$query = 'SELECT count(id_img) as tot FROM mc_cms_page_img WHERE id_pages = :id';
+					break;
 				default:
 					return false;
 			}

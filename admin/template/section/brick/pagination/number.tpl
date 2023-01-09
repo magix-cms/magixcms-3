@@ -11,7 +11,7 @@
     {/if}
 {capture name="searchform"}
     {strip}
-        <form action="{geturl}{$request}" class="form-inline">
+        <form action="{$url}{$request}" class="form-inline">
             <div class="form-group">
                 <label for="getpage" class="sr-only">Page</label>
                 <div class="input-group">
@@ -27,12 +27,12 @@
 <nav class="text-center">
     <ul class="pagination">
         <li{if $current == 1} class="disabled"{/if}>
-            <a href="{geturl}{$request}{if $smarty.get.page && $smarty.get.page > 2}&page={$smarty.get.page - 1}{/if}" aria-label="Previous">
+            <a href="{$url}{$request}{if $smarty.get.page && $smarty.get.page > 2}&page={$smarty.get.page - 1}{/if}" aria-label="Previous">
                 <i class="fa fa-chevron-left" aria-hidden="true">&nbsp;</i>
             </a>
         </li>
         <li{if $smarty.get.page === '1' || !$smarty.get.page } class="active"{/if}>
-            <a href="{geturl}{$request}&page=1">1</a>
+            <a href="{$url}{$request}&page=1">1</a>
         </li>
         {$prevform = false}
         {$nextform = false}
@@ -50,7 +50,7 @@
                 {/if}
                 {if $i >= $limit1 && $i <= $limit2}
                     <li{if $current == $i} class="active"{/if}>
-                        <a href="{geturl}{$request}&page={$i}">{$i}</a>
+                        <a href="{$url}{$request}&page={$i}">{$i}</a>
                     </li>
                 {else}
                     {if $i < $limit1 && !$prevform}
@@ -72,12 +72,12 @@
                 {/if}
             {else}
                 <li{if $current == $i} class="active"{/if}>
-                    <a href="{geturl}{$request}&page={$i}">{$i}</a>
+                    <a href="{$url}{$request}&page={$i}">{$i}</a>
                 </li>
             {/if}
         {/for}
         <li{if $current == $nbp} class="active"{/if}>
-            <a href="{geturl}{$request}&page={$nbp}">{$nbp}</a>
+            <a href="{$url}{$request}&page={$nbp}">{$nbp}</a>
         </li>
         {if $nbp > 10}
         <li>
@@ -87,7 +87,7 @@
         </li>
         {/if}
         <li{if $current == $nbp} class="disabled"{/if}>
-            <a href="{geturl}{$request}{if $smarty.get.page != $nbp}&page={if $smarty.get.page}{$smarty.get.page + 1}{else}2{/if}{/if}" aria-label="Next">
+            <a href="{$url}{$request}{if $smarty.get.page != $nbp}&page={if $smarty.get.page}{$smarty.get.page + 1}{else}2{/if}{/if}" aria-label="Next">
                 <i class="fa fa-chevron-right" aria-hidden="true">&nbsp;</i>
             </a>
         </li>

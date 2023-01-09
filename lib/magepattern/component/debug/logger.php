@@ -217,12 +217,12 @@ class debug_logger {
 		$this->write($logfile, $row);
 
         # Firephp
-        if (defined('MP_FIREPHP') && MP_FIREPHP == false){
+        /*if (defined('MP_FIREPHP') && MP_FIREPHP == false){
             $firephp = new debug_firephp();
             if($firephp instanceof debug_firephp){
                 $firephp->error($row);
             }
-        }
+        }*/
     }
 
 	/**
@@ -295,10 +295,10 @@ class debug_logger {
         $this->write($logfile, $row);
 
         # Firephp
-        $firephp = new debug_firephp();
+        /*$firephp = new debug_firephp();
         if($firephp instanceof debug_firephp){
             $firephp->error($row);
-        }
+        }*/
     }
 }
 ?>

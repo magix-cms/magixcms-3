@@ -40,10 +40,9 @@ class frontend_model_share extends frontend_db_share {
 
 	/**
 	 * frontend_model_about constructor.
-	 * @param stdClass $t
+	 * @param frontend_model_template|null $t
 	 */
-	public function __construct($t = null)
-	{
+	public function __construct(frontend_model_template $t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->data = new frontend_model_data($this,$this->template);
 	}
@@ -63,16 +62,14 @@ class frontend_model_share extends frontend_db_share {
 	/**
 	 *
 	 */
-	public function getShareConfig()
-	{
+	public function getShareConfig() {
 		return $this->getItems('shareConfig',1,'one',false);
 	}
 
 	/**
 	 *
 	 */
-	public function getShareUrl()
-	{
+	public function getShareUrl() {
 		return $this->getItems('shareUrl',null,'all',false);
 	}
 }

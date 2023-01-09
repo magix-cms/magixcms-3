@@ -1,5 +1,5 @@
 <form id="table-image" action="">
-    {include file="catalog/product/loop/img.tpl" controller="product" uploadDir="catalog/p" data=$images}
+    {include file="catalog/product/loop/img.tpl" controller="product" uploadDir="catalog/product" data=$images}
     <div class="actions">
         <div class="pull-right">
             {*<a href="#" class="btn btn-lg btn-default"></a>*}

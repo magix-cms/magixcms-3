@@ -12,11 +12,17 @@
 	--black: @black;
 	--deep-black: @deep-black;
 	each(@theme-color, {
-		--@{key}-color-h: hue(@value);
-		--@{key}-color-s: saturation(@value);
-		--@{key}-color-l: lightness(@value);
-		--@{key}-color-a: alpha(@value);
-		--@{key}-color: hsla(var(~"--@{key}-color-h"),var(~"--@{key}-color-s"),var(~"--@{key}-color-l"),var(~"--@{key}-color-a"));
+		//--@{key}-color-h: hsvhue(@value);
+		//--@{key}-color-s: hsvsaturation(@value);
+		//--@{key}-color-v: hsvvalue(@value);
+		//--@{key}-color-a: alpha(@value);
+		//--@{key}-color: hsva(var(~"--@{key}-color-h"),var(~"--@{key}-color-s"),var(~"--@{key}-color-v"),var(~"--@{key}-color-a"));
+		@palette: .palette(@value);
+		--@{key}-color-darker: @palette[darker];
+		--@{key}-color-dark: @palette[dark];
+		--@{key}-color: @palette[base];
+		--@{key}-color-light: @palette[light];
+		--@{key}-color-lighter: @palette[lighter];
 	});
 	--default-brd-h: 0;
 	--default-brd-s: 0%;
@@ -71,14 +77,12 @@
 }
 @media (prefers-color-scheme: dark) {
 	:root {
-		--dark-color: #222;
 		--body-bg: var(--dark-color);
 		--header-bg: var(--dark-color);
 		--menu-bg: var(--dark-color);
 		--footer-bg: rgba(0,0,0,.5);
 		--text-color: var(--text-light);
 		--brd-default: rgba(0,0,0,.5);
-		--main-color-l: 50%;
 		--heading-color:var(--dark-color);
 	}
 }

@@ -23,74 +23,74 @@
     .responsive-invisibility();
 }
 
-@media (max-width: (@screen-ph-max/1.5)) {
+@media (max-width: (.breakpoint(xs)[max]/1.5)) {
     .sr-small-ph { .sr-only(); }
 }
-@media (max-width: @screen-ph-max) {
+@media (max-width: .breakpoint(xs)[max]) {
     .visible-ph { .responsive-visibility(); }
     .hidden-ph { .responsive-invisibility(); }
     .sr-ph { .sr-only(); }
 }
-@media (max-width: @screen-xs-max) {
+@media (max-width: .breakpoint(sm)[max]) {
     .visible-xs-down { .responsive-visibility(); }
     .hidden-xs-down { .responsive-invisibility(); }
 }
-@media (min-width: @screen-xs-min) {
+@media (min-width: .breakpoint(xs)[min]) {
     .visible-xs-up { .responsive-visibility(); }
     .hidden-xs-up { .responsive-invisibility(); }
 
-    @media (max-width: @screen-xs-max) {
+    @media (max-width: .breakpoint(sm)[max]) {
         .visible-xs { .responsive-visibility(); }
         .hidden-xs { .responsive-invisibility(); }
         .sr-xs { .sr-only(); }
     }
 }
-@media (max-width: @screen-sm-max) {
+@media (max-width: .breakpoint(md)[max]) {
     .visible-sm-down { .responsive-visibility(); }
     .hidden-sm-down { .responsive-invisibility(); }
 }
-@media (min-width: @screen-sm-min) {
+@media (min-width: .breakpoint(sm)[min]) {
     .visible-sm-up { .responsive-visibility(); }
     .hidden-sm-up { .responsive-invisibility(); }
 
-    @media (max-width: @screen-sm-max) {
+    @media (max-width: .breakpoint(md)[max]) {
         .visible-sm { .responsive-visibility(); }
         .hidden-sm { .responsive-invisibility(); }
     }
 }
-@media (max-width: @screen-md-max) {
+@media (max-width: .breakpoint(lg)[max]) {
     .visible-md-down { .responsive-visibility(); }
     .hidden-md-down { .responsive-invisibility(); }
 }
-@media (min-width: @screen-md-min) {
+@media (min-width: .breakpoint(md)[min]) {
     .visible-md-up { .responsive-visibility(); }
     .hidden-md-up { .responsive-invisibility(); }
 
-    @media (max-width: @screen-md-max) {
+    @media (max-width: .breakpoint(lg)[max]) {
         .visible-md { .responsive-visibility(); }
         .hidden-md { .responsive-invisibility(); }
     }
 }
-@media (max-width: @screen-lg-max) {
+@media (max-width: .breakpoint(xl)[max]) {
     .visible-lg-down { .responsive-visibility(); }
     .hidden-lg-down { .responsive-invisibility(); }
 }
-@media (min-width: @screen-lg-min) {
+@media (min-width: .breakpoint(lg)[min]) {
     .visible-lg-up { .responsive-visibility(); }
     .hidden-lg-up { .responsive-invisibility(); }
 
-    @media (max-width: @screen-lg-max) {
+    @media (max-width: .breakpoint(xl)[max]) {
         .visible-lg { .responsive-visibility(); }
         .hidden-lg { .responsive-invisibility(); }
     }
 }
-@media (min-width: @screen-lg-min) {
+@media (min-width: .breakpoint(lg)[min]) {
     .visible-lg { .responsive-visibility(); }
     .hidden-lg { .responsive-invisibility(); }
 }
 
 // --- Pull block right or left on different breakpoint
-@media (max-width: @screen-ph-max) {
+@media (max-width: .breakpoint(xs)[max]) {
     .pull-ph-left {
         float: left;
     }
@@ -100,7 +100,7 @@
 }
 
 // --- Pull block right or left on different breakpoint
-@media (max-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+@media (max-width: .breakpoint(xs)[min]) and (max-width: .breakpoint(sm)[max]) {
     .pull-xs-left {
         float: left;
     }
@@ -109,7 +109,7 @@
     }
 }
 
-@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+@media (min-width: .breakpoint(sm)[min]) and (max-width: .breakpoint(md)[max]) {
     .pull-sm-left {
         float: left;
     }
@@ -118,7 +118,7 @@
     }
 }
 
-@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+@media (min-width: .breakpoint(md)[min]) and (max-width: .breakpoint(lg)[max]) {
     .pull-md-left {
         float: left;
     }
@@ -127,7 +127,7 @@
     }
 }
 
-@media (min-width: @screen-lg-min) and (max-width: @screen-lg-max) {
+@media (min-width: .breakpoint(lg)[min]) and (max-width: .breakpoint(xl)[max]) {
     .pull-lg-left {
         float: left;
     }
@@ -136,7 +136,7 @@
     }
 }
 
-@media (min-width: @screen-xl-min) {
+@media (min-width: .breakpoint(xl)[min]) {
     .pull-xl-left {
         float: left;
     }

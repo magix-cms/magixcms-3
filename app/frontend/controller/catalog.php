@@ -41,7 +41,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
         $this->lang = $this->template->lang;
         $this->modelCatalog = new frontend_model_catalog($this->template);
         $this->modelModule = new frontend_model_module($this->template);
-		$this->offset = 24;
+		$this->offset = $this->template->settings['product_per_page'];
 
         if(http_request::isGet('id')) $this->id = form_inputEscape::numeric($_GET['id']);
         if(http_request::isGet('id_parent')) $this->id_parent = form_inputEscape::numeric($_GET['id_parent']);
@@ -238,39 +238,33 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			}
 
 		}
-		//print_r($newTableArray);
-		if(is_null($id_parent)){
-			$defaultParams = array('iso' => $this->lang);
 
-			$defaultParams['where'] = [
-				['type' => 'WHERE',
-					'condition' => 'lang.iso_lang = :iso'
-				],
-				['type' => 'AND',
-					'condition' => 'catc.published_cat = 1'
-				],
-				['type' => 'AND',
-					'condition' => 'cat.id_parent IS NULL'
-				]
-			];
-		}else{
-			$defaultParams = array('iso' => $this->lang,'id_parent' => $id_parent);
+        $params = [
+            'iso' => $this->lang,
+            'where' => [
+                ['type' => 'WHERE',
+                    'condition' => 'lang.iso_lang = :iso'
+                ],
+                ['type' => 'AND',
+                    'condition' => 'catc.published_cat = 1'
+                ]
+            ]
+        ];
 
-			$defaultParams['where'] = [
-				['type' => 'WHERE',
-					'condition' => 'lang.iso_lang = :iso'
-				],
-				['type' => 'AND',
-					'condition' => 'catc.published_cat = 1'
-				],
-				['type' => 'AND',
-					'condition' => 'cat.id_parent = :id_parent'
-				]
-			];
-		}
-		if(!$newTableArray) {
-			$collection = $this->getItems('category',$defaultParams,'all',false);
-		}else{
+		/*if(is_null($id_parent)) {
+            $params['where'][] = [
+                'type' => 'AND',
+                'condition' => 'cat.id_parent IS NULL'
+            ];
+		}*/
+        /*if(!is_null($id_parent)) {
+            $params['id_parent'] = $id_parent;
+            $params['where'][] = [
+                'type' => 'AND',
+                'condition' => 'cat.id_parent = :id_parent'
+            ];
+		}*/
+		if($newTableArray) {
 			//print_r(array_merge($newTableArray['extendQueryParams'], $newTableArray['filterQueryParams']));
 			$extendQueryParams = [];
 			$extendQueryParams[] = $newTableArray['extendQueryParams'];
@@ -278,7 +272,6 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			$params = [];
 			if(!empty($extendQueryParams)) {
 				foreach ($extendQueryParams as $extendParams) {
-
 					if(isset($extendParams['select']) && !empty($extendParams['select'])) $params['select'][] = $extendParams['select'];
 					if(isset($extendParams['join']) && !empty($extendParams['join'])) $params['join'][] = $extendParams['join'];
 					if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
@@ -294,80 +287,76 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			/*print '<pre>';
 			print_r($params);
 			print '</pre>';*/
-			$collection = $this->getItems('product', array_merge($defaultParams,$params), 'all', false);
+			//$collection = $this->getItems('category', array_merge($defaultParams,$params), 'all', false);
 		}
 
 		$extendNumberProduct = $this->modelModule->extendDataArray('category','extendNbProduct', $filter);
 
-		if($extendNumberProduct){
-			//unset($params);
+		if($extendNumberProduct) {
 			$newNumbertableArray = [];
-			foreach ($extendNumberProduct as $key => $value) {
+			foreach ($extendNumberProduct as $value) {
 				$newNumbertableArray = array_merge_recursive($newNumbertableArray, $value);
 			}
 			$extendQueryParams = [];
 			$extendQueryParams[] = $newNumbertableArray['extendQueryParams'];
-			$params = [];
+			$nbParams = [];
 			if(!empty($extendQueryParams)) {
 				foreach ($extendQueryParams as $extendParams) {
-					if(isset($extendParams['join']) && !empty($extendParams['join'])) $params['join'][] = $extendParams['join'];
-					if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
+					if(isset($extendParams['join']) && !empty($extendParams['join'])) $nbParams['join'][] = $extendParams['join'];
+					if(isset($extendParams['where']) && !empty($extendParams['where'])) $nbParams['where'][] = $extendParams['where'];
 
 					if(!empty($filter)){
-						if(isset($extendParams['filter']) && !empty($extendParams['filter'])) $params['where'][] = $extendParams['filter'];
+						if(isset($extendParams['filter']) && !empty($extendParams['filter'])) $nbParams['where'][] = $extendParams['filter'];
 					}
 				}
 			}
-			/*print '<pre>';
-			print_r($params);
-			print '</pre>';*/
+            $params['nbParams'] = $nbParams;
 		}
 
-		foreach ($collection as $key => $value){
-			$childCat = $this->getItems('childCat', ['id_parent'=>$value['id_cat'],'id'=>$value['id_cat']], 'one', false);
-			if(!is_null($childCat)){
-				$nbProduct = $this->getItems('nbProduct', isset($params) ? array_merge(['id_cat'=>$childCat['child'],'iso' => $this->lang],$params) : ['id_cat'=>$childCat['child'],'iso' => $this->lang], 'one', false);
+        $collection = $this->getItems('category',$params,'all',false);
+
+		/*foreach ($collection as $key => $value){
+			//$childCat = $this->getItems('childCat', ['id_parent'=>$value['id_cat'],'id'=>$value['id_cat']], 'one', false);
+			if(!is_null($value['childs'])){
+				$nbProduct = $this->getItems('nbProduct', isset($params) ? array_merge(['id_cat'=>$value['childs'],'iso' => $this->lang],$params) : ['id_cat'=>$value['childs'],'iso' => $this->lang], 'one', false);
 				$collection[$key]['nb_product'] = $nbProduct['nb_product'];
 			}
-		}
+		}*/
 
 		/*print '<pre>';
 		print_r($collection);
 		print '</pre>';*/
-		$newSetArray = [];
-		if(!$newTableArray){
-			foreach ($collection as &$item) {
-				$newSetArray[] = $this->modelCatalog->setItemData($item, []);
-			}
-		}else{
+        $newRow = [];
+		if($newTableArray) {
 			if(isset($newTableArray['collection'])){
 				$extendFormArray = [];
-
 				if(is_array($newTableArray['collection'])){
-					foreach ($newTableArray['collection'] as $key => $value){
+					foreach ($newTableArray['collection'] as $value){
 						$extendFormArray[] = $value;
 					}
-				}else{
+				}
+                else{
 					$extendFormArray[] = $newTableArray['collection'];
 				}
-				/*print '<pre>';
-				print_r($newTableArray['collection']);
-				print '</pre>';*/
 				$extendFormData = $this->modelModule->extendDataArray('category','extendListCategory', $collection);
-
 				foreach ($collection as $key => $value){
 					foreach ($extendFormData as $key1 => $value1) {
-						$collection[$key][$extendFormArray[$key1]]/*[$key]*/ = $value1[$key];
+						$collection[$key][$extendFormArray[$key1]] = $value1[$key];
 					}
-
 				}
-
 				$newRow = $newTableArray['newRow'];
-				foreach ($collection as &$item) {
-					$newSetArray[] = $this->modelCatalog->setItemData($item, [], $newRow);
-				}
 			}
 		}
+
+        $newSetArray = [];
+        if(!empty($collection)) {
+            $newSetArray = $this->data->setPagesTree($collection,'cat', 'root' ,'all',$this->modelCatalog,false,$newRow);
+            /*foreach ($collection as $item) {
+                $newSetArray[] = $this->modelCatalog->setItemData($item, [], $newRow);
+            }*/
+            if($id_parent !== null) $newSetArray = $newSetArray[$id_parent];
+        }
+
 		return $newSetArray;
 	}
 
@@ -384,12 +373,11 @@ class frontend_controller_catalog extends frontend_db_catalog {
             }
         }
         if(!$newTableArray) {
-            $collection = $this->getItems('category', array('id' => $this->id, 'iso' => $this->lang), 'one', false);
+            $collection = $this->getItems('category', ['id' => $this->id, 'iso' => $this->lang], 'one', false);
         }
 		else {
             $extendQueryParams = [];
             $extendQueryParams[] = $newTableArray['extendQueryParams'];
-            //print_r($extendQueryParams);
             $params = [];
             if(!empty($extendQueryParams)) {
                 foreach ($extendQueryParams as $extendParams) {
@@ -398,15 +386,14 @@ class frontend_controller_catalog extends frontend_db_catalog {
                     if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
                 }
             }
-            $collection = $this->getItems('category', array_merge(array('id' => $this->id, 'iso' => $this->lang),$params), 'one', false);
+            $collection = $this->getItems('category', array_merge(['id' => $this->id, 'iso' => $this->lang],$params), 'one', false);
         }
 
         if(!$newTableArray) {
-
             $extendProductData = $this->modelModule->extendDataArray('category','extendCategoryData', $collection);
+			$newRow = [];
 
             if($extendProductData) {
-
                 $extendRow = [];
                 foreach ($extendProductData as $value) {
                     foreach ($value['newRow'] as $key => $item) {
@@ -415,22 +402,16 @@ class frontend_controller_catalog extends frontend_db_catalog {
                         $extendRow['data'][$key] = $value['data'];
                         $collection[$value['collection']] = $value['data'];
                     }
-
                 }
                 $newRow = $extendRow['newRow'];
-
-                return $this->modelCatalog->setItemData($collection, [], $newRow);
-
-            }else{
-
-                return $this->modelCatalog->setItemData($collection, []);
             }
 
+			return $this->modelCatalog->setItemData($collection, [], $newRow);
         }
 		else {
             if(isset($newTableArray['collection'])){
                 $extendFormArray = [];
-                foreach ($newTableArray['collection'] as $key => $value){
+                foreach ($newTableArray['collection'] as $value){
                     $extendFormArray[] = $value;
                 }
                 $extendFormData = $this->modelModule->extendDataArray('category','extendCategory', $collection);
@@ -439,7 +420,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
                 }
             }
             $extendProductData = $this->modelModule->extendDataArray('category','extendCategoryData', $collection);
-            //print_r($extendProductData);
+
             if($extendProductData) {
                 $extendRow = [];
                 foreach ($extendProductData as $value) {
@@ -449,12 +430,10 @@ class frontend_controller_catalog extends frontend_db_catalog {
                         $extendRow['data'][$key] = $value['data'];
                         $collection[$value['collection']] = $value['data'];
                     }
-
                 }
-
-                //print_r($extendRow);
                 $newRow = array_merge($newTableArray['newRow'], $extendRow['newRow']);
-            }else{
+            }
+			else{
                 $newRow = $newTableArray['newRow'];
             }
 
@@ -723,7 +702,6 @@ class frontend_controller_catalog extends frontend_db_catalog {
      */
     public function getProductData(int $id = null) : array {
         if($id !== null) $this->id = $id;
-        // $override = $this->modelModule->getOverride('product',__FUNCTION__);
         $newTableArray = [];
         $override = $this->modelModule->extendDataArray('product',__FUNCTION__);
         if($override) {
@@ -731,14 +709,13 @@ class frontend_controller_catalog extends frontend_db_catalog {
                 $newTableArray = array_merge_recursive($newTableArray, $value);
             }
         }
-        //print_r($newTableArray);
         if(!$newTableArray){
             $collection = $this->getItems('product', array('id' => $this->id, 'iso' => $this->lang), 'one', false);
         }
         else{
             $extendQueryParams = [];
             $extendQueryParams[] = $newTableArray['extendQueryParams'];
-            //print_r($extendQueryParams);
+
             $params = [];
             if(!empty($extendQueryParams)) {
                 foreach ($extendQueryParams as $extendParams) {
@@ -751,17 +728,12 @@ class frontend_controller_catalog extends frontend_db_catalog {
         }
 
         $imgCollection = $this->getItems('images', array('id' => $this->id, 'iso' => $this->lang), 'all', false);
-        //$associatedCollection = $this->getItems('similar', array('id' => $this->id, 'iso' => $this->lang), 'all', false);
-        if ($imgCollection != null) {
-            $collection['img'] = $imgCollection;
-        }
 
-        /*if ($associatedCollection != null) {
-            $collection['associated'] = $associatedCollection;
-        }*/
+        if ($imgCollection != null) $collection['img'] = $imgCollection;
+
         if(!$newTableArray){
             $extendProductData = $this->modelModule->extendDataArray('product','extendProductData', $collection);
-
+			$newRow = [];
             if($extendProductData) {
                 $extendRow = [];
                 foreach ($extendProductData as $value) {
@@ -773,12 +745,8 @@ class frontend_controller_catalog extends frontend_db_catalog {
                     }
                 }
                 $newRow = $extendRow['newRow'];
-
-                return $this->modelCatalog->setItemData($collection, [], $newRow);
             }
-            else{
-                return $this->modelCatalog->setItemData($collection, []);
-            }
+			return $this->modelCatalog->setItemData($collection, [], $newRow);
         }
         else{
             if(isset($newTableArray['collection'])){
@@ -793,7 +761,6 @@ class frontend_controller_catalog extends frontend_db_catalog {
             }
 
             $extendProductData = $this->modelModule->extendDataArray('product','extendProductData', $collection);
-            //print_r($extendProductData);
             if($extendProductData) {
                 $extendRow = [];
                 foreach ($extendProductData as $value) {
@@ -804,8 +771,6 @@ class frontend_controller_catalog extends frontend_db_catalog {
                         $collection[$value['collection']] = $value['data'];
                     }
                 }
-
-                //print_r($extendRow);
                 $newRow = array_merge($newTableArray['newRow'], $extendRow['newRow']);
             }
             else{
@@ -845,10 +810,19 @@ class frontend_controller_catalog extends frontend_db_catalog {
     private function getData(string $type) {
 		$data = $this->getRoot();
 		$this->template->assign('root',$data,true);
+
 		if($type != 'root') {
 			$hreflang = $this->setHrefLangItems($type);
 			$this->template->assign('hreflang',$hreflang,true);
+            $this->template->breadcrumb->addItem(
+                $data['name'] ?? $this->template->getConfigVars('catalog'),
+                '/'.$this->template->lang.($this->template->is_amp() ? '/amp' : '').'/catalog/',
+                $data['name'] ?? $this->template->getConfigVars('catalog')
+            );
 		}
+        else {
+            $this->template->breadcrumb->addItem($data['name'] ?? $this->template->getConfigVars('catalog'));
+        }
 
         switch($type){
             case 'root':
@@ -879,7 +853,13 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			$this->id = $data['id_parent'];
 			$parent = $this->getCategoryData();
 			$this->template->assign('parent',$parent,true);
+            if(!empty($parent)) $this->template->breadcrumb->addItem(
+                $parent['name'],
+                $parent['url'],
+                $this->template->getConfigVars('category').': '.$parent['name']
+            );
 		}
+        if($type != 'root') $this->template->breadcrumb->addItem($data['name']);
     }
 
     /**

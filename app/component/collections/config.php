@@ -54,12 +54,39 @@ class component_collections_config {
         if ($config['context'] === 'all') {
             switch ($config['type']) {
                 case 'imgSize':
-                    $query = 'SELECT * FROM mc_config_img 
+                    $query = 'SELECT
+						module_img as module,
+						attribute_img as attribute,
+						width_img as width,
+						height_img as height,
+						type_img as type,
+						prefix_img as prefix,
+						resize_img as resize
+					FROM mc_config_img 
                     WHERE module_img = :module_img AND attribute_img = :attribute_img
                     ORDER BY width_img';
                     break;
+                case 'configImages':
+                    $query = 'SELECT
+						module_img as module,
+						attribute_img as attribute,
+						width_img as width,
+						height_img as height,
+						type_img as type,
+						prefix_img as prefix,
+						resize_img as resize
+					FROM mc_config_img 
+                    ORDER BY module_img, attribute_img, width_img';
+                    break;
                 case 'attribute':
-                    $query = 'SELECT * FROM mc_config_img 
+                    $query = 'SELECT
+						module_img as module,
+						attribute_img as attribute,
+						width_img as width,
+						height_img as height,
+						type_img as type,
+						resize_img as resize
+					FROM mc_config_img 
                     WHERE module_img = :module_img AND attribute_img !=:attribute_img';
                     break;
                 case 'config':

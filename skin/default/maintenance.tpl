@@ -1,21 +1,20 @@
-{if $setting.amp.value}{$amp_setting = true}{else}{$amp_setting = false}{/if}
+{if $setting.amp}{$amp_setting = true}{else}{$amp_setting = false}{/if}
 <!DOCTYPE html>
 <html lang="{$lang}" dir="ltr">
 <head id="meta" {block name="ogp"}{include file="section/brick/ogp-protocol.tpl"}{/block}>
     <meta charset="utf-8">
-    <title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>
-    <meta name="description" content="Site en maintenance">
-    <meta itemprop="description" content="Site en maintenance">
-    <meta name="robots" content="{$setting['robots']['value']}">
+    {nocache}<title itemprop="headline">{capture name="title"}{block name="title"}{/block}{/capture}{$smarty.capture.title}</title>{/nocache}
+    {nocache}<meta name="description" content="Site en maintenance">{/nocache}
+    {nocache}<meta itemprop="description" content="Site en maintenance">{/nocache}
+    <meta name="robots" content="{$setting['robots']}">
     {strip}{include file="section/loop/lang.tpl" amp=false amp_active=$amp_setting iso={$lang}}{/strip}
     {strip}{include file="section/brick/canonical.tpl" amp=false amp_active=$amp_setting}{/strip}
-    {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5.0">
     {if $googleTools_webmaster !== ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
     {if $domain != null && $domain.tracking_domain != ''}{$domain.tracking_domain}{/if}
     <link rel="icon" type="image/png" href="{if $favicon != null}{$url}{$favicon.img.png.src}{else}{$url}/skin/{$theme}/img/favicon.png{/if}" />
-    <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{if $favicon != null}{$url}{$favicon.img.ico.src}{else}{$url}/skin/{$theme}/img/favicon.ico{/if}" /><![endif]-->
+    {*<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{if $favicon != null}{$url}{$favicon.img.ico.src}{else}{$url}/skin/{$theme}/img/favicon.ico{/if}" /><![endif]-->*}
     <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -37,19 +36,19 @@
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.woff" as="font" type="font/woff" crossorigin="anonymous">
     <meta name="theme-color" content="#3C62AA" />
-    {$basecss = [
-        "/skin/{$theme}/css/properties{if $setting.mode.value !== 'dev'}.min{/if}.css",
-        "/skin/{$theme}/css/{$viewport}{if $setting.mode.value !== 'dev'}.min{/if}.css",
-        "/skin/{$theme}/css/maintenance{if $setting.mode.value !== 'dev'}.min{/if}.css"
+    {nocache}{$basecss = [
+        "properties",
+        "{$viewport}",
+        "maintenance"
     ]}
     {$css_files = []}
     {block name="styleSheet"}{/block}
-    {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}
-    {if $setting['analytics']['value']}{include file="section/brick/analytics.tpl" aid=$setting['analytics']['value']}{/if}
+    {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}{/nocache}
+    {if $setting['analytics']}{include file="section/brick/analytics.tpl" aid=$setting['analytics']}{/if}
     <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
 </head>
-<body id="maintenance" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">
+{nocache}<body id="maintenance" class="{$bodyClass}{if $touch} touchscreen{/if} {block name='body:class'}{/block}" itemscope itemtype="http://schema.org/{block name="webType"}WebPage{/block}" itemref="meta">{/nocache}
 <main id="content">
     <article class="container" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         <div class="row row-center">

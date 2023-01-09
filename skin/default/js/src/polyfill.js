@@ -16,7 +16,37 @@ if (window.NodeList && !NodeList.prototype.forEach) {
     };
 }
 
+function scrollTo(pos = {x: 0,y: 0},scrollDuration) {
+    var cosParameter = window.scrollY / 2,
+        scrollCount = 0,
+        oldTimestamp = window.performance.now();
+
+    function step (newTimestamp) {
+        var tsDiff = newTimestamp - oldTimestamp;
+        if (tsDiff > 100) tsDiff = 30;
+        scrollCount += Math.PI / (scrollDuration / tsDiff);
+        if (scrollCount >= Math.PI) {
+            window.scrollTo(pos.x, pos.y);
+            cancelAnimationFrame(totop);
+            return;
+        }
+        window.scrollTo(pos.x, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+        oldTimestamp = newTimestamp;
+        window.requestAnimationFrame(step);
+    }
+
+    let totop = window.requestAnimationFrame(step);
+}
+
 function scrollToTop(scrollDuration) {
+    //scrollTo({x: 0,y: 0},scrollDuration);
+    window.scroll({
+        left: 0,
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+/*function scrollToTop(scrollDuration) {
     var cosParameter = window.scrollY / 2,
         scrollCount = 0,
         oldTimestamp = window.performance.now();
@@ -36,7 +66,7 @@ function scrollToTop(scrollDuration) {
     }
 
     let totop = window.requestAnimationFrame(step);
-}
+}*/
 
 function getPosition(element) {
     var xPosition = 0;
@@ -48,6 +78,35 @@ function getPosition(element) {
         element = element.offsetParent;
     }
     return { x: xPosition, y: yPosition };
+}
+
+function getAbsoluteValue(v) {
+    return parseFloat(v);
+}
+
+function getCSSProperties(e,p) {
+    let computed = window.getComputedStyle(e,p);
+    let elem = {
+        margin: {
+            top: getAbsoluteValue(computed.getPropertyValue('margin-top')),
+            left: getAbsoluteValue(computed.getPropertyValue('margin-left')),
+            right: getAbsoluteValue(computed.getPropertyValue('margin-right')),
+            bottom: getAbsoluteValue(computed.getPropertyValue('margin-bottom'))
+        },
+        padding: {
+            top: getAbsoluteValue(computed.getPropertyValue('padding-top')),
+            left: getAbsoluteValue(computed.getPropertyValue('padding-left')),
+            right: getAbsoluteValue(computed.getPropertyValue('padding-right')),
+            bottom: getAbsoluteValue(computed.getPropertyValue('padding-bottom'))
+        },
+        height: getAbsoluteValue(computed.getPropertyValue('height')),
+        width: getAbsoluteValue(computed.getPropertyValue('width')),
+        innerHeight: 0,
+        innerWidth: 0,
+    };
+    elem.innerHeight = elem.height - elem.padding.top - elem.padding.bottom;
+    elem.innerWidth = elem.width - elem.padding.left - elem.padding.right;
+    return elem;
 }
 
 const Cookie = {

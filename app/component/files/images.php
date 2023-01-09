@@ -5,106 +5,137 @@ use Intervention\Image\ImageManager;
 /**
  * Class component_files_images
  */
-class component_files_images{
+class component_files_images {
 
-    protected $template,$configCollection, $fileUpload, $progress, $config;
+    protected $template;
+	protected component_collections_config $configCollection;
+	protected component_routing_url $url;
+	protected component_core_feedback $progress;
+	/**
+	 * @deprecated
+	 * @var component_collections_config 
+	 */
+	protected $config;
+	
+	/**
+	 * @var array $imgConfig
+	 */
+	protected array $imgConfig = [];
     public $imageManager;
-    protected $imgconfig = [];
 
     /**
      * component_files_images constructor.
      * @param $template
      */
-    public function __construct($template){
+    public function __construct($template) {
         $this->template = $template;
         $this->configCollection = new component_collections_config();
-        $this->fileUpload = new component_files_upload();
-        $this->imageManager = new ImageManager(array('driver' => 'gd'));
-        $this->config = new component_collections_config();
+        $this->url = new component_routing_url();
+        $this->imageManager = new ImageManager(['driver' => 'gd']);
+        $this->config = $this->configCollection;
+    }
+
+    /**
+	 * @deprecated
+     * @return array
+     */
+    public function prefix(): array {
+        return ['default' => '', 'small' => 's_', 'medium' => 'm_', 'large' => 'l_'];
+    }
+
+    /**
+	 * @deprecated
+     * @return array
+     */
+    public function type(): array {
+        return ['default', 'small', 'medium', 'large'];
     }
 
     /**
      * @return array
      */
-    public function prefix(){
-        return array('small'=>'s_','medium'=>'m_','large'=>'l_');
+    public function module(): array {
+        return ['catalog', 'news', 'pages', 'logo', 'plugins'];
     }
 
     /**
      * @return array
      */
-    public function type(){
-        return array('small','medium','large');
-    }
-
-    /**
-     * @return array
-     */
-    public function module(){
-        return array('catalog','news','pages','logo','plugins');
-    }
-
-    /**
-     * @return array
-     */
-    public function resize(){
-        return array('basic','adaptive');
+    public function resize(): array {
+        return ['basic', 'adaptive'];
     }
 
 	/**
-	 * @param $src
+	 * @param string $src
 	 * @return array
 	 */
-	public function getImageInfos($src)
-	{
+	public function getImageInfos(string $src): array {
 		list($width, $height, $type, $attr) = getimagesize($src);
 
-		return array(
+		return [
 			'width' => $width,
 			'height' => $height,
 			'type' => $type,
 			'attr' => $attr
-		);
+		];
     }
 
     /**
-     * @param $params
-     * @param array $config
-     * @return mixed|null
-     * @throws Exception
-     */
-    public function getConfigItems($params,$config = array('context'=>'all','type'=>'imgSize')){
-    	if(!isset($this->imgconfig[$params['module_img']][$params['attribute_img']])) {
-			$imgconf = $this->configCollection->fetchData(
-				$config,
-				array(
-					'module_img'    =>$params['module_img'],
-					'attribute_img' =>$params['attribute_img']
-				)
-			);
-			$this->imgconfig[$params['module_img']] = [
-				$params['attribute_img'] => $imgconf
-			];
-		}
-
-        return $this->imgconfig[$params['module_img']][$params['attribute_img']];
-    }
-
-    /**
-     * @param $config
-     * @param $data
+     * @param string $module
+     * @param string $attribute
      * @return array
      */
-    private function setImgData($config,$data){
-        $newArr = array();
-        foreach($data as $key => $value){
-            $newArr[$key]['id'] = $value[$config['id']];
-            $newArr[$key]['img'] = $value[$config['img']];
-        }
+    public function getConfigItems(string $module, string $attribute): array {
+    	if(!isset($this->imgConfig[$module][$attribute])) {
+			/*$imgConf = $this->configCollection->fetchData(
+				$config,[
+					'module_img' => $params['module_img'],
+					'attribute_img' => $params['attribute_img']
+				]
+			);*/
+			$imgConf = $this->configCollection->fetchData(['context' => 'all', 'type' => 'imgSize'], [$module, $attribute]);
+			if(empty($imgConf)) return [];
+			$this->imgConfig[$module][$attribute] = $imgConf;
+		}
+        return $this->imgConfig[$module][$attribute];
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigImages(): array {
+		$imgConf = $this->configCollection->fetchData(['context' => 'all', 'type' => 'configImages']);
+		if(!empty($imgConf)) {
+			foreach ($imgConf as $conf) {
+				if(!key_exists($conf['module'],$this->imgConfig)) $this->imgConfig[$conf['module']] = [];
+				if(!key_exists($conf['attribute'],$this->imgConfig[$conf['module']])) $this->imgConfig[$conf['module']][$conf['attribute']] = [];
+				$this->imgConfig[$conf['module']][$conf['attribute']][] = $conf;
+			}
+		}
+        return $this->imgConfig;
+    }
+
+    /**
+     * @param array $config
+     * @param array $data
+     * @return array
+     */
+    private function setImgData(array $config,array $data): array {
+        $newArr = [];
+		if(!empty($data)) {
+			foreach($data as $key => $value){
+				$newArr[$key] = [
+					'id' => $value[$config['id']],
+					'img' => $value[$config['img']]
+				];
+			}
+		}
         return $newArr;
     }
 
     /**
+	 * @deprecated
+	 * @see component_files_upload::batchRegenerate()
      * @param $config
      * @param $data
      * @throws Exception
@@ -114,143 +145,139 @@ class component_files_images{
         $this->template->configLoad();
         usleep(200000);
         $this->progress = new component_core_feedback($this->template);
-        $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'),'progress' => 10));
-        if($data != null) {
-            $fetchConfig = $this->configCollection->fetchData(
-                array(
-                    'context'   =>  'all',
-                    'type'      =>  'imgSize'
-                ),
-                array(
-                    'module_img'    =>  $config['module_img'],
-                    'attribute_img' =>  $config['attribute_img']
-                )
-            );
-            $prefix = $this->prefix();
+        $this->progress->sendFeedback(['message' => $this->template->getConfigVars('control_of_data'),'progress' => 10]);
+
+        if(!empty($data)) {
+
+			$fetchConfig = $this->getConfigItems($config['module_img'],$config['attribute_img']);
             $fetchImg = $this->setImgData($config, $data);
-            //print_r($fetchImg);
             $total = count($fetchImg);
             $preparePercent =  100/$total;
             $percent = 0;
-            if($fetchImg != null) {
+
+            if(!empty($fetchImg)) {
+
                 foreach ($fetchImg as $item) {
+
                     $imgData = pathinfo($item['img']);
                     $filename = $imgData['filename'];
 
                     $percent = $percent + $preparePercent;
                     usleep(200000);
-                    $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent));
+                    $this->progress->sendFeedback(['message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent]);
 
                     // Loop config
                     foreach ($fetchConfig as $key => $value) {
-                        $imgPath = $this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $item['img']);
+
+                        $imgPath = $this->url->basePath($config['upload_root_dir'].'/'.$item['id'].'/'.$item['img']);
+
                         try {
                             $thumb = $this->imageManager->make($imgPath);
                         } catch (Exception $e) {
                             $logger = new debug_logger(MP_LOG_DIR);
-                            $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage() . ' ' . $imgPath, debug_logger::LOG_MONTH);
+                            $logger->log('php', 'error', 'An error has occured : '.$e->getMessage().' '.$imgPath, debug_logger::LOG_MONTH);
                         }
 
-                        switch ($value['resize_img']) {
+                        switch ($value['resize']) {
                             case 'basic':
-                                $thumb->resize($value['width_img'], $value['height_img'], function ($constraint) {
+                                $thumb->resize($value['width'], $value['height'], function ($constraint) {
                                     $constraint->aspectRatio();
                                     $constraint->upsize();
                                 });
-                                $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $item['img']), 80);
+                                /*$thumb->save($this->url->basePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $value['prefix'] . '_' . $item['img']), 80);
                                 if (function_exists('imagewebp')) {
                                     if (!isset($data['webp']) || $data['webp'] != false) {
-                                        $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $filename . '.' . $extwebp));
+                                        $thumb->save($this->url->basePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $value['prefix'] . '_' . $filename . '.' . $extwebp));
                                     }
-                                }
+                                }*/
                                 break;
                             case 'adaptive':
                                 //$thumb->adaptiveResize($value['width_img'], $value['height_img']);
-                                $thumb->fit($value['width_img'], $value['height_img']);
-                                $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $item['img']), 80);
-                                if (function_exists('imagewebp')) {
-                                    if (!isset($data['webp']) || $data['webp'] != false) {
-                                        $thumb->save($this->fileUpload->imgBasePath($config['upload_root_dir'] . '/' . $item['id'] . '/' . $prefix[$value['type_img']] . $filename . '.' . $extwebp));
-                                    }
-                                }
+                                $thumb->fit($value['width'], $value['height']);
                                 break;
                         }
+
+						$thumb->save($this->url->basePath($config['upload_root_dir'].'/'.$item['id'].'/'.$value['prefix'].'_'.$item['img']), 80);
+
+						if (function_exists('imagewebp')) $thumb->save($this->url->basePath($config['upload_root_dir'].'/'.$item['id'].'/'. $value['prefix'].'_'.$filename.'.'.$extwebp));
                     }
                 }
             }
             usleep(200000);
-            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'),'progress' => 100,'status' => 'success'));
-        }else{
+            $this->progress->sendFeedback(['message' => $this->template->getConfigVars('creating_thumbnails_success'),'progress' => 100,'status' => 'success']);
+        }
+		else{
             usleep(200000);
-            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'),'progress' => 100,'status' => 'error','error_code' => 'error_data'));
+            $this->progress->sendFeedback(['message' => $this->template->getConfigVars('creating_thumbnails_error'),'progress' => 100,'status' => 'error','error_code' => 'error_data']);
         }
     }
 
 	/**
+	 * @param string $path
+	 * @param string $name
 	 * @param array $conf
+	 * @return array
+	 */
+	private function setImageData(string $path, string $name, array $conf): array {
+		$image = [];
+		$url = component_core_system::basePath();
+		if(file_exists($url.$path.$conf['prefix'].'_'.$name)) {
+			$imageInfos = $this->getImageInfos($url.$path.$conf['prefix'].'_'.$name);
+			$filename = pathinfo($name)['filename'];
+			$image = [
+				'src' => '/'.$path.$conf['prefix'].'_'.$name,
+				'src_webp' => '/'.$path.$conf['prefix'].'_'.$filename.'.webp',
+				'w' => $conf['resize'] === 'basic' ? $imageInfos['width'] : $conf['width'],
+				'h' => $conf['resize'] === 'basic' ? $imageInfos['height'] : $conf['height'],
+				'crop' => $conf['resize'],
+				'ext' => mime_content_type($url.$path.$conf['prefix'].'_'.$name)
+			];
+		}
+		return $image;
+	}
+
+	/**
+	 * @param string $module
+	 * @param string $attribute
 	 * @param string $name
 	 * @param int|null $id
 	 * @return array|false
-	 * @throws Exception
 	 */
-	public function setModuleImage(array $conf,string $name,$id = null)
-	{
-		if(empty($conf)) return false;
-
-		$default = null;
-		$images = [];
-		if(in_array($conf['type']['module_img'],['category','product','news','pages'])) {
-			$logo = new frontend_model_logo();
-			$imagePlaceHolder = $logo->getImagePlaceholder();
-			$default = $imagePlaceHolder[$conf['type']['module_img']];
-		}
-		$images['default'] = $default;
-
+	public function setModuleImage(string $module, string $attribute, string $name = '', int $id = null): array {
+		$image = [];
+		$config = $this->getConfigItems($module,$attribute);
 		if(!empty($name)) {
-			$imgPrefix = $this->prefix();
-			$config = $this->getConfigItems($conf['type']);
-
-			// # return filename without extension
-			$pathinfo = pathinfo($name);
-			$filename = $pathinfo['filename'];
-			$imgPath = 'upload/'.$conf['dir'].($id && $conf['subDir'] ? '/'.$id.'/' : '/');
-			$url = component_core_system::basePath();
-			$extwebp = 'webp';
-
+			$imgPath = 'upload/'.$module.($attribute !== $module ? '/'.$attribute : '').($id ? '/'.$id.'/' : '/');
 			foreach ($config as $v) {
-				$imginfo = $this->getImageInfos($url.$imgPath.$imgPrefix[$v['type_img']].$name);
-				$img = [
-					'src' => '/'.$imgPath.$imgPrefix[$v['type_img']].$name,
-					'src_webp' => '/'.$imgPath.$imgPrefix[$v['type_img']] . $filename. '.' .$extwebp,
-					'w' => $v['resize_img'] === 'basic' ? $imginfo['width'] : $v['width_img'],
-					'h' => $v['resize_img'] === 'basic' ? $imginfo['height'] : $v['height_img'],
-					'crop' => $v['resize_img'],
-					'ext' => mime_content_type($url.$imgPath.$imgPrefix[$v['type_img']].$name)
-				];
-				$images[$v['type_img']] = $img;
+				$image[$v['type']] = $this->setImageData($imgPath,$name,$v);
 			}
-			$images['name'] = $name;
+			$image['name'] = $name;
 		}
-		return $images;
+		else {
+			$defaultPath = 'img/default/'.$module.($attribute !== $module ? '/'.$attribute.'/' : '/');
+			$default = '';
+			foreach ($config as $v) {
+				if($default === '') $default = (file_exists(component_core_system::basePath().$defaultPath.$v['prefix'].'_default.png')) ? 'default.png' : 'default.jpg';
+				$image[$v['type']] = $this->setImageData($defaultPath,$default,$v);
+			}
+		}
+		return $image;
     }
 
 	/**
-	 * @param array $conf
-	 * @param array $data
-	 * @param string $imgKey
-	 * @return array|false
-	 * @throws Exception
+	 * @param string $module
+	 * @param string $attribute
+	 * @param array $images
+	 * @param int $id
+	 * @return array
 	 */
-	public function setModuleImages(array $conf,array $data,string $imgKey)
-	{
-		if(empty($conf)) return false;
-
-		if(!empty($data) && $imgKey !== '') {
-			foreach ($data as &$row) {
-				$row['img'] = $this->setModuleImage($conf, $row[$imgKey], ($conf['subDir'] ? $row[$conf['subDir']] : null));
+	public function setModuleImages(string $module, string $attribute, array $images, int $id): array {
+		if(!empty($images)) {
+			foreach ($images as &$image) {
+				$image['img'] = $this->setModuleImage($module, $attribute, $image['name'], $id);
 			}
 		}
-		return $data;
+		return $images;
     }
 
     /**
@@ -295,7 +322,7 @@ class component_files_images{
 
                 $extwebp = 'webp';
                 // ---- Dossier temporaire des images
-                $dirImgTemp = $this->fileUpload->dirImgUpload(
+                $dirImgTemp = $this->url->dirUpload(
                     array_merge(
                         array(
                             'upload_root_dir' => $imgTempCollection['upload_root_dir']
@@ -308,7 +335,7 @@ class component_files_images{
                 // ---- Parcours des images temporaires en base de données
                 foreach ($filesData as $item) {
                     //Détecte le type mime du fichier
-                    $mimeContent = $this->fileUpload->mimeContentType(array('filename' => $dirImgTemp . $imgTempCollection['upload_dir'] . $item['name_img']));
+                    $mimeContent = $this->url->mimeContentType(array('filename' => $dirImgTemp . $imgTempCollection['upload_dir'] . $item['name_img']));
 
                     $prefix = '';
                     $name = filter_rsa::randMicroUI();
@@ -344,7 +371,7 @@ class component_files_images{
                     );
                 }
                 // ---- Chemin des dossiers définitif pour les images
-                $dirImg = $this->fileUpload->dirImgUpload(
+                $dirImg = $this->url->dirUpload(
                     array_merge(
                         array(
                             'upload_root_dir'=>$imgCollection['upload_root_dir']
@@ -354,7 +381,7 @@ class component_files_images{
                         )
                     )
                 );
-                $fetchConfig = $this->config->fetchData(array('context' => 'all', 'type' => 'imgSize'), array('module_img' => $data['module_img'], 'attribute_img' => $data['attribute_img']));
+                $fetchConfig = $this->configCollection->fetchData(array('context' => 'all', 'type' => 'imgSize'), array('module_img' => $data['module_img'], 'attribute_img' => $data['attribute_img']));
 
                 foreach ($resultUpload as $key => $value) {
                     if ($value['statut'] != 0) {
@@ -369,7 +396,7 @@ class component_files_images{
                         if ($fetchConfig != null) {
                             if (is_array($imgCollection)) {
                                 // return array collection
-                                $dirImgArray = $this->upload->dirImgUploadCollection($imgCollection, $debug = true);
+                                $dirImgArray = $this->url->dirUploadCollection($imgCollection, $debug = true);
 
                                 foreach ($fetchConfig as $keyConf => $valueConf) {
                                     if (is_array($dirImgArray)) {
@@ -463,4 +490,71 @@ class component_files_images{
             $logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
+
+	/**
+	 * @param string $module
+	 * @param string $attribute
+	 * @param string $old
+	 * @param string $new
+	 * @param string $root
+	 * @param array $directories
+	 * @return bool
+	 */
+	public function rePrefixImages(string $module, string $attribute, string $old, string $new, string $root, array $directories = []): bool {
+
+		$imageData = pathinfo($edit);
+		$ext = '.'.$imageData['extension'];
+		$filename = $imageData['filename'];
+		$imageDirectories = $this->url->dirUploadCollection($root,$directories);
+		$imageConfig = $this->imageConfig->getConfigItems($module,$attribute);
+
+		try {
+			// Rename the image
+			foreach ($imageDirectories as $dirPath) {
+				// Check if the image to rename exists and if there is not already an image with this name and extension
+				if(!file_exists($dirPath.$name.$ext) && file_exists($dirPath.$filename.$ext)) {
+					$this->makeFile->rename([
+						'origin' => $dirPath.$filename.$ext,
+						'target' => $dirPath.$name.$ext
+					]);
+				}
+				else {
+					return false;
+				}
+
+				foreach ($imageConfig as $value) {
+					$prefix = $value['prefix'].'_';
+					// Check if the original image still exists:
+					// - if it is, the renaming has failed, the process should not continue
+					// - if not, the image has been correctly renamed or the image has never exist, the process can continue
+					if(!file_exists($dirPath.$edit)) {
+						// Check if the image to rename exists and if there is not already an image with this name and extension
+						if(file_exists($dirPath.$prefix.$filename.$ext) && !file_exists($dirPath.$prefix.$name.$ext)) {
+							$this->makeFile->rename([
+								'origin' => $dirPath.$prefix.$filename.$ext,
+								'target' => $dirPath.$prefix.$name.$ext
+							]);
+						}
+
+						// Check if the image to rename exists and if there is not already an image with this name and webp extension
+						if(file_exists($dirPath.$prefix.$filename.self::WEBP_EXT) && !file_exists($dirPath.$prefix.$name.self::WEBP_EXT)){
+							$this->makeFile->rename([
+								'origin' => $dirPath.$prefix.$filename.self::WEBP_EXT,
+								'target' => $dirPath.$prefix.$name.self::WEBP_EXT
+							]);
+						}
+					}
+					else {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+		catch (Exception $e){
+			$this->logger->log('php', 'error', 'An error has occured : '.$e->getMessage(), debug_logger::LOG_MONTH);
+		}
+		return false;
+	}
 }

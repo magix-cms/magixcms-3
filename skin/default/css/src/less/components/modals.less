@@ -97,23 +97,23 @@
 	-webkit-transform: translateY(150px) scale(0.8);
 	transform: translateY(150px) scale(0.8);
 
-	@media (min-width: @screen-sm-min) {
-		min-width: @screen-xs-min;
-		max-width: @screen-xs-max;
+	@media (min-width: .breakpoint(sm)[min]) {
+		min-width: .breakpoint(xs)[min];
+		max-width: .breakpoint(sm)[max];
 	}
 }
 
 .modal-lg, .modal-md {
-	@media (min-width: @screen-md-min) {
-		min-width: @screen-sm-min;
-		max-width: @screen-sm-max;
+	@media (min-width: .breakpoint(md)[min]) {
+		min-width: .breakpoint(sm)[min];
+		max-width: .breakpoint(md)[max];
 	}
 }
 
 .modal-lg {
-	@media (min-width: @screen-lg-min) {
-		min-width: @screen-md-min;
-		max-width: @screen-md-max;
+	@media (min-width: .breakpoint(lg)[min]) {
+		min-width: .breakpoint(md)[min];
+		max-width: .breakpoint(lg)[max];
 	}
 }
 

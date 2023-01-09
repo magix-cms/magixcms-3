@@ -2362,8 +2362,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $makeFiles = new filesystem_makefile();
         switch($operation['type']){
             case 'pages':
-                $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
-                $imgPrefix = $this->imagesComponent->prefix();
+                //$fetchConfig = $this->imagesComponent->getConfigItems('pages','page');
+                //$imgPrefix = $this->imagesComponent->prefix();
                 if($arrData['id'] != null) {
                     if (is_array($arrData['id'])) {
                         foreach ($arrData['id'] as $key => $value) {
@@ -2456,8 +2456,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                     }
                 }else {
-                    $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img' => 'news', 'attribute_img' => 'news'));
-                    $imgPrefix = $this->imagesComponent->prefix();
+                    //$fetchConfig = $this->imagesComponent->getConfigItems('news', 'news');
+                    //$imgPrefix = $this->imagesComponent->prefix();
                     if ($arrData['id'] != null) {
                         if (is_array($arrData['id'])) {
                             foreach ($arrData['id'] as $key => $value) {
@@ -2508,8 +2508,8 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 }
                 break;
             case 'category':
-                $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'category'));
-                $imgPrefix = $this->imagesComponent->prefix();
+                //$fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'category'));
+                //$imgPrefix = $this->imagesComponent->prefix();
                 if($arrData['id'] != null) {
                     if (is_array($arrData['id'])) {
                         foreach ($arrData['id'] as $key => $value) {

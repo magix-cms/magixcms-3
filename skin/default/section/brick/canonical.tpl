@@ -5,7 +5,7 @@
     {else}
         {$uri = $smarty.server.REQUEST_URI}
     {/if}
-    <link rel="canonical" href="{if $setting['ssl']['value'] eq 1}https://{else}http://{/if}{$defaultDomain}{$uri|replace:'amp/':''}" />
+    <link rel="canonical" href="{if $setting['ssl'] eq 1}https://{else}http://{/if}{$defaultDomain}{$uri|replace:'amp/':''}" />
     {*{else}
         {if $amp}
             <link rel="canonical" href="{$url}{$smarty.server.REQUEST_URI|replace:'amp/':''}">

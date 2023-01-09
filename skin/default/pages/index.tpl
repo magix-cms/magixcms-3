@@ -2,7 +2,7 @@
 {block name="title" nocache}{$pages.seo.title}{/block}
 {block name="description" nocache}{$pages.seo.description}{/block}
 {block name='body:id'}pages{/block}
-{block name="styleSheet"}
+{block name="styleSheet" nocache}
     {$css_files = ["cms","gallery","lightbox","slider"]}
 {/block}
 

@@ -1,14 +1,14 @@
 //
 // Rules for footer
 //
-@media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
+@media (min-width: .breakpoint(sm)[min]) and (max-width: .breakpoint(lg)[max]) {
 	#block-socials { order: 1; }
 	#block-sitemap { order: 2; }
 	#block-last-news { order: 3; }
 	#block-contact { order: 4; }
 	#block-legal { order: 5; }
 }
-@media (min-width: @screen-sm-min) {
+@media (min-width: .breakpoint(sm)[min]) {
 	#footbar {
 		.dropup {
 			text-align: left;
@@ -17,7 +17,7 @@
 }
 @media (min-width: @grid-float-breakpoint) {
 	:root {
-		--footbar-h: 0;
+		--footbar-h: var(--grid-gutter);
 	}
 	#footbar {
 		opacity: 1;

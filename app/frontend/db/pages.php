@@ -201,12 +201,18 @@ class frontend_db_pages {
 								COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, c.name_pages) as caption_img,
 								COALESCE(c.seo_title_pages, c.name_pages) as seo_title_pages,
 								COALESCE(c.seo_desc_pages, c.resume_pages) as seo_desc_pages,
-								lang.iso_lang
+								lang.iso_lang,
+								parent.name_pages as parent_name,
+								parent.url_pages as parent_url,
+								parent.seo_title_pages as seo_title_parent
 							FROM mc_cms_page AS h
 							JOIN mc_cms_page_content AS c ON(h.id_pages = c.id_pages) 
 							LEFT JOIN mc_cms_page_img AS img ON (h.id_pages = img.id_pages AND img.default_img = 1)
 							LEFT JOIN mc_cms_page_img_content AS imgc ON (imgc.id_img = img.id_img and c.id_lang = imgc.id_lang)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
+                            LEFT JOIN (
+                                SELECT id_lang, id_pages, name_pages, url_pages, seo_title_pages FROM mc_cms_page_content WHERE published_pages = 1
+                            ) as parent ON (h.id_parent = parent.id_pages AND parent.id_lang = lang.id_lang) 
 							WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1';
 					break;
 				case 'root':

@@ -52,7 +52,7 @@ const C = {
     }
 };
 
-window.addEventListener('load', function() {
+window.addEventListener('load', () => {
     if(Cookie !== undefined) {
         C.init();
         if(Cookie.checkCookie('embedCookies') === 'true') {
@@ -62,7 +62,28 @@ window.addEventListener('load', function() {
                 iytb.removeAttribute('data-src');
             });
         }
+        let now = new Date();
+        let offset = now.getTimezoneOffset();
+        if(Cookie.checkCookie('TimeZoneOffset') !== offset.toString()) {
+            Cookie.createCookie('TimeZoneOffset',offset.toString());
+            window.location.reload();
+        }
     }
+
+    function viewportUnitValue() {
+        // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+        let vh = window.innerHeight * 0.01;
+        let vw = document.body.clientWidth * 0.01;
+        // Then we set the value in the --vh custom property to the root of the document
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        document.documentElement.style.setProperty('--vw', `${vw}px`);
+    }
+    function rem2px(rem) {
+        return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
+
+    window.addEventListener('resize', viewportUnitValue);
+    viewportUnitValue();
 
     if(typeof LazyLoad !== "undefined") {
         let lazyLoadInstance = new LazyLoad({
@@ -95,11 +116,25 @@ window.addEventListener('load', function() {
     document.querySelectorAll('[data-toggle="collapse"]').forEach( function(i) {
         let parent = i.dataset.parent || false,
             target = i.dataset.target ? i.dataset.target : i.getAttribute('href');
-        parent ? new Collapse(i,{parent: document.querySelector(parent)}) : new Collapse(i);
-        function toggle(i,e,t) { if(e.target === t) i.classList.toggle('open',/^shown.*/.test(e.type)); }
+        i.collapse = parent ? new Collapse(i,{parent: document.querySelector(parent)}) : new Collapse(i);
+        //function toggle(i,e,t) { if(e.target === t) i.classList.toggle('open',/^shown.*/.test(e.type)); }
+        function toggle(i, e) {
+            //if (e.target === t) {
+            let shown = /^shown.*/.test(e.type);
+            i.classList.toggle('open', shown);
+            if (e.target.classList.contains('has-overlay')) {
+                //let overlay = document.getElementById('overlay');
+                let overlay = e.target.querySelector('.overlay');
+                overlay.classList.toggle('active', shown);
+                overlay.addEventListener('click', (e) => {
+                    i.collapse.hide();
+                });
+            }
+            //}
+        }
         if(typeof target === 'string' && /^#.+/.test(target)) {
-            document.querySelector(target).addEventListener('shown.bs.collapse', function(e) { toggle(i,e,this); });
-            document.querySelector(target).addEventListener('hidden.bs.collapse', function(e) { toggle(i,e,this); });
+            document.querySelector(target).addEventListener('shown.bs.collapse', (e) => { toggle(i,e); });
+            document.querySelector(target).addEventListener('hidden.bs.collapse', (e) => { toggle(i,e); });
         }
     });
 
@@ -180,16 +215,23 @@ window.addEventListener('load', function() {
         }));
 
         document.querySelectorAll('.show-img').forEach(function(i){
-            i.addEventListener('click',function(e){
+            i.addEventListener('click',(e) => {
                 e.preventDefault();
-                document.querySelectorAll('.big-image a').forEach(function(main){
-                    main.style.opacity = 0;
+                document.querySelectorAll('.big-image a').forEach((main,i) => {
                     main.style.zIndex = -1;
+                    main.style.opacity = 0;
+
+                    let img = main.querySelector('img');
+                    img.style.visibility = 'hidden';
+                    if(i) img.style.display = 'none';
                 });
 
-                let img = document.querySelectorAll(i.dataset.target)[0];
-                img.style.opacity = 1;
-                img.style.zIndex = 1;
+                let target = document.querySelectorAll(i.dataset.target)[0];
+                target.style.zIndex = 1;
+                target.style.opacity = 1;
+                let img = target.querySelector('img');
+                img.style.visibility = 'visible';
+                img.style.display = 'block';
                 return false;
             });
         });

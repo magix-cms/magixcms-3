@@ -10,6 +10,7 @@
 	background: var(--footer-bg);
 	color: var(--footer-color);
 	--heading-color: var(--footer-color);
+	border-top: 2px solid var(--main-color);
 
 	.normalize-link(@footer-link);
 
@@ -98,7 +99,7 @@
 
 	.material-icons {
 		font-size: inherit;
-		vertical-align: middle;
+		//vertical-align: middle;
 	}
 }
 
@@ -188,7 +189,7 @@
 	}
 }
 
-@media (max-width: @screen-ph-max) {
+@media (max-width: .breakpoint(xs)[max]) {
 	#colophon {
 		.footer-colophon {
 			.row {
@@ -202,7 +203,7 @@
 		}
 	}
 }
-@media (min-width: @screen-xs-min) {
+@media (min-width: .breakpoint(xs)[min]) {
 	#colophon {
 		.footer-colophon {
 			.col.copy {
@@ -217,7 +218,7 @@
 		}
 	}
 }
-@media (max-width: @screen-xs-max) {
+@media (max-width: .breakpoint(sm)[max]) {
 	#block {
 		// --- Block contact
 		&-contact {

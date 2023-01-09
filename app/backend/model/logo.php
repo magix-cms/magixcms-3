@@ -69,10 +69,7 @@ class backend_model_logo extends backend_db_logo {
         $data = $this->getItems('page', array('iso'=>$this->iso),'one',false);
         $newData = array();
         if($data != null && $data['img_logo'] != '') {
-            $fetchConfig = $this->imagesComponent->getConfigItems(array(
-                'module_img' => 'logo',
-                'attribute_img' => 'logo'
-            ));
+            $fetchConfig = $this->imagesComponent->getConfigItems('logo','logo');
             $path = 'img/logo/';
             if(file_exists(component_core_system::basePath().$path.$data['img_logo'])) {
                 $extwebp = 'webp';
@@ -85,13 +82,13 @@ class backend_model_logo extends backend_db_logo {
                 $newData['img']['title'] = $data['title_logo'];
 
                 foreach ($fetchConfig as $key => $value) {
-                    $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().$path.$filename.'@'.$value['width_img'].'.'.$extension);
-                    $newData['img'][$value['type_img']]['src'] = '/'.$path.$filename.'@'.$value['width_img'].'.'.$extension;
-                    $newData['img'][$value['type_img']]['src_webp'] = '/'.$path.$filename.'@'.$value['width_img'].'.'.$extwebp;
-                    $newData['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-                    $newData['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-                    $newData['img'][$value['type_img']]['crop'] = $value['resize_img'];
-                    $newData['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().$path.$filename.'@'.$value['width_img'].'.'.$extension);
+                    $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().$path.$filename.'@'.$value['width'].'.'.$extension);
+                    $newData['img'][$value['type']]['src'] = '/'.$path.$filename.'@'.$value['width'].'.'.$extension;
+                    $newData['img'][$value['type']]['src_webp'] = '/'.$path.$filename.'@'.$value['width'].'.'.$extwebp;
+                    $newData['img'][$value['type']]['w'] = $value['resize'] === 'basic' ? $imginfo['width'] : $value['width'];
+                    $newData['img'][$value['type']]['h'] = $value['resize'] === 'basic' ? $imginfo['height'] : $value['height'];
+                    $newData['img'][$value['type']]['crop'] = $value['resize_img'];
+                    $newData['img'][$value['type']]['ext'] = mime_content_type(component_core_system::basePath().$path.$filename.'@'.$value['width'].'.'.$extension);
                 }
             }
         }

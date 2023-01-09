@@ -393,7 +393,14 @@ class backend_model_plugins{
                     //$mods[] = $item['name'];
                     $modClass = 'plugins_' . $item['name'] . '_core';
 
-                    if(class_exists($modClass)) $active_mods[$item['name']] = $this->getCallClass($modClass);
+                    if(class_exists($modClass)) {
+						if(method_exists($modClass,'getExtension')) {
+							if($modClass::isExtension('backend',$item['name'])) $active_mods[$item['name']] = $modClass->getExtension('backend',$item['name']);
+						}
+						else {
+							$active_mods[$item['name']] = $this->getCallClass($modClass);
+						}
+					}
                 }
             }
             return $active_mods;

@@ -206,8 +206,7 @@ class frontend_model_about extends frontend_db_about {
 		$this->language = new frontend_controller_language($this->template);
 		$this->languages = $this->language->setCollection();
 		$this->amp = http_request::isGet('amp');
-
-		$detect = new Mobile_Detect;
+		/*$detect = new Mobile_Detect;
 		$this->touch = false;
 		$this->mOS = '';
 
@@ -220,7 +219,7 @@ class frontend_model_about extends frontend_db_about {
 			elseif($detect->isAndroidOS()){
 				$this->mOS = 'Android';
 			}
-		}
+		}*/
 	}
 
 	/**
@@ -394,13 +393,9 @@ class frontend_model_about extends frontend_db_about {
 	/**
 	 * @return array
 	 */
-	public function getCompanyData()
-	{
+	public function getCompanyData(): array {
 		$infoData = parent::fetchData(['context'=>'all','type'=>'info']);
-		$about = [];
-		foreach ($infoData as $item) {
-			$about[$item['name_info']] = $item['value_info'];
-		}
+        $about = !empty($infoData) ? array_column($infoData,'value_info','name_infos') : [];
 		$schedule = [];
 
 		foreach ($this->company as $info => $value) {
@@ -410,72 +405,58 @@ class frontend_model_about extends frontend_db_about {
 					break;
 				case 'contact':
 					foreach ($value as $contact_info => $val) {
-						if($contact_info == 'adress') {
-							$this->company['contact'][$contact_info]['adress'] = $about['adress'];
-							$this->company['contact'][$contact_info]['street'] = $about['street'];
-							$this->company['contact'][$contact_info]['postcode'] = $about['postcode'];
-							$this->company['contact'][$contact_info]['city'] = $about['city'];
-						} elseif ($contact_info == 'languages') {
-							$this->company['contact'][$contact_info] = $this->getActiveLang();
-						} else {
-							$this->company['contact'][$contact_info] = $about[$contact_info];
-						}
+                        switch ($contact_info) {
+                            case 'adress':
+                                $this->company['contact'][$contact_info]['adress'] = $about['adress'];
+                                $this->company['contact'][$contact_info]['street'] = $about['street'];
+                                $this->company['contact'][$contact_info]['postcode'] = $about['postcode'];
+                                $this->company['contact'][$contact_info]['city'] = $about['city'];
+                                break;
+                            case 'languages':
+                                $this->company['contact'][$contact_info] = $this->getActiveLang();
+                                break;
+                            default:
+                                $this->company['contact'][$contact_info] = $about[$contact_info];
+                        }
 					}
 					break;
 				case 'socials':
-					/*if($this->is_array_empty($value)) {
-						$this->company['socials'] = array();
-					}
-					else{*/
 					foreach ($value as $social_name => $link) {
-						//$this->company['socials'][$social_name] = $about[$social_name];
 						$social = [];
 
 						if($about[$social_name] !== null) {
 							switch ($social_name) {
 								case 'facebook':
-									$link = (($this->touch && !$this->amp) ? 'fb://facewebmodal/f?href=' : '') . 'https://www.facebook.com/'.$about[$social_name].'/';
-									//$link = 'https://www.facebook.com/'.$about[$social_name].'/';
+									$link = 'https://www.facebook.com/'.$about[$social_name].'/';
 									break;
 								case 'twitter':
-									//$link = (($this->touch) ? 'twitter://user?screen_name=' : 'https://twitter.com/') . $about[$social_name];
-									$link = 'https://twitter.com/'. $about[$social_name];
+									$link = 'https://www.twitter.com/'. $about[$social_name];
 									break;
 								case 'youtube':
-									//$link = (($this->touch) ? 'gplus://' : 'https://') . 'plus.google.com/'.$about[$social_name].'/posts';
-									//$link = ($this->touch) ? 'gplus://plus.google.com/app/basic/'.$about[$social_name].'/posts' : 'https://plus.google.com/'.$about[$social_name].'/posts';
-									//$link = 'https://plus.google.com/'.$about[$social_name].'/posts';
 									$link = 'https://www.youtube.com/channel/'.$about[$social_name];
 									break;
 								case 'linkedin':
-									//$link = (($this->touch) ? 'linkedin://profile?id=' : 'https://www.linkedin.com/in/') . $about[$social_name];
 									$link = 'https://www.linkedin.com/'.(strpos($about[$social_name],'company/') === false ? 'in/' : '').$about[$social_name];
 									break;
 								case 'viadeo':
-									//$link = (($this->touch) ? 'viadeo://profile?id=' : 'http://www.viadeo.com/fr/profile/') . $about[$social_name];
-									$link = 'http://www.viadeo.com/fr/profile/'.$about[$social_name];
+									$link = 'https://www.viadeo.com/fr/profile/'.$about[$social_name];
 									break;
 								case 'pinterest':
-									//$link = (($this->touch) ? 'pinterest://user/' : 'https://www.pinterest.fr/') . $about[$social_name];
 									$link = 'https://www.pinterest.fr/'.$about[$social_name];
 									break;
 								case 'instagram':
-									//$link = ($this->touch) ? 'instagram://user?username='.$about[$social_name] : 'https://www.instagram.com/'.$about[$social_name].'/';
 									$link = 'https://www.instagram.com/'.$about[$social_name].'/';
 									break;
 								case 'github':
-									$link = 'https://github.com/'.$about[$social_name];
+									$link = 'https://www.github.com/'.$about[$social_name];
 									break;
 								case 'soundcloud':
-									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
-									$link = 'https://soundcloud.com/'.$about[$social_name];
+									$link = 'https://www.soundcloud.com/'.$about[$social_name];
 									break;
 								case 'tumblr':
-									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
 									$link = 'https://'.$about[$social_name].'.tumblr.com/';
 									break;
 								case 'tiktok':
-									//$link = (($this->touch) ? 'soundcloud://users/' : 'https://soundcloud.com/') . $about[$social_name];
 									$link = 'https://www.tiktok.com/@'.$about[$social_name];
 									break;
 							}
@@ -487,21 +468,20 @@ class frontend_model_about extends frontend_db_about {
 
 						$this->company['socials'][$social_name] = $social;
 					}
-					$this->company['socials'] = $this->is_array_empty($this->company['socials']) ? array() : $this->company['socials'];
-					/*}*/
+					$this->company['socials'] = $this->is_array_empty($this->company['socials']) ? [] : $this->company['socials'];
 					break;
 				case 'specifications':
 					foreach ($value as $day => $op_info) {
 						foreach ($op_info as $t => $v) {
-							$this->company['specifications'][$day][$t] = isset($schedule[$day][$t]) ? $schedule[$day][$t] : $this->company['specifications'][$day][$t];
+							$this->company['specifications'][$day][$t] = $schedule[$day][$t] ?? $this->company['specifications'][$day][$t];
 						}
 					}
 					break;
 				case 'openinghours':
 					$this->company[$info] = $about['openinghours'];
 
-					$op = parent::fetchData(array('context'=>'all','type'=>'op'));
-					$op_content = parent::fetchData(array('context'=>'all','type'=>'op_content'));
+					$op = parent::fetchData(['context'=>'all','type'=>'op']);
+					$op_content = parent::fetchData(['context'=>'all','type'=>'op_content']);
 
 					foreach ($op as $d) {
 						$abbr = $d['day_abbr'];
@@ -513,7 +493,7 @@ class frontend_model_about extends frontend_db_about {
 					}
 					break;
 				default:
-					$this->company[$info] = isset($about[$info]) ? $about[$info] : $this->company[$info];
+					$this->company[$info] = $about[$info] ?? $this->company[$info];
 			}
 		}
 

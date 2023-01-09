@@ -151,21 +151,16 @@
 .btn-main-theme() {
 	//.btn;
 	//.button-variant(#fff, extract(@main-colors, 3), extract(@main-colors, 3));
-	.button-variant(
-			var(--white),
-			var(--main-color-h),
-			var(--main-color-s),
-			var(--main-color-l),
-			var(--main-color-a),
-			var(--main-color-h),
-			var(--main-color-s),
-			var(--main-color-l),
-			var(--main-color-a)
-	);
+	@color: @theme-color[main];
+	@ch: hue(@color);
+	@cs: saturation(@color);
+	@cl: lightness(@color);
+	@ca: alpha(@color);
+	.button-variant(var(--white), @ch, @cs, @cl, @ca, @ch, @cs, @cl, @ca);
 }
 .btn-sd-theme() {
 	//.btn;
-	.button-variant(
+	/*.button-variant(
 			var(--white),
 			var(--sd-color-h),
 			var(--sd-color-s),
@@ -175,11 +170,17 @@
 			var(--sd-color-s),
 			var(--sd-color-l),
 			var(--sd-color-a)
-	);
+	);*/
+	@color: @theme-color[sd];
+	@ch: hue(@color);
+	@cs: saturation(@color);
+	@cl: lightness(@color);
+	@ca: alpha(@color);
+	.button-variant(var(--white), @ch, @cs, @cl, @ca, @ch, @cs, @cl, @ca);
 }
 .btn-dark-theme() {
 	//.btn;
-	.button-variant(
+	/*.button-variant(
 			var(--white),
 			var(--dark-color-h),
 			var(--dark-color-s),
@@ -189,7 +190,13 @@
 			var(--dark-color-s),
 			var(--dark-color-l),
 			var(--dark-color-a)
-	);
+	);*/
+	@color: @theme-color[dark];
+	@ch: hue(@color);
+	@cs: saturation(@color);
+	@cl: lightness(@color);
+	@ca: alpha(@color);
+	.button-variant(var(--white), @ch, @cs, @cl, @ca, @ch, @cs, @cl, @ca);
 }
 
 
@@ -286,7 +293,7 @@ each(@theme-color, {
 	--btn-focus-border-color: var(--main-color);
 	margin-right: 1rem;
 
-	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; 0);
+	.button-size(.5rem; 1rem; @font-size-base; @line-height-base; @btn-border-radius-base);
 	position: relative;
 	z-index: 2;
 	padding-left: 3.25rem;

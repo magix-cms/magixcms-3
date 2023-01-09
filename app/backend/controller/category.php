@@ -1,6 +1,5 @@
 <?php
-class backend_controller_category extends backend_db_category
-{
+class backend_controller_category extends backend_db_category {
     public $edit, $action, $tabs, $search;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent,$routingUrl,$makeFiles,$finder;
     public $controller,$id_cat,$parent_id,$content,$category,$img,$del_img,$ajax,$tableaction,$tableform,$iso,$offset,$name_img,$menu_cat,$plugin,$modelPlugins;
@@ -225,22 +224,20 @@ class backend_controller_category extends backend_db_category
      * @return array
      */
     private function setItemData($data){
-
-        $imgPath = $this->upload->imgBasePath('upload/catalog/c');
+        $imgPath = $this->routingUrl->basePath('upload/catalog/category');
         $arr = array();
         $conf = array();
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'category'));
-        $imgPrefix = $this->imagesComponent->prefix();
+        //$fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'catalog','attribute_img'=>'category'));
+        $fetchConfig = $this->imagesComponent->getConfigItems('catalog','category');
+        //$imgPrefix = $this->imagesComponent->prefix();
 
         foreach ($data as $page) {
-
-            $publicUrl = !empty($page['url_cat']) ? $this->routingUrl->getBuildUrl(array(
-                    'type'      =>  'category',
-                    'iso'       =>  $page['iso_lang'],
-                    'id'        =>  $page['id_cat'],
-                    'url'       =>  $page['url_cat']
-                )
-            ) : '';
+            $publicUrl = !empty($page['url_cat']) ? $this->routingUrl->getBuildUrl([
+				'type'=> 'category',
+				'iso'=> $page['iso_lang'],
+				'id'=> $page['id_cat'],
+				'url'=> $page['url_cat']
+			]) : '';
 
             if (!array_key_exists($page['id_cat'], $arr)) {
                 $arr[$page['id_cat']] = array();
@@ -257,10 +254,10 @@ class backend_controller_category extends backend_db_category
                         $arr[$page['id_cat']]['imgSrc']['original']['height'] = $originalSize[1];
                     }
                     foreach ($fetchConfig as $key => $value) {
-                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_cat'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_cat']);
-                        $arr[$page['id_cat']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_cat'];
-                        $arr[$page['id_cat']]['imgSrc'][$value['type_img']]['width'] = $size[0];
-                        $arr[$page['id_cat']]['imgSrc'][$value['type_img']]['height'] = $size[1];
+                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_cat'].DIRECTORY_SEPARATOR.$value['prefix'] . '_' . $page['img_cat']);
+                        $arr[$page['id_cat']]['imgSrc'][$value['type']]['img'] = $value['prefix'] . '_' . $page['img_cat'];
+                        $arr[$page['id_cat']]['imgSrc'][$value['type']]['width'] = $size[0];
+                        $arr[$page['id_cat']]['imgSrc'][$value['type']]['height'] = $size[1];
                     }
                 }
                 $arr[$page['id_cat']]['date_register'] = $page['date_register'];
@@ -471,7 +468,8 @@ class backend_controller_category extends backend_db_category
                         break;
                 }
             }
-        }else{
+        }
+		else {
             if(isset($this->tableaction)) {
                 $this->tableform->run();
             }
@@ -507,23 +505,28 @@ class backend_controller_category extends backend_db_category
                         if(isset($this->img) || isset($this->name_img)){
                             $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                             $page = $this->getItems('pageLang', array('id' => $this->id_cat, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
-                            $settings = array(
+                            /*$settings = array(
                                 'name' => $this->name_img !== '' ? $this->name_img : $page['url_cat'],
                                 'edit' => $page['img_cat'],
-                                'prefix' => array('s_', 'm_', 'l_'),
+                                //'prefix' => array('s_', 'm_', 'l_'),
                                 'module_img' => 'catalog',
                                 'attribute_img' => 'category',
                                 'original_remove' => false
                             );
                             $dirs = array(
-                                'upload_root_dir' => 'upload/catalog/c', //string
+                                'upload_root_dir' => 'upload/catalog/category', //string
                                 'upload_dir' => $this->id_cat //string ou array
-                            );
+                            );*/
                             $filename = '';
                             $update = false;
 
                             if(isset($this->img)) {
-                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
+                                //$resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
+								$resultUpload = $this->upload->imageUpload(
+									'catalog','category','upload/catalog/category',["$this->id_cat"],[
+									'name' => $this->name_img !== '' ? $this->name_img : $page['url_cat']
+								],false);
+
                                 $filename = $resultUpload['file'];
                                 $update = true;
                             }
@@ -532,9 +535,13 @@ class backend_controller_category extends backend_db_category
                                 $img_name = $img_pages['filename'];
 
                                 if($this->name_img !== $img_name && $this->name_img !== '') {
-                                    $result = $this->upload->renameImages($settings,$dirs);
-                                    $filename = $result;
-                                    $update = true;
+                                    //$result = $this->upload->renameImages($settings,$dirs);
+                                    $result = $this->upload->renameImages('catalog','category',$page['img_cat'],$this->name_img,'upload/catalog/category',["$this->id_cat"]);
+
+									if($result) {
+										$filename = $this->name_img.'.'.$img_pages['extension'];
+										$update = true;
+									}
                                 }
                             }
 
@@ -630,30 +637,24 @@ class backend_controller_category extends backend_db_category
                             }
                         }
                         elseif(isset($this->del_img)) {
-                            $this->upd(array(
-                                'type'    => 'img',
-                                'data' => array(
-                                    'id_cat' => $this->del_img,
-                                    'img_cat' => NULL
-                                )
-                            ));
+                            $this->upd([
+								'type' => 'img',
+								'data' => [
+									'id_cat' => $this->del_img,
+									'img_cat' => NULL
+								]
+							]);
 
-                            $setEditData = $this->getItems('page',array('edit'=>$this->del_img),'all',false);
+                            $setEditData = $this->getItems('page',['edit'=>$this->del_img],'all',false);
                             $setEditData = $this->setItemData($setEditData);
 
-                            $setImgDirectory = $this->upload->dirImgUpload(
-                                array_merge(
-                                    array('upload_root_dir'=>'upload/catalog/c/'.$this->del_img),
-                                    array('imgBasePath'=>true)
-                                )
-                            );
+                            $setImgDirectory = $this->routingUrl->dirUpload('upload/catalog/category/'.$this->del_img,true);
 
                             if(file_exists($setImgDirectory)){
                                 $setFiles = $this->finder->scanDir($setImgDirectory);
-                                $clean = '';
-                                if($setFiles != null){
+                                if(!empty($setFiles)) {
                                     foreach($setFiles as $file){
-                                        $clean .= $this->makeFiles->remove($setImgDirectory.$file);
+                                        $this->makeFiles->remove($setImgDirectory.$file);
                                     }
                                 }
                             }

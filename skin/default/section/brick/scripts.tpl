@@ -1,5 +1,5 @@
-{$dev = $setting.mode.value === 'dev'}
-{$http2 = $setting.http2.value}
+{$dev = $setting.mode === 'dev'}
+{$http2 = $setting.http2}
 {if $jquery}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 {/if}
@@ -8,12 +8,12 @@
         {if !$dev && !$http2}
             {assign var=files value=','|implode:$files}
             {capture name="jssrc"}{"/min/?{if $loading eq 'group'}g{else}f{/if}="|cat:$files|cat:"{if !$dev}&amp;{$smarty.now}{/if}"}{/capture}
-            {capture name="jssrc"}{if $setting.concat.value}{$smarty.capture.jssrc|concat_url:'js'}{else}{$smarty.capture.jssrc}{/if}{/capture}
+            {capture name="jssrc"}{if $setting.concat}{$smarty.capture.jssrc|concat_url:'js'}{else}{$smarty.capture.jssrc}{/if}{/capture}
             <script src="{$smarty.capture.jssrc}"{if $loading eq 'async' || $loading eq 'defer'} {$loading}{/if}></script>
         {else}
             {foreach $files as $js}
                 {capture name="jssrc"}{"{if $loading eq 'group'}/min/?g={elseif !$dev}/min/?f={/if}"|cat:$js}{/capture}
-                {capture name="jssrc"}{if $setting.concat.value}{$smarty.capture.jssrc|concat_url:'js'}{else}{$smarty.capture.jssrc}{/if}{/capture}
+                {capture name="jssrc"}{if $setting.concat}{$smarty.capture.jssrc|concat_url:'js'}{else}{$smarty.capture.jssrc}{/if}{/capture}
                 <script src="{$smarty.capture.jssrc}"{if $loading eq 'async' || $loading eq 'defer'} {$loading}{/if}></script>
             {/foreach}
         {/if}

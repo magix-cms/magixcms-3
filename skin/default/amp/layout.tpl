@@ -8,7 +8,6 @@
     <meta name="robots" content="{google_tools tools='robots'}">
     {strip}{include file="section/loop/lang.tpl" amp=true iso={$lang}}{/strip}
     {strip}{include file="section/brick/canonical.tpl" amp=true}{/strip}
-    {*{if {module type="news"} eq true}<link rel="alternate" type="application/rss+xml" href="{$url}/news_{$lang}_rss.xml" title="RSS">{/if}*}
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
     {if $googleTools_webmaster !== ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}

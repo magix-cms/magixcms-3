@@ -1,281 +1,206 @@
 <?php
-class backend_controller_files extends backend_db_files{
-    public $edit, $action, $tabs;
-    public $id_config_img, $module_img,$attribute_img,$width_img,$height_img,$type_img,$resize_img;
-    protected $message, $template, $header, $data,$imagesComponent, $DBpages,$DBnews,$DBcategory,$DBproduct, $configCollection,$modelPlugins;
-    public $attr_name,$module_name;
+class backend_controller_files extends backend_db_files {
+	/**
+	 * @var backend_model_template $template
+	 * @var backend_model_data $data
+	 * @var component_core_message $message
+	 * @var http_header $header
+	 * @var component_files_images $imagesComponent
+	 * @var component_collections_config $configCollection
+	 * @var backend_model_plugins $modelPlugins
+	 * @var component_files_upload $upload
+	 */
+	protected backend_model_template $template;
+	protected backend_model_data $data;
+	protected component_core_message $message;
+	protected http_header $header;
+	protected component_files_images $imagesComponent;
+	protected component_collections_config $configCollection;
+	protected backend_model_plugins $modelPlugins;
+	protected component_files_upload $upload;
 
 	/**
-	 * backend_controller_files constructor.
-	 * @param stdClass $t
+	 * @var string $action
+	 * @var string $tabs
+	 * @var string $attribute
+	 * @var string $module
 	 */
-    public function __construct($t = null)
-    {
-        $this->template = $t ? $t : new backend_model_template;
+	public string
+		$action,
+		$tabs,
+		$attribute,
+		$module;
+
+	/**
+	 * @var int $edit
+	 * @var int $id
+	 */
+	public int
+		$edit,
+		$id;
+
+	/**
+	 * @var array $imageConfig
+	 */
+	public array $imageConfig;
+
+	/**
+	 * @param backend_model_template|null $t
+	 */
+    public function __construct(backend_model_template $t = null) {
+        $this->template = $t instanceof backend_model_template ? $t : new backend_model_template;
+		$this->data = new backend_model_data($this);
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
-        $this->data = new backend_model_data($this);
-        $formClean = new form_inputEscape();
         $this->configCollection = new component_collections_config();
         $this->imagesComponent = new component_files_images($this->template);
-        $this->DBpages = new backend_db_pages();
-        $this->DBnews = new backend_db_news();
-        $this->DBcategory = new backend_db_category();
-        $this->DBproduct = new backend_db_product();
+		$this->upload = new component_files_upload();
         $this->modelPlugins = new backend_model_plugins();
 
         // --- GET
-        if (http_request::isGet('edit')) {
-            $this->edit = $formClean->numeric($_GET['edit']);
-        }
-        if (http_request::isGet('action')) {
-            $this->action = $formClean->simpleClean($_GET['action']);
-        } elseif (http_request::isPost('action')) {
-            $this->action = $formClean->simpleClean($_POST['action']);
-        }
-        if (http_request::isGet('tabs')) {
-            $this->tabs = $formClean->simpleClean($_GET['tabs']);
-        }
+        if (http_request::isGet('edit')) $this->edit = form_inputEscape::numeric($_GET['edit']);
+		if (http_request::isGet('tabs')) $this->tabs = form_inputEscape::simpleClean($_GET['tabs']);
+		if (http_request::isRequest('action')) $this->action = form_inputEscape::simpleClean($_REQUEST['action']);
 
-        // --- ADD or EDIT
-        if (http_request::isPost('id')) {
-            $this->id_config_img = $formClean->simpleClean($_POST['id']);
-        }
-        // Config IMG
-        if (http_request::isPost('module_img')) {
-            $this->module_img = $formClean->simpleClean($_POST['module_img']);
-        }
-        if (http_request::isPost('attribute_img')) {
-            $this->attribute_img = $formClean->simpleClean($_POST['attribute_img']);
-        }
-        if (http_request::isPost('width_img')) {
-            $this->width_img = $formClean->simpleClean($_POST['width_img']);
-        }
-        if (http_request::isPost('height_img')) {
-            $this->height_img = $formClean->simpleClean($_POST['height_img']);
-        }
-        if (http_request::isPost('type_img')) {
-            $this->type_img = $formClean->simpleClean($_POST['type_img']);
-        }
-        if (http_request::isPost('resize_img')) {
-            $this->resize_img = $formClean->simpleClean($_POST['resize_img']);
-        }
-        // Thumbnail Manager
-        if (http_request::isPost('attr_name')) {
-            $this->attr_name = $formClean->simpleClean($_POST['attr_name']);
-        }
-        if (http_request::isPost('module_name')) {
-            $this->module_name = $formClean->simpleClean($_POST['module_name']);
-        }
+		// --- ADD or EDIT
+        if (http_request::isPost('id')) $this->id = form_inputEscape::numeric($_POST['id']);
+        if (http_request::isPost('attribute')) $this->attribute = form_inputEscape::simpleClean($_POST['attribute']);
+        if (http_request::isPost('module')) $this->module = form_inputEscape::simpleClean($_POST['module']);
+        if (http_request::isPost('imageConfig')) $this->imageConfig = form_inputEscape::arrayClean($_POST['imageConfig']);
     }
 
 	/**
 	 * Assign data to the defined variable or return the data
 	 * @param string $type
-	 * @param string|int|null $id
-	 * @param string $context
-	 * @param boolean $assign
+	 * @param array|int|null $id
+	 * @param string|null $context
+	 * @param bool|string $assign
 	 * @return mixed
 	 */
-	private function getItems($type, $id = null, $context = null, $assign = true) {
+	private function getItems(string $type, $id = null, string $context = null, $assign = true) {
 		return $this->data->getItems($type, $id, $context, $assign);
 	}
 
-    /**
-     * Save Data
-     */
-    private function save(){
-
-        if(isset($this->id_config_img)){
-            parent::update(
-                array('type'=>'resize'),
-                array(
-                    'id_config_img'    => $this->id_config_img,
-                    'module_img'       => $this->module_img,
-                    'attribute_img'    => $this->attribute_img,
-                    'width_img'        => $this->width_img,
-                    'height_img'       => $this->height_img,
-                    'type_img'         => $this->type_img,
-                    'resize_img'       => $this->resize_img
-                )
-            );
-            $this->message->json_post_response(true,'update',$this->id_config_img);
-        }else{
-
-            parent::insert(
-                array('type'=>'newResize'),
-                array(
-                    'module_img'       => $this->module_img,
-                    'attribute_img'    => $this->attribute_img,
-                    'width_img'        => $this->width_img,
-                    'height_img'       => $this->height_img,
-                    'type_img'         => $this->type_img,
-                    'resize_img'       => $this->resize_img
-                )
-            );
-            $this->message->json_post_response(true,'add_redirect');
-
-        }
-    }
-
-    /**
-     * Insertion de données
-     * @param $data
-     */
-    private function del($data){
-        switch($data['type']){
-            case 'delResize':
-                parent::delete(
-                    array(
-                        'type'      =>    $data['type']
-                    ),
-                    $data['data']
-                );
-                $this->message->json_post_response(true,'delete',$data['data']);
-                break;
-        }
-    }
-
-
-    public function run(){
+    public function run() {
         if(isset($this->action)) {
             switch ($this->action) {
                 case 'add':
-                    if(isset($this->module_img) && isset($this->attribute_img)){
-                        $this->save();
-                    }else{
+                    if(isset($this->imageConfig)) {
+						parent::insert(['type' => 'resize'], $this->imageConfig);
+						$this->message->json_post_response(true,'add_redirect');
+                    }
+					else {
                         $module = $this->imagesComponent->module();
                         $this->template->assign('module',$module);
-                        $type = $this->imagesComponent->type();
-                        $this->template->assign('type',$type);
                         $resize = $this->imagesComponent->resize();
                         $this->template->assign('resize',$resize);
                         $this->template->display('files/add.tpl');
                     }
                     break;
-
                 case 'edit':
-                    if(isset($this->id_config_img)){
-                        $this->save();
-                    }elseif(isset($this->module_name)){
-                        switch($this->module_name){
-                            case 'pages':
-                                $fetchImg = $this->DBpages->fetchData(array('context'=>'all','type'=>'imagesAll'));
-                                $this->imagesComponent->getThumbnailItems(array(
-                                    'type'              => $this->module_name,
-                                    'upload_root_dir'   => 'upload/pages',
-                                    'module_img'        => $this->module_name,
-                                    'attribute_img'     => 'page',
-                                    'id'                =>'id_pages',
-                                    'img'               =>'name_img',
-                                    'webp'              => true
-                                ),
-                                    $fetchImg
-                                );
-                                break;
-                            case 'news':
-                                $fetchImg = $this->DBnews->fetchData(array('context'=>'all','type'=>'img'));
-                                $this->imagesComponent->getThumbnailItems(array(
-                                    'type'              => $this->module_name,
-                                    'upload_root_dir'   => 'upload/news',
-                                    'module_img'        => $this->module_name,
-                                    'attribute_img'     => 'news',
-                                    'id'                =>'id_news',
-                                    'img'               =>'img_news',
-                                    'webp'              => true
-                                ),
-                                    $fetchImg
-                                );
-                                break;
-                            case 'catalog':
-                                if(isset($this->attr_name) && !empty($this->attr_name)){
-                                    switch($this->attr_name){
-                                        case 'category':
-                                            $fetchImg = $this->DBcategory->fetchData(array('context'=>'all','type'=>'img'));
-                                            $this->imagesComponent->getThumbnailItems(array(
-                                                'type'              => $this->module_name,
-                                                'upload_root_dir'   => 'upload/catalog/c',
-                                                'module_img'        => $this->module_name,
-                                                'attribute_img'     => 'category',
-                                                'id'                =>'id_cat',
-                                                'img'               =>'img_cat',
-                                                'webp'              => true
-                                            ),
-                                                $fetchImg
-                                            );
-                                            break;
-                                        case 'product':
-                                            $fetchImg = $this->DBproduct->fetchData(array('context' => 'all', 'type' => 'imagesAll'));
-                                            $this->imagesComponent->getThumbnailItems(array(
-                                                'type'              => $this->module_name,
-                                                'upload_root_dir'   => 'upload/catalog/p',
-                                                'module_img'        => $this->module_name,
-                                                'attribute_img'     => 'product',
-                                                'id'                =>'id_product',
-                                                'img'               =>'name_img',
-                                                'webp'              => true
-                                            ),
-                                                $fetchImg
-                                            );
-                                    }
-                                }
-                                break;
-                            default:
-                                    //preg_grep('!^car_!', $array);
-                                    $plugin = 'plugins_' . $this->module_name . '_admin';
-                                    if (class_exists($plugin)) {
-                                        //Si la méthode run existe on ajoute le plugin dans le menu
-                                        if (method_exists($plugin, 'getItemsImages')) {
-                                            $class = new $plugin();
-                                            $fetchImg = $class->getItemsImages();
-                                            $this->imagesComponent->getThumbnailItems(array(
-                                                'type'              => $this->module_name,
-                                                'upload_root_dir'   => 'upload/'.$this->module_name,
-                                                'module_img'        => 'plugins',
-                                                'attribute_img'     => $this->module_name,
-                                                'id'                =>'id',
-                                                'img'               =>'img',
-                                                'webp'              => true
-                                            ),
-                                                $fetchImg
-                                            );
-                                        }
-                                    }
-                                    break;
-                        }
-                    }else{
+                    if(isset($this->imageConfig)) {
+						$previous = $this->getItems('size',['id' => $this->edit],'one',false);
+						parent::update(['type' => 'resize'], $this->imageConfig);
+
+						if($previous['prefix_img'] !== $this->imageConfig['prefix_img'] ||
+							$previous['width_img'] !== $this->imageConfig['width_img'] ||
+							$previous['height_img'] !== $this->imageConfig['height_img'] ||
+							$previous['resize_img'] !== $this->imageConfig['resize_img']) {
+							$root = 'upload/'.$this->imageConfig['module_img'];
+							if(in_array($this->imageConfig['module_img'],['pages','news','catalog'])) {
+								$images = $this->getItems('images',['type' => $this->imageConfig['attribute_img'] !== $this->imageConfig['module_img'] ? $this->imageConfig['attribute_img'] : $this->imageConfig['module_img']],'all',false);
+							}
+							else {
+								$plugin = 'plugins_'.$this->imageConfig['attribute_img'].'_admin';
+								if (class_exists($plugin) && method_exists($plugin, 'getItemsImages')) {
+									$class = new $plugin();
+									$images = $class->getItemsImages();
+								}
+							}
+							if(isset($this->imageConfig['attribute_img']) && $this->imageConfig['attribute_img'] !== $this->imageConfig['module_img'] && $this->imageConfig['module_img'] !== 'plugins') $root .= '/'.$this->imageConfig['attribute_img'];
+
+							if(!empty($images)) {
+								$options = ['progress' => new component_core_feedback($this->template),'template' => $this->template];
+								if($previous['prefix_img'] !== $this->imageConfig['prefix_img']) {
+									$this->upload->batchPrefixRename(
+										$this->imageConfig['module_img'],
+										$this->imageConfig['attribute_img'],
+										$root,
+										$images,
+										$this->imageConfig['type_img'],
+										$previous['prefix_img'],
+										$this->imageConfig['prefix_img'],
+										$options
+									);
+								}
+								if($previous['width_img'] !== $this->imageConfig['width_img'] ||
+									$previous['height_img'] !== $this->imageConfig['height_img'] ||
+									$previous['resize_img'] !== $this->imageConfig['resize_img']) {
+									$this->upload->batchRegenerate(
+										$this->imageConfig['module_img'],
+										$this->imageConfig['attribute_img'],
+										$root,
+										$images,
+										$this->imageConfig['type_img'],
+										$options
+									);
+								}
+							}
+						}
+						else {
+							$this->message->json_post_response(true,'update',$this->edit);
+						}
+                    }
+					elseif(isset($this->module)) {
+						$root = 'upload/'.$this->module;
+						$module = $this->module;
+						$attribute = $this->module;
+
+						if(in_array($this->module,['pages','news','catalog'])) {
+							$type = (isset($this->attribute) && !empty($this->attribute)) ? $this->attribute : $this->module;
+							$images = $this->getItems('images',['type' => $type],'all',false);
+						}
+						else {
+							$plugin = 'plugins_'.$this->module.'_admin';
+							if (class_exists($plugin) && method_exists($plugin, 'getItemsImages')) {
+								$class = new $plugin();
+								$images = $class->getItemsImages();
+								$module = 'plugins';
+							}
+						}
+						if(isset($this->attribute) && !empty($this->attribute) && $this->attribute !== $this->module && $this->module !== 'plugins') $root .= '/'.$this->attribute;
+						if(!empty($images)) {
+							$this->upload->batchRegenerate($module,$attribute,$root,$images,null,[
+								'progress' => new component_core_feedback($this->template),
+								'template' => $this->template
+							]);
+						}
+                    }
+					else {
                         $this->getItems('size',$this->edit);
                         $module = $this->imagesComponent->module();
                         $this->template->assign('module',$module);
-                        $type = $this->imagesComponent->type();
-                        $this->template->assign('type',$type);
                         $resize = $this->imagesComponent->resize();
                         $this->template->assign('resize',$resize);
                         $this->template->display('files/edit.tpl');
                     }
                     break;
-
                 case 'delete':
-                    if(isset($this->id_config_img)) {
-                        $this->del(
-                            array(
-                                'type'=>'delResize',
-                                'data'=>array(
-                                    'id' => $this->id_config_img
-                                )
-                            )
-                        );
-                    }
+                    if(isset($this->id)) {
+						parent::delete(['type' => 'delResize'], ['id' => $this->id]);
+						$this->message->json_post_response(true,'delete',['id' => $this->id]);
+					}
                     break;
             }
-        }else{
+        }
+		else {
             $this->getItems('sizes');
 
-			$this->data->getScheme(array('mc_config_img'),array('id_config_img','module_img','attribute_img','width_img','height_img','type_img','resize_img'));
+			$this->data->getScheme(['mc_config_img'],['id_config_img','module_img','attribute_img','width_img','height_img','type_img','prefix_img','resize_img']);
 
-            $config = $this->configCollection->fetchData(array('context'=>'all','type'=>'config'));
-            $plugins = $this->modelPlugins->getItems(array('type'=>'thumbnail'));
-            if($plugins != NULL) {
+            $config = $this->configCollection->fetchData(['context'=>'all','type'=>'config']);
+            $plugins = $this->modelPlugins->getItems(['type'=>'thumbnail']);
+            if(!empty($plugins)) {
                 foreach ($plugins as $items) {
                     $config[]['attr_name'] = $items['name'];
                 }
@@ -286,4 +211,3 @@ class backend_controller_files extends backend_db_files{
         }
     }
 }
-?>

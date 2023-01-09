@@ -20,14 +20,14 @@
  # but WITHOUT ANY WARRANTY; without even the implied warranty of
  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  # GNU General Public License for more details.
-
+ #
  # You should have received a copy of the GNU General Public License
  # along with this program.  If not, see <http://www.gnu.org/licenses/>.
  #
  # -- END LICENSE BLOCK -----------------------------------
-
+ #
  # DISCLAIMER
-
+ #
  # Do not edit or add to this file if you wish to upgrade MAGIX CMS to newer
  # versions in the future. If you wish to customize MAGIX CMS for your
  # needs please refer to http://www.magix-cms.com for more information.
@@ -39,15 +39,9 @@ class frontend_model_plugins {
 	 * frontend_model_plugins constructor.
 	 * @param null|frontend_model_template $t
 	 */
-    public function __construct($t = null) {
+    public function __construct(frontend_model_template $t = null) {
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
-        $formClean = new form_inputEscape();
         $this->DBPlugins = new frontend_db_plugins();
-        if(http_request::isGet('controller')) $this->controller_name = $formClean->simpleClean($_GET['controller']);
-        if(http_request::isGet('plugin')) $this->plugin = $formClean->simpleClean($_GET['plugin']);
-        //$this->dbPlugins = new backend_db_plugins();
-        //$this->data = new backend_model_data($this);
-        $this->collectionLanguage = new component_collections_language();
     }
 
     /**
@@ -65,19 +59,12 @@ class frontend_model_plugins {
      * @param $template
      */
     public function addConfigDir($routes, $template = null){
-    	$template = $template === null ? $this->template : $template;
+    	$template = $template ?? $this->template;
+        if(http_request::isGet('controller')) $this->controller_name = form_inputEscape::simpleClean($_GET['controller']);
         if(isset($this->controller_name)){
             $setConfigPath = component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/';
-            if(file_exists($setConfigPath)){
-                $template->addConfigFile(
-                    array(
-                        component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/'
-                    ),
-                    array(
-                        'public_local_',
-                    )
-                    ,false
-                );
+            if(file_exists($setConfigPath)) {
+                $template->addConfigFile([component_core_system::basePath().'/'.$routes.'/'.$this->controller_name.'/i18n/'], ['public_local_',],false);
             }
         }
     }

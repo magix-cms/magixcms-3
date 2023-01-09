@@ -16,7 +16,7 @@
 
 // Typography
 // --------------------------------------------------
-@font-family-sans-serif:  Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-sans-serif:  Roboto, Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
@@ -96,9 +96,9 @@
 @padding-xs-vertical:       1px;
 @padding-xs-horizontal:     5px;
 
-@border-radius-base:        0;
-@border-radius-small:       3px;
-@border-radius-large:       6px;
+@border-radius-base:        .5rem;
+@border-radius-small:       .25rem;
+@border-radius-large:       1rem;
 
 //** Global color for active items (e.g., navs or dropdowns).
 @component-active-color:    var(--white);
@@ -296,19 +296,24 @@
 	xl: 102.25em; // 1636px
 };
 
-// So media queries don't overlap when required, provide a maximum
-@screen-xs-min: @breakpoints[xs];
-@screen-sm-min: @breakpoints[sm];
-@screen-md-min: @breakpoints[md];
-@screen-lg-min: @breakpoints[lg];
-@screen-xl-min: @breakpoints[xl];
+.breakpoint(@bp) {
+	min: @breakpoints[$@bp];
+	max: (@breakpoints[$@bp] - .001em);
+}
 
 // So media queries don't overlap when required, provide a maximum
-@screen-ph-max: (@breakpoints[xs] - .001em);
-@screen-xs-max: (@breakpoints[sm] - .001em);
-@screen-sm-max: (@breakpoints[md] - .001em);
-@screen-md-max: (@breakpoints[lg] - .001em);
-@screen-lg-max: (@breakpoints[xl] - .001em);
+@screen-xs-min: .breakpoint(ph)[min];
+@screen-sm-min: .breakpoint(xs)[min];
+@screen-md-min: .breakpoint(sm)[min];
+@screen-lg-min: .breakpoint(md)[min];
+@screen-xl-min: .breakpoint(lg)[min];
+
+// So media queries don't overlap when required, provide a maximum
+@screen-ph-max: .breakpoint(ph)[max];
+@screen-xs-max: .breakpoint(xs)[max];
+@screen-sm-max: .breakpoint(sm)[max];
+@screen-md-max: .breakpoint(md)[max];
+@screen-lg-max: .breakpoint(lg)[max];
 
 
 //== Grid system
@@ -322,9 +327,9 @@
 
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
-@grid-float-breakpoint: @breakpoints[sm];
+@grid-float-breakpoint: .breakpoint(sm)[min];
 //** Point at which the navbar begins collapsing.
-@grid-float-breakpoint-max: (@breakpoints[sm] - .001em);
+@grid-float-breakpoint-max: .breakpoint(sm)[max];
 
 
 //== Container sizes
@@ -335,13 +340,13 @@
 //@container-sm: ~"calc(53rem + var(--grid-gutter))";
 // Medium screen / desktop
 //@container-md: ~"calc(60rem + var(--grid-gutter))";
-@container-md: (1rem * @screen-md-min);
+@container-md: (1rem * .breakpoint(md)[min]);
 // Large screen / wide desktop
 //@container-lg: ~"calc(73rem + var(--grid-gutter))";
-@container-lg: (1rem * @screen-lg-min);
+@container-lg: (1rem * .breakpoint(lg)[min]);
 // Large screen / wide desktop
 //@container-xl: ~"calc(88rem + var(--grid-gutter))";
-@container-xl: (1rem * @screen-xl-min);
+@container-xl: (1rem * .breakpoint(xl)[min]);
 
 //== Navbar
 //

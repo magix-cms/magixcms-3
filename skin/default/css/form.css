@@ -61,7 +61,7 @@ output {
   background-color: var(--body-bg);
   background-image: none;
   border: 1px solid #ccc;
-  border-radius: 0;
+  border-radius: 0.5rem;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -210,7 +210,7 @@ fieldset[disabled] .checkbox label {
   padding: 5px 10px;
   font-size: 0.875rem;
   line-height: 1.25;
-  border-radius: 3px;
+  border-radius: 0.25rem;
 }
 select.input-sm {
   height: 1.25;
@@ -225,7 +225,7 @@ select[multiple].input-sm {
   padding: 5px 10px;
   font-size: 0.875rem;
   line-height: 1.25;
-  border-radius: 3px;
+  border-radius: 0.25rem;
 }
 .form-group-sm select.form-control {
   height: 1.25;
@@ -247,7 +247,7 @@ select[multiple].input-sm {
   padding: 10px 16px;
   font-size: 1.25rem;
   line-height: 2;
-  border-radius: 6px;
+  border-radius: 1rem;
 }
 select.input-lg {
   height: 2;
@@ -262,7 +262,7 @@ select[multiple].input-lg {
   padding: 10px 16px;
   font-size: 1.25rem;
   line-height: 2;
-  border-radius: 6px;
+  border-radius: 1rem;
 }
 .form-group-lg select.form-control {
   height: 2;
@@ -411,7 +411,7 @@ select[multiple].input-lg {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: hsl(0, 0%, 45%);
+  color: #737373;
 }
 @media (min-width: 48em) {
   .form-inline .form-group {
@@ -441,7 +441,6 @@ select[multiple].input-lg {
   }
   .form-inline .control-label {
     margin-bottom: 0;
-    vertical-align: middle;
   }
   .form-inline .radio,
   .form-inline .checkbox {
@@ -757,7 +756,7 @@ textarea.form-control {
   padding: 10px 16px;
   font-size: 1.25rem;
   line-height: 2;
-  border-radius: 6px;
+  border-radius: 1rem;
 }
 select.input-group-lg > .form-control,
 select.input-group-lg > .input-group-addon,
@@ -780,7 +779,7 @@ select[multiple].input-group-lg > .input-group-btn > .btn {
   padding: 5px 10px;
   font-size: 0.875rem;
   line-height: 1.25;
-  border-radius: 3px;
+  border-radius: 0.25rem;
 }
 select.input-group-sm > .form-control,
 select.input-group-sm > .input-group-addon,
@@ -810,7 +809,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .input-group-btn {
   width: 1%;
   white-space: nowrap;
-  vertical-align: middle;
 }
 .input-group-addon {
   padding: 6px 12px;
@@ -821,17 +819,17 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   text-align: center;
   background-color: #eeeeee;
   border: 1px solid #ccc;
-  border-radius: 0;
+  border-radius: 0.5rem;
 }
 .input-group-addon.input-sm {
   padding: 5px 10px;
   font-size: 0.875rem;
-  border-radius: 3px;
+  border-radius: 0.25rem;
 }
 .input-group-addon.input-lg {
   padding: 10px 16px;
   font-size: 1.25rem;
-  border-radius: 6px;
+  border-radius: 1rem;
 }
 .input-group-addon input[type="radio"],
 .input-group-addon input[type="checkbox"] {
@@ -979,7 +977,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding: var(--spacer);
   margin-bottom: var(--spacer);
   border: 1px solid var(--alert-brd-c, transparent);
-  border-radius: 0;
+  border-radius: 0.5rem;
   background-color: var(--alert-bg-c, transparent);
   color: var(--alert-c, var(--text-color));
 }

@@ -10,9 +10,9 @@
     <meta name="robots" content="no-index">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="{geturl}/install/template/img/favicon.png" />
+    <link rel="icon" type="image/png" href="{$url}/install/template/img/favicon.png" />
     <!--[if IE]>
-    <link rel="shortcut icon" type="image/x-icon" href="{geturl}/install/template/img/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="{$url}/install/template/img/favicon.ico" />
     <![endif]-->
     {include file="brick/google-font.tpl" fonts=['Heebo'=>'300,500,700']}
     {headlink rel="stylesheet" href="/install/min/?f={$install_folder}/template/css/install.min.css" media="screen"}

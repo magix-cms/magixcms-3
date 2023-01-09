@@ -168,11 +168,10 @@ class backend_controller_news extends backend_db_news
      * @throws Exception
      */
     private function setItemData($data){
-        $imgPath = $this->upload->imgBasePath('upload/news');
-        $arr = array();
-        $conf = array();
-        $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'news','attribute_img'=>'news'));
-        $imgPrefix = $this->imagesComponent->prefix();
+        $imgPath = $this->routingUrl->basePath('upload/news');
+        $arr = [];
+        $fetchConfig = $this->imagesComponent->getConfigItems('news','news');
+        //$imgPrefix = $this->imagesComponent->prefix();
 
         foreach ($data as $page) {
             $dateFormat = new date_dateformat();
@@ -191,10 +190,10 @@ class backend_controller_news extends backend_db_news
                         $arr[$page['id_news']]['imgSrc']['original']['height'] = $originalSize[1];
                     }
                     foreach ($fetchConfig as $key => $value) {
-                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_news'].DIRECTORY_SEPARATOR.$imgPrefix[$value['type_img']] . $page['img_news']);
-                        $arr[$page['id_news']]['imgSrc'][$value['type_img']]['img'] = $imgPrefix[$value['type_img']] . $page['img_news'];
-                        $arr[$page['id_news']]['imgSrc'][$value['type_img']]['width'] = $size[0];
-                        $arr[$page['id_news']]['imgSrc'][$value['type_img']]['height'] = $size[1];
+                        $size = getimagesize($imgPath.DIRECTORY_SEPARATOR.$page['id_news'].DIRECTORY_SEPARATOR.$value['prefix'] . '_' . $page['img_news']);
+                        $arr[$page['id_news']]['imgSrc'][$value['type']]['img'] = $value['prefix'] . '_' . $page['img_news'];
+                        $arr[$page['id_news']]['imgSrc'][$value['type']]['width'] = $size[0];
+                        $arr[$page['id_news']]['imgSrc'][$value['type']]['height'] = $size[1];
                     }
                 }
                 //$arr[$page['id_news']]['menu_news'] = $page['menu_news'];
@@ -491,24 +490,16 @@ class backend_controller_news extends backend_db_news
                     case 'edit':
 						if(isset($this->img) || isset($this->name_img)){
 							$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-							$page = $this->getItems('pageLang', array('id' => $this->id_news, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
-							$settings = array(
-								'name' => $this->name_img !== '' ? $this->name_img : $page['url_news'],
-								'edit' => $page['img_news'],
-								'prefix' => array('s_', 'm_', 'l_'),
-								'module_img' => 'news',
-								'attribute_img' => 'news',
-								'original_remove' => false
-							);
-							$dirs = array(
-								'upload_root_dir' => 'upload/news', //string
-								'upload_dir' => $this->id_news //string ou array
-							);
+							$page = $this->getItems('pageLang', ['id' => $this->id_news, 'iso' => $defaultLanguage['iso_lang']], 'one', false);
 							$filename = '';
 							$update = false;
 
 							if(isset($this->img)) {
-								$resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
+								$resultUpload = $this->upload->imageUpload(
+									'news','news','upload/news',["$this->id_news"],[
+									'name' => $this->name_img !== '' ? $this->name_img : $page['url_news']
+								],false);
+
 								$filename = $resultUpload['file'];
 								$update = true;
 							}
@@ -517,20 +508,24 @@ class backend_controller_news extends backend_db_news
 								$img_name = $img_pages['filename'];
 
 								if($this->name_img !== $img_name && $this->name_img !== '') {
-									$result = $this->upload->renameImages($settings,$dirs);
-									$filename = $result;
-									$update = true;
+									//$result = $this->upload->renameImages($settings,$dirs);
+									$result = $this->upload->renameImages('news','news',$page['img_news'],$this->name_img,'upload/news',["$this->id_news"]);
+
+									if($result) {
+										$filename = $this->name_img.'.'.$img_pages['extension'];
+										$update = true;
+									}
 								}
 							}
 
 							if($filename !== '' && $update) {
-								$this->upd(array(
+								$this->upd([
 									'type' => 'img',
-									'data' => array(
+									'data' => [
 										'id_news' => $this->id_news,
 										'img_news' => $filename
-									)
-								));
+									]
+								]);
 							}
 
 							foreach ($this->content as $lang => $content) {

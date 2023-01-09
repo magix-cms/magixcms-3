@@ -21,13 +21,13 @@
 }
 
 .container {
-	@media (min-width: @screen-md-min) {
+	@media (min-width: .breakpoint(md)[min]) {
 		max-width: @container-md;
 	}
-	@media (min-width: @screen-lg-min) {
+	@media (min-width: .breakpoint(lg)[min]) {
 		max-width: @container-lg;
 	}
-	@media (min-width: @screen-xl-min) {
+	@media (min-width: .breakpoint(xl)[min]) {
 		max-width: @container-xl;
 	}
 }
@@ -54,7 +54,7 @@
 
 .make-grid();
 
-@media (min-width: @screen-md-min) {
+@media (min-width: .breakpoint(md)[min]) {
 	:root {
 		--grid-gutter: 2rem;
 	}

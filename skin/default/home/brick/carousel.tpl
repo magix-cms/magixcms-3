@@ -1,6 +1,9 @@
 {if !isset($variant)}
     {$variant = 'default'}
 {/if}
+{if !isset($lazy)}
+    {$lazy = true}
+{/if}
 {if $amp}
 <amp-carousel id="home-slideshow" class="carousel2"
               type="slides"
@@ -60,7 +63,7 @@
                 <!--[if IE 9]><video style="display: none;"><![endif]-->
                 <source type="image/webp" sizes="1920px" media="(min-width: 960px)" srcset="/skin/{$theme}/img/carousel/{$variant}/l_slide-{$k}.webp 1920w">
                 <source type="image/webp" sizes="960px" media="(min-width: 480px)" srcset="/skin/{$theme}/img/carousel/{$variant}/m_slide-{$k}.webp 960w">
-                <source type="image/webp" sizes="480px" data-srcset="/skin/{$theme}/img/carousel/{$variant}/s_slide-{$k}.webp 480w">
+                <source type="image/webp" sizes="480px" srcset="/skin/{$theme}/img/carousel/{$variant}/s_slide-{$k}.webp 480w">
                 <source type="image/png" sizes="1920px" media="(min-width: 960px)" srcset="/skin/{$theme}/img/carousel/{$variant}/l_slide-{$k}.jpg 1920w">
                 <source type="image/png" sizes="960px" media="(min-width: 480px)" srcset="/skin/{$theme}/img/carousel/{$variant}/m_slide-{$k}.jpg 960w">
                 <source type="image/png" sizes="480px" srcset="/skin/{$theme}/img/carousel/{$variant}/s_slide-{$k}.jpg 480w">
@@ -69,7 +72,7 @@
                      sizes="(min-width: 960px) 1920px, (min-width: 480px) 960px, 480px"
                      srcset="/skin/{$theme}/img/carousel/{$variant}/l_slide-{$k}.jpg 1920w,/skin/{$theme}/img/carousel/{$variant}/m_slide-{$k}.jpg 960w,/skin/{$theme}/img/carousel/{$variant}/s_slide-{$k}.jpg 480w"
                      alt="Slide {$k}"
-                     class="img-responsive lazyload" loading="lazy"
+                     class="img-responsive{if $lazy} lazyload{/if}"{if $lazy} loading="lazy"{/if}
                      width="1920" height="768"/>
             </picture>{/strip}
         </div>

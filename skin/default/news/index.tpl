@@ -4,7 +4,7 @@
 {block name='body:id'}news{/block}
 {block name='body:class'}news-page{/block}
 {block name="webType"}CollectionPage{/block}
-{block name="styleSheet"}
+{block name="styleSheet" nocache}
     {$css_files = ["newsRoot"]}
 {/block}
 
@@ -96,7 +96,7 @@
             {/if}
         {/block}
     </article>
-    {if $nbp > 1}
+    {if $nbp.nbp > 1}
         <div class="container">
             {include file="section/brick/pagination/number.tpl" nbp=$nbp nocache}
             {*{include file="section/brick/pagination/pager.tpl" nbp=$nbp}*}

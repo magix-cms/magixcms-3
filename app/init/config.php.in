@@ -60,4 +60,3 @@ define('MP_LOG_DIR','/Applications/MAMP/htdocs/scbox/caching/report');
 
 // FirePHP (false or true)
 define('MP_FIREPHP',true);
-?>

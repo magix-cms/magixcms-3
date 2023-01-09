@@ -5,7 +5,7 @@
 {block name="webType"}WebPage{/block}
 {block name='article:class'} class="container clearfix"{/block}
 {block name='article:type'}Article{/block}
-{block name="styleSheet"}
+{block name="styleSheet" nocache}
     {$css_files = ["newsRoot","news","lightbox","slider"]}
 {/block}
 

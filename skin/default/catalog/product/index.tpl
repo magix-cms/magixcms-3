@@ -4,7 +4,7 @@
 {block name="description" nocache}{$product.seo.description}{/block}
 {block name="webType"}ItemPage{/block}
 {block name='body:id'}product{/block}
-{block name="styleSheet"}
+{block name="styleSheet" nocache}
     {$css_files = ["product","gallery","lightbox","slider"]}
 {/block}
 
@@ -22,18 +22,18 @@
     <article class="catalog container" itemprop="mainEntity" itemscope itemtype="http://schema.org/Product">
         {block name='article:content' nocache}
             {if $product.long_name !== ''}<meta itemprop="name" content="{$product.short_name}">{/if}
-            {*<header>*}
+            <header>
                 <h1 itemprop="{if $product.long_name !== ''}alternateName{else}name{/if}">{$product.name}</h1>
                 {if $product.reference}<span class="ref">{#product_ref#}&nbsp;{$product.reference}</span>{/if}
-                {if $product.price !== 0 && $setting.price_display.value === 'tinc'}
-                    {$price = $product.price * (1 + ($setting.vat_rate.value/100))}
+                {if $product.price !== 0 && $setting.price_display === 'tinc'}
+                    {$price = $product.price * (1 + ($setting.vat_rate/100))}
                 {else}
                     {$price = $product.price}
                 {/if}
                 <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <span itemprop="price" content="{$price|round:2|number_format:2:',':' '|decimal_trim:','}"></span><span itemprop="priceCurrency" content="EUR"></span>
                 </span>
-            {*</header>*}
+            </header>
             <div itemprop="category" itemscope itemtype="http://schema.org/Series">
                 <meta itemprop="name" content="{$parent.name}">
                 <meta itemprop="url" content="{$parent.url}">
@@ -45,13 +45,12 @@
                 </div>
                 {/if}
                 <div class="col-12{if is_array($product.imgs) && count($product.imgs) > 0} col-md-6 col-lg-7 col-xl-8{/if}">
-                    {strip}{if $product.price !== 0}<div class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;{if $setting.price_display.value === 'tinc'}{#tax_included#}{else}{#tax_excluded#}{/if}</div>{/if}{/strip}
+                    {strip}{if $product.price !== 0}<div class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;{if $setting.price_display === 'tinc'}{#tax_included#}{else}{#tax_excluded#}{/if}</div>{/if}{/strip}
                     <div class="text" itemprop="description">
                         {$product.content}
                     </div>
                     <div class="row-center">
                         {$smarty.capture.contact}
-                        {include file="cartpay/brick/add-to-cart.tpl"}
                     </div>
                 </div>
             </div>

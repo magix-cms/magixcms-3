@@ -1,59 +1,61 @@
 <?php
-class install_db_installer
-{
+class install_db_installer {
 	/**
-	 * @param $config
-	 * @param bool $params
-	 * @return mixed
-	 * @throws Exception
+	 * @var debug_logger $logger
 	 */
-	public function fetchData($config, $params = false)
-	{
-		if (!is_array($config)) return '$config must be an array';
+	protected debug_logger $logger;
 
-		$sql = '';
-
+	/**
+	 * @param array $config
+	 * @param array $params
+	 * @return array|bool
+	 */
+	public function fetchData(array $config, array $params = []) {
 		switch ($config['type']) {
             case 'database':
-                $sql = "SELECT COUNT(DISTINCT `table_name`) FROM `information_schema`.`columns` WHERE `table_schema` = 'dsi_dev'";
+                $query = "SELECT COUNT(DISTINCT `table_name`) FROM `information_schema`.`columns` WHERE `table_schema` = 'dsi_dev'";
                 break;
 			case 'lastEmployee':
-				$sql = 'SELECT em.* FROM mc_admin_employee AS em ORDER BY em.id_admin DESC LIMIT 0,1';
+				$query = 'SELECT em.* FROM mc_admin_employee AS em ORDER BY em.id_admin DESC LIMIT 0,1';
 				break;
+			default:
+				return false;
 		}
 
-		return $sql ? component_routing_db::layer()->fetch($sql,$params) : null;
+		try {
+			return component_routing_db::layer()->fetch($query, $params);
+		}
+		catch (Exception $e) {
+			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+		}
+		return false;
 	}
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
-	 * @return bool|string
+	 * @return bool
 	 */
-	public function insert($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'domain':
-				$sql = 'INSERT INTO mc_domain (url_domain,default_domain) VALUE (:domain,1)';
+				$query = 'INSERT INTO mc_domain (url_domain,default_domain) VALUE (:domain,1)';
 				break;
 			case 'admin':
-				$sql = 'INSERT INTO mc_admin_employee (keyuniqid_admin,title_admin,lastname_admin,firstname_admin,email_admin,active_admin,passwd_admin,last_change_admin)
+				$query = 'INSERT INTO mc_admin_employee (keyuniqid_admin,title_admin,lastname_admin,firstname_admin,email_admin,active_admin,passwd_admin,last_change_admin)
 						VALUE (:keyuniqid_admin,:title_admin,:lastname_admin,:firstname_admin,:email_admin,:active_admin,:passwd_admin,NOW())';
 				break;
 			case 'adminRel':
-				$sql = 'INSERT INTO mc_admin_access_rel (id_admin,id_role)
+				$query = 'INSERT INTO mc_admin_access_rel (id_admin,id_role)
 						VALUE (:id_admin,:id_role)';
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->insert($sql,$params);
+			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
@@ -62,19 +64,14 @@ class install_db_installer
 	}
 
 	/**
-	 * @param $config
+	 * @param array $config
 	 * @param array $params
-	 * @return bool|string
+	 * @return bool
 	 */
-	public function update($config, $params = array())
-	{
-		if (!is_array($config)) return '$config must be an array';
-
-		$sql = '';
-
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'company':
-				$sql = "UPDATE `mc_about`
+				$query = "UPDATE `mc_about`
 					SET `value_info` = CASE `name_info`
 						WHEN 'name' THEN :nme
 						WHEN 'type' THEN :tpe
@@ -85,12 +82,12 @@ class install_db_installer
 					'tpe' => $params['type']
 				);
 				break;
+			default:
+				return false;
 		}
 
-		if($sql === '') return 'Unknown request asked';
-
 		try {
-			component_routing_db::layer()->update($sql,$params);
+			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {

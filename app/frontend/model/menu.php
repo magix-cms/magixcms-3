@@ -236,7 +236,7 @@ class frontend_model_menu extends frontend_db_menu {
 						break;
 				}
 
-				if($data) $link['subdata'] = $this->data->parseData($data,$model,$this->current,false,true);
+				if($data) $link['subdata'] = $this->data->parseData($data,$model,$this->current,[],true);
 			}
 		}
 

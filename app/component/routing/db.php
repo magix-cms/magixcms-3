@@ -124,7 +124,6 @@ class component_routing_db {
             }
             return true;
         }
-        //$this->logger->log('php', 'error', 'An error has occured : setupSQL', debug_logger::LOG_MONTH);
-        return false;
+		return false;
     }
 }

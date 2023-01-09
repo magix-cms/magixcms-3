@@ -432,8 +432,7 @@ class backend_controller_pages extends backend_db_pages
      * @param $data
      * @throws Exception
      */
-    private function del($data)
-	{
+    private function del($data) {
         switch($data['type']){
             case 'delPages':
                 parent::delete(
@@ -446,92 +445,73 @@ class backend_controller_pages extends backend_db_pages
                 break;
             case 'delImages':
                 $makeFiles = new filesystem_makefile();
-                $newArr = array();
                 $imgArray = explode(',',$data['data']['id']);
-                $fetchConfig = $this->imagesComponent->getConfigItems(array('module_img'=>'pages','attribute_img'=>'page'));
-                $imgPrefix = $this->imagesComponent->prefix();
+                $fetchConfig = $this->imagesComponent->getConfigItems('pages','pages');
                 $defaultErased = false;
-                $id_pages = false;
+				$id_pages = false;
                 $extwebp = 'webp';
+				$toRemove = [];
 
-                foreach($imgArray as $key => $value){
+                foreach($imgArray as $value){
                     $img = $this->getItems('img',$value,'one',false);
-                    $id_pages = $img['id_pages'];
-                    if($img['default_img']) $defaultErased = true;
 
-                    if(isset($id_pages) && $id_pages != '') {
-                        $imgPath = $this->upload->dirFileUpload(
-                            array_merge(
-                                array(
-                                    'upload_root_dir' => 'upload/pages',
-                                    'upload_dir' => $img['id_pages'])
-                                , array(
-                                    'fileBasePath' => true
-                                )
-                            )
-                        );
+					if(!empty($img) && !empty($img['id_pages']) && !empty($img['name_img'])) {
+						// Get the product's id
+						$id_pages = $img['id_pages'];
+						// Check if it's the default image that's going to be erased
+						if($img['default_img']) $defaultErased = true;
+						// Concat the image directory path
+						//$imgPath = $this->upload->dirFileUpload(['upload_root_dir' => 'upload/catalog/product', 'upload_dir' => $id_product, 'fileBasePath'=>true]);
+						$imgPath = $this->routingUrl->dirUpload('upload/pages/'.$id_pages, true);
 
-                        $newArr[$key]['img']['original'] = $imgPath . $img['name_img'];
-                        if (file_exists($newArr[$key]['img']['original'])) {
-                            $makeFiles->remove(array(
-                                $newArr[$key]['img']['original']
-                            ));
-                        }
-                        foreach ($fetchConfig as $configKey => $confiValue) {
-                            $newArr[$key]['img'][$confiValue['type_img']] = $imgPath . $imgPrefix[$confiValue['type_img']] . $img['name_img'];
-                            $imgData = pathinfo($img['name_img']);
-                            $filename = $imgData['filename'];
+						// Original file of the image
+						$original = $imgPath.$img['name_img'];
+						if(file_exists($original)) $toRemove[] = $original;
 
-                            if (file_exists($newArr[$key]['img'][$confiValue['type_img']])) {
-                                $makeFiles->remove(array(
-                                    $newArr[$key]['img'][$confiValue['type_img']]
-                                ));
-                            }
-                            // Check if the image with webp extension exist
-                            if (file_exists($imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp)) {
-                                $makeFiles->remove(array(
-                                    $imgPath . $imgPrefix[$confiValue['type_img']] . $filename . '.' . $extwebp
-                                ));
-                            }
-                        }
-                    }
+						// Loop over each version of the image
+						foreach ($fetchConfig as $configKey => $confiValue) {
+							$image = $imgPath.$confiValue['prefix'].'_'.$img['name_img'];
+							if(file_exists($image)) $toRemove[] = $image;
+
+							// Check if the image with webp extension exist
+							$imgData = pathinfo($img['name_img']);
+							$filename = $imgData['filename'];
+							$webpImg = $imgPath.$confiValue['prefix'].'_'.$filename.'.'.$extwebp;
+							if(file_exists($webpImg)) $toRemove[] = $webpImg;
+						}
+					}
                 }
 
-                if($newArr && isset($data['data']['id'])) {
-                    parent::delete(
-                        array(
-                            'type' => $data['type']
-                        ),
-                        $data['data']
-                    );
-                    $id_pages = $data['data']['id'];
-                    $imgs = $this->getItems('images',$id_pages,'all',false);
-                    if($imgs != null && $defaultErased) {
-                        $this->upd(array(
-                            'type' => 'firstImageDefault',
-                            'data' => array(
-                                ':id' => $id_pages
-                            )
-                        ));
-                    }
-                }
+				// If files had been found
+				if(!empty($toRemove)) {
+					// Erased images
+					$makeFiles->remove($toRemove);
+
+					// Remove from database
+					parent::delete(
+						['type' => $data['type']],
+						$data['data']
+					);
+
+					// Count the remaining images
+					$imgs = $this->getItems('countImages',$id_pages,'one',false);
+
+					// If there is at leats one image left and the default image has been erased, set the first remaining image as default
+					if($imgs['tot'] > 0 && $defaultErased) {
+						$this->upd([
+							'type' => 'firstImageDefault',
+							'data' => ['id' => $id_pages]
+						]);
+					}
+				}
+
                 break;
             case 'delImagesPages':
                 $makeFiles = new filesystem_makefile();
                 $imgArray = explode(',',$data['data']['id']);
 
-                foreach($imgArray as $key => $value){
-                    $imgPath = $this->upload->dirFileUpload(
-                        array_merge(
-                            array(
-                                'upload_root_dir' => 'upload/pages',
-                                'upload_dir' => $value
-                            ),
-                            array(
-                                'fileBasePath'=>true
-                            )
-                        )
-                    );
+                foreach($imgArray as $value){
+					$imgPath = $this->routingUrl->dirUpload('upload/catalog/pages/'.$value,true);
 
                     if(file_exists($imgPath)) {
                         try {
@@ -627,61 +607,53 @@ class backend_controller_pages extends backend_db_pages
 
                             $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                             $page = $this->getItems('pageLang', array('id' => $this->id_pages, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
-                            $newimg = $this->getItems('lastImgId', null, 'one', false);
-                            // If $newimg = NULL return 0
-                            $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
+                            $newimg = $this->getItems('lastImgId', ['id_pages' => $this->id_pages], 'one', false);
 
-                            $resultUpload = $this->upload->setMultipleImageUpload(
-                                'img_multiple',
-                                array(
-                                    'name' => $page['url_pages'],
-                                    'prefix_name' => $newimg['id_img'],
-                                    'prefix_increment' => true,
-                                    'prefix' => array('s_', 'm_', 'l_'),
-                                    'module_img' => 'pages',
-                                    'attribute_img' => 'page',
-                                    'original_remove' => false,
-									'progress' => $this->progress,
-									'template' => $this->template
-                                ),
-                                array(
-                                    'upload_root_dir' => 'upload/pages', //string
-                                    'upload_dir' => $this->id_pages //string ou array
-                                ),
-                                false
-                            );
+							$resultUpload = $this->upload->multipleImageUpload(
+								'pages','pages','upload/pages',["$this->id_pages"],[
+								'name' => $page['url_pages'],
+								'suffix' => (int)$newimg['index'],
+								'suffix_increment' => true,
+								'progress' => $this->progress,
+								'template' => $this->template
+							],false);
 
-                            if ($resultUpload != null) {
+                            if (!empty($resultUpload)) {
+								$totalUpload = count($resultUpload);
 								$percent = $this->progress->progress;
-								$preparePercent = (90 - $percent) / count($resultUpload);
+								$preparePercent = (90 - $percent) / $totalUpload;
+								$i = 1;
 
-                                foreach ($resultUpload as $key => $value) {
-                                    if ($value['statut'] == '1') {
+                                foreach ($resultUpload as $value) {
+                                    if ($value['status']) {
                                         $percent = $percent + $preparePercent;
 
-                                        usleep(200000);
-                                        $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails'), 'progress' => $percent));
+										usleep(200000);
+										$this->progress->sendFeedback(['message' => sprintf($this->template->getConfigVars('creating_records'),$i,$totalUpload), 'progress' => $percent]);
 
-                                        $this->add(array(
-                                            'type' => 'newImg',
-                                            'data' => array(
-                                                'id_pages' => $this->id_pages,
-                                                'name_img' => $value['file']
-                                            )
-                                        ));
+                                        $this->add([
+											'type' => 'newImg',
+											'data' => [
+												'id_pages' => $this->id_pages,
+												'name_img' => $value['file']
+											]
+										]);
                                     }
+									$i++;
                                 }
 
                                 usleep(200000);
                                 $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_success'), 'progress' => 90));
 
                                 usleep(200000);
-                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success', 'result' => $display));
-                            } else {
+                                $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('upload_done'), 'progress' => 100, 'status' => 'success'));
+                            }
+							else {
                                 usleep(200000);
                                 $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('creating_thumbnails_error'), 'progress' => 100, 'status' => 'error', 'error_code' => 'error_data'));
                             }
-                        }elseif (isset($this->editimg)) {
+                        }
+						elseif (isset($this->editimg)) {
                             if (isset($this->id_img)) {
                                 foreach ($this->imgData as $lang => $content) {
                                     $content['id_img'] = $this->id_img;
@@ -715,33 +687,23 @@ class backend_controller_pages extends backend_db_pages
                                     $img_name = $img_pages['filename'];
 
                                     if ($this->name_img !== $img_name && $this->name_img !== '') {
-                                        $result = $this->upload->renameImages(
-                                            array(
-                                                'name' => $this->name_img,
-                                                'edit' => $page['name_img'],
-                                                'prefix' => array('s_', 'm_', 'l_'),
-                                                'module_img' => 'pages',
-                                                'attribute_img' => 'page',
-                                                'original_remove' => false
-                                            ),
-                                            array(
-                                                'upload_root_dir' => 'upload/pages', //string
-                                                'upload_dir' => $page['id_pages'] //string ou array
-                                            )
-                                        );
+										$result = $this->upload->renameImages('pages','pages',$page['name_img'],$this->name_img,'upload/pages',[$page['id_pages']]);
 
-                                        $this->upd(array(
-                                            'type' => 'img',
-                                            'data' => array(
-                                                'id_img' => $this->id_img,
-                                                'name_img' => $result
-                                            )
-                                        ));
+										if($result) {
+											$this->upd([
+												'type' => 'img',
+												'data' => [
+													'id_img' => $this->id_img,
+													'name_img' => $this->name_img.'.'.$img_pages['extension']
+												]
+											]);
+										}
                                     }
                                 }
 
                                 $this->message->json_post_response(true, 'add_redirect');
-                            } else {
+                            }
+							else {
                                 $this->modelLanguage->getLanguage();
                                 $setEditData = parent::fetchData(
                                     array('context' => 'all', 'type' => 'imgData'),
@@ -828,7 +790,8 @@ class backend_controller_pages extends backend_db_pages
                                         $this->message->json_post_response(true, 'delete', array('id' => $this->id_pages));
                                         break;
                                 }
-                            }else{
+                            }
+							else{
                                 $this->del(
                                     array(
                                         'type'=>'delPages',

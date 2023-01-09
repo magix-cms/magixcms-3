@@ -286,10 +286,9 @@ class db_layer {
         print $color.'<br />';
      */
     public function fetchAll(string $sql, array $execute = [], array $setOption = []) {
-        try {
-			//$this->logger->log('statement', 'db', 'fetchAll : '.$sql, debug_logger::LOG_MONTH);
-
-            $setConfig = $this->setConfig($setOption);
+        //$this->logger->log('statement', 'db', 'fetchAll : '.$sql, debug_logger::LOG_MONTH);
+		try {
+			$setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)) {
                 $prepare->setFetchMode($this->setMode($setConfig['mode']));
@@ -322,10 +321,9 @@ class db_layer {
      * print $select['name'];
      */
     public function fetch(string $sql, array $execute = [], array $setOption = []) {
-        try {
-			//$this->logger->log('statement', 'db', 'fetch : '.$sql, debug_logger::LOG_MONTH);
-
-            $setConfig = $this->setConfig($setOption);
+        //$this->logger->log('statement', 'db', 'fetch : '.$sql, debug_logger::LOG_MONTH);
+		try {
+			$setConfig = $this->setConfig($setOption);
             $prepare = $this->prepare($sql);
             if(is_object($prepare)) {
                 $prepare->setFetchMode($this->setMode($setConfig['mode']));

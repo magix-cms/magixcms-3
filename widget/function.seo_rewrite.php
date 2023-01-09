@@ -34,8 +34,8 @@ function smarty_function_seo_rewrite($params, $template){
 
 	if(is_array($params['conf'])){
 		$conf = $params['conf'];
-		$parent = $params['parent'];
-		$record = $params['record'];
+		$parent = $params['parent'] ?? '';
+		$record = $params['record'] ?? '';
 
 		if(isset($_GET['controller'])){
 			$controller = form_inputEscape::simpleClean($_GET['controller']);
@@ -54,7 +54,6 @@ function smarty_function_seo_rewrite($params, $template){
 			else {
 				if (!isset($conf['default'])) {
 					trigger_error("default: missing 'default' parameter");
-					return;
 				}
 				else {
 					return $conf['default'];

@@ -1,5 +1,5 @@
 <script>
-    {if $setting.ssl.value && $setting.service_worker.value}
+    {if $setting.ssl && $setting.service_worker}
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('/sw.min.js').then(function(registration) {

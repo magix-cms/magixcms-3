@@ -49,18 +49,6 @@ class frontend_model_product {
 	protected component_routing_url $routingUrl;
 	protected component_files_images $imagesComponent;
 	protected component_format_math $math;
-	
-    /**
-     * @var array $imagePlaceHolder
-     * @var array $defaultImage
-     * @var array $imgPrefix
-     * @var array $fetchConfig
-     */
-    protected array 
-		$imagePlaceHolder,
-		$defaultImage,
-		$imgPrefix,
-		$fetchConfig;
 
 	/**
 	 * @param null|frontend_model_template $t
@@ -79,16 +67,7 @@ class frontend_model_product {
 	 * @return void
 	 */
 	private function initImageComponent() {
-		if(!isset($this->imagePlaceHolder)) $this->imagePlaceHolder = $this->logo->getImagePlaceholder();
-		if(!isset($this->imgPrefix)) $this->imgPrefix = $this->imagesComponent->prefix();
-		if(!isset($this->fetchConfig)) $this->fetchConfig = $this->imagesComponent->getConfigItems([
-			'module_img' => 'catalog',
-			'attribute_img' => 'product'
-		]);
-		if(!isset($this->defaultImage)) $this->defaultImage = $this->imagesComponent->getConfigItems([
-			'module_img' => 'logo',
-			'attribute_img' => 'product'
-		]);
+		if(!isset($this->imagesComponent)) $this->imagesComponent = new component_files_images($this->template);
 	}
 
     /**
@@ -100,37 +79,32 @@ class frontend_model_product {
     public function setItemData (array $row, array $active, array $newRow = []): array {
 		$string_format = new component_format_string();
         $data = [];
-        $extwebp = 'webp';
-        $this->initImageComponent();
 
         if(!empty($row)) {
-			//$subcat['id']   = (isset($row['idcls'])) ? $row['idcls'] : null;
-			//$subcat['name'] = (isset($row['pathslibelle'])) ? $row['pathslibelle'] : null;
+			$this->initImageComponent();
 			$data['short_name']= $row['name_p'];
 			$data['name']      = $row['name_p'];
 			$data['long_name'] = $row['longname_p'];
-			$data['url'] = $this->routingUrl->getBuildUrl(array(
-				'type'       => 'product',
-				'iso'        => $row['iso_lang'],
-				'id'         => $row['id_product'],
-				'url'        => $row['url_p'],
-				'id_parent'  => $row['id_cat'],
+			$data['url'] = $this->routingUrl->getBuildUrl([
+				'type' => 'product',
+				'iso' => $row['iso_lang'],
+				'id' => $row['id_product'],
+				'url' => $row['url_p'],
+				'id_parent' => $row['id_cat'],
 				'url_parent' => $row['url_cat']
-			));
+			]);
 			// Base url for product
 			$data['baseUrl']       = $row['url_p'];
 			$data['active'] = false;
-			if ($row['id_product'] == $active['controller']['id']) {
-				$data['active'] = true;
-			}
+			if ($row['id_product'] == $active['controller']['id']) $data['active'] = true;
 			$data['id']        = $row['id_product'];
 			$data['id_parent'] = $row['id_cat'];
-			$data['url_parent'] = $this->routingUrl->getBuildUrl(array(
+			$data['url_parent'] = $this->routingUrl->getBuildUrl([
 				'type' => 'category',
-				'iso'  => $row['iso_lang'],
-				'id'   => $row['id_cat'],
-				'url'  => $row['url_cat']
-			));
+				'iso' => $row['iso_lang'],
+				'id' => $row['id_cat'],
+				'url' => $row['url_cat']
+			]);
 			$data['cat']       = $row['name_cat'];
 			$data['id_lang']   = $row['id_lang'];
 			$data['iso']       = $row['iso_lang'];
@@ -141,59 +115,22 @@ class frontend_model_product {
 			$data['order']     = isset($row['order_p']) ? $row['order_p'] : null;
 			if (isset($row['img'])) {
 				if(is_array($row['img'])) {
-					foreach ($row['img'] as $item => $val) {
-						// # return filename without extension
-						$pathinfo = pathinfo($val['name_img']);
-						$filename = $pathinfo['filename'];
-						$data['imgs'][$item]['img']['alt'] = $val['alt_img'];
-						$data['imgs'][$item]['img']['title'] = $val['title_img'];
-						$data['imgs'][$item]['img']['caption'] = $val['caption_img'];
-						$data['imgs'][$item]['img']['name'] = $val['name_img'];
-						foreach ($this->fetchConfig as $key => $value) {
-							$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $this->imgPrefix[$value['type_img']] . $val['name_img']);
-							$data['imgs'][$item]['img'][$value['type_img']]['src'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $this->imgPrefix[$value['type_img']] . $val['name_img'];
-							if(file_exists(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $this->imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)) {
-								$data['imgs'][$item]['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $val['id_product'] . '/' . $this->imgPrefix[$value['type_img']] . $filename . '.' . $extwebp;
-							}
-							$data['imgs'][$item]['img'][$value['type_img']]['crop'] = $value['resize_img'];
-							//$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['width_img'];
-							$data['imgs'][$item]['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-							//$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['height_img'];
-							$data['imgs'][$item]['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-							$data['imgs'][$item]['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/' . $val['id_product'] . '/' . $this->imgPrefix[$value['type_img']] . $val['name_img']);
+					foreach ($row['img'] as $val) {
+						$image = $this->imagesComponent->setModuleImage('catalog','product',$val['name_img'],$row['id_product']);
+						if($val['default_img']) {
+							$data['img'] = $image;
+							$image['default'] = 1;
 						}
-						$data['imgs'][$item]['default'] = $val['default_img'];
+						$data['imgs'][] = $image;
 					}
+					$data['img']['default'] = $this->imagesComponent->setModuleImage('catalog','product');
 				}
 			}
 			else {
-				if(isset($row['name_img'])){
-					// # return filename without extension
-					$pathinfo = pathinfo($row['name_img']);
-					$filename = $pathinfo['filename'];
-					foreach ($this->fetchConfig as $key => $value) {
-						$imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$this->imgPrefix[$value['type_img']] . $row['name_img']);
-						$data['img'][$value['type_img']]['src'] = '/upload/catalog/p/'.$row['id_product'].'/'.$this->imgPrefix[$value['type_img']] . $row['name_img'];
-						if(file_exists(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$this->imgPrefix[$value['type_img']] . $filename. '.' .$extwebp)) {
-							$data['img'][$value['type_img']]['src_webp'] = '/upload/catalog/p/' . $row['id_product'] . '/' . $this->imgPrefix[$value['type_img']] . $filename . '.' . $extwebp;
-						}
-						//$data['img'][$value['type_img']]['w'] = $value['width_img'];
-						$data['img'][$value['type_img']]['w'] = $value['resize_img'] === 'basic' ? $imginfo['width'] : $value['width_img'];
-						//$data['img'][$value['type_img']]['h'] = $value['height_img'];
-						$data['img'][$value['type_img']]['h'] = $value['resize_img'] === 'basic' ? $imginfo['height'] : $value['height_img'];
-						$data['img'][$value['type_img']]['crop'] = $value['resize_img'];
-						$data['img'][$value['type_img']]['ext'] = mime_content_type(component_core_system::basePath().'/upload/catalog/p/'.$row['id_product'].'/'.$this->imgPrefix[$value['type_img']] . $row['name_img']);
-					}
-					$data['img']['alt'] = $row['alt_img'];
-					$data['img']['title'] = $row['title_img'];
-					$data['img']['caption'] = $row['caption_img'];
-					$data['img']['name'] = $row['name_img'];
+				if(isset($row['name_img'])) {
+					$data['img'] = $this->imagesComponent->setModuleImage('catalog','product',$row['name_img'],$row['id_product']);
 				}
-				$data['img']['default'] = [
-					'src' => isset($this->imagePlaceHolder['product']) ? $this->imagePlaceHolder['product'] : '/skin/'.$this->template->theme.'/img/catalog/p/default.png',
-					'w' => $this->defaultImage[0]['width_img'],
-					'h' => $this->defaultImage[0]['height_img']
-				];
+				$data['img']['default'] = $this->imagesComponent->setModuleImage('catalog','product');
 			}
 			// Plugin
 			if(!empty($newRow)){

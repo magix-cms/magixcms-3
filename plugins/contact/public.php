@@ -15,15 +15,14 @@ class plugins_contact_public extends plugins_contact_db {
      * @var frontend_model_domain $modelDomain
      * @var plugins_recaptcha_public $recaptcha
      */
-    protected
-		$template,
-		$data,
-        $header,
-		$sanitize,
-        $mail,
-		$settings,
-        $modelDomain,
-		$recaptcha;
+	protected frontend_model_template $template;
+	protected frontend_model_data $data;
+    protected http_header $header;
+	protected filter_sanitize $sanitize;
+    protected frontend_model_mail $mail;
+	protected frontend_model_setting $settings;
+    protected frontend_model_domain $modelDomain;
+	protected plugins_recaptcha_public $recaptcha;
 
 	/**
 	 * @var bool $amp_available
@@ -53,12 +52,8 @@ class plugins_contact_public extends plugins_contact_db {
         $this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 		$this->data = new frontend_model_data($this,$this->template);
         $this->lang = $this->template->lang;
-
         $this->amp = http_request::isGet('amp');
 
-        if(http_request::isPost('msg')) $this->msg = form_inputEscape::arrayClean($_POST['msg']);
-        if(http_request::isPost('type')) $this->type = form_inputEscape::simpleClean($_POST['type']);
-        if(http_request::isPost('custom_mail')) $this->custom_mail = form_inputEscape::simpleClean($_POST['custom_mail']);
         if(http_request::isGet('__amp_source_origin')) $this->origin = form_inputEscape::simpleClean($_GET['__amp_source_origin']);
         if(http_request::isRequest('moreinfo')) $this->moreinfo = form_inputEscape::simpleClean($_REQUEST['moreinfo']);
     }
@@ -103,7 +98,7 @@ class plugins_contact_public extends plugins_contact_db {
 						'installed' => $this->template->getConfigVars('installed'),
 						'configured' => $this->template->getConfigVars('configured')
 					];
-                    $message = sprintf('plugin_error','contact',$error[$subContent]);
+                    if(in_array($subContent,$error)) $message = sprintf($this->template->getConfigVars('plugin_error'),'contact',$error[$subContent]);
                 }
                 break;
         }
@@ -161,7 +156,7 @@ class plugins_contact_public extends plugins_contact_db {
      * @param bool $error
      * @return string
      */
-    private function setTitleMail(bool $error = false){
+    private function setTitleMail(bool $error = false): string {
         if($error) {
             $title = $this->msg['title'];
         }
@@ -298,16 +293,21 @@ class plugins_contact_public extends plugins_contact_db {
      */
     public function run() {
 		if(http_request::isMethod('GET')) {
+            $this->template->breadcrumb->addItem($this->template->getConfigVars('contact'));
 			if(isset($this->moreinfo)) $this->template->assign('title',$this->moreinfo);
 			$this->getItems('page',['lang' => $this->lang],'one');
 			$this->template->assign('contact',$this->getContactConf());
 			$this->template->display('contact/index.tpl');
 		}
 		if(http_request::isMethod('POST')) {
+            if(http_request::isPost('msg')) $this->msg = form_inputEscape::arrayClean($_POST['msg']);
+            if(http_request::isPost('type')) $this->type = form_inputEscape::simpleClean($_POST['type']);
+            if(http_request::isPost('custom_mail')) $this->custom_mail = form_inputEscape::simpleClean($_POST['custom_mail']);
+
 			$this->recaptchaEnabled();
 			if(isset($this->msg)) {
 				if (isset($this->recaptcha) && $this->recaptcha->active && !$this->recaptcha->getRecaptcha()) {
-					$this->notify('warning','captcha');
+					$this->getNotify('warning','captcha');
 					return;
 				}
 				else {
@@ -321,7 +321,7 @@ class plugins_contact_public extends plugins_contact_db {
      * @param string $iso
      * @return array|null
      */
-    public function submenu(string $iso) {
+    public function submenu(string $iso): ?array {
         if(class_exists('plugins_gmap_public')) {
             $this->template->addConfigFile([component_core_system::basePath().'/plugins/gmap/i18n/'], ['public_local_'], false);
             $this->template->configLoad();

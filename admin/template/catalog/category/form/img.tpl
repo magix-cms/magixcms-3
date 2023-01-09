@@ -44,7 +44,7 @@
             </div>
             <div class="preview-img">
                 <img id="preview"
-                     src="{if isset($page.imgSrc) && !empty($page.imgSrc)}/upload/catalog/c/{$page.id_cat}/{$page.imgSrc['original'].img}{else}#{/if}"
+                     src="{if isset($page.imgSrc) && !empty($page.imgSrc)}/upload/catalog/category/{$page.id_cat}/{$page.imgSrc['original'].img}{else}#{/if}"
                      alt="Déposez votre images ici..."
                      class="{if isset($page.imgSrc) && !empty($page.imgSrc)}preview{else}no-img{/if} img-responsive" />
             </div>
