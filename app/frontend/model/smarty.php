@@ -78,10 +78,11 @@ class frontend_model_smarty extends Smarty{
 	}
 
 	/**
-	 * Les paramètres pour la configuration de smarty 3
-	 * @param null|frontend_model_template $t
+	 * @param $t
+	 * @return void
+	 * @throws SmartyException
 	 */
-	protected function setParams($t){
+	protected function setParams($t = null){
 		$template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
 
 		/**
@@ -165,7 +166,7 @@ class frontend_model_smarty extends Smarty{
 		 * load pre filter
 		 */
 		//$this->load_filter('pre','magixmin');
-		$this->autoload_filters = array('pre' => array('magixmin'));
+		//$this->autoload_filters = array('pre' => array('magixmin'));
 		$this->loadFilter('output', 'trimwhitespace');
         $this->loadPlugin('smarty_compiler_switch');
 		/**
