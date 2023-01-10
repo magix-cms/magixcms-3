@@ -17,7 +17,7 @@ class component_routing_backend extends component_routing_dispatcher {
         $this->controllerCollection = array_map($funcBasenameFinder,$controllerFinder);
         $members = new backend_controller_login($this->template);
 
-        if(!$this->controller_name)  {
+        if(!isset($this->controller_name))  {
             $members->checkout();
         }
         else {
