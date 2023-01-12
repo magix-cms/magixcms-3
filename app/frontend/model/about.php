@@ -395,7 +395,7 @@ class frontend_model_about extends frontend_db_about {
 	 */
 	public function getCompanyData(): array {
 		$infoData = parent::fetchData(['context'=>'all','type'=>'info']);
-        $about = !empty($infoData) ? array_column($infoData,'value_info','name_infos') : [];
+        $about = !empty($infoData) ? array_column($infoData,'value_info','name_info') : [];
 		$schedule = [];
 
 		foreach ($this->company as $info => $value) {
