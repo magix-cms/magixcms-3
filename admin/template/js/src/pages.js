@@ -290,13 +290,13 @@ var pages = (function ($, undefined) {
                 return false;
             });
 
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            /*$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 if($(e.target).attr('href') === '#images') {
                     initDropZone();
                     initDefaultImg(edit);
                     initSortable(edit);
                 }
-            });
+            });*/
         }
     };
 })(jQuery);

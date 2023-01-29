@@ -52,7 +52,7 @@ class component_routing_url {
      * @throws Exception
      */
 	public function getBuildUrl($data) {
-        if(isset($this->dateFormat)) $this->dateFormat = new date_dateformat();
+        if(!isset($this->dateFormat)) $this->dateFormat = new date_dateformat();
         if(is_array($data)) {
             $iso = $data['iso'];
             $type = $data['type'];

@@ -144,7 +144,6 @@ class frontend_model_data{
 		$id = 'id_'.$type;
 
 		foreach ($data as &$item) {
-			if(!isset($item[$id])) $id = 'id';
 
 			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all'){
 				if($parser !== false) {
@@ -152,13 +151,14 @@ class frontend_model_data{
 					else $item = method_exists($parser, 'setItemData') ? $parser->setItemData($item,[],$newRow) : $item;
 				}
 
+                if(!isset($item[$id])) $id = 'id';
 				$childs[$item[$id]] = &$item;
 				$childs[$item[$id]]['subdata'] = [];
 				$childs[$item[$id]]['deepness'] = !isset($childs[$item['id_parent']]) ? 0 : $childs[$item['id_parent']]['deepness'] +1;
 				$kept[] = &$item;
 			}
 		}
-		//unset($item);
+		unset($item);
 
 		foreach($kept as &$item) {
 			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all') {
@@ -171,7 +171,7 @@ class frontend_model_data{
 					$childs[$k]['subdata'][] = &$item;
 			}
 		}
-		//unset($item);
+		unset($item);
 
 		foreach($kept as &$item) {
 			if (isset($childs[$item[$id]])) {

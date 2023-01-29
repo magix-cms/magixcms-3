@@ -120,30 +120,28 @@ class form_inputEscape{
     /**
      * Combine function trimText and isPostNumeric for input
      * @param string $str
-     *
-     * @return string
+     * @return int
      */
-    public static function numeric($str){
+    public static function numeric(string $str): int {
         return filter_escapeHtml::trim(form_inputFilter::isNumeric($str));
     }
+
     /**
      * Special function for clean array
      *
-     * @param string $array
+     * @param array $array
      * @return array
      */
-    public static function arrayClean($array): array {
-        if(is_array($array)){
-            foreach($array as $key => $val) {
-                if (!is_array($array[$key])) {
-                    $array[$key] = self::simpleClean($val);
-                }
-                else{
-                    $array[$key] = self::arrayClean($array[$key]);
-                }
+    public static function arrayClean(array $array): array {
+        foreach($array as $key => $val) {
+            if (!is_array($val)) {
+                $array[$key] = self::simpleClean($val);
             }
-            return $array;
+            else{
+                $array[$key] = self::arrayClean($val);
+            }
         }
+        return $array;
     }
     /**
      * Special function for extreme clean array

@@ -102,12 +102,12 @@
                         <input type="text" class="form-control" id="price_p" name="productData[price]" value="" placeholder="{#ph_price_vat#|ucfirst}">
                     </div>
                 </div>
-                {*<div class="col-ph-12 col-md-6">
+                <div class="col-ph-12 col-md-6">
                     <div class="form-group">
                         <label for="price_ttc">{#ttc#}</label>
-                        <input type="text" class="form-control" id="price_ttc" name="catalog[price_ttc]" value="" />
+                        <input type="text" class="form-control" id="price_ttc" data-vat="{$setting.vat_rate}" value="{($page.price_p * ($setting.vat_rate/100 + 1))|number_format:2:'.':''}" />
                     </div>
-                </div>*}
+                </div>
             </div>
         </div>
     </div>

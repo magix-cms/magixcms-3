@@ -7,7 +7,7 @@
     {headlink rel="stylesheet" href=$smarty.capture.cssColorpicker media="screen"}
 {/block}
 {block name='head:title'}{#logo#|ucfirst}{/block}
-{block name='body:id'}logo{/block}
+{block name='body:id'}edit-logo{/block}
 
 {block name='article:header'}
     <h1 class="h2">{#logo#|ucfirst}</h1>
@@ -22,8 +22,8 @@
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_logo#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#image" data-toggle="tab">{#logo#}</a></li>
-                    <li role="presentation"><a data-toggle="tab" href="#image_default">{#image_placeholder#}</a></li>
+                    <li role="presentation" class="active"><a data-toggle="tab" href="#logo">{#logo#}</a></li>
+                    <li role="presentation"><a data-toggle="tab" href="#placeholder">{#image_placeholder#}</a></li>
                     <li role="presentation"><a data-toggle="tab" href="#favicon">favicon</a></li>
                 </ul>
             </header>
@@ -32,10 +32,10 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="image">
+                    <div role="tabpanel" class="tab-pane active" id="logo">
                         {include file="logo/form/img.tpl" controller="logo"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="image_default">
+                    <div role="tabpanel" class="tab-pane" id="placeholder">
                         {include file="logo/form/holder.tpl" controller="logo"}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="favicon">

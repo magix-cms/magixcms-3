@@ -92,15 +92,15 @@ class frontend_model_logo extends frontend_db_logo {
                 $newData['img']['title'] = $data['title_logo'];
 
                 foreach ($fetchConfig as $value) {
-                    $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extension);
-                    $newData['img'][$value['type']]['src'] = '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extension;
-                    if(file_exists(component_core_system::basePath() .'/img/logo/' . $filename . '@' . $value['width'] . '.' . $extwebp)){
-                        $newData['img'][$value['type']]['src_webp'] = '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extwebp;
+                    $imginfo = $this->imagesComponent->getImageInfos(component_core_system::basePath().'/img/logo/'.$value['prefix'].'_'.$filename.'@'.$value['width'].'.'.$extension);
+                    $newData['img'][$value['type']]['src'] = '/img/logo/'.$value['prefix'].'_'.$filename.'@'.$value['width'].'.'.$extension;
+                    if(file_exists(component_core_system::basePath() .'/img/logo/'.$value['prefix'].'_'.$filename.'@'.$value['width'].'.'.$extwebp)){
+                        $newData['img'][$value['type']]['src_webp'] = '/img/logo/'.$value['prefix'].'_'.$filename.'@'.$value['width'].'.'.$extwebp;
                     }
                     $newData['img'][$value['type']]['w'] = $value['resize'] === 'basic' ? $imginfo['width'] : $value['width'];
                     $newData['img'][$value['type']]['h'] = $value['resize'] === 'basic' ? $imginfo['height'] : $value['height'];
                     $newData['img'][$value['type']]['crop'] = $value['resize'];
-                    $newData['img'][$value['type']]['ext'] = mime_content_type(component_core_system::basePath() . '/img/logo/' . $filename . '@' . $value['width'] . '.' . $extension);
+                    $newData['img'][$value['type']]['ext'] = mime_content_type(component_core_system::basePath().'/img/logo/'.$value['prefix'].'_'.$filename.'@'.$value['width'].'.'.$extension);
                 }
             }
         }

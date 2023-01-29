@@ -69,7 +69,7 @@ class backend_db_logo {
 	 */
 	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
-            case 'img':
+            case 'logo':
                 $query = "INSERT INTO `mc_logo`(img_logo,active_logo,date_register) 
 						VALUES (:img_logo,:active_logo,NOW())";
                 break;
@@ -97,7 +97,7 @@ class backend_db_logo {
 	 */
 	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
-            case 'img':
+            case 'logo':
                 $query = 'UPDATE mc_logo
 						SET img_logo = :img_logo,
 						    active_logo = :active_logo

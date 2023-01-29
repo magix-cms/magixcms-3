@@ -33,7 +33,7 @@
             <label for="name_img_{$id}">{#name_img#|ucfirst} :</label>
             <input type="text" class="form-control" placeholder="{#ph_name_img#}" id="name_img_{$id}" name="name_img" value="{if isset($page.img_news)}{$page.img_news}{else}{$page.content[$default].url_news}{/if}" />
         </div>
-        <div id="drop-zone" class="img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}">
+        {*<div id="drop-zone" class="img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}">
             <div id="drop-buttons" class="form-group">
                 <label id="clickHere" class="btn btn-default">
                     ou cliquez ici.. <span class="fa fa-upload"></span>
@@ -48,6 +48,21 @@
                      alt="Déposez votre images ici..."
                      class="{if isset($page.imgSrc) && !empty($page.imgSrc)}preview{else}no-img{/if} img-responsive" />
             </div>
+        </div>*}
+        <div class="dropzone img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}" data-preview="true">
+            <div class="preview-img">
+                <img
+                        src="{if isset($page.imgSrc) && !empty($page.imgSrc)}/upload/news/{$page.imgSrc['original'].img}{else}#{/if}"
+                        alt="{#drop_img_here#}"
+                        class="{if isset($page.imgSrc) && !empty($page.imgSrc)}preview{else}no-img{/if} img-responsive" />
+            </div>
+            <div class="drop-buttons form-group">
+                {*<div class="drop-text">{#drop_here#}</div>*}
+                <label class="btn btn-default" for="img">ou cliquez ici.. <span class="fa fa-upload"></span></label>
+            </div>
+            <input type="hidden" name="MAX_FILE_SIZE" value="6291456" />
+            <input type="hidden" id="id_cat" name="id" value="{$page.id_news}">
+            <input type="file" accept="image/*" id="img" name="img" value="" />
         </div>
         {include file="language/brick/dropdown-lang.tpl" onclass="true"}
         <div class="tab-content">

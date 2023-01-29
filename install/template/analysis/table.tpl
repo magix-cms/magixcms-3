@@ -45,11 +45,15 @@
         <th>{#permission#}</th></tr>
     </thead>
     <tbody>
-    <tr class="{if $results.php.encoding}success{else}warning{/if}">
+    <tr class="{if $results.access.writable_var}success{else}warning{/if}">
         <td>/var</td>
         <td>{if $results.access.writable_var}{#is_writable#}{else}{#is_not_writable#}{/if}</td>
     </tr>
-    <tr class="{if $results.php.encoding}success{else}warning{/if}">
+    <tr class="{if $results.access.writable_upload}success{else}warning{/if}">
+        <td>/upload</td>
+        <td>{if $results.access.writable_upload}{#is_writable#}{else}{#is_not_writable#}{/if}</td>
+    </tr>
+    <tr class="{if $results.access.writable_config}success{else}warning{/if}">
         <td>/app/config</td>
         <td>{if $results.access.writable_config}{#is_writable#}{else}{#is_not_writable#}{/if}</td>
     </tr>

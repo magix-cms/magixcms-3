@@ -100,6 +100,7 @@
         libjs/vendor/livefilter.min.js,
         libjs/vendor/bootstrap-select.min.js,
         libjs/vendor/filterlist.min.js,
+        {baseadmin}/template/js/img-drop.min.js,
         {baseadmin}/template/js/product.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}

@@ -248,7 +248,7 @@ class backend_db_product {
 					$query = 'SELECT * FROM mc_catalog_product_img WHERE `id_img` = :id';
 					break;
 				case 'lastImgId':
-					$query = 'SELECT count(id_img) as `index` FROM mc_catalog_product_img WHERE id_product = :id_product';
+					$query = 'SELECT id_img as `index` FROM mc_catalog_product_img WHERE id_product = :id_product ORDER BY id_img DESC LIMIT 0,1';
 					break;
 				case 'imgDefault':
 					$query = 'SELECT id_img FROM mc_catalog_product_img WHERE id_product = :id AND default_img = 1';

@@ -65,6 +65,7 @@ class install_controller_installer extends install_db_installer {
 			),
 			'access' => array(
 				'writable_config' => is_valid(!is_writable(component_core_system::basePath().'app'.DIRECTORY_SEPARATOR.'init'.DIRECTORY_SEPARATOR)),
+				'writable_upload' => is_valid(!is_writable(component_core_system::basePath().'upload'.DIRECTORY_SEPARATOR)),
 				'writable_var' => is_valid(!is_writable(component_core_system::basePath().'var'.DIRECTORY_SEPARATOR))
 			)
 		);

@@ -73,6 +73,7 @@
         libjs/vendor/src/bootstrap-select.js,
         libjs/vendor/filterlist.min.js,
         {baseadmin}/template/js/table-form.min.js,
+        {baseadmin}/template/js/img-drop.min.js,
         {baseadmin}/template/js/pages.min.js
     {/strip}{/capture}
     {script src=$smarty.capture.scriptForm type="javascript"}

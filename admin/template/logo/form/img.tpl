@@ -1,5 +1,5 @@
 <div class="row">
-    <form id="delete_img_logo" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=delete" method="post" class="validate_form delete_form_img col-ph-12" data-target="logo_img">
+    <form id="delete_img_logo" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=delete&tabs=logo" method="post" class="validate_form delete_form_img col-ph-12" data-target="logo_img">
         <div class="form-group">
             <input type="hidden" id="del_img" name="del_img" value="">
             <button class="btn btn-danger" type="submit" name="action" value="img">{#remove#|ucfirst}</button>
@@ -8,7 +8,7 @@
     {foreach $langs as $id => $iso}
         {if $iso@first}{$default = $id}{break}{/if}
     {/foreach}
-    <form id="edit_img_logo" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form_img col-ph-12 col-md-6 col-lg-5" data-target="logo_img">
+    <form id="edit_img_logo" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&tabs=logo" method="post" class="validate_form edit_form_img col-ph-12 col-md-6 col-lg-5" data-target="logo_img">
         <h3>Image, description de l'image et SEO <a href="#" class="icon-help text-info" data-trigger="hover" data-placement="top"
                                                     data-toggle="popover"
                                                     data-content="{#info_size_logo#}"
@@ -30,7 +30,7 @@
                     {#unactive_logo#|ucfirst}
             </label>
         </div>
-        <div id="drop-zone" class="img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}">
+        {*<div id="drop-zone" class="img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}">
             <div id="drop-buttons" class="form-group">
                 <label id="clickHere" class="btn btn-default">
                     ou cliquez ici.. <span class="fa fa-upload"></span>
@@ -44,6 +44,20 @@
                      alt="Déposez votre images ici..."
                      class="{if isset($page.imgSrc) && !empty($page.imgSrc)}preview{else}no-img{/if} img-responsive" />
             </div>
+        </div>*}
+        <div class="dropzone img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}" data-preview="true">
+            <div class="preview-img">
+                <img
+                     src="{if isset($page.imgSrc) && !empty($page.imgSrc)}/img/logo/{$page.imgSrc['original'].img}{else}#{/if}"
+                     alt="{#drop_img_here#}"
+                     class="{if isset($page.imgSrc) && !empty($page.imgSrc)}preview{else}no-img{/if} img-responsive" />
+            </div>
+            <div class="drop-buttons form-group">
+                {*<div class="drop-text">{#drop_here#}</div>*}
+                <label class="btn btn-default" for="img">ou cliquez ici.. <span class="fa fa-upload"></span></label>
+            </div>
+            <input type="hidden" name="MAX_FILE_SIZE" value="6291456" />
+            <input type="file" accept="image/*" id="img" name="img" value="" />
         </div>
         {include file="language/brick/dropdown-lang.tpl" onclass="true"}
         <div class="tab-content">

@@ -45,7 +45,7 @@ Requirements
 ### Server
  * APACHE / IIS / NGINX
      * Le serveur doit avoir la réécriture d'url activé pour fonctionner (rewrite_mod).
- * PHP 7 et plus
+ * PHP 7.4 et plus
      * GD activé avec le support Webp
      * SPL
      * SimpleXML et XML READER
@@ -62,17 +62,17 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 
 ## Watchers PHP STORM
 ### NPM requirements
- * npm >= 4.1.2
- * [less](http://lesscss.org/usage/) >= 3.5.0
+ * npm >= 9.3.1
+ * [less](http://lesscss.org/usage/) >= 4.1.3
  * [less-plugin-glob](https://github.com/just-boris/less-plugin-glob) >= 3.0.0
     * Requires: [globby](https://www.npmjs.com/package/globby) >= 9.1.0
  * [less-plugin-clean-css](https://github.com/less/less-plugin-clean-css) >= 1.5.1 *deprecated use clean-css-cli instead*
- * [clean-css-cli](https://www.npmjs.com/package/clean-css-cli) >= 4.3.0
+ * [clean-css-cli](https://www.npmjs.com/package/clean-css-cli) >= 5.3.0
  * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21 *deprecated use terser-js*
  * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 *deprecated use terser-js*
- * [terser](https://github.com/terser-js/terser) >= 3.17.0 (ou terser-js à la place de Uglify)
+ * [terser](https://github.com/terser-js/terser) >= 5.7.1 (ou terser-js à la place de Uglify)
  * [sass](https://sass-lang.com/install) >= 1.20.1
- * [mjml](https://mjml.io/download)
+ * [mjml](https://mjml.io/download) >= 4.12.0
  
 #### Script Plugins
 <pre>

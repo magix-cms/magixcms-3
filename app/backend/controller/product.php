@@ -1,6 +1,5 @@
 <?php
-class backend_controller_product extends backend_db_product
-{
+class backend_controller_product extends backend_db_product {
 	public $edit, $action, $tabs, $search;
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory,$routingUrl;
 	public $controller,$id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img,$plugin,$tables,
@@ -840,7 +839,7 @@ class backend_controller_product extends backend_db_product
                                 $product = $this->getItems('content', array('id_product' => $this->id_product, 'id_lang' => $defaultLanguage['id_lang']), 'one', false);
                                 $newimg = $this->getItems('lastImgId', ['id_product' => $this->id_product], 'one', false);
                                 // If $newimg = NULL return 0
-                                //$newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
+                                $newimg['index'] = $newimg['index'] ?? 0;
 
                                 /*$resultUpload = $this->upload->setMultipleImageUpload(
                                     'img_multiple',

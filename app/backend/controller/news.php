@@ -1,6 +1,5 @@
 <?php
-class backend_controller_news extends backend_db_news
-{
+class backend_controller_news extends backend_db_news {
     public $edit, $action, $tabs, $search, $plugin, $controller, $lang;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$makeFiles,$finder,$routingUrl;
     public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img,$ajax,$tableaction,$tableform,$iso,$name_img;
@@ -18,12 +17,11 @@ class backend_controller_news extends backend_db_news
 
     /**
      * backend_controller_news constructor.
-     * @param null|object $t
+     * @param ?backend_model_template $t
      * @throws Exception
      */
-    public function __construct($t = null)
-    {
-        $this->template = $t ? $t : new backend_model_template;
+    public function __construct(?backend_model_template $t = null) {
+        $this->template = $t instanceof backend_model_template ? $t : new backend_model_template;
         $this->lang = $this->template->lang;
         $this->message = new component_core_message($this->template);
         $this->header = new http_header();
@@ -419,8 +417,7 @@ class backend_controller_news extends backend_db_news
     /**
      *
      */
-    public function run()
-    {
+    public function run() {
         $this->modelPlugins->getItems(
             array(
                 'type'      =>  'tabs',

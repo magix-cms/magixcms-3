@@ -1,6 +1,5 @@
 <?php
-class backend_controller_pages extends backend_db_pages
-{
+class backend_controller_pages extends backend_db_pages {
     public $edit, $action, $tabs, $search, $plugin, $controller;
     protected $message, $template, $progress, $header, $data, $modelLanguage, $collectionLanguage, $order, $order_img, $upload, $config, $imagesComponent, $modelPlugins,$routingUrl,$makeFiles,$finder;
     public $id_pages,$parent_id,$content,$pages,$img,$iso,$del_img,$ajax,$tableaction,$tableform,$offset,$name_img,$menu_pages,$id_img,$img_multiple,$imgData,$editimg;
@@ -277,6 +276,7 @@ class backend_controller_pages extends backend_db_pages
         }
         return $arr;
     }
+
     /**
      * @param $id
      * @return array
@@ -603,14 +603,14 @@ class backend_controller_pages extends backend_db_pages
                             $this->progress = new component_core_feedback($this->template);
 
                             usleep(200000);
-                            $this->progress->sendFeedback(array('message' => $this->template->getConfigVars('control_of_data'), 'progress' => 30));
+                            $this->progress->sendFeedback(['message' => $this->template->getConfigVars('control_of_data'), 'progress' => 30]);
 
-                            $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                            $page = $this->getItems('pageLang', array('id' => $this->id_pages, 'iso' => $defaultLanguage['iso_lang']), 'one', false);
+                            $defaultLanguage = $this->collectionLanguage->fetchData(['context' => 'one', 'type' => 'default']);
+                            $page = $this->getItems('pageLang', ['id' => $this->id_pages, 'iso' => $defaultLanguage['iso_lang']], 'one', false);
                             $newimg = $this->getItems('lastImgId', ['id_pages' => $this->id_pages], 'one', false);
+                            $newimg['index'] = $newimg['index'] ?? 0;
 
-							$resultUpload = $this->upload->multipleImageUpload(
-								'pages','pages','upload/pages',["$this->id_pages"],[
+							$resultUpload = $this->upload->multipleImageUpload('pages','pages','upload/pages',["$this->id_pages"],[
 								'name' => $page['url_pages'],
 								'suffix' => (int)$newimg['index'],
 								'suffix_increment' => true,

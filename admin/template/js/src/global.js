@@ -1,3 +1,37 @@
+function getPosition(element) {
+	return element.getBoundingClientRect();
+}
+
+function getClosest (elem, selector) {
+	// Element.matches() polyfill
+	if (!Element.prototype.matches) {
+		Element.prototype.matches =
+			Element.prototype.matchesSelector ||
+			Element.prototype.mozMatchesSelector ||
+			Element.prototype.msMatchesSelector ||
+			Element.prototype.oMatchesSelector ||
+			Element.prototype.webkitMatchesSelector ||
+			function(s) {
+				var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+					i = matches.length;
+				while (--i >= 0 && matches.item(i) !== this) {}
+				return i > -1;
+			};
+	}
+
+	// Get the closest matching element
+	for ( ; elem && elem !== document; elem = elem.parentNode ) {
+		if ( elem.matches( selector ) ) return elem;
+	}
+	return null;
+}
+
+Number.prototype.between = function(a, b, inclusive) {
+	var min = Math.min.apply(Math, [a, b]),
+		max = Math.max.apply(Math, [a, b]);
+	return inclusive ? this >= min && this <= max : this > min && this < max;
+};
+
 +function ($) {
 	'use strict';
 

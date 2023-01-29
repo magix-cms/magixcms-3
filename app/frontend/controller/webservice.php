@@ -1,70 +1,117 @@
 <?php
-class frontend_controller_webservice extends frontend_db_webservice{
+class frontend_controller_webservice extends frontend_db_webservice {
     /**
-     * @var
+     * @var frontend_model_template $template
+     * @var frontend_model_data $data
+     * @var component_core_message $message
+     * @var http_header $header
+     * @var component_xml_output $xml
+     * @var date_dateformat $dateFormat
+     * @var component_routing_url $routingUrl
+     * @var component_files_upload $upload
+     * @var component_files_images $imagesComponent
+     * @var component_collections_language $collectionLanguage
+     * @var frontend_model_domain $collectionDomain
+     * @var frontend_db_home $DBHome
+     * @var frontend_db_pages $DBPages
+     * @var frontend_db_news $DBNews
+     * @var frontend_db_catalog $DBCatalog
+     * @var frontend_db_category $DBCategory
+     * @var frontend_db_product $DBProduct
+     * @var frontend_model_webservice $ws
+     * @var frontend_model_collection $buildCollection
+     * @var frontend_model_plugins $buildPlugins
      */
-    protected $template,$UtilsHeader, $header, $data, $modelNews, $modelCore, $dateFormat, $xml, $message;
-    protected $DBPages, $DBNews, $DBCatalog, $DBHome,$DBCategory,$DBProduct;
-    protected $modelPages,$upload,$imagesComponent, $routingUrl, $buildCollection,$ws,$collectionLanguage,$collectionDomain,$buildPlugins;
-    public $collection, $retrieve, $id, $filter ,$sort, $url, $img, $img_multiple, $imgData;
+    protected frontend_model_template $template;
+    protected frontend_model_data $data;
+    protected component_core_message $message;
+    protected http_header $header;
+    protected component_xml_output $xml;
+    protected date_dateformat $dateFormat;
+    protected component_routing_url $routingUrl;
+    protected component_files_upload $upload;
+    protected component_files_images $imagesComponent;
+    protected component_collections_language $collectionLanguage;
+    protected frontend_model_domain $collectionDomain;
+    protected frontend_db_home $DBHome;
+    protected frontend_db_pages $DBPages;
+    protected frontend_db_news $DBNews;
+    protected frontend_db_catalog $DBCatalog;
+    protected frontend_db_category $DBCategory;
+    protected frontend_db_product $DBProduct;
+    protected frontend_model_webservice $ws;
+    protected frontend_model_collection $buildCollection;
+    protected frontend_model_plugins $buildPlugins;
+
+    /**
+     * @var int $id
+     */
+    public int $id;
+
+    /**
+     * @var string $url
+     * @var string $collection
+     * @var string $retrieve
+     * @var string $sort
+     * @var string $img
+     * @var string $img_multiple
+     */
+    public string
+        $url,
+        $collection,
+        $retrieve,
+        $sort,
+        $img,
+        $img_multiple;
+
+    /**
+     * @var array $imgData
+     * @var array $filter
+     */
+    public array
+        $imgData,
+        $filter;
 
     /**
      * frontend_controller_webservice constructor.
-     * @param null $t
-     * @throws Exception
+     * @param ?frontend_model_template $t
      */
-    public function __construct($t = null){
-		$this->template = $t ? $t : new frontend_model_template();
-		$formClean = new form_inputEscape();
-        $this->message = new component_core_message($this->template);
-        $this->UtilsHeader = new component_httpUtils_header($this->template);
-        $this->modelPages = new frontend_model_pages($this->template);
-        $this->xml = new component_xml_output();
-        $this->header = new http_header();
+    public function __construct(?frontend_model_template $t = null) {
+		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $this->data = new frontend_model_data($this);
-        //$this->getlang = $this->template->currentLanguage();
-        $this->imagesComponent = new component_files_images($this->template);
+        $this->message = new component_core_message($this->template);
+        $this->header = new http_header();
+        $this->xml = new component_xml_output();
+        $this->dateFormat = new date_dateformat();
+        $this->routingUrl = new component_routing_url();
         $this->upload = new component_files_upload();
+        $this->imagesComponent = new component_files_images($this->template);
+        $this->collectionLanguage = new component_collections_language();
+        $this->collectionDomain = new frontend_model_domain($this->template);
+        $this->ws = new frontend_model_webservice();
         $this->buildCollection = new frontend_model_collection($this->template);
+        $this->buildPlugins = new frontend_model_plugins();
+        // Databases
         $this->DBHome = new frontend_db_home();
         $this->DBPages = new frontend_db_pages();
         $this->DBNews = new frontend_db_news();
-        $this->DBCatalog = new frontend_db_news();
-        $this->dateFormat = new date_dateformat();
         $this->DBCatalog = new frontend_db_catalog();
         $this->DBCategory = new frontend_db_category();
         $this->DBProduct = new frontend_db_product();
-        $this->collectionDomain = new frontend_model_domain($this->template);
-        $this->url = http_url::getUrl();
-        $this->collectionLanguage = new component_collections_language();
-        $this->ws = new frontend_model_webservice();
-        $this->buildPlugins = new frontend_model_plugins();
 
-        if (http_request::isGet('id')) {
-            $this->id = $formClean->numeric($_GET['id']);
-        }
-        if (http_request::isGet('collection')) {
-            $this->collection = $formClean->simpleClean($_GET['collection']);
-        }
-        if (http_request::isGet('retrieve')) {
-            $this->retrieve = $formClean->simpleClean($_GET['retrieve']);
-        }
-        if(http_request::isGet('filter')){
-            $this->filter = $formClean->arrayClean($_GET['filter']);
-        }
-        if(http_request::isGet('sort')){
-            $this->sort = $formClean->simpleClean($_GET['sort']);
-        }
+        $this->url = http_url::getUrl();
+        if (http_request::isGet('id')) $this->id = form_inputEscape::numeric($_GET['id']);
+        if (http_request::isGet('collection')) $this->collection = form_inputEscape::simpleClean($_GET['collection']);
+        if (http_request::isGet('retrieve')) $this->retrieve = form_inputEscape::simpleClean($_GET['retrieve']);
+        if(http_request::isGet('sort')) $this->sort = form_inputEscape::simpleClean($_GET['sort']);
+        if(http_request::isGet('filter')) $this->filter = form_inputEscape::arrayClean($_GET['filter']);
 
         // --- Image Upload
-        if(isset($_FILES['img']["name"])){
-            $this->img = http_url::clean($_FILES['img']["name"]);
-        }
+        if(isset($_FILES['img']["name"])) $this->img = http_url::clean($_FILES['img']["name"]);
         // --- MultiImage Upload
         if (isset($_FILES['img_multiple']["name"])) $this->img_multiple = ($_FILES['img_multiple']["name"]);
-
         if (http_request::isPost('data')) {
-            $this->imgData = array();
+            $this->imgData = [];
             parse_str($_POST['data'],$this->imgData);
         }
     }
@@ -72,69 +119,52 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * Assign data to the defined variable or return the data
      * @param string $type
-     * @param string|int|null $id
-     * @param string $context
-     * @param boolean $assign
+     * @param array|int|null $id
+     * @param ?string $context
+     * @param bool|string $assign
      * @return mixed
-     * @throws Exception
      */
-    private function getItems($type, $id = null, $context = null, $assign = true) {
+    private function getItems(string $type, $id = null, ?string $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
 
     /**
      * @return string
-     * @throws Exception
      */
-    public function setWsAuthKey(){
+    public function setWsAuthKey(): string {
         $data = $this->getItems('auth',null,'one',false);
-        if($data != null){
-            if($data['status_ws'] != '0'){
-                return $data['key_ws'];
-            }else{
-                return false;
-            }
-        }else{
-            return false;
-        }
+        if(!empty($data) && !empty($data['key_ws']) && $data['status_ws']) return $data['key_ws'];
+        return '';
     }
 
     // ############## GET
     /**
      * Global Root
      */
-    private function getBuildRootData(){
-        $data = array('domain','languages','home','pages','news','catalog');
+    private function getBuildRootData() {
+        $data = ['domain','languages','home','pages','news','catalog'];
         $this->xml->newStartElement('modules');
         foreach($data as $key) {
-            $this->xml->setElement(
-                array(
-                    'start' => 'module',
-                    'attrNS' => array(
-                        array(
-                            'prefix' => 'xlink',
-                            'name' => 'href',
-                            'uri' => $this->url . '/webservice/'.$key.'/'
-                        )
-                    )
-                )
-            );
+            $this->xml->setElement([
+                'start' => 'module',
+                'attrNS' => [[
+                    'prefix' => 'xlink',
+                    'name' => 'href',
+                    'uri' => $this->url . '/webservice/'.$key.'/'
+                ]]
+            ]);
         }
         $plugins = $this->buildPlugins->setWebserviceItems();
-        if($plugins != null) {
+        if(!empty($plugins)) {
             foreach ($plugins as $key) {
-                $this->xml->setElement(
-                    array(
-                        'start' => 'module',
-                        'attrNS' => array(
-                            array(
-                                'prefix' => 'xlink',
-                                'name' => 'href',
-                                'uri' => $this->url . '/webservice/plugin/' . $key . '/'
-                            )
-                        )
-                    )
-                );
+                $this->xml->setElement([
+                    'start' => 'module',
+                    'attrNS' => [[
+                        'prefix' => 'xlink',
+                        'name' => 'href',
+                        'uri' => $this->url . '/webservice/plugin/' . $key . '/'
+                    ]]
+                ]);
             }
         }
         $this->xml->newEndElement();
@@ -144,79 +174,55 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * Build language Data
      */
-    private function getBuildLanguageData(){
-        // Collection
-        $collection = $this->collectionLanguage->fetchData(
-            array('context' => 'all', 'type' => 'langs')
-        );
-
+    private function getBuildLanguageData() {
+        $collection = $this->collectionLanguage->fetchData(['context' => 'all', 'type' => 'langs']);
         $this->xml->newStartElement('languages');
-
         foreach($collection as $key) {
             $this->xml->newStartElement('language');
-
-            $this->xml->setElement(
-                array(
-                    'start' => 'id_lang',
-                    'text' => $key['id_lang']
-                )
-            );
-            $this->xml->setElement(
-                array(
-                    'start' => 'iso_lang',
-                    'text' => $key['iso_lang']
-                )
-            );
-            $this->xml->setElement(
-                array(
-                    'start' => 'name_lang',
-                    'text' => $key['name_lang']
-                )
-            );
-            $this->xml->setElement(
-                array(
-                    'start' => 'default_lang',
-                    'text' => $key['default_lang']
-                )
-            );
+            $this->xml->setElement([
+                'start' => 'id_lang',
+                'text' => $key['id_lang']
+            ]);
+            $this->xml->setElement([
+                'start' => 'iso_lang',
+                'text' => $key['iso_lang']
+            ]);
+            $this->xml->setElement([
+                'start' => 'name_lang',
+                'text' => $key['name_lang']
+            ]);
+            $this->xml->setElement([
+                'start' => 'default_lang',
+                'text' => $key['default_lang']
+            ]);
             $this->xml->newEndElement();
         }
         $this->xml->newEndElement();
         $this->xml->output();
     }
+
     /**
      * Build language Data
      */
-    private function getBuildDomainData(){
-        // Collection
+    private function getBuildDomainData() {
         $collection = $this->collectionDomain->getValidDomains();
-
         $this->xml->newStartElement('domains');
-
         foreach($collection as $key) {
             $this->xml->newStartElement('domain');
-
-            $this->xml->setElement(
-                array(
-                    'start' => 'id_domain',
-                    'text' => $key['id_domain']
-                )
-            );
-            $this->xml->setElement(
-                array(
-                    'start' => 'url_domain',
-                    'text' => $key['url_domain']
-                )
-            );
-            $this->xml->setElement(
-                array(
-                    'start' => 'default_domain',
-                    'text' => $key['default_domain']
-                )
-            );
+            $this->xml->setElement([
+                'start' => 'id_domain',
+                'text' => $key['id_domain']
+            ]);
+            $this->xml->setElement([
+                'start' => 'url_domain',
+                'text' => $key['url_domain']
+            ]);
+            $this->xml->setElement([
+                'start' => 'default_domain',
+                'text' => $key['default_domain']
+            ]);
             $this->xml->newEndElement();
         }
-
         $this->xml->newEndElement();
         $this->xml->output();
     }
@@ -224,14 +230,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * Build Home Data (EDIT)
      */
-    private function getBuildHomeData(){
+    private function getBuildHomeData() {
         // Collection
-        $collection = $this->DBHome->fetchData(
-            array('context' => 'all', 'type' => 'pages')
-        );
+        $collection = $this->DBHome->fetchData(['context' => 'all', 'type' => 'pages']);
         //print_r($collection);
         $this->xml->newStartElement('pages');
-
         foreach($collection as $key) {
             $this->xml->newStartElement('page');
             /*$this->xml->setElement(
@@ -295,15 +298,13 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * Build Pages items (LIST)
      */
-    private function getBuildPagesItems(){
-        $collection = $this->DBPages->fetchData(
-            array('context' => 'all', 'type' => 'pages','conditions'=>null)
-        );
+    private function getBuildPagesItems() {
+        $collection = $this->DBPages->fetchData(['context' => 'all', 'type' => 'pages','conditions'=>null]);
         $arr = $this->buildCollection->getBuildPages($collection);
         //print_r($arr);
         $this->xml->newStartElement('pages');
 
-        foreach($arr as $key => $value) {
+        foreach($arr as $value) {
             $this->xml->newStartElement('page');
             $this->xml->setElement(
                 array(
@@ -472,7 +473,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * Build Pages Data (EDIT)
      */
-    private function getBuildPagesData(){
+    private function getBuildPagesData() {
         $collection = $this->DBPages->fetchData(
             array('context' => 'all', 'type' => 'ws'),
             array(':id'=>$this->id)
@@ -673,11 +674,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->output();
 
     }
+
     /**
      * Build News items
      */
-    private function getBuildNewsItems()
-    {
+    private function getBuildNewsItems() {
         $collection = $this->DBNews->fetchData(
             array('context' => 'all', 'type' => 'pages', 'conditions' => null)
         );
@@ -806,10 +807,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->output();
 
     }
+
     /**
      * Build Pages Data (EDIT)
      */
-    private function getBuildNewsData(){
+    private function getBuildNewsData() {
         $collection = $this->DBNews->fetchData(
             array('context' => 'all', 'type' => 'ws'),
             array(':id'=>$this->id)
@@ -962,7 +964,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * Build Home Data (EDIT)
      */
-    private function getBuildCatalogData(){
+    private function getBuildCatalogData() {
         // Collection
         $collectionData = $this->DBCatalog->fetchData(
             array('context' => 'all', 'type' => 'rootWs')
@@ -1039,8 +1041,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      * Build News items
      */
-    private function getBuildCategoryItems()
-    {
+    private function getBuildCategoryItems() {
         $collection = $this->DBCategory->fetchData(
             array('context' => 'all', 'type' => 'pages', 'conditions' => null)
         );
@@ -1149,11 +1150,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->output();
 
     }
+
     /**
      * Build News items
      */
-    private function getBuildCategoryData()
-    {
+    private function getBuildCategoryData() {
         $collection = $this->DBCatalog->fetchData(
             array('context' => 'all', 'type' => 'category', 'conditions' => 'WHERE p.id_cat = :id'),
             array('id'=>$this->id)
@@ -1279,7 +1280,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->output();
 
     }
-    public function getBuildProductItems(){
+
+    /**
+     * @return void
+     */
+    public function getBuildProductItems() {
         $collection = $this->DBProduct->fetchData(
             array('context' => 'all', 'type' => 'pages','conditions'=>null)
         );
@@ -1469,7 +1474,7 @@ class frontend_controller_webservice extends frontend_db_webservice{
     /**
      *
      */
-    public function getBuildProductData(){
+    public function getBuildProductData() {
         $collection = $this->DBProduct->fetchData(
             array('context' => 'all', 'type' => 'pages','conditions'=>'WHERE p.id_product = :id'),
             array('id'=>$this->id)
@@ -1814,32 +1819,32 @@ class frontend_controller_webservice extends frontend_db_webservice{
         $this->xml->newEndElement();
         $this->xml->output();
     }
-    //########## REQUEST POST, PUT, DELETE
 
+    //########## REQUEST POST, PUT, DELETE
     /**
      * @param bool $debug
      * @return mixed|SimpleXMLElement
      */
-    public function parse($debug = false){
+    public function parse(bool $debug = false) {
         return $this->ws->setParseData($debug);
     }
 
     /**
      * Ajout et Mise a jour des données
-     * @param $operation
-     * @param $arrData
+     * @param array $operation
+     * @param array $arrData
      * @throws Exception
      */
-    private function getBuildSave($operation,$arrData)
-    {
-        switch($operation['type']){
+    private function getBuildSave(array $operation, array $arrData) {
+        switch($operation['type']) {
             case 'home':
-                $fetchRootData = $this->DBHome->fetchData(array('context'=>'one','type'=>'root'));
-                if($fetchRootData != null){
+                $fetchRootData = $this->DBHome->fetchData(['context' => 'one', 'type' => 'root']);
+                if($fetchRootData != null) {
                     $id_page = $fetchRootData['id_page'];
-                }else{
-                    $this->DBHome->insert(array('type'=>'newHome'));
-                    $newData = $this->DBHome->fetchData(array('context'=>'one','type'=>'root'));
+                }
+                else {
+                    $this->DBHome->insert(['type'=>'newHome']);
+                    $newData = $this->DBHome->fetchData(['context'=>'one','type'=>'root']);
                     $id_page = $newData['id_page'];
                 }
 
@@ -1847,46 +1852,47 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     if(!array_key_exists('0',$arrData['language'])) {
                         $content = $arrData['language'];
 
-                        $data = array(
-                            'title_page'        => !is_array($content['name']) ? $content['name'] : NULL,
-                            'content_page'      => !is_array($content['content']) ? $content['content'] : NULL,
-                            'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
-                            'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
-                            'published'         => $content['published'],
-                            'id_page'           => $id_page,
-                            'id_lang'           => $content['id_lang']
-                        );
+                        $data = [
+                            'title_page' => !is_array($content['name']) ? $content['name'] : NULL,
+                            'content_page' => !is_array($content['content']) ? $content['content'] : NULL,
+                            'seo_title_page' => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                            'seo_desc_page' => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
+                            'published' => $content['published'],
+                            'id_page' => $id_page,
+                            'id_lang' => $content['id_lang']
+                        ];
 
-                        if ($this->DBHome->fetchData(array('context' => 'one', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $content['id_lang'])) != null) {
-                            $this->DBHome->update(array('type' => 'content'), $data);
-                        } else {
-                            $this->DBHome->insert(array('type' => 'newContent'), $data);
+                        if ($this->DBHome->fetchData(['context' => 'one', 'type' => 'content'], ['id_page' => $id_page, 'id_lang' => $content['id_lang']]) != null) {
+                            $this->DBHome->update(['type' => 'content'], $data);
                         }
-                    }else{
+                        else {
+                            $this->DBHome->insert(['type' => 'newContent'], $data);
+                        }
+                    }
+                    else {
                         foreach ($arrData['language'] as $lang => $content) {
                             //$content['published'] = (!isset($content['published']) ? 0 : 1);
+                            $data = [
+                                'title_page' => !is_array($content['name']) ? $content['name'] : NULL,
+                                'content_page' => !is_array($content['content']) ? $content['content'] : NULL,
+                                'seo_title_page' => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
+                                'seo_desc_page' => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
+                                'published' => $content['published'],
+                                'id_page' => $id_page,
+                                'id_lang' => $content['id_lang']
+                            ];
 
-                            $data = array(
-                                'title_page'        => !is_array($content['name']) ? $content['name'] : NULL,
-                                'content_page'      => !is_array($content['content']) ? $content['content'] : NULL,
-                                'seo_title_page'    => !is_array($content['seo']['title']) ? $content['seo']['title'] : NULL,
-                                'seo_desc_page'     => !is_array($content['seo']['description']) ? $content['seo']['description'] : NULL,
-                                'published'         => $content['published'],
-                                'id_page'           => $id_page,
-                                'id_lang'           => $content['id_lang']
-                            );
-
-                            if ($this->DBHome->fetchData(array('context' => 'one', 'type' => 'content'), array('id_page' => $id_page, 'id_lang' => $content['id_lang'])) != null) {
-                                $this->DBHome->update(array('type' => 'content'), $data);
-                            } else {
-                                $this->DBHome->insert(array('type' => 'newContent'), $data);
+                            if ($this->DBHome->fetchData(['context' => 'one', 'type' => 'content'], ['id_page' => $id_page, 'id_lang' => $content['id_lang']]) != null) {
+                                $this->DBHome->update(['type' => 'content'], $data);
+                            }
+                            else {
+                                $this->DBHome->insert(['type' => 'newContent'], $data);
                             }
                         }
                     }
                     //print_r($arrData['language']);
-
                     $this->header->set_json_headers();
-                    $this->message->json_post_response(true, null, array('id'=>$id_page));
+                    $this->message->json_post_response(true, null, ['id' => $id_page]);
                 }
                 break;
             case 'pages':
@@ -1902,12 +1908,12 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         $newData = $this->DBPages->fetchData(array('context'=>'one','type'=>'root'));
                         $id_page = $newData['id_pages'];
                     }
-                }else{
+                }
+                else {
                     $this->DBPages->insert(array('type'=>'page'),array(':id_parent' => empty($arrData['parent']) ? NULL : $arrData['parent']));
                     $newData = $this->DBPages->fetchData(array('context'=>'one','type'=>'root'));
                     $id_page = $newData['id_pages'];
                 }
-
 
                 if($id_page) {
                     //print_r($arrData);
@@ -2354,11 +2360,10 @@ class frontend_controller_webservice extends frontend_db_webservice{
     }
 
     /**
-     * @param $operation
-     * @param $arrData
-     * @throws Exception
+     * @param array $operation
+     * @param array $arrData
      */
-    private function getBuildRemove($operation,$arrData){
+    private function getBuildRemove(array $operation, array $arrData) {
         $makeFiles = new filesystem_makefile();
         switch($operation['type']){
             case 'pages':
@@ -2367,29 +2372,21 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 if($arrData['id'] != null) {
                     if (is_array($arrData['id'])) {
                         foreach ($arrData['id'] as $key => $value) {
-                            $fetchImg[$key] = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'image'), array('id_pages' => $value));
+                            $fetchImg[$key] = $this->DBPages->fetchData(['context' => 'one', 'type' => 'image'], ['id_pages' => $value]);
 
                             if ($fetchImg[$key] != null) {
                                 $imgPath[$key] = component_core_system::basePath() . 'upload/pages/' . $value;
                                 // Supprime le dossier des images et les fichiers
-                                if (file_exists($imgPath[$key])) {
-                                    $makeFiles->remove(array(
-                                        $imgPath[$key]
-                                    ));
-                                }
+                                if (file_exists($imgPath[$key])) $makeFiles->remove([$imgPath[$key]]);
                             }
                         }
-
                         $this->DBPages->delete(
-                            array(
-                                'type' => 'delPages'
-                            ),
-                            array('id' => implode(",", $arrData['id'])
-                            )
+                            ['type' => 'delPages'],
+                            ['id' => implode(",", $arrData['id'])]
                         );
-
-                    } else {
-                        $fetchImg = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'image'), array('id_pages' => $arrData['id']));
+                    }
+                    else {
+                        $fetchImg = $this->DBPages->fetchData(['context' => 'one', 'type' => 'image'], ['id_pages' => $arrData['id']]);
 
                         if ($fetchImg != null) {
                             $imgPath = component_core_system::basePath() . 'upload/pages/' . $arrData['id'];
@@ -2411,98 +2408,75 @@ class frontend_controller_webservice extends frontend_db_webservice{
                                 }
                             }*/
                             // Supprime le dossier des images et les fichiers
-                            if (file_exists($imgPath)) {
-                                $makeFiles->remove(array(
-                                    $imgPath
-                                ));
-                            }
+                            if (file_exists($imgPath)) $makeFiles->remove([$imgPath]);
                         }
-
                         $this->DBPages->delete(
-                            array(
-                                'type' => 'delPages'
-                            ),
-                            array('id' => $arrData['id'])
+                            ['type' => 'delPages'],
+                            ['id' => $arrData['id']]
                         );
-
                     }
                 }
                 break;
             case 'news':
                 if (isset($this->id)) {
-                    foreach ($arrData['language'] as $lang => $content) {
+                    foreach ($arrData['language'] as $content) {
                         if ($content['tag'] != null) {
                             if (is_array($content['tag'])) {
-                                foreach ($content['tag'] as $key => $value) {
+                                foreach ($content['tag'] as $value) {
                                     $setTags = $this->DBNews->fetchData(
-                                        array('context' => 'one', 'type' => 'tag_ws'),
-                                        array(':id_news' => $this->id, ':id_lang' => $content['id_lang'], ':name_tag' => $value)
+                                        ['context' => 'one', 'type' => 'tag_ws'],
+                                        [':id_news' => $this->id, ':id_lang' => $content['id_lang'], ':name_tag' => $value]
                                     );
-
                                     if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
-                                        $this->DBNews->delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
+                                        $this->DBNews->delete(['type' => 'tagRel'], ['id_rel' => $setTags['rel_tag']]);
                                     }
                                 }
-                            }else{
+                            }
+                            else{
                                 $setTags = $this->DBNews->fetchData(
-                                    array('context' => 'one', 'type' => 'tag_ws'),
-                                    array(':id_news' => $this->id, ':id_lang' => $content['id_lang'], ':name_tag' => $content['tag'])
+                                    ['context' => 'one', 'type' => 'tag_ws'],
+                                    [':id_news' => $this->id, ':id_lang' => $content['id_lang'], ':name_tag' => $content['tag']]
                                 );
-
                                 if ($setTags['id_tag'] != null && $setTags['rel_tag'] != null) {
-                                    $this->DBNews->delete(array('type' => 'tagRel'), array('id_rel' => $setTags['rel_tag']));
+                                    $this->DBNews->delete(['type' => 'tagRel'], ['id_rel' => $setTags['rel_tag']]);
                                 }
                             }
                         }
                     }
-                }else {
+                }
+                else {
                     //$fetchConfig = $this->imagesComponent->getConfigItems('news', 'news');
                     //$imgPrefix = $this->imagesComponent->prefix();
                     if ($arrData['id'] != null) {
                         if (is_array($arrData['id'])) {
                             foreach ($arrData['id'] as $key => $value) {
-                                $fetchImg[$key] = $this->DBNews->fetchData(array('context' => 'one', 'type' => 'image'), array('id_news' => $value));
+                                $fetchImg[$key] = $this->DBNews->fetchData(['context' => 'one', 'type' => 'image'], ['id_news' => $value]);
 
                                 if ($fetchImg[$key] != null) {
                                     $imgPath[$key] = component_core_system::basePath() . 'upload/news/' . $value;
                                     // Supprime le dossier des images et les fichiers
-                                    if (file_exists($imgPath[$key])) {
-                                        $makeFiles->remove(array(
-                                            $imgPath[$key]
-                                        ));
-                                    }
+                                    if (file_exists($imgPath[$key])) $makeFiles->remove([$imgPath[$key]]);
                                 }
                             }
-
                             $this->DBNews->delete(
-                                array(
-                                    'type' => 'delPages'
-                                ),
-                                array('id' => implode(",", $arrData['id'])
-                                )
+                                ['type' => 'delPages'],
+                                ['id' => implode(",", $arrData['id'])]
                             );
-
-                        } else {
-                            $fetchImg = $this->DBNews->fetchData(array('context' => 'one', 'type' => 'image'), array('id_news' => $arrData['id']));
-
+                        }
+                        else {
+                            $fetchImg = $this->DBNews->fetchData(['context' => 'one', 'type' => 'image'], ['id_news' => $arrData['id']]);
                             if ($fetchImg != null) {
                                 $imgPath = component_core_system::basePath() . 'upload/news/' . $arrData['id'];
 
                                 // Supprime le dossier des images et les fichiers
                                 if (file_exists($imgPath)) {
-                                    $makeFiles->remove(array(
-                                        $imgPath
-                                    ));
+                                    $makeFiles->remove([$imgPath]);
                                 }
                             }
-
                             $this->DBNews->delete(
-                                array(
-                                    'type' => 'delPages'
-                                ),
-                                array('id' => $arrData['id'])
+                                ['type' => 'delPages'],
+                                ['id' => $arrData['id']]
                             );
-
                         }
                     }
                 }
@@ -2513,45 +2487,30 @@ class frontend_controller_webservice extends frontend_db_webservice{
                 if($arrData['id'] != null) {
                     if (is_array($arrData['id'])) {
                         foreach ($arrData['id'] as $key => $value) {
-                            $fetchImg[$key] = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'image'), array('id_cat' => $value));
+                            $fetchImg[$key] = $this->DBCategory->fetchData(['context' => 'one', 'type' => 'image'], ['id_cat' => $value]);
 
                             if ($fetchImg[$key] != null) {
-                                $imgPath[$key] = component_core_system::basePath() . 'upload/catalog/c/' . $value;
+                                $imgPath[$key] = component_core_system::basePath() . 'upload/catalog/category/' . $value;
                                 // Supprime le dossier des images et les fichiers
-                                if (file_exists($imgPath[$key])) {
-                                    $makeFiles->remove(array(
-                                        $imgPath[$key]
-                                    ));
-                                }
+                                if (file_exists($imgPath[$key])) $makeFiles->remove([$imgPath[$key]]);
                             }
                         }
-
                         $this->DBCategory->delete(
-                            array(
-                                'type' => 'delPages'
-                            ),
-                            array('id' => implode(",", $arrData['id'])
-                            )
+                            ['type' => 'delPages'],
+                            ['id' => implode(",", $arrData['id'])]
                         );
-
-                    } else {
-                        $fetchImg = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'image'), array('id_cat' => $arrData['id']));
+                    }
+                    else {
+                        $fetchImg = $this->DBCategory->fetchData(['context' => 'one', 'type' => 'image'], ['id_cat' => $arrData['id']]);
 
                         if ($fetchImg != null) {
-                            $imgPath = component_core_system::basePath() . 'upload/catalog/c/' . $arrData['id'];
+                            $imgPath = component_core_system::basePath() . 'upload/catalog/category/' . $arrData['id'];
                             // Supprime le dossier des images et les fichiers
-                            if (file_exists($imgPath)) {
-                                $makeFiles->remove(array(
-                                    $imgPath
-                                ));
-                            }
+                            if (file_exists($imgPath)) $makeFiles->remove([$imgPath]);
                         }
-
                         $this->DBCategory->delete(
-                            array(
-                                'type' => 'delPages'
-                            ),
-                            array('id' => $arrData['id'])
+                            ['type' => 'delPages'],
+                            ['id' => $arrData['id']]
                         );
 
                     }
@@ -2562,645 +2521,455 @@ class frontend_controller_webservice extends frontend_db_webservice{
                     $setImgDirectory = NULL;
                     if (is_array($arrData['id'])) {
                         // ----- Remove Image All for replace from Webservice
-                        $this->DBProduct->delete(array('type' => 'delImagesAll'), array('id' => implode(",", $arrData['id'])));
+                        $this->DBProduct->delete(['type' => 'delImagesAll'], ['id' => implode(",", $arrData['id'])]);
                         $makeFiles = new filesystem_makefile();
                         $finder = new file_finder();
-                        foreach ($arrData['id'] as $key => $value) {
-                            $setImgDirectory = $this->upload->dirImgUpload(
-                                array_merge(
-                                    array('upload_root_dir'=>'upload/catalog/p/'.$value),
-                                    array('imgBasePath'=>true)
-                                )
-                            );
+                        foreach ($arrData['id'] as $value) {
+                            $setImgDirectory = $this->routingUrl->dirUpload('upload/catalog/product/'.$value, true);
                         }
-
                         $this->DBProduct->delete(
-                            array(
-                                'type' => 'delPages'
-                            ),
-                            array('id' => implode(",", $arrData['id'])
-                            )
-                        );
-                    }else{
-                        // ----- Remove Image All for replace from Webservice
-                        $this->DBProduct->delete(array('type' => 'delImagesAll'), array('id' => $arrData['id']));
-                        $makeFiles = new filesystem_makefile();
-                        $finder = new file_finder();
-
-                        $setImgDirectory = $this->upload->dirImgUpload(
-                            array_merge(
-                                array('upload_root_dir'=>'upload/catalog/p/'.$arrData['id']),
-                                array('imgBasePath'=>true)
-                            )
-                        );
-                        $this->DBProduct->delete(
-                            array(
-                                'type' => 'delPages'
-                            ),
-                            array('id' => $arrData['id'])
+                            ['type' => 'delPages'],
+                            ['id' => implode(",", $arrData['id'])]
                         );
                     }
-
+                    else{
+                        // ----- Remove Image All for replace from Webservice
+                        $this->DBProduct->delete(['type' => 'delImagesAll'], ['id' => $arrData['id']]);
+                        $makeFiles = new filesystem_makefile();
+                        $finder = new file_finder();
+                        $setImgDirectory = $this->routingUrl->dirUpload('upload/catalog/product/'.$arrData['id'], true);
+                        $this->DBProduct->delete(
+                            ['type' => 'delPages'],
+                            ['id' => $arrData['id']]
+                        );
+                    }
                     if(file_exists($setImgDirectory) && $setImgDirectory != NULL){
                         $setFiles = $finder->scanDir($setImgDirectory);
-                        $clean = '';
                         if($setFiles != null){
                             foreach($setFiles as $file){
-                                $clean .= $makeFiles->remove($setImgDirectory.$file);
+                                $makeFiles->remove($setImgDirectory.$file);
                             }
                         }
                     }
                 }
-
                 break;
         }
     }
+
     /**
      * Set parse data from XML OR JSON
-     * @param $operations
-     * @return array
-     * @throws Exception
+     * @param array $operations
      */
-    private function getBuildParse($operations){
+    private function getBuildParse(array $operations) {
         try {
             $getContentType = $this->ws->getContentType();
             //$this->ws->setHeaderType();
             switch ($operations['type']) {
                 case 'languages':
-
                     $this->xml->getXmlHeader();
                     $this->getBuildLanguageData();
-
                     break;
                 case 'domain':
-
                     $this->xml->getXmlHeader();
                     $this->getBuildDomainData();
-
                     break;
                 case 'home':
                     /*if ($operations['scrud'] === 'create') {
 
                     }*/
-                    if($this->ws->setMethod() === 'PUT'){
-                        if($getContentType === 'xml') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-                        }
-                    }
-                    elseif($this->ws->setMethod() === 'POST'){
-                        if($getContentType === 'xml'){
-                            $arrData = json_decode(json_encode($this->parse()), true);
-
-                            $this->getBuildSave($operations,$arrData);
-                            //$this->header->set_json_headers();
-                            //print '{"statut":'.json_encode(true).',"notify":'.json_encode("add").'}';
-
-
-                        }elseif($getContentType === 'json'){
-
-                            //{"parent":2,"languages":{"language":[{"id_lang":6},{"id_lang":2}]}}
-                            //{"parent":2,"language":[{"id_lang":6},{"id_lang":2}]}
-                            $arrData = json_decode(json_encode($this->parse()), true);
-
-                            $this->getBuildSave($operations,$arrData);
-                        }
-                    }
-
-                    elseif($this->ws->setMethod() === 'GET'){
-                        //print $getContentType;
-                        $this->xml->getXmlHeader();
-                        $this->getBuildHomeData();
-
+                    switch ($this->ws->setMethod()) {
+                        case 'GET':
+                            //print $getContentType;
+                            $this->xml->getXmlHeader();
+                            $this->getBuildHomeData();
+                            break;
+                        case 'PUT':
+                            if($getContentType === 'xml') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildSave($operations,$arrData);
+                            }
+                            break;
+                        case 'POST':
+                            if($getContentType === 'xml'){
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildSave($operations,$arrData);
+                            }
+                            elseif($getContentType === 'json'){
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildSave($operations,$arrData);
+                            }
+                            break;
                     }
                     break;
                 case 'pages':
-
-                    if($this->ws->setMethod() === 'PUT'){
-                        if($getContentType === 'xml') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-                        }
-                    }
-                    elseif($this->ws->setMethod() === 'POST'){
-                        if($getContentType === 'xml'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-
-
-                        }elseif($getContentType === 'json'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-
-                        }elseif($getContentType === 'files'){
-
+                    switch ($this->ws->setMethod()) {
+                        case 'GET':
+                            $this->xml->getXmlHeader();
                             if (isset($this->id)) {
-
-                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                                $page = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
-                                $newimg = $this->DBPages->fetchData(array('context' => 'one', 'type' => 'lastImgId'));
-
-                                // ----- Remove Image All for replace from Webservice
-                                $this->DBPages->delete(array('type' => 'delImagesAll'), array('id' => $this->id));
-                                $makeFiles = new filesystem_makefile();
-                                $finder = new file_finder();
-
-                                $setImgDirectory = $this->upload->dirImgUpload(
-                                    array_merge(
-                                        array('upload_root_dir'=>'upload/pages/'.$this->id),
-                                        array('imgBasePath'=>true)
-                                    )
-                                );
-
-                                if(file_exists($setImgDirectory)){
-                                    $setFiles = $finder->scanDir($setImgDirectory);
-                                    $clean = '';
-                                    if($setFiles != null){
-                                        foreach($setFiles as $file){
-                                            $clean .= $makeFiles->remove($setImgDirectory.$file);
-                                        }
-                                    }
-                                }
-                                // -----------
-                                $newData = array();
-
-                                foreach($_FILES as $key => $value){
-                                    $newData['name'][$key] = $value['name'];
-                                    $imageInfo = getimagesize( $value['tmp_name'] );
-                                    $newData['type'][$key] = $imageInfo['mime'];
-                                    $newData['tmp_name'][$key] = $value['tmp_name'];
-                                    $newData['error'][$key] = $value['error'];
-                                    $newData['size'][$key] = $value['size'];
-                                }
-                                $_FILES = array(
-                                    'img_multiple' => $newData
-                                );
-
-                                // If $newimg = NULL return 0
-                                $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
-                                //$img_multiple = $newData;
-                                $this->img_multiple = ($_FILES['img_multiple']["name"]);
-                                $this->upload = new component_files_upload();
-                                $resultUpload = $this->upload->setMultipleImageUpload(
-                                    'img_multiple',
-                                    array(
-                                        'name' => $page['url_pages'],
-                                        'prefix_name' => $newimg['id_img'],
-                                        'prefix_increment' => true,
-                                        'prefix' => array('s_', 'm_', 'l_'),
-                                        'module_img' => 'pages',
-                                        'attribute_img' => 'page',
-                                        'original_remove' => false
-                                    ),
-                                    array(
-                                        'upload_root_dir' => 'upload/pages', //string
-                                        'upload_dir' => $this->id //string ou array
-                                    ),
-                                    false
-                                );
-
-                                if ($resultUpload != null) {
-
-                                    foreach ($resultUpload as $key => $value) {
-                                        if ($value['statut'] == '1') {
-
-                                            $this->DBPages->insert(
-                                                array(
-                                                    'type' => 'newImg'
-                                                ),
-                                                array(
-                                                    'id_pages' => $this->id,
-                                                    'name_img' => $value['file']
-                                                )
-                                            );
-                                        }
-                                    }
-                                }
+                                $this->getBuildPagesData();
                             }
-                        }
-                    }
-                    elseif($this->ws->setMethod() === 'DELETE'){
-                        //print_r($this->parse());
+                            else {
+                                $this->getBuildPagesItems();
+                            }
+                            break;
+                        case 'PUT':
+                            if($getContentType === 'xml') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildSave($operations,$arrData);
+                            }
+                            break;
+                        case 'POST':
+                            switch ($getContentType) {
+                                case 'xml':
+                                case 'json':
+                                    $arrData = json_decode(json_encode($this->parse()), true);
+                                    $this->getBuildSave($operations,$arrData);
+                                    break;
+                                case 'files':
+                                    if (isset($this->id)) {
+                                        $defaultLanguage = $this->collectionLanguage->fetchData(['context' => 'one', 'type' => 'default']);
+                                        $page = $this->DBPages->fetchData(['context' => 'one', 'type' => 'pageLang'], ['id' => $this->id, 'iso' => $defaultLanguage['iso_lang']]);
+                                        $newimg = $this->DBPages->fetchData(['context' => 'one', 'type' => 'lastImgId'],['id_pages' => $this->id]);
 
-                        if($getContentType === 'xml') {
+                                        // ----- Remove Image All for replace from Webservice
+                                        $this->DBPages->delete(['type' => 'delImagesAll'], ['id' => $this->id]);
+                                        $makeFiles = new filesystem_makefile();
+                                        $finder = new file_finder();
 
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
+                                        /*$setImgDirectory = $this->upload->dirImgUpload(
+                                            array_merge(
+                                                array('upload_root_dir'=>'upload/pages/'.$this->id),
+                                                array('imgBasePath'=>true)
+                                            )
+                                        );*/
 
-                        }elseif($getContentType === 'json'){
-                            //{"id":[53,54]}
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
+                                        $setImgDirectory = $this->routingUrl->dirUpload('upload/pages/'.$this->id,true);
 
-                        }
-                        //$this->header->set_json_headers();
-                        //$this->message->json_post_response(true,'delete',$del);
+                                        if(file_exists($setImgDirectory)){
+                                            $setFiles = $finder->scanDir($setImgDirectory);
+                                            if($setFiles != null) {
+                                                foreach($setFiles as $file) {
+                                                    $makeFiles->remove($setImgDirectory.$file);
+                                                }
+                                            }
+                                        }
+                                        // -----------
+                                        $newData = [];
+                                        foreach($_FILES as $key => $value){
+                                            $newData['name'][$key] = $value['name'];
+                                            $imageInfo = getimagesize( $value['tmp_name'] );
+                                            $newData['type'][$key] = $imageInfo['mime'];
+                                            $newData['tmp_name'][$key] = $value['tmp_name'];
+                                            $newData['error'][$key] = $value['error'];
+                                            $newData['size'][$key] = $value['size'];
+                                        }
+                                        $_FILES = ['img_multiple' => $newData];
 
-                    }
-                    elseif($this->ws->setMethod() === 'GET'){
-                        if (isset($this->id)) {
-                            $this->xml->getXmlHeader();
-                            $this->getBuildPagesData();
+                                        // If $newimg = NULL return 0
+                                        $newimg['index'] = $newimg['index'] ?? 0;
+                                        //$img_multiple = $newData;
+                                        $this->img_multiple = ($_FILES['img_multiple']["name"]);
+                                        $this->upload = new component_files_upload();
+                                        /*$resultUpload = $this->upload->setMultipleImageUpload(
+                                            'img_multiple',
+                                            array(
+                                                'name' => $page['url_pages'],
+                                                'prefix_name' => $newimg['id_img'],
+                                                'prefix_increment' => true,
+                                                'prefix' => array('s_', 'm_', 'l_'),
+                                                'module_img' => 'pages',
+                                                'attribute_img' => 'page',
+                                                'original_remove' => false
+                                            ),
+                                            array(
+                                                'upload_root_dir' => 'upload/pages', //string
+                                                'upload_dir' => $this->id //string ou array
+                                            ),
+                                            false
+                                        );*/
 
-                        } else {
-                            $this->xml->getXmlHeader();
-                            $this->getBuildPagesItems();
-                        }
+                                        $resultUpload = $this->upload->multipleImageUpload('pages','pages','upload/pages',["$this->id"],[
+                                            'name' => $page['url_pages'],
+                                            'suffix' => (int)$newimg['index'],
+                                            'suffix_increment' => true
+                                        ],false);
 
+                                        if ($resultUpload != null) {
+                                            foreach ($resultUpload as $value) {
+                                                if ($value['status'] == '1') {
+                                                    $this->DBPages->insert(
+                                                        ['type' => 'newImg'], [
+                                                            'id_pages' => $this->id,
+                                                            'name_img' => $value['file']
+                                                        ]
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                        case 'DELETE':
+                            //print_r($this->parse());
+                            if($getContentType === 'xml') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildRemove($operations,$arrData);
+                            }
+                            elseif($getContentType === 'json') {
+                                //{"id":[53,54]}
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildRemove($operations,$arrData);
+                            }
+                            //$this->header->set_json_headers();
+                            //$this->message->json_post_response(true,'delete',$del);
+                            break;
                     }
                     break;
                 case 'news':
-                    if($this->ws->setMethod() === 'PUT'){
-                        if($getContentType === 'xml') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-                        }
-                    }
-                    elseif($this->ws->setMethod() === 'POST'){
-                        if($getContentType === 'xml'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-
-
-                        }elseif($getContentType === 'json'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-                        }
-                        elseif($getContentType === 'files'){
-
+                    switch ($this->ws->setMethod()) {
+                        case 'GET':
+                            $this->xml->getXmlHeader();
                             if (isset($this->id)) {
-
-                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                                $page = $this->DBNews->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
-
-                                $settings = array(
-                                    'name' => $page['url_news'],
-                                    'edit' => $page['img_news'],
-                                    'prefix' => array('s_', 'm_', 'l_'),
-                                    'module_img' => 'news',
-                                    'attribute_img' => 'news',
-                                    'original_remove' => false
-                                );
-                                $dirs = array(
-                                    'upload_root_dir' => 'upload/news', //string
-                                    'upload_dir' => $this->id //string ou array
-                                );
-
-                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
-
-                                $this->DBNews->update(
-                                    array(
-                                        'type' => 'img'
-                                    ),
-                                    array(
-                                        'id_news' => $this->id,
-                                        'img_news' => $resultUpload['file']
-                                    )
-                                );
+                                $this->getBuildNewsData();
                             }
-                        }
-
-                    }elseif($this->ws->setMethod() === 'DELETE'){
-                        //print_r($this->parse());
-
-                        if($getContentType === 'xml') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
-
-                        }elseif($getContentType === 'json'){
-                            //{"id":[53,54]}
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
-                        }
-                        //$this->header->set_json_headers();
-                        //$this->message->json_post_response(true,'delete',$del);
-
-                    }elseif($this->ws->setMethod() === 'GET'){
-                        if (isset($this->id)) {
-
-                            $this->xml->getXmlHeader();
-                            $this->getBuildNewsData();
-
-                        } else {
-                            $this->xml->getXmlHeader();
-                            $this->getBuildNewsItems();
-
-                        }
+                            else {
+                                $this->getBuildNewsItems();
+                            }
+                            break;
+                        case 'PUT':
+                            if($getContentType === 'xml') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildSave($operations,$arrData);
+                            }
+                            break;
+                        case 'POST':
+                            switch ($getContentType) {
+                                case 'xml':
+                                case 'json':
+                                    $arrData = json_decode(json_encode($this->parse()), true);
+                                    $this->getBuildSave($operations,$arrData);
+                                    break;
+                                case 'files':
+                                    if (isset($this->id)) {
+                                        $defaultLanguage = $this->collectionLanguage->fetchData(['context' => 'one', 'type' => 'default']);
+                                        $page = $this->DBNews->fetchData(['context' => 'one', 'type' => 'pageLang'], ['id' => $this->id, 'iso' => $defaultLanguage['iso_lang']]);
+                                        $resultUpload = $this->upload->imageUpload('news','news','upload/news',["$this->id"],['name' => $page['url_news'] !== '' ? $page['url_news'] : $page['url_news']],false);
+                                        $this->DBNews->update(
+                                            ['type' => 'img'],[
+                                                'id_news' => $this->id,
+                                                'img_news' => $resultUpload['file']
+                                            ]
+                                        );
+                                    }
+                                    break;
+                            }
+                            break;
+                        case 'DELETE':
+                            switch ($getContentType) {
+                                case 'xml':
+                                case 'json':
+                                    $arrData = json_decode(json_encode($this->parse()), true);
+                                    $this->getBuildRemove($operations,$arrData);
+                                    break;
+                            }
+                            break;
                     }
                     break;
                 case 'catalog':
-                    if($this->ws->setMethod() === 'POST') {
-                        if ($getContentType === 'xml') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations, $arrData);
-
-
-                        } elseif ($getContentType === 'json') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations, $arrData);
-                        }
-                    }
-                    elseif($this->ws->setMethod() === 'GET') {
+                    if($this->ws->setMethod() === 'GET') {
                         $this->xml->getXmlHeader();
                         $this->getBuildCatalogData();
                     }
-                    break;
-                case 'category':
-                    if($this->ws->setMethod() === 'PUT'){
-                        if($getContentType === 'xml') {
-
+                    elseif($this->ws->setMethod() === 'POST') {
+                        if ($getContentType === 'xml' || $getContentType === 'json') {
                             $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
+                            $this->getBuildSave($operations, $arrData);
                         }
                     }
-                    elseif($this->ws->setMethod() === 'POST'){
-                        if($getContentType === 'xml'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-
-
-                        }elseif($getContentType === 'json'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-                        }elseif($getContentType === 'files'){
-
+                    break;
+                case 'category':
+                    switch ($this->ws->setMethod()) {
+                        case 'GET':
+                            $this->xml->getXmlHeader();
                             if (isset($this->id)) {
-
-                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                                $page = $this->DBCategory->fetchData(array('context' => 'one', 'type' => 'pageLang'), array('id' => $this->id, 'iso' => $defaultLanguage['iso_lang']));
-
-                                $settings = array(
-                                    'name'              => $page['url_cat'],
-                                    'edit'              => $page['img_cat'],
-                                    'prefix'            => array('s_', 'm_', 'l_'),
-                                    'module_img'        => 'catalog',
-                                    'attribute_img'     => 'category',
-                                    'original_remove'   => false
-                                );
-                                $dirs = array(
-                                    'upload_root_dir'   => 'upload/catalog/c', //string
-                                    'upload_dir'        => $this->id //string ou array
-                                );
-
-                                $resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
-
-                                $this->DBCategory->update(
-                                    array(
-                                        'type' => 'img'
-                                    ),
-                                    array(
-                                        'id_cat' => $this->id,
-                                        'img_cat' => $resultUpload['file']
-                                    )
-                                );
+                                $this->getBuildCategoryData();
                             }
-                        }
-
-                    }elseif($this->ws->setMethod() === 'DELETE'){
-                        //print_r($this->parse());
-
-                        if($getContentType === 'xml') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
-
-                        }elseif($getContentType === 'json'){
-                            //{"id":[53,54]}
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
-                        }
-                        //$this->header->set_json_headers();
-                        //$this->message->json_post_response(true,'delete',$del);
-
-                    }elseif($this->ws->setMethod() === 'GET'){
-                        if (isset($this->id)) {
-
-                            /*print 'test collection : ' . $this->collection.'<br />';
-                            print 'retrieve : ' . $this->retrieve.'<br />';
-                            print 'id : ' . $this->id;
-                            print_r($this->filter);*/
-                            $this->xml->getXmlHeader();
-                            $this->getBuildCategoryData();
-
-                        } else {
-
-                            /*print 'test collection : ' . $this->collection.'<br />';
-                            print 'retrieve : ' . $this->retrieve;*/
-                            $this->xml->getXmlHeader();
-                            $this->getBuildCategoryItems();
-
-                        }
+                            else {
+                                $this->getBuildCategoryItems();
+                            }
+                            break;
+                        case 'PUT':
+                            if($getContentType === 'xml') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildSave($operations,$arrData);
+                            }
+                            break;
+                        case 'POST':
+                            switch ($getContentType) {
+                                case 'xml':
+                                case 'json':
+                                    $arrData = json_decode(json_encode($this->parse()), true);
+                                    $this->getBuildSave($operations,$arrData);
+                                    break;
+                                case 'files':
+                                    if (isset($this->id)) {
+                                        $defaultLanguage = $this->collectionLanguage->fetchData(['context' => 'one', 'type' => 'default']);
+                                        $page = $this->DBCategory->fetchData(['context' => 'one', 'type' => 'pageLang'], ['id' => $this->id, 'iso' => $defaultLanguage['iso_lang']]);
+                                        $resultUpload = $this->upload->imageUpload('catalog','category','upload/catalog/category',["$this->id"],['name' => $page['url_cat'] !== '' ? $page['url_cat'] : $page['url_cat']],false);
+                                        $this->DBCategory->update(
+                                            ['type' => 'img'],[
+                                                'id_cat' => $this->id,
+                                                'img_cat' => $resultUpload['file']
+                                            ]
+                                        );
+                                    }
+                                    break;
+                            }
+                            break;
+                        case 'DELETE':
+                            if($getContentType === 'xml' || $getContentType === 'json') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildRemove($operations,$arrData);
+                            }
+                            break;
                     }
                     break;
                 case 'product':
-                    if($this->ws->setMethod() === 'PUT'){
-                        if($getContentType === 'xml') {
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-                        }
-                    }elseif($this->ws->setMethod() === 'POST'){
-                        if($getContentType === 'xml'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-
-
-                        }elseif($getContentType === 'json'){
-
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildSave($operations,$arrData);
-
-                        }elseif($getContentType === 'files'){
-
+                    switch ($this->ws->setMethod()) {
+                        case 'GET':
+                            $this->xml->getXmlHeader();
                             if (isset($this->id)) {
-
-                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
-                                $product = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'content'), array('id_product' => $this->id, 'id_lang' => $defaultLanguage['id_lang']));
-                                $newimg = $this->DBProduct->fetchData(array('context' => 'one', 'type' => 'lastImgId'));
-
-                                // ----- Remove Image All for replace from Webservice
-                                $this->DBProduct->delete(array('type' => 'delImagesAll'), array('id' => $this->id));
-                                $makeFiles = new filesystem_makefile();
-                                $finder = new file_finder();
-
-                                $setImgDirectory = $this->upload->dirImgUpload(
-                                    array_merge(
-                                        array('upload_root_dir'=>'upload/catalog/p/'.$this->id),
-                                        array('imgBasePath'=>true)
-                                    )
-                                );
-
-                                if(file_exists($setImgDirectory)){
-                                    $setFiles = $finder->scanDir($setImgDirectory);
-                                    $clean = '';
-                                    if($setFiles != null){
-                                        foreach($setFiles as $file){
-                                            $clean .= $makeFiles->remove($setImgDirectory.$file);
-                                        }
-                                    }
-                                }
-                                // -----------
-                                $newData = array();
-
-                                foreach($_FILES as $key => $value){
-                                    $newData['name'][$key] = $value['name'];
-                                    $imageInfo = getimagesize( $value['tmp_name'] );
-                                    $newData['type'][$key] = $imageInfo['mime'];
-                                    $newData['tmp_name'][$key] = $value['tmp_name'];
-                                    $newData['error'][$key] = $value['error'];
-                                    $newData['size'][$key] = $value['size'];
-                                }
-                                $_FILES = array(
-                                    'img_multiple' => $newData
-                                );
-
-                                // If $newimg = NULL return 0
-                                $newimg['id_img'] = empty($newimg) ? 0 : $newimg['id_img'];
-                                //$img_multiple = $newData;
-                                $this->img_multiple = ($_FILES['img_multiple']["name"]);
-                                $this->upload = new component_files_upload();
-                                $resultUpload = $this->upload->setMultipleImageUpload(
-                                    'img_multiple',
-                                    array(
-                                        'name' => $product['url_p'],
-                                        'prefix_name' => $newimg['id_img'],
-                                        'prefix_increment' => true,
-                                        'prefix' => array('s_', 'm_', 'l_'),
-                                        'module_img' => 'catalog',
-                                        'attribute_img' => 'product',
-                                        'original_remove' => false
-                                    ),
-                                    array(
-                                        'upload_root_dir' => 'upload/catalog/p', //string
-                                        'upload_dir' => $this->id //string ou array
-                                    ),
-                                    false
-                                );
-
-                                if ($resultUpload != null) {
-
-                                    foreach ($resultUpload as $key => $value) {
-                                        if ($value['statut'] == '1') {
-
-                                            $this->DBProduct->insert(
-                                                array(
-                                                    'type' => 'newImg'
-                                                ),
-                                                array(
-                                                    'id_product' => $this->id,
-                                                    'name_img' => $value['file']
-                                                )
-                                            );
-                                        }
-                                    }
-                                }
+                                $this->getBuildProductData();
                             }
-                        }
+                            else {
+                                $this->xml->getXmlHeader();
+                                $this->getBuildProductItems();
+                            }
+                            break;
+                        case 'PUT':
+                            if($getContentType === 'xml') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildSave($operations,$arrData);
+                            }
+                            break;
+                        case 'POST':
+                            switch ($getContentType) {
+                                case 'xml':
+                                case 'json':
+                                    $arrData = json_decode(json_encode($this->parse()), true);
+                                    $this->getBuildSave($operations,$arrData);
+                                    break;
+                                case 'files':
+                                    if (isset($this->id)) {
+                                        $defaultLanguage = $this->collectionLanguage->fetchData(['context' => 'one', 'type' => 'default']);
+                                        $product = $this->DBProduct->fetchData(['context' => 'one', 'type' => 'content'],['id_product' => $this->id, 'id_lang' => $defaultLanguage['id_lang']]);
+                                        $newimg = $this->DBProduct->fetchData(['context' => 'one', 'type' => 'lastImgId'],['id_product' => $this->id]);
 
-                    }elseif($this->ws->setMethod() === 'DELETE'){
-                        //print_r($this->parse());
+                                        // ----- Remove Image All for replace from Webservice
+                                        $this->DBProduct->delete(['type' => 'delImagesAll'], ['id' => $this->id]);
+                                        $makeFiles = new filesystem_makefile();
+                                        $finder = new file_finder();
 
-                        if($getContentType === 'xml') {
+                                        $setImgDirectory = $this->routingUrl->dirUpload('upload/catalog/p/'.$this->id,true);
 
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
+                                        if(file_exists($setImgDirectory)){
+                                            $setFiles = $finder->scanDir($setImgDirectory);
+                                            if($setFiles != null){
+                                                foreach($setFiles as $file){
+                                                    $makeFiles->remove($setImgDirectory.$file);
+                                                }
+                                            }
+                                        }
+                                        // -----------
+                                        $newData = [];
+                                        foreach($_FILES as $key => $value){
+                                            $newData['name'][$key] = $value['name'];
+                                            $imageInfo = getimagesize( $value['tmp_name'] );
+                                            $newData['type'][$key] = $imageInfo['mime'];
+                                            $newData['tmp_name'][$key] = $value['tmp_name'];
+                                            $newData['error'][$key] = $value['error'];
+                                            $newData['size'][$key] = $value['size'];
+                                        }
+                                        $_FILES = ['img_multiple' => $newData];
 
-                        }elseif($getContentType === 'json'){
-                            //{"id":[53,54]}
-                            $arrData = json_decode(json_encode($this->parse()), true);
-                            $this->getBuildRemove($operations,$arrData);
-                        }
-                        //$this->header->set_json_headers();
-                        //$this->message->json_post_response(true,'delete',$del);
+                                        // If $newimg = NULL return 0
+                                        $newimg['index'] = $newimg['index'] ?? 0;
+                                        //$img_multiple = $newData;
+                                        $this->img_multiple = ($_FILES['img_multiple']["name"]);
+                                        $this->upload = new component_files_upload();
+                                        $resultUpload = $this->upload->multipleImageUpload('catalog','product','upload/catalog/product',["$this->id"],[
+                                            'name' => $product['url_p'],
+                                            'suffix' => (int)$newimg['index'],
+                                            'suffix_increment' => true
+                                        ],false);
 
-                    }elseif($this->ws->setMethod() === 'GET'){
-                        if (isset($this->id)) {
-
-                            /*print 'test collection : ' . $this->collection.'<br />';
-                            print 'retrieve : ' . $this->retrieve.'<br />';
-                            print 'id : ' . $this->id;
-                            print_r($this->filter);*/
-                            $this->xml->getXmlHeader();
-                            $this->getBuildProductData();
-
-                        } else {
-
-                            /*print 'test collection : ' . $this->collection.'<br />';
-                            print 'retrieve : ' . $this->retrieve;*/
-                            $this->xml->getXmlHeader();
-                            $this->getBuildProductItems();
-
-                        }
+                                        if ($resultUpload != null) {
+                                            foreach ($resultUpload as $value) {
+                                                if ($value['status'] == '1') {
+                                                    $this->DBProduct->insert(
+                                                        ['type' => 'newImg'],[
+                                                            'id_product' => $this->id,
+                                                            'name_img' => $value['file']
+                                                        ]
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+                        case 'DELETE':
+                            if($getContentType === 'xml' || $getContentType === 'json') {
+                                $arrData = json_decode(json_encode($this->parse()), true);
+                                $this->getBuildRemove($operations,$arrData);
+                            }
+                            break;
                     }
                     break;
             }
-        }catch (Exception $e){
+        }
+        catch (Exception $e) {
             $logger = new debug_logger(MP_LOG_DIR);
             $logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
         }
     }
+
     /**
      *
      */
-    public function run(){
+    public function run() {
         if ($this->ws->authorization($this->setWsAuthKey())) {
             if (isset($this->collection)) {
                 switch ($this->collection) {
                     case 'languages':
-
-                        $this->getBuildParse(array('type' => 'languages'));
-
+                        $this->getBuildParse(['type' => 'languages']);
                         break;
                     case 'domain':
-
-                        $this->getBuildParse(array('type' => 'domain'));
-
+                        $this->getBuildParse(['type' => 'domain']);
                         break;
                     case 'home':
-
-                        $this->getBuildParse(array('type' => 'home'));
-
+                        $this->getBuildParse(['type' => 'home']);
                         break;
                     case 'pages':
-
-                        $this->getBuildParse(array('type' => 'pages'));
-
+                        $this->getBuildParse(['type' => 'pages']);
                         break;
                     case 'news':
-
-                        $this->getBuildParse(array('type' => 'news'));
-
+                        $this->getBuildParse(['type' => 'news']);
                         break;
                     case 'catalog':
-
                         if (isset($this->retrieve)) {
-
                             if ($this->retrieve == 'category') {
-
-                                $this->getBuildParse(array('type' => 'category'));
-
-                            }elseif ($this->retrieve == 'product') {
-
-                                $this->getBuildParse(array('type' => 'product'));
-
-                            } else {
-                                return;
+                                $this->getBuildParse(['type' => 'category']);
                             }
-                        }else{
-                            $this->getBuildParse(array('type' => 'catalog'));
+                            elseif ($this->retrieve == 'product') {
+                                $this->getBuildParse(['type' => 'product']);
+                            }
+                            return;
+                        }
+                        else {
+                            $this->getBuildParse(['type' => 'catalog']);
                         }
                         break;
                     case 'plugin':
@@ -3209,11 +2978,11 @@ class frontend_controller_webservice extends frontend_db_webservice{
                         }
                         break;
                 }
-            } else {
+            }
+            else {
                 $this->xml->getXmlHeader();
                 $this->getBuildRootData();
             }
         }
     }
 }
-?>

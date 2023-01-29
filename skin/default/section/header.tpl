@@ -10,7 +10,7 @@
         {* Brand && Headline *}
         <div class="site-name">
             {if $logo && $logo.img.active eq 1}
-                {capture name="sizes"}{$logo.img.medium.w}px{/capture}
+                {capture name="sizes"}{$logo.img.small.w}px{/capture}
                 <a href="{$url}/{$lang}/" title="{if !empty($logo.img.title)}{$logo.img.title|ucfirst}{else}{#logo_link_title#|ucfirst}{/if}">
                     {strip}
                         <picture>

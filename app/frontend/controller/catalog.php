@@ -350,11 +350,11 @@ class frontend_controller_catalog extends frontend_db_catalog {
 
         $newSetArray = [];
         if(!empty($collection)) {
-            $newSetArray = $this->data->setPagesTree($collection,'cat', 'root' ,'all',$this->modelCatalog,false,$newRow);
+            $newSetArray = $this->data->setPagesTree($collection,'cat', $id_parent ?? 'root' ,'all',$this->modelCatalog,false,$newRow);
             /*foreach ($collection as $item) {
                 $newSetArray[] = $this->modelCatalog->setItemData($item, [], $newRow);
             }*/
-            if($id_parent !== null) $newSetArray = $newSetArray[$id_parent];
+            if($id_parent !== null) $newSetArray = empty($newSetArray['subdata']) ? [] : $newSetArray['subdata'];
         }
 
 		return $newSetArray;

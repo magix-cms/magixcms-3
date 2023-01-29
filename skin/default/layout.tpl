@@ -36,7 +36,7 @@
     {* Please try to use icomoon to create a small iconfont and reduce load work, uncomment the next lines if you use icofont *}
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.woff" as="font" type="font/woff" crossorigin="anonymous">
-    <link rel="preload" href="{$url}/img/cookie.svg" as="image" type="image/svg+xml">
+    {if $smarty.cookies.complianceCookie !== 'true'}<link rel="preload" href="{$url}/img/cookie.svg" as="image" type="image/svg+xml">{/if}
     <meta name="theme-color" content="#3C62AA" />
     {nocache}{$basecss = [
     "properties",

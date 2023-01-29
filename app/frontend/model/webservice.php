@@ -1,5 +1,5 @@
 <?php
-class frontend_model_webservice{
+class frontend_model_webservice {
     protected $curl;
     public $img;
     /**
@@ -436,4 +436,3 @@ class frontend_model_webservice{
         }
     }
 }
-?>

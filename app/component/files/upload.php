@@ -545,7 +545,7 @@ class component_files_upload {
      * @param bool $debug
      * @return array
      */
-	private function getUploadImg(array $image, string $path, bool $debug = false): array {
+	public function getUploadImg(array $image, string $path, bool $debug = false): array {
         $msg = '';
         $mimeContent = null;
 		
@@ -653,13 +653,13 @@ class component_files_upload {
 
 				// Rename file
 				if(!empty($options['name'])) {
-					$filename = $options['name'].(!empty($options['suffix']) ? '_'.$options['suffix'] : '');
+					$filename = $options['name'].(!empty($options['suffix'] && !is_array($options['suffix'])) ? '_'.$options['suffix'] : '');
 					$this->makeFile->rename([
 						'origin' => $dirImg.$originName.$ext,
 						'target' => $dirImg.$filename.$ext
 					]);
 				}
-				elseif(!empty($options['suffix'])) {
+				elseif(!empty($options['suffix']) && !is_array($options['suffix'])) {
 					$filename = $originName.'_'.$options['suffix'];
 					$this->makeFile->rename([
 						'origin' => $dirImg.$originName.$ext,
@@ -679,6 +679,9 @@ class component_files_upload {
 									if (array_key_exists('prefix', $options)) $prefix = (is_array($options['prefix']) ? $options['prefix'][$key] : $options['prefix']).'_';
 									else $prefix = $value['prefix'].'_';
 
+                                    if (array_key_exists('suffix', $options) && is_array($options['suffix'])) $suffix = $options['suffix'][$key];
+                                    else $suffix = '';
+
 									switch ($value['resize']) {
 										case 'adaptive':
 											$thumb->fit($value['width'], $value['height']);
@@ -690,10 +693,10 @@ class component_files_upload {
 												$constraint->upsize();
 											});
 									}
-									$thumb->save($dirPath.$prefix.$filename.$ext,80);
-									if(function_exists('imagewebp')) $thumb->save($dirPath.$prefix.$filename.self::WEBP_EXT, 80);
+									$thumb->save($dirPath.$prefix.$filename.$suffix.$ext,80);
+									if(function_exists('imagewebp')) $thumb->save($dirPath.$prefix.$filename.$suffix.self::WEBP_EXT, 80);
 
-									$filesPathDebug[] = $dirPath.$prefix.$filename.$ext;
+									$filesPathDebug[] = $dirPath.$prefix.$filename.$suffix.$ext;
 								}
 								catch (Exception $e) {
 									$this->logger->log('php', 'error', 'An error has occured : ' . $e->getMessage(), debug_logger::LOG_MONTH);
