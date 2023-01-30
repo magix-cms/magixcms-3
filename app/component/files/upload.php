@@ -647,8 +647,9 @@ class component_files_upload {
 				}
 				if($debug) $this->logger->tracelog('rename format');
 
-				$ext = '.'.$upload['mimecontent']['type'];
-				$originName = pathinfo($upload['name'])['filename'];
+                $fileInfo = pathinfo($upload['name']);
+				$ext = '.'.$fileInfo['extension'];
+				$originName = $fileInfo['filename'];
 				$filename = $originName;
 
 				// Rename file
