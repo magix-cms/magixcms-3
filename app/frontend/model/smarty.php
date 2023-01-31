@@ -182,6 +182,22 @@ class frontend_model_smarty extends Smarty{
 		 * security settings
 		 */
 		//$this->enableSecurity('Security_Policy');
+		// @todo a tester avec smarty 4
+		/*$callbacks = [
+			['modifier', 'filesize', [\Booka\Frontend\Page\Page::class, 'smartyModifierFilesize']],
+			['modifier', 'format_date', [\Booka\Frontend\Page\Page::class, 'smartyModifierFormatDate']],
+			['modifier', 'trim', 'trim'],
+			['modifier', 'md5', 'md5'],
+			['modifier', 'ucfirst', 'ucfirst'],
+			['modifier', 'in_array', 'in_array'],
+		];
+		foreach ($callbacks as $callback) {
+			try {
+				$this->registerPlugin($callback[0], $callback[1], $callback[2]);
+			} catch (SmartyException $eException) {
+				//Tracking::trackException($eException);
+			}
+		}*/
 	}
 	public static function getInstance($t = null){
         if (!isset(self::$instance))
