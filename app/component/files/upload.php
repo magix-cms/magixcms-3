@@ -556,7 +556,8 @@ class component_files_upload {
 
 				if(is_uploaded_file($image["tmp_name"])) {
 					$source = $tmpImg;
-					$target = component_core_system::basePath().$path.http_url::clean($image["name"]);
+					$cleanName = http_url::clean($image["name"]);
+					$target = component_core_system::basePath().$path.$cleanName;
 
 					if(!move_uploaded_file($source, $target)) $msg .= 'Temporary File Error';
 				}
@@ -588,7 +589,7 @@ class component_files_upload {
 		$result = [
 			'status' => empty($msg),
 			'notify' => empty($msg) ? 'upload' : 'upload_error',
-			'name' => $image["name"],
+			'name' => $cleanName ?? $image["name"],
 			'tmp_name' => $image["tmp_name"],
 			'mimecontent' => $mimeContent,
 			'msg' => empty($msg) ? 'Upload success' : $msg
@@ -615,7 +616,7 @@ class component_files_upload {
 			$imageDirectories = $this->url->dirUploadCollection($root,$directories);
 			$imageConfig = $this->imageConfig->getConfigItems($module,$attribute);
 
-			if($debug) $this->logger->tracelog('statut : '.json_encode($upload['status']));
+			if($debug) $this->logger->tracelog('status : '.json_encode($upload['status']));
 
 			if ($this->imgSizeMin($dirImg . $upload['name'], 25, 25)) {
 				// Remove old image
@@ -760,6 +761,7 @@ class component_files_upload {
      * @return array
      */
     public function imageUpload(string $module, string $attribute, string $root, array $directories = [], array $options = [], bool $debug = false): array {
+        if ($debug) $this->logger->tracelog('imageUpload',true);
 		if(isset($options['postKey']) && !empty($options['postKey']) && isset($_FILES[$options['postKey']]["name"])) $this->image = http_url::clean($_FILES[$options['postKey']]["name"]);
 
 		$default = [
