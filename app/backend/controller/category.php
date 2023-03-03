@@ -358,10 +358,7 @@ class backend_controller_category extends backend_db_category {
 			case 'page':
 			case 'content':
 				parent::insert(
-					array(
-						'context' => $data['context'],
-						'type' => $data['type']
-					),
+					['type' => $data['type']],
 					$data['data']
 				);
 				break;
@@ -382,9 +379,7 @@ class backend_controller_category extends backend_db_category {
 			case 'img':
 			case 'imgContent':
                 parent::update(
-                    array(
-                        'type'=>$data['type']
-                    ),
+                    ['type'=>$data['type']],
 					$data['data']
                 );
                 break;
@@ -424,18 +419,14 @@ class backend_controller_category extends backend_db_category {
         switch($data['type']){
             case 'delPages':
                 parent::delete(
-                    array(
-                        'type'      =>    $data['type']
-                    ),
+					['type'=>$data['type']],
                     $data['data']
                 );
                 $this->message->json_post_response(true,'delete',$data['data']);
                 break;
             case 'delProduct':
                 parent::delete(
-                    array(
-                        'type'      =>    $data['type']
-                    ),
+					['type'=>$data['type']],
                     $data['data']
                 );
                 $this->message->json_post_response(true,'delete',$data['data']);

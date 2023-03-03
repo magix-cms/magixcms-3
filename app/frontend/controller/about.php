@@ -155,12 +155,18 @@ class frontend_controller_about extends frontend_db_about {
 		$this->template->assign('root',$data,true);
 
 		if(isset($this->id)) {
+			$this->template->breadcrumb->addItem(
+				$data['name'],
+				'about',
+				$data['name']
+			);
 			$data = $this->getBuildItems();
 			$parent = $data['id_parent'] !== null ? $this->getBuildParent($data) : null;
 			$hreflang = $this->getBuildLangItems();
 			$this->template->assign('parent',$parent,true);
 			$this->template->assign('hreflang',$hreflang,true);
 		}
+		$this->template->breadcrumb->addItem($data['name']);
 
 		$this->template->assign('pages',$data,true);
     }

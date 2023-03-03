@@ -154,7 +154,7 @@ class backend_controller_files extends backend_db_files {
 					elseif(isset($this->module)) {
 						$root = 'upload/'.$this->module;
 						$module = $this->module;
-						$attribute = $this->module;
+						$attribute = $this->attribute;
 
 						if(in_array($this->module,['pages','news','catalog'])) {
 							$type = (isset($this->attribute) && !empty($this->attribute)) ? $this->attribute : $this->module;
@@ -165,10 +165,10 @@ class backend_controller_files extends backend_db_files {
 							if (class_exists($plugin) && method_exists($plugin, 'getItemsImages')) {
 								$class = new $plugin();
 								$images = $class->getItemsImages();
-								$module = 'plugins';
+								//$module = 'plugins';
 							}
 						}
-						if(isset($this->attribute) && !empty($this->attribute) && $this->attribute !== $this->module && $this->module !== 'plugins') $root .= '/'.$this->attribute;
+						if(isset($this->attribute) && !empty($this->attribute) && $this->attribute !== $this->module) $root .= '/'.$this->attribute;
 						if(!empty($images)) {
 							$this->upload->batchRegenerate($module,$attribute,$root,$images,null,[
 								'progress' => new component_core_feedback($this->template),

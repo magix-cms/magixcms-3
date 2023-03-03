@@ -130,7 +130,7 @@ ORDER BY m.order_link, lg.id_lang";
 						WHERE m.id_link = :id";
 					break;
 				case 'pages':
-					$query = 'SELECT * FROM (
+					/*$query = 'SELECT * FROM (
 						SELECT p.id_pages AS id, p.id_parent AS parent, pc.name_pages AS name
 						FROM mc_cms_page AS p
 						LEFT JOIN mc_cms_page_content AS pc
@@ -140,10 +140,18 @@ ORDER BY m.order_link, lg.id_lang";
 						AND pc.published_pages = 1
 						ORDER BY p.id_pages, l.default_lang DESC
 						) as pt
-						GROUP BY pt.id';
+						GROUP BY pt.id';*/
+					$query = 'SELECT p.id_pages AS id, p.id_parent AS parent, pc.name_pages AS name
+						FROM mc_cms_page AS p
+						LEFT JOIN mc_cms_page_content AS pc
+						USING ( id_pages ) 
+						LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
+						WHERE p.menu_pages = 1
+						AND pc.published_pages = 1
+						ORDER BY p.id_pages, l.default_lang DESC';
 					break;
 				case 'about_page':
-					$query = 'SELECT * FROM (
+					/*$query = 'SELECT * FROM (
 						SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
 						FROM mc_about_page as p
 						LEFT JOIN mc_about_page_content as pc
@@ -153,10 +161,18 @@ ORDER BY m.order_link, lg.id_lang";
 						AND pc.published_pages =1
 						ORDER BY p.id_pages, l.default_lang DESC
 						) as pt
-						GROUP BY pt.id';
+						GROUP BY pt.id';*/
+					$query = 'SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
+						FROM mc_about_page as p
+						LEFT JOIN mc_about_page_content as pc
+						USING(id_pages)
+						LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
+						WHERE p.menu_pages =1
+						AND pc.published_pages =1
+						ORDER BY p.id_pages, l.default_lang DESC';
 					break;
 				case 'category':
-					$query = 'SELECT * FROM (
+					/*$query = 'SELECT * FROM (
 						SELECT p.id_cat as id, p.id_parent as parent, pc.name_cat as name
 						FROM mc_catalog_cat as p
 						LEFT JOIN mc_catalog_cat_content as pc
@@ -165,7 +181,14 @@ ORDER BY m.order_link, lg.id_lang";
 						WHERE pc.published_cat =1
 						ORDER BY p.id_cat, l.default_lang DESC
 						) as pt
-						GROUP BY pt.id';
+						GROUP BY pt.id';*/
+					$query = 'SELECT p.id_cat as id, p.id_parent as parent, pc.name_cat as name
+						FROM mc_catalog_cat as p
+						LEFT JOIN mc_catalog_cat_content as pc
+						USING(id_cat)
+						LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
+						WHERE pc.published_cat =1
+						ORDER BY p.id_cat, l.default_lang DESC';
 					break;
 				case 'plugin':
 					$query = 'SELECT id_plugins as id, name FROM mc_plugins';

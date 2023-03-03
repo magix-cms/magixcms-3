@@ -173,49 +173,37 @@ class plugins_contact_admin extends plugins_contact_db {
      * @param $id_contact
      * @return array
      */
-    private function saveContent($id_contact)
-    {
-        $extendData = array();
+    private function saveContent($id_contact) {
+        $extendData = [];
 
         foreach ($this->content as $lang => $content) {
             $content['id_lang'] = $lang;
             $content['id_contact'] = $id_contact;
+            $contentContact = $this->getItems('content',['id_contact' => $id_contact, 'id_lang' => $lang],'one',false);
 
-            $contentContact = $this->getItems('content',array('id_contact'=>$id_contact, 'id_lang'=>$lang),'one',false);
-
-            //print_r($contentContact);
-
-            if($contentContact != null) {
-                $this->upd(
-                    array(
-                        'context' => 'contact',
-                        'type' => 'contact',
-                        'data' => array(
-                            'id_contact' => $id_contact,
-                            'mail_contact' => $this->mail_contact
-                        )
-                    )
-                );
-                $this->upd(
-                    array(
-                        'context' => 'contact',
-                        'type' => 'content',
-                        'data' => $content
-                    )
-                );
+            if(!empty($contentContact)) {
+                $this->upd([
+					'context' => 'contact',
+					'type' => 'contact',
+					'data' => [
+						'id_contact' => $id_contact,
+						'mail_contact' => $this->mail_contact
+					]
+				]);
+                $this->upd([
+					'context' => 'contact',
+					'type' => 'content',
+					'data' => $content
+				]);
             }
             else {
-                $this->add(
-                    array(
-                        'context' => 'contact',
-                        'type' => 'content',
-                        'data' => $content
-                    )
-                );
+                $this->add([
+					'context' => 'contact',
+					'type' => 'content',
+					'data' => $content
+				]);
             }
         }
-
-        //if(!empty($extendData)) return $extendData;
     }
 
 	/**
@@ -320,15 +308,11 @@ class plugins_contact_admin extends plugins_contact_db {
                 switch ($this->action) {
                     case 'add':
                         if (isset($this->content)) {
-                            $this->add(
-                                array(
-                                    'context' => 'contact',
-                                    'type' => 'contact',
-                                    'data' => array(
-                                        'mail_contact' => $this->mail_contact
-                                    )
-                                )
-                            );
+                            $this->add([
+								'context' => 'contact',
+								'type' => 'contact',
+								'data' => ['mail_contact' => $this->mail_contact]
+							]);
 
                             $contact = $this->getItems('root', null, 'one', false);
 
@@ -336,7 +320,8 @@ class plugins_contact_admin extends plugins_contact_db {
                                 $this->saveContent($contact['id_contact']);
                                 $this->message->json_post_response(true, 'add_redirect');
                             }
-                        } else {
+                        }
+						else {
                             $this->modelLanguage->getLanguage();
                             $this->template->display('add.tpl');
                         }
@@ -403,10 +388,15 @@ class plugins_contact_admin extends plugins_contact_db {
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                 // Page content
                 $last = $this->getItems('root_page', null, 'one', false);
-                $collection = $this->getItems('pages', $last['id_page'], 'all', false);
-                $this->template->assign('pages', $this->setItemPageData($collection));
+				$pages = [];
+				if(!empty($last)) {
+					$collection = $this->getItems('pages', $last['id_page'], 'all', false);
+					$pages = $this->setItemPageData($collection);
+				}
+				$this->template->assign('pages', $pages);
                 // Mails
-                $this->getItems('contact', array(':default_lang' => $defaultLanguage['id_lang']), 'all');
+                $contacts = $this->getItems('contact', array(':default_lang' => $defaultLanguage['id_lang']), 'all',false);
+				$this->template->assign('contact',empty($contacts) ? [] : $contacts);
                 $assign = array(
                     'id_contact',
                     'mail_contact' => ['title' => 'name']

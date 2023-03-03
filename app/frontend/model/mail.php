@@ -81,7 +81,8 @@ class frontend_model_mail {
 		$cssInliner = $this->template->settings['css_inliner'];
 		$this->template->assign('data',$data);
 
-		$bodyMail = $this->template->fetch($this->tpl_dir.'/mail/'.$tpl.'.tpl');
+		$bodyMail = $this->template->fetch('mail/'.$this->tpl_dir.'/'.$tpl.'.tpl');
+
 		if ($cssInliner) {
 			$this->settings = new frontend_model_setting($this->template);
 			$this->template->assign('getDataCSSIColor',$this->settings->fetchCSSIColor());
@@ -129,7 +130,6 @@ class frontend_model_mail {
 					}
 
 					if(!empty($noreply)) {
-
 						$message = $this->mail->body_mail(
 							($title === '') ? self::setTitleMail($tpl) : $title,
 							array($noreply),

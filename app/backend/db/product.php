@@ -117,8 +117,9 @@ class backend_db_product {
                         'pc.content_p',
                         'pc.seo_title_p',
                         'pc.seo_desc_p',
-                        'IFNULL(pi.default_img,0) as img_p',
-                        'p.date_register'];
+                        'IFNULL(pi.default_img,0) as default_img',
+                        'p.date_register'
+					];
 
                     if(isset($params['select'])) {
                         foreach ($params['select'] as $extendSelect) {
@@ -144,17 +145,25 @@ class backend_db_product {
                         unset($params['search']);
                     }
 
+                    /*$query = 'SELECT '.implode(',', $select).'
+							FROM mc_catalog_product AS p
+							JOIN mc_catalog_product_content AS pc USING ( id_product )
+							LEFT JOIN mc_catalog AS c ON ( p.id_product = c.id_product AND c.default_c = 1 )
+							LEFT JOIN mc_catalog_cat_content AS cc ON ( c.id_cat = cc.id_cat )
+							LEFT JOIN mc_catalog_product_img AS pi ON ( p.id_product = pi.id_product AND pi.default_img = 1 )
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) 
+							'.$joins. 'WHERE pc.id_lang = :default_lang '.$cond.$where.' GROUP BY p.id_product 
+							ORDER BY p.id_product DESC'. $limit;*/
+
                     $query = 'SELECT '.implode(',', $select).'
 							FROM mc_catalog_product AS p
 							JOIN mc_catalog_product_content AS pc USING ( id_product )
 							LEFT JOIN mc_catalog AS c ON ( p.id_product = c.id_product AND c.default_c = 1 )
 							LEFT JOIN mc_catalog_cat_content AS cc ON ( c.id_cat = cc.id_cat )
 							LEFT JOIN mc_catalog_product_img AS pi ON ( p.id_product = pi.id_product AND pi.default_img = 1 )
-							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
-							
-							'.$joins. 'WHERE pc.id_lang = :default_lang '.$cond.$where.' GROUP BY p.id_product 
+							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) 
+							'.$joins. 'WHERE pc.id_lang = :default_lang '.$cond.$where.' 
 							ORDER BY p.id_product DESC'. $limit;
-
                     break;
 				case 'page':
 					$query = 'SELECT p.*,c.*,lang.*

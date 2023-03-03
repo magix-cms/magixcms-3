@@ -12,7 +12,7 @@ class plugins_contact_db {
 	 */
 	public function fetchData(array $config,array $params = []) {
 		if ($config['context'] === 'all') {
-            	switch ($config['type']) {
+			switch ($config['type']) {
 					case 'pages':
 						$query = 'SELECT h.*,c.*
                     			FROM mc_contact_page AS h
@@ -25,16 +25,14 @@ class plugins_contact_db {
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-								WHERE c.id_lang = :default_lang
-								GROUP BY p.id_contact';
+								WHERE c.id_lang = :default_lang';
 						break;
 					case 'contacts':
 						$query = 'SELECT p.id_contact, p.mail_contact
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
-								WHERE lang.iso_lang = :lang
-								GROUP BY p.id_contact';
+								WHERE lang.iso_lang = :lang';
 						break;
 					case 'data':
 						$query = 'SELECT p.*,c.*,lang.*
@@ -130,7 +128,8 @@ class plugins_contact_db {
 			return true;
 		}
 		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
+			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 		}
     }
 
@@ -179,7 +178,8 @@ class plugins_contact_db {
 			return true;
 		}
 		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
+			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 		}
     }
 
@@ -203,7 +203,8 @@ class plugins_contact_db {
 			return true;
 		}
 		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
+			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 		}
     }
 }

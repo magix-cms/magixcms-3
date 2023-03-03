@@ -51,7 +51,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane{if $tab == 'page'} active{/if}" id="info_page">
                     <p class="text-right">
-                        {#nbr_pages#|ucfirst}: {$pages|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=addpage" title="{#add_pages#}" class="btn btn-link">
+                        {#nbr_pages#|ucfirst}: {if !empty($pages)}{$pages|count}{else}0{/if} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=addpage" title="{#add_pages#}" class="btn btn-link">
                             <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
                         </a>
                     </p>

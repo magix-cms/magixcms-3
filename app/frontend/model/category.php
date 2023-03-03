@@ -82,8 +82,10 @@ class frontend_model_category {
         if(!empty($row)) {
 			$this->initImageComponent();
 			$data['active'] = false;
-			if ($row['id_cat'] == $active['controller']['id'] OR $row['id_cat'] == $active['controller']['id_parent'] ) {
-				$data['active'] = true;
+			if (!empty($active)) {
+				if($row['id_cat'] == $active['controller']['id'] OR $row['id_cat'] == $active['controller']['id_parent'] ) {
+					$data['active'] = true;
+				}
 			}
 			if (isset($row['img_cat'])) {
 				$data['img'] = $this->imagesComponent->setModuleImage('catalog','category',$row['img_cat'],$row['id_cat']);
@@ -109,7 +111,7 @@ class frontend_model_category {
 			$data['resume']    = $row['resume_cat'] ? $row['resume_cat'] : ($row['content_cat'] ? $string_format->truncate(strip_tags($row['content_cat'])) : '');
 			$data['menu']      = $row['menu_cat'];
 			$data['order']     = $row['order_cat'];
-			$data['nb_product']= $row['nb_product'];
+			$data['nb_product']= $row['nb_product'] ?? null;
 			// Plugin
 			if(!empty($newRow)){
 				foreach($newRow as $key => $value){
@@ -142,6 +144,7 @@ class frontend_model_category {
     public function setItemShortData (array $row): array {
         $data = [];
         if (!empty($row)) {
+			$this->initImageComponent();
 			$data['id'] = $row['id_cat'];
 			$data['url'] = $this->routingUrl->getBuildUrl([
 				'type' => 'category',
@@ -149,6 +152,10 @@ class frontend_model_category {
 				'id'   => $row['id_cat'],
 				'url'  => $row['url_cat']
 			]);
+			if (isset($row['img_cat'])) {
+				$data['img'] = $this->imagesComponent->setModuleImage('catalog','category',$row['img_cat'],$row['id_cat']);
+			}
+			$data['img']['default'] = $this->imagesComponent->setModuleImage('catalog','category');
 			// Base url for category
 			$data['id_parent'] = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
 			$data['name'] = $row['name_cat'];

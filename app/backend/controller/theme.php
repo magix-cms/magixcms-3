@@ -29,7 +29,7 @@ class backend_controller_theme extends backend_db_theme {
 		$this->theme = http_request::isPost('theme') ? $formClean->simpleClean($_POST['theme']) : [] ;
 
 		if (http_request::isPost('type')) $this->type = $formClean->simpleClean($_POST['type']);
-		if (http_request::isPost('pages_id')) $this->id = intval($formClean->numeric($_POST['pages_id']));
+		if (http_request::isPost('pages_id') && !empty($_POST['pages_id'])) $this->id = $formClean->numeric($_POST['pages_id']);
 		if (http_request::isPost('id')) $this->id = intval($formClean->simpleClean($_POST['id']));
 
 		if(http_request::isPost('link')) $this->link = $formClean->arrayClean($_POST['link']);
@@ -445,7 +445,7 @@ class backend_controller_theme extends backend_db_theme {
 							$this->template->assign('links',$plugins);
 						}
 						else {
-							$defaultLanguage = $this->collectionLanguage->fetchData(['context'=>'one','type'=>'default']);
+							//$defaultLanguage = $this->collectionLanguage->fetchData(['context'=>'one','type'=>'default']);
 							//$this->setPagesTree($this->getItems($this->content,['idlang'=>$defaultLanguage['id_lang']],'all',false));
 							$this->setPagesTree($this->getItems($this->content,[],'all',false));
 						}

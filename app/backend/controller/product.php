@@ -114,6 +114,7 @@ class backend_controller_product extends backend_db_product {
 	private function getItems($type, $id = null, $context = null, $assign = true, $pagination = false) {
 		return $this->data->getItems($type, $id, $context, $assign, $pagination);
 	}
+
     /**
      *
      */
@@ -121,6 +122,7 @@ class backend_controller_product extends backend_db_product {
         $this->module = $this->module ?? new backend_model_plugins();
         if(empty($this->mods)) $this->mods = $this->module->loadExtendCore('product');
     }
+
     /**
      * @return void
      */
@@ -137,12 +139,13 @@ class backend_controller_product extends backend_db_product {
             }
         }
     }
+
     /**
      * @return void
      */
     private function setColumnsArray() {
         if(!isset($this->columns)) {
-            $this->columns = ['id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'img_p', 'seo_title_p', 'seo_desc_p', 'date_register'];
+            $this->columns = ['id_product', 'name_p', 'name_cat', 'price_p', 'reference_p', 'resume_p', 'content_p', 'default_img', 'seo_title_p', 'seo_desc_p', 'date_register'];
             $this->loadModules();
             if(!empty($this->mods)) {
                 foreach ($this->mods as $mod){
@@ -153,21 +156,21 @@ class backend_controller_product extends backend_db_product {
             }
         }
     }
+
     /**
      * @return void
      */
     private function setAssignArray() {
         if(!isset($this->assign)) {
             $this->assign = [
-                'id_product' =>
-                    ['title' => 'id', 'type' => 'text', 'class' => 'fixed-td-md text-center'],
+                'id_product' => ['title' => 'id', 'type' => 'text', 'class' => 'fixed-td-md text-center'],
                 'name_p' => ['title' => 'name'],
                 'name_cat' => ['title' => 'main_cat'],
                 'price_p' => ['type' => 'price','input' => null],
                 'reference_p' => ['title' => 'reference'],
                 'resume_p' => ['class' => 'fixed-td-lg text-center', 'type' => 'bin', 'input' => null],
                 'content_p' => ['class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
-                'img_p' => ['title' => 'img', 'class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
+                'default_img' => ['title' => 'img', 'class' => 'fixed-td-md text-center', 'type' => 'bin', 'input' => null],
                 'seo_title_p' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
                 'seo_desc_p' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
                 'date_register'
@@ -217,6 +220,7 @@ class backend_controller_product extends backend_db_product {
             }
         }
     }
+
 	/**
 	 * @param $ajax
 	 * @return mixed
@@ -278,6 +282,7 @@ class backend_controller_product extends backend_db_product {
 			'params' => $params
 		);
 	}
+
     /**
      * @return void
      */

@@ -134,7 +134,7 @@ class component_files_upload {
 		$files;
 
     public function __construct() {
-        if(!defined('DS')) define('DS',DIRECTORY_SEPARATOR);
+		if(!defined('DS')) define('DS',DIRECTORY_SEPARATOR);
         $this->url = new component_routing_url();
 		$this->makeFile = new filesystem_makefile();
         $this->imageConfig = new component_files_images(null);
@@ -1299,8 +1299,19 @@ class component_files_upload {
 	 * @param bool $debug
 	 * @return array
 	 */
-	public function setImageUpload($img,$data,$imgCollection,$debug=false){
-		return $this->imageUpload($data['module_img'], $data['attribute_img'], $imgCollection['upload_root_dir'], is_array($imgCollection['upload_dir']) ? $imgCollection['upload_dir'] : [$imgCollection['upload_dir']], $data ,$debug);
+	public function setImageUpload($img, $data, $imgCollection, $debug=false) {
+		$options = [
+			'postKey' => $data['postKey'] ?? '',
+			'name' => $data['name'] ?? '',
+			'edit' => $data['edit'] ?? false,
+			'suffix' => $data['suffix'] ?? null,
+			'suffix_increment' => $data['suffix_increment'] ?? false,
+			'original_remove' => $data['original_remove'] ?? false,
+			'progress' => $data['progress'] ?? true,
+			'template' => $data['template'] ?? null
+		];
+
+		return $this->imageUpload($data['module_img'], $data['attribute_img'], $imgCollection['upload_root_dir'], is_array($imgCollection['upload_dir']) ? $imgCollection['upload_dir'] : [$imgCollection['upload_dir']], $options ,$debug);
 
 		if(isset($this->$img)){
 			try{

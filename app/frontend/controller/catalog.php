@@ -354,7 +354,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
             /*foreach ($collection as $item) {
                 $newSetArray[] = $this->modelCatalog->setItemData($item, [], $newRow);
             }*/
-            if($id_parent !== null) $newSetArray = empty($newSetArray['subdata']) ? [] : $newSetArray['subdata'];
+            if($id_parent !== null) $newSetArray = empty($newSetArray[0]['subdata']) ? [] : $newSetArray[0]['subdata'];
         }
 
 		return $newSetArray;
@@ -852,6 +852,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 		if(isset($data['id_parent'])) {
 			$this->id = $data['id_parent'];
 			$parent = $this->getCategoryData();
+            $parent['subdata'] = $this->getCategoryList($data['id_parent']);
 			$this->template->assign('parent',$parent,true);
             if(!empty($parent)) $this->template->breadcrumb->addItem(
                 $parent['name'],

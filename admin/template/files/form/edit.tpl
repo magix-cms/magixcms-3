@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-ph-12 col-md-12">
             <div class="row">
-                <div class="col-xs-6">
+                {*<div class="col-xs-6">
                     <div class="form-group">
                         <label for="module_img">{#module#|ucfirst}</label>
                         <select name="imageConfig[module_img]" id="module_img" class="form-control required" required>
@@ -13,6 +13,12 @@
                                 <option value="{$val}" {if $size.module_img == $val} selected{/if}>{#$newVal#|ucfirst}</option>
                             {/foreach}
                         </select>
+                    </div>
+                </div>*}
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="module_img">{#module#|ucfirst}</label>
+                        <input type="text" class="form-control required" name="imageConfig[module_img]" id="module_img" placeholder="{#ph_module#|ucfirst}" required value="{$size.module_img}">
                     </div>
                 </div>
                 <div class="col-xs-6">

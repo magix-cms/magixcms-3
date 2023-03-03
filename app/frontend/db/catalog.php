@@ -123,7 +123,7 @@ class frontend_db_catalog {
                         foreach ($newJoin as $join) { $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') '; }
                         unset($params['join']);
                     }
-                    if(!isset($params['order']) && !is_array($params['order'])) $order = ' ORDER BY cat.order_cat';
+                    if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY cat.order_cat';
                     if(isset($params['order']) && is_array($params['order'])){
                         $order = ' ORDER BY ';
                         $orders = [];
@@ -272,12 +272,12 @@ class frontend_db_catalog {
 
                         unset($params['join']);
                     }
-                    if($params['id_cat']){
+                    if(isset($params['id_cat'])){
                         $cat = 'AND catalog.default_c = 1 AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat)';
                     }else{
                         $cat = '';
                     }
-                    if(!isset($params['order']) && !is_array($params['order'])) {
+                    if(!isset($params['order']) || !is_array($params['order'])) {
                         $order = ' ORDER BY catalog.order_p ASC';
                     }
 
@@ -449,7 +449,7 @@ class frontend_db_catalog {
                         unset($params['join']);
                     }
 
-                    if(!isset($params['order']) && !is_array($params['order'])) {
+                    if(!isset($params['order']) || !is_array($params['order'])) {
                         $order = '';
                     }
 
