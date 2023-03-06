@@ -214,7 +214,7 @@ class frontend_model_module extends frontend_db_module {
      * @return array
      */
     public function extendDataArray($type,$method,array $params = []) : array{
-        if(!isset($this->mods)) $this->mods = $this->loadExtendCore($type);
+        /*if(!isset($this->mods)) $this->mods = $this->loadExtendCore($type);
         $loadMethod = [];
         if(!empty($this->mods)) {
             foreach ($this->mods as $mod){
@@ -225,6 +225,20 @@ class frontend_model_module extends frontend_db_module {
                             $mod,
                             $method
                         ),
+                        [$params]
+                    );
+                }
+            }
+        }
+        return $loadMethod;*/
+        $this->mods = $this->loadExtendCore($type);
+        $loadMethod = [];
+        if(!empty($this->mods)) {
+            foreach ($this->mods as $mod){
+                //print $mod;
+                if(method_exists($mod,$method)){
+                    $loadMethod[] = call_user_func_array(
+                        [$mod, $method],
                         [$params]
                     );
                 }

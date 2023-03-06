@@ -237,7 +237,7 @@ class backend_db_category {
 			case 'page':
 				$cond = $params['id_parent'] != NULL ? 'IN ('.$params['id_parent'].')' : 'IS NULL' ;
 				$query = "INSERT INTO `mc_catalog_cat`(id_parent,menu_cat,order_cat,date_register) 
-						SELECT null,1,lastCat.order_cat,NOW() FROM (SELECT count(order_cat) as order_cat FROM mc_catalog_cat WHERE id_parent $cond) as lastCat";
+						SELECT :id_parent,:menu_cat,(IFNULL(SUM(order_cat), 0) +1),NOW() FROM mc_catalog_cat WHERE id_parent $cond ORDER BY order_cat desc LIMIT 0,1";
 				break;
 			case 'content':
 				$query = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 

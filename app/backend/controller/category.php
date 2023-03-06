@@ -383,7 +383,6 @@ class backend_controller_category extends backend_db_category {
 					$data['data']
                 );
                 break;
-                break;
             case 'order':
                 $p = $this->order;
                 for ($i = 0; $i < count($p); $i++) {
