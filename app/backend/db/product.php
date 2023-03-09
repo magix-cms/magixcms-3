@@ -101,7 +101,12 @@ class backend_db_product {
 
                     $where = '';
                     if(isset($params['where']) && is_array($params['where'])) {
-                        foreach ($params['where'] as $item) {
+                        $newWhere = [];
+
+                        foreach ($params['where'] as $key => $value) {
+                            $newWhere = array_merge($newWhere, $value);
+                        }
+                        foreach ($newWhere as $item) {
                             $where .= ' '.$item['type'].' '.$item['condition'].' ';
                         }
                         unset($params['where']);
