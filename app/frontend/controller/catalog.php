@@ -314,7 +314,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 		}
 
         $collection = $this->getItems('category',$params,'all',false);
-
+        unset($params);
 		/*foreach ($collection as $key => $value){
 			//$childCat = $this->getItems('childCat', ['id_parent'=>$value['id_cat'],'id'=>$value['id_cat']], 'one', false);
 			if(!is_null($value['childs'])){
