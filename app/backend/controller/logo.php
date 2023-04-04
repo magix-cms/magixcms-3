@@ -156,7 +156,7 @@ class backend_controller_logo extends backend_db_logo {
      */
     private function emptyDir(string $directory) {
         $dirPath = $this->routingUrl->basePath($directory);
-        $scanRecursiveDir = $this->finder->scanRecursiveDir($dirPath);
+        $scanRecursiveDir = $this->finder->scanDir($dirPath);
         if (file_exists($dirPath)) {
             if (!empty($scanRecursiveDir)) {
                 foreach ($scanRecursiveDir as $file) {
@@ -567,8 +567,9 @@ class backend_controller_logo extends backend_db_logo {
                                  $this->emptyDir('img/logo/');
 
                                  // Remove social image
-                                 $socialPath = $this->routingUrl->basePath('img/social/');
-                                 if (file_exists($socialPath.'social.jpg')) $this->makeFiles->remove($socialPath.'social.jpg');
+								 $this->emptyDir('img/social/');
+                                 //$socialPath = $this->routingUrl->basePath('img/social/');
+                                 //if (file_exists($socialPath.'social.jpg')) $this->makeFiles->remove($socialPath.'social.jpg');
 
                                  $this->template->assign('page', $setEditData[$id_page]);
                                  $display = $this->template->fetch('logo/brick/img.tpl');

@@ -2,7 +2,7 @@
     <form id="delete_img_logo" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=delete&tabs=logo" method="post" class="validate_form delete_form_img col-ph-12" data-target="logo_img">
         <div class="form-group">
             <input type="hidden" id="del_img" name="del_img" value="">
-            <button class="btn btn-danger" type="submit" name="action" value="img">{#remove#|ucfirst}</button>
+            <button class="btn btn-danger" type="submit">{#remove#|ucfirst}</button>
         </div>
     </form>
     {foreach $langs as $id => $iso}
