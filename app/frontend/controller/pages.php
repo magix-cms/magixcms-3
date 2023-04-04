@@ -125,7 +125,7 @@ class frontend_controller_pages extends frontend_db_pages {
             $data = $this->getBuildPagesItems();
             $hreflang = $this->getBuildLangItems();
             $pagesTree = $this->getBuildPagesItemsTree();
-            $childs = $pagesTree[$this->id];
+            $childs = $pagesTree[$this->id] ?? [];
             $this->template->assign('pages',$data,true);
             if(!empty($data['id_parent'])) $this->template->breadcrumb->addItem(
                 $data['parent']['name'],

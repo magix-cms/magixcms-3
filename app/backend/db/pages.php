@@ -24,13 +24,12 @@ class backend_db_pages {
 						}
 					}
 
-					$query = "SELECT p.id_pages, c.name_pages, IFNULL(pi.default_img,0) as img_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
+					$query = "SELECT p.id_pages, c.name_pages, IFNULL(pi.default_img,0) as default_img, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register
 						FROM mc_cms_page AS p
 							JOIN mc_cms_page_content AS c USING ( id_pages )
 						    LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
-							GROUP BY p.id_pages 
 						ORDER BY p.order_pages".$limit;
 
 					if(isset($config['search'])) {
@@ -109,15 +108,14 @@ class backend_db_pages {
 						}
 					}
 
-					$query = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, IFNULL(pi.default_img,0) as img_pages
+					$query = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, IFNULL(pi.default_img,0) as default_img
 							FROM mc_cms_page AS p
 							JOIN mc_cms_page_content AS c USING ( id_pages )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
 							LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages )
                             LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
-							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond
-							GROUP BY p.id_pages";
+							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond";
 					break;
 				case 'pagesSelect':
 					$query = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages

@@ -90,13 +90,13 @@ class frontend_model_pages extends frontend_db_pages {
 				$this->initImageComponent();
 				$data['id'] = $row['id_pages'];
 				$data['id_parent'] = $row['id_parent'];
-                if(!empty($row['id_parent'])) {
+                if(!empty($row['id_parent']) && empty(array_diff(['parent_name','parent_url'],array_keys($row)))) {
                     $parentData = [
                         'id_pages' => $row['id_parent'],
                         'name_pages' => $row['parent_name'],
                         'iso_lang' => $row['iso_lang'],
                         'url_pages' => $row['parent_url'],
-                        'seo_title_pages' => $row['seo_title_parent'],
+                        'seo_title_pages' => $row['seo_title_parent'] ?: '',
                     ];
                     $data['parent'] = $this->setItemShortData($parentData);
                 }
@@ -109,7 +109,7 @@ class frontend_model_pages extends frontend_db_pages {
 					'url' => $row['url_pages']
 				]);
 				$data['active'] = false;
-				if ($row['id_pages'] == $current['controller']['id']) $data['active'] = true;
+				if (!empty($current) && $row['id_pages'] == $current['controller']['id']) $data['active'] = true;
 
 				if (isset($row['img'])) {
 					if(is_array($row['img'])) {

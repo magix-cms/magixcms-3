@@ -111,7 +111,7 @@ class frontend_model_product {
 			$data['price']     = $row['price_p'] ?? null;
 			$data['reference'] = $row['reference_p'] ?? null;
 			$data['content']   = $row['content_p'] ?? null;
-			$data['resume']    = $row['resume_p'] ? $row['resume_p'] : ($row['content_p'] ? $string_format->truncate(strip_tags($row['content_p'])) : '');
+			$data['resume']    = isset($row['resume_p']) ? $row['resume_p'] : (isset($row['content_p']) ? $string_format->truncate(strip_tags($row['content_p'])) : '');
 			$data['order']     = isset($row['order_p']) ? $row['order_p'] : null;
 			if (isset($row['img'])) {
 				if(is_array($row['img'])) {

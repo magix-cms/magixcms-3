@@ -6,7 +6,7 @@
     {if {employee_access type="append" class_name=$cClass} eq 1}
     <div class="pull-right hidden-ph hidden-xs">
         <p class="text-right">
-            {#nbr_pages#|ucfirst}: {$pages|count}<a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" title="{#add_pages#}" class="btn btn-link">
+            {#nbr_pages#|ucfirst}: {if !empty($pages)}{$pages|count}{else}0{/if}<a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" title="{#add_pages#}" class="btn btn-link">
                 <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
             </a>
         </p>

@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `mc_setting` (
 INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `category`) VALUES
 (NULL, 'theme', 'default', 'string', 'site theme', 'theme'),
 (NULL, 'analytics', NULL, 'string', 'google analytics', 'google'),
-(NULL, 'magix_version', '3.7.1', 'string', 'Version Magix CMS', 'release'),
+(NULL, 'magix_version', '3.7.2', 'string', 'Version Magix CMS', 'release'),
 (NULL, 'vat_rate', '21', 'float', 'VAT Rate', 'catalog'),
 (NULL, 'price_display', 'tinc', 'string', 'Price display with or without tax included', 'catalog'),
 (NULL, 'product_per_page', 12, 'int', 'Number of product per page in the pages of the catalog', 'catalog'),
@@ -265,7 +265,7 @@ ALTER TABLE `mc_domain_language`
 
 CREATE TABLE IF NOT EXISTS `mc_config_img` (
   `id_config_img` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `module_img` enum('catalog','news','pages','logo','plugins') NOT NULL,
+  `module_img` varchar(40) NOT NULL,
   `attribute_img` varchar(40) NOT NULL,
   `width_img` decimal(4,0) NOT NULL,
   `height_img` decimal(4,0) NOT NULL,

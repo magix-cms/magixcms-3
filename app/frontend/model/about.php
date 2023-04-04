@@ -265,7 +265,7 @@ class frontend_model_about extends frontend_db_about {
 
 				$data['active'] = false;
 
-				if ($row['id_pages'] == $current['controller']['id']) {
+				if (!empty($current) && $row['id_pages'] == $current['controller']['id']) {
 					$data['active'] = true;
 				}
 				$data['resume'] = $row['resume_pages'] ? $row['resume_pages'] : ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');

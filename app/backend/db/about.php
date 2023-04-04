@@ -56,7 +56,6 @@ class backend_db_about {
 								JOIN mc_about_page_content AS c USING ( id_pages )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								WHERE c.id_lang = :default_lang AND p.id_parent IS NULL 
-								GROUP BY p.id_pages 
 							ORDER BY p.order_pages".$limit;
 
 					if(isset($config['search'])) {

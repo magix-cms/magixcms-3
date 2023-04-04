@@ -53,11 +53,11 @@ Requirements
      * Fileinfo Extension
  * MYSQL Ou MariaDB
  
-##### Note: Pour utiliser Magix CMS avec PHP 7 et plus
+##### Note: Pour utiliser Magix CMS avec PHP 7.4 et plus
 <pre>
 error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
 </pre>
-##### Note: Magix CMS 3.x.x est optimisé pour PHP 7 mais sera adapté pour PHP 8 !!
+##### Note: Magix CMS 3.x.x est optimisé pour PHP 7.4 mais sera adapté pour PHP 8 !!
 
 
 ## Watchers PHP STORM

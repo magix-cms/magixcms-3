@@ -4,10 +4,7 @@
             <legend>{#catalog_setting#}</legend>
             <div class="form-group">
                 <label for="product_per_page">{#product_per_page#|ucfirst}</label>
-                <div class="input-group">
-                    <input type="number" min="0" id="product_per_page" name="setting[product_per_page]" class="form-control" value="{$settings.product_per_page}" />
-                    <div class="input-group-addon"><span class="fas fa-percent"></span></div>
-                </div>
+                <input type="number" min="0" id="product_per_page" name="setting[product_per_page]" class="form-control" value="{$settings.product_per_page}" />
             </div>
             <div class="form-group">
                 <label for="vat_rate">{#vat_rate#|ucfirst}</label>
@@ -32,10 +29,7 @@
             <legend>{#news_setting#}</legend>
             <div class="form-group">
                 <label for="news_per_page">{#news_per_page#|ucfirst}</label>
-                <div class="input-group">
-                    <input type="number" min="0" id="news_per_page" name="setting[news_per_page]" class="form-control" value="{$settings.news_per_page}" />
-                    <div class="input-group-addon"><span class="fas fa-percent"></span></div>
-                </div>
+                <input type="number" min="0" id="news_per_page" name="setting[news_per_page]" class="form-control" value="{$settings.news_per_page}" />
             </div>
         </fieldset>
         <input type="hidden" id="type" name="type" value="news">

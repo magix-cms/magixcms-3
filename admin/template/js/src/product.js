@@ -319,13 +319,13 @@ var product = (function ($, undefined) {
 
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 if($(e.target).attr('href') === '#images') {
-                    initDropZone();
+                    //initDropZone();
                     initDefaultImg(edit);
                     initSortable(edit);
                 }
             });
             if($('#images').hasClass('active')) {
-                initDropZone();
+                //initDropZone();
                 initDefaultImg(edit);
                 initSortable(edit);
             }

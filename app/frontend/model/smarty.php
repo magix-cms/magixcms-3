@@ -139,6 +139,7 @@ class frontend_model_smarty extends Smarty{
 		 * compile (true/false)
 		 */
 		$this->compile_check = true;
+		$this->config_booleanize = false;
 		/**
 		 * Force compile
 		 * @var void

@@ -41,7 +41,7 @@
                     </div>
                     <div role="tabpanel" class="tab-pane tab-table{if !$smarty.get.plugin && $smarty.get.tab === 'child'} active{/if}" id="child">
                         <p class="text-right">
-                            {#nbr_pages#|ucfirst}: {$pagesChild|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&parent_id={$smarty.get.edit}" title="{#add_pages#}" class="btn btn-link">
+                            {#nbr_pages#|ucfirst}: {if !empty($pagesChild)}{$pagesChild|count}{else}0{/if} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add&parent_id={$smarty.get.edit}" title="{#add_pages#}" class="btn btn-link">
                                 <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
                             </a>
                         </p>
