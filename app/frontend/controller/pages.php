@@ -101,6 +101,20 @@ class frontend_controller_pages extends frontend_db_pages {
     /**
      * @return array
      */
+    private function getBuildPagesChildren(): array {
+        $modelSystem = new frontend_model_core();
+		$current = $modelSystem->setCurrentId();
+		$data = $this->modelPages->getData(['context' => 'all', 'select' => $this->id], $current);
+		if(!empty($data)) {
+			$page = $this->data->parseData($data, $this->modelPages, $current);
+			return $page[0]['subdata'] ?? [];
+		}
+		return [];
+    }
+
+    /**
+     * @return array
+     */
     private function getBuildPagesItemsTree(): array {
         $modelSystem = new frontend_model_core();
 		$current = $modelSystem->setCurrentId();
@@ -125,7 +139,7 @@ class frontend_controller_pages extends frontend_db_pages {
             $data = $this->getBuildPagesItems();
             $hreflang = $this->getBuildLangItems();
             $pagesTree = $this->getBuildPagesItemsTree();
-            $childs = $pagesTree[0]['subdata'] ?? [];
+			$childs = $this->getBuildPagesChildren();
             $this->template->assign('pages',$data,true);
             if(!empty($data['id_parent'])) $this->template->breadcrumb->addItem(
                 $data['parent']['name'],
