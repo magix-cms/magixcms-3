@@ -234,7 +234,7 @@ class frontend_db_news {
 
 						unset($params['order']);
 					}
-					elseif(!isset($params['order']) && !is_array($params['order'])) {
+					elseif(!isset($params['order']) || !is_array($params['order'])) {
 						$order = ' ORDER BY mnc.date_publish DESC, mn.id_news DESC';
 					}
 
@@ -449,7 +449,7 @@ class frontend_db_news {
 						unset($params['group']);
 					}
 
-					if(!isset($params['order']) && !is_array($params['order'])) $order = ' ORDER BY mnc.date_publish DESC, mn.id_news DESC';
+					if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY mnc.date_publish DESC, mn.id_news DESC';
 
 					if(isset($params['order']) && is_array($params['order'])) {
 						$order = ' ORDER BY ';

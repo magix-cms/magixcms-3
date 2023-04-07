@@ -164,9 +164,8 @@ class backend_db_product {
 							FROM mc_catalog_product AS p
 							JOIN mc_catalog_product_content AS pc USING ( id_product )
 							LEFT JOIN mc_catalog AS c ON ( p.id_product = c.id_product AND c.default_c = 1 )
-							LEFT JOIN mc_catalog_cat_content AS cc ON ( c.id_cat = cc.id_cat )
+							LEFT JOIN mc_catalog_cat_content AS cc ON ( c.id_cat = cc.id_cat AND pc.id_lang = cc.id_lang )
 							LEFT JOIN mc_catalog_product_img AS pi ON ( p.id_product = pi.id_product AND pi.default_img = 1 )
-							JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) 
 							'.$joins. 'WHERE pc.id_lang = :default_lang '.$cond.$where.' 
 							ORDER BY p.id_product DESC'. $limit;
                     break;

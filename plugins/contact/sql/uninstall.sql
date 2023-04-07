@@ -8,7 +8,3 @@ TRUNCATE TABLE `mc_contact`;
 DROP TABLE `mc_contact`;
 TRUNCATE TABLE `mc_contact_config`;
 DROP TABLE `mc_contact_config`;
-
-DELETE FROM `mc_admin_access` WHERE `id_module` IN (
-    SELECT `id_module` FROM `mc_module` as m WHERE m.name = 'contact'
-);

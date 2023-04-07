@@ -140,15 +140,15 @@ class frontend_model_product {
 			}
 			
 			if (!isset($row['seo_title_p']) || empty($row['seo_title_p'])) {
-				$seoTitle = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'title');
-				$data['seo']['title'] = $seoTitle ? $seoTitle : $data['name'];
+				$seoTitle = $this->seo->replace_var_rewrite($row['name_cat'] ?? '',$data['name'],'title');
+				$data['seo']['title'] = $seoTitle ?: $data['name'];
 			}
 			else {
 				$data['seo']['title'] = $row['seo_title_p'];
 			}
 			if (!isset($row['seo_desc_p']) || empty($row['seo_desc_p'])) {
-				$seoDesc = $this->seo->replace_var_rewrite($row['name_cat'],$data['name'],'description');
-				$data['seo']['description'] = $seoDesc ? $seoDesc : ($data['resume'] ? $data['resume'] : $data['seo']['title']);
+				$seoDesc = $this->seo->replace_var_rewrite($row['name_cat'] ?? '',$data['name'],'description');
+				$data['seo']['description'] = $seoDesc ?: ($data['resume'] ?: $data['seo']['title']);
 			}
 			else {
 				$data['seo']['description'] = $row['seo_desc_p'];

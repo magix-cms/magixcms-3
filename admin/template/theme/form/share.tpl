@@ -44,7 +44,7 @@
         </div>
         <div class="form-group">
             <div class="switch">
-                <input type="checkbox" id="share-google-plus" name="share[google]" class="switch-native-control"{if $shareConfig.google} checked{/if} />
+                <input type="checkbox" id="share-google-plus" name="share[google]" class="switch-native-control"{if $shareConfig.google} checked{/if} disabled/>
                 <div class="switch-bg">
                     <div class="switch-knob"></div>
                 </div>

@@ -1,0 +1,54 @@
+#contact .contact-infos {
+  text-align: center;
+}
+#contact #aside {
+  font-size: 14px;
+}
+#contact #aside h3 {
+  color: var(--text-color);
+}
+#contact #aside p {
+  margin: 25px 0;
+}
+#contact #aside p.adresse span.fa {
+  float: left;
+  height: 40px;
+}
+#contact #aside p.lead {
+  font-size: 14px;
+}
+#contact #aside p.lead + p {
+  margin-bottom: 0;
+}
+#contact #aside .fa:first-child {
+  font-size: 24px;
+}
+#contact #aside .fa,
+#contact #aside .material-icons {
+  color: var(--main-color);
+  display: block;
+  margin-bottom: 10px;
+}
+#contact #aside .email .fa.fa-at {
+  font-size: 100%;
+  margin: 0;
+  color: var(--text-color);
+  padding: 0;
+  width: auto;
+  display: inline;
+}
+#btn-contact {
+  margin-top: 15px;
+  text-align: center;
+}
+#btn-contact button {
+  display: inline-flex;
+  align-items: center;
+}
+#btn-contact button .material-icons {
+  margin-right: 4px;
+}
+/*#map {
+	margin-bottom: 20px;
+}*/
+/*# sourceMappingURL=contact.css.map */

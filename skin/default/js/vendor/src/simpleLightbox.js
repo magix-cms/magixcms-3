@@ -427,7 +427,6 @@
             this.addEvent(this.$el, 'click', function(e) {
 
                 var $target = e.target;
-                console.log($target);
 
                 if ((matches($target, '.slbCloseBtn') || (self.options.closeOnOverlayClick && matches($target, '.slbWrap')))
                     || (matches($target.parentElement, '.slbCloseBtn') || (self.options.closeOnOverlayClick && matches($target.parentElement, '.slbWrap')))) {

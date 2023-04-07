@@ -217,21 +217,22 @@ window.addEventListener('load', () => {
         document.querySelectorAll('.show-img').forEach(function(i){
             i.addEventListener('click',(e) => {
                 e.preventDefault();
-                document.querySelectorAll('.big-image a').forEach((main,i) => {
-                    main.style.zIndex = -1;
-                    main.style.opacity = 0;
-
-                    let img = main.querySelector('img');
-                    img.style.visibility = 'hidden';
-                    if(i) img.style.display = 'none';
+                document.querySelectorAll('.big-image > a, .big-image > div').forEach((container) => {
+                    container.style.zIndex = -1;
+                    container.style.opacity = 0;
+                    container.querySelectorAll('img, iframe, video').forEach((item) => {
+                        item.style.visibility = 'hidden';
+                        item.style.display = 'none';
+                    });
                 });
 
                 let target = document.querySelectorAll(i.dataset.target)[0];
                 target.style.zIndex = 1;
                 target.style.opacity = 1;
-                let img = target.querySelector('img');
-                img.style.visibility = 'visible';
-                img.style.display = 'block';
+                target.querySelectorAll('img, iframe, video').forEach((item) => {
+                    item.style.visibility = 'visible';
+                    item.style.display = 'block';
+                });
                 return false;
             });
         });

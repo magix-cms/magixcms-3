@@ -51,8 +51,7 @@
         </div>*}
         <div class="dropzone img-drop{if !isset($page.imgSrc) || empty($page.imgSrc)} no-img{/if}" data-preview="true">
             <div class="preview-img">
-                <img
-                        src="{if isset($page.imgSrc) && !empty($page.imgSrc)}/upload/catalog/category/{$page.imgSrc['original'].img}{else}#{/if}"
+                <img src="{if isset($page.imgSrc) && !empty($page.imgSrc)}/upload/catalog/category/{$page.imgSrc['original'].img}{else}#{/if}"
                         alt="{#drop_img_here#}"
                         class="{if isset($page.imgSrc) && !empty($page.imgSrc)}preview{else}no-img{/if} img-responsive" />
             </div>

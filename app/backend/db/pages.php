@@ -85,20 +85,20 @@ class backend_db_pages {
 						foreach ($config['search'] as $key => $q) {
 							if($q !== '') {
 								$cond .= 'AND ';
-								$p = 'p'.$nbc;
+								$p = 'mcp'.$nbc;
 								switch ($key) {
 									case 'id_pages':
-										$cond .= 'c.'.$key.' = '.$p.' ';
+										$cond .= 'mcpc.'.$key.' = '.$p.' ';
 										break;
 									case 'name_pages':
-										$cond .= "c.".$key." LIKE CONCAT('%', :".$p.", '%') ";
+										$cond .= "mcpc.".$key." LIKE CONCAT('%', :".$p.", '%') ";
 										break;
 									case 'menu_pages':
-										$cond .= 'p.'.$key.' = '.$p.' ';
+										$cond .= 'mcp.'.$key.' = '.$p.' ';
 										break;
 									case 'date_register':
 										$q = $dateFormat->date_to_db_format($q);
-										$cond .= "p.".$key." LIKE CONCAT('%', :".$p.", '%') ";
+										$cond .= "mcp.".$key." LIKE CONCAT('%', :".$p.", '%') ";
 										//$params[$key] = $q;
 										break;
 								}
@@ -108,14 +108,29 @@ class backend_db_pages {
 						}
 					}
 
-					$query = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, IFNULL(pi.default_img,0) as default_img
+					/*$query = "SELECT p.id_pages, c.name_pages, c.resume_pages, c.content_pages, c.seo_title_pages, c.seo_desc_pages, p.menu_pages, p.date_register, IFNULL(pi.default_img,0) as default_img
 							FROM mc_cms_page AS p
 							JOIN mc_cms_page_content AS c USING ( id_pages )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
 							LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages )
                             LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
-							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond";
+							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond";*/
+					$query = "SELECT 
+								mcp.id_pages, 
+								mcpc.name_pages, 
+								mcpc.resume_pages,
+								mcpc.content_pages, 
+								mcpc.seo_title_pages, 
+								mcpc.seo_desc_pages, 
+								mcp.menu_pages, 
+								mcp.date_register, 
+								IFNULL(mcpi.default_img,0) as default_img
+							FROM mc_cms_page mcp
+							JOIN mc_cms_page_content mcpc USING ( id_pages )
+							JOIN mc_lang ml ON ( mcpc.id_lang = ml.id_lang )
+                            LEFT JOIN mc_cms_page_img mcpi ON ( mcp.id_pages = mcpi.id_pages AND mcpi.default_img = 1 )
+							WHERE mcp.id_parent = :id AND mcpc.id_lang = :default_lang $cond";
 					break;
 				case 'pagesSelect':
 					$query = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages

@@ -15,7 +15,7 @@
 	z-index: 1;
 	position: static;
 	float: left;
-	img {
+	iframe, video, img {
 		visibility: visible;
 		display: block;
 	}
@@ -32,21 +32,22 @@
 		//border-top: 1px solid var(--smooth-white);
 		//border-bottom: 1px solid var(--smooth-white);
 
-		a {
-			position: absolute;
+		> div,
+		> a {
 			opacity: 0;
 			left: 0;
 			top: 0;
 			width: 100%;
 			margin: 0 auto;
 			z-index: -1;
+			//transform: translate(-50%,-50%);
 			.transition(opacity 350ms);
 
 			&:hover {
 				cursor: zoom-in;
 			}
 
-			img {
+			iframe, video, img {
 				visibility: hidden;
 				display: none;
 				width: 100%;

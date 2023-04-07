@@ -21,24 +21,24 @@
         <input id="phone" type="tel" name="msg[phone]" placeholder="{#ph_contact_phone#|ucfirst}" class="form-control phone" pattern="{literal}^((?=[0-9\+ \(\)-]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})${/literal}" maxlength="20" />
         <label for="phone" class="is_empty">{#pn_contact_phone#|ucfirst}&nbsp;:</label>
     </div>
-    {if $contact.address_enabled}
+    {if $contact_config.address_enabled}
         <div class="row">
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <input id="address" type="text" name="msg[address]" placeholder="{#ph_address#|ucfirst}" value="" class="form-control{if $contact.address_required} required{/if}" {if $contact.address_required}required{/if}/>
-                    <label for="address" class="is_empty">{#pn_contact_address#|ucfirst}{if $contact.address_required}*{/if}&nbsp;:</label>
+                    <input id="address" type="text" name="msg[address]" placeholder="{#ph_address#|ucfirst}" value="" class="form-control{if $contact_config.address_required} required{/if}" {if $contact_config.address_required}required{/if}/>
+                    <label for="address" class="is_empty">{#pn_contact_address#|ucfirst}{if $contact_config.address_required}*{/if}&nbsp;:</label>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="form-group">
-                    <input id="postcode" type="text" name="msg[postcode]" placeholder="{#ph_postcode#|ucfirst}" value="" class="form-control{if $contact.address_required} required{/if}" {if $contact.address_required}required{/if}/>
-                    <label for="postcode" class="is_empty">{#pn_contact_postcode#|ucfirst}{if $contact.address_required}*{/if}&nbsp;:</label>
+                    <input id="postcode" type="text" name="msg[postcode]" placeholder="{#ph_postcode#|ucfirst}" value="" class="form-control{if $contact_config.address_required} required{/if}" {if $contact_config.address_required}required{/if}/>
+                    <label for="postcode" class="is_empty">{#pn_contact_postcode#|ucfirst}{if $contact_config.address_required}*{/if}&nbsp;:</label>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="form-group">
-                    <input id="city" type="text" name="msg[city]" placeholder="{#ph_city#|ucfirst}" value="" class="form-control{if $contact.address_required} required{/if}" {if $contact.address_required}required{/if}/>
-                    <label for="city" class="is_empty">{#pn_contact_city#|ucfirst}{if $contact.address_required}*{/if}&nbsp;:</label>
+                    <input id="city" type="text" name="msg[city]" placeholder="{#ph_city#|ucfirst}" value="" class="form-control{if $contact_config.address_required} required{/if}" {if $contact_config.address_required}required{/if}/>
+                    <label for="city" class="is_empty">{#pn_contact_city#|ucfirst}{if $contact_config.address_required}*{/if}&nbsp;:</label>
                 </div>
             </div>
         </div>
@@ -47,7 +47,9 @@
         <input id="title" type="text" name="msg[title]" placeholder="{#ph_contact_programme#|ucfirst}"  value="{$smarty.post.moreinfo}" class="form-control required" required/>
         <label for="title"{if !$smarty.post.moreinfo} class="is_empty" {/if}>{#pn_contact_programme#|ucfirst}*&nbsp;:</label>
     </div>
-
+    {if isset($contact_config.recaptcha) && $contact_config.recaptcha}
+        {include file="recaptcha/form/recaptcha.tpl" action="contact"}
+    {/if}
     <div class="form-group">
         <textarea id="msg_content" name="msg[content]" rows="5" class="form-control required" required></textarea>
         <label for="msg_content" class="is_empty">{#pn_contact_message#|ucfirst}*&nbsp;:</label>

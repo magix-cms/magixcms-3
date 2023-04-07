@@ -13,37 +13,37 @@ class plugins_contact_db {
 	public function fetchData(array $config,array $params = []) {
 		if ($config['context'] === 'all') {
 			switch ($config['type']) {
-					case 'pages':
-						$query = 'SELECT h.*,c.*
+				case 'pages':
+					$query = 'SELECT h.*,c.*
                     			FROM mc_contact_page AS h
                     			JOIN mc_contact_page_content AS c USING(id_page)
                     			JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
                     			WHERE h.id_page = :id';
-						break;
-					case 'contact':
-						$query = 'SELECT p.*,c.*,lang.*
+					break;
+				case 'contact':
+					$query = 'SELECT p.*,c.*,lang.*
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 								WHERE c.id_lang = :default_lang';
-						break;
-					case 'contacts':
-						$query = 'SELECT p.id_contact, p.mail_contact
+					break;
+				case 'contacts':
+					$query = 'SELECT p.id_contact, p.mail_contact
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 								WHERE lang.iso_lang = :lang';
-						break;
-					case 'data':
-						$query = 'SELECT p.*,c.*,lang.*
+					break;
+				case 'data':
+					$query = 'SELECT p.*,c.*,lang.*
 								FROM mc_contact AS p
 								JOIN mc_contact_content AS c USING(id_contact)
 								JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 								WHERE p.id_contact = :edit';
-						break;
-					default:
-						return false;
-				}
+					break;
+				default:
+					return false;
+			}
 
 			try {
 				return component_routing_db::layer()->fetchAll($query, $params);
@@ -91,15 +91,15 @@ class plugins_contact_db {
 			}
 		}
 		return false;
-    }
+	}
 
 	/**
 	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-    public function insert(array $config, array $params = []) {
-        switch ($config['type']) {
+	public function insert(array $config, array $params = []) {
+		switch ($config['type']) {
 			case 'root_page':
 				$query = 'INSERT INTO mc_contact_page(date_register) VALUES (NOW())';
 				break;
@@ -131,14 +131,14 @@ class plugins_contact_db {
 			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
 			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 		}
-    }
+	}
 
 	/**
 	 * @param array $config
 	 * @param array $params
 	 * @return bool|string
 	 */
-    public function update(array $config, array $params = []) {
+	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'contact':
 				$query = 'UPDATE mc_contact 
@@ -181,18 +181,18 @@ class plugins_contact_db {
 			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
 			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 		}
-    }
+	}
 
 	/**
 	 * @param array $config
 	 * @param array $params
-	 * @return bool|string
+	 * @return bool
 	 */
-    public function delete(array $config, array $params = []) {
+	public function delete(array $config, array $params = []): bool {
 		switch ($config['type']) {
 			case 'delMail':
 				$query = 'DELETE FROM mc_contact WHERE id_contact IN ('.$params['id'].')';
-				$params = array();
+				$params = [];
 				break;
 			default:
 				return false;
@@ -206,5 +206,5 @@ class plugins_contact_db {
 			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
 			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 		}
-    }
+	}
 }

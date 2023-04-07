@@ -472,14 +472,15 @@ class frontend_controller_news extends frontend_db_news {
                 'months' => $months
             ];
 		}*/
-        if(!empty($monthData)) {
+        if(!empty($monthsData)) {
             $year = '';
             foreach ($monthsData as $monthData) {
                 if($year !== $monthData['year']) $year = $monthData['year'];
                 if(!isset($archives[$year])) {
                     $archives[$year] = [
                         'year' => $year,
-                        'url' => $this->routingUrl->getBuildUrl(['type' => 'date',
+                        'url' => $this->routingUrl->getBuildUrl([
+							'type' => 'date',
                             'iso' => $this->lang,
                             'year' => $year
                         ])
@@ -487,7 +488,8 @@ class frontend_controller_news extends frontend_db_news {
                 }
                 $month = [
                     'month' => $monthData['month'],
-                    'url' => $this->routingUrl->getBuildUrl(['type' => 'date',
+                    'url' => $this->routingUrl->getBuildUrl([
+						'type' => 'date',
                         'iso' => $this->lang,
                         'year' => $year,
                         'month' => $monthData['month'],

@@ -568,7 +568,8 @@ class frontend_controller_catalog extends frontend_db_catalog {
 
         if(!$newTableArray) {
             $collection = $this->getItems('similar',$defaultParams ,'all', false);
-        }else{
+        }
+		else{
             //print_r(array_merge($newTableArray['extendQueryParams'], $newTableArray['filterQueryParams']));
             $extendQueryParams = [];
             $extendQueryParams[] = $newTableArray['extendQueryParams'];
@@ -600,7 +601,8 @@ class frontend_controller_catalog extends frontend_db_catalog {
             foreach ($collection as &$item) {
                 $newSetArray[] = $this->modelCatalog->setItemData($item, []);
             }
-        }else{
+        }
+		else{
             if(isset($newTableArray['collection'])){
                 $extendFormArray = [];
 

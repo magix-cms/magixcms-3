@@ -91,9 +91,9 @@ var setting = (function ($, undefined) {
                 $('#service_worker').prop('disabled',!checked);
                 if(checked) $('#service_worker').parent().removeAttr('disabled');
                 else $('#service_worker').parent().attr('disabled','disabled');
-                $('#amp').prop('disabled',!checked);
+                /*$('#amp').prop('disabled',!checked);
                 if(checked) $('#amp').parent().removeAttr('disabled');
-                else $('#amp').parent().attr('disabled','disabled');
+                else $('#amp').parent().attr('disabled','disabled');*/
             });
 
             $('.advanced-popover').each(function(){

@@ -314,18 +314,18 @@ class backend_controller_theme extends backend_db_theme {
 						}
 						elseif (isset($this->id)) {
 							foreach ($langs as $lang) {
-								$page = $this->getItems($this->type,array('id' => $this->id,'id_lang' => $lang['id_lang']),'one',false);
+								$page = $this->getItems($this->type,['id' => $this->id,'id_lang' => $lang['id_lang']],'one',false);
 
-								$this->add(array(
+								$this->add([
 									'type' => 'link_content',
-									'data' => array(
+									'data' => [
 										'id' => $link['id_link'],
 										'id_lang' => $lang['id_lang'],
-										'name_link' => $page['name'] ?: null,
-										'title_link' => $page['name'] ?: null,
+										'name_link' => $page['name'] ?? null,
+										'title_link' => $page['name'] ?? null,
 										'url_link' => null
-									)
-								));
+									]
+								]);
 							}
 						}
 

@@ -13,21 +13,26 @@ class plugins_contact_public extends plugins_contact_db {
      * @var frontend_model_mail $mail
      * @var frontend_model_setting $settings
      * @var frontend_model_domain $modelDomain
-     * @var plugins_recaptcha_public $recaptcha
+     * @var frontend_model_module $module
      */
 	protected frontend_model_template $template;
 	protected frontend_model_data $data;
-    protected http_header $header;
+	protected http_header $header;
 	protected filter_sanitize $sanitize;
-    protected frontend_model_mail $mail;
+	protected frontend_model_mail $mail;
 	protected frontend_model_setting $settings;
-    protected frontend_model_domain $modelDomain;
-	protected plugins_recaptcha_public $recaptcha;
+	protected frontend_model_domain $modelDomain;
+	protected frontend_model_module $module;
 
 	/**
 	 * @var bool $amp_available
 	 */
     protected bool $amp_available = true;
+
+	/**
+	 * @var array $mods
+	 */
+	protected array $mods;
 
     /**
      * @var array
@@ -37,7 +42,12 @@ class plugins_contact_public extends plugins_contact_db {
     /**
      * @var string
      */
-    public string $origin, $moreinfo, $type, $lang, $custom_mail;
+    public string
+		$origin,
+		$moreinfo,
+		$type,
+		$lang,
+		$custom_mail;
 
     /**
      * @var boolean
@@ -69,6 +79,14 @@ class plugins_contact_public extends plugins_contact_db {
     private function getItems(string $type, $id = null, string $context = null, $assign = true) {
         return $this->data->getItems($type, $id, $context, $assign);
     }
+
+	/**
+	 * Load account modules
+	 */
+	private function loadModules() {
+		if(!isset($this->module)) $this->module = new frontend_model_module($this->template);
+		if(empty($this->mods)) $this->mods = $this->module->load_module('account');
+	}
 
     /**
      * Retourne le message de notification
@@ -273,47 +291,40 @@ class plugins_contact_public extends plugins_contact_db {
 	 * @return array|mixed
 	 */
     public function getContactConf() {
-        return $this->getItems('config',null,'one',false) ?: [];
-    }
-
-	// --- Google Recaptcha
-	/**
-	 * @throws Exception
-	 */
-	private function recaptchaEnabled() {
-		if(class_exists('plugins_recaptcha_public') && $this->template->is_amp() === false) {
-			$pluginModel = new frontend_model_plugins();
-			if($pluginModel->isInstalled('recaptcha')) $this->recaptcha = new plugins_recaptcha_public();
+        $config = $this->getItems('config',null,'one',false) ?: [];
+		$this->loadModules();
+		if(!empty($this->mods)) {
+			$plugin = new frontend_model_plugins();
+			if(key_exists('recaptcha',$this->mods)) $config['recaptcha'] = $plugin->isInstalled('recaptcha');
 		}
-	}
-	// ---
+        return $config;
+    }
 
     /**
      *
      */
     public function run() {
+		$this->loadModules();
+
 		if(http_request::isMethod('GET')) {
-            $this->template->breadcrumb->addItem($this->template->getConfigVars('contact'));
+			$this->template->breadcrumb->addItem($this->template->getConfigVars('contact'));
 			if(isset($this->moreinfo)) $this->template->assign('title',$this->moreinfo);
 			$this->getItems('page',['lang' => $this->lang],'one');
-			$this->template->assign('contact',$this->getContactConf());
+			$this->template->assign('contact_config',$this->getContactConf());
 			$this->template->display('contact/index.tpl');
 		}
 		if(http_request::isMethod('POST')) {
-            if(http_request::isPost('msg')) $this->msg = form_inputEscape::arrayClean($_POST['msg']);
-            if(http_request::isPost('type')) $this->type = form_inputEscape::simpleClean($_POST['type']);
-            if(http_request::isPost('custom_mail')) $this->custom_mail = form_inputEscape::simpleClean($_POST['custom_mail']);
+			if(http_request::isPost('msg')) $this->msg = form_inputEscape::arrayClean($_POST['msg']);
+			if(http_request::isPost('type')) $this->type = form_inputEscape::simpleClean($_POST['type']);
+			if(http_request::isPost('custom_mail')) $this->custom_mail = form_inputEscape::simpleClean($_POST['custom_mail']);
 
-			$this->recaptchaEnabled();
-			if(isset($this->msg)) {
-				if (isset($this->recaptcha) && $this->recaptcha->active && !$this->recaptcha->getRecaptcha()) {
-					$this->getNotify('warning','captcha');
-					return;
-				}
-				else {
-					$this->send_email();
-				}
+			// --- Check the google captcha if needed
+			if (key_exists('recaptcha',$this->mods) && $this->mods['recaptcha']->active && !$this->mods['recaptcha']->getRecaptcha()) {
+				$this->notify('warning','captcha');
+				return;
 			}
+
+			if(isset($this->msg)) $this->send_email();
 		}
     }
 

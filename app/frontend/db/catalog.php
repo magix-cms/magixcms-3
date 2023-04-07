@@ -410,8 +410,8 @@ class frontend_db_catalog {
                     }
 
                     $select = ['catalog.*',
-                        'cat.name_cat',
-                        'cat.url_cat',
+                        'cc.name_cat',
+                        'cc.url_cat',
                         'p.*',
                         'pc.name_p',
                         'pc.longname_p',
@@ -477,17 +477,17 @@ class frontend_db_catalog {
 
                     $sql = 'SELECT '.implode(',', $select).'
 						FROM mc_catalog_product_rel AS rel
-						JOIN mc_catalog AS catalog ON (rel.id_product_2 = catalog.id_product)
-						JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
-						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
-						JOIN mc_catalog_product AS p ON ( catalog.id_product = p.id_product )
+						JOIN mc_catalog_product AS p ON ( rel.id_product_2 = p.id_product )
 						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
+						LEFT JOIN mc_catalog AS catalog ON (p.id_product = catalog.id_product)
+						LEFT JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat AND catalog.default_c = 1 )
+						LEFT JOIN mc_catalog_cat_content AS cc ON ( c.id_cat = cc.id_cat AND pc.id_lang = cc.id_lang)
 						LEFT JOIN mc_catalog_product_img AS img ON (p.id_product = img.id_product)
 						LEFT JOIN mc_catalog_product_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
-						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) AND (cat.id_lang = lang.id_lang)
+						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang)
 						'.$joins.'
 						WHERE lang.iso_lang = :iso AND rel.id_product = :id 
-						AND pc.published_p = 1 AND cat.published_cat = 1 AND catalog.default_c = 1 
+						AND pc.published_p = 1 AND cc.published_cat = 1 AND catalog.default_c = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL) 
 						 '.$where
                         .$order.$limit;

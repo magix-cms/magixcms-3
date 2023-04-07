@@ -7,6 +7,8 @@
   position: static;
   float: left;
 }
+#default iframe,
+#default video,
 #default img {
   visibility: visible;
   display: block;
@@ -18,8 +20,8 @@
   overflow: hidden;
   position: relative;
 }
-.image-gallery .big-image a {
-  position: absolute;
+.image-gallery .big-image > div,
+.image-gallery .big-image > a {
   opacity: 0;
   left: 0;
   top: 0;
@@ -30,10 +32,16 @@
   -o-transition: opacity 350ms;
   transition: opacity 350ms;
 }
-.image-gallery .big-image a:hover {
+.image-gallery .big-image > div:hover,
+.image-gallery .big-image > a:hover {
   cursor: zoom-in;
 }
-.image-gallery .big-image a img {
+.image-gallery .big-image > div iframe,
+.image-gallery .big-image > a iframe,
+.image-gallery .big-image > div video,
+.image-gallery .big-image > a video,
+.image-gallery .big-image > div img,
+.image-gallery .big-image > a img {
   visibility: hidden;
   display: none;
   width: 100%;

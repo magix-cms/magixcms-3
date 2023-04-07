@@ -123,7 +123,7 @@ class frontend_model_news extends frontend_db_news {
 			$data['img']['alt'] = $row['alt_img'];
 			$data['img']['title'] = $row['title_img'];
 			$data['img']['caption'] = $row['caption_img'];
-            $data['active'] = ($row['id_news'] == $current['controller']['id']) ? true : false;
+            $data['active'] = (!empty($current) && $row['id_news'] == $current['controller']['id']) ? true : false;
 
             /*$dr = new DateTime($row['date_register']);
             $drt = $dr->getTimestamp();

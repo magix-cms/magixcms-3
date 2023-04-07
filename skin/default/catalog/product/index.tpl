@@ -54,10 +54,10 @@
                     </div>
                 </div>
             </div>
-            {if $product.associated}
+            {if $associated}
             <p class="h2">{#similar_products#|ucfirst}</p>
             <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                {include file="catalog/loop/product.tpl" data=$product.associated classCol='vignette' nocache}
+                {include file="catalog/loop/product.tpl" data=$associated classCol='vignette' nocache}
             </div>
             {/if}
         {/block}

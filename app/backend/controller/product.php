@@ -309,9 +309,9 @@ class backend_controller_product extends backend_db_product {
             }
         }
         //$this->getItems('accounts',$params,'all',true,true);
-        $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+        $defaultLanguage = $this->collectionLanguage->fetchData(['context' => 'one', 'type' => 'default']);
 
-        $this->getItems('pages', array_merge(array('default_lang' => $defaultLanguage['id_lang']),$params), 'all', true, true);
+        $this->getItems('pages', array_merge(['default_lang' => $defaultLanguage['id_lang']],$params), 'all', true, true);
 
         $this->data->getScheme($this->tables,$this->columns,$this->assign);
     }

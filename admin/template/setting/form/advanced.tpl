@@ -108,7 +108,7 @@
         <legend>{#additionnal_feature_setting#}</legend>
         <div class="form-group">
             <div class="switch">
-                <input type="checkbox" id="amp" name="setting[amp]" class="switch-native-control"{if isset($settings.amp) && $settings.amp eq '1'} checked{/if}{if isset($settings.ssl) && $settings.ssl !== '1'} disabled{/if} />
+                <input type="checkbox" id="amp" name="setting[amp]" class="switch-native-control"{if isset($settings.amp) && $settings.amp eq '1'} checked{/if}{*{if isset($settings.ssl) && $settings.ssl !== '1'} disabled{/if}*} disabled/>
                 <div class="switch-bg">
                     <div class="switch-knob"></div>
                 </div>
