@@ -125,7 +125,7 @@ class frontend_controller_pages extends frontend_db_pages {
             $data = $this->getBuildPagesItems();
             $hreflang = $this->getBuildLangItems();
             $pagesTree = $this->getBuildPagesItemsTree();
-            $childs = $pagesTree[$this->id] ?? [];
+            $childs = $pagesTree[0]['subdata'] ?? [];
             $this->template->assign('pages',$data,true);
             if(!empty($data['id_parent'])) $this->template->breadcrumb->addItem(
                 $data['parent']['name'],
@@ -133,7 +133,7 @@ class frontend_controller_pages extends frontend_db_pages {
                 $this->template->getConfigVars('show_page').': '.$data['parent']['name']
             );
             $this->template->breadcrumb->addItem($data['name']);
-            if(isset($childs[0]['subdata'])) $this->template->assign('childs',$childs[0]['subdata'],true);
+            $this->template->assign('childs',$childs,true);
             $this->template->assign('pagesTree',$pagesTree,true);
             $this->template->assign('hreflang',$hreflang,true);
 
