@@ -16,12 +16,24 @@
             <h2 class="panel-heading h5">{#root_about#|ucfirst}</h2>
             {$tab = $smarty.get.tab}
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation"{if !$smarty.get.plugin && ($tab == 'company' || !$tab)} class="active"{/if}><a href="#info_company" aria-controls="info_company" role="tab" data-toggle="tab">{#info_company#}</a></li>
-                <li role="presentation"{if $tab == 'contact'} class="active"{/if}><a href="#info_contact" aria-controls="info_contact" role="tab" data-toggle="tab">{#info_contact#}</a></li>
-                <li role="presentation"{if $tab == 'socials'} class="active"{/if}><a href="#info_socials" aria-controls="info_socials" role="tab" data-toggle="tab">{#info_socials#}</a></li>
-                <li role="presentation"{if $tab == 'opening'} class="active"{/if}><a href="#info_opening" aria-controls="info_opening" role="tab" data-toggle="tab">{#info_opening#}</a></li>
-                <li role="presentation"{if $tab == 'text'} class="active"{/if}><a href="#info_text" aria-controls="info_text" role="tab" data-toggle="tab">{#text#}</a></li>
-                <li role="presentation"{if $tab == 'page'} class="active"{/if}><a href="#info_page" aria-controls="info_page" role="tab" data-toggle="tab">{#info_page#}</a></li>
+                <li role="presentation"{if !$smarty.get.plugin && ($tab == 'company' || !$tab)} class="active"{/if}>
+                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=company{else}#info_company{/if}" aria-controls="info_company"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#info_company#}</a>
+                </li>
+                <li role="presentation"{if $tab == 'contact'} class="active"{/if}>
+                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=contact{else}#info_contact{/if}" aria-controls="info_contact" {if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#info_contact#}</a>
+                </li>
+                <li role="presentation"{if $tab == 'socials'} class="active"{/if}>
+                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=socials{else}#info_socials{/if}" aria-controls="info_socials"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#info_socials#}</a>
+                </li>
+                <li role="presentation"{if $tab == 'opening'} class="active"{/if}>
+                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=opening{else}#info_opening{/if}" aria-controls="info_opening"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#info_opening#}</a>
+                </li>
+                <li role="presentation"{if $tab == 'text'} class="active"{/if}>
+                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=text{else}#info_text{/if}" aria-controls="info_text"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#text#}</a>
+                </li>
+                <li role="presentation"{if $tab == 'page'} class="active"{/if}>
+                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=page{else}#info_page{/if}" aria-controls="info_page"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#info_page#}</a>
+                </li>
                 {foreach $setTabsPlugins as $key => $value}
                     <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.title}</a></li>
                 {/foreach}

@@ -14,11 +14,18 @@
             {/if}
             <header class="panel-header panel-nav">
                 <h2 class="panel-heading h5">{#edit_pages#|ucfirst}</h2>
+                {$tab = $smarty.get.tab}
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" {if !$smarty.get.plugin}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{if !$smarty.get.plugin}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
-                    <li role="presentation"><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}{if !$smarty.get.plugin}#child{/if}" aria-controls="child" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#child_page#}</a></li>
+                    <li role="presentation"{if !$smarty.get.plugin && ($tab == 'general' || !$tab)} class="active"{/if}>
+                        <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$smarty.get.edit}&tabs=pages&tab=general{else}#general{/if}" aria-controls="general"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#text#}</a>
+                    </li>
+                    <li role="presentation"{if $tab == 'child'} class="active"{/if}>
+                        <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$smarty.get.edit}&tabs=pages&tab=child{else}#child{/if}" aria-controls="child"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#child_page#}</a>
+                    </li>
                     {foreach $setTabsPlugins as $key => $value}
-                        <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.name}</a></li>
+                        <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}>
+                            <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_pages}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.name}</a>
+                        </li>
                     {/foreach}
                 </ul>
             </header>
@@ -27,10 +34,10 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane {if !$smarty.get.plugin}active{/if}" id="general">
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && ($tab == 'general' || !$tab)} active{/if}" id="general">
                         {include file="about/pages/form/edit.tpl" controller="pages"}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="child">
+                    <div role="tabpanel" class="tab-pane{if $tab == 'child'} active{/if}" id="child">
                         <p class="text-right">
                             {#nbr_pages#|ucfirst}: {$pagesChild|count} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=addpage&parent_id={$smarty.get.edit}" title="{#add_pages#}" class="btn btn-link">
                                 <span class="fa fa-plus"></span> {#add_pages#|ucfirst}

@@ -349,9 +349,9 @@ class frontend_model_pages extends frontend_db_pages {
 			else {
 				$conditions .= ' WHERE lang.iso_lang = :iso AND c.published_pages = 1 AND (img.default_img = 1 OR img.default_img IS NULL) ';
 
-				/*if (isset($custom['select'])) {
+				if (isset($custom['select'])) {
 					$conditions .= ' AND (p.id_pages IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') OR p.id_parent IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . '))';
-				}*/
+				}
 
 				if (isset($custom['exclude'])) {
 					$conditions .= ' AND p.id_pages NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ') AND p.id_parent NOT IN (' . (is_array($conf['id']) ? implode(',',$conf['id']) : $conf['id']) . ')';
