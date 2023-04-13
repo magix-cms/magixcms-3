@@ -81,50 +81,32 @@ class backend_model_plugins{
     private function setItems($config){
         $data =  $this->dbPlugins->fetchData(array('context'=>'all','type'=>'list'));
         $defaultLanguage = $this->collectionLanguage->fetchData(array('context'=>'one','type'=>'default'));
-		$newsItems = array();
+		$newsItems = [];
+		$coreComponent = new component_format_array();
         foreach($data as $item){
             switch($config['type']){
                 case 'self':
-                    if(file_exists(component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'admin.php')) {
+					$pluginPath = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR;
+					$item['title'] = $item['name'];
+					$class = null;
+                    if(file_exists($pluginPath.'admin.php')) {
                         $class = 'plugins_' . $item['name'] . '_admin';
-                        $baseConfigPath = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'/i18n/public_local_'.$defaultLanguage['iso_lang'].'.conf';
-                        if(file_exists($baseConfigPath)){
-                            $item['translate'] = 1;
-                        }else{
-                            $item['translate'] = 0;
-                        }
-						$files = component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'sql'.DIRECTORY_SEPARATOR.'uninstall.sql';
-						if(file_exists($files)){
-							$item['uninstall'] = 1;
-						}
-						else {
-							$item['uninstall'] = 0;
-						}
-                        if (class_exists($class)) {
-                            //Si la méthode run existe on ajoute le plugin dans le menu
-                            if (method_exists($class, 'getExtensionName')) {
-								$this->template->addConfigFile(
-									array(component_core_system::basePath().'plugins'.DIRECTORY_SEPARATOR.$item['name'].DIRECTORY_SEPARATOR.'i18n'.DIRECTORY_SEPARATOR),
-									array($item['name'].'_admin_')
-								);
-								//$this->template->configLoad();
-                            	$ext = new $class();
-                                $item['title'] = $ext->getExtensionName();
-                            } else {
-                            	$item['title'] = $item['name'];
-							}
-                            if (method_exists($class, 'run') && !property_exists($class, 'hidden')) {
-                                $item['admin'] = 1;
-                            }
-                            else {
-                                $item['admin'] = 0;
-                            }
-                            $newsItems[] = $item;
-                            $coreComponent = new component_format_array();
-                            $coreComponent->array_sortBy('title', $newsItems);
-                        }
+                        if (class_exists($class)) $item['admin'] = (int)(method_exists($class, 'run') && !property_exists($class, 'hidden'));
                     }
-
+					elseif(file_exists($pluginPath.'core.php')){
+						$class = 'plugins_' . $item['name'] . '_core';
+					}
+					if ($class !== null && class_exists($class) && method_exists($class, 'getExtensionName')) {
+						$this->template->addConfigFile([$pluginPath.'i18n'.DIRECTORY_SEPARATOR], [$item['name'] . '_admin_']);
+						$ext = new $class();
+						$item['title'] = $ext->getExtensionName();
+					}
+					$baseConfigPath = $pluginPath.'/i18n/public_local_'.$defaultLanguage['iso_lang'].'.conf';
+					$item['translate'] = (int)file_exists($baseConfigPath);
+					$uninstallFile = $pluginPath.'sql'.DIRECTORY_SEPARATOR.'uninstall.sql';
+					$item['uninstall'] = (int)file_exists($uninstallFile);
+					$newsItems[] = $item;
+					$coreComponent->array_sortBy('title', $newsItems);
                     break;
                 case 'tabs':
                     //Ajoute l'onglet si le plugin est inscrit pour le core

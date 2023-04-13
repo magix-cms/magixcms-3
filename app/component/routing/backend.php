@@ -75,6 +75,7 @@ class component_routing_backend extends component_routing_dispatcher {
                                 $pluginsController->unregister($this->controller_name);
                                 break;
                         }
+						exit;
                     }
                     catch (Exception $e) {
                         if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
