@@ -1,7 +1,7 @@
 <form id="add_product_content" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" method="post" class="validate_form add_form collapse in">
     {include file="language/brick/dropdown-lang.tpl"}
     <div class="row">
-        <div class="col-ph-12 col-md-6">
+        <div class="col-ph-12 col-md-8">
             <div class="tab-content">
                 {foreach $langs as $id => $iso}
                     <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
