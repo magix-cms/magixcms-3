@@ -54,7 +54,7 @@ class frontend_controller_pages extends frontend_db_pages {
     protected component_httpUtils_header $header;
 
     public
-        $getlang,
+        $lang,
         $id;
 
 	/**
@@ -63,7 +63,7 @@ class frontend_controller_pages extends frontend_db_pages {
     public function __construct(frontend_model_template $t = null){
 		$this->template = $t instanceof frontend_model_template ? $t : new frontend_model_template();
         $this->data = new frontend_model_data($this);
-        $this->getlang = $this->template->lang;
+        $this->lang = $this->template->lang;
         $this->modelPages = new frontend_model_pages($this->template);
         $this->modelModule = new frontend_model_module($this->template);
         if (http_request::isGet('id')) $this->id = form_inputEscape::numeric($_GET['id']);
@@ -88,8 +88,8 @@ class frontend_controller_pages extends frontend_db_pages {
     private function getBuildPagesItems(): array {
         $override = $this->modelModule->getOverride('pages',__FUNCTION__);
         if(!$override) {
-            $collection = $this->getItems('page', ['id' => $this->id, 'iso' => $this->getlang], 'one', false);
-            $imgCollection = $this->getItems('imgs', ['id' => $this->id, 'iso' => $this->getlang], 'all', false);
+            $collection = $this->getItems('page', ['id' => $this->id, 'iso' => $this->lang], 'one', false);
+            $imgCollection = $this->getItems('imgs', ['id' => $this->id, 'iso' => $this->lang], 'all', false);
             if ($imgCollection != null) $collection['img'] = $imgCollection;
             return $this->modelPages->setItemData($collection, []);
         }
@@ -129,7 +129,116 @@ class frontend_controller_pages extends frontend_db_pages {
         $collection = $this->getItems('langs',['id'=>$this->id],'all',false);
         return $this->modelPages->setHrefLangData($collection);
     }
+    /**
+     * @param $id_parent
+     * @param array $filter
+     * @return array
+     * @throws Exception
+     */
+    public function getPagesList($id_parent = NULL, array $filter = []) : array {
+        if(isset($this->filter)){
+            $filter = $this->filter;
+        }
+        $newTableArray = [];
+        $override = $this->modelModule->extendDataArray('pages',__FUNCTION__, $filter);
 
+        if($override) {
+            foreach ($override as $key => $value) {
+                $newTableArray = array_merge_recursive($newTableArray, $value);
+            }
+
+        }
+
+        $params = [
+            'iso' => $this->lang/*,
+            'where' => [
+                ['type' => 'WHERE',
+                    'condition' => 'lang.iso_lang = :iso'
+                ],
+                ['type' => 'AND',
+                    'condition' => 'pc.published_pages = 1'
+                ],
+                ['type'=> 'AND',
+                    'condition'=>'(img.default_img = 1 OR img.default_img IS NULL)'
+                ]
+            ]*/
+        ];
+
+        if($newTableArray) {
+            //print_r(array_merge($newTableArray['extendQueryParams'], $newTableArray['filterQueryParams']));
+            $extendQueryParams = [];
+            $extendQueryParams[] = $newTableArray['extendQueryParams'];
+            //print_r($extendQueryParams);
+            //$params = [];
+            if(!empty($extendQueryParams)) {
+                foreach ($extendQueryParams as $extendParams) {
+                    if(isset($extendParams['select']) && !empty($extendParams['select'])) $params['select'][] = $extendParams['select'];
+                    if(isset($extendParams['join']) && !empty($extendParams['join'])) $params['join'][] = $extendParams['join'];
+                    if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
+                    if(isset($extendParams['order']) && !empty($extendParams['order'])) $params['order'][] = $extendParams['order'];
+
+                    if(!empty($filter)){
+                        if(isset($extendParams['limit']) && !empty($extendParams['limit'])) $params['limit'][] = $extendParams['limit'];
+                        if(isset($extendParams['order']) && !empty($extendParams['order'])) $params['order'] = $extendParams['order'];
+                        if(isset($extendParams['filter']) && !empty($extendParams['filter'])) $params['where'][] = is_array($extendParams['where']) ? array_merge($extendParams['where'],$extendParams['filter']) : $extendParams['filter'];
+                    }
+                }
+            }
+            /*print '<pre>';
+            print_r($params);
+            print '</pre>';*/
+            //$collection = $this->getItems('category', array_merge($defaultParams,$params), 'all', false);
+        }
+
+        $collection = $this->getItems('pages',$params,'all',false);
+        unset($params);
+
+        /*print '<pre>';
+        print_r($collection);
+        print '</pre>';*/
+
+        $newRow = [];
+        if($newTableArray) {
+            if(isset($newTableArray['collection'])){
+                $extendFormArray = [];
+                if(is_array($newTableArray['collection'])){
+                    foreach ($newTableArray['collection'] as $value){
+                        $extendFormArray[] = $value;
+                    }
+                }
+                else{
+                    $extendFormArray[] = $newTableArray['collection'];
+                }
+                $extendFormData = $this->modelModule->extendDataArray('pages','extendListPages', $collection);
+                foreach ($collection as $key => $value){
+                    foreach ($extendFormData as $key1 => $value1) {
+                        $collection[$key][$extendFormArray[$key1]] = $value1[$key];
+                    }
+                }
+                $newRow = $newTableArray['newRow'];
+                $newTree = $newTableArray['type'] ?? [];
+			}
+        }
+        $setTree = !empty($newTree) ? $newTree : 'root';
+        /*print '<pre>';
+        print_r($collection);
+        print '</pre>';*/
+
+        $newSetArray = [];
+        if(!empty($collection)) {
+            $newSetArray = $this->data->setPagesTree($collection,'pages', $id_parent ?? $newTree ,'all',$this->modelPages,false,$newRow);
+            /*print '<pre>';
+            print_r($newSetArray);
+            print '</pre>';*/
+            /*foreach ($collection as $item) {
+                $newSetArray[] = $this->modelPages->setItemData($item, [], $newRow);
+            }*/
+
+            if($id_parent !== null) $newSetArray = empty($newSetArray[0]['subdata']) ? [] : $newSetArray[0]['subdata'];
+        }
+
+        return $newSetArray;
+    }
     /**
      * @access public
      * run app
@@ -139,7 +248,8 @@ class frontend_controller_pages extends frontend_db_pages {
             $data = $this->getBuildPagesItems();
             $hreflang = $this->getBuildLangItems();
             $pagesTree = $this->getBuildPagesItemsTree();
-			$childs = $this->getBuildPagesChildren();
+            $childs = $this->getPagesList($this->id);
+			//$childs = $this->getBuildPagesChildren();
             $this->template->assign('pages',$data,true);
             if(!empty($data['id_parent'])) $this->template->breadcrumb->addItem(
                 $data['parent']['name'],

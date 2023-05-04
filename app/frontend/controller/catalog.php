@@ -225,7 +225,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 * @return array
 	 * @throws Exception
 	 */
-	private function getCategoryList($id_parent = NULL, array $filter = []) : array {
+	public function getCategoryList($id_parent = NULL, array $filter = []) : array {
 		if(isset($this->filter)){
 			$filter = $this->filter;
 		}
@@ -240,7 +240,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 		}
 
         $params = [
-            'iso' => $this->lang,
+            'iso' => $this->lang/*,
             'where' => [
                 ['type' => 'WHERE',
                     'condition' => 'lang.iso_lang = :iso'
@@ -248,7 +248,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
                 ['type' => 'AND',
                     'condition' => 'catc.published_cat = 1'
                 ]
-            ]
+            ]*/
         ];
 
 		/*if(is_null($id_parent)) {
@@ -269,7 +269,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			$extendQueryParams = [];
 			$extendQueryParams[] = $newTableArray['extendQueryParams'];
 			//print_r($extendQueryParams);
-			$params = [];
+			//$params = [];
 			if(!empty($extendQueryParams)) {
 				foreach ($extendQueryParams as $extendParams) {
 					if(isset($extendParams['select']) && !empty($extendParams['select'])) $params['select'][] = $extendParams['select'];
@@ -312,7 +312,9 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			}
             $params['nbParams'] = $nbParams;
 		}
-
+        /*print '<pre>';
+        print_r($params);
+        print '</pre>';*/
         $collection = $this->getItems('category',$params,'all',false);
         unset($params);
 		/*foreach ($collection as $key => $value){
@@ -327,7 +329,11 @@ class frontend_controller_catalog extends frontend_db_catalog {
 		print_r($collection);
 		print '</pre>';*/
         $newRow = [];
+        $newTree = [];
 		if($newTableArray) {
+            /*print '<pre>';
+            print_r($newTableArray);
+            print '</pre>';*/
 			if(isset($newTableArray['collection'])){
 				$extendFormArray = [];
 				if(is_array($newTableArray['collection'])){
@@ -345,12 +351,16 @@ class frontend_controller_catalog extends frontend_db_catalog {
 					}
 				}
 				$newRow = $newTableArray['newRow'];
+                $newTree = $newTableArray['type'] ?? [];
 			}
 		}
-
+        $setTree = !empty($newTree) ? $newTree : 'root';
         $newSetArray = [];
         if(!empty($collection)) {
-            $newSetArray = $this->data->setPagesTree($collection,'cat', $id_parent ?? 'root' ,'all',$this->modelCatalog,false,$newRow);
+            $newSetArray = $this->data->setPagesTree($collection,'cat', $id_parent ?? $setTree ,'all',$this->modelCatalog,false,$newRow);
+            /*print '<pre>';
+            print_r($newSetArray);
+            print '</pre>';*/
             /*foreach ($collection as $item) {
                 $newSetArray[] = $this->modelCatalog->setItemData($item, [], $newRow);
             }*/

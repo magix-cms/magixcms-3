@@ -77,7 +77,7 @@ class frontend_model_pages extends frontend_db_pages {
 	 * @param array $newRow
 	 * @return array
      */
-    public function setItemData(array $row, array $current, array $newRow = []) {
+    public function setItemData(array $row, $current, array $newRow = []): array {
     	$string_format = new component_format_string();
         $data = [];
 
@@ -145,8 +145,8 @@ class frontend_model_pages extends frontend_db_pages {
 					}
 				}
 			}
-			return $data;
         }
+        return $data;
     }
 
 	/**

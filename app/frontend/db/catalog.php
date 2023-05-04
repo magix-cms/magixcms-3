@@ -91,7 +91,7 @@ class frontend_db_catalog {
                     $where = '';
                     if(isset($params['where']) && is_array($params['where'])) {
                         $newWhere = [];
-                        foreach ($params['where'] as $value) { $newWhere[] = array_merge($newWhere, $value); }
+                        foreach ($params['where'] as $value) { $newWhere = array_merge($newWhere, $value); }
                         foreach ($newWhere as $item) { $where .= ' '.$item['type'].' '.$item['condition'].' '; }
                         unset($params['where']);
                     }
@@ -120,7 +120,10 @@ class frontend_db_catalog {
                     if(isset($params['join']) && is_array($params['join'])) {
                         $newJoin = [];
                         foreach ($params['join'] as $value) { $newJoin = array_merge($newJoin, $value); }
-                        foreach ($newJoin as $join) { $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') '; }
+                        foreach ($newJoin as $join) {
+                            $key = isset($join['on']['newkey']) ? $join['on']['newkey'] : $join['on']['key'];
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$key .') ';
+                        }
                         unset($params['join']);
                     }
                     if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY cat.order_cat';
@@ -170,7 +173,7 @@ class frontend_db_catalog {
                                 AND mcpc.published_p = 1
                                 ".$nbwhere."
                                 GROUP BY id_cat, id_lang
-                            ) as products ON (cat.id_cat = products.id_cat AND products.id_lang = lang.id_lang)".$joins.$where
+                            ) as products ON (cat.id_cat = products.id_cat AND products.id_lang = lang.id_lang)".$joins." WHERE lang.iso_lang = :iso AND catc.published_cat = 1 ".$where
                         .$order.$limit;
                     break;
 				case 'rand_category':
