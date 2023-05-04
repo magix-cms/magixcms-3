@@ -282,6 +282,95 @@ class frontend_db_pages {
                             ) as parent ON (h.id_parent = parent.id_pages AND parent.id_lang = lang.id_lang) 
 							WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1';
 					break;
+                case 'pages':
+                    $where = '';
+                    if(isset($params['where']) && is_array($params['where'])) {
+                        $newWhere = [];
+
+                        foreach ($params['where'] as $key => $value) {
+                            $newWhere = array_merge($newWhere, $value);
+                        }
+                        foreach ($newWhere as $item) {
+                            $where .= ' '.$item['type'].' '.$item['condition'].' ';
+                        }
+                        unset($params['where']);
+                    }
+                    $select = [
+                        'h.*',
+                        'c.name_pages',
+                        'c.url_pages',
+                        'c.resume_pages',
+                        'c.content_pages',
+                        'c.published_pages',
+                        'img.name_img',
+                        'COALESCE(imgc.alt_img, c.name_pages) as alt_img',
+                        'COALESCE(imgc.title_img, imgc.alt_img, c.name_pages) as title_img',
+                        'COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, c.name_pages) as caption_img',
+                        'COALESCE(c.seo_title_pages, c.name_pages) as seo_title_pages',
+                        'COALESCE(c.seo_desc_pages, c.resume_pages) as seo_desc_pages',
+                        'lang.iso_lang',
+                        'parent.name_pages as parent_name',
+                        'parent.url_pages as parent_url',
+                        'parent.seo_title_pages as seo_title_parent'
+                    ];
+
+                    if(isset($params['select'])) {
+                        foreach ($params['select'] as $extendSelect) {
+                            $select = array_merge($select, $extendSelect);
+                        }
+                        unset($params['select']);
+                    }
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+
+                        unset($params['join']);
+                    }
+                    if(!isset($params['order']) || !is_array($params['order'])) {
+                        $order = '';
+                    }
+
+                    if(isset($params['order']) && is_array($params['order'])){
+                        $order = ' ORDER BY ';
+                        $orders = [];
+
+                        foreach ($params['order'] as $extendOrder) {
+                            $orders = array_merge($orders, $extendOrder);
+                        }
+
+                        $order .= ' '.implode(',', $orders);
+
+                        unset($params['order']);
+                    }
+                    $limit = '';
+                    if(isset($params['limit']) && is_array($params['limit'])){
+
+                        foreach ($params['limit'] as $item) {
+                            $limit = ' LIMIT '.$item;
+                        }
+                        unset($params['limit']);
+                    }
+                    $query = 'SELECT '.implode(',', $select).'
+                            FROM mc_cms_page AS h
+							JOIN mc_cms_page_content AS c ON(h.id_pages = c.id_pages) 
+							LEFT JOIN mc_cms_page_img AS img ON (h.id_pages = img.id_pages AND img.default_img = 1)
+							LEFT JOIN mc_cms_page_img_content AS imgc ON (imgc.id_img = img.id_img and c.id_lang = imgc.id_lang)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
+                            LEFT JOIN (
+                                SELECT id_lang, id_pages, name_pages, url_pages, seo_title_pages FROM mc_cms_page_content WHERE published_pages = 1
+                            ) as parent ON (h.id_parent = parent.id_pages AND parent.id_lang = lang.id_lang) 
+                            '.$joins.'
+							WHERE h.id_pages = :id AND lang.iso_lang = :iso AND c.published_pages = 1 '.$where
+                            .$order.$limit;
+
+                    break;
 				case 'root':
 					$query = 'SELECT * FROM mc_cms_page ORDER BY id_pages DESC LIMIT 0,1';
 					break;
