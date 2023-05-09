@@ -47,7 +47,7 @@
                     controller={$editController}
                     &action=edit
                     {if $plugin}
-                        &edit={$smarty.get.edit}
+                        {if isset($smarty.get.edit)}&edit={$smarty.get.edit}{/if}
                         &plugin={$plugin}
                         &mod_edit={$row[$editColumn]}
                         &mod_action=edit

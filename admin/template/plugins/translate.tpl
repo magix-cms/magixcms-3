@@ -26,7 +26,8 @@
                                     {foreach $langs as $id => $iso}
                                         <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                                             <ul class="list-group">
-                                                {foreach $translate.content[$id] as $key => $value nocache}
+                                                {nocache}
+                                                {foreach $translate.content[$id] as $key => $value}
                                                     <li class="panel list-group-item">
                                                         {if is_array($value)}
                                                             <header>
@@ -39,7 +40,7 @@
                                                             </header>
                                                             <div class="collapse" id="collapse{$iso}{$value@index}">
                                                                 <div class="subform">
-                                                                    {foreach $value as $k => $v nocache}
+                                                                    {foreach $value as $k => $v}
                                                                         <div class="form-group">
                                                                             <label for="config[{$iso}][{$key}][{$k}]">{$k}</label>
                                                                             <input type="text" class="form-control" name="config[{$iso}][{$key}][{$k}]" value="{$v|escape:'html'}" />
@@ -55,6 +56,7 @@
                                                         {/if}
                                                     </li>
                                                 {/foreach}
+                                                {/nocache}
                                             </ul>
                                         </fieldset>
                                     {/foreach}
