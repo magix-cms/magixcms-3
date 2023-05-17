@@ -69,6 +69,9 @@ class backend_db_domain {
 						WHERE dl.id_domain = :id
 						ORDER BY dl.id_domain_lg DESC LIMIT 0,1';
 					break;
+                case 'defaultDomain':
+                    $query = 'SELECT d.* FROM mc_domain AS d WHERE d.default_domain = 1';
+                    break;
 				default:
 					return false;
 			}

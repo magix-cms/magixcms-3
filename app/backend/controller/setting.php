@@ -112,14 +112,51 @@ class backend_controller_setting extends backend_db_setting {
     }
 
     /**
+     * @param array $data
+     * @return string
+     */
+    public function getDomain(array $data) : string{
+        $setting = $this->setItemsData();
+        if($setting['ssl'] === '0'){
+            $host = 'http://';
+        }else{
+            $host = 'https://';
+        }
+
+        $domain = $data['domain'];
+
+        return $host.$domain.$data['sitemap'];
+    }
+    /**
+     * @return string
+     */
+    public function setDefaultDomain(): string {
+        $defaultDomain = '';
+        $dbdomain = new backend_db_domain();
+        $data = $dbdomain->fetchData(['context' => 'one', 'type' => 'defaultDomain']);
+        if(!empty($data)) $defaultDomain = $data['url_domain'];
+        return $defaultDomain;
+    }
+
+    /**
      * @param string $data
+     * @return void
      */
     private function robotsFiles(string $data = 'index') {
         $basePath = component_core_system::basePath();
         $fh = fopen($basePath.'robots.txt', 'w+');
+        $defaultDomain = $this->setDefaultDomain();
+        $basePath = component_core_system::basePath();
+
         if(is_writable($basePath.'robots.txt')) {
 			fwrite($fh, "User-Agent: *" . PHP_EOL);
 			fwrite($fh, ($data === 'index' ? "Allow" : "Disallow").': /'.PHP_EOL);
+            if(file_exists($basePath.'sitemap-' . $defaultDomain . '.xml')){
+                $sitemap = $basePath.'sitemap-' . $defaultDomain . '.xml';
+                if($data === 'index'){
+                    fwrite($fh,'Sitemap: '.$this->getDomain(['domain'=>$defaultDomain,'sitemap'=>'/sitemap-' . $defaultDomain . '.xml']).PHP_EOL);
+                }
+            }
             fclose($fh);
         }
     }
