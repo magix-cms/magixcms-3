@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'HTTP_ConditionalGet' => $baseDir . '/lib/HTTP/ConditionalGet.php',
     'HTTP_Encoder' => $baseDir . '/lib/HTTP/Encoder.php',
     'Minify' => $baseDir . '/lib/Minify.php',
@@ -20,6 +21,7 @@ return array(
     'Minify_CSSmin' => $baseDir . '/lib/Minify/CSSmin.php',
     'Minify_CacheInterface' => $baseDir . '/lib/Minify/CacheInterface.php',
     'Minify_Cache_APC' => $baseDir . '/lib/Minify/Cache/APC.php',
+    'Minify_Cache_APCu' => $baseDir . '/lib/Minify/Cache/APCu.php',
     'Minify_Cache_File' => $baseDir . '/lib/Minify/Cache/File.php',
     'Minify_Cache_Memcache' => $baseDir . '/lib/Minify/Cache/Memcache.php',
     'Minify_Cache_Null' => $baseDir . '/lib/Minify/Cache/Null.php',
@@ -56,4 +58,9 @@ return array(
     'Minify_YUICompressor' => $baseDir . '/lib/Minify/YUICompressor.php',
     'MrClay\\Cli' => $baseDir . '/lib/MrClay/Cli.php',
     'MrClay\\Cli\\Arg' => $baseDir . '/lib/MrClay/Cli/Arg.php',
+    'lessc' => $vendorDir . '/marcusschwarz/lesserphp/lessc.inc.php',
+    'lessc_formatter_classic' => $vendorDir . '/marcusschwarz/lesserphp/lessc.inc.php',
+    'lessc_formatter_compressed' => $vendorDir . '/marcusschwarz/lesserphp/lessc.inc.php',
+    'lessc_formatter_lessjs' => $vendorDir . '/marcusschwarz/lesserphp/lessc.inc.php',
+    'lessc_parser' => $vendorDir . '/marcusschwarz/lesserphp/lessc.inc.php',
 );

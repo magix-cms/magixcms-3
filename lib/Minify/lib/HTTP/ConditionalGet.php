@@ -128,8 +128,8 @@ class HTTP_ConditionalGet
         $etagAppend = '';
         if (isset($spec['encoding'])) {
             $this->_stripEtag = true;
-            $this->_headers['Vary'] = 'Accept-Encoding';
             if ('' !== $spec['encoding']) {
+                $this->_headers['Vary'] = 'Accept-Encoding';
                 if (0 === strpos($spec['encoding'], 'x-')) {
                     $spec['encoding'] = substr($spec['encoding'], 2);
                 }
@@ -317,7 +317,7 @@ class HTTP_ConditionalGet
         if (!isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             return false;
         }
-        $clientEtagList = get_magic_quotes_gpc()
+        $clientEtagList = PHP_VERSION_ID < 50400 && get_magic_quotes_gpc()
             ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])
             : $_SERVER['HTTP_IF_NONE_MATCH'];
         $clientEtags = explode(',', $clientEtagList);

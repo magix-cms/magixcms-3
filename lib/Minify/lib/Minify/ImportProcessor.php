@@ -32,15 +32,15 @@ class Minify_ImportProcessor
     }
 
     // allows callback funcs to know the current directory
-    private $_currentDir = null;
+    private $_currentDir;
 
     // allows callback funcs to know the directory of the file that inherits this one
-    private $_previewsDir = null;
+    private $_previewsDir;
 
     // allows _importCB to write the fetched content back to the obj
     private $_importedContent = '';
 
-    private static $_isCss = null;
+    private static $_isCss;
 
     /**
      * @param String $currentDir
@@ -66,7 +66,7 @@ class Minify_ImportProcessor
         $this->_currentDir = dirname($file);
 
         // remove UTF-8 BOM if present
-        if (pack("CCC",0xef,0xbb,0xbf) === substr($content, 0, 3)) {
+        if (pack("CCC", 0xef, 0xbb, 0xbf) === substr($content, 0, 3)) {
             $content = substr($content, 3);
         }
         // ensure uniform EOLs
@@ -182,7 +182,7 @@ class Minify_ImportProcessor
     private function truepath($path)
     {
         // whether $path is unix or not
-        $unipath = (strlen($path) == 0) || ($path{0} != '/');
+        $unipath = ('' === $path) || ($path[0] !== '/');
 
         // attempts to detect if path is relative in which case, add cwd
         if (strpos($path, ':') === false && $unipath) {
@@ -194,10 +194,10 @@ class Minify_ImportProcessor
         $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
         $absolutes = array();
         foreach ($parts as $part) {
-            if ('.' == $part) {
+            if ('.' === $part) {
                 continue;
             }
-            if ('..' == $part) {
+            if ('..' === $part) {
                 array_pop($absolutes);
             } else {
                 $absolutes[] = $part;

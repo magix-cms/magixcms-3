@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit06d6c28ebb102b205c20eebf8575c649
+class ComposerStaticInitfaf993cd57806c5631f93ff101f29027
 {
     public static $prefixLengthsPsr4 = array (
         't' => 
@@ -23,7 +23,6 @@ class ComposerStaticInit06d6c28ebb102b205c20eebf8575c649
         'I' => 
         array (
             'Intervention\\Httpauth\\' => 22,
-            'Interop\\Container\\' => 18,
         ),
     );
 
@@ -48,10 +47,6 @@ class ComposerStaticInit06d6c28ebb102b205c20eebf8575c649
         array (
             0 => __DIR__ . '/..' . '/intervention/httpauth/src/Intervention/Httpauth',
         ),
-        'Interop\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
-        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -60,7 +55,6 @@ class ComposerStaticInit06d6c28ebb102b205c20eebf8575c649
             'Props\\' => 
             array (
                 0 => __DIR__ . '/..' . '/mrclay/props-dic/src',
-                1 => __DIR__ . '/..' . '/mrclay/props-dic/test',
             ),
             'Pimple' => 
             array (
@@ -77,6 +71,7 @@ class ComposerStaticInit06d6c28ebb102b205c20eebf8575c649
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'HTTP_ConditionalGet' => __DIR__ . '/../..' . '/lib/HTTP/ConditionalGet.php',
         'HTTP_Encoder' => __DIR__ . '/../..' . '/lib/HTTP/Encoder.php',
         'Minify' => __DIR__ . '/../..' . '/lib/Minify.php',
@@ -91,6 +86,7 @@ class ComposerStaticInit06d6c28ebb102b205c20eebf8575c649
         'Minify_CSSmin' => __DIR__ . '/../..' . '/lib/Minify/CSSmin.php',
         'Minify_CacheInterface' => __DIR__ . '/../..' . '/lib/Minify/CacheInterface.php',
         'Minify_Cache_APC' => __DIR__ . '/../..' . '/lib/Minify/Cache/APC.php',
+        'Minify_Cache_APCu' => __DIR__ . '/../..' . '/lib/Minify/Cache/APCu.php',
         'Minify_Cache_File' => __DIR__ . '/../..' . '/lib/Minify/Cache/File.php',
         'Minify_Cache_Memcache' => __DIR__ . '/../..' . '/lib/Minify/Cache/Memcache.php',
         'Minify_Cache_Null' => __DIR__ . '/../..' . '/lib/Minify/Cache/Null.php',
@@ -127,15 +123,20 @@ class ComposerStaticInit06d6c28ebb102b205c20eebf8575c649
         'Minify_YUICompressor' => __DIR__ . '/../..' . '/lib/Minify/YUICompressor.php',
         'MrClay\\Cli' => __DIR__ . '/../..' . '/lib/MrClay/Cli.php',
         'MrClay\\Cli\\Arg' => __DIR__ . '/../..' . '/lib/MrClay/Cli/Arg.php',
+        'lessc' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
+        'lessc_formatter_classic' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
+        'lessc_formatter_compressed' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
+        'lessc_formatter_lessjs' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
+        'lessc_parser' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit06d6c28ebb102b205c20eebf8575c649::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit06d6c28ebb102b205c20eebf8575c649::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit06d6c28ebb102b205c20eebf8575c649::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit06d6c28ebb102b205c20eebf8575c649::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfaf993cd57806c5631f93ff101f29027::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfaf993cd57806c5631f93ff101f29027::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitfaf993cd57806c5631f93ff101f29027::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitfaf993cd57806c5631f93ff101f29027::$classMap;
 
         }, null, ClassLoader::class);
     }

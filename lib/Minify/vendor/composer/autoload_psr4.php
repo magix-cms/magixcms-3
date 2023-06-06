@@ -11,5 +11,4 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Intervention\\Httpauth\\' => array($vendorDir . '/intervention/httpauth/src/Intervention/Httpauth'),
-    'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
 );
