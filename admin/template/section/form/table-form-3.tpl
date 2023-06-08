@@ -21,9 +21,9 @@
 {/if}
 {if isset($data) && is_array($data)}
     {if $debug}{foreach $scheme as $sch}
-        {$sch.input|var_dump}
+        {var_dump($sch.input)}
     {/foreach}{/if}
-    {if $debug}{$data|var_dump}{/if}
+    {if $debug}{var_dump($data)}{/if}
     {if $change_offset && !isset($smarty.get.search)}
         {$request = $smarty.server.REQUEST_URI}
         {$offset = strpos($request,'&offset=')}

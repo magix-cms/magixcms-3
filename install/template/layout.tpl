@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <p><i class="far fa-copyright"></i> 2008{if 'Y'|date !== '2008'} - {'Y'|date}{/if} <a href="http://www.magix-cms.com/" class="targetblank">Magix CMS</a> &mdash; <small>v</small>&thinsp;{$releaseData.version}&thinsp;<sup>({$releaseData.phase})</sup> &mdash;{#all_right_reserved#}</p>
+            <p><i class="far fa-copyright"></i> 2008{if date('Y') !== '2008'} - {date('Y')}{/if} <a href="https://www.magix-cms.com/" class="targetblank">Magix CMS</a> &mdash; <small>v</small>&thinsp;{$releaseData.version}&thinsp;<sup>({$releaseData.phase})</sup> &mdash;{#all_right_reserved#}</p>
         </div>
     </main>
 {/block}

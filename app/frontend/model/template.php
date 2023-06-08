@@ -156,7 +156,11 @@ class frontend_model_template {
             $this->companyData = $this->aboutModel->getCompanyData();
         }
 
-        $this->domain = isset($_SERVER['HTTP_HOST']) ? $this->DBDomain->fetchData(['context' => 'one','type' => 'currentDomain'],['url' => $_SERVER['HTTP_HOST']]) : null;
+		$this->domain = [];
+		if(isset($_SERVER['HTTP_HOST'])) {
+			$current = $this->DBDomain->fetchData(['context' => 'one','type' => 'currentDomain'],['url' => $_SERVER['HTTP_HOST']]);
+			$this->domain = $current ?: [];
+		}
         $this->lang = $this->currentLanguage();
         $this->breadcrumb = new frontend_model_breadcrumb($this->lang);
 

@@ -21,7 +21,7 @@
             <div class="modal-body">
                 {capture name="privateLink"}<a href="{#private_data_url#}" class="targetblank" title="{#private_data_title#}">{#private_data_label#}</a>{/capture}
                 {capture name="cookieLink"}<a href="{#cookie_page#}" class="targetblank">{#cookie_read_page#|ucfirst}</a>{/capture}
-                <p>{#cookie_modal#|sprintf:$smarty.capture.cookieLink:$smarty.capture.privateLink}</p>
+                <p>{#cookie_modal#|string_format:$smarty.capture.cookieLink:$smarty.capture.privateLink}</p>
                 <form action="#" class="validate_form refresh_form">
                 <div class="vertical-tabs">
                     <ul class="nav nav-tabs" role="tablist">

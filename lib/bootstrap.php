@@ -61,7 +61,7 @@ if (file_exists($interventionImage)) {
 /**
  * Include smarty3
  */
-$smarty = __DIR__.'/smarty3/Smarty.class.php';
+$smarty = __DIR__.'/smarty4/Smarty.class.php';
 if (file_exists($smarty)) {
 	require ($smarty);
 }else{

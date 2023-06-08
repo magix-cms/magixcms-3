@@ -503,6 +503,7 @@ class frontend_controller_news extends frontend_db_news {
     }
 
     public function run() {
+		$this->template->assign('tags',$this->getBuildTagList());
         if(isset($this->id) && isset($this->date)) {
             $this->template->breadcrumb->addItem(
                 $this->template->getConfigVars('news'),
@@ -513,7 +514,6 @@ class frontend_controller_news extends frontend_db_news {
             $this->template->display('news/news.tpl');
         }
         else {
-			$this->template->assign('tags',$this->getBuildTagList());
 			$this->template->assign('archives',$this->getBuildArchive());
 			$this->template->assign('news',$this->getNewsList());
 			$this->template->assign('nbp',$this->getNewsList(true));

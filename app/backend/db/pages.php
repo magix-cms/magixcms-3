@@ -73,8 +73,7 @@ class backend_db_pages {
 									LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
 								    LEFT JOIN mc_cms_page_img AS pi ON ( p.id_pages = pi.id_pages AND pi.default_img = 1 )
 									WHERE c.id_lang = :default_lang $cond
-									GROUP BY p.id_pages 
-								ORDER BY p.order_pages".$limit;
+								ORDER BY p.id_pages".$limit;
 						}
 					}
 					break;
@@ -140,7 +139,6 @@ class backend_db_pages {
 								LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
 								LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
 								WHERE c.id_lang = :default_lang
-								GROUP BY p.id_pages 
 							ORDER BY p.id_pages DESC";
 					break;
 				case 'pagesPublishedSelect':
@@ -149,10 +147,9 @@ class backend_db_pages {
 								JOIN mc_cms_page_content AS c USING ( id_pages )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
-								LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+								LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages AND c.id_lang = ca.id_lang ) 
 								WHERE c.id_lang = :default_lang
 								AND c.published_pages = 1
-								GROUP BY p.id_pages 
 							ORDER BY p.id_pages DESC";
 					break;
 				case 'page':
@@ -195,7 +192,6 @@ class backend_db_pages {
 							JOIN mc_cms_page_content AS c USING ( id_pages )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							WHERE c.id_lang = :default_lang
-							GROUP BY p.id_pages 
 							ORDER BY p.id_pages DESC
 							LIMIT 5";
 					break;

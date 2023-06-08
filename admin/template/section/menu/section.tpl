@@ -268,14 +268,14 @@
     </li>
     {if {employee_access type="view" class_name="backend_controller_employee"} eq 1}
     <li class="panel has-submenu{if $smarty.get.controller == 'employee' || $smarty.get.controller == 'access'} active{/if}">
-        <button type="button" class="navbar-toggle{if $smarty.get.controller == 'employee'} open{/if}" data-toggle="collapse" data-parent="#mainmenu" data-target="#nav-employee">
+        <button type="button" class="navbar-toggle{if $smarty.get.controller == 'employee' || $smarty.get.controller == 'access'} open{/if}" data-toggle="collapse" data-parent="#mainmenu" data-target="#nav-employee">
             <span class="show-more"><i class="material-icons">more_vert</i></span>
             <span class="show-less"><i class="material-icons">close</i></span>
         </button>
         <a href="{$url}/{baseadmin}/index.php?controller=employee">
             <span class="fa fa-user"></span> {#administration#}
         </a>
-        <nav id="nav-employee" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'employee'} in{/if}">
+        <nav id="nav-employee" class="collapse{* navbar-collapse*}{if $smarty.get.controller == 'employee' || $smarty.get.controller == 'access'} in{/if}">
             <ul class="nav list-unstyled">
                 <li{if $smarty.get.controller == 'employee'} class="active"{/if}>
                     <a href="{$url}/{baseadmin}/index.php?controller=employee">{#list_employees#}</a>

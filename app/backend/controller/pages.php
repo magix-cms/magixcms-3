@@ -157,7 +157,7 @@ class backend_controller_pages extends backend_db_pages {
 			$params['cClass'] = 'backend_controller_pages';
 		}
 
-		$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','img_pages','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
+		$this->data->getScheme(array('mc_cms_page','mc_cms_page_content','mc_cms_page_img','mc_cms_page_img_content'),array('id_pages','name_pages','default_img','resume_pages','content_pages','seo_title_pages','seo_desc_pages','menu_pages','date_register'),$assign);
 
 		return array(
 			'data' => $results,

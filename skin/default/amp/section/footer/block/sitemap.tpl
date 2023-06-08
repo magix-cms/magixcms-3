@@ -38,7 +38,7 @@
             <a href="{$url}/{$lang}/contact/" title="{#show_contact_form#|ucfirst}">{#contact#|ucfirst}</a>
         </li>*}
         {foreach $links as $k => $link}
-            {if !{$link.url_link|strpos:'amp'}}{$link.url_link = {$link.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
+            {if !{strpos($link.url_link,'amp')}}{$link.url_link = {$link.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
             <li>
                 <a href="{$link.url_link}" title="{if empty($link.title_link)}{$link.name_link}{else}{$link.title_link}{/if}">
                     <span>{$link.name_link}</span>

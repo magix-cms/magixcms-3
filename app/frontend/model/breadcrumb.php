@@ -161,6 +161,6 @@ class frontend_model_breadcrumb extends frontend_db_menu {
      * @return array
      */
     public function getBreadcrumb(): array {
-        return $this->breadcrumbs;
+        return $this->breadcrumbs ?? [];
     }
 }

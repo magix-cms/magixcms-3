@@ -14,7 +14,8 @@
         {/if}
     {/if}
 {/foreach}
-{$open_days = ','|implode:$open_days}
+{$open_days = implode($open_days,',')}
+{*{$open_days = ','|implode:$open_days}*}
 <table class="table">
     <thead>
     <tr>

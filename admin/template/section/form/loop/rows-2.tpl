@@ -11,7 +11,7 @@
             {if $checkbox}
             <div class="checkbox">
                 <label for="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$row[$idcolumn]}">
-                    <input type="checkbox" id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$row[$idcolumn]}" name="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}[]" value="{$row[$idcolumn]}"{if $row[$idcolumn]|in_array:$readonly} readonly disabled{/if}/>
+                    <input type="checkbox" id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$row[$idcolumn]}" name="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}[]" value="{$row[$idcolumn]}"{if in_array($row[$idcolumn],$readonly)} readonly disabled{/if}/>
                 </label>
             </div>
             {/if}
@@ -47,7 +47,7 @@
             {/if}
             {/if}
             {if {employee_access type="del" class_name=$cClass} eq 1}
-            {if !$row[$idcolumn]|in_array:$readonly && $dlt}
+            {if !in_array($row[$idcolumn],$readonly) && $dlt}
             <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$row[$idcolumn]}" data-controller="{$controller}" {if $subcontroller} data-sub="{$subcontroller}"{/if} data-target="#delete_modal"><i class="material-icons">delete</i></a>
             {/if}
             {/if}

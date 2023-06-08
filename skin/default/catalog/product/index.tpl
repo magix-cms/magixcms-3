@@ -25,7 +25,7 @@
             <header>
                 <h1 itemprop="{if $product.long_name !== ''}alternateName{else}name{/if}">{$product.name}</h1>
                 {if $product.reference}<span class="ref">{#product_ref#}&nbsp;{$product.reference}</span>{/if}
-                {if $product.price !== 0 && $setting.price_display === 'tinc'}
+                {if $product.price !== '0.00' && $setting.price_display === 'tinc'}
                     {$price = $product.price * (1 + ($setting.vat_rate/100))}
                 {else}
                     {$price = $product.price}
@@ -45,7 +45,7 @@
                 </div>
                 {/if}
                 <div class="col-12{if is_array($product.imgs) && count($product.imgs) > 0} col-md-6 col-lg-7 col-xl-8{/if}">
-                    {strip}{if $product.price !== 0}<div class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;{if $setting.price_display === 'tinc'}{#tax_included#}{else}{#tax_excluded#}{/if}</div>{/if}{/strip}
+                    {strip}{if $product.price !== '0.00'}<div class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;{if $setting.price_display === 'tinc'}{#tax_included#}{else}{#tax_excluded#}{/if}</div>{/if}{/strip}
                     <div class="text" itemprop="description">
                         {$product.content}
                     </div>

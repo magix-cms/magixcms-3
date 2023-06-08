@@ -6,7 +6,7 @@
         {if $item.controller === $active_link.controller && (!isset($item.id_page) || in_array($item.id_page,$active_link.ids))}{$item.active = true}{/if}
         {if $amp}
         <section>
-        {if !{$item.url_link|strpos:'amp'} && $item.amp_available}{$item.url_link = {$item.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
+        {if !{strpos($item.url_link,'amp')} && $item.amp_available}{$item.url_link = {$item.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
         {if $item.mode_link eq 'simple' || !isset($item.subdata) || empty($item.subdata)}
             <header>
                 <a itemprop="url" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>

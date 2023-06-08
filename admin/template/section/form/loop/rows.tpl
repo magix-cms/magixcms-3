@@ -3,7 +3,7 @@
         <td class="text-center">
             <div class="checkbox">
                 <label for="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$data[$section]}">
-                    <input type="checkbox" id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$data[$section]}" name="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}[]" value="{$data[$section]}"{if $data[$section]|in_array:$readonly} readonly disabled{/if}/>
+                    <input type="checkbox" id="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}{$data[$section]}" name="{if $subcontroller}{$subcontroller}{else}{$controller}{/if}[]" value="{$data[$section]}"{if in_array($data[$section],$readonly)} readonly disabled{/if}/>
                 </label>
             </div>
         </td>
@@ -29,7 +29,7 @@
             <a href="/{baseadmin}/index.php?controller={$controller}&action=edit&edit={$data[$section]}{if $subcontroller}&tabs={$subcontroller}{/if}" class="btn btn-link action_on_record"><span class="fa fa-pencil-square-o"></span></a>
             {/if}
             {if {employee_access type="del" class_name=$cClass} eq 1}
-            {if !$data[$section]|in_array:$readonly}
+            {if !in_array($data[$section],$readonly)}
                 <a href="#" class="btn btn-link action_on_record modal_action" data-id="{$data[$section]}" data-controller="{$controller}" {if $subcontroller} data-sub="{$subcontroller}"{/if} data-target="#delete_modal"><span class="fa fa-trash"></span></a>
             {/if}
             {/if}

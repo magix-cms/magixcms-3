@@ -15,7 +15,7 @@
                     {$italic = false}
 
                     {foreach $wghts as $wght}
-                        {if $wght|strpos:'italic' !== false}
+                        {if strpos($wght,'italic') !== false}
                             {$italic = true}
                             {$wght = $wght|replace:'italic':''}
                             {$italics[] = $wght}

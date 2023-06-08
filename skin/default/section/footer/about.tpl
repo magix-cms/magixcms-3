@@ -67,7 +67,7 @@
                         {/if}
                     {/if}
                 {/foreach}
-                {$open_days = ','|implode:$open_days}
+                {$open_days = implode($open_days,',')}
                 <meta itemprop="openingHours" content="{$open_days} {$open}-{$close}">
                 {foreach $companyData.specifications as $day => $specific}
                     {if $specific.open_day}
@@ -116,7 +116,7 @@
             {/if}
         </div>
         <div class="col copy">
-            {strip}<p><i class="material-icons ico ico-copyright"></i> <span itemprop="copyrightYear">2020{if 'Y'|date != '2020'} - {'Y'|date}{/if}</span> | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>{/strip}
+            {strip}<p><i class="material-icons ico ico-copyright"></i> <span itemprop="copyrightYear">2020{if date('Y')!= '2020'} - {date('Y')}{/if}</span> | {$companyData.name}, {#footer_all_rights_reserved#|ucfirst}</p>{/strip}
         </div>
         {if $companyData.tva}<div class="col middle"><p>{#footer_tva#} {$companyData.tva}</p></div>{/if}
         <div class="col created">

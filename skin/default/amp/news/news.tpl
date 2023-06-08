@@ -89,7 +89,7 @@
                                                         <ul class="list-unstyled">
                                                             {foreach $year.months as $month}
                                                                 <li>
-                                                                    <a href="{$month.url}" title="{$year.year|cat:"-%02d-01"|sprintf:$month['month']|date_format:'%B'|ucfirst}">
+                                                                    <a href="{$month.url}" title="{$year.year|cat:"-%02d-01"|string_format:$month['month']|date_format:'%B'|ucfirst}">
                                                                         {$year.year|cat:"-%02d-01"|sprintf:$month['month']|date_format:'%B'|ucfirst}
                                                                         <small>(&thinsp;{$month['nbr']}&thinsp;)</small></a>
                                                                 </li>

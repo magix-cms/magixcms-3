@@ -6,7 +6,7 @@
             ]
         assign='lastNews'
     }
-    {elseif count($lastNews) > 2}{$lastNews|array_pop}
+    {elseif count($lastNews) > 2}{array_pop($lastNews)}
     {/if}
     <p class="h4"><a href="{$url}/{$lang}/news/" title="{#show_news#|ucfirst}">{#last_news#|ucfirst}</a></p>
     <div class="news-list-last row">

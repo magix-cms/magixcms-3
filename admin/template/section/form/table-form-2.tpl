@@ -21,9 +21,9 @@
 {/if}
 {if isset($data) && is_array($data)}
     {if $debug}{foreach $scheme as $sch}
-        {$sch.input|var_dump}
+        {var_dump($sch.input)}
     {/foreach}{/if}
-    {if $debug}{$data|var_dump}{/if}
+    {if $debug}{var_dump($data)}{/if}
     <div class="table-responsive{if (empty($data) || !count($data)) && !$smarty.get.search} hide{/if}" id="table-{if $subcontroller}{$subcontroller}{else}{$controller}{/if}">
         <form action="{$smarty.server.REQUEST_URI}" method="get"{if $ajax_form} class="validate_form search_form"{/if}>
             <input type="hidden" name="controller" value="{$smarty.get.controller}" />
