@@ -27,7 +27,7 @@
                 {/if}
             </div>
             <div class="modal-footer">
-                <form id="delete_form" class="delete_form" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}&amp;action=delete{if $subcontroller}&amp;tabs={$subcontroller}{/if}" method="post">
+                <form id="delete_form" class="delete_form" action="{$smarty.server.SCRIPT_NAME}?controller={$controller}{if isset($plugin)}&amp;action=edit&amp;edit={$smarty.get.edit}{if $subcontroller}&amp;tabs={$subcontroller}{/if}&amp;plugin={$plugin}&amp;mod_action=delete{else}&amp;action=delete{if $subcontroller}&amp;tabs={$subcontroller}{/if}{/if}" method="post">
                     <input type="hidden" name="id" value="">
                     <button type="button" class="btn btn-info" data-dismiss="modal">{#cancel#|ucfirst}</button>
                     <button type="submit" name="delete" value="{$data_type}" class="btn btn-danger">{#remove#|ucfirst}</button>

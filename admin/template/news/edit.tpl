@@ -35,6 +35,7 @@
                 </div>
                 <div class="tab-content">
                     {*<pre>{$page|print_r}</pre>*}
+                    {if !$smarty.get.plugin}
                     <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && !$smarty.get.tab} active{/if}" id="general">
                         {include file="news/form/edit.tpl" controller="news"}
                     </div>
@@ -46,6 +47,7 @@
                             {/if}
                         </div>*}
                     </div>
+                    {/if}
                     {foreach $setTabsPlugins as $key => $value}
                         <div role="tabpanel" class="tab-pane {if $smarty.get.plugin eq $value.name}active{/if}" id="plugins-{$value.name}">
                             {if $smarty.get.plugin eq $value.name}{block name="plugin:content"}{/block}{/if}
