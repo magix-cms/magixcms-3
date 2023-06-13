@@ -93,6 +93,7 @@ class component_routing_frontend extends component_routing_dispatcher {
 		if($this->template->settings['maintenance'] === '1' && !$adminSession) {
             $this->preloadComponents($this->template->lang,true);
 			$this->header->set_503_header();
+            $this->template->configLoad();
 			$this->template->display('maintenance.tpl');
 		}
 		else {
