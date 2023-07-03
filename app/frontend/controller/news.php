@@ -166,10 +166,9 @@ class frontend_controller_news extends frontend_db_news {
     }
 
     /**
-     * set Data from database
-     * @access private
+     * @return array
      */
-    private function getBuildTagList() {
+    public function getBuildTagList() : array {
 		$conditions = ' WHERE lang.iso_lang = :iso ';
 		//$tagsData = parent::fetchData(['context' => 'all', 'type' => 'tags', 'conditions' => $conditions],['iso' => $this->lang]);
         $tagsData = $this->getItems('tagsLang',['iso' => $this->lang],'all',false);
@@ -189,7 +188,7 @@ class frontend_controller_news extends frontend_db_news {
 	 * @param array $filter
 	 * @return array
 	 */
-	public function getNewsList(bool $count = false, array $filter = []) : array {
+	public function getNewsList(bool $count = false, $limit = false, array $filter = []) : array {
 		if(isset($this->filter)) $filter = $this->filter;
 
 		$newtableArray = [];
@@ -263,7 +262,7 @@ class frontend_controller_news extends frontend_db_news {
 			$params['date'] = $this->dateFormat->SQLDate();
 		}
 
-		if(!$count) $limit = [($this->page * $this->offset) . ', ' . $this->offset];
+		if(!$count) $limit = !$limit ? [($this->page * $this->offset) . ', ' . $this->offset] : [$limit] ;
 
 		if(!empty($joins)) $params['join'] = [$joins];
 		if(!empty($conditions)) $params['where'] = [$conditions];

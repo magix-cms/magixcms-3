@@ -43,7 +43,12 @@ class backend_model_data extends backend_db_scheme{
 		unset($item);
 
 		foreach($data as &$item) {
-			$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+
+            if(isset($item['id_parent'])){
+                $k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
+            }else{
+                $k = 'root';
+            }
 			if(!isset($item[$id])) $id = 'id';
 
 			if($k === 'root')

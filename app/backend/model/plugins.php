@@ -134,10 +134,20 @@ class backend_model_plugins{
                                     $coreComponent->array_sortBy('title', $newsItems);
                                 }
                             }else{
-                                $newsItems[] = $item;
-                                $this->template->assign('setTabsPlugins', $newsItems);
-                                $coreComponent = new component_format_array();
-                                $coreComponent->array_sortBy('title', $newsItems);
+                                if (method_exists($class, 'getTabsRoot')) {
+                                    $ext = new $class();
+                                    if($ext->getTabsRoot() OR isset($_GET['action'])){
+                                        $newsItems[] = $item;
+                                        $this->template->assign('setTabsPlugins', $newsItems);
+                                        $coreComponent = new component_format_array();
+                                        $coreComponent->array_sortBy('title', $newsItems);
+                                    }
+                                }else {
+                                    $newsItems[] = $item;
+                                    $this->template->assign('setTabsPlugins', $newsItems);
+                                    $coreComponent = new component_format_array();
+                                    $coreComponent->array_sortBy('title', $newsItems);
+                                }
                             }
 
                         }

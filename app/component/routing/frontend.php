@@ -89,6 +89,7 @@ class component_routing_frontend extends component_routing_dispatcher {
             }
 			if(!empty($session) ) $adminSession = true;
 		}
+		if (isset($_COOKIE['consentedCookies'])) $this->template->assign('consentedCookies',(array)json_decode($_COOKIE['consentedCookies']));
 
 		if($this->template->settings['maintenance'] === '1' && !$adminSession) {
             $this->preloadComponents($this->template->lang,true);

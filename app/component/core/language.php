@@ -186,12 +186,12 @@ class component_core_language{
      * @param bool $debug
      */
     public function init($debug = false){
-        $session = new http_session(0);
-        $session->start('lang');
-        if($debug){
+        //$session = new http_session(0);
+        //$session->start('lang');
+        /*if($debug){
             $session->debug();
-        }
-        $this->initLang();
+        }*/
+        //$this->initLang();
         $this->setTimeLocal();
 	}
 }
