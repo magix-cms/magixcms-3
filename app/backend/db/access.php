@@ -152,24 +152,35 @@ class backend_db_access {
 	 * @return bool|string
 	 */
     public function delete(array $config, array $params = []) {
-		if($config['context'] === 'role'){
-			if($config['type'] === 'delRole') {
-				$queries = array(
-					array('request'=>'DELETE FROM mc_admin_access WHERE id_role IN('.$params['id'].')','params'=>array()),
-					array('request'=>'DELETE FROM mc_admin_role_user WHERE id_role IN('.$params['id'].')','params'=>array()),
-					array('request'=>'UPDATE mc_admin_access_rel SET id_role=1 WHERE id_role IN('.$params['id'].')','params'=>array())
-				);
+        switch($config['type']) {
+            case  'delRole':
+                $queries = array(
+                    array('request'=>'DELETE FROM mc_admin_access WHERE id_role IN('.$params['id'].')','params'=>array()),
+                    array('request'=>'DELETE FROM mc_admin_role_user WHERE id_role IN('.$params['id'].')','params'=>array()),
+                    array('request'=>'UPDATE mc_admin_access_rel SET id_role=1 WHERE id_role IN('.$params['id'].')','params'=>array())
+                );
 
-				try {
-					component_routing_db::layer()->transaction($queries);
-					return true;
-				}
-				catch (Exception $e) {
-					return 'Exception reçue : '.$e->getMessage();
-				}
-			}
-			return false;
-		}
-		return false;
+                try {
+                    component_routing_db::layer()->transaction($queries);
+                    return true;
+                }
+                catch (Exception $e) {
+                    return 'Exception reçue : '.$e->getMessage();
+                }
+            break;
+            case 'delAccess':
+                $query = 'DELETE FROM `mc_admin_access` WHERE `id_access` IN ('.$params['id'].')';
+                $params = [];
+                break;
+            default :
+                return false;
+        }
+        try {
+            component_routing_db::layer()->delete($query,$params);
+            return true;
+        }
+        catch (Exception $e) {
+            return 'Exception reçue : '.$e->getMessage();
+        }
     }
 }

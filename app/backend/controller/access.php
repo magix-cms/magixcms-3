@@ -183,9 +183,9 @@ class backend_controller_access extends backend_db_access{
     private function del($data){
         switch($data['type']){
             case 'delRole':
+            case 'delAccess':
                 parent::delete(
                     array(
-                        'context'   =>    'role',
                         'type'      =>    $data['type']
                     ),
                     $data['data']
@@ -252,9 +252,14 @@ class backend_controller_access extends backend_db_access{
                 case 'delete':
                     if(isset($this->id)) {
                         if(isset($this->tabs)) {
-                            switch ($this->tabs) {
-
-                            }
+                            $this->del(
+                                array(
+                                    'type'=>'delAccess',
+                                    'data'=>array(
+                                        'id' => $this->id
+                                    )
+                                )
+                            );
                         } else {
                             $this->del(
                                 array(
