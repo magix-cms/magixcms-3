@@ -326,16 +326,6 @@ class backend_controller_employee extends backend_db_employee
                 }else{
 
                 }
-            }elseif($this->tabs === 'jobs'){
-                if(isset($this->action)) {
-                    switch($this->action){
-                        case 'add':
-                            break;
-                    }
-                }else{
-                    $this->getItemsJobs();
-                    $this->template->display('employee/jobs.tpl');
-                }
             }
         }else{
             if(isset($this->action)){

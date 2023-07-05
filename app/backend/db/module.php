@@ -72,9 +72,11 @@ class backend_db_module {
 			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
     }
 
 	/**
@@ -95,9 +97,11 @@ class backend_db_module {
 			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
     }
 
 	/**
@@ -118,8 +122,10 @@ class backend_db_module {
 			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
     }
 }

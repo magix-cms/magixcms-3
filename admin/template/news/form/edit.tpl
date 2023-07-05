@@ -1,6 +1,6 @@
 {include file="language/brick/dropdown-lang.tpl"}
 <div class="row">
-    <form id="edit_news" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}" method="post" class="validate_form edit_form_extend col-ph-12 col-md-6">
+    <form id="edit_news" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}" method="post" class="validate_form edit_form_extend col-ph-12 col-md-10">
         <div class="tab-content">
             {foreach $langs as $id => $iso}
                 <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">

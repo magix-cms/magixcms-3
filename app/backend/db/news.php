@@ -184,9 +184,11 @@ class backend_db_news {
 					component_routing_db::layer()->transaction($queries);
 					return true;
 				}
-				catch (Exception $e) {
-					return 'Exception reçue : '.$e->getMessage();
-				}
+                catch (Exception $e) {
+                    if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+                    $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+                }
+                break;
 			case 'page':
 				$query = 'INSERT INTO `mc_news`(date_register) VALUE (NOW())';
 				break;
@@ -208,9 +210,11 @@ class backend_db_news {
 			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
 	}
 
 	/**
@@ -253,9 +257,11 @@ class backend_db_news {
 			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
     }
 
 	/**
@@ -283,8 +289,10 @@ class backend_db_news {
 			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
     }
 }

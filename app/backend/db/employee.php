@@ -59,12 +59,6 @@ class backend_db_employee {
 							JOIN mc_admin_role_user AS pr ON( acrel.id_role = pr.id_role )
 							$cond ORDER BY em.id_admin DESC";
 					break;
-				case 'jobs':
-					$query = 'SELECT jobs.* FROM mc_admin_jobs AS jobs';
-					break;
-				case 'LastJobs':
-					$query = 'SELECT jobs.* FROM mc_admin_jobs AS jobs ORDER BY jobs.id_job DESC LIMIT 0,1';
-					break;
 				case 'roles':
 					$query = 'SELECT * FROM mc_admin_role_user';
 					break;
@@ -180,9 +174,11 @@ class backend_db_employee {
 			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
 	}
 
     /**
@@ -236,9 +232,11 @@ class backend_db_employee {
 			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
 	}
 
 	/**
@@ -279,8 +277,10 @@ class backend_db_employee {
 			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
-		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
-		}
+        catch (Exception $e) {
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+        }
+        return false;
 	}
 }

@@ -84,8 +84,10 @@ class backend_db_snippet {
             return true;
         }
         catch (Exception $e) {
-            return 'Exception reçue : '.$e->getMessage();
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
         }
+        return false;
     }
 
     /**
@@ -113,8 +115,10 @@ class backend_db_snippet {
             return true;
         }
         catch (Exception $e) {
-            return 'Exception reçue : '.$e->getMessage();
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
         }
+        return false;
     }
 
     /**
@@ -138,7 +142,9 @@ class backend_db_snippet {
             return true;
         }
         catch (Exception $e) {
-            return 'Exception reçue : '.$e->getMessage();
+            if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+            $this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
         }
+        return false;
     }
 }
