@@ -357,6 +357,13 @@ class frontend_controller_catalog extends frontend_db_catalog {
         $setTree = !empty($newTree) ? $newTree : 'root';
         $newSetArray = [];
         if(!empty($collection)) {
+			$collection = array_map(function(&$row){
+				$row['products'] = $this->getProductList($row['id_cat'],false,[]);
+				return $row;
+			},$collection);
+			//$newRow[] = ['products' => 'products'];
+			//$newRow[] = ['products'];
+			$newRow['products'] = 'products';
             $newSetArray = $this->data->setPagesTree($collection,'cat', $id_parent ?? $setTree ,'all',$this->modelCatalog,false,$newRow);
             /*print '<pre>';
             print_r($newSetArray);
@@ -781,9 +788,9 @@ class frontend_controller_catalog extends frontend_db_catalog {
             case 'root':
                 $cats = $this->getCategoryList();
                 $this->template->assign('categories',$cats,true);
-                $products = $this->getProductList(NULL,false,$this->filter ?? []);
+                //$products = $this->getProductList(NULL,false,$this->filter ?? []);
 				//$this->template->assign('nbp',$this->getProductList(NULL,true,$this->filter ?? []));
-				$this->template->assign('products',$products,true);
+				//$this->template->assign('products',$products,true);
                 break;
             case 'cat':
                 $data = $this->getCategoryData();

@@ -63,4 +63,18 @@ class component_format_string {
 		$text = $text.($html_hellip ? "&hellip;" : "...");
 		return $text;
 	}
+
+    /**
+     * Remove html tags and replacement tags ([[TOREPLACE]]) then truncate
+     * @param string $html
+     * @return string
+     */
+    public function clearHTMLTemplate(string $html): string {
+        if(!empty($html)) {
+            $html = strip_tags($html);
+            if(preg_match('(\[\[[A-Z\-]+\]\])',$html)) $html = preg_replace('(\[\[[A-Z\-]+\]\])','',$html);
+            $html = $this->truncate($html);
+        }
+        return $html;
+    }
 }

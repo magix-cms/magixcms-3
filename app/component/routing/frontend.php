@@ -89,7 +89,17 @@ class component_routing_frontend extends component_routing_dispatcher {
             }
 			if(!empty($session) ) $adminSession = true;
 		}
+        if (!isset($_COOKIE['consentAsked']) && !empty($_SERVER['HTTP_COOKIE'])) {
+            $cookies = explode(';', $_SERVER['HTTP_COOKIE']);//get all cookies
+            foreach($cookies as $cookie) {//loop
+                $parts = explode('=', $cookie);//get the bits we need
+                $name = trim($parts[0]);
+                setcookie($name, '', time()-1000);//kill it
+                setcookie($name, '', time()-1000, '/');//kill it more
+            }
+        }
 		if (isset($_COOKIE['consentedCookies'])) $this->template->assign('consentedCookies',(array)json_decode($_COOKIE['consentedCookies']));
+		$this->template->assign('consentAsked', isset($_COOKIE['consentAsked']) && (bool)json_decode($_COOKIE['consentAsked']));
 
 		if($this->template->settings['maintenance'] === '1' && !$adminSession) {
             $this->preloadComponents($this->template->lang,true);

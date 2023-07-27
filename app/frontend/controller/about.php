@@ -157,7 +157,7 @@ class frontend_controller_about extends frontend_db_about {
 		if(isset($this->id)) {
 			$this->template->breadcrumb->addItem(
 				$data['name'],
-				'about',
+				'/'.$this->template->lang.($this->template->is_amp() ? '/amp' : '').'/about/',
 				$data['name']
 			);
 			$data = $this->getBuildItems();

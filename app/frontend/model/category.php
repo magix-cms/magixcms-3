@@ -108,7 +108,7 @@ class frontend_model_category {
 			$data['iso']       = $row['iso_lang'];
 			$data['name']      = $row['name_cat'];
 			$data['content']   = $row['content_cat'];
-			$data['resume']    = $row['resume_cat'] ? $row['resume_cat'] : ($row['content_cat'] ? $string_format->truncate(strip_tags($row['content_cat'])) : '');
+			$data['resume']    = $row['resume_cat'] ?: ($row['content_cat'] ? $string_format->clearHTMLTemplate($row['content_cat']) : '');
 			$data['menu']      = $row['menu_cat'];
 			$data['order']     = $row['order_cat'];
 			$data['nb_product']= $row['nb_product'] ?? null;

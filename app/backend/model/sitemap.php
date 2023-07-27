@@ -7,11 +7,10 @@ class backend_model_sitemap{
 
     /**
      * backend_model_sitemap constructor.
-     * @param stdClass $t
+     * @param backend_model_template|null $t
      */
-    public function __construct($t)
-    {
-		$this->template = $t;
+    public function __construct(?backend_model_template $t = null) {
+		$this->template = $t instanceof backend_model_template ? $t: new backend_model_template();
 		$this->xml = new xml_sitemap();
 		$this->setting = new backend_controller_setting($t);
 		$this->DBPages = new backend_db_pages();

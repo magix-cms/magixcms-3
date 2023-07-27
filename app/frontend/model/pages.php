@@ -132,7 +132,7 @@ class frontend_model_pages extends frontend_db_pages {
 				}
 
 				$data['content'] = $row['content_pages'];
-				$data['resume'] = $row['resume_pages'] ?: ($row['content_pages'] ? $string_format->truncate(strip_tags($row['content_pages'])) : '');
+                $data['resume'] = $row['resume_pages'] ?: ($row['content_pages'] ? $string_format->clearHTMLTemplate($row['content_pages']) : '');
 				$data['menu'] = $row['menu_pages'];
 				$data['date']['update'] = $row['last_update'] ?? null;
 				$data['date']['register'] = $row['date_register'] ?? null;
