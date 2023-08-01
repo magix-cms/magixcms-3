@@ -7,74 +7,71 @@
  * @author Salvatore Di Salvo <disalvo.infographiste@gmail.com>
  */
 'use strict';
-if (window.NodeList && !NodeList.prototype.forEach) {
+/*if (window.NodeList && !NodeList.prototype.forEach) {
     NodeList.prototype.forEach = function (callback, thisArg) {
         thisArg = thisArg || window;
         for (var i = 0; i < this.length; i++) {
             callback.call(thisArg, this[i], i, this);
         }
     };
-}
+}*/
 
-Number.prototype.between = function(a, b, inclusive) {
+Number.prototype.between = (a, b, inclusive) => {
     var min = Math.min.apply(Math, [a, b]),
         max = Math.max.apply(Math, [a, b]);
     return inclusive ? this >= min && this <= max : this > min && this < max;
 };
 
-
-function scrollTo(pos = {x: 0,y: 0},scrollDuration) {
-    var cosParameter = window.scrollY / 2,
-        scrollCount = 0,
-        oldTimestamp = window.performance.now();
-
-    function step (newTimestamp) {
-        var tsDiff = newTimestamp - oldTimestamp;
-        if (tsDiff > 100) tsDiff = 30;
-        scrollCount += Math.PI / (scrollDuration / tsDiff);
-        if (scrollCount >= Math.PI) {
-            window.scrollTo(pos.x, pos.y);
-            cancelAnimationFrame(totop);
-            return;
-        }
-        window.scrollTo(pos.x, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
-        oldTimestamp = newTimestamp;
-        window.requestAnimationFrame(step);
-    }
-
-    let totop = window.requestAnimationFrame(step);
+//Returns true if it is a DOM element
+function isElement(o){
+    return (
+        typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+            o && typeof o === "object" && true && o.nodeType === 1 && typeof o.nodeName==="string"
+    );
 }
 
-function scrollToTop(scrollDuration) {
-    //scrollTo({x: 0,y: 0},scrollDuration);
+/**
+ * @param {object} obj
+ * @returns {boolean}
+ */
+function isEmpty(obj) {
+    for(let prop in obj) {
+        if(obj.hasOwnProperty(prop)) {
+            return false;
+        }
+    }
+
+    return JSON.stringify(obj) === JSON.stringify({});
+}
+
+/**
+ * Select elements matching the selector through querySelectorAll in the context, loop through them and apply the callback function
+ * @param {string} selector - selector to match.
+ * @param {function(Element|Node,Number)|function(Element|Node,Number): void} callback - callback to apply on each element
+ * @param {Element|Document} [context=document] - context to apply the querySelector
+ */
+function forEach(selector, callback, context = document) {
+    context.querySelectorAll(selector).forEach((e,i) => {
+        callback(e,i);
+    })
+}
+
+/**
+ * Scroll to Top
+ */
+function scrollToTop() {
     window.scroll({
         left: 0,
         top: 0,
         behavior: 'smooth'
     });
 }
-/*function scrollToTop(scrollDuration) {
-    var cosParameter = window.scrollY / 2,
-        scrollCount = 0,
-        oldTimestamp = window.performance.now();
 
-    function step (newTimestamp) {
-        var tsDiff = newTimestamp - oldTimestamp;
-        if (tsDiff > 100) tsDiff = 30;
-        scrollCount += Math.PI / (scrollDuration / tsDiff);
-        if (scrollCount >= Math.PI) {
-            window.scrollTo(0, 0);
-            cancelAnimationFrame(totop);
-            return;
-        }
-        window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
-        oldTimestamp = newTimestamp;
-        window.requestAnimationFrame(step);
-    }
-
-    let totop = window.requestAnimationFrame(step);
-}*/
-
+/**
+ * Return absolute position of the element on the page in an object format {x,y}
+ * @param {Element} element
+ * @returns {{x: number, y: number}}
+ */
 function getPosition(element) {
     var xPosition = 0;
     var yPosition = 0;
@@ -87,10 +84,20 @@ function getPosition(element) {
     return { x: xPosition, y: yPosition };
 }
 
+/**
+ * @param {string} v
+ * @returns {number}
+ */
 function getAbsoluteValue(v) {
     return parseFloat(v);
 }
 
+/**
+ *
+ * @param {Element} e
+ * @param {string|null} p
+ * @returns {{padding: {top: number, left: number, bottom: number, right: number}, innerWidth: number, margin: {top: number, left: number, bottom: number, right: number}, innerHeight: number, width: number, height: number}}
+ */
 function getCSSProperties(e,p) {
     let computed = window.getComputedStyle(e,p);
     let elem = {
@@ -117,7 +124,7 @@ function getCSSProperties(e,p) {
 }
 
 const Cookie = {
-    checkCookie: function(name) {
+    checkCookie: (name) => {
         let nameEQ = name+'=';
         let ca = document.cookie.split(';');
         for(let i = 0; i < ca.length; i++) {
@@ -130,12 +137,41 @@ const Cookie = {
         }
         return null;
     },
-    createCookie: function(name, value, expires, path) {
+    createCookie: (name, value, expires, path, domain) => {
         let date = new Date();
         date.setTime(date.getTime() + (365*24*60*60*1000));
         value = value  === undefined ? 'on' : value;
         expires = expires === undefined ? date.toGMTString() : expires;
         path = path === undefined ?'/' : path;
-        document.cookie = name + '=' + value + '; expires=' + expires + '; path=' + path;
+        document.cookie = name + '=' + value + '; expires=' + expires + '; path=' + path + (domain !== undefined ? '; domain=' + domain : '');
+    },
+    deleteAllCookies: () => {
+        let ca = document.cookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            let eqPos = c.indexOf("=");
+            let name = eqPos > -1 ? c.substring(0, eqPos) : c;
+            Cookie.createCookie(name,'','Thu, 01 Jan 1970 00:00:00 GMT','/',window.location.hostname.substring(3));
+        }
+        window.localStorage.clear();
+        sessionStorage.clear();
     }
 };
+
+function viewportUnitValue() {
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    let vw = document.body.clientWidth * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    document.documentElement.style.setProperty('--vw', `${vw}px`);
+}
+
+/**
+ * Returns rem value in px
+ * @param {number} rem
+ * @returns {number}
+ */
+function rem2px(rem) {
+    return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}

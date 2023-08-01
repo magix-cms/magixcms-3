@@ -8,80 +8,7 @@
  */
 'use strict';
 
-const C = {
-    block: document.getElementById('cookies'),
-    btn: document.querySelector('#acceptCookies'),
-    btnConfig: document.querySelector('#saveCookieParam'),
-    cookies: {
-        complianceCookie: true,
-        essentialCookies: true,
-        analyticCookies: true,
-        ggWebfontCookies: true,
-        adobeWebfontCookies: true,
-        ggMapCookies: true,
-        embedCookies: true
-    },
-    modal: null,
-    setCookies: function() {
-        for (var name in C.cookies) {
-            if (C.cookies.hasOwnProperty(name)){
-                let setting = document.querySelector('[name="'+name+'"]');
-                if(setting !== null) {
-                    C.cookies[name] = setting.checked;
-                }
-            }
-        }
-        C.modal.hide();
-        C.createCookies();
-    },
-    createCookies: function() {
-        for (var name in C.cookies) {
-            Cookie.createCookie(name,C.cookies[name]);
-        }
-        window.location.reload();
-    },
-    hideBox: function() {
-        C.block.classList.remove('in');
-        C.block.classList.add('hide');
-    },
-    init: function() {
-        C.modal = new Modal('#cookiesModal',{backdrop: 'static',keyboard: false});
-        if (!Cookie.checkCookie('complianceCookie')) C.block.classList.remove('hide');
-        C.btn.addEventListener('click',this.createCookies);
-        C.btnConfig.addEventListener('click',this.setCookies);
-    }
-};
-
-window.addEventListener('load', () => {
-    if(Cookie !== undefined) {
-        C.init();
-        if(Cookie.checkCookie('embedCookies') === 'true') {
-            // change iframe data-src to src
-            document.querySelectorAll('iframe.ytb').forEach((iytb) => {
-                iytb.src = iytb.dataset.src;
-                iytb.removeAttribute('data-src');
-            });
-        }
-        let now = new Date();
-        let offset = now.getTimezoneOffset();
-        if(Cookie.checkCookie('TimeZoneOffset') !== offset.toString()) {
-            Cookie.createCookie('TimeZoneOffset',offset.toString());
-            window.location.reload();
-        }
-    }
-
-    function viewportUnitValue() {
-        // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
-        let vh = window.innerHeight * 0.01;
-        let vw = document.body.clientWidth * 0.01;
-        // Then we set the value in the --vh custom property to the root of the document
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        document.documentElement.style.setProperty('--vw', `${vw}px`);
-    }
-    function rem2px(rem) {
-        return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
-    }
-
+window.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', viewportUnitValue);
     viewportUnitValue();
 
@@ -117,6 +44,9 @@ window.addEventListener('load', () => {
         let parent = i.dataset.parent || false,
             target = i.dataset.target ? i.dataset.target : i.getAttribute('href');
         i.collapse = parent ? new Collapse(i,{parent: document.querySelector(parent)}) : new Collapse(i);
+        if(parent && document.querySelector(parent).querySelector('[data-toggle="collapse"]') === i) {
+            i.collapse.show();
+        }
         //function toggle(i,e,t) { if(e.target === t) i.classList.toggle('open',/^shown.*/.test(e.type)); }
         function toggle(i, e) {
             //if (e.target === t) {

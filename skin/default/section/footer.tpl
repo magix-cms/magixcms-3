@@ -14,6 +14,11 @@
                     {/foreach}
                 </div>
             </div>
+            <div id="rgpd-param" class="fade in hide">
+                <button class="btn btn-default" type="button" id="paramCookies" data-toggle="modal" data-target="#cookiesModal">
+                    <span class="ico ico-cookie-bite"></span><span class="sr-only">{#param_cookies#}</span>
+                </button>
+            </div>
         </section>
     {/if}
     <div id="colophon" class="container-fluid">

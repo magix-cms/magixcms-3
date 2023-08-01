@@ -41,6 +41,7 @@
     {nocache}{$basecss = [
     "properties",
     "{$viewport}",
+    "cookie",
     "content"
     ]}
     {if $setting['maintenance'] === '1'}{$basecss[] = "maintenance"}{/if}
@@ -93,6 +94,7 @@
 "/skin/{$theme}/js/vendor/{if $setting.mode === 'dev'}src/{/if}simpleLightbox{if $setting.mode !== 'dev'}.min{/if}.js",
 "/skin/{$theme}/js/vendor/{if $setting.mode === 'dev'}src/{/if}tiny-slider{if $setting.mode !== 'dev'}.min{/if}.js",
 "/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}polyfill{if $setting.mode !== 'dev'}.min{/if}.js",
+"/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}consent{if $setting.mode !== 'dev'}.min{/if}.js",
 "/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}affixhead{if $setting.mode !== 'dev'}.min{/if}.js",
 "/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}global{if $setting.mode !== 'dev'}.min{/if}.js"
 ]
