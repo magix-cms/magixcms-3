@@ -1,1 +1,0 @@
-ALTER TABLE `mc_plugins_test2` DROP `contest_test2` ;

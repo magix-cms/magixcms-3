@@ -1,1 +1,0 @@
-ALTER TABLE `mc_plugins_test2` ADD `contest_test2` TEXT NULL ;
