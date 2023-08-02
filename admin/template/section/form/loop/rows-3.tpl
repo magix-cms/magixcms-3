@@ -33,6 +33,8 @@
                     {if $row[$name]}{$row[$name]|string_format:"%.2f"}&nbsp;<span class="fa fa-euro"></span>{elseif $row[$name] == null}&mdash;{else}{#price_0#|ucfirst}{/if}
                 {elseif $col.type == 'date'}
                     {if $row[$name]}{$row[$name]|date_format:'%d/%m/%Y'}{else}&mdash;{/if}
+                {elseif $col.type == 'img'}
+                    {if $row[$name]}<img src="{$row[$name]}" class="img-responsive" />{else}&mdash;{/if}
                 {else}
                     {if $row[$name]}{$row[$name]}{else}&mdash;{/if}
                 {/if}
