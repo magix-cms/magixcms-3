@@ -1,8 +1,8 @@
 <div class="row">
     <form id="delete_img_favicon" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=delete&tabs=favicon" method="post" class="validate_form delete_form_img col-ph-12" data-target="favicon_img">
         <div class="form-group">
-            <input type="hidden" id="del_favicon" name="del_favicon" value="">
-            <button class="btn btn-danger" type="submit" name="action" value="img">{#remove#|ucfirst}</button>
+            <input type="hidden" id="del_favicon" name="del_favicon" value="del_favicon">
+            <button class="btn btn-danger" type="submit">{#remove#|ucfirst}</button>
         </div>
     </form>
     <form id="edit_img_favicon" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&tabs=favicon" method="post" class="validate_form edit_form_img col-ph-12 col-md-6 col-lg-5" data-target="favicon_img">
