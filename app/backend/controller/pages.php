@@ -211,41 +211,44 @@ class backend_controller_pages extends backend_db_pages {
      * @return array
      */
     private function setItemData($data){
-        $arr = array();
-        $conf = array();
+        $arr = [];
+        $conf = [];
 
         foreach ($data as $page) {
 
-            $publicUrl = !empty($page['url_pages']) ? $this->routingUrl->getBuildUrl(array(
-                    'type'      =>  'pages',
-                    'iso'       =>  $page['iso_lang'],
-                    'id'        =>  $page['id_pages'],
-                    'url'       =>  $page['url_pages']
-                )
-            ) : '';
+            $publicUrl = !empty($page['url_pages']) ? $this->routingUrl->getBuildUrl([
+				'type' => 'pages',
+				'iso' => $page['iso_lang'],
+				'id' => $page['id_pages'],
+				'url' => $page['url_pages']
+			]) : '';
 
             if (!array_key_exists($page['id_pages'], $arr)) {
-                $arr[$page['id_pages']] = array();
-                $arr[$page['id_pages']]['id_pages'] = $page['id_pages'];
-                $arr[$page['id_pages']]['id_parent'] = $page['id_parent'];
-                $arr[$page['id_pages']]['menu_pages'] = $page['menu_pages'];
-                $arr[$page['id_pages']]['date_register'] = $page['date_register'];
+                $arr[$page['id_pages']] = [
+					'id_pages' => $page['id_pages'],
+					'id_parent' => $page['id_parent'],
+					'menu_pages' => $page['menu_pages'],
+					'date_register' => $page['date_register']
+				];
             }
-            $arr[$page['id_pages']]['content'][$page['id_lang']] = array(
-                'id_lang'           => $page['id_lang'],
-                'iso_lang'          => $page['iso_lang'],
-                'name_pages'        => $page['name_pages'],
-                'url_pages'         => $page['url_pages'],
-                'resume_pages'      => $page['resume_pages'],
-                'content_pages'     => $page['content_pages'],
-                'seo_title_pages'   => $page['seo_title_pages'],
-                'seo_desc_pages'    => $page['seo_desc_pages'],
-                'published_pages'   => $page['published_pages'],
-                'public_url'        => $publicUrl
-            );
+            $arr[$page['id_pages']]['content'][$page['id_lang']] = [
+				'id_lang' => $page['id_lang'],
+				'iso_lang' => $page['iso_lang'],
+				'name_pages' => $page['name_pages'],
+				'url_pages' => $page['url_pages'],
+				'link_label_pages' => $page['link_label_pages'],
+				'link_title_pages' => $page['link_title_pages'],
+				'resume_pages' => $page['resume_pages'],
+				'content_pages' => $page['content_pages'],
+				'seo_title_pages' => $page['seo_title_pages'],
+				'seo_desc_pages' => $page['seo_desc_pages'],
+				'published_pages' => $page['published_pages'],
+				'public_url' => $publicUrl
+			];
         }
         return $arr;
     }
+
     /**
      * Load img Data
      * @param $data
@@ -278,13 +281,12 @@ class backend_controller_pages extends backend_db_pages {
     }
 
     /**
-     * @param $id
-     * @return array
+     * @param int $id
+     * @return array|void
      * @throws Exception
      */
-	private function saveContent($id)
-	{
-		$extendData = array();
+	private function saveContent(int $id) {
+		$extendData = [];
 
 		foreach ($this->content as $lang => $content) {
 			$content['id_lang'] = $lang;
@@ -292,46 +294,40 @@ class backend_controller_pages extends backend_db_pages {
 			$content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
 			$content['resume_pages'] = (!empty($content['resume_pages']) ? $content['resume_pages'] : NULL);
 			$content['content_pages'] = (!empty($content['content_pages']) ? $content['content_pages'] : NULL);
+			$content['link_label_pages'] = (!empty($content['link_label_pages']) ? $content['link_label_pages'] : NULL);
+			$content['link_title_pages'] = (!empty($content['link_title_pages']) ? $content['link_title_pages'] : NULL);
 			$content['seo_title_pages'] = (!empty($content['seo_title_pages']) ? $content['seo_title_pages'] : NULL);
 			$content['seo_desc_pages'] = (!empty($content['seo_desc_pages']) ? $content['seo_desc_pages'] : NULL);
 
 			if (empty($content['url_pages'])) {
-				$content['url_pages'] = http_url::clean($content['name_pages'],
-					array(
-						'dot' => false,
-						'ampersand' => 'strict',
-						'cspec' => '', 'rspec' => ''
-					)
-				);
+				$content['url_pages'] = http_url::clean($content['name_pages'],[
+					'dot' => false,
+					'ampersand' => 'strict',
+					'cspec' => '', 'rspec' => ''
+				]);
 			}
 
-			$contentPage = $this->getItems('content',array('id_pages'=>$id, 'id_lang'=>$lang),'one',false);
+			$contentPage = $this->getItems('content',['id_pages'=>$id, 'id_lang'=>$lang],'one',false);
 
 			if($contentPage != null) {
-				$this->upd(
-					array(
-						'type' => 'page',
-						'data' => array(
-							'id_pages' => $id,
-							'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
-							'menu_pages' => isset($this->menu_pages) ? 1 : 0
-						)
-					)
-				);
-				$this->upd(
-					array(
-						'type' => 'content',
-						'data' => $content
-					)
-				);
+				$this->upd([
+					'type' => 'page',
+					'data' => [
+						'id_pages' => $id,
+						'id_parent' => empty($this->parent_id) ? NULL : $this->parent_id,
+						'menu_pages' => isset($this->menu_pages) ? 1 : 0
+					]
+				]);
+				$this->upd([
+					'type' => 'content',
+					'data' => $content
+				]);
 			}
 			else {
-				$this->add(
-					array(
-						'type' => 'content',
-						'data' => $content
-					)
-				);
+				$this->add([
+					'type' => 'content',
+					'data' => $content
+				]);
 			}
 
 			if(isset($this->id_pages)) {

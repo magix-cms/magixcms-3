@@ -29,13 +29,13 @@
         assign="news"
     }
     {if $news}
-    <section id="last-news" class="container" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
+    <div id="last-news" class="container" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
         <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
             <h3>{#last_news#|ucfirst}</h3>
             <div class="tile-list row">
                 {include file="amp/news/loop/news.tpl" data=$news classCol="news-tile col-12"}
             </div>
         </div>
-    </section>
+    </div>
     {/if}
 {/block}

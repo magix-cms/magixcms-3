@@ -30,10 +30,7 @@ li.mgdropdown {
 				a {
 					color: @mg-link-color;
 
-					&:hover,
-					&:focus,
-					&:active,
-					&.active {
+					&:is(:hover,:focus,:active,.active) {
 						color: @smooth-white;
 						background: @mg-hover-bg;
 					}
@@ -49,10 +46,7 @@ li.mgdropdown {
 				display: inline-block;
 				width: 100%;
 
-				&:hover,
-				&:focus,
-				&:active,
-				&.active {
+				&:is(:hover,:focus,:active,.active) {
 					color: @mg-head-color;
 					text-decoration: underline;
 					background: transparent;

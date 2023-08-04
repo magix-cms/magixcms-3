@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5.0">
     {include file="section/brick/socials.tpl" title=$smarty.capture.title description=$smarty.capture.description}
     {if $googleTools_webmaster !== ''}<meta name="google-site-verification" content="{$googleTools_webmaster}">{/if}
-    {if $domain != null && $domain.tracking_domain != ''}{$domain.tracking_domain}{/if}
+    {if $domain != null && $domain.tracking_domain != '' && $consentedCookies.analyticCookies}{$domain.tracking_domain}{/if}
     <link rel="icon" type="image/png" href="{if $favicon != null}{$url}{$favicon.img.png.src}{else}{$url}/skin/{$theme}/img/favicon.png{/if}" />
     {*<!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{if $favicon != null}{$url}{$favicon.img.ico.src}{else}{$url}/skin/{$theme}/img/favicon.ico{/if}" /><![endif]-->*}
     <link rel="manifest" href="{$url}/skin/{$theme}/manifest.json">
@@ -32,7 +32,7 @@
         ['Raleway' => '300..700italic']         Raleway font family with 300 to 700 weight italic
         ['Raleway' => '300,400..700,400..700italic,900']    Raleway font family with 300 weight, 400 to 700 weight normal and italic, 900 weight
     *}
-    {if $smarty.cookies.ggWebfontCookies === 'true'}{include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,400italic,700'] css2=false}{/if}
+    {if $consentedCookies.ggWebfontCookies}{include file="section/brick/google-font.tpl" fonts=['Roboto'=>'300,400,400italic,700'] css2=true}{/if}
     {* Please try to use icomoon to create a small iconfont and reduce load work, uncomment the next lines if you use icofont *}
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="preload" href="{$url}/skin/{$theme}/fonts/Icofont.woff" as="font" type="font/woff" crossorigin="anonymous">
@@ -46,7 +46,7 @@
     ]}
     {if $setting['maintenance'] === '1'}{$basecss[] = "maintenance"}{/if}
     {$css_files = []}
-    {block name="styleSheet"}{/block}
+    {block name="styleSheet" nocache}{/block}
     {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}{/nocache}
     {if $setting['analytics'] && $smarty.cookies.analyticCookies === 'true'}{include file="section/brick/analytics.tpl" aid=$setting['analytics']}{/if}
     {if in_array($browser,['Safari','Opera'])}<link rel="preconnect" href="https://cdn.jsdelivr.net"/>

@@ -817,7 +817,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
             if(!empty($parent)) $this->template->breadcrumb->addItem(
                 $parent['name'],
                 $parent['url'],
-                $this->template->getConfigVars('category').': '.$parent['name']
+				!empty($parent['link']['title']) ? $parent['link']['title'] : $this->template->getConfigVars('category').': '.$parent['name']
             );
 		}
         if($type != 'root') $this->template->breadcrumb->addItem($data['name']);

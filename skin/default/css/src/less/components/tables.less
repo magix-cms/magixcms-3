@@ -97,21 +97,18 @@ th {
 .table-bordered {
   border: 1px solid @table-border-color;
   
-  th,
-  td {
+  :is(th,td) {
     border: 1px solid @table-border-color;
   }
   thead {
-    th,
-    td {
+    :is(th,td) {
       border-bottom-width: 2px;
     }
   }
 }
 
 .table-borderless {
-  th,
-  td,
+  :is(th,td),
   thead th,
   tbody + tbody {
     border: 0;
@@ -197,8 +194,7 @@ th {
       margin-bottom: 0;
 
       // Ensure the content doesn't wrap
-      th,
-      td {
+      :is(th,td) {
         white-space: nowrap;
       }
       
@@ -209,23 +205,19 @@ th {
       border: 0;
 
       // Nuke the appropriate borders so that the parent can handle them
-      th:first-child,
-      td:first-child {
+      :is(th,td):first-child {
         border-left: 0;
       }
-      th:last-child,
-      td:last-child {
+      :is(th,td):last-child {
         border-right: 0;
       }
 
       // Only nuke the last row's bottom-border in `tbody` and `tfoot` since
       // chances are there will be only one `tr` in a `thead` and that would
       // remove the border altogether.
-      tbody,
-      tfoot {
+      :is(tbody,tfoot) {
         tr:last-child {
-          th,
-          td {
+          :is(th,td) {
             border-bottom: 0;
           }
         }

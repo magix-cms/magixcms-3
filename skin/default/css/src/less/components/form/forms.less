@@ -39,8 +39,7 @@ input[type="search"] {
 }
 
 // Position radios and checkboxes better
-input[type="radio"],
-input[type="checkbox"] {
+input:is([type="radio"],[type="checkbox"]) {
 	margin: 4px 0 0;
 	margin-top: 1px \9; // IE8-9
 	line-height: normal;
@@ -57,15 +56,12 @@ input[type="range"] {
 }
 
 // Make multiple select elements height not fixed
-select[multiple],
-select[size] {
+select:is([multiple],[size]) {
 	height: auto;
 }
 
 // Focus for file, radio, and checkbox
-input[type="file"]:focus,
-input[type="radio"]:focus,
-input[type="checkbox"]:focus {
+input:is([type="file"],[type="radio"],[type="checkbox"]):focus {
 	.tab-focus();
 }
 
@@ -162,10 +158,7 @@ output {
 // Note that as of 9.3, iOS doesn't support `week`.
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-	input[type="date"],
-	input[type="time"],
-	input[type="datetime-local"],
-	input[type="month"] {
+	input:is([type="date"], [type="time"], [type="datetime-local"], [type="month"]) {
 		&.form-control {
 			line-height: @input-height-base;
 		}
@@ -212,10 +205,8 @@ output {
 		cursor: pointer;
 	}
 }
-.radio input[type="radio"],
-.radio-inline input[type="radio"],
-.checkbox input[type="checkbox"],
-.checkbox-inline input[type="checkbox"] {
+:is(.radio, .radio-inline) input[type="radio"],
+:is(.checkbox, .checkbox-inline) input[type="checkbox"] {
 	position: absolute;
 	margin-left: -20px;
 	margin-top: 4px \9;
@@ -247,8 +238,7 @@ output {
 // Some special care is needed because <label>s don't inherit their parent's `cursor`.
 //
 // Note: Neither radios nor checkboxes can be readonly.
-input[type="radio"],
-input[type="checkbox"] {
+input:is([type="radio"],[type="checkbox"]) {
 	&[disabled],
 	&.disabled,
 	fieldset[disabled] & {
@@ -288,8 +278,7 @@ input[type="checkbox"] {
 	margin-bottom: 0;
 	min-height: calc(var(--spacer) + @font-size-base);
 
-	&.input-lg,
-	&.input-sm {
+	&:is(.input-lg,.input-sm) {
 		padding-left: 0;
 		padding-right: 0;
 	}

@@ -98,6 +98,7 @@ class frontend_controller_pages extends frontend_db_pages {
             return $override;
         }
     }
+
     /**
      * @param int|null $id
      * @return array
@@ -187,6 +188,7 @@ class frontend_controller_pages extends frontend_db_pages {
             return $this->modelPages->setItemData($collection, [], $newRow);
         }
     }
+
     /**
      * @deprecated
      * @return array
@@ -219,6 +221,7 @@ class frontend_controller_pages extends frontend_db_pages {
         $collection = $this->getItems('langs',['id'=>$this->id],'all',false);
         return $this->modelPages->setHrefLangData($collection);
     }
+
     /**
      * @param $id_parent
      * @param array $filter

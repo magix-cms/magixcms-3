@@ -13,8 +13,8 @@ tinymce.PluginManager.add('lazyloadimage', function(editor, url) {
                 let src = tinymce.DOM.getAttrib(el,'src');
                 editor.dom.addClass(el, 'lazyload');
                 tinymce.DOM.setAttrib(el,'loading','lazy');
-                tinymce.DOM.setAttrib(el,'data-src',src);
-                tinymce.DOM.setAttrib(el,'src','');
+                //tinymce.DOM.setAttrib(el,'data-src',src);
+                //tinymce.DOM.setAttrib(el,'src','');
             }
         }
     });

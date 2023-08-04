@@ -7,8 +7,7 @@
 .pagination > li {
   display: inline;
 }
-.pagination > li > a,
-.pagination > li > span {
+.pagination > li > :is(a, span) {
   position: relative;
   float: left;
   padding: 6px 12px;
@@ -19,44 +18,30 @@
   border: 1px solid #ddd;
   margin-left: -1px;
 }
-.pagination > li:first-child > a,
-.pagination > li:first-child > span {
+.pagination > li:first-child > :is(a, span) {
   margin-left: 0;
   border-bottom-left-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
 }
-.pagination > li:last-child > a,
-.pagination > li:last-child > span {
+.pagination > li:last-child > :is(a, span) {
   border-bottom-right-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 }
-.pagination > li > a:hover,
-.pagination > li > span:hover,
-.pagination > li > a:focus,
-.pagination > li > span:focus {
+.pagination > li > :is(a, span):is(:hover:focus) {
   z-index: 2;
   color: var(--main-color-dark);
   background-color: #eeeeee;
   border-color: #ddd;
 }
-.pagination > .active > a,
-.pagination > .active > span,
-.pagination > .active > a:hover,
-.pagination > .active > span:hover,
-.pagination > .active > a:focus,
-.pagination > .active > span:focus {
+.pagination > .active > :is(a, span),
+.pagination > .active > :is(a, span):is(:hover:focus) {
   z-index: 3;
   color: #fff;
   background-color: #337ab7;
   border-color: #337ab7;
   cursor: default;
 }
-.pagination > .disabled > span,
-.pagination > .disabled > span:hover,
-.pagination > .disabled > span:focus,
-.pagination > .disabled > a,
-.pagination > .disabled > a:hover,
-.pagination > .disabled > a:focus {
+.pagination > .disabled > :is(span,span:hover,span:focus,a,a:hover,a:focus) {
   color: #777777;
   background-color: #fff;
   border-color: #ddd;
@@ -103,31 +88,24 @@
 .pager li {
   display: inline;
 }
-.pager li > a,
-.pager li > span {
+.pager li > :is(a, span) {
   display: inline-block;
   padding: 5px 14px;
   background-color: transparent;
   border: 1px solid transparent;
   border-radius: 15px;
 }
-.pager li > a:hover,
-.pager li > a:focus {
+.pager li > a:is(:hover,:focus) {
   text-decoration: none;
   background-color: transparent;
 }
-.pager .next > a,
-.pager .next > span {
+.pager .next > :is(a, span) {
   float: right;
 }
-.pager .previous > a,
-.pager .previous > span {
+.pager .previous > :is(a, span) {
   float: left;
 }
-.pager .disabled > a,
-.pager .disabled > a:hover,
-.pager .disabled > a:focus,
-.pager .disabled > span {
+.pager .disabled > :is(a, a:hover, a:focus, span) {
   color: #777777;
   background-color: transparent;
   cursor: not-allowed;
@@ -139,16 +117,14 @@
   border-radius: 0;
   color: var(--text-color);
   border: none;
-  padding: 10px;
+  padding: 0.5rem 1rem;
 }
-.pager > li > a:active,
-.pager > li > a:focus {
+.pager > li > a:is(:active, :focus) {
   color: var(--main-color);
   text-decoration: none;
   background-color: transparent;
 }
-.pager > li.active a,
-.pager > li:focus a {
+.pager > li:is(:active, :focus) a {
   color: var(--main-color);
   background-color: transparent;
   font-weight: bold;

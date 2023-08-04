@@ -12,12 +12,10 @@ const niceForms = (function ($) {
 
     function isEmpty(elem) {
         const val = elem.val();
-        console.log(val);
         return ((typeof val === 'string' && val.length === 0) || (typeof val === 'object' && val == null));
     }
 
     function updateParent(elem) {
-        console.log(isEmpty(elem));
         $('[for="' + elem.attr('id') + '"]').toggleClass('is_empty', isEmpty(elem));
     }
 

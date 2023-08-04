@@ -3,8 +3,7 @@
 //----------------
 // ---- Rules
 @media (min-width: .breakpoint(sm)[min]) {
-	.menu-tabs,
-	.menu-tabs-arrow {
+	:is(.menu-tabs, .menu-tabs-arrow) {
 		.nav {
 			width: 100%;
 			display: table;
@@ -45,8 +44,7 @@
 				opacity: 0;
 			}
 
-			&:hover,
-			&.active {
+			&:is(:hover,.active) {
 				&:before {
 					opacity: 1;
 				}

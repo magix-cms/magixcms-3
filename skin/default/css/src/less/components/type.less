@@ -8,8 +8,7 @@
 // Headings
 // -------------------------
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+:is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
 	margin-top: 0; // 1
 	margin-bottom: @headings-margin-bottom;
 	font-family: @headings-font-family;
@@ -18,23 +17,23 @@ h1, h2, h3, h4, h5, h6,
 	line-height: @headings-line-height;
 	color: var(--heading-color);
 
-	small, .small {
+	:is(small, .small) {
 		font-size: .8em;
 	}
 }
 
-h1, .h1 { font-size: @headinds-font-sizes[h1]; }
-h2, .h2 { font-size: @headinds-font-sizes[h2]; }
-h3, .h3 { font-size: @headinds-font-sizes[h3]; }
-h4, .h4 { font-size: @headinds-font-sizes[h4]; }
-h5, .h5 { font-size: @headinds-font-sizes[h5]; }
-h6, .h6 { font-size: @headinds-font-sizes[h6]; }
+h1, .h1 { font-size: @headings-font-sizes[h1]; }
+h2, .h2 { font-size: @headings-font-sizes[h2]; }
+h3, .h3 { font-size: @headings-font-sizes[h3]; }
+h4, .h4 { font-size: @headings-font-sizes[h4]; }
+h5, .h5 { font-size: @headings-font-sizes[h5]; }
+h6, .h6 { font-size: @headings-font-sizes[h6]; }
 
 
 // Display
 // -------------------------
 
-.d1, .d2, .d3, .d4, .d5, .d6 {
+:is(.d1, .d2, .d3, .d4, .d5, .d6) {
 	margin-top: 0; // 1
 	margin-bottom: @display-margin-bottom;
 	font-family: @display-font-family;
@@ -43,7 +42,7 @@ h6, .h6 { font-size: @headinds-font-sizes[h6]; }
 	line-height: @display-line-height;
 	color: @display-color;
 
-	small, .small {
+	:is(small, .small) {
 		font-size: .8em;
 	}
 }
@@ -60,8 +59,15 @@ h6, .h6 { font-size: @headinds-font-sizes[h6]; }
 // -------------------------
 
 p {
-	margin-top: 0;
-	margin-bottom: @paragraph-margin-bottom;
+	margin: 0;
+
+	+ :is(p, ul, ol) {
+		margin-top: @paragraph-margin-bottom;
+	}
+}
+
+:is(p, ul, ol) + :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
+	margin-top: 1.5em;
 }
 
 .lead {
@@ -147,8 +153,7 @@ mark,
 // 3. Add explicit cursor to indicate changed behavior.
 // 4. Prevent the text-decoration to be skipped.
 
-abbr[title],
-abbr[data-original-title] { // 1
+abbr:is([title], [data-original-title]) { // 1
 	text-decoration: underline; // 2
 	text-decoration: underline dotted; // 2
 	cursor: help; // 3
@@ -180,10 +185,7 @@ dl {
 	margin-bottom: 1rem;
 }
 
-ol ol,
-ul ul,
-ol ul,
-ul ol {
+:is(ol, ul) :is(ol, ul) {
 	margin-bottom: 0;
 }
 
@@ -367,9 +369,7 @@ blockquote {
 		.text-justify;
 	}
 
-	p,
-	ul,
-	ol {
+	:is(p,ul,ol) {
 		&:last-child {
 			margin-bottom: 0;
 		}

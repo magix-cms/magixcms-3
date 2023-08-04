@@ -1,6 +1,10 @@
 //
 // Additional rules for image classes
 //
+img {
+    aspect-ratio: var(--ratio,auto);
+}
+
 .img-galery,
 .img-zoom {
     z-index: 1;
@@ -21,9 +25,8 @@
         &.float-left {
             margin: 0 1rem 1rem 0;
         }
-        
-        &.float-right,
-        &.float-left {
+
+        &:is(.float-right,.float-left) {
             max-width: 50%;
         }
     }

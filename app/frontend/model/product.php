@@ -93,6 +93,10 @@ class frontend_model_product {
 				'id_parent' => $row['id_cat'],
 				'url_parent' => $row['url_cat']
 			]);
+			$data['link'] = [
+				'label' => $row['link_label_p'],
+				'title' => $row['link_title_p']
+			];
 			// Base url for product
 			$data['baseUrl']       = $row['url_p'];
 			$data['active'] = false;
@@ -105,6 +109,10 @@ class frontend_model_product {
 				'id' => $row['id_cat'],
 				'url' => $row['url_cat']
 			]);
+			$data['link_parent'] = [
+				'label' => $row['link_label_cat'],
+				'title' => $row['link_title_cat']
+			];
 			$data['cat']       = $row['name_cat'];
 			$data['id_lang']   = $row['id_lang'];
 			$data['iso']       = $row['iso_lang'];

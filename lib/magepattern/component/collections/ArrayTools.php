@@ -44,7 +44,8 @@
  * Time: 00:53
  *
  */
-class collections_ArrayTools{
+class collections_ArrayTools {
+	private static array $exceptions;
     /**
      * @static
      * @var $default_country
@@ -380,6 +381,36 @@ class collections_ArrayTools{
 
         return $array;
     }
+
+	/**
+	 * @param $value
+	 * @return bool
+	 */
+	private static function isValueEmpty($value): bool {
+		foreach (self::$exceptions as $except) {
+			if($value === $except) return true;
+		}
+		return !empty($value);
+	}
+
+	/**
+	 * @param array $array
+	 * @param array $exceptions
+	 * @return array
+	 */
+	public static function ArrayCleaner(array $array, array $exceptions = []): array {
+		foreach ($array as &$item) {
+			if (is_array($item)) $item = self::ArrayCleaner($item);
+		}
+
+		if($exceptions !== []) {
+			self::$exceptions = $exceptions;
+			return array_filter($array, function($item) {
+				return self::isValueEmpty($item);
+			});
+		}
+		return array_filter($array);
+	}
 
     /**
      * Remplace les valeurs d'un tableau suivant la clé

@@ -41,17 +41,14 @@
 	background-color: var(--btn-bg-color, var(--btn-bg, inherit));
 
 	&,
-	&:active,
-	&.active {
+	&:is(:active,.active) {
 		&:focus,
 		&.focus {
 			.tab-focus();
 		}
 	}
 
-	&:hover,
-	&:focus,
-	&.focus {
+	&:is(:hover,:focus,.focus) {
 		color: var(--btn-color, inherit);
 		--bg-l: calc(var(--btn-bg-l) * 0.9);
 		--btn-bg-img: var(--btn-hover-bg-img);
@@ -59,8 +56,7 @@
 		text-decoration: none;
 	}
 
-	&:focus,
-	&.focus {
+	&:is(:focus,.focus) {
 		--brd-l: calc(var(--btn-brd-l) * 0.75);
 		--btn-border-color: var(--btn-focus-border-color, var(--btn-brd, inherit));
 	}
@@ -69,14 +65,12 @@
 		--btn-border-color: var(--btn-hover-border-color, var(--btn-brd, inherit));
 	}
 
-	&:active,
-	&.active {
+	&:is(:active,.active) {
 		outline: 0;
 		.box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
 	}
 
-	&:active,
-	&.active,
+	&:is(:active,.active),
 	.open > .dropdown-toggle& {
 		color: var(--btn-color, inherit);
 		--bg-l: calc(var(--btn-bg-l) * 0.9);
@@ -85,9 +79,7 @@
 		--brd-l: calc(var(--btn-brd-l) * 0.88);
 		--btn-border-color: var(--btn-hover-border-color, var(--btn-brd, inherit));
 
-		&:hover,
-		&:focus,
-		&.focus {
+		&:is(:hover,:focus,.focus) {
 			color: var(--btn-color, inherit);
 			--bg-l: calc(var(--btn-bg-l) * 0.83);
 			--btn-bg-color: var(--btn-ahf-bg-color, var(--btn-bg, inherit));
@@ -104,9 +96,7 @@
 		.opacity(.65);
 		.box-shadow(none);
 
-		&:hover,
-		&:focus,
-		&.focus {
+		&:is(:hover,:focus,.focus) {
 			--btn-bg: var(--btn-bg);
 			--btn-bg-img: var(--btn-ahf-bg-img);
 			--btn-brd: var(--btn-brd);
@@ -218,13 +208,10 @@
 		.box-shadow(none);
 	}
 	&,
-	&:hover,
-	&:focus,
-	&:active {
+	&:is(:hover,:focus,:active) {
 		border-color: transparent;
 	}
-	&:hover,
-	&:focus {
+	&:is(:hover,:focus) {
 		color: var(--link-hover-color);
 		text-decoration: var(--link-hover-deco);
 		background-color: transparent;
@@ -269,9 +256,7 @@
 }
 
 // Specificity overrides
-input[type="submit"],
-input[type="reset"],
-input[type="button"] {
+input:is([type="submit"],[type="reset"],[type="button"]) {
 	&.btn-block {
 		width: 100%;
 	}
@@ -327,4 +312,28 @@ each(@theme-color, {
 
 .btn-box {
 	--btn-border-radius: 0;
+}
+
+.readmore {
+	padding-left: 0;
+	--link-color: var(--text-color);
+	display: inline-flex;
+	align-items: center;
+	gap: 1rem;
+
+	&:before {
+		content: '';
+		display: block;
+		height: 1px;
+		width: 2rem;
+		background: var(--text-color);
+		.auto-transition(.35s);
+	}
+
+	&:hover {
+		&:before {
+			width: 4rem;
+			background: var(--link-hover-color);
+		}
+	}
 }

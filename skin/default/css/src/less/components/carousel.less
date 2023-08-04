@@ -31,28 +31,22 @@
 			.backface-visibility(~'hidden');
 			.perspective(1000px);
 
-			&.next,
-			&.active.right {
+			&:is(.next,.active.right) {
 				.translate3d(100%, 0, 0);
 				left: 0;
 			}
-			&.prev,
-			&.active.left {
+			&:is(.prev,.active.left){
 				.translate3d(-100%, 0, 0);
 				left: 0;
 			}
-			&.next.left,
-			&.prev.right,
-			&.active {
+			&:is(.next.left,.prev.right,.active) {
 				.translate3d(0, 0, 0);
 				left: 0;
 			}
 		}
 	}
 
-	> .active,
-	> .next,
-	> .prev {
+	> :is(.active, .next, .prev) {
 		display: block;
 	}
 
@@ -60,8 +54,7 @@
 		left: 0;
 	}
 
-	> .next,
-	> .prev {
+	> :is(.next, .prev) {
 		position: absolute;
 		top: 0;
 		width: 100%;
@@ -73,8 +66,7 @@
 	> .prev {
 		left: -100%;
 	}
-	> .next.left,
-	> .prev.right {
+	> :is(.next.left, .prev.right) {
 		left: 0;
 	}
 
@@ -119,8 +111,7 @@
 	// animation if you trip this while in the middle of another animation.
 
 	// Hover/focus state
-	&:hover,
-	&:focus {
+	&:is(:hover,:focus) {
 		outline: 0;
 		color: @carousel-control-color;
 		text-decoration: none;
@@ -213,22 +204,15 @@
 			transition-property: opacity;
 		}
 
-		.item,
-		.active.left,
-		.active.right {
+		:is(.item,.active.left,.active.right) {
 			opacity: 0;
 		}
 
-		.active,
-		.next.left,
-		.prev.right {
+		:is(.active,.next.left,.prev.right) {
 			opacity: 1;
 		}
 
-		.next,
-		.prev,
-		.active.left,
-		.active.right {
+		:is(.next,.prev,.active.left,.active.right) {
 			left: 0;
 			transform: translate3d(0, 0, 0);
 		}

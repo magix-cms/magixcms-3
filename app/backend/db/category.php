@@ -24,7 +24,7 @@ class backend_db_category {
 						}
 					}
 
-					$query = "SELECT p.id_cat, c.name_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
+					$query = "SELECT p.id_cat, c.name_cat, c.content_cat, c.link_label_cat, c.link_title_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
 							FROM mc_catalog_cat AS p
 								JOIN mc_catalog_cat_content AS c USING ( id_cat )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -100,7 +100,7 @@ class backend_db_category {
 							}
 						}
 					}
-					$query = "SELECT p.id_cat, c.name_cat, c.resume_cat, c.content_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
+					$query = "SELECT p.id_cat, c.name_cat, c.resume_cat, c.content_cat, c.link_label_cat, c.link_title_cat, c.seo_title_cat, c.seo_desc_cat, p.menu_cat, p.date_register, p.img_cat
 						FROM mc_catalog_cat AS p
 							JOIN mc_catalog_cat_content AS c USING ( id_cat )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
@@ -240,8 +240,8 @@ class backend_db_category {
 						SELECT :id_parent,:menu_cat,count(order_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond ORDER BY order_cat desc LIMIT 0,1";
 				break;
 			case 'content':
-				$query = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,seo_title_cat,seo_desc_cat,published_cat) 
-				  		VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:seo_title_cat,:seo_desc_cat,:published_cat)';
+				$query = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,link_label_cat,link_title_cat,seo_title_cat,seo_desc_cat,published_cat) 
+				  		VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:link_label_cat,:link_title_cat,:seo_title_cat,:seo_desc_cat,:published_cat)';
 				break;
 			default:
 				return false;
@@ -278,10 +278,12 @@ class backend_db_category {
                             name_cat = :name_cat, 
                             url_cat = :url_cat, 
                             resume_cat = :resume_cat, 
-                            content_cat=:content_cat, 
-                            seo_title_cat=:seo_title_cat, 
-                            seo_desc_cat=:seo_desc_cat, 
-                            published_cat=:published_cat
+                            content_cat = :content_cat, 
+                            link_label_cat = :link_label_cat, 
+                            link_title_cat = :link_title_cat, 
+                            seo_title_cat = :seo_title_cat, 
+                            seo_desc_cat = :seo_desc_cat, 
+                            published_cat = :published_cat
 						WHERE id_cat = :id_cat AND id_lang = :id_lang';
 				break;
 			case 'img':

@@ -98,8 +98,7 @@
   }
 
   // Nuke default margins from checkboxes and radios to vertically center within.
-  input[type="radio"],
-  input[type="checkbox"] {
+  input:is([type="radio"], [type="checkbox"]) {
     margin-top: 0;
   }
 }
@@ -147,23 +146,19 @@
       margin-left: -1px;
     }
     // Bring the "active" button to the front
-    &:hover,
-    &:focus,
-    &:active {
+    &:is(:hover,:focus,:active) {
       z-index: 2;
     }
   }
 
   // Negative margin to only have a 1px border between the two
   &:first-child {
-    > .btn,
-    > .btn-group {
+    > :is(.btn,.btn-group) {
       margin-right: -1px;
     }
   }
   &:last-child {
-    > .btn,
-    > .btn-group {
+    > :is(.btn,.btn-group) {
       z-index: 2;
       margin-left: -1px;
     }

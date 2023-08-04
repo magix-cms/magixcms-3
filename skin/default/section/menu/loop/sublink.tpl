@@ -4,7 +4,7 @@
 {if ($chc === $active_link.controller || $chc === null ) && (in_array($child.id,$active_link.ids) || ($chc === null && !isset($child.id) && empty($active_link.ids)))}{$child.active = true}{/if}
 {if $amp}
     <section>
-        {if !{strpos()$child.url_link,'amp')} && $child.amp_available}{$child.url_link = {$child.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
+        {if !{strpos($child.url_link,'amp')} && $child.amp_available}{$child.url_link = {$child.url_link|replace:{'/'|cat:{$lang}|cat:'/'}:{'/'|cat:{$lang}|cat:'/amp/'}}}{/if}
         {if $mega && $child.subdata && $dp < $deepness}
             {$sn = $sn + 1}
             {$navparent = "subnav-"|cat:$sn}

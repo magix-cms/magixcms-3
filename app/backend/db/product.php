@@ -120,6 +120,8 @@ class backend_db_product {
                         'p.price_p',
                         'pc.resume_p' ,
                         'pc.content_p',
+                        'pc.link_label_p',
+                        'pc.link_title_p',
                         'pc.seo_title_p',
                         'pc.seo_desc_p',
                         'IFNULL(pi.default_img,0) as default_img',
@@ -282,6 +284,8 @@ class backend_db_product {
 								p.id_product,
 								pc.name_p,
 								pc.url_p,
+								pc.link_label_p,
+								pc.link_title_p,
 								cc.id_cat as id_parent,
 								ccc.name_cat as name_parent,
 								ccc.url_cat as url_parent,
@@ -325,8 +329,8 @@ class backend_db_product {
 						VALUES (:price_p,:reference_p,NOW())';
 				break;
 			case 'newContent':
-				$query = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,seo_title_p,seo_desc_p,published_p) 
-			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:seo_title_p,:seo_desc_p,:published_p)';
+				$query = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,link_label_p,link_title_p,seo_title_p,seo_desc_p,published_p) 
+			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:link_label_p,:link_title_p,:seo_title_p,:seo_desc_p,:published_p)';
 				break;
 			case 'newImg':
 				$query = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img,order_img,default_img) 
@@ -378,6 +382,8 @@ class backend_db_product {
 							url_p = :url_p,
 							resume_p = :resume_p,
 							content_p = :content_p,
+							link_label_p = :link_label_p,
+							link_title_p = :link_title_p,
 							seo_title_p = :seo_title_p, 
                             seo_desc_p = :seo_desc_p,
 							published_p = :published_p

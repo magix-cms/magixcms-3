@@ -15,6 +15,13 @@ return array(
     'jquery' => array(
         '//libjs/vendor/jquery-3.0.0.min.js'
     ),
+	'vanilla_form' => array(
+		'//libjs/vendor/validate.min.js',
+		'//libjs/vendor/validator.min.js',
+		'//libjs/vendor/magicform.min.js',
+		'//libjs/vendor/axios.min.js',
+		'//libjs/vendor/request.min.js'
+	),
     'form' => array(
 		'//libjs/vendor/jquery.form.4.2.1.min.js',
 		'//libjs/vendor/jquery.validate.1.17.0.min.js',

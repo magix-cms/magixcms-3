@@ -206,30 +206,34 @@ class frontend_controller_news extends frontend_db_news {
 		$conditions = [];
 
 		if(isset($this->tag) || isset($this->tags)) {
-			$joins[] = [
-				'type' => 'LEFT JOIN',
-				'table' => 'mc_news_tag_rel',
-				'as' => 'mntr',
-				'on' => [
-					'table' => 'mn',
-					'key' => 'id_news'
-				]
-			];
+			if(isset($this->tags)) $this->tags = collections_ArrayTools::ArrayCleaner($this->tags);
 
-			if (isset($this->tags)) {
-				$conditions[] = [
-					'type' => 'AND',
-					'condition' => 'mntr.id_tag IN('.implode(',',$this->tags).')'
+			if(!empty($this->tag) || !empty($this->tags)) {
+				$joins[] = [
+					'type' => 'LEFT JOIN',
+					'table' => 'mc_news_tag_rel',
+					'as' => 'mntr',
+					'on' => [
+						'table' => 'mn',
+						'key' => 'id_news'
+					]
 				];
-				$params['group'] = [['mn.id_news']];
-				$params['having'] = [['COUNT(mn.id_news) = '.count($this->tags)]];
-			}
-			elseif (isset($this->tag)) {
-				$conditions[] = [
-					'type' => 'AND',
-					'condition' => 'mntr.id_tag = :tag'
-				];
-				$params['tag'] = $this->tag;
+
+				if (!empty($this->tags)) {
+					$conditions[] = [
+						'type' => 'AND',
+						'condition' => 'mntr.id_tag IN('.implode(',',$this->tags).')'
+					];
+					$params['group'] = [['mn.id_news']];
+					$params['having'] = [['COUNT(mn.id_news) = '.count($this->tags)]];
+				}
+				elseif (!empty($this->tag)) {
+					$conditions[] = [
+						'type' => 'AND',
+						'condition' => 'mntr.id_tag = :tag'
+					];
+					$params['tag'] = $this->tag;
+				}
 			}
 		}
 		if(isset($this->date)) {

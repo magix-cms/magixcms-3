@@ -100,6 +100,10 @@ class frontend_model_category {
 				'id' => $row['id_cat'],
 				'url' => $row['url_cat']
 			]);
+			$data['link'] = [
+				'label' => $row['link_label_cat'],
+				'title' => $row['link_title_cat']
+			];
 			// Base url for category
 			$data['baseUrl']   = $row['url_cat'];
 			$data['id']        = $row['id_cat'];

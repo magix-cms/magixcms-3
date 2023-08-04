@@ -6,7 +6,7 @@
 {/strip}
 <footer id="footer">
     {if is_array($blocks) && !empty($blocks)}
-        <section id="footer-blocks">
+        <div id="footer-blocks">
             <div class="container">
                 <div class="blocks row">
                     {foreach $blocks as $block}
@@ -14,12 +14,12 @@
                     {/foreach}
                 </div>
             </div>
-            <div id="rgpd-param" class="fade in hide">
+            {if $consentAsked}<div id="rgpd-param" class="fade in hide">
                 <button class="btn btn-default" type="button" id="paramCookies" data-toggle="modal" data-target="#cookiesModal">
                     <span class="ico ico-cookie-bite"></span><span class="sr-only">{#param_cookies#}</span>
                 </button>
-            </div>
-        </section>
+            </div>{/if}
+        </div>
     {/if}
     <div id="colophon" class="container-fluid">
         <div class="container">

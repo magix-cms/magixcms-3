@@ -13,7 +13,7 @@
     <article class="container">
         {block name='article:content'}
             <h1 itemprop="name">{#contact_root_h1#}</h1>
-            <section id="form" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
+            <div id="form" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
                 <h2>{#pn_contact_forms#|ucfirst}</h2>
                 <p>{#pn_questions#|ucfirst}</p>
                 <p>{#pn_fill_form#|ucfirst}</p>
@@ -98,10 +98,10 @@
                         <p>{#message_send_error#|ucfirst}</p>
                     </div>
                 </form>
-            </section>
-            <section id="aside">
+            </div>
+            <div id="aside">
                 {include file="amp/contact/block/map.tpl"}
-            </section>
+            </div>
         {/block}
     </article>
 {/block}

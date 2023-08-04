@@ -11,8 +11,7 @@
   &:extend(.clearfix all);
   li {
     display: inline;
-    > a,
-    > span {
+    > :is(a, span) {
       display: inline-block;
       padding: 5px 14px;
       background-color: @pager-bg;
@@ -20,32 +19,26 @@
       border-radius: @pager-border-radius;
     }
 
-    > a:hover,
-    > a:focus {
+    > a:is(:hover,:focus) {
       text-decoration: none;
       background-color: @pager-hover-bg;
     }
   }
 
   .next {
-    > a,
-    > span {
+    > :is(a, span) {
       float: right;
     }
   }
 
   .previous {
-    > a,
-    > span {
+    > :is(a, span) {
       float: left;
     }
   }
 
   .disabled {
-    > a,
-    > a:hover,
-    > a:focus,
-    > span {
+    > :is(a, a:hover, a:focus, span) {
       color: @pager-disabled-color;
       background-color: @pager-bg;
       cursor: @cursor-disabled;
@@ -61,10 +54,10 @@
     border-radius: 0;
     color:var(--text-color);
     border: none;
-    padding: 10px;
+    //padding: 10px;
+    padding: .5rem 1rem;
 
-    &:active,
-    &:focus {
+    &:is(:active, :focus) {
       color: var(--main-color);
       text-decoration: none;
       background-color: transparent;
@@ -72,8 +65,7 @@
   }
 
   > li {
-    &.active,
-    &:focus {
+    &:is(:active, :focus) {
       a {
         color: var(--main-color);
         background-color: transparent;

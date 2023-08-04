@@ -1,6 +1,6 @@
 <footer id="footer">
     {if is_array($blocks) && !empty($blocks)}
-        <section id="footer-blocks">
+        <div id="footer-blocks">
             <div class="container-fluid">
                 <div class="blocks">
                     <div class="row">
@@ -10,12 +10,12 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     {/if}
-    <section id="colophon">
+    <div id="colophon">
         <div class="container">
             {include file="amp/section/footer/about.tpl"}
         </div>
-    </section>
+    </div>
 </footer>
 {include file="amp/section/footer/footbar.tpl"}

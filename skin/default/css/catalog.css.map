@@ -1,1 +1,1 @@
-{"version":3,"sources":["./src/less/catalog.less","./src/less/components/mixins/type.less"],"names":[],"mappings":";;;AAYA,QACC,MAAM;EC0DN,QAAQ,iCAAR;EACA,SAAS,yBAAT;EACA,eAAe,2BAA2B,mBAA1C;EACA,OAAO,mCAAP","file":"catalog.css"}
+{"version":3,"sources":["./src/less/catalog.less","./src/less/components/mixins/type.less"],"names":[],"mappings":";;;AAYA,QACC,MAAM;EC0DN,QAAQ,wBAAR;EACA,SAAS,yBAAT;EACA,eAAe,2BAA2B,mBAA1C;EACA,OAAO,mBAAkB,qBAAzB","file":"catalog.css"}

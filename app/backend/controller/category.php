@@ -296,6 +296,8 @@ class backend_controller_category extends backend_db_category {
 			$content['published_cat'] = (!isset($content['published_cat']) ? 0 : 1);
 			$content['resume_cat'] = (!empty($content['resume_cat']) ? $content['resume_cat'] : NULL);
 			$content['content_cat'] = (!empty($content['content_cat']) ? $content['content_cat'] : NULL);
+			$content['link_label_cat'] = (!empty($content['link_label_cat']) ? $content['link_label_cat'] : NULL);
+			$content['link_title_cat'] = (!empty($content['link_title_cat']) ? $content['link_title_cat'] : NULL);
 			$content['seo_title_cat'] = (!empty($content['seo_title_cat']) ? $content['seo_title_cat'] : NULL);
 			$content['seo_desc_cat'] = (!empty($content['seo_desc_cat']) ? $content['seo_desc_cat'] : NULL);
 			if (empty($content['url_cat'])) {

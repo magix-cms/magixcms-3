@@ -72,7 +72,7 @@ class backend_db_news {
 							}
 						}
 					}
-					$query = "SELECT c.id_news,c.name_news,c.content_news,p.img_news,c.seo_title_news, c.seo_desc_news,c.last_update,c.date_publish,c.published_news
+					$query = "SELECT c.id_news,c.name_news,c.content_news,p.img_news,c.link_label_news,c.link_title_news,c.seo_title_news, c.seo_desc_news,c.last_update,c.date_publish,c.published_news
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
@@ -193,8 +193,8 @@ class backend_db_news {
 				$query = 'INSERT INTO `mc_news`(date_register) VALUE (NOW())';
 				break;
 			case 'content':
-				$query = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,seo_title_news, seo_desc_news,date_publish,published_news) 
-				  		VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:seo_title_news, :seo_desc_news,:date_publish,:published_news)';
+				$query = 'INSERT INTO `mc_news_content`(id_news,id_lang,name_news,url_news,resume_news,content_news,link_label_news,link_title_news,seo_title_news, seo_desc_news,date_publish,published_news) 
+				  		VALUES (:id_news,:id_lang,:name_news,:url_news,:resume_news,:content_news,:link_label_news,:link_title_news,:seo_title_news, :seo_desc_news,:date_publish,:published_news)';
 				break;
 			case 'newTag':
 				$query = 'INSERT INTO mc_news_tag (id_lang,name_tag) VALUES (:id_lang,:name_tag)';
@@ -231,6 +231,8 @@ class backend_db_news {
 							url_news = :url_news,
 							resume_news = :resume_news,
 							content_news = :content_news,
+							link_label_news = :link_label_news,
+							link_title_news = :link_title_news,
 							seo_title_news = :seo_title_news,
 							seo_desc_news = :seo_desc_news,
 							date_publish = :date_publish, 

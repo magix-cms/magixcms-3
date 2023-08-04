@@ -45,13 +45,13 @@
 
 // --- All headings
 .headings(@function) {
-	h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	:is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
 		@function();
 	}
 }
 // --- Direct child headings
 .direct-headings(@function) {
-	> h1, > h2, > h3, > h4, > h5, > h6, > .h1, > .h2, > .h3, > .h4, > .h5, > .h6 {
+	> :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
 		@function();
 	}
 }
@@ -69,19 +69,19 @@
 
 // --- Main title page
 .main-title() {
-	margin: var(--title-mg, .5rem auto 2rem);
+	margin: var(--title-mg, inherit);
 	padding: var(--title-pd, 0 0 1rem);
 	border-bottom: var(--title-brd, 1px solid var(--brd-default));
-	color: var(--title-color,--heading-color);
+	color: var(--title-color,var(--heading-color));
 }
 
 // Normalize content
 .normalize-content() {
 	article {
 		// Normalize the main title of the content
-		h1 {
+		/*h1 {
 			.main-title();
-		}
+		}*/
 
 		p > img:not(.img-float) {
 			margin: 1rem;

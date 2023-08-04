@@ -115,6 +115,10 @@ class frontend_model_news extends frontend_db_news {
 				'id' => $row['id_news'],
 				'url' => $row['url_news']
 			]);
+			$data['link'] = [
+				'label' => $row['link_label_news'],
+				'title' => $row['link_title_news']
+			];
 
             if (isset($row['img_news'])) {
 				$data['img'] = $this->imagesComponent->setModuleImage('news','news',$row['img_news'],$row['id_news']);

@@ -2,9 +2,9 @@
                         Catalog
 ---------------------------------------------------------- */
 .catalog .text ~ .h2 {
-  margin: var(--title-mg, 0.5rem auto 2rem);
+  margin: var(--title-mg, inherit);
   padding: var(--title-pd, 0 0 1rem);
   border-bottom: var(--title-brd, 1px solid var(--brd-default));
-  color: var(--title-color, --heading-color);
+  color: var(--title-color, var(--heading-color));
 }
 /*# sourceMappingURL=catalog.css.map */

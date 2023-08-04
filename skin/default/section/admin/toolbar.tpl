@@ -1,4 +1,4 @@
-<section id="admin-panel">
+<div id="admin-panel">
     <div class="dropdown">
         <button class="btn btn-box btn-flat btn-dark-theme dropdown-toggle" type="button" id="adminmenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="fa fa-user"></span>
@@ -18,4 +18,4 @@
             </li>
         </ul>
     </div>
-</section>
+</div>

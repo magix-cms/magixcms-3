@@ -2,7 +2,7 @@
 {block name="title"}{$home.seo.title}{/block}
 {block name="description"}{$home.seo.description}{/block}
 {block name='body:id'}home{/block}
-{block name="styleSheet"}
+{block name="styleSheet" nocache}
     {$css_files = ["home","lightbox","slider"]}
 {/block}
 

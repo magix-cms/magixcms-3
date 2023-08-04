@@ -1,8 +1,6 @@
 *,
 *:before,
 *:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 :root,
@@ -73,10 +71,7 @@ button:not(:disabled),
   padding: 0;
   border-style: none;
 }
-input[type="date"],
-input[type="time"],
-input[type="datetime-local"],
-input[type="month"] {
+input:is([type="date"],[type="time"],[type="datetime-local"],[type="month"]) {
   -webkit-appearance: textfield;
 }
 textarea {
@@ -133,8 +128,7 @@ a:active {
   color: var(--link-color, var(--main-color));
   text-decoration: var(--link-deco, none);
 }
-a:hover,
-a:focus {
+a:is(:hover, :focus) {
   text-decoration: var(--link-hover-deco, underline);
   color: var(--link-hover-color, var(--main-color-dark));
 }
@@ -171,8 +165,7 @@ svg {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
-.sr-only-focusable:active,
-.sr-only-focusable:focus {
+.sr-only-focusable:is(:active,:focus) {
   position: static;
   width: auto;
   height: auto;
@@ -192,20 +185,8 @@ svg {
   padding-right: calc(var(--grid-gutter) / 2);
   width: 100%;
 }
-@media (min-width: 62em) {
-  .container {
-    max-width: 62rem;
-  }
-}
-@media (min-width: 75em) {
-  .container {
-    max-width: 75rem;
-  }
-}
-@media (min-width: 102.25em) {
-  .container {
-    max-width: 102.25rem;
-  }
+.container {
+  max-width: var(--container-mw);
 }
 .row {
   display: flex;
@@ -1285,27 +1266,23 @@ tbody.collapse.in {
   color: var(--text-color);
   white-space: nowrap;
 }
-.dropdown-menu > li > a:hover,
-.dropdown-menu > li > a:focus {
+.dropdown-menu > li > a:is(:hover,:focus) {
   text-decoration: none;
   color: var(--text-color);
   background-color: rgba(0, 0, 0, 0.15);
 }
 .dropdown-menu .active > a,
-.dropdown-menu .active > a:hover,
-.dropdown-menu .active > a:focus {
+.dropdown-menu .active > a:is(:hover,:focus) {
   color: var(--white);
   text-decoration: none;
   outline: 0;
   background-color: #3c62aa;
 }
 .dropdown-menu > .disabled > a,
-.dropdown-menu > .disabled > a:hover,
-.dropdown-menu > .disabled > a:focus {
+.dropdown-menu > .disabled > a:is(:hover,:focus) {
   color: #777777;
 }
-.dropdown-menu > .disabled > a:hover,
-.dropdown-menu > .disabled > a:focus {
+.dropdown-menu > .disabled > a:is(:hover,:focus) {
   text-decoration: none;
   background-color: transparent;
   background-image: none;
@@ -1391,16 +1368,14 @@ tbody.collapse.in {
 .nav > li.disabled > a {
   color: #777777;
 }
-.nav > li.disabled > a:hover,
-.nav > li.disabled > a:focus {
+.nav > li.disabled > a:is(:hover,:focus) {
   color: #777777;
   text-decoration: none;
   background-color: transparent;
   cursor: not-allowed;
 }
 .nav .open > a,
-.nav .open > a:hover,
-.nav .open > a:focus {
+.nav .open > a:is(:hover,:focus) {
   background-color: #eeeeee;
   border-color: var(--main-color);
 }
@@ -1430,8 +1405,7 @@ tbody.collapse.in {
   border-color: #eeeeee #eeeeee #ddd;
 }
 .nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
+.nav-tabs > li.active > a:is(:hover,:focus) {
   color: #555555;
   background-color: var(--body-bg);
   border: 1px solid #ddd;
@@ -1457,8 +1431,7 @@ tbody.collapse.in {
   border: 1px solid transparent;
 }
 .vertical-tabs .nav-tabs > li.active > a,
-.vertical-tabs .nav-tabs > li.active > a:hover,
-.vertical-tabs .nav-tabs > li.active > a:focus {
+.vertical-tabs .nav-tabs > li.active > a:is(:hover,:focus) {
   border: 1px solid transparent;
   border-right-color: #ddd;
 }
@@ -1505,8 +1478,6 @@ tbody.collapse.in {
     box-shadow: none;
   }
   .navbar-collapse.collapse {
-    display: block !important;
-    height: auto !important;
     padding-bottom: 0;
     overflow: visible !important;
   }
@@ -1622,8 +1593,7 @@ button.close {
   border: 0;
   -webkit-appearance: none;
 }
-.modal .close:hover,
-.modal .close:focus {
+.modal .close:is(:hover,:focus) {
   color: #000;
   text-decoration: none;
   cursor: pointer;
@@ -3094,11 +3064,10 @@ body.embedEnabled .video-preview {
   display: none;
   visibility: hidden;
 }
-article h1 {
-  margin: var(--title-mg, 0.5rem auto 2rem);
-  padding: var(--title-pd, 0 0 1rem);
-  border-bottom: var(--title-brd, 1px solid var(--brd-default));
-  color: var(--title-color, --heading-color);
+article {
+  /*h1 {
+			.main-title();
+		}*/
 }
 article p > img:not(.img-float) {
   margin: 1rem;
@@ -3426,8 +3395,7 @@ article ol {
   }
 }
 @media (min-width: 48em) {
-  .menu .dropdown,
-  .menu .megadropdown {
+  .menu :is(.dropdown,.megadropdown) {
     min-width: 100%;
     position: absolute;
     padding: 5px 0;
@@ -3441,22 +3409,16 @@ article ol {
     transform: translateY(-5px);
     transition: all 0.25s ease 0s;
   }
-  .menu .dropdown > ul,
-  .menu .megadropdown > ul {
+  .menu :is(.dropdown,.megadropdown) > ul {
     padding: 0;
   }
-  .menu .dropdown li a,
-  .menu .megadropdown li a {
+  .menu :is(.dropdown,.megadropdown) li a {
     white-space: nowrap;
   }
-  .menu .dropdown li a:hover,
-  .menu .megadropdown li a:hover {
+  .menu :is(.dropdown,.megadropdown) li a:hover {
     text-decoration: none;
   }
-  .menu .dropdown:hover,
-  .menu .megadropdown:hover,
-  .menu .dropdown:focus,
-  .menu .megadropdown:focus {
+  .menu :is(.dropdown,.megadropdown):is(:hover, :focus) {
     visibility: visible;
     box-shadow:  0 6px 10px 0 rgba(0, 0, 0, 0.14),  0 1px 18px 0 rgba(0, 0, 0, 0.12),  0 3px 5px 0 rgba(0, 0, 0, 0.2);
     opacity: 1;
@@ -3471,10 +3433,7 @@ article ol {
   .has-dropdown {
     position: relative;
   }
-  .has-dropdown:hover + .dropdown,
-  .has-dropdown:focus + .dropdown,
-  .has-dropdown:hover + .megadropdown,
-  .has-dropdown:focus + .megadropdown {
+  .has-dropdown:is(:hover, :focus) + :is(.dropdown,.megadropdown) {
     visibility: visible;
     box-shadow:  0 6px 10px 0 rgba(0, 0, 0, 0.14),  0 1px 18px 0 rgba(0, 0, 0, 0.12),  0 3px 5px 0 rgba(0, 0, 0, 0.2);
     opacity: 1;
@@ -3691,18 +3650,7 @@ article ol {
 #footer .block .h4 a {
   font-weight: bold;
 }
-#footer h1,
-#footer h2,
-#footer h3,
-#footer h4,
-#footer h5,
-#footer h6,
-#footer .h1,
-#footer .h2,
-#footer .h3,
-#footer .h4,
-#footer .h5,
-#footer .h6 {
+#footer :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6) {
   color: var(--footer-color);
 }
 .touchscreen #footer {

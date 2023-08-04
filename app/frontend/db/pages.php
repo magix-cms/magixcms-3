@@ -67,6 +67,8 @@ class frontend_db_pages {
                         'p.*',
                         'pc.name_pages',
                         'pc.url_pages',
+                        'pc.link_label_pages',
+                        'pc.link_title_pages',
                         'pc.resume_pages',
                         'pc.content_pages',
                         'pc.published_pages',
@@ -123,31 +125,30 @@ class frontend_db_pages {
 
                     break;
 				case 'rand_pages':
-					$queries = array(
-						array('request'=>'CREATE TEMPORARY TABLE page_map (row_id int not NULL primary key, random_id int not null)'),
-						array('request'=>'CREATE TEMPORARY TABLE random_ids (rand_id int auto_increment not NULL primary key, gen_id int not null)'),
-						array('request'=>'SET @id = 0'),
-						array('request'=>'
-								INSERT INTO page_map 
+					$queries = [
+						['request' => 'CREATE TEMPORARY TABLE page_map (row_id int not NULL primary key, random_id int not null)'],
+						['request' => 'CREATE TEMPORARY TABLE random_ids (rand_id int auto_increment not NULL primary key, gen_id int not null)'],
+						['request' => 'SET @id = 0'],
+						[
+							'request' => '
+								INSERT INTO page_map
 								SELECT @id := @id + 1, p.id_pages 
 								FROM mc_cms_page AS p 
 								JOIN mc_cms_page_content AS pc ON ( p.id_pages = pc.id_pages )
 								JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang ) WHERE pc.published_pages = 1 and lang.iso_lang = :iso',
-							'params'=>array('iso' => $params['iso'])),
-						array('request'=>'INSERT INTO random_ids (gen_id) VALUES '.$params['ids']),
-						array('request'=>"
-						SELECT rows.random_id
-						FROM page_map as rows
-						JOIN random_ids as ids ON(rows.row_id = ids.gen_id)
-					",'fetch'=>true)
-					);
+							'params' => ['iso' => $params['iso']]
+						],
+						['request' => 'INSERT INTO random_ids (gen_id) VALUES '.$params['ids']],
+						['request' => "SELECT rows.random_id FROM page_map as rows JOIN random_ids as ids ON(rows.row_id = ids.gen_id)", 'fetch'=>true]
+					];
 
 					try {
 						$result = component_routing_db::layer()->transaction($queries);
 						return $result[5];
 					}
 					catch (Exception $e) {
-						return 'Exception reçue : '.$e->getMessage();
+						if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+						$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 					}
 					break;
 				case 'pages_short':
@@ -157,6 +158,8 @@ class frontend_db_pages {
 								p.id_parent,
 								c.name_pages,
 								c.url_pages,
+								c.link_label_pages,
+								c.link_title_pages,
 								COALESCE(c.seo_title_pages, c.name_pages) as seo_title_pages,
 								lang.iso_lang
 							FROM mc_cms_page AS p
@@ -189,11 +192,12 @@ class frontend_db_pages {
 					$query = "SELECT 
 								p.id_pages,
 								p.id_parent,
-								p.img_pages,
 								p.menu_pages, 
 								p.date_register, 
 								c.name_pages,
 								c.url_pages,
+								c.link_label_pages,
+								c.link_title_pages,
 								c.resume_pages,
 								c.content_pages,
 								c.published_pages,
@@ -250,7 +254,6 @@ class frontend_db_pages {
 				if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
 				$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
 			}
-
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
@@ -259,6 +262,8 @@ class frontend_db_pages {
 								h.*,
 								c.name_pages,
 								c.url_pages,
+								c.link_label_pages,
+								c.link_title_pages,
 								c.resume_pages,
 								c.content_pages,
 								c.published_pages,
@@ -299,6 +304,8 @@ class frontend_db_pages {
                         'h.*',
                         'c.name_pages',
                         'c.url_pages',
+                        'c.link_label_pages',
+                        'c.link_title_pages',
                         'c.resume_pages',
                         'c.content_pages',
                         'c.published_pages',
@@ -377,9 +384,9 @@ class frontend_db_pages {
 				case 'wsEdit':
 					$query = 'SELECT * FROM mc_cms_page WHERE `id_pages` = :id';
 					break;
-				case 'image':
+				/*case 'image':
 					$query = 'SELECT img_pages FROM mc_cms_page WHERE `id_pages` = :id_pages';
-					break;
+					break;*/
 				case 'content':
 					$query = 'SELECT * FROM `mc_cms_page_content` WHERE `id_pages` = :id_pages AND `id_lang` = :id_lang';
 					break;
@@ -423,11 +430,7 @@ class frontend_db_pages {
 	 * @param array $params
 	 * @return bool
 	 */
-	public function insert(array $config, array $params = []) {
-		if (!is_array($config)) return '$config must be an array';
-
-		$query = '';
-
+	public function insert(array $config, array $params = []): bool {
 		switch ($config['type']) {
 		    case 'page':
 				$cond = $params['id_parent'] != NULL ? 'IN ('.$params['id_parent'].')' : 'IS NULL';
@@ -435,8 +438,8 @@ class frontend_db_pages {
 						SELECT :id_parent,COUNT(id_pages),NOW() FROM mc_cms_page WHERE id_parent $cond";
 		    	break;
 		    case 'content':
-				$query = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
-				  		VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
+				$query = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,link_label_pages,link_title_pages,seo_title_pages,seo_desc_pages,published_pages) 
+				  		VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:link_label_pages,:link_title_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
 		    	break;
             case 'newImg':
                 $query = 'INSERT INTO `mc_cms_page_img`(id_pages,name_img,order_img,default_img) 
@@ -446,16 +449,18 @@ class frontend_db_pages {
                 $query = 'INSERT INTO `mc_cms_page_img_content`(id_img,id_lang,alt_img,title_img,caption_img) 
 			  			VALUES (:id_img,:id_lang,:alt_img,:title_img,:caption_img)';
                 break;
+			default:
+				return false;
 		}
-
-		if($query === '') return 'Unknown request asked';
 
 		try {
 			component_routing_db::layer()->insert($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
+			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			return false;
 		}
     }
 
@@ -464,11 +469,7 @@ class frontend_db_pages {
 	 * @param array $params
 	 * @return bool
 	 */
-	public function update(array $config, array $params = []) {
-		if (!is_array($config)) return '$config must be an array';
-
-		$query = '';
-
+	public function update(array $config, array $params = []): bool {
 		switch ($config['type']) {
 			case 'page':
 				$query = 'UPDATE mc_cms_page 
@@ -483,10 +484,12 @@ class frontend_db_pages {
 							name_pages = :name_pages,
 							url_pages = :url_pages,
 							resume_pages = :resume_pages,
-							content_pages=:content_pages,
-							seo_title_pages=:seo_title_pages,
-							seo_desc_pages=:seo_desc_pages, 
-							published_pages=:published_pages
+							content_pages = :content_pages,
+							link_label_pages = :link_label_pages,
+							link_title_pages = :link_title_pages,
+							seo_title_pages = :seo_title_pages,
+							seo_desc_pages = :seo_desc_pages, 
+							published_pages = :published_pages
                 		WHERE id_pages = :id_pages 
                 		AND id_lang = :id_lang';
 				break;
@@ -503,16 +506,18 @@ class frontend_db_pages {
 						SET order_pages = :order_pages
                 		WHERE id_pages = :id_pages';
 				break;
+			default:
+				return false;
 		}
-
-		if($query === '') return 'Unknown request asked';
 
 		try {
 			component_routing_db::layer()->update($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
+			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			return false;
 		}
     }
 
@@ -521,10 +526,7 @@ class frontend_db_pages {
 	 * @param array $params
 	 * @return bool
 	 */
-	public function delete(array $config, array $params = []) {
-		if (!is_array($config)) return '$config must be an array';
-		$query = '';
-
+	public function delete(array $config, array $params = []): bool {
 		switch ($config['type']) {
 			case 'delPages':
 				$query = 'DELETE FROM `mc_cms_page` WHERE `id_pages` IN ('.$params['id'].')';
@@ -537,16 +539,18 @@ class frontend_db_pages {
             case 'delImagesAll':
                 $query = 'DELETE FROM `mc_cms_page_img` WHERE id_pages = :id';
                 break;
+			default:
+				return false;
 		}
-
-		if($query === '') return 'Unknown request asked';
 
 		try {
 			component_routing_db::layer()->delete($query,$params);
 			return true;
 		}
 		catch (Exception $e) {
-			return 'Exception reçue : '.$e->getMessage();
+			if(!isset($this->logger)) $this->logger = new debug_logger(MP_LOG_DIR);
+			$this->logger->log('statement','db',$e->getMessage(),$this->logger::LOG_MONTH);
+			return false;
 		}
     }
 }

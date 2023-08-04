@@ -72,7 +72,7 @@
                      sizes="(min-width: 960px) 1920px, (min-width: 480px) 960px, 480px"
                      srcset="/skin/{$theme}/img/carousel/{$variant}/l_slide-{$k}.jpg 1920w,/skin/{$theme}/img/carousel/{$variant}/m_slide-{$k}.jpg 960w,/skin/{$theme}/img/carousel/{$variant}/s_slide-{$k}.jpg 480w"
                      alt="Slide {$k}"
-                     class="img-responsive{if $lazy} lazyload{/if}"{if $lazy} loading="lazy"{/if}
+                     class="img-responsive{if $k > 1} lazyload" loading="lazy{/if}"
                      width="1920" height="768"/>
             </picture>{/strip}
         </div>

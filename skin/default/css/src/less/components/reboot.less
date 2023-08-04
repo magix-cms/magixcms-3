@@ -13,7 +13,8 @@
 *,
 *:before,
 *:after {
-  .box-sizing(border-box);
+  //.box-sizing(border-box);
+  box-sizing: border-box;
 }
 
 // Root
@@ -151,10 +152,7 @@ button,
 // See https://bugs.webkit.org/show_bug.cgi?id=139848
 // and https://github.com/twbs/bootstrap/issues/11266
 
-input[type="date"],
-input[type="time"],
-input[type="datetime-local"],
-input[type="month"] {
+input:is([type="date"],[type="time"],[type="datetime-local"],[type="month"]) {
   -webkit-appearance: textfield;
 }
 
@@ -280,8 +278,7 @@ a {
     text-decoration: var(--link-deco, @link-decoration);
   }
 
-  &:hover,
-  &:focus {
+  &:is(:hover, :focus) {
     text-decoration: var(--link-hover-deco, @link-hover-decoration);
     color: var(--link-hover-color, @link-hover-color);
   }
@@ -387,14 +384,11 @@ svg {
 // Useful for "Skip to main content" links; see http://www.w3.org/TR/2013/NOTE-WCAG20-TECHS-20130905/G1
 // Credit: HTML5 Boilerplate
 
-.sr-only-focusable {
-  &:active,
-  &:focus {
+.sr-only-focusable:is(:active,:focus) {
     position: static;
     width: auto;
     height: auto;
     margin: 0;
     overflow: visible;
     clip: auto;
-  }
 }

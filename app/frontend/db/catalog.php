@@ -46,14 +46,14 @@ class frontend_db_catalog {
 					break;
 				case 'catLang':
 					$sql = 'SELECT
-						h.id_parent,h.id_cat,c.id_lang,c.name_cat,c.url_cat,lang.iso_lang
+						h.id_parent,h.id_cat,c.id_lang,c.name_cat,c.url_cat,c.link_label_cat,c.link_title_cat,lang.iso_lang
 						FROM mc_catalog_cat AS h
 						JOIN mc_catalog_cat_content AS c ON(h.id_cat = c.id_cat) 
 						JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang) 
 						WHERE h.id_cat = :id AND c.published_cat = 1';
 					break;
 				case 'productLang':
-					$sql = 'SELECT c.* ,cat.name_cat, cat.url_cat, p.*, pc.name_p, pc.url_p, pc.id_lang,lang.iso_lang, pc.last_update
+					$sql = 'SELECT c.* ,cat.name_cat, cat.url_cat, cat.link_label_cat, cat.link_title_cat, p.*, pc.name_p, pc.url_p, pc.link_label_p, pc.link_title_p, pc.id_lang,lang.iso_lang, pc.last_update
 						FROM mc_catalog AS c
 						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
 						JOIN mc_catalog_product AS p ON ( c.id_product = p.id_product )
@@ -105,6 +105,8 @@ class frontend_db_catalog {
                             'COALESCE(catc.alt_img, catc.name_cat) as alt_img',
                             'COALESCE(catc.title_img, catc.alt_img, catc.name_cat) as title_img',
                             'COALESCE(catc.caption_img, catc.title_img, catc.alt_img, catc.name_cat) as caption_img',
+                            'catc.link_label_cat',
+                            'catc.link_title_cat',
                             'catc.seo_title_cat',
                             'catc.seo_desc_cat',
                             'childs.childs',
@@ -210,6 +212,8 @@ class frontend_db_catalog {
        								p.id_parent,
 								   c.name_cat,
 								   c.url_cat,
+								   c.link_label_cat,
+								   c.link_title_cat,
 								   c.seo_title_cat,
 								   lang.iso_lang
 							FROM mc_catalog_cat AS p
@@ -240,11 +244,16 @@ class frontend_db_catalog {
                     $select = ['catalog.*',
                         'cat.name_cat',
                         'cat.url_cat',
+                        'cat.link_label_cat',
+                        'cat.link_title_cat',
                         'p.id_product',
                         'pc.name_p',
                         //'pc.longname_p',
-                        'IFNULL(pc.resume_p,pc.content_p) as resume_p',
+                        'pc.resume_p',
+                        'pc.content_p',
                         'pc.url_p',
+                        'pc.link_label_p',
+                        'pc.link_title_p',
                         'pc.id_lang',
                         'lang.iso_lang',
                         //'pc.last_update',
@@ -384,8 +393,12 @@ class frontend_db_catalog {
 								catalog.id_cat,
 								cat.name_cat,
 								cat.url_cat, 
+								cat.link_label_cat, 
+								cat.link_title_cat, 
 								pc.name_p, 
 								pc.url_p,
+								pc.link_label_p,
+								pc.link_title_p,
 								lang.iso_lang, 
 								pc.seo_title_p
 						FROM mc_catalog AS catalog
@@ -415,12 +428,16 @@ class frontend_db_catalog {
                     $select = ['catalog.*',
                         'cc.name_cat',
                         'cc.url_cat',
+                        'cc.link_label_cat',
+                        'cc.link_title_cat',
                         'p.*',
                         'pc.name_p',
                         'pc.longname_p',
                         'pc.resume_p',
                         'pc.content_p',
                         'pc.url_p',
+                        'pc.link_label_p',
+                        'pc.link_title_p',
                         'pc.id_lang',
                         'lang.iso_lang',
                         'pc.last_update',
@@ -585,6 +602,8 @@ class frontend_db_catalog {
                                 'COALESCE(catc.alt_img, catc.name_cat) as alt_img',
                                 'COALESCE(catc.title_img, catc.alt_img, catc.name_cat) as title_img',
                                 'COALESCE(catc.caption_img, catc.title_img, catc.alt_img, catc.name_cat) as caption_img',
+                               'catc.link_label_cat',
+                               'catc.link_title_cat',
                                'catc.seo_title_cat',
                                'catc.seo_desc_cat',
                                'lang.*'
@@ -627,12 +646,16 @@ class frontend_db_catalog {
                     $select = ['c.*' ,
 							   'cat.name_cat',
 							   'cat.url_cat',
+							   'cat.link_label_cat',
+							   'cat.link_title_cat',
 							   'p.*',
 							   'pc.name_p',
 							   'pc.longname_p',
 							   'pc.resume_p',
 							   'pc.content_p',
 							   'pc.url_p',
+							   'pc.link_label_p',
+							   'pc.link_title_p',
 							   'pc.id_lang',
 							   'pc.seo_title_p',
 							   'pc.seo_desc_p',

@@ -108,6 +108,10 @@ class frontend_model_pages extends frontend_db_pages {
 					'id' => $row['id_pages'],
 					'url' => $row['url_pages']
 				]);
+				$data['link'] = [
+					'label' => $row['link_label_pages'],
+					'title' => $row['link_title_pages']
+				];
 				$data['active'] = false;
 				if (!empty($current) && $row['id_pages'] == $current['controller']['id']) $data['active'] = true;
 

@@ -8,8 +8,7 @@
 }
 
 .menu {
-	.dropdown,
-	.megadropdown {
+	:is(.dropdown,.megadropdown) {
 		min-width: 100%;
 		position: absolute;
 		padding: 5px 0;
@@ -36,7 +35,7 @@
 			}
 		}
 
-		&:hover, &:focus {
+		&:is(:hover, :focus) {
 			.dp-menu();
 		}
 	}
@@ -52,9 +51,8 @@
 
 .has-dropdown {
 	position: relative;
-	&:hover, &:focus {
-		& + .dropdown,
-		& + .megadropdown {
+	&:is(:hover, :focus) {
+		& + :is(.dropdown,.megadropdown) {
 			.dp-menu();
 		}
 	}

@@ -210,12 +210,37 @@
                     <label for="content[{$id}][content_p]">{#content#|ucfirst} :</label>
                     <textarea name="content[{$id}][content_p]" id="content[{$id}][content_p]" class="form-control mceEditor">{call name=cleantextarea field=$page.content[{$id}].content_p}</textarea>
                 </div>
+
+                <div class="form-group">
+                    <button class="btn collapsed btn-collapse" role="button" data-toggle="collapse" href="#link-{$id}" aria-expanded="true" aria-controls="link-{$id}">
+                        <span class="fa"></span> {#custom_link#|ucfirst}
+                    </button>
+                </div>
+                <div id="link-{$id}" class="collapse">
+                    <div class="row">
+                        <div class="col-ph-12 col-sm-8">
+                            <div class="form-group">
+                                <label for="content[{$id}][link_label_p]">{#custom_link_label#} :</label>
+                                <textarea class="form-control" id="content[{$id}][link_label_p]" name="content[{$id}][link_label_p]" cols="70" rows="3">{$page.content[{$id}].link_label_p}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-ph-12 col-sm-8">
+                            <div class="form-group">
+                                <label for="content[{$id}][link_title_p]">{#custom_link_title#} :</label>
+                                <textarea class="form-control" id="content[{$id}][link_title_p]" name="content[{$id}][link_title_p]" cols="70" rows="3">{$page.content[{$id}].link_title_p}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <button class="btn collapsed btn-collapse" role="button" data-toggle="collapse" data-parent="#accordion" href="#metas-{$id}" aria-expanded="true" aria-controls="metas-{$id}">
                         <span class="fa"></span> {#display_metas#|ucfirst}
                     </button>
                 </div>
-                <div id="metas-{$id}" class="collapse" role="tabpanel" aria-labelledby="heading{$id}">
+                <div id="metas-{$id}" class="collapse">
                     <div class="row">
                         <div class="col-ph-12 col-sm-8">
                             <div class="form-group">

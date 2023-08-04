@@ -21,15 +21,7 @@
 }
 
 .container {
-	@media (min-width: .breakpoint(md)[min]) {
-		max-width: @container-md;
-	}
-	@media (min-width: .breakpoint(lg)[min]) {
-		max-width: @container-lg;
-	}
-	@media (min-width: .breakpoint(xl)[min]) {
-		max-width: @container-xl;
-	}
+	max-width: var(--container-mw);
 }
 
 // Row
