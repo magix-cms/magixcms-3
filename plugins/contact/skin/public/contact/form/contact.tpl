@@ -18,7 +18,7 @@
         <label for="email" class="is_empty">{#pn_contact_mail#|ucfirst}*&nbsp;:</label>
     </div>
     <div class="form-group">
-        <input id="phone" type="tel" name="msg[phone]" placeholder="{#ph_contact_phone#|ucfirst}" class="form-control phone" pattern="{literal}^((?=[0-9\+ \(\)-]{9,20})(\+)?\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3}(-| )?\d{1,3})${/literal}" maxlength="20" />
+        <input id="phone" type="tel" name="msg[phone]" placeholder="{#ph_contact_phone#|ucfirst}" class="form-control phone" maxlength="20" />
         <label for="phone" class="is_empty">{#pn_contact_phone#|ucfirst}&nbsp;:</label>
     </div>
     {if $contact_config.address_enabled}

@@ -39,4 +39,15 @@
         'defer' => ["/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}form{if $setting.mode !== 'dev'}.min{/if}.js"]
     ]}
     {if {$lang} !== "en"}{$js_files['defer'][] = "/libjs/vendor/localization/messages_{$lang}.js"}{/if}
+    {*
+    {$js_files = [
+    'group' => ['vanilla_form'],
+    'normal' => [],
+    'defer' => [
+    "/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}notifier{if $setting.mode !== 'dev'}.min{/if}.js",
+    "/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}niceforms{if $setting.mode !== 'dev'}.min{/if}.js",
+    "/skin/{$theme}/js/{if $setting.mode === 'dev'}src/{/if}vanilla_form{if $setting.mode !== 'dev'}.min{/if}.js"]
+    ]}
+    {if $lang !== "en"}{$basejs['defer'][] = "/libjs/vendor/validate_loc/messages_{$lang}.js"}{/if}
+    *}
 {/block}
