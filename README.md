@@ -1,5 +1,5 @@
 # [Magix cms 3](http://www.magix-cms.com/)
-Magix CMS dans sa version 3, incluant une nouvelle librairie et de nouvelles fonctionnalités.
+Magix CMS dans sa version 3, un cms optimisé pour le référencement.
 
 ![logo-magix_cms](https://user-images.githubusercontent.com/356674/31891050-82862b34-b805-11e7-9d10-84066a7474dc.png)
 
