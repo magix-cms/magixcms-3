@@ -320,7 +320,7 @@ class plugins_contact_public extends plugins_contact_db {
 
 			// --- Check the google captcha if needed
 			if (key_exists('recaptcha',$this->mods) && $this->mods['recaptcha']->active && !$this->mods['recaptcha']->getRecaptcha()) {
-				$this->notify('warning','captcha');
+				$this->getNotify('error','captcha');
 				return;
 			}
 
