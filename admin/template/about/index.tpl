@@ -31,8 +31,8 @@
                 <li role="presentation"{if $tab == 'text'} class="active"{/if}>
                     <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=text{else}#info_text{/if}" aria-controls="info_text"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#text#}</a>
                 </li>
-                <li role="presentation"{if $tab == 'page'} class="active"{/if}>
-                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=page{else}#info_page{/if}" aria-controls="info_page"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#info_page#}</a>
+                <li role="presentation"{if $tab == 'pages'} class="active"{/if}>
+                    <a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&tab=pages{else}#info_page{/if}" aria-controls="info_page"{if !$smarty.get.plugin} role="tab" data-toggle="tab"{/if}>{#info_page#}</a>
                 </li>
                 {foreach $setTabsPlugins as $key => $value}
                     <li role="presentation" {if $smarty.get.plugin eq $value.name}class="active"{/if}><a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&plugin={$value.name}" aria-controls="plugins-{$value.name}" role="tab">{$value.title}</a></li>
@@ -61,7 +61,7 @@
                 <div role="tabpanel" class="tab-pane{if $tab == 'text'} active{/if}" id="info_text">
                     {include file="about/form/text.tpl"}
                 </div>
-                <div role="tabpanel" class="tab-pane{if $tab == 'page'} active{/if}" id="info_page">
+                <div role="tabpanel" class="tab-pane{if $tab == 'pages'} active{/if}" id="info_page">
                     <p class="text-right">
                         {#nbr_pages#|ucfirst}: {if !empty($pages)}{$pages|count}{else}0{/if} <a href="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=addpage" title="{#add_pages#}" class="btn btn-link">
                             <span class="fa fa-plus"></span> {#add_pages#|ucfirst}
@@ -69,7 +69,7 @@
                     </p>
                     {if $smarty.get.search}{$sortable = false}{else}{$sortable = true}{/if}
                     {*{include file="section/form/table-form-2.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="pages"}*}
-                    {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_pages' ajax_form=true activation=true sortable=$sortable controller="about" subcontroller="pages" change_offset=true}
+                    {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_pages' activation=true sortable=$sortable controller="about" subcontroller="pages" change_offset=true}
                 </div>
                 {/if}
                 {foreach $setTabsPlugins as $key => $value}{if $smarty.get.plugin eq $value.name}

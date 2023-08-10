@@ -132,7 +132,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{$url}/{baseadmin}/index.php?controller=about&tab=page">
+                    <a href="{$url}/{baseadmin}/index.php?controller=about&tab=pages">
                         <span class="fa fa-file"></span> {#info_page#}
                     </a>
                 </li>

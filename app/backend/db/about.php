@@ -95,16 +95,15 @@ class backend_db_about {
 										JOIN mc_about_page_content AS c USING ( id_pages )
 										JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 										LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
-										LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+										LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages AND ca.id_lang = c.id_lang) 
 										WHERE c.id_lang = :default_lang $cond
-										GROUP BY p.id_pages 
 									ORDER BY p.order_pages".$limit;
 						}
 					}
 					break;
 				case 'pagesChild':
 					$cond = '';
-					if(isset($config['search']) && is_array($config['search']) && !empty($config['search'])) {
+					if(is_array($config['search']) && !empty($config['search'])) {
 						$nbc = 0;
 						foreach ($config['search'] as $key => $q) {
 							if($q !== '') {
@@ -134,9 +133,8 @@ class backend_db_about {
 								JOIN mc_about_page_content AS c USING ( id_pages )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
-								LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
-								WHERE p.id_parent = :id $cond
-								GROUP BY p.id_pages";
+								LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages AND ca.id_lang = c.id_lang ) 
+								WHERE p.id_parent = :id $cond";
 					break;
 				case 'pagesSelect':
 					$query = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages

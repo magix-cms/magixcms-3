@@ -279,7 +279,7 @@ class backend_controller_about extends backend_db_about{
 			$results = $this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',false,true);
 		}
 
-		$assign = $this->tableconfig[(($ajax || $this->edit) ? 'parent' : 'all')];
+		$assign = $this->tableconfig[($this->edit ? 'parent' : 'all')];
 
 		if($ajax) {
 			$params['section'] = 'pages';

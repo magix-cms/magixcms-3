@@ -72,7 +72,18 @@ class backend_db_news {
 							}
 						}
 					}
-					$query = "SELECT c.id_news,c.name_news,c.content_news,p.img_news,c.link_label_news,c.link_title_news,c.seo_title_news, c.seo_desc_news,c.last_update,c.date_publish,c.published_news
+					$query = "SELECT 
+								c.id_news,
+								c.name_news,
+								c.content_news,
+								p.img_news,
+								c.link_label_news,
+								c.link_title_news,
+								c.seo_title_news, 
+								c.seo_desc_news,
+								c.last_update,
+								c.date_publish,
+								c.published_news
 							FROM mc_news AS p
 							JOIN mc_news_content AS c USING(id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)

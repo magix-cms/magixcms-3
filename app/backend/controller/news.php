@@ -3,17 +3,17 @@ class backend_controller_news extends backend_db_news {
     public $edit, $action, $tabs, $search, $plugin, $controller, $lang;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $modelPlugins,$makeFiles,$finder,$routingUrl;
     public $id_news,$content,$news,$img,$id_lang,$name_tag,$del_img,$ajax,$tableaction,$tableform,$iso,$name_img;
-	public $tableconfig = array(
+	public $tableconfig = [
 		'id_news',
 		'name_news',
 		'content_news' => ['type' => 'bin', 'input' => null],
 		'img_news' => ['type' => 'bin', 'input' => null, 'class' => ''],
-        'seo_title_news' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
-        'seo_desc_news' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
+		'seo_title_news' => ['title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null],
+		'seo_desc_news' => ['title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null],
 		'last_update' => ['title' => 'last_update', 'input' => ['type' => 'text', 'class' => 'date-input']],
 		'date_publish',
 		'published_news'
-	);
+	];
 
     /**
      * backend_controller_news constructor.

@@ -239,13 +239,8 @@ class backend_model_data extends backend_db_scheme{
 				$pre = strstr($name, '_', true);
 
 				if(is_array($info)) {
-					if(isset($info['col'])) {
-						$key = $info['col'];
-					} else {
-						$key = $name;
-					}
-
-					$newScheme[$name] = $scheme[$key];
+					$key = $info['col'] ?? $name;
+					if(key_exists($key, $scheme)) $newScheme[$name] = $scheme[$key];
 
 					if(isset($info['title'])) {
 						if($info['title'] == 'pre') {
