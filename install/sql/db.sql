@@ -591,10 +591,10 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product` (
   `id_product` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `price_p` decimal(20,2) NOT NULL DEFAULT '0.00',
   `reference_p` varchar(32) DEFAULT NULL,
-  `width_p` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `height_p` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `depth_p` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `weight_p` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `width_p` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `height_p` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `depth_p` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `weight_p` decimal(10,2) NOT NULL DEFAULT '0.00',
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_product`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
