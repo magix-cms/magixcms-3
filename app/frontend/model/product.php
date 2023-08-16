@@ -118,6 +118,12 @@ class frontend_model_product {
 			$data['iso']       = $row['iso_lang'];
 			$data['price']     = $row['price_p'] ?? null;
 			$data['reference'] = $row['reference_p'] ?? null;
+            $data['properties'] = [
+                'width' => $row['width_p'] ?? null,
+                'height' => $row['height_p'] ?? null,
+                'depth' => $row['depth_p'] ?? null,
+                'weight' => $row['weight_p'] ?? null
+            ];
 			$data['content']   = $row['content_p'] ?? null;
 			$data['resume']    = $row['resume_p'] ?? (($row['content_p']) ? $string_format->clearHTMLTemplate($row['content_p']) : '');
 			$data['order']     = $row['order_p'] ?? null;

@@ -16,6 +16,7 @@
                 <h2 class="panel-heading h5">{#edit_product#|ucfirst}</h2>
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" {if !$smarty.get.plugin && !$smarty.get.tab}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}{else}#general{/if}" aria-controls="general" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#text#}</a></li>
+                    <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'properties'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tab=properties{else}#properties{/if}" aria-controls="properties" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#properties#|ucfirst}</a></li>
                     <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'images'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tab=images{else}#images{/if}" aria-controls="images" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#images#|ucfirst}</a></li>
                     <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'cat'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tab=cat{else}#cat{/if}" aria-controls="cat" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>{#categories#|ucfirst}</a></li>
                     <li role="presentation" {if !$smarty.get.plugin && $smarty.get.tab === 'similar'}class="active"{/if}><a href="{if $smarty.get.plugin}{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_product}&tab=similar{else}#similar{/if}" aria-controls="similar" role="tab" {if !$smarty.get.plugin}data-toggle="tab"{/if}>similar</a></li>
@@ -32,6 +33,9 @@
                     {if !$smarty.get.plugin}
                     <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && !$smarty.get.tab} active{/if}" id="general">
                         {include file="catalog/product/form/edit.tpl" controller="product"}
+                    </div>
+                    <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'properties'} active{/if}" id="properties">
+                        {include file="catalog/product/form/properties.tpl" controller="product"}
                     </div>
                     <div role="tabpanel" class="tab-pane{if !$smarty.get.plugin && $smarty.get.tab === 'images'} active{/if}" id="images">
                         {*<pre>{$images|print_r}</pre>*}

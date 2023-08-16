@@ -1,6 +1,6 @@
 <?php
 class backend_controller_product extends backend_db_product {
-	public $edit, $action, $tabs, $search;
+	public $edit, $action, $tabs, $search, $tab;
 	protected $message, $template, $header, $progress, $data, $modelLanguage, $collectionLanguage, $order, $upload, $config, $imagesComponent, $dbCategory,$routingUrl;
 	public $controller,$id_product, $id_img, $parent_id, $content, $productData, $imgData, $img_multiple, $editimg, $product_cat, $parent, $default_cat,$product_id, $id_product_2,$ajax,$tableaction,$tableform,$iso,$name_img,$plugin,$tables,
         $columns, $module, $assign;
@@ -45,6 +45,7 @@ class backend_controller_product extends backend_db_product {
 		if (http_request::isGet('action')) $this->action = $formClean->simpleClean($_GET['action']);
 		elseif (http_request::isPost('action')) $this->action = $formClean->simpleClean($_POST['action']);
         if (http_request::isGet('tabs')) $this->tabs = $formClean->simpleClean($_GET['tabs']);
+        if (http_request::isGet('tab')) $this->tab = $formClean->simpleClean($_GET['tab']);
 		if (http_request::isGet('editimg')) $this->editimg = $formClean->numeric($_GET['editimg']);
 		if (http_request::isGet('parentid')) $this->parent_id = $formClean->numeric($_GET['parentid']);
         if (http_request::isGet('product_id')) $this->product_id = $formClean->numeric($_GET['product_id']);
@@ -520,6 +521,7 @@ class backend_controller_product extends backend_db_product {
 		switch ($data['type']) {
 			case 'product':
 			case 'content':
+            case 'properties':
 			case 'img':
             case 'imgContent':
 			//case 'img':
@@ -912,6 +914,30 @@ class backend_controller_product extends backend_db_product {
 								else {
                                     usleep(200000);
                                     $this->progress->sendFeedback(['message' => $this->template->getConfigVars('creating_thumbnails_error'), 'progress' => 100, 'status' => 'error', 'error_code' => 'error_data']);
+                                }
+                            }else{
+                                if(isset($this->tab)){
+                                    switch ($this->tab){
+                                        case 'properties':
+                                            $this->productData['width'] = !empty($this->productData['width']) ? number_format(str_replace(",", ".", $this->productData['width']), 2, '.', '') : '0';
+                                            $this->productData['weight'] = !empty($this->productData['weight']) ? number_format(str_replace(",", ".", $this->productData['weight']), 2, '.', '') : '0';
+                                            $this->productData['depth'] = !empty($this->productData['depth']) ? number_format(str_replace(",", ".", $this->productData['depth']), 2, '.', '') : '0';
+                                            $this->productData['height'] = !empty($this->productData['height']) ? number_format(str_replace(",", ".", $this->productData['height']), 2, '.', '') : '0';
+
+                                            $this->upd(array(
+                                                'type' => 'properties',
+                                                'data' => array(
+                                                    'id_product' => $this->id_product,
+                                                    'width_p' => $this->productData['width'],
+                                                    'weight_p' => $this->productData['weight'],
+                                                    'depth_p' => $this->productData['depth'],
+                                                    'height_p' => $this->productData['height']
+                                                )
+                                            ));
+                                            $this->message->json_post_response(true, 'update', array('result' => $this->id_product));
+
+                                            break;
+                                    }
                                 }
                             }
                         }

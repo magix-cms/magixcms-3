@@ -390,6 +390,14 @@ class backend_db_product {
 							WHERE id_product = :id_product 
                 		AND id_lang = :id_lang';
 				break;
+            case 'properties':
+                $query = 'UPDATE mc_catalog_product SET 
+                          width_p = :width_p, 
+                          weight_p = :weight_p, 
+                          depth_p = :depth_p, 
+                          height_p= :height_p
+                        WHERE id_product = :id_product';
+                break;
 			case 'imgContent':
 				$query = 'UPDATE mc_catalog_product_img_content 
 						SET 
