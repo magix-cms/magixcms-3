@@ -329,8 +329,8 @@ class backend_db_product {
 						VALUES (:price_p,:reference_p,NOW())';
 				break;
 			case 'newContent':
-				$query = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,link_label_p,link_title_p,seo_title_p,seo_desc_p,published_p) 
-			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:link_label_p,:link_title_p,:seo_title_p,:seo_desc_p,:published_p)';
+				$query = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,seo_title_p,seo_desc_p,published_p) 
+			  			VALUES (:id_product,:id_lang,:name_p,:longname_p,:url_p,:resume_p,:content_p,:seo_title_p,:seo_desc_p,:published_p)';
 				break;
 			case 'newImg':
 				$query = 'INSERT INTO `mc_catalog_product_img`(id_product,name_img,order_img,default_img) 
