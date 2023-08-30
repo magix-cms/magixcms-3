@@ -243,7 +243,7 @@ class component_files_images {
 	 * @param int|null $id
 	 * @return array|false
 	 */
-	public function setModuleImage(string $module, string $attribute, string $name = '', int $id = null): array {
+	public function setModuleImage(string $module, string $attribute, string $name = '', int $id = null, string $alt = '', string $title = ''): array {
 		$image = [];
 		$config = $this->getConfigItems($module,$attribute);
 		if(!empty($name)) {
@@ -252,6 +252,8 @@ class component_files_images {
 				$image[$v['type']] = $this->setImageData($imgPath,$name,$v);
 			}
 			$image['name'] = $name;
+            $image['alt'] = $alt;
+            $image['title'] = $title;
 		}
 		else {
 			$defaultPath = 'img/default/'.$module.($attribute !== $module ? '/'.$attribute.'/' : '/');

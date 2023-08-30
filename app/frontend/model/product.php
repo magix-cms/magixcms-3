@@ -130,7 +130,7 @@ class frontend_model_product {
 			if (isset($row['img'])) {
 				if(is_array($row['img'])) {
 					foreach ($row['img'] as $val) {
-						$image = $this->imagesComponent->setModuleImage('catalog','product',$val['name_img'],$row['id_product']);
+						$image = $this->imagesComponent->setModuleImage('catalog','product',$val['name_img'],$row['id_product'],$val['alt_img'] ?? $row['name_p'], $val['title_img'] ?? $row['name_p']);
 						if($val['default_img']) {
 							$data['img'] = $image;
 							$image['default'] = 1;
@@ -142,7 +142,7 @@ class frontend_model_product {
 			}
 			else {
 				if(isset($row['name_img'])) {
-					$data['img'] = $this->imagesComponent->setModuleImage('catalog','product',$row['name_img'],$row['id_product']);
+					$data['img'] = $this->imagesComponent->setModuleImage('catalog','product',$row['name_img'],$row['id_product'],$row['alt_img'] ?? $row['name_p'], $row['title_img'] ?? $row['name_p']);
 				}
 				$data['img']['default'] = $this->imagesComponent->setModuleImage('catalog','product');
 			}

@@ -118,7 +118,7 @@ class frontend_model_pages extends frontend_db_pages {
 				if (isset($row['img'])) {
 					if(is_array($row['img'])) {
 						foreach ($row['img'] as $val) {
-							$image = $this->imagesComponent->setModuleImage('pages','pages',$val['name_img'],$row['id_pages']);
+							$image = $this->imagesComponent->setModuleImage('pages','pages',$val['name_img'],$row['id_pages'],$val['alt_img'] ?? $row['name_pages'], $val['title_img'] ?? $row['name_pages']);
 							if($val['default_img']) {
 								$data['img'] = $image;
 								$image['default'] = 1;
@@ -130,7 +130,7 @@ class frontend_model_pages extends frontend_db_pages {
 				}
 				else {
 					if(isset($row['name_img'])) {
-						$data['img'] = $this->imagesComponent->setModuleImage('pages','pages',$row['name_img'],$row['id_pages']);
+						$data['img'] = $this->imagesComponent->setModuleImage('pages','pages',$row['name_img'],$row['id_pages'],$row['alt_img'] ?? $row['name_pages'], $row['title_img'] ?? $row['name_pages']);
 					}
 					$data['img']['default'] = $this->imagesComponent->setModuleImage('pages','pages');
 				}
