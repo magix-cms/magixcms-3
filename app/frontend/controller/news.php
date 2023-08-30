@@ -433,7 +433,13 @@ class frontend_controller_news extends frontend_db_news {
     private function getData($type) {
         switch($type){
             case 'tag':
-            	$this->getItems('tag',$this->tag,'one');
+            	$data = $this->getItems('tag',$this->tag,'one',false);
+                $tag = [];
+                $tag['id'] = $data['id'];
+                $tag['name'] = $data['name'];
+                $tag['seo'] = $this->modelNews->tagSeo($data['name']);
+                $this->template->assign('tag',$tag);
+                $this->template->breadcrumb->addItem($this->template->getConfigVars('theme').': '.$data['name']);
                 break;
             case 'id':
                 $data = $this->getBuildNewsItems();
@@ -546,8 +552,7 @@ class frontend_controller_news extends frontend_db_news {
                     '/'.$this->template->lang.($this->template->is_amp() ? '/amp' : '').'/news/',
                     $this->template->getConfigVars('news')
                 );
-                $this->template->breadcrumb->addItem($this->template->getConfigVars('theme').': '.$this->tag);
-				$this->getData('tag');
+                $this->getData('tag');
 				$this->template->display('news/tag.tpl');
 			}
 			else {

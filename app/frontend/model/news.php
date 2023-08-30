@@ -83,14 +83,29 @@ class frontend_model_news extends frontend_db_news {
     /**
      * @return array
      */
-	public function rootSeo() {
-		$rootSeo = array();
+	public function rootSeo() :array {
+		$rootSeo = [];
 		$this->seo->level = 'root';
 		$seoTitle = $this->seo->replace_var_rewrite('','','title');
 		$rootSeo['title'] = $seoTitle ? $seoTitle : $this->template->getConfigVars('news');
 		$seoDesc = $this->seo->replace_var_rewrite('','','description');
 		$rootSeo['description'] = $seoDesc ? $seoDesc : $this->template->getConfigVars('last_news');
 		return $rootSeo;
+    }
+
+    /**
+     * @param string $name
+     * @return array
+     */
+    public function tagSeo(string $name) :array{
+        $tagSeo = [];
+        $this->seo->level = 'parent';
+        $seoTitle = $this->seo->replace_var_rewrite($name,'','title');
+        $tagSeo['title'] = $seoTitle ? $seoTitle : $name;
+
+        $seoDesc = $this->seo->replace_var_rewrite($name,'','description');
+        $tagSeo['description'] = $seoDesc ? $seoDesc : $name;
+        return $tagSeo;
     }
 
     /**
