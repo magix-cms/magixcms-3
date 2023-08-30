@@ -1,6 +1,6 @@
 {extends file="layout.tpl"}
-{block name="title" nocache}{$rootSeo['title']}{/block}
-{block name="description" nocache}{$rootSeo['description']}{/block}
+{block name="title" nocache}{if isset($smarty.get.page)}{$rootSeo['title']|cat:' - page '|cat:$smarty.get.page}{else}{$rootSeo['title']}{/if}{/block}
+{block name="description" nocache}{if isset($smarty.get.page)}{$rootSeo['description']|cat:' - page '|cat:$smarty.get.page}{else}{$rootSeo['description']}{/if}{/block}
 {block name='body:id'}news{/block}
 {block name='body:class'}news-page{/block}
 {block name="webType"}CollectionPage{/block}
