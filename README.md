@@ -3,7 +3,7 @@ Magix CMS dans sa version 3, un cms optimisé pour le référencement.
 
 ![logo-magix_cms](https://user-images.githubusercontent.com/356674/31891050-82862b34-b805-11e7-9d10-84066a7474dc.png)
 
-![Website](https://img.shields.io/website?url=https%3A%2F%2Fwww.magix-cms.com)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fwww.magix-cms.com)](https://www.magix-cms.com)
 
 ### License
 
