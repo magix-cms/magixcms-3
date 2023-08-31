@@ -3,6 +3,8 @@ Magix CMS dans sa version 3, un cms optimisé pour le référencement.
 
 ![logo-magix_cms](https://user-images.githubusercontent.com/356674/31891050-82862b34-b805-11e7-9d10-84066a7474dc.png)
 
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fwww.magix-cms.com)
+
 ### License
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) 
@@ -66,49 +68,7 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
  * [less](http://lesscss.org/usage/) >= 4.1.3
  * [less-plugin-glob](https://github.com/just-boris/less-plugin-glob) >= 3.0.0
     * Requires: [globby](https://www.npmjs.com/package/globby) >= 9.1.0
- * [less-plugin-clean-css](https://github.com/less/less-plugin-clean-css) >= 1.5.1 *deprecated use clean-css-cli instead*
  * [clean-css-cli](https://www.npmjs.com/package/clean-css-cli) >= 5.3.0
- * [uglify-js](https://www.npmjs.com/package/uglify-js) >= 3.3.21 *deprecated use terser-js*
- * [uglify-es](https://www.npmjs.com/package/uglify-es) >= 3.3.9 *deprecated use terser-js*
  * [terser](https://github.com/terser-js/terser) >= 5.7.1 (ou terser-js à la place de Uglify)
  * [sass](https://sass-lang.com/install) >= 1.20.1
  * [mjml](https://mjml.io/download) >= 4.12.0
- 
-#### Script Plugins
-<pre>
-file:plugins/*/js/src/*.js
-</pre>
-#### Plugin Style
-<pre>
-file:plugins/*/css/src/*.less&&!file:plugins/*/skin//*
-</pre>
-
-#### AMP
-<pre>
-file:skin/*/amp/css/less//*
-</pre>
-
-#### Mobile
-<pre>
-file:skin/*/css/**/*.less&&!file:skin/*/css/src/less/tablet//*&&!file:skin/*/css/src/less/tablet.less&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less&&!file:skin/*/css/src/less/tinymce.less
-</pre>
-
-#### Tablet
-<pre>
-file:skin/*/css/**/*.less&&!file:skin/*/css/src/less/desktop//*&&!file:skin/*/css/src/less/desktop.less&&!file:skin/*/css/src/less/tinymce.less
-</pre>
-
-#### Desktop
-<pre>
-file:file:skin/*/css/**/*.less&&!file:skin/*/css/src/less/tinymce.less
-</pre>
-
-#### Script
-<pre>
-file:skin/*/js/src/*.js
-</pre>
-
-#### Script Vendors
-<pre>
-file:skin/*/js/vendor/src/*.js
-</pre>
