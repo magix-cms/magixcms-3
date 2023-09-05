@@ -1,6 +1,6 @@
 {capture name="privateLink"}<a href="{#private_data_url#}" class="targetblank" title="{#private_data_title#}">{#private_data_label#}</a>{/capture}
 {capture name="cookieLink"}<a href="{#cookie_page_url#}" class="targetblank" title="{#cookie_page_title#}">{#cookie_read_label#|ucfirst}</a>{/capture}
-{if !consentAsked}<div id="rgpd-compliance" class="fade in hide">
+{if !$consentAsked}<div id="rgpd-compliance" class="fade in hide">
     <p>{sprintf({#cookie_text#},$smarty.capture.cookieLink,$smarty.capture.privateLink)}</p>
     <div class="btns">
         <button class="btn btn-link refuseRgpd" type="button">{#refuse_cookies#}</button>
