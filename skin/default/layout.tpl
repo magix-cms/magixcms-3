@@ -48,7 +48,7 @@
     {$css_files = []}
     {block name="styleSheet" nocache}{/block}
     {include file="section/brick/css.tpl" css_files=array_merge($basecss,$css_files)}{/nocache}
-    {if $setting['analytics'] && $smarty.cookies.analyticCookies === 'true'}{include file="section/brick/analytics.tpl" aid=$setting['analytics']}{/if}
+    {if $setting['analytics'] && $consentedCookies.analyticCookies}{include file="section/brick/analytics.tpl" aid=$setting['analytics']}{/if}
     {if in_array($browser,['Safari','Opera'])}<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>{/if}
 </head>
@@ -101,7 +101,7 @@
 ]}
 {if $touch}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}viewport{if !$dev}.min{/if}.js"}{/if}
 {*if $smarty.cookies.embedCookies === 'true'}<script type="module" src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.4.0/lite-youtube.js"></script>{/if*}
-{if $smarty.cookies.embedCookies === 'true'}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}liteytplayer{if !$dev}.min{/if}.js"}{/if}
+{if $consentedCookies.embedCookies}{$basejs['defer'][] = "/skin/{$theme}/js/{if $dev}src/{/if}liteytplayer{if !$dev}.min{/if}.js"}{/if}
 {$js_files = []}
 {block name="scripts"}{/block}
 {include file="section/brick/scripts.tpl" js_files=array_merge_recursive($basejs,$js_files) jquery=$jquery}{/nocache}
