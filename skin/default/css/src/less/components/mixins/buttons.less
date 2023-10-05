@@ -29,13 +29,30 @@
 	//--btn-focus-border-color: darken(@border, 25%);
 }
 
-.button-gradient-variant(@color; @bg-color-1; @bg-color-2;) {
+/*.button-gradient-variant(@color; @bg-color-1; @bg-color-2;) {
 	.button-variant(@color; @bg-color-1; transparent);
 	background-repeat: repeat-x;
 	--btn-bg-img: linear-gradient(45deg, @bg-color-1, @bg-color-2);
 	--btn-hover-bg-img: linear-gradient(45deg, darken(@bg-color-1, 10%), darken(@bg-color-2, 10%));
 	--btn-ahf-bg-img: linear-gradient(45deg, darken(@bg-color-1, 17%), darken(@bg-color-2, 17%));
 	border: none;
+}*/
+.button-gradient(@hv-color; @hv-txt; @base-color: @text-color; @base-txt: @text-color) {
+	//background-repeat: repeat-x;
+	--btn-bg: transparent;
+	//--btn-brd: @base-color;
+	--btn-hover-bg-color: transparent;
+	--btn-ahf-bg-color: transparent;
+	--btn-color: @hv-txt;
+	--btn-bg-img: linear-gradient(45deg, @hv-color, @base-color);
+	//--btn-hover-bg-img: linear-gradient(45deg, @hv-color, @base-txt);
+	//--btn-ahf-bg-img: linear-gradient(45deg, @hv-color, @base-txt);
+	//.auto-transition(.25s);
+	//border: none;
+	&:hover {
+		--btn-color: @hv-txt;
+		--btn-bg-img: linear-gradient(45deg, @hv-color, @base-txt);
+	}
 }
 
 // Button invert Style
@@ -94,6 +111,8 @@
 	@class: ~".btn-@{name}";
 
 	@var: ~'--@{name}-color';
+	@lighter: ~'--@{name}-color-lighter';
+	@light: ~'--@{name}-color-light';
 	//@ch: ~"--@{name}-color-h";
 	//@cs: ~"--@{name}-color-s";
 	//@cl: ~"--@{name}-color-l";
@@ -112,6 +131,9 @@
 				//&-gradient {
 				//	.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));
 				//}
+				&-gradient {
+					.button-gradient(var(@var); @txt-color; var(@lighter); var(@light) );
+				}
 				&-outline {
 					.button-invert(var(@var); @txt-color; var(@var); var(@var));
 				}

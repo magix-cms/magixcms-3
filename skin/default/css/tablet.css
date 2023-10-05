@@ -2177,6 +2177,17 @@ button.close {
   --btn-brd-l: 45.09803922%;
   --btn-brd-a: 1;
 }
+.btn.btn-main-gradient {
+  --btn-bg: transparent;
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--main-color), var(--main-color-lighter));
+}
+.btn.btn-main-gradient:hover {
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--main-color), var(--main-color-light));
+}
 .btn.btn-main-outline {
   --btn-color: var(--main-color);
   --btn-bg: transparent;
@@ -2298,6 +2309,17 @@ button.close {
   --btn-brd-s: 2.00803213%;
   --btn-brd-l: 51.17647059%;
   --btn-brd-a: 1;
+}
+.btn.btn-sd-gradient {
+  --btn-bg: transparent;
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--sd-color), var(--sd-color-lighter));
+}
+.btn.btn-sd-gradient:hover {
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--sd-color), var(--sd-color-light));
 }
 .btn.btn-sd-outline {
   --btn-color: var(--sd-color);
@@ -2421,6 +2443,17 @@ button.close {
   --btn-brd-l: 20%;
   --btn-brd-a: 1;
 }
+.btn.btn-dark-gradient {
+  --btn-bg: transparent;
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--dark-color), var(--dark-color-lighter));
+}
+.btn.btn-dark-gradient:hover {
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--dark-color), var(--dark-color-light));
+}
 .btn.btn-dark-outline {
   --btn-color: var(--dark-color);
   --btn-bg: transparent;
@@ -2542,6 +2575,17 @@ button.close {
   --btn-brd-s: 38.72340426%;
   --btn-brd-l: 53.92156863%;
   --btn-brd-a: 1;
+}
+.btn.btn-green-gradient {
+  --btn-bg: transparent;
+  --btn-hover-bg-color: transparent;
+  --btn-ahf-bg-color: transparent;
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--green-color), var(--green-color-lighter));
+}
+.btn.btn-green-gradient:hover {
+  --btn-color: var(--white);
+  --btn-bg-img: linear-gradient(45deg, var(--green-color), var(--green-color-light));
 }
 .btn.btn-green-outline {
   --btn-color: var(--green-color);
