@@ -1798,6 +1798,8 @@ tbody.collapse.in {
     box-shadow: none;
   }
   .navbar-collapse.collapse {
+    display: block !important;
+    height: auto !important;
     padding-bottom: 0;
     overflow: visible !important;
   }
