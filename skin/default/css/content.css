@@ -817,11 +817,11 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   --btn-hover-bg-color: transparent;
   --btn-ahf-bg-color: transparent;
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--main-color), var(--main-color-lighter));
+  --btn-bg-img: linear-gradient(90deg, var(--main-color) 20%, var(--main-color-lighter) 100%);
 }
 .btn.btn-main-gradient:hover {
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--main-color), var(--main-color-light));
+  --btn-bg-img: linear-gradient(90deg, var(--main-color-dark) 20%, var(--main-color-light) 100%);
 }
 .btn.btn-main-outline {
   --btn-color: var(--main-color);
@@ -950,11 +950,11 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   --btn-hover-bg-color: transparent;
   --btn-ahf-bg-color: transparent;
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--sd-color), var(--sd-color-lighter));
+  --btn-bg-img: linear-gradient(90deg, var(--sd-color) 20%, var(--sd-color-lighter) 100%);
 }
 .btn.btn-sd-gradient:hover {
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--sd-color), var(--sd-color-light));
+  --btn-bg-img: linear-gradient(90deg, var(--sd-color-dark) 20%, var(--sd-color-light) 100%);
 }
 .btn.btn-sd-outline {
   --btn-color: var(--sd-color);
@@ -1083,11 +1083,11 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   --btn-hover-bg-color: transparent;
   --btn-ahf-bg-color: transparent;
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--dark-color), var(--dark-color-lighter));
+  --btn-bg-img: linear-gradient(90deg, var(--dark-color) 20%, var(--dark-color-lighter) 100%);
 }
 .btn.btn-dark-gradient:hover {
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--dark-color), var(--dark-color-light));
+  --btn-bg-img: linear-gradient(90deg, var(--dark-color-dark) 20%, var(--dark-color-light) 100%);
 }
 .btn.btn-dark-outline {
   --btn-color: var(--dark-color);
@@ -1216,11 +1216,11 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   --btn-hover-bg-color: transparent;
   --btn-ahf-bg-color: transparent;
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--green-color), var(--green-color-lighter));
+  --btn-bg-img: linear-gradient(90deg, var(--green-color) 20%, var(--green-color-lighter) 100%);
 }
 .btn.btn-green-gradient:hover {
   --btn-color: var(--white);
-  --btn-bg-img: linear-gradient(45deg, var(--green-color), var(--green-color-light));
+  --btn-bg-img: linear-gradient(90deg, var(--green-color-dark) 20%, var(--green-color-light) 100%);
 }
 .btn.btn-green-outline {
   --btn-color: var(--green-color);

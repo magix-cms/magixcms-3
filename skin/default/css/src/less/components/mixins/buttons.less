@@ -37,21 +37,21 @@
 	--btn-ahf-bg-img: linear-gradient(45deg, darken(@bg-color-1, 17%), darken(@bg-color-2, 17%));
 	border: none;
 }*/
-.button-gradient(@hv-color; @hv-txt; @base-color: @text-color; @base-txt: @text-color) {
+.button-gradient(@hv-color; @hv-txt; @base-color: @text-color; @base-txt: @text-color; @dark-color: @text-color) {
 	//background-repeat: repeat-x;
 	--btn-bg: transparent;
 	//--btn-brd: @base-color;
 	--btn-hover-bg-color: transparent;
 	--btn-ahf-bg-color: transparent;
 	--btn-color: @hv-txt;
-	--btn-bg-img: linear-gradient(45deg, @hv-color, @base-color);
+	--btn-bg-img: linear-gradient(90deg, @hv-color 20%, @base-color 100%);
 	//--btn-hover-bg-img: linear-gradient(45deg, @hv-color, @base-txt);
 	//--btn-ahf-bg-img: linear-gradient(45deg, @hv-color, @base-txt);
 	//.auto-transition(.25s);
 	//border: none;
 	&:hover {
 		--btn-color: @hv-txt;
-		--btn-bg-img: linear-gradient(45deg, @hv-color, @base-txt);
+		--btn-bg-img: linear-gradient(90deg, @dark-color 20%, @base-txt 100%);
 	}
 }
 
@@ -113,6 +113,7 @@
 	@var: ~'--@{name}-color';
 	@lighter: ~'--@{name}-color-lighter';
 	@light: ~'--@{name}-color-light';
+	@dark: ~'--@{name}-color-dark';
 	//@ch: ~"--@{name}-color-h";
 	//@cs: ~"--@{name}-color-s";
 	//@cl: ~"--@{name}-color-l";
@@ -132,7 +133,7 @@
 				//	.button-gradient-variant(@txt-color, extract(@color, 2), extract(@color, 4));
 				//}
 				&-gradient {
-					.button-gradient(var(@var); @txt-color; var(@lighter); var(@light) );
+					.button-gradient(var(@var); @txt-color; var(@lighter); var(@light); var(@dark) );
 				}
 				&-outline {
 					.button-invert(var(@var); @txt-color; var(@var); var(@var));
