@@ -248,6 +248,8 @@ class frontend_db_catalog {
                         'cat.link_title_cat',
                         'p.id_product',
                         'pc.name_p',
+                        'p.price_p',
+                        'p.reference_p',
                         //'pc.longname_p',
                         'pc.resume_p',
                         'pc.content_p',
