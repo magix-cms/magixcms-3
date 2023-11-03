@@ -32,7 +32,7 @@
                         {/if}
                     {/strip}
                 </div>
-                <a class="all-hover" href="{$item.url}" title="{$item.seo.description}" itemprop="url">{$item.seo.title}</a>
+                <a class="all-hover" href="{$item.url}" title="{if $item.link.title}{$item.link.title}{else}{$item.seo.description}{/if}" itemprop="url">{if $item.link.label}{$item.link.label}{else}{$item.seo.title}{/if}</a>
             </div>
         </div>
     {/foreach}

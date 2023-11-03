@@ -19,41 +19,51 @@
         mobile: {
             //theme: 'mobile',
             menubar: true,
-            plugins: [ 'lists', 'autolink' ],
-            toolbar: [ 'undo', 'bold', 'italic', 'styleselect' ]
+            plugins:  'lists autolink responsivefilemanager' ,
+            toolbar: 'formatselect undo bold italic styleselect responsivefilemanager'
         },
         relative_urls : false,
         //convert_urls: false,
         entity_encoding : "raw",
+        promotion: false,
         plugins: [
-            'hr advlist autolink lists clists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen textpattern wordcount directionality codesample',
-            'insertdatetime media table paste template imagetools codesample youtube loremipsum responsivefilemanager mc_pages mc_cat mc_news mc_product lazyloadimage cryptmail tabpanel'
+            'advlist', 'lists','clists','link','image','charmap','preview','anchor',
+            'searchreplace','visualblocks','code','fullscreen','wordcount','directionality','codesample',
+            'media','table','template','codesample','youtube','loremipsum','responsivefilemanager',
+            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel'
         ],
-        toolbar1: 'fullscreen | code | removeformat | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | link unlink | bullist numlist | blockquote | forecolor | mc_pages mc_cat mc_news mc_product',
-        imagetools_toolbar: "imageoptions",
+        toolbar: 'link unlink image code | blocks | '
+            +'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | '
+            +'bullist numlist | blockquote | removeformat forecolor | mc_pages mc_cat mc_news mc_product | fullscreen',
         menu : {
             view   : {title : 'View'  , items : 'code | visualaid visualblocks | preview fullscreen'},
             edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall | searchreplace'},
-            insert : {title : 'Insert', items : 'link anchor | image media youtube responsivefilemanager | tabpanel | template | table | hr | loremipsum | codesample'},
-            format : {title : 'Format', items : 'formats | lazyloadimage cryptmail'},
+            insert : {title : 'Insert', items : 'link anchor | image media youtube | tabpanel | template | table | hr | loremipsum | codesample'},
+            format : {title : 'Format', items : 'styles | lazyloadimage cryptmail'},
             table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
             tools  : {title : 'Tools' , items : 'code'}
         },
         menubar: 'view edit insert format table tools',
         image_advtab: true,
+        /*Flmngr: {
+            apiKey: "FLMNFLMN",
+            urlFileManager: '/'+baseadmin+'/template/js/vendor/flmngr/flmngr.php',
+            urlFiles: '/media/'
+        },*/
+        file_picker_types: 'file image media',
+        file_picker_callback: function() { },
         external_filemanager_path: '/'+baseadmin+'/template/js/vendor/filemanager/',
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
             "filemanager" : '/'+baseadmin+'/template/js/vendor/filemanager/plugin.min.js'
         },
-        min_height: 350,
+        min_height: 400,
         image_dimensions: true,
         image_class_list: [
             {title: 'None', value: ''},
             {title: 'Image Responsive', value: 'img-responsive'},
-            {title: 'Image float left', value: 'img-float float-left'},
-            {title: 'Image float right', value: 'img-float float-right'},
+            /*{title: 'Image float left', value: 'img-float float-left'},
+            {title: 'Image float right', value: 'img-float float-right'},*/
             {title: 'Image rounded', value: 'img-rounded'},
             {title: 'Image circle', value: 'img-circle'},
             {title: 'Image thumbnail', value: 'img-thumbnail'}
@@ -62,6 +72,7 @@
             {title: 'None', value: ''},
             {title: 'TargetBlank', value: 'targetblank'},
             {title: 'btn-main', value: 'btn btn-main'},
+            {title: 'btn-main-gradient', value: 'btn btn-main-gradient'},
             {title: 'btn-main-outline', value: 'btn btn-main-outline'},
             {title: 'btn-main-invert', value: 'btn btn-main-invert'},
             {title: 'btn-sd', value: 'btn btn-sd'},
@@ -97,124 +108,148 @@
         },
         style_formats: [
             {title: 'Link', items: [
-                {title: 'TargetBlank', selector: 'a', classes: 'targetblank'}
-            ]},
+                    {title: 'TargetBlank', selector: 'a', classes: 'targetblank'}
+                ]},
             {title: 'Image', items: [
-                {title: 'Lightbox simple', selector: 'a', classes: 'img-zoom',
-                    attributes: {
-                        'data-fancybox-group': 'lightbox'
-                    }
-                },
-                {title: 'Lightbox galery', selector: 'a', classes: 'img-gallery',
-                    attributes: {
-                        'data-fancybox-group': 'lightbox'
-                    }
-                },
-                {title: 'Image Responsive', selector: 'img', classes: 'img-responsive'},
-                {title: 'Image float left', selector: 'img', classes: 'img-float float-left'},
-                {title: 'Image float right', selector: 'img', classes: 'img-float float-right'},
-                {title: 'Image center', selector: 'img', classes: 'center-block'},
-                {title: 'Image rounded', selector: 'img', classes: 'img-rounded'},
-                {title: 'Image circle', selector: 'img', classes: 'img-circle'},
-                {title: 'Image thumbnail', selector: 'img', classes: 'img-thumbnail'}
-            ]},
+                    {title: 'Lightbox simple', selector: 'a', classes: 'img-zoom',
+                        attributes: {
+                            'data-fancybox-group': 'lightbox'
+                        }
+                    },
+                    {title: 'Lightbox galery', selector: 'a', classes: 'img-gallery',
+                        attributes: {
+                            'data-fancybox-group': 'lightbox'
+                        }
+                    },
+                    {title: 'Image Responsive', selector: 'img', classes: 'img-responsive'},
+                    /*{title: 'Image float left', selector: 'img', classes: 'img-float float-left'},
+                    {title: 'Image float right', selector: 'img', classes: 'img-float float-right'},
+                    {title: 'Image center', selector: 'img', classes: 'text-center'},*/
+                    {title: 'Image rounded', selector: 'img', classes: 'img-rounded'},
+                    {title: 'Image circle', selector: 'img', classes: 'img-circle'},
+                    {title: 'Image thumbnail', selector: 'img', classes: 'img-thumbnail'}
+                ]},
             {title: 'Table', items: [
-                {title: 'Table', selector: 'table', classes: 'table'},
-                {title: 'Table Condensed', selector: 'table', classes: 'table-condensed'},
-                {title: 'Table Bordered', selector: 'table', classes: 'table-bordered'},
-                {title: 'Table Hover', selector: 'table', classes: 'table-hover'},
-                {title: 'Table Striped', selector: 'table', classes: 'table-striped'},
-                {title: 'TR', items: [
-                    {title : 'Active', selector : 'tr', classes : 'active'},
-                    {title : 'Success', selector : 'tr', classes : 'success'},
-                    {title : 'Warning', selector : 'tr', classes : 'warning'},
-                    {title : 'Danger', selector : 'tr', classes : 'danger'},
-                    {title : 'Info', selector : 'tr', classes : 'info'}
+                    {title: 'Table', selector: 'table', classes: 'table'},
+                    {title: 'Table Condensed', selector: 'table', classes: 'table-condensed'},
+                    {title: 'Table Bordered', selector: 'table', classes: 'table-bordered'},
+                    {title: 'Table Hover', selector: 'table', classes: 'table-hover'},
+                    {title: 'Table Striped', selector: 'table', classes: 'table-striped'},
+                    {title: 'TR', items: [
+                            {title : 'Active', selector : 'tr', classes : 'active'},
+                            {title : 'Success', selector : 'tr', classes : 'success'},
+                            {title : 'Warning', selector : 'tr', classes : 'warning'},
+                            {title : 'Danger', selector : 'tr', classes : 'danger'},
+                            {title : 'Info', selector : 'tr', classes : 'info'}
+                        ]},
+                    {title: 'TD', items: [
+                            {title : 'Active', selector : 'td', classes : 'active'},
+                            {title : 'Success', selector : 'td', classes : 'success'},
+                            {title : 'Warning', selector : 'td', classes : 'warning'},
+                            {title : 'Danger', selector : 'td', classes : 'danger'},
+                            {title : 'Info', selector : 'td', classes : 'info'}
+                        ]},
+                    {title: "Blocks", items: [
+                            {title: "Div responsive", block: "div", classes: 'table-responsive'}
+                        ]}
                 ]},
-                {title: 'TD', items: [
-                    {title : 'Active', selector : 'td', classes : 'active'},
-                    {title : 'Success', selector : 'td', classes : 'success'},
-                    {title : 'Warning', selector : 'td', classes : 'warning'},
-                    {title : 'Danger', selector : 'td', classes : 'danger'},
-                    {title : 'Info', selector : 'td', classes : 'info'}
-                ]},
-                {title: "Blocks", items: [
-                    {title: "Div responsive", block: "div", classes: 'table-responsive'}
-                ]}
-            ]},
             {title: 'Helper classes', items: [
-                {title: "Blocks", items: [
-                    {title: "Div center", block: "div", classes: 'center-block'}
+                    {title: "Blocks", items: [
+                            {title: "Div center", block: "div", classes: 'center-block text-center'}
+                        ]},
+                    {title: "Header", items: [
+                            {title: "Title 1", selector: "h1,h2,h3,h4,h5,h6,p", classes: 'h1'},
+                            {title: "Title 2", selector: "h2,h1,h3,h4,h5,h6,p", classes: 'h2'},
+                            {title: "Title 3", selector: "h3,h1,h2,h4,h5,h6,p", classes: 'h3'},
+                            {title: "Title 4", selector: "h4,h1,h2,h3,h5,h6,p", classes: 'h4'},
+                            {title: "Title 5", selector: "h5,h1,h2,h3,h4,h6,p", classes: 'h5'},
+                            {title: "Title 6", selector: "h6,h1,h2,h3,h4,h5,p", classes: 'h6'}
+                        ]},
+                    {title: "Alignment", items: [
+                            {title: "Text Center", selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table", classes: 'text-center'},
+                            {title: "Clearfix", selector: "p,h1,h2,h3,h4,h5,h6,div,ul,ol,table", classes: 'clearfix'}
+                        ]},
+                    {title: "Paragraph", items: [
+                            {title: "Text Center", block: "p", classes: 'text-center'},
+                            {title: "Text Muted", block: "p", classes: 'text-muted'},
+                            {title: "Text Primary", block: "p", classes: 'text-primary'},
+                            {title: "Text Success", block: "p", classes: 'text-success'},
+                            {title: "Text Info", block: "p", classes: 'text-info'},
+                            {title: "Text Warning", block: "p", classes: 'text-warning'},
+                            {title: "Text Danger", block: "p", classes: 'text-danger'},
+                            {title: "Bg Primary", block: "p", classes: 'bg-primary'},
+                            {title: "Bg Success", block: "p", classes: 'bg-success'},
+                            {title: "Bg Info", block: "p", classes: 'bg-info'},
+                            {title: "Bg Warning", block: "p", classes: 'bg-warning'},
+                            {title: "Bg Danger", block: "p", classes: 'bg-danger'}
+                        ]},
+                    {title: "List", items: [
+                            {title: "Bullet list", block: "ul", classes: 'bullet-list'},
+                            {title: 'Circle List', block: "ul", classes: 'circle-list'},
+                            {title: 'Square List', block: "ul", classes: 'square-list'},
+                            {title: 'Arrow List', block: "ul", classes: 'arrow-list'},
+                            {title: 'Label List', block: "ul", classes: 'label-list'}
+                        ]}
                 ]},
-                {title: "Header", items: [
-                    {title: "Title 1", selector: "h1,h2,h3,h4,h5,h6,p", classes: 'h1'},
-                    {title: "Title 2", selector: "h2,h1,h3,h4,h5,h6,p", classes: 'h2'},
-                    {title: "Title 3", selector: "h3,h1,h2,h4,h5,h6,p", classes: 'h3'},
-                    {title: "Title 4", selector: "h4,h1,h2,h3,h5,h6,p", classes: 'h4'},
-                    {title: "Title 5", selector: "h5,h1,h2,h3,h4,h6,p", classes: 'h5'},
-                    {title: "Title 6", selector: "h6,h1,h2,h3,h4,h5,p", classes: 'h6'}
-                ]},
-                {title: "Alignment", items: [
-                    {title: "Text Center", selector: "p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table", classes: 'text-center'},
-                    {title: "Clearfix", selector: "p,h1,h2,h3,h4,h5,h6,div,ul,ol,table", classes: 'clearfix'}
-                ]},
-                {title: "Paragraph", items: [
-                    {title: "Text Center", block: "p", classes: 'text-center'},
-                    {title: "Text Muted", block: "p", classes: 'text-muted'},
-                    {title: "Text Primary", block: "p", classes: 'text-primary'},
-                    {title: "Text Success", block: "p", classes: 'text-success'},
-                    {title: "Text Info", block: "p", classes: 'text-info'},
-                    {title: "Text Warning", block: "p", classes: 'text-warning'},
-                    {title: "Text Danger", block: "p", classes: 'text-danger'},
-                    {title: "Bg Primary", block: "p", classes: 'bg-primary'},
-                    {title: "Bg Success", block: "p", classes: 'bg-success'},
-                    {title: "Bg Info", block: "p", classes: 'bg-info'},
-                    {title: "Bg Warning", block: "p", classes: 'bg-warning'},
-                    {title: "Bg Danger", block: "p", classes: 'bg-danger'}
-                ]},
-                {title: "List", items: [
-                    {title: "Bullet list", block: "ul", classes: 'bullet-list'}
-                ]}
-            ]},
             {title: 'Alert', items: [
-                {title: "Blocks", items: [
-                    {title: "Alert success", block: "div", classes: 'alert alert-success'},
-                    {title: "Alert info", block: "div", classes: 'alert alert-info'},
-                    {title: "Alert warning", block: "div", classes: 'alert alert-warning'},
-                    {title: "Alert danger", block: "div", classes: 'alert danger-info'}
+                    {title: "Blocks", items: [
+                            {title: "Alert success", block: "div", classes: 'alert alert-success'},
+                            {title: "Alert info", block: "div", classes: 'alert alert-info'},
+                            {title: "Alert warning", block: "div", classes: 'alert alert-warning'},
+                            {title: "Alert danger", block: "div", classes: 'alert danger-info'}
+                        ]},
+                    {title: "Paragraph", items: [
+                            {title: "Alert success", block: "p", classes: 'alert alert-success'},
+                            {title: "Alert info", block: "p", classes: 'alert alert-info'},
+                            {title: "Alert warning", block: "p", classes: 'alert alert-warning'},
+                            {title: "Alert danger", block: "p", classes: 'alert danger-info'}
+                        ]},
+                    {title: "Link", items: [
+                            {title: 'Alert link', selector: 'a', classes: 'alert-link'}
+                        ]}
                 ]},
-                {title: "Paragraph", items: [
-                    {title: "Alert success", block: "p", classes: 'alert alert-success'},
-                    {title: "Alert info", block: "p", classes: 'alert alert-info'},
-                    {title: "Alert warning", block: "p", classes: 'alert alert-warning'},
-                    {title: "Alert danger", block: "p", classes: 'alert danger-info'}
-                ]},
-                {title: "Link", items: [
-                    {title: 'Alert link', selector: 'a', classes: 'alert-link'}
-                ]}
-            ]},
             {title: 'Embed', items: [
-                {title: "Blocks", items: [
-                    {title: "Media 16:9", block: "div", classes: 'embed-responsive embed-responsive-16by9'},
-                    {title: "Media 4:3", block: "div", classes: 'embed-responsive embed-responsive-4by3'}
+                    {title: "Blocks", items: [
+                            {title: "Media 16:9", block: "div", classes: 'embed-responsive embed-responsive-16by9'},
+                            {title: "Media 4:3", block: "div", classes: 'embed-responsive embed-responsive-4by3'}
+                        ]}
                 ]}
-            ]}
         ],
         cbullet_styles: [
             'default',
-            {title: 'disc', style: 'disc'},
+            /*{title: 'disc', style: 'disc'},
             {title: 'circle', style: 'circle'},
-            {title: 'square', style: 'square'},
-            {title: 'Bullet List', classes: 'bullet-list'},
-            {title: 'Circle List', classes: 'circle-list'},
-            {title: 'Square List', classes: 'square-list'},
-            {title: 'Arrow List', classes: 'arrow-list'},
-            {title: 'Label List', classes: 'label-list'}
+            {title: 'square', style: 'square'},*/
+            {title: 'Bullet List', block: "ul", classes: 'bullet-list'},
+            {title: 'Circle List', block: "ul", classes: 'circle-list'},
+            {title: 'Square List', block: "ul", classes: 'square-list'},
+            {title: 'Arrow List', block: "ul", classes: 'arrow-list'},
+            {title: 'Label List', block: "ul", classes: 'label-list'}
         ],
+        invalid_styles: {
+            'table': 'width height border border-collapse border-width',
+            'tr' : 'width height',
+            'th' : 'width height',
+            'td' : 'width height'
+        },
+        table_class_list: [
+            {title: 'Table', value: 'table'},
+            {title: 'Table Condensed', value: 'table table-condensed'},
+            {title: 'Table Bordered', value: 'table table-bordered'},
+            {title: 'Table Hover', value: 'table table-hover'},
+            {title: 'Table Striped', value: 'table table-striped'},
+        ],
+        //style_formats_merge : true,
+        table_use_colgroups: false,
+        //table_style_by_css: true,
+        table_default_styles: {},
+        table_default_attributes: {
+            class: 'table'
+        },
         templates : '/'+baseadmin+'/index.php?controller=setting&action=getSnippet',
         language : tinyLanguage,
         schema: "html5",
-        extended_valid_elements: "+img[class|src|srcset|sizes|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+iframe[src|width|height|name|align|class],+strong[*]",
+        extended_valid_elements: "+img[class|src|srcset|sizes|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+i[*],+iframe[src|width|height|name|align|class],+strong[*]",
         content_css : content_css
     });
 })( jQuery, window, document );

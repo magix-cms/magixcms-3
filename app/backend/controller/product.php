@@ -20,13 +20,12 @@ class backend_controller_product extends backend_db_product {
 	);*/
 
     /**
-     * backend_controller_catalog constructor.
-     * @param stdClass $t
+     * @param backend_model_template|null $t
      * @throws Exception
      */
-	public function __construct($t = null)
-	{
-		$this->template = $t ? $t : new backend_model_template;
+    public function __construct(backend_model_template $t = null) {
+        $this->template = $t instanceof backend_model_template ? $t : new backend_model_template;
+
 		$this->message = new component_core_message($this->template);
 		$this->header = new http_header();
 		$this->data = new backend_model_data($this);
@@ -222,13 +221,11 @@ class backend_controller_product extends backend_db_product {
         }
     }
 
-	/**
-	 * @param $ajax
-	 * @return mixed
-	 * @throws Exception
-	 */
-	public function tableSearch($ajax = false)
-	{
+    /**
+     * @param bool $ajax
+     * @return array
+     */
+	public function tableSearch(bool $ajax = false) : array{
 		/*$this->modelLanguage->getLanguage();
 		$defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
 		$results = $this->getItems('pages', array('default_lang' => $defaultLanguage['id_lang']), 'all',false,true);
@@ -345,6 +342,7 @@ class backend_controller_product extends backend_db_product {
 	}
 
 	/**
+     * @deprecated
 	 * @return array
 	 */
 	private function setItemsData()
@@ -364,10 +362,9 @@ class backend_controller_product extends backend_db_product {
 	 * @param $data
 	 * @return array
 	 */
-	private function setItemData($data)
-	{
-		$arr = array();
-		$conf = array();
+	private function setItemData($data) :array{
+		$arr = [];
+		$conf = [];
 
 		foreach ($data as $page) {
 			//$publicUrl = !empty($page['url_p']) ? '/' . $page['iso_lang'] . '/' . $page['id_product'] . '-' . $page['url_p'] . '/' : '';

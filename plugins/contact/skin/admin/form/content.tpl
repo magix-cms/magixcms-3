@@ -1,6 +1,6 @@
 {include file="language/brick/dropdown-lang.tpl"}
 <div class="row">
-    <form id="edit_page" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;tabs=content&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-8">
+    <form id="edit_page" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;tabs=content&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-10">
         <div class="row">
             <div class="col-ph-12">
                 <div class="tab-content">

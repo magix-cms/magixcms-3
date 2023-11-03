@@ -14,7 +14,7 @@
                 {foreach $langs as $id => $iso}
                     <fieldset role="tabpanel" class="tab-pane{if $iso@first} active{/if}" id="lang-{$id}">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-4">
+                            <div class="col-xs-12 col-sm-6">
                                 <div class="form-group">
                                     <label>{#active#|ucfirst}&nbsp;*</label>
                                     <div class="radio">

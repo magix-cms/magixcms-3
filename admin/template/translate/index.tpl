@@ -20,7 +20,7 @@
                 <div class="mc-message"></div>
             </div>
 
-            <form id="edit_translate" action="{$smarty.server.SCRIPT_NAME}" method="get" class="col-xs-6">
+            <form id="edit_translate" action="{$smarty.server.SCRIPT_NAME}" method="get" class="col-xs-8">
                 <input type="hidden" name="controller" value="{$smarty.get.controller}" />
                 <input type="hidden" name="action" value="translate" />
                 <div class="row">

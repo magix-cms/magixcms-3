@@ -42,7 +42,7 @@
                             {include file="form/content.tpl" controller="contact"}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="mail">
-                            {include file="section/form/table-form-2.tpl" idcolumn='id_contact' data=$contact activation=false sortable=false controller="contact"}
+                            {include file="section/form/table-form-3.tpl" idcolumn='id_contact' data=$contact activation=false sortable=false controller="contact"}
                         </div>
                         <div role="tabpanel" class="tab-pane" id="config">
                             <div class="row">
