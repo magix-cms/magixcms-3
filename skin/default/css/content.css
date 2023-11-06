@@ -730,6 +730,12 @@ fieldset[disabled] a.btn {
   pointer-events: none;
 }
 .btn-default {
+  --default-color-h: 0;
+  --default-color-s: 100%;
+  --default-color-l: 100%;
+  --default-color-a: 1;
+  --btn-hover-bg-color: var(--smooth-white);
+  --btn-ahf-bg-color: #fff;
   --btn-color: var(--text-color);
   --btn-bg-h: var(--default-color-h);
   --btn-bg-s: var(--default-color-s);
@@ -739,6 +745,27 @@ fieldset[disabled] a.btn {
   --btn-brd-s: var(--default-brd-s);
   --btn-brd-l: var(--default-brd-l);
   --btn-brd-a: var(--default-brd-a);
+}
+.btn-white {
+  --default-color-h: 0;
+  --default-color-s: 100%;
+  --default-color-l: 100%;
+  --default-color-a: 1;
+  --main-border-h: 204;
+  --main-border-s: 100%;
+  --main-border-l: 28%;
+  --main-border-a: 1;
+  --btn-hover-bg-color: var(--smooth-white);
+  --btn-ahf-bg-color: #fff;
+  --btn-color: var(--main-color);
+  --btn-bg-h: var(--default-color-h);
+  --btn-bg-s: var(--default-color-s);
+  --btn-bg-l: var(--default-color-l);
+  --btn-bg-a: var(--default-color-a);
+  --btn-brd-h: var(--main-border-h);
+  --btn-brd-s: var(--main-border-s);
+  --btn-brd-l: var(--main-border-l);
+  --btn-brd-a: var(--main-border-a);
 }
 .btn-link {
   color: var(--link-color);
@@ -1455,6 +1482,18 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
 }
 .btn-box {
   --btn-border-radius: 0;
+}
+.link-arrow:after {
+  display: inline-block;
+  transform: scale(1, 1.2);
+  content: ">";
+  position: absolute;
+  margin-left: 0.5rem;
+  transition: all 0.35s ease 0s;
+}
+.link-arrow:hover:after {
+  transform: scale(1, 1.5);
+  margin-left: calc(0.5rem + 0.5rem);
 }
 .readmore {
   padding-left: 0;

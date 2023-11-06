@@ -125,6 +125,12 @@
 //	.button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
 //}
 .btn-default {
+	--default-color-h: 0;
+	--default-color-s: 100%;
+	--default-color-l: 100%;
+	--default-color-a: 1;
+	--btn-hover-bg-color: var(--smooth-white);
+	--btn-ahf-bg-color: #fff;
 	//.button-variant(#fff, extract(@main-colors, 3), extract(@main-colors, 3));
 	.button-variant(
 			var(--text-color),
@@ -136,6 +142,30 @@
 			var(--default-brd-s),
 			var(--default-brd-l),
 			var(--default-brd-a)
+	);
+}
+.btn-white {
+	--default-color-h: 0;
+	--default-color-s: 100%;
+	--default-color-l: 100%;
+	--default-color-a: 1;
+	--main-border-h : 204;
+	--main-border-s : 100%;
+	--main-border-l : 28%;
+	--main-border-a : 1;
+	--btn-hover-bg-color: var(--smooth-white);
+	--btn-ahf-bg-color: #fff;
+	//.button-variant(#fff, extract(@main-colors, 3), extract(@main-colors, 3));
+	.button-variant(
+					var(--main-color),
+					var(--default-color-h),
+					var(--default-color-s),
+					var(--default-color-l),
+					var(--default-color-a),
+					var(--main-border-h),
+					var(--main-border-s),
+					var(--main-border-l),
+					var(--main-border-a)
 	);
 }
 .btn-main-theme() {
@@ -313,7 +343,23 @@ each(@theme-color, {
 .btn-box {
 	--btn-border-radius: 0;
 }
+.link-arrow{
+	&:after {
+		display: inline-block;
+		transform: scale(1, 1.2);
+		content: ">";
+		position: absolute;
+		margin-left: .5rem;
+		.auto-transition(.35s);
+	}
 
+	&:hover{
+		&:after {
+			transform: scale(1, 1.5);
+			margin-left: calc(.5rem + .5rem);
+		}
+	}
+}
 .readmore {
 	padding-left: 0;
 	--link-color: var(--text-color);
