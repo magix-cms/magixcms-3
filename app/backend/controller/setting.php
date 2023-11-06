@@ -296,7 +296,7 @@ class backend_controller_setting extends backend_db_setting {
 					$newData = !empty($stData) ? (!empty($files) ? array_merge($stData,$files) : $stData) : $files;
 
 					if (!empty($newData) && is_array($newData)) {
-						asort($newData, SORT_REGULAR);
+						//asort($newData, SORT_REGULAR);
 						$output = '['.implode(',', $newData).']';
 						$this->header->set_json_headers();
 						print $output;

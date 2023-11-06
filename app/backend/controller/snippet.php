@@ -2,7 +2,7 @@
 class backend_controller_snippet extends backend_db_snippet {
     public $edit, $action, $tabs, $search, $controller;
     protected $message, $template, $header, $data, $modelLanguage, $collectionLanguage,
-        $config, $routingUrl,$tableaction,$tableform;
+        $config, $routingUrl,$tableaction,$tableform, $order;
     public $id_snippet, $content, $iso, $del_snippet, $ajax;
 
     public $tableconfig = array(
@@ -59,6 +59,7 @@ class backend_controller_snippet extends backend_db_snippet {
         }
         # JSON LINK (TinyMCE)
         if (http_request::isGet('iso')) $this->iso = $formClean->simpleClean($_GET['iso']);
+        if (http_request::isPost('snippet')) $this->order = $formClean->arrayClean($_POST['snippet']);
     }
     /**
      * Assign data to the defined variable or return the data
@@ -138,6 +139,19 @@ class backend_controller_snippet extends backend_db_snippet {
                     ),
                     $data['data']
                 );
+                break;
+            case 'order':
+                $p = $this->order;
+                for ($i = 0; $i < count($p); $i++) {
+                    parent::update(
+                        array(
+                            'type'=>$data['type']
+                        ),array(
+                            'id_snippet'  => $p[$i],
+                            'order_sp'    => $i + (isset($this->offset) ? ($this->offset + 1) : 0)
+                        )
+                    );
+                }
                 break;
         }
     }
@@ -233,6 +247,15 @@ class backend_controller_snippet extends backend_db_snippet {
 
                         $this->template->assign('page',$setEditData);
                         $this->template->display('snippet/edit.tpl');
+                    }
+                    break;
+                case 'order':
+                    if (isset($this->order)) {
+                        $this->upd(
+                            array(
+                                'type' => 'order'
+                            )
+                        );
                     }
                     break;
                 case 'delete':

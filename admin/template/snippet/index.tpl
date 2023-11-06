@@ -29,7 +29,7 @@
                     <div class="mc-message mc-message-pages">{if isset($message)}{$message}{/if}</div>
                 </div>
                 {*{if isset($scheme)}{$scheme|var_dump}{/if}*}
-                {$sortable = false}
+                {$sortable = true}
                 {include file="section/form/table-form-3.tpl" data=$pages idcolumn='id_snippet' search=false activation=false sortable=$sortable controller="snippet" change_offset=true}
             </div>
         </section>

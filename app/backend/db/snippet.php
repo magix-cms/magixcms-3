@@ -26,7 +26,7 @@ class backend_db_snippet {
                     $query = "SELECT 
 								st.*
 							FROM mc_snippet AS st
-							ORDER BY st.id_snippet DESC".$limit;
+							ORDER BY st.order_sp ASC, st.id_snippet DESC".$limit;
                     break;
 				default:
 					return false;
@@ -72,8 +72,8 @@ class backend_db_snippet {
     public function insert(array $config, array $params = []) {
         switch ($config['type']) {
             case 'page':
-                $query = "INSERT INTO `mc_snippet`(title_sp, description_sp, content_sp, date_register) 
-                        VALUE (:title_sp, :description_sp, :content_sp, NOW())";
+                $query = "INSERT INTO `mc_snippet`(title_sp, description_sp, content_sp, order_sp, date_register) 
+                        VALUE (:title_sp, :description_sp, :content_sp, COUNT(id_snippet), NOW())";
                 break;
 			default:
 				return false;
@@ -106,6 +106,11 @@ class backend_db_snippet {
 
 							WHERE id_snippet = :id_snippet';
                 break;
+            case 'order':
+                $query = 'UPDATE mc_snippet 
+						SET order_sp = :order_sp
+                		WHERE id_snippet = :id_snippet';
+                break;
 			default:
 				return false;
         }
@@ -131,7 +136,7 @@ class backend_db_snippet {
             case 'delPages':
                 $query = 'DELETE FROM mc_snippet 
 						WHERE id_snippet IN ('.$params['id'].')';
-                $params = array();
+                $params = [];
                 break;
 			default:
 				return false;
