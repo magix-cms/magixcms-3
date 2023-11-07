@@ -60,7 +60,7 @@ tinymce.PluginManager.add('mc_news', function(editor, url) {
             _api = showDialog()
         },
         onSetup: (buttonApi) => {
-            const editorEventCallback = (eventApi) => buttonApi.setEnabled(eventApi.element.nodeName === 'IMG');
+            const editorEventCallback = (eventApi) => buttonApi.setEnabled(eventApi.element.nodeName !== 'IMG');
             editor.on('NodeChange', editorEventCallback);
             return (buttonApi) => editor.off('NodeChange', editorEventCallback);
         }
