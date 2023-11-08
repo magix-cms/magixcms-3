@@ -44,8 +44,8 @@
         </div>
     {/if}
     <div class="form-group">
-        <input id="title" type="text" name="msg[title]" placeholder="{#ph_contact_programme#|ucfirst}"  value="{$smarty.post.moreinfo}" class="form-control required" required/>
-        <label for="title"{if !$smarty.post.moreinfo} class="is_empty" {/if}>{#pn_contact_programme#|ucfirst}*&nbsp;:</label>
+        <input id="title" type="text" name="msg[title]" placeholder="{#ph_contact_programme#|ucfirst}"  value="{$smarty.get.moreinfo}" class="form-control required" required/>
+        <label for="title"{if !$smarty.get.moreinfo} class="is_empty" {/if}>{#pn_contact_programme#|ucfirst}*&nbsp;:</label>
     </div>
     {if isset($contact_config.recaptcha) && $contact_config.recaptcha}
         {include file="recaptcha/form/recaptcha.tpl" action="contact"}
