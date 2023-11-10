@@ -73,7 +73,7 @@ class backend_db_snippet {
         switch ($config['type']) {
             case 'page':
                 $query = "INSERT INTO `mc_snippet`(title_sp, description_sp, content_sp, order_sp, date_register) 
-                        VALUE (:title_sp, :description_sp, :content_sp, COUNT(id_snippet), NOW())";
+                        SELECT :title_sp, :description_sp, :content_sp, COUNT(id_snippet), NOW() FROM mc_snippet";
                 break;
 			default:
 				return false;
