@@ -85,7 +85,7 @@ class plugins_contact_public extends plugins_contact_db {
 	 */
 	private function loadModules() {
 		if(!isset($this->module)) $this->module = new frontend_model_module($this->template);
-		if(empty($this->mods)) $this->mods = $this->module->load_module('account');
+		if(empty($this->mods)) $this->mods = $this->module->load_module('contact');
 	}
 
     /**
