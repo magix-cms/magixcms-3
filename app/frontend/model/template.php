@@ -252,8 +252,9 @@ class frontend_model_template {
 	 * @return string
 	 */
 	public function currentLanguage(): string {
+        $accept_language = !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'fr';
 		$lang = '';
-		$user_langs = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$user_langs = explode(",",$accept_language);
 
 		foreach($user_langs as $ul) {
 			$iso = strtolower(substr(chop($ul),0,2));
