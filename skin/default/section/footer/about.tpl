@@ -4,6 +4,7 @@
             <meta itemprop="name" content="{$companyData.name}"/>
             <meta itemprop="url" content="{$url}"/>
             <meta itemprop="brand" content="{$companyData.name}"/>
+            <meta itemprop="priceRange" content="€€€"/>
             {if $companyData.tva}<meta itemprop="vatID" content="{$companyData.tva}">{/if}
             {if $about != null}
                 <meta itemprop="sameAs" content="{$url}/{$lang}/about/"/>
@@ -24,21 +25,23 @@
             </div>
             {if $companyData.contact.phone}
                 <meta itemprop="telephone" content="{$companyData.contact.phone}"/>
+            {elseif $companyData.contact.mobile}
+                <meta itemprop="telephone" content="{$companyData.contact.mobile}"/>
             {/if}
             {if $companyData.socials != null}
                 {if $companyData.socials.facebook != null || $companyData.socials.google != null || $companyData.socials.linkedin != null}
                     <div id="socials-links">
                         {if $companyData.socials.facebook != null}
-                            <meta itemprop="sameAs" content="{$companyData.socials.facebook}"/>
+                            <meta itemprop="sameAs" content="{$companyData.socials.facebook.url}"/>
                         {/if}
                         {if $companyData.socials.twitter != null}
-                            <meta itemprop="sameAs" content="{$companyData.socials.twitter}"/>
+                            <meta itemprop="sameAs" content="{$companyData.socials.twitter.url}"/>
                         {/if}
                         {if $companyData.socials.google != null}
-                            <meta itemprop="sameAs" content="{$companyData.socials.google}"/>
+                            <meta itemprop="sameAs" content="{$companyData.socials.google.url}"/>
                         {/if}
                         {if $companyData.socials.linkedin != null}
-                            <meta itemprop="sameAs" content="{$companyData.socials.linkedin}"/>
+                            <meta itemprop="sameAs" content="{$companyData.socials.linkedin.url}"/>
                         {/if}
                     </div>
                 {/if}
