@@ -224,8 +224,10 @@ class frontend_controller_news extends frontend_db_news {
 						'type' => 'AND',
 						'condition' => 'mntr.id_tag IN('.implode(',',$this->tags).')'
 					];
-					$params['group'] = [['mn.id_news']];
-					$params['having'] = [['COUNT(mn.id_news) = '.count($this->tags)]];
+					if(!$count) {
+						$params['group'] = [['mn.id_news']];
+						$params['having'] = [['COUNT(mn.id_news) = ' . count($this->tags)]];
+					}
 				}
 				elseif (!empty($this->tag)) {
 					$conditions[] = [
