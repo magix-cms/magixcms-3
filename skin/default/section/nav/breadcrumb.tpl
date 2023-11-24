@@ -1,6 +1,8 @@
 <div id="breadcrumb-container">
+    {*{if count($breadcrumbs) > 0 }
+    {if $icon }{$breadcrumbs[0]['name'] = "<i class=\"material-icons ico ico-{$icon}\"></i><span class=\"hidden\">{$breadcrumbs[0]['name']}</span>"}{/if}*}
     {if count($breadcrumbs) > 0 }
-    {if $icon }{$breadcrumbs[0]['name'] = "<i class=\"material-icons ico ico-{$icon}\"></i><span class=\"hidden\">{$breadcrumbs[0]['name']}</span>"}{/if}
+    {if $icon }{$breadcrumbs[0]['name'] = "<i class=\"material-icons ico ico-{$icon}\"></i><span class=\"hidden\">{#home#}</span>"}{/if}
     <nav id="breadcrumb" class="breadcrumb container" itemprop="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
         <ol>
         {foreach $breadcrumbs as $breadcrumb}
