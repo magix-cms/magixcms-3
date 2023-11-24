@@ -184,7 +184,7 @@ class frontend_model_template {
                     'share' => $this->share,
                     'companyData' => $this->companyData
                 ];
-                $fh = fopen($systemCacheFile, 'x+');
+                $fh = fopen($systemCacheFile, 'wb+');
                 if(is_writable($systemCacheFile)) {
                     fwrite($fh, json_encode($system) . PHP_EOL);
                     fclose($fh);
