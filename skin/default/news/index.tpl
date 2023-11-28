@@ -69,9 +69,10 @@
                                             <a href="{$year.url}" title="{$year.year}" {*data-toggle="collapse" data-target="#mth-{$year.year}"*}>{$year.year}</a>
                                             <ul id="mth-{$year.year}" class="collapse">
                                             {foreach $year.months as $month}
+                                                {$strdate = $year.year|cat:"-%02d-01"}
                                                 {strip}<li{if ($smarty.get.year && $smarty.get.year == $year.year) && $smarty.get.month && $smarty.get.month == '%02d'|string_format:$month['month']} class="active"{/if}>
-                                                    <a href="{$month.url}" title="{$year.year|cat:"-%02d-01"|string_format:$month['month']|date_format:'%B'|ucfirst}">{$year.year|cat:"-%02d-01"|string_format:$month['month']|date_format:'%B'|ucfirst} <small>(&thinsp;{$month['nbr']}&thinsp;)</small></a>
-                                                </li>{/strip}
+                                                    <a href="{$month.url}" title="{$month['month']|string_format:$strdate|magic_date:'%B'|ucfirst}">{$month['month']|string_format:$strdate|magic_date:'%B'|ucfirst} <small>(&thinsp;{$month['nbr']}&thinsp;)</small></a>
+                                                    </li>{/strip}
                                             {/foreach}
                                             </ul>
 {*                                            </div>*}

@@ -541,7 +541,8 @@ class frontend_controller_news extends frontend_db_news {
                     $this->template->breadcrumb->addItem(ucfirst($this->template->getConfigVars('date')).': '.strftime('%e %B %Y',$date->getTimestamp()));
                 }
                 if(isset($this->month)) {
-                    $monthName = strftime("%B", mktime(0, 0, 0, $this->month, 1, 2000));
+                    $monthName = date("%B", mktime(0, 0, 0, $this->month, 1, 2000));
+                    //$monthName = strftime("%B", mktime(0, 0, 0, $this->month, 1, 2000));
                     $this->template->breadcrumb->addItem(ucfirst($this->template->getConfigVars('month')).': '.$monthName.' '.$this->year);
                 }
                 elseif(isset($this->year)) $this->template->breadcrumb->addItem(ucfirst($this->template->getConfigVars('year')).': '.$this->year);
