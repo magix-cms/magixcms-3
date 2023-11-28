@@ -92,6 +92,7 @@ class component_format_date {
 				'abv' => strftime('%a',$timestamp)
 			],
 			'suffix' => $datetime->format('S'),
+            'iso' => $datetime->format('c')
 		];
 
 		date_default_timezone_set('UTC');

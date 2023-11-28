@@ -13,8 +13,8 @@
     <header id="header-news">
         <h1 itemprop="headline">{$news.name}</h1>
         <small>
-            <time itemprop="datePublished" datetime="{$news.date.publish.date}">{$news.date.publish.timestamp|magic_date:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
-            <meta itemprop="dateModified" content="{$news.date.update.date}">
+            <time itemprop="datePublished" datetime="{$news.date.publish.iso}">{$news.date.publish.timestamp|magic_date:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
+            <meta itemprop="dateModified" content="{$news.date.update.iso}">
         </small>
     </header>
 {/block}
