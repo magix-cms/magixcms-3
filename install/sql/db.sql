@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `mc_admin_session` (
   `id_admin_session` varchar(150) NOT NULL,
   `id_admin` smallint(5) UNSIGNED NOT NULL,
   `keyuniqid_admin` varchar(50) NOT NULL,
-  `ip_session` varchar(25) NOT NULL,
+  `ip_session` varchar(50) NOT NULL,
   `browser_admin` varchar(50) NOT NULL,
   `last_modified_session` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `expires` timestamp NULL DEFAULT NULL,
