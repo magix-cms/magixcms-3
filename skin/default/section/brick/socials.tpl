@@ -26,9 +26,9 @@
     {if !empty($pages.imgs)}
         {foreach $pages.imgs as $img}
             {if $img.default}
-                {$meta["og:image"] = {''|cat:{$url}|cat:{$img.img.medium.src}}}
-                {$meta["og:image:width"] = {$img.img.medium.w}}
-                {$meta["og:image:height"] = {$img.img.medium.h}}
+                {$meta["og:image"] = {''|cat:{$url}|cat:{$img['medium']['src']}}}
+                {$meta["og:image:width"] = {$img['medium']['w']}}
+                {$meta["og:image:height"] = {$img['medium']['h']}}
             {/if}
         {/foreach}
     {/if}
@@ -44,9 +44,9 @@
         {if !empty($product.imgs)}
             {foreach $product.imgs as $img}
                 {if $img.default}
-                    {$meta["og:image"] = {''|cat:{$url}|cat:{$img.img.medium.src}}}
-                    {$meta["og:image:width"] = {$img.img.medium.w}}
-                    {$meta["og:image:height"] = {$img.img.medium.h}}
+                    {$meta["og:image"] = {''|cat:{$url}|cat:{$img['medium']['src']}}}
+                    {$meta["og:image:width"] = {$img['medium']['w']}}
+                    {$meta["og:image:height"] = {$img['medium']['h']}}
                 {/if}
             {/foreach}
         {/if}
