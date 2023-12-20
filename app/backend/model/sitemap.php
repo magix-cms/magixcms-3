@@ -243,18 +243,44 @@ class backend_model_sitemap{
                 }
                 #WriteNode News
                 if($setConfig['news'] != '0') {
+                    $newImgArr = [];
                     // Load Data news
                     $dataNews = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'sitemap'), array('id_lang' => $item['id_lang']));
 
                     foreach ($dataNews as $key => $value) {
+
+                        $dataNewsImg = $this->DBNews->fetchData(array('context' => 'all', 'type' => 'images'), array('id' => $value['id_news']));
+
                         $datePublish = $dateFormat->dateToDefaultFormat($value['date_publish']);
                         $url = '/' . $value['iso_lang'] . '/news/' . $datePublish . '/' . $value['id_news'] . '-' . $value['url_news'] . '/';
-                        if ($value['img_news'] != NULL) {
+
+
+                        /*if ($value['img_news'] != NULL) {
                             $this->xml->writeNode(
                                 array(
                                     'type' => 'image',
                                     'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
                                     'image' => array('url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/news/' . $value['id_news'] . '/')), 'imageloc' => $value['img_news'])
+                                )
+                            );
+                        }*/
+                        print 'test';
+                        if ($dataNewsImg != null) {
+                            // Multi images
+                            foreach ($dataNewsImg as $img) {
+                                $newImgArr[] = $img['name_img'];
+                            }
+                            //print_r($newImgArr);
+
+                            $this->xml->writeNode(
+
+                                array(
+                                    'type' => 'image',
+                                    'loc' => $this->url(array('domain' => $config['domain'], 'url' => $url)),
+                                    'image' => array(
+                                        'url' => $this->url(array('domain' => $config['domain'], 'url' => '/upload/news/' . $value['id_news'] . '/')),
+                                        'loop' => $newImgArr
+                                    )
                                 )
                             );
                         }

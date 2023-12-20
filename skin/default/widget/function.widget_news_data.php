@@ -95,7 +95,7 @@ function smarty_function_widget_news_data($params, $smarty)
 {
 	if(!empty($params)) {
 		$modelTemplate = $smarty->tpl_vars['modelTemplate']->value instanceof frontend_model_template ? $smarty->tpl_vars['modelTemplate']->value : new frontend_model_template();
-		$ModelNews = new frontend_model_news($modelTemplate);
+		/*$ModelNews = new frontend_model_news($modelTemplate);
 		$modelSystem = new frontend_model_core($modelTemplate);
 
 		// Set and load data
@@ -104,7 +104,7 @@ function smarty_function_widget_news_data($params, $smarty)
 		$override = $params['conf']['plugins']['override'] ? $params['conf']['plugins']['override'] : '';
 		$data     = $ModelNews->getData($conf,$current,$override);
 		$newRow   = (is_array($params['conf']['plugins']['item'])) ? $params['conf']['plugins']['item'] : array();
-
+        */
 		// Format data
 		/*$items = array();
 		if ($data != null) {
@@ -117,6 +117,10 @@ function smarty_function_widget_news_data($params, $smarty)
 		}
 		$assign = isset($params['assign']) ? $params['assign'] : 'data';
 		$template->assign($assign,$items);*/
-		$smarty->assign(isset($params['assign']) ? $params['assign'] : 'data',$ModelNews->parseData($data,$current,$newRow,(isset($params['datatype']) && $params['datatype'] === 'short')));
+		//$smarty->assign(isset($params['assign']) ? $params['assign'] : 'data',$ModelNews->parseData($data,$current,$newRow,(isset($params['datatype']) && $params['datatype'] === 'short')));
+        $news = new frontend_controller_news($modelTemplate);
+        $smarty->assign('tags',$news->getBuildTagList());
+        $getNewsList = $news->getNewsList(false,$params['limit']);
+        $smarty->assign(isset($params['assign']) ? $params['assign'] : 'data',$getNewsList);
 	}
 }

@@ -123,6 +123,7 @@ class frontend_model_news extends frontend_db_news {
 			$this->initImageComponent();
             $data['id'] = $row['id_news'];
             $data['name'] = $row['name_news'];
+            $data['long_name'] = $row['longname_news'] ?? null;
             $data['url'] = $this->routingUrl->getBuildUrl([
 				'type' => 'news',
 				'iso' => $row['iso_lang'],
@@ -135,13 +136,32 @@ class frontend_model_news extends frontend_db_news {
 				'title' => $row['link_title_news']
 			];
 
-            if (isset($row['img_news'])) {
+            /*if (isset($row['img_news'])) {
 				$data['img'] = $this->imagesComponent->setModuleImage('news','news',$row['img_news'],$row['id_news']);
             }
 			$data['img']['default'] = $this->imagesComponent->setModuleImage('news','news');
 			$data['img']['alt'] = $row['alt_img'];
 			$data['img']['title'] = $row['title_img'];
-			$data['img']['caption'] = $row['caption_img'];
+			$data['img']['caption'] = $row['caption_img'];*/
+            if (isset($row['img'])) {
+                if(is_array($row['img'])) {
+                    foreach ($row['img'] as $val) {
+                        $image = $this->imagesComponent->setModuleImage('news','news',$val['name_img'],$row['id_news'],$val['alt_img'] ?? $row['name_pages'], $val['title_img'] ?? $row['name_pages']);
+                        if($val['default_img']) {
+                            $data['img'] = $image;
+                            $image['default'] = 1;
+                        }
+                        $data['imgs'][] = $image;
+                    }
+                    $data['img']['default'] = $this->imagesComponent->setModuleImage('news','news');
+                }
+            }
+            else {
+                if(isset($row['name_img'])) {
+                    $data['img'] = $this->imagesComponent->setModuleImage('news','news',$row['name_img'],$row['id_news'],$row['alt_img'] ?? $row['name_pages'], $row['title_img'] ?? $row['name_pages']);
+                }
+                $data['img']['default'] = $this->imagesComponent->setModuleImage('news','news');
+            }
             $data['active'] = (!empty($current) && $row['id_news'] == $current['controller']['id']) ? true : false;
 
             /*$dr = new DateTime($row['date_register']);
@@ -210,6 +230,12 @@ class frontend_model_news extends frontend_db_news {
                     'suffix' => $dp->format('S'),
                 );*/
                 $data['date']['publish'] = $date_format->setTzDateTimeArray($row['date_publish']);
+            }
+            if(isset($row['date_event_start'])) {
+                $data['date']['event']['start'] = $date_format->setTzDateTimeArray($row['date_event_start']);
+                if(isset($row['date_event_end'])) {
+                    $data['date']['event']['end'] = $date_format->setTzDateTimeArray($row['date_event_end']);
+                }
             }
 
             $data['content'] = $row['content_news'];
@@ -452,7 +478,7 @@ class frontend_model_news extends frontend_db_news {
             }
             else {
 
-                $conditions .= ' WHERE lang.iso_lang = :iso AND c.date_publish <=:date AND c.published_news = 1 ';
+                $conditions .= ' WHERE lang.iso_lang = :iso AND p.date_publish <=:date AND c.published_news = 1 ';
                 //
 
                 if (isset($custom['exclude'])) {
@@ -465,14 +491,14 @@ class frontend_model_news extends frontend_db_news {
 
                 if ($conf['filter'] != null) {
                     if(isset($conf['filter']['year'])) {
-                        $conditions .= ' AND YEAR(c.date_publish) = ' . $conf['filter']['year'];
+                        $conditions .= ' AND YEAR(p.date_publish) = ' . $conf['filter']['year'];
                     }
                     if(isset($conf['filter']['month']) && $conf['filter']['month'] != null) {
-                        $conditions .= ' AND MONTH(c.date_publish) = ' . $conf['filter']['month'];
+                        $conditions .= ' AND MONTH(p.date_publish) = ' . $conf['filter']['month'];
                     }
                 }
 
-                $conditions .= ' ORDER BY c.date_publish DESC';
+                $conditions .= ' ORDER BY p.date_publish DESC';
 
                 if ($conf['limit'] != null) {
                     $conditions .= ' LIMIT ' . $conf['limit'];
@@ -529,7 +555,7 @@ class frontend_model_news extends frontend_db_news {
             }
             else{
                 $conditions .= ' JOIN mc_news_tag_rel AS tagrel ON ( tagrel.id_news = p.id_news ) ';
-                $conditions .= ' WHERE lang.iso_lang = :iso AND c.date_publish <=:date AND c.published_news = 1 AND tagrel.id_tag = :id ';
+                $conditions .= ' WHERE lang.iso_lang = :iso AND p.date_publish <=:date AND c.published_news = 1 AND tagrel.id_tag = :id ';
 
                 if (isset($custom['select'])) {
                     $conf['id'] = $custom['select'];
@@ -691,16 +717,16 @@ class frontend_model_news extends frontend_db_news {
                 }
             }
             else {
-                $conditions .= ' WHERE lang.iso_lang = :iso AND c.date_publish <=:date AND c.published_news = 1 ';
+                $conditions .= ' WHERE lang.iso_lang = :iso AND p.date_publish <=:date AND c.published_news = 1 ';
 
                 if (isset($custom['exclude'])) $conditions .= ' AND p.id_news NOT IN (' . $conf['id'] . ') ';
 
                 if ($conf['filter'] != null) {
-                    if(isset($conf['filter']['year'])) $conditions .= ' AND YEAR(c.date_publish) = ' . $conf['filter']['year'];
-                    if(isset($conf['filter']['month']) && $conf['filter']['month'] != null) $conditions .= ' AND MONTH(c.date_publish) = ' . $conf['filter']['month'];
+                    if(isset($conf['filter']['year'])) $conditions .= ' AND YEAR(p.date_publish) = ' . $conf['filter']['year'];
+                    if(isset($conf['filter']['month']) && $conf['filter']['month'] != null) $conditions .= ' AND MONTH(p.date_publish) = ' . $conf['filter']['month'];
                 }
 
-                $conditions .= ' ORDER BY c.date_publish DESC';
+                $conditions .= ' ORDER BY p.date_publish DESC';
 
                 if ($conf['limit'] != null) $conditions .= ' LIMIT ' . $conf['limit'];
 
@@ -745,7 +771,7 @@ class frontend_model_news extends frontend_db_news {
             }
             else{
                 $conditions .= ' JOIN mc_news_tag_rel AS tagrel ON ( tagrel.id_news = p.id_news ) ';
-                $conditions .= ' WHERE lang.iso_lang = :iso AND c.date_publish <=:date AND c.published_news = 1 AND tagrel.id_tag = :id ';
+                $conditions .= ' WHERE lang.iso_lang = :iso AND p.date_publish <=:date AND c.published_news = 1 AND tagrel.id_tag = :id ';
 
                 if (isset($custom['select'])) {
                     $conf['id'] = $custom['select'];

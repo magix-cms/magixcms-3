@@ -62,7 +62,7 @@ class backend_controller_webservice extends backend_db_webservice {
             switch ($this->action) {
                 case 'edit':
                     $data = $this->getItems('ws',null,'one',false);
-                    if(empty($data['id_ws'])) {
+                    if(!empty($data['id_ws'])) {
                         parent::update(['type' => 'ws'],['id_ws' => $data['id_ws'], 'key_ws' => $this->key_ws, 'status_ws' => $this->status_ws]);
                         $this->message->json_post_response(true, 'update', $data['id_ws']);
                     }

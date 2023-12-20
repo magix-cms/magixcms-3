@@ -58,7 +58,8 @@ class backend_controller_logo extends backend_db_logo {
         $holder_bg_color,
         $fav,
         $del_favicon,
-        $active_logo;
+        $active_logo,
+        $logo_percent;
     
     /**
      * backend_controller_logo constructor.
@@ -83,6 +84,7 @@ class backend_controller_logo extends backend_db_logo {
         if (http_request::isGet('tabs')) $this->tabs = form_inputEscape::simpleClean($_GET['tabs']);
         if (http_request::isPost('content')) $this->content = $_POST['content'];
         if (http_request::isPost('holder_bg_color')) $this->holder_bg_color = form_inputEscape::simpleClean($_POST['holder_bg_color']);
+        if (http_request::isPost('logo_percent')) $this->logo_percent = form_inputEscape::simpleClean($_POST['logo_percent']);
         // --- Image Upload
         if (http_request::isPost('name_img')) $this->name_img = http_url::clean($_POST['name_img']);
         if (http_request::isPost('del_img')) $this->del_img = form_inputEscape::simpleClean($_POST['del_img']);
@@ -239,11 +241,19 @@ class backend_controller_logo extends backend_db_logo {
             case 'logo':
             case 'active':
             case 'imgContent':
+            case 'placeholder':
                 parent::update(['type' => $type], $params);
                 break;
         }
     }
-
+    /**
+     * @return array
+     */
+    public function settingsData(): array {
+        //$settingsData = $this->getItems('settings',null,'all',false);
+        $settingsData = $this->getItems('placeholder',NULL,'all',false);
+        return empty($settingsData) ? [] : array_column($settingsData,'value','name');
+    }
     /**
      * @throws Exception
      */
@@ -357,13 +367,14 @@ class backend_controller_logo extends backend_db_logo {
                                  }
 
                                  if($filename != null) {
+                                     $settingsData = $this->settingsData();
                                      $ext = '.jpg';
                                      $dirImgArray = $this->routingUrl->dirUpload('img/social',true);
                                      $logo = $this->imagesComponent->imageManager->make(
                                          $this->routingUrl->basePath('img/logo/') . $filename
                                      );
 
-                                     $percentage = 50;
+                                     $percentage = $settingsData['logo_percent'] ?? 50;
                                      $width = ($percentage / 100) * 250;
                                      $height = ($percentage / 100) * 250;
 
@@ -371,9 +382,8 @@ class backend_controller_logo extends backend_db_logo {
                                          $constraint->aspectRatio();
                                          $constraint->upsize();
                                      });
-
                                      $logo->save($dirImgArray . 'logo.png');
-                                     $image = $this->imagesComponent->imageManager->canvas(250, 250, '#fff');
+                                     $image = $this->imagesComponent->imageManager->canvas(250, 250, $settingsData['holder_bg_color']);
                                      $image->save($dirImgArray . 'social' . $ext);
                                      $watermark = $this->imagesComponent->imageManager->make($dirImgArray . 'logo.png');
                                      $image->insert($watermark, 'center');
@@ -407,7 +417,12 @@ class backend_controller_logo extends backend_db_logo {
                              }
                              break;
                          case 'placeholder':
-                             if(isset($this->holder_bg_color)){
+                             if(isset($this->holder_bg_color) && isset($this->logo_percent)){
+                                 $this->upd('placeholder',[
+                                     'holder_bg_color' => $this->holder_bg_color,
+                                     'logo_percent' => $this->logo_percent
+                                 ]);
+
                                  $fetchRootData = $this->getItems('root', NULL, 'one', false);
                                  $defaultDir = $this->routingUrl->basePath('img/default/');
                                  $directories = $this->finder->scanRecursiveDir($defaultDir);
@@ -436,7 +451,7 @@ class backend_controller_logo extends backend_db_logo {
                                      $logo = $this->imagesComponent->imageManager->make(
                                          $this->routingUrl->basePath('img/logo/') . $fetchRootData['img_logo']
                                      );
-                                     $percentage = 50;
+                                     $percentage = $this->logo_percent ?? 50;
 
                                      foreach ($fetchConfig as $module => $attributes) {
                                          if($module !== 'logo') {
@@ -617,6 +632,7 @@ class backend_controller_logo extends backend_db_logo {
                  $this->template->assign('page',$setEditData[$id_page]);
              }
              $this->modelLanguage->getLanguage();
+             $this->template->assign('placeholder',$this->settingsData());
              $this->template->display('logo/index.tpl');
          }
     }

@@ -1,4 +1,41 @@
 <form id="add_news" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" method="post" class="validate_form add_form collapse in">
+    <div class="row">
+        <div class="col-ph-12 col-sm-6">
+            <div class="form-group">
+                <label for="newsData[date_publish]">Date de publication *</label>
+                <div class="input-group date date-input-picker">
+                    <input type="text" class="form-control" id="newsData[date_publish]" name="newsData[date_publish]" value="" size="50" />
+                    <span class="input-group-addon">
+                        <span class="far fa-calendar-plus"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-ph-12 col-sm-6">
+            <div class="form-group">
+                <label for="newsData[date_publish]">Date du début de l'évènement</label>
+                <div class="input-group date date-input-picker">
+                    <input type="text" class="form-control" id="newsData[date_event_start]" name="newsData[date_event_start]" value="" size="50" />
+                    <span class="input-group-addon">
+                        <span class="far fa-calendar-plus"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-ph-12 col-sm-6">
+            <div class="form-group">
+                <label for="newsData[date_publish]">Date de fin de l'évènement</label>
+                <div class="input-group date date-input-picker">
+                    <input type="text" class="form-control" id="newsData[date_event_end]" name="newsData[date_event_end]" value="" size="50" />
+                    <span class="input-group-addon">
+                        <span class="far fa-calendar-plus"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
     {include file="language/brick/dropdown-lang.tpl"}
     <div class="tab-content">
         {foreach $langs as $id => $iso}
@@ -14,19 +51,6 @@
                         <div class="form-group">
                             <label for="content[{$id}][published_news]">Statut</label>
                             <input id="content[{$id}][published_news]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_news]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-ph-12 col-sm-4">
-                        <div class="form-group">
-                            <label for="content[{$id}][date_publish]">Date de publication</label>
-                            <div class="input-group date date-input-picker">
-                                <input type="text" class="form-control" id="content[{$id}][date_publish]" name="content[{$id}][date_publish]" value="" size="50" />
-                                <span class="input-group-addon">
-                                        <span class="far fa-calendar-plus"></span>
-                                    </span>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -46,9 +46,12 @@ class backend_db_files {
 						case 'pages':
 							$query = 'SELECT id_pages as id, name_img as img FROM mc_cms_page_img';
 							break;
-						case 'news':
+						/*case 'news':
 							$query = 'SELECT id_news as id, img_news as img FROM mc_news WHERE img_news IS NOT NULL';
-							break;
+							break;*/
+                        case 'news':
+                            $query = 'SELECT id_news as id, name_img as img FROM mc_news_img';
+                            break;
 						case 'category':
 							$query = 'SELECT id_cat as id, img_cat as img FROM mc_catalog_cat WHERE img_cat IS NOT NULL';
 							break;

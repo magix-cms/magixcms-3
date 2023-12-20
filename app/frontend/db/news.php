@@ -16,7 +16,6 @@ class frontend_db_news {
 								c.resume_news,
 								c.content_news,
 								c.published_news,
-								c.date_publish,
 								COALESCE(c.alt_img, c.name_news) as alt_img,
 								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
 								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
@@ -40,7 +39,6 @@ class frontend_db_news {
 								c.resume_news,
 								c.content_news,
 								c.published_news,
-								c.date_publish,
 								COALESCE(c.alt_img, c.name_news) as alt_img,
 								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
 								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
@@ -68,7 +66,7 @@ class frontend_db_news {
 								c.url_news,
 								c.link_label_news,
 								c.link_title_news,
-								c.date_publish,
+								p.date_publish,
 								c.seo_title_news,
 								lang.iso_lang
 							FROM mc_news AS p
@@ -145,10 +143,11 @@ class frontend_db_news {
 						'mnc.resume_news',
 						'mnc.content_news',
 						'mnc.published_news',
-						'mnc.date_publish',
-						'COALESCE(mnc.alt_img, mnc.name_news) as alt_img',
-						'COALESCE(mnc.title_img, mnc.alt_img, mnc.name_news) as title_img',
-						'COALESCE(mnc.caption_img, mnc.title_img, mnc.alt_img, mnc.name_news) as caption_img',
+						//'mn.date_publish',
+                        'img.name_img',
+                        'COALESCE(imgc.alt_img, mnc.name_news) as alt_img',
+                        'COALESCE(imgc.title_img, imgc.alt_img, mnc.name_news) as title_img',
+                        'COALESCE(imgc.caption_img, imgc.title_img, imgc.alt_img, mnc.name_news) as caption_img',
 						'mnc.link_label_news',
 						'mnc.link_title_news',
 						'mnc.seo_title_news',
@@ -241,7 +240,7 @@ class frontend_db_news {
 						unset($params['order']);
 					}
 					elseif(!isset($params['order']) || !is_array($params['order'])) {
-						$order = ' ORDER BY mnc.date_publish DESC, mn.id_news DESC';
+						$order = ' ORDER BY mn.date_publish DESC, mn.id_news DESC';
 					}
 
 					$limit = '';
@@ -252,21 +251,43 @@ class frontend_db_news {
 						unset($params['limit']);
 					}
 
-					$query = "SELECT ".implode(',', $select)."
+                    $query = "SELECT ".implode(',', $select)."
 						FROM mc_news mn
-							JOIN mc_news_content mnc ON mn.id_news = mnc.id_news
+							JOIN mc_news_content mnc ON (mn.id_news = mnc.id_news)
+							LEFT JOIN mc_news_img AS img ON (mn.id_news = img.id_news)
+							LEFT JOIN mc_news_img_content AS imgc ON (imgc.id_img = img.id_img AND mnc.id_lang = imgc.id_lang)
 							LEFT JOIN (
 							        SELECT mn.id_news, GROUP_CONCAT(mntr.id_tag SEPARATOR ',') as tags_ids FROM mc_news as mn LEFT JOIN mc_news_tag_rel as mntr on (mn.id_news = mntr.id_news) GROUP BY mn.id_news
 								) tagrel ON(tagrel.id_news = mn.id_news)
 							JOIN mc_lang ml ON mnc.id_lang = ml.id_lang
 							".$joins."
 						WHERE ml.iso_lang = :iso 
-							AND mnc.published_news = 1
+							AND mnc.published_news = 1 AND (img.default_img = 1 OR img.default_img IS NULL) 
 						 ".$where
 						.$group
 						.$order
 						.$limit;
 					break;
+                case 'imgs':
+                    $query = 'SELECT 
+						img.id_img,
+						img.id_news,
+						img.name_img,
+						COALESCE(c.alt_img, pc.name_news) as alt_img,
+						COALESCE(c.title_img, c.alt_img, pc.name_news) as title_img,
+						COALESCE(c.caption_img, c.title_img, c.alt_img, pc.name_news) as caption_img,
+						img.default_img,
+						img.order_img,
+						c.id_lang,
+						lang.iso_lang
+					FROM mc_news AS p
+					LEFT JOIN mc_news_content AS pc ON (p.id_news = pc.id_news)
+					LEFT JOIN mc_news_img AS img ON (img.id_news = p.id_news)
+					LEFT JOIN mc_news_img_content AS c ON (img.id_img = c.id_img AND c.id_lang = pc.id_lang)
+					LEFT JOIN mc_lang AS lang ON(pc.id_lang = lang.id_lang)
+					WHERE img.id_news = :id AND lang.iso_lang = :iso
+					ORDER BY img.order_img';
+                    break;
 				default:
 					return false;
 			}
@@ -282,19 +303,21 @@ class frontend_db_news {
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
 			    case 'page':
+                    //COALESCE(c.alt_img, c.name_news) as alt_img,
+                    //								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
+                    //								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
 					$query = "SELECT 
 								p.id_news,
-								p.img_news,
 								c.name_news,
+								c.longname_news,
 								c.url_news,
 								c.resume_news,
 								c.content_news,
 								c.published_news,
 								p.date_register,
-								c.date_publish,
-								COALESCE(c.alt_img, c.name_news) as alt_img,
-								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
-								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
+								p.date_publish,
+								p.date_event_start,
+								p.date_event_end,
 								c.link_label_news,
 								c.link_title_news,
 								c.seo_title_news,
@@ -347,7 +370,7 @@ class frontend_db_news {
 								c.resume_news,
 								c.content_news,
 								c.published_news,
-								c.date_publish,
+								p.date_publish,
 								COALESCE(c.alt_img, c.name_news) as alt_img,
 								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
 								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
@@ -368,7 +391,7 @@ class frontend_db_news {
 								c.resume_news,
 								c.content_news,
 								c.published_news,
-								c.date_publish,
+								p.date_publish,
 								COALESCE(c.alt_img, c.name_news) as alt_img,
 								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
 								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
@@ -457,7 +480,7 @@ class frontend_db_news {
 						unset($params['group']);
 					}
 
-					if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY mnc.date_publish DESC, mn.id_news DESC';
+					if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY mn.date_publish DESC, mn.id_news DESC';
 
 					if(isset($params['order']) && is_array($params['order'])) {
 						$order = ' ORDER BY ';

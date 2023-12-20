@@ -215,7 +215,9 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `categ
 (NULL, 'http2', '0', 'int', 'HTTP2 protocol', 'advanced'),
 (NULL, 'service_worker', '0', 'int', 'Service Worker', 'advanced'),
 (NULL, 'amp', '0', 'int', 'amp', 'advanced'),
-(NULL, 'maintenance', '0', 'int', 'Mode maintenance', 'advanced');
+(NULL, 'maintenance', '0', 'int', 'Mode maintenance', 'advanced'),
+(NULL, 'holder_bg_color', '#ffffff', 'string', 'color bg replacement image', 'advanced'),
+(NULL, 'logo_percent', '50', 'int', 'Logo size percentage', 'advanced');
 
 CREATE TABLE IF NOT EXISTS `mc_plugins` (
   `id_plugins` int(5) unsigned NOT NULL AUTO_INCREMENT,
@@ -490,36 +492,63 @@ ALTER TABLE `mc_about_page_content`
   ADD CONSTRAINT `mc_about_page_content_ibfk_1` FOREIGN KEY (`id_pages`) REFERENCES `mc_about_page` (`id_pages`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_news` (
-  `id_news` int(7) unsigned NOT NULL AUTO_INCREMENT,
-  `img_news` varchar(125) DEFAULT NULL,
-  `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_news`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+    `id_news` int(7) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `date_publish` timestamp NULL DEFAULT NULL,
+    `date_event_start` timestamp NULL DEFAULT NULL,
+    `date_event_end` timestamp NULL DEFAULT NULL,
+    `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id_news`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `mc_news_content` (
-  `id_content` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_news` int(7) unsigned NOT NULL,
-  `id_lang` smallint(3) unsigned NOT NULL,
-  `name_news` varchar(150) DEFAULT NULL,
-  `url_news` varchar(150) DEFAULT NULL,
-  `resume_news` text,
-  `content_news` text,
-  `alt_img` varchar(70) DEFAULT NULL,
-  `title_img` varchar(70) DEFAULT NULL,
-  `caption_img` varchar(125) DEFAULT NULL,
-  `link_label_news` varchar(125) DEFAULT NULL,
-  `link_title_news` varchar(125) DEFAULT NULL,
-  `seo_title_news` varchar(180) DEFAULT NULL,
-  `seo_desc_news` text,
-  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_publish` timestamp NULL DEFAULT NULL,
-  `published_news` smallint(1) unsigned DEFAULT '0',
-  PRIMARY KEY (`id_content`),
-  KEY `id_news` (`id_news`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+    `id_content` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id_news` int(7) UNSIGNED NOT NULL,
+    `id_lang` smallint(3) UNSIGNED NOT NULL,
+    `name_news` varchar(150) DEFAULT NULL,
+    `longname_news` varchar(150) DEFAULT NULL,
+    `url_news` varchar(150) DEFAULT NULL,
+    `resume_news` text,
+    `content_news` text,
+    `link_label_news` varchar(125) DEFAULT NULL,
+    `link_title_news` varchar(125) DEFAULT NULL,
+    `seo_title_news` varchar(180) DEFAULT NULL,
+    `seo_desc_news` text,
+    `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `published_news` smallint(1) UNSIGNED DEFAULT '0',
+    PRIMARY KEY (`id_content`),
+    KEY `id_news` (`id_news`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 ALTER TABLE `mc_news_content`
   ADD CONSTRAINT `mc_news_content_ibfk_1` FOREIGN KEY (`id_news`) REFERENCES `mc_news` (`id_news`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_news_img` (
+    `id_img` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id_news` int(7) UNSIGNED NOT NULL,
+    `name_img` varchar(150) NOT NULL,
+    `default_img` smallint(1) UNSIGNED NOT NULL DEFAULT '0',
+    `order_img` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id_img`),
+    KEY `id_news` (`id_news`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mc_news_img`
+    ADD FOREIGN KEY (`id_news`) REFERENCES `mc_news`(`id_news`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `mc_news_img_content` (
+    `id_content` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id_img` int(11) UNSIGNED NOT NULL,
+    `id_lang` smallint(3) UNSIGNED NOT NULL,
+    `alt_img` varchar(70) DEFAULT NULL,
+    `title_img` varchar(70) DEFAULT NULL,
+    `caption_img` varchar(125) DEFAULT NULL,
+    PRIMARY KEY (`id_content`),
+    KEY `id_img` (`id_img`,`id_lang`),
+    KEY `id_lang` (`id_lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `mc_news_img_content`
+    ADD FOREIGN KEY (`id_img`) REFERENCES `mc_news_img`(`id_img`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE TABLE IF NOT EXISTS `mc_news_tag` (
   `id_tag` int(5) unsigned NOT NULL AUTO_INCREMENT,

@@ -1,9 +1,4 @@
-{widget_news_data
-conf = [
-'context' => 'all',
-'limit' => 3
-]
-assign="lastNews" scope="global"}
+{widget_news_data limit=3 assign="lastNews" scope="global"}
 {if $lastNews}
     <div id="last-news" class="container" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
         <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">

@@ -50,7 +50,8 @@ class backend_db_webservice {
 	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newWs':
-				$query = 'INSERT INTO mc_webservice (key_ws,status_ws) VALUE(:key_ws,:status_ws)';
+				$query = 'INSERT INTO mc_webservice (key_ws,status_ws) 
+                            VALUE(:key_ws,:status_ws)';
 				break;
 			default:
 				return false;

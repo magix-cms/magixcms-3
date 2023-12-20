@@ -20,6 +20,9 @@ class backend_db_logo {
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)
 							WHERE p.id_logo = :edit';
                     break;
+                case 'placeholder':
+                    $query = "SELECT * FROM mc_setting WHERE name IN ('holder_bg_color','logo_percent')";
+                    break;
 				default:
 					return false;
 			}
@@ -117,6 +120,14 @@ class backend_db_logo {
 							title_logo = :title_logo
                 		WHERE id_logo = :id_logo 
                 		AND id_lang = :id_lang';
+                break;
+            case 'placeholder':
+                $query = "UPDATE `mc_setting`
+						SET `value` = CASE `name`
+							WHEN 'holder_bg_color' THEN :holder_bg_color
+							WHEN 'logo_percent' THEN :logo_percent
+						END
+						WHERE `name` IN ('holder_bg_color','logo_percent')";
                 break;
 			default:
 				return false;

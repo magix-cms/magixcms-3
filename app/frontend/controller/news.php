@@ -109,20 +109,20 @@ class frontend_controller_news extends frontend_db_news {
 
 
             if (isset($this->date)) {
-                $conditions .= ' AND c.date_publish = :date';
+                $conditions .= ' AND p.date_publish = :date';
                 $params['date'] = $this->dateFormat->SQLDate($this->date);
             }
 			elseif (isset($this->year)) {
-                $conditions .= ' AND YEAR(c.date_publish) = :yr';
+                $conditions .= ' AND YEAR(p.date_publish) = :yr';
                 $params['yr'] = $this->year;
 
                 if (isset($this->month)) {
-                    $conditions .= ' AND MONTH(c.date_publish) = :mth';
+                    $conditions .= ' AND MONTH(p.date_publish) = :mth';
                     $params['mth'] = $this->month;
                 }
             }
 			else {
-                $conditions .= ' AND c.date_publish <= :date';
+                $conditions .= ' AND p.date_publish <= :date';
                 $params['date'] = $this->dateFormat->SQLDate();
             }
 
@@ -131,7 +131,7 @@ class frontend_controller_news extends frontend_db_news {
                 $params['tag'] = $this->tag;
             }
 
-            $conditions .= ' AND c.published_news = 1 ORDER BY c.date_publish DESC, p.id_news DESC' . (!$count ? ' LIMIT ' . ($this->page * $this->offset) . ', ' . $this->offset : '');
+            $conditions .= ' AND c.published_news = 1 ORDER BY p.date_publish DESC, p.id_news DESC' . (!$count ? ' LIMIT ' . ($this->page * $this->offset) . ', ' . $this->offset : '');
 
             $collection = parent::fetchData(
                 array('context' => ($count ? 'one' : 'all'), 'type' => ($count ? 'count_news' : 'pages'), 'conditions' => $conditions),
@@ -169,7 +169,7 @@ class frontend_controller_news extends frontend_db_news {
      * @return array
      */
     public function getBuildTagList() : array {
-		$conditions = ' WHERE lang.iso_lang = :iso ';
+		//$conditions = ' WHERE lang.iso_lang = :iso ';
 		//$tagsData = parent::fetchData(['context' => 'all', 'type' => 'tags', 'conditions' => $conditions],['iso' => $this->lang]);
         $tagsData = $this->getItems('tagsLang',['iso' => $this->lang],'all',false);
 
@@ -183,11 +183,13 @@ class frontend_controller_news extends frontend_db_news {
 		return $tags;
     }
 
-	/**
-	 * @param bool $count
-	 * @param array $filter
-	 * @return array
-	 */
+    /**
+     * @param bool $count
+     * @param $limit
+     * @param array $filter
+     * @return array
+     * @throws Exception
+     */
 	public function getNewsList(bool $count = false, $limit = false, array $filter = []) : array {
 		if(isset($this->filter)) $filter = $this->filter;
 
@@ -241,21 +243,21 @@ class frontend_controller_news extends frontend_db_news {
 		if(isset($this->date)) {
 			$conditions[] = [
 				'type' => 'AND',
-				'condition' => 'mnc.date_publish = :date'
+				'condition' => 'mn.date_publish = :date'
 			];
 			$params['date'] = $this->dateFormat->SQLDate($this->date);
 		}
 		elseif(isset($this->year)) {
 			$conditions[] = [
 				'type' => 'AND',
-				'condition' => 'YEAR(mnc.date_publish) = :yr'
+				'condition' => 'YEAR(mn.date_publish) = :yr'
 			];
 			$params['yr'] = $this->year;
 
 			if (isset($this->month)) {
 				$conditions[] = [
 					'type' => 'AND',
-					'condition' => 'MONTH(mnc.date_publish) = :mth'
+					'condition' => 'MONTH(mn.date_publish) = :mth'
 				];
 				$params['mth'] = $this->month;
 			}
@@ -263,7 +265,7 @@ class frontend_controller_news extends frontend_db_news {
 		else {
 			$conditions[] = [
 				'type' => 'AND',
-				'condition' => 'mnc.date_publish <= :date'
+				'condition' => 'mn.date_publish <= :date'
 			];
 			$params['date'] = $this->dateFormat->SQLDate();
 		}
@@ -371,6 +373,8 @@ class frontend_controller_news extends frontend_db_news {
         $override = $this->modelModule->getOverride('news',__FUNCTION__);
         if(!$override) {
             $collection = $this->getItems('page', array('id' => $this->id, 'iso' => $this->lang), 'one', false);
+            $imgCollection = $this->getItems('imgs', ['id' => $this->id, 'iso' => $this->lang], 'all', false);
+            if ($imgCollection != null) $collection['img'] = $imgCollection;
             /*$tagsCollection = $this->getItems('tagsRel', array('id' => $this->id, 'iso' => $this->lang), 'all', false);
             if ($tagsCollection != null) {
                 $collection['tags'] = $tagsCollection;
@@ -445,6 +449,7 @@ class frontend_controller_news extends frontend_db_news {
                 break;
             case 'id':
                 $data = $this->getBuildNewsItems();
+                //print_r($data);
                 $this->template->breadcrumb->addItem($data['name']);
                 $hreflang = $this->getBuildLangItems();
                 $this->template->assign('news',$data,true);
@@ -541,7 +546,6 @@ class frontend_controller_news extends frontend_db_news {
                     $this->template->breadcrumb->addItem(ucfirst($this->template->getConfigVars('date')).': '.strftime('%e %B %Y',$date->getTimestamp()));
                 }
                 if(isset($this->month)) {
-                    //$monthName = date("%B", mktime(0, 0, 0, $this->month, 1, 2000));
                     $monthName = strftime("%B", mktime(0, 0, 0, $this->month, 1, 2000));
                     $this->template->breadcrumb->addItem(ucfirst($this->template->getConfigVars('month')).': '.$monthName.' '.$this->year);
                 }

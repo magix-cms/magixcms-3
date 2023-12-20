@@ -6,16 +6,35 @@
 {block name='article:class'} class="container clearfix"{/block}
 {block name='article:type'}Article{/block}
 {block name="styleSheet" nocache}
-    {$css_files = ["newsRoot","news","lightbox","slider"]}
+    {$css_files = ["newsRoot","news","gallery","lightbox","slider"]}
 {/block}
 
 {block name='article:header' nocache}
+    {*<pre>{print_r($news)}</pre>*}
     <header id="header-news">
-        <h1 itemprop="headline">{$news.name}</h1>
-        <small>
-            <time itemprop="datePublished" datetime="{$news.date.publish.iso}">{$news.date.publish.timestamp|magic_date:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
+        <h1 itemprop="headline">{if $news.long_name !== ''}{$news.long_name}{else}{$news.name}{/if}</h1>
+        {if isset($news.date.event)}
+        <div class="news-event">
+            <meta itemprop="datePublished" content="{$news.date.publish.iso}">
             <meta itemprop="dateModified" content="{$news.date.update.iso}">
-        </small>
+            <small>
+            {if $news.date.event.end}
+            <span>{#of#|ucfirst} </span>
+            <time datetime="{$news.date.event.start.date}">{$news.date.event.start.timestamp|magic_date:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
+            <span> {#at#} </span>
+            <time datetime="{$news.date.event.end.date}">{$news.date.event.end.timestamp|magic_date:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
+            {else}
+                <span>{#the#|ucfirst} </span>
+                <time datetime="{$news.date.event.start.date}">{$news.date.event.start.timestamp|magic_date:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
+            {/if}
+            </small>
+        </div>
+        {else}
+            <small>
+                <time itemprop="datePublished" datetime="{$news.date.publish.iso}">{$news.date.publish.timestamp|magic_date:"%e|%B|%Y"|replace:'|':'&nbsp;'}</time>
+                <meta itemprop="dateModified" content="{$news.date.update.iso}">
+            </small>
+        {/if}
     </header>
 {/block}
 {block name='article:content' nocache}
@@ -36,31 +55,32 @@
         </div>
     </div>
     <div itemprop="author" itemscope itemtype="https://schema.org/{$companyData.type}" itemref="publisher"></div>
-    <div itemprop="articleBody" class="clearfix">
+    <div itemprop="articleBody" class="text clearfix">
         <div class="desc">
-            {if isset($news.img.name)}
+            {*{if isset($news.img.name)}
                 <a href="{$news.img.large.src}" class="img-zoom" title="{$news.img.title}" data-caption="{$news.img.caption}">
                     <figure itemprop="image" itemscope itemtype="http://schema.org/ImageObject">
                         <meta itemprop="url" content="{$url}{$news.img.large.src}" />
                         <meta itemprop="height" content="{$news.img.large.h}" />
                         <meta itemprop="width" content="{$news.img.large.w}" />
-                        {*<img class="img-responsive" src="{$news.img.medium.src}" alt="{$news.img.alt}" title="{$news.img.title}" />*}
-                        {*{strip}<picture>
-                            <!--[if IE 9]><video style="display: none;"><![endif]-->
-                            <source type="image/webp" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src_webp']} {$news.img.medium['w']}w">
-                            <source type="{$news.img.medium.ext}" sizes="{$news.img.medium['w']}px" srcset="{$news.img.medium['src']} {$news.img.medium['w']}w">
-                            <!--[if IE 9]></video><![endif]-->
-                            <img data-src="{$news.img.medium['src']}" width="{$news.img.medium['w']}" height="{$news.img.medium['h']}" alt="{$news.img.alt}" title="{$news.img.title}" class="img-responsive lazyload" />
-                            </picture>{/strip}*}
                         {include file="img/img.tpl" img=$news.img lazy=true}
                         {if $news.img.caption}
                             <figcaption>{$news.img.caption}</figcaption>
                         {/if}
                     </figure>
                 </a>
+            {/if}*}
+        </div>
+        <div class="row row-center">
+            <div class="col-12{if is_array($news.imgs) && count($news.imgs) > 0} col-md-6 col-lg-7 col-xl-8{/if}">
+                {if $news.lead}<p class="resume">{$news.lead}</p>{/if}
+                {$news.content}
+            </div>
+            {if is_array($news.imgs) && count($news.imgs) > 0}
+                <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+                    {include file="img/loop/gallery.tpl" imgs=$news.imgs}
+                </div>
             {/if}
-            {if $news.lead}<p class="resume">{$news.lead}</p>{/if}
-            {$news.content}
         </div>
     </div>
     {strip}

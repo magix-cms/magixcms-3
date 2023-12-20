@@ -18,13 +18,19 @@ class frontend_model_collection{
         $this->DBproduct = new frontend_db_product();
         $this->DBPages = new frontend_db_pages();
     }
-
+    /**
+     * @return void
+     */
+    private function initImageComponent() {
+        if(!isset($this->imagesComponent)) $this->imagesComponent = new component_files_images($this->template);
+    }
     /**
      * Build Pages
      * @param $data
      * @return array
      */
     public function getBuildPages($data){
+        $this->initImageComponent();
         $imgPath = $this->upload->imgBasePath('upload/pages');
         $arr = array();
         $conf = array();

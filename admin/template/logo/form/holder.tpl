@@ -15,8 +15,15 @@
                     <span class="fa fa-question-circle"></span>
                 </a>:</label>
             <div class="input-group colorpicker-component csspicker">
-                <input type="text" value="#ffffff" class="form-control" name="holder_bg_color" />
+                <input type="text" value="{$placeholder.holder_bg_color}" class="form-control" name="holder_bg_color" />
                 <span class="input-group-addon"><i></i></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="logo_percent">{#logo_percent#|ucfirst}</label>
+            <div class="input-group">
+                <input type="number" step="1" id="logo_percent" name="logo_percent" class="form-control" value="{$placeholder.logo_percent}" />
+                <div class="input-group-addon"><span class="fas fa-percent"></span></div>
             </div>
         </div>
         <fieldset>
