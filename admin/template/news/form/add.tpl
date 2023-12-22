@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-ph-12 col-sm-6">
             <div class="form-group">
-                <label for="newsData[date_publish]">Date du début de l'évènement</label>
+                <label for="newsData[date_event_start]">Date du début de l'évènement</label>
                 <div class="input-group date date-input-picker">
                     <input type="text" class="form-control" id="newsData[date_event_start]" name="newsData[date_event_start]" value="" size="50" />
                     <span class="input-group-addon">
@@ -26,7 +26,7 @@
         </div>
         <div class="col-ph-12 col-sm-6">
             <div class="form-group">
-                <label for="newsData[date_publish]">Date de fin de l'évènement</label>
+                <label for="newsData[date_event_end]">Date de fin de l'évènement</label>
                 <div class="input-group date date-input-picker">
                     <input type="text" class="form-control" id="newsData[date_event_end]" name="newsData[date_event_end]" value="" size="50" />
                     <span class="input-group-addon">
@@ -51,6 +51,21 @@
                         <div class="form-group">
                             <label for="content[{$id}][published_news]">Statut</label>
                             <input id="content[{$id}][published_news]" data-toggle="toggle" type="checkbox" name="content[{$id}][published_news]" data-on="Publiée" data-off="Brouillon" data-onstyle="success" data-offstyle="danger">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-ph-12 col-sm-8">
+                        <div class="form-group">
+                            <label for="content[{$id}][longname_news]">{#longname_news#|ucfirst} :</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="content[{$id}][longname_news]" name="content[{$id}][longname_news]" value="" size="50" />
+                                <span class="input-group-addon">
+                                        <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Max. 125 caractères. Si remplis, sera utilisé dans la page à la place du nom court et sera également utilisé pour le référencement">
+                                            <span class="fa fa-question-circle"></span>
+                                        </a>
+                                    </span>
+                            </div>
                         </div>
                     </div>
                 </div>
