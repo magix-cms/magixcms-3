@@ -428,7 +428,7 @@ class frontend_controller_news extends frontend_db_news {
      * @return array
      */
     private function getBuildLangItems(){
-        $collection = $this->getItems('langs',array(':id'=>$this->id),'all',false);
+        $collection = $this->getItems('langs',array('id'=>$this->id),'all',false);
         return $this->modelNews->setHrefLangData($collection);
     }
 
