@@ -12,7 +12,7 @@
 {block name='article:header' nocache}
     {*<pre>{print_r($news)}</pre>*}
     <header id="header-news">
-        <h1 itemprop="headline">{if $news.long_name !== ''}{$news.long_name}{else}{$news.name}{/if}</h1>
+        <h1 itemprop="headline">{if $news.long_name != ''}{$news.long_name}{else}{$news.name}{/if}</h1>
         {if isset($news.date.event)}
         <div class="news-event">
             <meta itemprop="datePublished" content="{$news.date.publish.iso}">
