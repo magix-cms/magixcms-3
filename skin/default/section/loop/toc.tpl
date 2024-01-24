@@ -34,6 +34,7 @@
         </section>
     {else}
         {if $child.subdata}
+            {if $child.menu != '0'}
             <li class="dropdown-header{if $current_page} active{/if}">
                 <a href="{$child.url}" title="{$child.description}">{$child.name}</a>
                 <button class="btn btn-link{if $current_page} open{/if}" type="button" data-toggle="collapse" data-target="#s-{$s}-{$child@index}">
@@ -46,11 +47,14 @@
                     {include file="section/loop/toc.tpl" pages=$child.subdata s=$s}
                 </ul>
             </li>
+            {/if}
         {else}
+            {if $child.menu != '0'}
             <li{if $current_page} class="active"{/if}>
                 {*<i class="material-icons ico ico-lens"></i>*}
                 <a href="{$child.url}" title="{$child.seo.description}">{$child.name}</a>
             </li>
+            {/if}
         {/if}
     {/if}
 {/foreach}

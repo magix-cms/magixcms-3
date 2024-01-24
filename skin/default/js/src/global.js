@@ -44,9 +44,10 @@ window.addEventListener('DOMContentLoaded', () => {
         let parent = i.dataset.parent || false,
             target = i.dataset.target ? i.dataset.target : i.getAttribute('href');
         i.collapse = parent ? new Collapse(i,{parent: document.querySelector(parent)}) : new Collapse(i);
-        if(parent && document.querySelector(parent).querySelector('[data-toggle="collapse"]') === i) {
+        /*if(parent && document.querySelector(parent).querySelector('[data-toggle="collapse"]') === i) {
+            //console.log(i.collapse);
             i.collapse.show();
-        }
+        }*/
         //function toggle(i,e,t) { if(e.target === t) i.classList.toggle('open',/^shown.*/.test(e.type)); }
         function toggle(i, e) {
             //if (e.target === t) {
