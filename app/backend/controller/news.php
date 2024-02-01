@@ -911,7 +911,7 @@ class backend_controller_news extends backend_db_news {
                 $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                 $this->getItems('news', array('default_lang' => $defaultLanguage['id_lang']), 'all',true,true);
                 $this->data->getScheme(
-                	array('mc_news', 'mc_news_content'),
+                	array('mc_news', 'mc_news_content','mc_news_img'),
 					array('id_news', 'name_news', 'content_news', 'default_img','seo_title_news','seo_desc_news', 'last_update', 'date_publish', 'published_news'),
 					$this->tableconfig);
                 $this->template->display('news/index.tpl');
