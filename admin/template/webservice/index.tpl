@@ -20,22 +20,28 @@
                     <div class="mc-message"></div>
                 </div>
                 <div class="row">
-                    <form id="edit_webservice" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12 col-md-4">
-                        <div class="form-group">
-                            <label for="key_ws">Clé API</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="key" id="key_ws" name="key_ws" value="{$ws.key_ws}" size="50">
-                                <span class="input-group-btn">
-                            <button class="btn btn-success" id="key_generator" type="button">Key generator</button>
-                        </span>
+                    <form id="edit_webservice" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit" method="post" class="validate_form edit_form col-ph-12">
+                        <div class="row">
+                            <div class="col-ph-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="key_ws">Clé API</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="key" id="key_ws" name="key_ws" value="{$ws.key_ws}" size="50">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-success" id="key_generator" type="button">Key generator</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-ph-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="status_ws">Status</label>
+                                    <input id="status_ws" data-toggle="toggle" type="checkbox" name="status_ws" data-toggle="toggle" type="checkbox" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if $ws.status_ws} checked{/if}>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="status_ws">Status</label>
-                            <input id="status_ws" data-toggle="toggle" type="checkbox" name="status_ws" data-toggle="toggle" type="checkbox" data-on="oui" data-off="non" data-onstyle="primary" data-offstyle="default"{if $ws.status_ws} checked{/if}>
-                        </div>
                         <div id="submit">
-                            <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
+                            <button class="btn btn-main-theme" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
                         </div>
                     </form>
                 </div>

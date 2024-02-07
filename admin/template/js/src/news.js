@@ -205,7 +205,7 @@ var news = (function ($, undefined) {
                     }
                 });
             }
-        }); 
+        });
     }
     function initSortable(edit) {
         $( ".row.sortable" ).sortable({

@@ -46,7 +46,8 @@ class frontend_controller_webservice extends frontend_db_webservice {
     /**
      * @var int $id
      */
-    public int $id;
+    public int $id,
+        $tag;
 
     /**
      * @var string $url
@@ -62,7 +63,8 @@ class frontend_controller_webservice extends frontend_db_webservice {
         $retrieve,
         $sort,
         $img,
-        $img_multiple;
+        $img_multiple,
+        $lang;
 
     /**
      * @var array $imgData
@@ -70,7 +72,9 @@ class frontend_controller_webservice extends frontend_db_webservice {
      */
     public array
         $imgData,
-        $filter;
+        $filter,
+        $tags,
+        $tagsData;
 
     /**
      * frontend_controller_webservice constructor.
@@ -98,6 +102,7 @@ class frontend_controller_webservice extends frontend_db_webservice {
         $this->DBCatalog = new frontend_db_catalog();
         $this->DBCategory = new frontend_db_category();
         $this->DBProduct = new frontend_db_product();
+        $this->lang = $this->template->lang;
 
         $this->url = http_url::getUrl();
         if (http_request::isGet('id')) $this->id = form_inputEscape::numeric($_GET['id']);
@@ -105,6 +110,8 @@ class frontend_controller_webservice extends frontend_db_webservice {
         if (http_request::isGet('retrieve')) $this->retrieve = form_inputEscape::simpleClean($_GET['retrieve']);
         if(http_request::isGet('sort')) $this->sort = form_inputEscape::simpleClean($_GET['sort']);
         if(http_request::isGet('filter')) $this->filter = form_inputEscape::arrayClean($_GET['filter']);
+        if (http_request::isGet('tag')) $this->tag = form_inputEscape::numeric($_GET['tag']);
+        if (http_request::isGet('tags')) $this->tags = form_inputEscape::arrayClean($_GET['tags']);
 
         // --- Image Upload
         if(isset($_FILES['img']["name"])) $this->img = http_url::clean($_FILES['img']["name"]);
@@ -142,15 +149,26 @@ class frontend_controller_webservice extends frontend_db_webservice {
      * Global Root
      */
     private function getBuildRootData() {
-        $data = ['domain','languages','home','pages','news','catalog'];
+        $module = ['domain','languages','home'];
         $this->xml->newStartElement('modules');
-        foreach($data as $key) {
+        foreach($module as $key) {
             $this->xml->setElement([
                 'start' => 'module',
                 'attrNS' => [[
                     'prefix' => 'xlink',
                     'name' => 'href',
                     'uri' => $this->url . '/webservice/'.$key.'/'
+                ]]
+            ]);
+        }
+        $moduleIso = ['pages','news','catalog'];
+        foreach($moduleIso as $key) {
+            $this->xml->setElement([
+                'start' => 'module',
+                'attrNS' => [[
+                    'prefix' => 'xlink',
+                    'name' => 'href',
+                    'uri' => $this->url .'/'.$this->lang.'/webservice/'.$key.'/'
                 ]]
             ]);
         }
@@ -299,8 +317,9 @@ class frontend_controller_webservice extends frontend_db_webservice {
      * Build Pages items (LIST)
      */
     private function getBuildPagesItems() {
-        $collection = $this->DBPages->fetchData(['context' => 'all', 'type' => 'pages','conditions'=>null]);
-        $arr = $this->buildCollection->getBuildPages($collection);
+        $pages = new frontend_controller_pages();
+        //$collection = $this->DBPages->fetchData(['context' => 'all', 'type' => 'pages','conditions'=>null]);
+        $arr = $pages->getPagesList();//$this->buildCollection->getBuildPages($collection);
         //print_r($arr);
         $this->xml->newStartElement('pages');
 
@@ -309,7 +328,7 @@ class frontend_controller_webservice extends frontend_db_webservice {
             $this->xml->setElement(
                 array(
                     'start' => 'id',
-                    'text' => $value['id_pages']
+                    'text' => $value['id']
                 )
             );
             $this->xml->setElement(
@@ -318,6 +337,51 @@ class frontend_controller_webservice extends frontend_db_webservice {
                     'text' => $value['id_parent']
                 )
             );
+            $this->xml->setElement(
+                array(
+                    'start' => 'name',
+                    'text' => $value['name']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'iso',
+                    'text' => $value['iso']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'url',
+                    'text' => $value['url']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'resume',
+                    'text' => $value['resume']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'content',
+                    'cData' => $value['content']
+                )
+            );
+
+            $this->xml->newStartElement('seo');
+            $this->xml->setElement(
+                array(
+                    'start' => 'title',
+                    'text' => $value['seo']['title']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'description',
+                    'cData' => $value['seo']['description']
+                )
+            );
+            $this->xml->newEndElement();
             /*if(isset($value['imgSrc'])) {
                 $this->xml->newStartElement('image');
                 foreach ($value['imgSrc'] as $k => $item) {
@@ -336,9 +400,56 @@ class frontend_controller_webservice extends frontend_db_webservice {
                 }
                 $this->xml->newEndElement();
             }*/
-            if(isset($value['images'])) {
+            if(isset($value['img']) && isset($value['img']['name'])) {
                 $this->xml->newStartElement('images');
-                foreach ($value['images'] as $k) {
+                $this->xml->newStartElement('image');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'name',
+                        'text' => $value['img']['name']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'small',
+                        'attrNS' => array(
+                            array(
+                                'prefix' => 'xlink',
+                                'name' => 'href',
+                                'uri' => $value['img']['small']['src']
+                            )
+                        )
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'medium',
+                        'attrNS' => array(
+                            array(
+                                'prefix' => 'xlink',
+                                'name' => 'href',
+                                'uri' => $value['img']['medium']['src']
+                            )
+                        )
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'large',
+                        'attrNS' => array(
+                            array(
+                                'prefix' => 'xlink',
+                                'name' => 'href',
+                                'uri' => $value['img']['large']['src']
+                            )
+                        )
+                    )
+                );
+                // End loop image
+                $this->xml->newEndElement();
+                // End images
+                $this->xml->newEndElement();
+                /*foreach ($value['images'] as $k) {
                     $this->xml->newStartElement('image');
                     $this->xml->setElement(
                         array(
@@ -404,10 +515,10 @@ class frontend_controller_webservice extends frontend_db_webservice {
                     $this->xml->newEndElement();
                 }
                 // End images
-                $this->xml->newEndElement();
+                $this->xml->newEndElement();*/
             }
             // Start languages loop
-            $this->xml->newStartElement('languages');
+            /*$this->xml->newStartElement('languages');
             foreach($value['content'] as $item) {
                 // Start Language
                 $this->xml->newStartElement('language');
@@ -462,7 +573,7 @@ class frontend_controller_webservice extends frontend_db_webservice {
                 // End language loop
                 $this->xml->newEndElement();
             }
-            $this->xml->newEndElement();
+            $this->xml->newEndElement();*/
             // End languages
             $this->xml->newEndElement();
         }
@@ -679,13 +790,14 @@ class frontend_controller_webservice extends frontend_db_webservice {
      * Build News items
      */
     private function getBuildNewsItems() {
-        $collection = $this->DBNews->fetchData(
+        /*$collection = $this->DBNews->fetchData(
             array('context' => 'all', 'type' => 'pages', 'conditions' => null)
-        );
-
-        $arr = $this->buildCollection->getBuildNews($collection);
+        );*/
+        $news = new frontend_controller_news();
+        $news->getBuildTagList();
+        $arr = $news->getNewsList();//$this->buildCollection->getBuildNews($collection);
         //
-       /*print '<pre>';
+        /*print '<pre>';
         print_r($arr);
         print '</pre>';*/
 
@@ -696,7 +808,7 @@ class frontend_controller_webservice extends frontend_db_webservice {
             $this->xml->setElement(
                 array(
                     'start' => 'id',
-                    'text' => $value['id_news']
+                    'text' => $value['id']
                 )
             );
             /*$this->xml->setElement(
@@ -705,7 +817,189 @@ class frontend_controller_webservice extends frontend_db_webservice {
                     'text' => $value['id_parent']
                 )
             );*/
-            if(isset($value['imgSrc'])) {
+            $this->xml->setElement(
+                array(
+                    'start' => 'name',
+                    'text' => $value['name']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'iso',
+                    'text' => $value['iso']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'url',
+                    'text' => $value['url']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'resume',
+                    'text' => $value['resume']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'content',
+                    'cData' => $value['content']
+                )
+            );
+
+            $this->xml->newStartElement('seo');
+            $this->xml->setElement(
+                array(
+                    'start' => 'title',
+                    'text' => $value['seo']['title']
+                )
+            );
+            $this->xml->setElement(
+                array(
+                    'start' => 'description',
+                    'cData' => $value['seo']['description']
+                )
+            );
+            $this->xml->newEndElement();
+            if(isset($value['img']) && isset($value['img']['name'])) {
+                $this->xml->newStartElement('images');
+                $this->xml->newStartElement('image');
+                $this->xml->setElement(
+                    array(
+                        'start' => 'name',
+                        'text' => $value['img']['name']
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'small',
+                        'attrNS' => array(
+                            array(
+                                'prefix' => 'xlink',
+                                'name' => 'href',
+                                'uri' => $value['img']['small']['src']
+                            )
+                        )
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'medium',
+                        'attrNS' => array(
+                            array(
+                                'prefix' => 'xlink',
+                                'name' => 'href',
+                                'uri' => $value['img']['medium']['src']
+                            )
+                        )
+                    )
+                );
+                $this->xml->setElement(
+                    array(
+                        'start' => 'large',
+                        'attrNS' => array(
+                            array(
+                                'prefix' => 'xlink',
+                                'name' => 'href',
+                                'uri' => $value['img']['large']['src']
+                            )
+                        )
+                    )
+                );
+                // End loop image
+                $this->xml->newEndElement();
+                // End images
+                $this->xml->newEndElement();
+                /*foreach ($value['images'] as $k) {
+                    $this->xml->newStartElement('image');
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'name',
+                            'text' => $k['name_img']
+                        )
+                    );
+                    //start src
+                    $this->xml->newStartElement('src');
+                    foreach ($k['imgSrc'] as $images => $imgSrc) {
+                        $this->xml->setElement(
+                            array(
+                                'start' => $images,
+                                'attrNS' => array(
+                                    array(
+                                        'prefix' => 'xlink',
+                                        'name' => 'href',
+                                        'uri' => $this->url . $imgSrc
+                                    )
+                                )
+                            )
+                        );
+                    }
+                    //End src
+                    $this->xml->newEndElement();
+                    if($k['content']!= null) {
+                        // Start languages loop
+                        $this->xml->newStartElement('languages');
+                        foreach ($k['content'] as $imgData) {
+                            // Start Language
+                            $this->xml->newStartElement('language');
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'id_lang',
+                                    'text' => $imgData['id_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'iso',
+                                    'text' => $imgData['iso_lang']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'alt',
+                                    'text' => $imgData['alt_img']
+                                )
+                            );
+                            $this->xml->setElement(
+                                array(
+                                    'start' => 'title',
+                                    'text' => $imgData['title_img']
+                                )
+                            );
+                            //End language img
+                            $this->xml->newEndElement();
+                        }
+                        //End languages img
+                        $this->xml->newEndElement();
+                    }
+                    // End loop image
+                    $this->xml->newEndElement();
+                }
+                // End images
+                $this->xml->newEndElement();*/
+            }
+            // Start tags
+            $this->xml->newStartElement('tags');
+            if(is_array($value['tags'])) {
+                foreach ($value['tags'] as $tags => $tag) {
+                    $this->xml->setElement(
+                        array(
+                            'start' => 'tag',
+                            'text' => $tag['name'],
+                            'attr' => array(
+                                array(
+                                    'name' => 'id',
+                                    'content' => $tag['id']
+                                )
+                            )
+                        )
+                    );
+                }
+            }
+            // END tags
+            $this->xml->newEndElement();
+            /*if(isset($value['imgSrc'])) {
                 $this->xml->newStartElement('image');
                 foreach ($value['imgSrc'] as $k => $item) {
                     $this->xml->setElement(
@@ -722,9 +1016,9 @@ class frontend_controller_webservice extends frontend_db_webservice {
                     );
                 }
                 $this->xml->newEndElement();
-            }
+            }*/
             // Start languages loop
-            $this->xml->newStartElement('languages');
+            /*$this->xml->newStartElement('languages');
             foreach($value['content'] as $item) {
                 // Start Language
                 $this->xml->newStartElement('language');
@@ -799,7 +1093,7 @@ class frontend_controller_webservice extends frontend_db_webservice {
                 // End language loop
                 $this->xml->newEndElement();
             }
-            $this->xml->newEndElement();
+            $this->xml->newEndElement();*/
             // End languages
             $this->xml->newEndElement();
         }
