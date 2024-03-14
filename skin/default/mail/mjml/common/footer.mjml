@@ -9,14 +9,15 @@
                                 <tr>
                                     <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                         <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation"><tr><![endif]-->
-                                        {if isset($companyData['socials']['facebook'])}
-                                        <!--[if mso | IE]><td><![endif]-->
+                                        {if isset($companyData['socials']['facebook']['url'])}
+                                        <!--[if mso | IE]>
+                                        <td><![endif]-->
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
                                             <tr>
                                                 <td style="padding:4px;">
                                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
                                                         <tr>
-                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://www.facebook.com/sharer/sharer.php?u={$companyData.socials.facebook}" target="_blank">
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://www.facebook.com/sharer/sharer.php?u={$companyData.socials.facebook.url}" target="_blank">
                                                                 <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/facebook.png" style="border-radius:3px;display:block;" width="30"/>
                                                             </a> </td>
                                                         </tr>
@@ -26,14 +27,14 @@
                                         </table>
                                         <!--[if mso | IE]></td><![endif]-->
                                         {/if}
-                                        {if isset($companyData['socials']['twitter'])}
+                                        {if isset($companyData['socials']['twitter']['url'])}
                                         <!--[if mso | IE]><td><![endif]-->
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
                                             <tr>
                                                 <td style="padding:4px;">
                                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
                                                         <tr>
-                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://twitter.com/home?status={$companyData.socials.twitter}" target="_blank">
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://twitter.com/home?status={$companyData.socials.twitter.url}" target="_blank">
                                                                 <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/twitter.png" style="border-radius:3px;display:block;" width="30"/>
                                                             </a> </td>
                                                         </tr>
@@ -43,14 +44,14 @@
                                         </table>
                                         <!--[if mso | IE]></td><![endif]-->
                                         {/if}
-                                        {if isset($companyData['socials']['linkedin'])}
+                                        {if isset($companyData['socials']['linkedin']['url'])}
                                         <!--[if mso | IE]><td><![endif]-->
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
                                             <tr>
                                                 <td style="padding:4px;">
                                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
                                                         <tr>
-                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={$companyData.socials.linkedin}&amp;title=&amp;summary=&amp;source=" target="_blank">
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={$companyData.socials.linkedin.url}&amp;title=&amp;summary=&amp;source=" target="_blank">
                                                                 <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/linkedin.png" style="border-radius:3px;display:block;" width="30"/>
                                                             </a> </td>
                                                         </tr>
@@ -60,14 +61,14 @@
                                         </table>
                                         <!--[if mso | IE]></td><![endif]-->
                                         {/if}
-                                        {if isset($companyData['socials']['pinterest'])}
+                                        {if isset($companyData['socials']['pinterest']['url'])}
                                         <!--[if mso | IE]><td><![endif]-->
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
                                             <tr>
                                                 <td style="padding:4px;">
                                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
                                                         <tr>
-                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://pinterest.com/pin/create/button/?url={$companyData.socials.pinterest}&amp;media=&amp;description=" target="_blank">
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="https://pinterest.com/pin/create/button/?url={$companyData.socials.pinterest.url}&amp;media=&amp;description=" target="_blank">
                                                                 <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/pinterest.png" style="border-radius:3px;display:block;" width="30"/>
                                                             </a> </td>
                                                         </tr>
@@ -77,14 +78,14 @@
                                         </table>
                                         <!--[if mso | IE]></td><![endif]-->
                                         {/if}
-                                        {if isset($companyData['socials']['instagram'])}
+                                        {if isset($companyData['socials']['instagram']['url'])}
                                         <!--[if mso | IE]><td><![endif]-->
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
                                             <tr>
                                                 <td style="padding:4px;">
                                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
                                                         <tr>
-                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.instagram}" target="_blank">
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.instagram.url}" target="_blank">
                                                                 <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/instagram.png" style="border-radius:3px;display:block;" width="30"/>
                                                             </a> </td>
                                                         </tr>
@@ -94,14 +95,14 @@
                                         </table>
                                         <!--[if mso | IE]></td><![endif]-->
                                         {/if}
-                                        {if isset($companyData['socials']['github'])}
+                                        {if isset($companyData['socials']['github']['url'])}
                                         <!--[if mso | IE]><td><![endif]-->
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
                                             <tr>
                                                 <td style="padding:4px;">
                                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
                                                         <tr>
-                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.github}" target="_blank">
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.github.url}" target="_blank">
                                                                 <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/github.png" style="border-radius:3px;display:block;" width="30"/>
                                                             </a> </td>
                                                         </tr>
@@ -111,14 +112,14 @@
                                         </table>
                                         <!--[if mso | IE]></td><![endif]-->
                                         {/if}
-                                        {if isset($companyData['socials']['soundcloud'])}
+                                        {if isset($companyData['socials']['soundcloud']['url'])}
                                         <!--[if mso | IE]><td><![endif]-->
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
                                             <tr>
                                                 <td style="padding:4px;">
                                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#A1A0A0;border-radius:3px;width:30px;">
                                                         <tr>
-                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.soundcloud}" target="_blank">
+                                                            <td style="font-size:0;height:30px;vertical-align:middle;width:30px;"> <a href="{$companyData.socials.soundcloud.url}" target="_blank">
                                                                 <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/soundcloud.png" style="border-radius:3px;display:block;" width="30"/>
                                                             </a> </td>
                                                         </tr>
@@ -141,7 +142,7 @@
     <mj-section>
         <mj-column width="50%">
             <mj-text mj-class="lightext" padding-top="0" font-size="11px">
-                {#call_us_at#}<br/>{$companyData['contact']['phone']}<br/>
+                {if $companyData['contact']['phone']}{#call_us_at#}<br/>{$companyData['contact']['phone']}<br/>{/if}
                 {if $companyData['contact']['mobile']}{#call_us_at#}<br/>{$companyData['contact']['mobile']}<br/>{/if}
                 {#email_us_at#}<br/>{$companyData['contact']['mail']}
             </mj-text>
