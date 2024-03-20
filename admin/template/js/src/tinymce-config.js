@@ -30,7 +30,7 @@
             'advlist', 'lists','clists','link','image','charmap','preview','anchor',
             'searchreplace','visualblocks','code','fullscreen','wordcount','directionality','codesample',
             'media','table','template','codesample','youtube','loremipsum','responsivefilemanager',
-            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel'
+            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion'
         ],
         toolbar: 'link unlink image code | blocks | '
             +'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | '
