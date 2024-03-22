@@ -56,7 +56,10 @@ class frontend_controller_pages extends frontend_db_pages {
     public
         $lang,
         $id;
-
+    /**
+     * @var array $filter
+     */
+    public array $filter;
 	/**
 	 * @param frontend_model_template|null $t
 	 */
@@ -67,6 +70,7 @@ class frontend_controller_pages extends frontend_db_pages {
         $this->modelPages = new frontend_model_pages($this->template);
         $this->modelModule = new frontend_model_module($this->template);
         if (http_request::isGet('id')) $this->id = form_inputEscape::numeric($_GET['id']);
+        if(http_request::isGet('filter')) $this->filter = form_inputEscape::arrayClean($_GET['filter']);
     }
 
     /**
@@ -229,9 +233,8 @@ class frontend_controller_pages extends frontend_db_pages {
      * @throws Exception
      */
     public function getPagesList($id_parent = NULL, array $filter = []) : array {
-        if(isset($this->filter)){
-            $filter = $this->filter;
-        }
+        if(isset($this->filter)) $filter = $this->filter;
+
         $newTableArray = [];
         $override = $this->modelModule->extendDataArray('pages',__FUNCTION__, $filter);
 
@@ -271,9 +274,9 @@ class frontend_controller_pages extends frontend_db_pages {
                     if(isset($extendParams['order']) && !empty($extendParams['order'])) $params['order'][] = $extendParams['order'];
 
                     if(!empty($filter)){
-                        if(isset($extendParams['limit']) && !empty($extendParams['limit'])) $params['limit'][] = $extendParams['limit'];
-                        if(isset($extendParams['order']) && !empty($extendParams['order'])) $params['order'] = $extendParams['order'];
-                        if(isset($extendParams['filter']) && !empty($extendParams['filter'])) $params['where'][] = is_array($extendParams['where']) ? array_merge($extendParams['where'],$extendParams['filter']) : $extendParams['filter'];
+                    if(isset($extendParams['limit']) && !empty($extendParams['limit'])) $params['limit'][] = $extendParams['limit'];
+                        //if(isset($extendParams['order']) && !empty($extendParams['order'])) $params['order'] = $extendParams['order'];
+                    if(isset($extendParams['filter']) && !empty($extendParams['filter'])) $params['where'][] = is_array($extendParams['where']) ? array_merge($extendParams['where'],$extendParams['filter']) : $extendParams['filter'];
                     }
                 }
             }
