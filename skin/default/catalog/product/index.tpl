@@ -27,11 +27,18 @@
                 {if $product.reference}<span class="ref">{#product_ref#}&nbsp;{$product.reference}</span>{/if}
                 {if $product.price !== '0.00' && $setting.price_display === 'tinc'}
                     {$price = $product.price * (1 + ($setting.vat_rate/100))}
+                    {if $product.promo_price !== '0.00'}
+                        {$promo_price = $product.promo_price * (1 + ($setting.vat_rate/100))}
+                    {/if}
                 {else}
                     {$price = $product.price}
+                    {if $product.promo_price !== '0.00' && $product.promo_price !== '0.00'}
+                        {$promo_price = $product.promo_price}
+                    {/if}
                 {/if}
                 <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <span itemprop="price" content="{$price|round:2|number_format:2:',':' '|decimal_trim:','}"></span><span itemprop="priceCurrency" content="EUR"></span>
+                    <span itemprop="price" content="{if $product.promo_price !== '0.00'}{$promo_price|round:2|number_format:2:',':' '|decimal_trim:','}{else}{$price|round:2|number_format:2:',':' '|decimal_trim:','}{/if}"></span>
+                    <span itemprop="priceCurrency" content="EUR"></span>
                 </span>
             </header>
             <div itemprop="category" itemscope itemtype="http://schema.org/Series">
@@ -41,11 +48,41 @@
             <div class="row row-center">
                 {if is_array($product.imgs) && count($product.imgs) > 0}
                 <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-                    {include file="img/loop/gallery.tpl" imgs=$product.imgs}
+                    {if $product.promo_price !== '0.00'}
+                        {$discount = 100 * ($promo_price - $price) / $price|cat:'%'}
+                        {else}
+                        {$discount = NULL}
+                    {/if}
+                    {capture name="discount" nocache}
+                        {if $discount !== NULL}
+                        <div class="discount">
+                            <span>{$discount}</span>
+                        </div>
+                        {/if}
+                    {/capture}
+                    {include file="img/loop/gallery.tpl" imgs=$product.imgs badge=$smarty.capture.discount}
                 </div>
                 {/if}
                 <div class="col-12{if is_array($product.imgs) && count($product.imgs) > 0} col-md-6 col-lg-7 col-xl-8{/if}">
-                    {strip}{if $product.price !== '0.00'}<div class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;{if $setting.price_display === 'tinc'}{#tax_included#}{else}{#tax_excluded#}{/if}</div>{/if}{/strip}
+                    {strip}
+                        {if $product.price !== '0.00'}
+                            <div class="price">
+                            {if $product.promo_price !== '0.00'}
+                                {$promo_price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;
+                                <span class="crossed-price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;</span>
+                                {*{$discount = 100 * ($promo_price - $price) / $price}
+                                <span class="discount">({$discount}%)</span>*}
+                            {else}
+                                {$price|round:2|number_format:2:',':' '|decimal_trim:','}&nbsp;€&nbsp;
+                            {/if}
+                            {if $setting.price_display === 'tinc'}
+                                <span class="tax">{#tax_included#}</span>
+                            {else}
+                                <span class="tax">{#tax_excluded#}</span>
+                            {/if}
+                            </div>
+                        {/if}
+                    {/strip}
                     <div class="text" itemprop="description">
                         {$product.content}
                     </div>

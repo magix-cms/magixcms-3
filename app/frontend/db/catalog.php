@@ -249,6 +249,7 @@ class frontend_db_catalog {
                         'p.id_product',
                         'pc.name_p',
                         'p.price_p',
+                        'p.price_promo_p',
                         'p.reference_p',
                         //'pc.longname_p',
                         'pc.resume_p',

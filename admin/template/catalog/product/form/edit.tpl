@@ -78,6 +78,21 @@
                     </div>
                 </div>
             </div>
+            <h4>{#price_promo#|ucfirst}</h4>
+            <div class="row">
+                <div class="col-ph-12 col-md-6">
+                    <div class="form-group">
+                        <label for="price_promo_p">{#ht#}</label>
+                        <input type="text" class="form-control" id="price_promo_p" name="productData[price_promo]" value="{$page.price_promo_p}" placeholder="{#ph_price_vat#|ucfirst}">
+                    </div>
+                </div>
+                <div class="col-ph-12 col-md-6">
+                    <div class="form-group">
+                        <label for="promo_ttc">{#ttc#}</label>
+                        <input type="text" class="form-control" id="promo_ttc" data-vat="{$setting.vat_rate}" value="{($page.price_promo_p * ($setting.vat_rate/100 + 1))|number_format:2:'.':''}" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="tab-content">

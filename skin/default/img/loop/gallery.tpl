@@ -8,6 +8,7 @@
                 <span itemprop="thumbnail" itemscope itemtype="http://schema.org/ImageObject">
                     {include file="img/img.tpl" img=$img lazy=true size='medium' lazyClass='lazyload'}
                 </span>
+                {if isset($badge) && $badge != NULL}{$badge}{/if}
             </a>
         {/foreach}
         </div>

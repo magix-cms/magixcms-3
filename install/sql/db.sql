@@ -619,6 +619,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_data` (
 CREATE TABLE IF NOT EXISTS `mc_catalog_product` (
   `id_product` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `price_p` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `price_promo_p` decimal(20,2) NOT NULL DEFAULT '0.00',
   `reference_p` varchar(32) DEFAULT NULL,
   `width_p` decimal(10,2) NOT NULL DEFAULT '0.00',
   `height_p` decimal(10,2) NOT NULL DEFAULT '0.00',

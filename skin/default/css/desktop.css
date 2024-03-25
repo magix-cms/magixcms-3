@@ -3740,6 +3740,7 @@ article ol {
   font-size: inherit;
 }
 #footbar {
+  background-color: var(--main-color);
   color: var(--white);
 }
 #footbar .btn {
@@ -3906,6 +3907,12 @@ article ol {
 .dropdown:not(.toc-drop) .dropdown-menu {
   min-width: 100%;
   top: calc(100% - 2px);
+}
+@media (max-width: 47.999em) {
+  .dropdown:not(.toc-drop) .dropdown-menu {
+    min-width: 100%;
+    top: calc(100% - 125px);
+  }
 }
 .dropdown .dropdown-header {
   padding: 0;

@@ -118,6 +118,7 @@ class backend_db_product {
                         'cc.name_cat',
                         'p.reference_p',
                         'p.price_p',
+                        'p.price_promo_p',
                         'pc.resume_p' ,
                         'pc.content_p',
                         'pc.link_label_p',
@@ -325,8 +326,8 @@ class backend_db_product {
 	public function insert(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'newPages':
-				$query = 'INSERT INTO `mc_catalog_product`(price_p,reference_p,date_register) 
-						VALUES (:price_p,:reference_p,NOW())';
+				$query = 'INSERT INTO `mc_catalog_product`(price_p,price_promo_p,reference_p,date_register) 
+						VALUES (:price_p,:price_promo_p,:reference_p,NOW())';
 				break;
 			case 'newContent':
 				$query = 'INSERT INTO `mc_catalog_product_content`(id_product,id_lang,name_p,longname_p,url_p,resume_p,content_p,seo_title_p,seo_desc_p,published_p) 
@@ -371,7 +372,7 @@ class backend_db_product {
 	public function update(array $config, array $params = []) {
 		switch ($config['type']) {
 			case 'product':
-				$query = 'UPDATE mc_catalog_product SET price_p = :price_p, reference_p = :reference_p
+				$query = 'UPDATE mc_catalog_product SET price_p = :price_p, reference_p = :reference_p, price_promo_p = :price_promo_p
                 WHERE id_product = :id_product';
 				break;
 			case 'content':

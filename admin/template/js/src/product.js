@@ -304,10 +304,32 @@ var product = (function ($, undefined) {
             priceTaxInc.addEventListener('input',(e) => { editPrice(parseFloat(priceTaxInc.value),vat_rate); });
         }
     }
+    function editPromo(value, vat) {
+        let promo = document.getElementById('price_promo_p');
+        promo.value = Math.round(Math.round((value / vat) * 1000) / 10) / 100;
+    }
+    function editPromoTaxInc(value, vat) {
+        let promoTaxInc = document.getElementById('promo_ttc');
+        promoTaxInc.value = Math.round(Math.round((value * vat) * 1000) / 10) / 100;
+    }
+
+    function promoHandler() {
+        let promo = document.getElementById('price_promo_p');
+        let promoTaxInc = document.getElementById('promo_ttc');
+        let vat_rate = parseFloat(promoTaxInc.dataset.vat)/100 + 1;
+
+        if(vat_rate !== null && vat_rate !== '') {
+            promo.addEventListener('change',(e) => { editPromoTaxInc(parseFloat(promo.value),vat_rate); });
+            promo.addEventListener('input',(e) => { editPromoTaxInc(parseFloat(promo.value),vat_rate); });
+            promoTaxInc.addEventListener('change',(e) => { editPromo(parseFloat(promoTaxInc.value),vat_rate); });
+            promoTaxInc.addEventListener('input',(e) => { editPromo(parseFloat(promoTaxInc.value),vat_rate); });
+        }
+    }
 
     return {
         run: function(globalForm,tableForm,edit){
             priceHandler();
+            promoHandler();
             $('.progress').hide();
             $('.form-gen').on('submit', function(e) {
                 e.preventDefault();
@@ -356,6 +378,7 @@ var product = (function ($, undefined) {
         },
         runAdd: function(){
             priceHandler();
+            promoHandler();
             if($('#product_id').val() !== ''){
                 var id = $('#product_id').val();
                 var cus = $('#filter-pages').find('li[data-value="'+id+'"]');

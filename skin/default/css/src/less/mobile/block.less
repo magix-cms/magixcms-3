@@ -37,6 +37,14 @@
 			top: ~"calc(100% - 2px)";
 		}
 	}
+	@media (max-width: .breakpoint(sm)[max]) {
+		&:not(.toc-drop) {
+			.dropdown-menu {
+				min-width: 100%;
+				top: ~"calc(100% - 125px)"; //~"calc(100% - 2px)";
+			}
+		}
+	}
 
 	.dropdown-header {
 		padding: 0;

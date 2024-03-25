@@ -117,6 +117,7 @@ class frontend_model_product {
 			$data['id_lang']   = $row['id_lang'];
 			$data['iso']       = $row['iso_lang'];
 			$data['price']     = $row['price_p'] ?? null;
+            $data['promo_price']= $row['price_promo_p'] ?? null;
 			$data['reference'] = $row['reference_p'] ?? null;
             $data['properties'] = [
                 'width' => $row['width_p'] ?? null,

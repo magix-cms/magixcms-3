@@ -18,7 +18,37 @@
 	.price {
 		text-align: center;
 		margin-bottom: var(--spacer);
-		font-size: 3rem;
+		font-size: calc(var(--font-size) * 3);
 		color: var(--main-color);
+	}
+	.crossed-price{
+		text-decoration: line-through;
+		font-size: calc(var(--font-size) * 2);
+		color: var(--sd-color);
+	}
+	#gallery{
+		.image-gallery{
+			.big-image{
+				position: relative;
+				.discount{
+					margin-top: var(--spacer);
+					margin-right: var(--spacer);
+					padding: .5rem 1rem;
+					top: 0;
+					right: 0;
+					position: absolute;
+					content: '';
+					font-size: var(--font-size);
+					background-color: @brand-danger;
+					span{
+						color: var(--white);
+					}
+				}
+			}
+		}
+	}
+	.tax{
+		font-size: var(--font-size);
+		color: var(--sd-color);
 	}
 }

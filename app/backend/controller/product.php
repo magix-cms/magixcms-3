@@ -372,6 +372,7 @@ class backend_controller_product extends backend_db_product {
 				$arr[$page['id_product']] = [
 					'id_product' => $page['id_product'],
 					'price_p' => $page['price_p'],
+                    'price_promo_p' => $page['price_promo_p'],
 					'reference_p' => $page['reference_p'],
 					'width_p' => $page['width_p'],
 					'height_p' => $page['height_p'],
@@ -719,6 +720,7 @@ class backend_controller_product extends backend_db_product {
                                 'type' => 'newPages',
                                 'data' => array(
                                     'price_p' => !empty($this->productData['price']) ? number_format(str_replace(",", ".", $this->productData['price']), 6, '.', '') : '0',
+                                    'price_promo_p' => !empty($this->productData['price_promo']) ? number_format(str_replace(",", ".", $this->productData['price_promo']), 6, '.', '') : '0',
                                     'reference_p' => $this->productData['reference']
                                 )
                             ));
@@ -774,6 +776,7 @@ class backend_controller_product extends backend_db_product {
                         if (isset($this->id_product)) {
                             if (isset($this->content)) {
                                 $this->productData['price'] = !empty($this->productData['price']) ? number_format(str_replace(",", ".", $this->productData['price']), 6, '.', '') : '0';
+                                $this->productData['price_promo'] = !empty($this->productData['price_promo']) ? number_format(str_replace(",", ".", $this->productData['price_promo']), 6, '.', '') : '0';
                                 $this->productData['reference'] = !empty($this->productData['reference']) ? $this->productData['reference'] : NULL;
 
                                 $this->upd(array(
@@ -781,6 +784,7 @@ class backend_controller_product extends backend_db_product {
                                     'data' => array(
                                         'id_product' => $this->id_product,
                                         'price_p' => $this->productData['price'],
+                                        'price_promo_p' => $this->productData['price_promo'],
                                         'reference_p' => $this->productData['reference']
                                     )
                                 ));

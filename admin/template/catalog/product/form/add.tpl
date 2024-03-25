@@ -109,6 +109,21 @@
                     </div>
                 </div>
             </div>
+            <h4>{#price_promo#|ucfirst}</h4>
+            <div class="row">
+                <div class="col-ph-12 col-md-6">
+                    <div class="form-group">
+                        <label for="price_promo_p">{#ht#}</label>
+                        <input type="text" class="form-control" id="price_promo_p" name="productData[price_promo]" value="" placeholder="{#ph_price_vat#|ucfirst}">
+                    </div>
+                </div>
+                <div class="col-ph-12 col-md-6">
+                    <div class="form-group">
+                        <label for="promo_ttc">{#ttc#}</label>
+                        <input type="text" class="form-control" id="promo_ttc" data-vat="{$setting.vat_rate}" value="" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <button class="btn btn-main-theme" type="submit" name="action" value="add">{#save#|ucfirst}</button>
