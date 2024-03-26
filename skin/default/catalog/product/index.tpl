@@ -49,7 +49,8 @@
                 {if is_array($product.imgs) && count($product.imgs) > 0}
                 <div class="col-12 col-md-6 col-lg-5 col-xl-4">
                     {if $product.promo_price !== '0.00'}
-                        {$discount = 100 * ($promo_price - $price) / $price|cat:'%'}
+                        {$discount_price = (100 * ($promo_price - $price) / $price)|round:1|number_format:2:',':' '|decimal_trim:','}
+                        {$discount = $discount_price|cat:'%'}
                         {else}
                         {$discount = NULL}
                     {/if}
