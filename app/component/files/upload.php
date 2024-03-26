@@ -1062,11 +1062,18 @@ class component_files_upload {
                 // Charge la classe pour le traitement du fichier
                 $makeFiles = new filesystem_makefile();
                 $resultUpload = null;
-                $dirconf = [
-					'upload_root_dir' => $filesCollection['upload_root_dir'],
-					'upload_dir' => $filesCollection['upload_dir'],
-					'fileBasePath'=> true//'fileBasePath' => true
-				];
+                if(isset($filesCollection['upload_dir'])){
+                    $dirconf = [
+                        'upload_root_dir' => $filesCollection['upload_root_dir'],
+                        'upload_dir' => $filesCollection['upload_dir'],
+                        'fileBasePath'=> true//'fileBasePath' => true
+                    ];
+                }else{
+                    $dirconf = [
+                        'upload_root_dir' => $filesCollection['upload_root_dir'],
+                        'fileBasePath'=> true//'fileBasePath' => true
+                    ];
+                }
 
                 $dirFiles = $this->dirFileUpload($dirconf);//$this->dirFileUpload($dirconf);
                 if ($debug) {
