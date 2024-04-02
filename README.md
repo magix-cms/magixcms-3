@@ -21,9 +21,10 @@ Magix CMS dans sa version 3, un cms optimisé pour le référencement.
 -------
 
  * Gerits Aurelien (Author-Developer) aurelien[at]magix-cms[point]com
-    * [magixcms](http://www.magix-cms.com)
+    * [magixcms](https://www.magix-cms.com)
     * [Github Aurelien Gerits](https://github.com/gtraxx/)
     * [Magepattern](https://github.com/gtraxx/magepattern)
+    * [Gerits Aurelien Blog](https://www.gerits-aurelien.be)
 
 ## Contributors
 
