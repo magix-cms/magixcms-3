@@ -125,8 +125,18 @@ class frontend_model_template {
         $this->amp = http_request::isGet('amp') && (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') && $this->ssl;
 	}
 
+    /**
+     * @param string $file
+     * @return void
+     * @throws Exception
+     */
     private function getCacheData(string $file) {
         $system = json_decode(file_get_contents($file),true);
+        if(empty($system['settings'])){
+            $makeFiles = new filesystem_makefile();
+            $makeFiles->remove($file);
+            $this->init();
+        }
         $this->settings = $system['settings'];
         $this->ssl = $system['ssl'];
         $this->defaultDomain = $system['defaultDomain'];
@@ -137,9 +147,10 @@ class frontend_model_template {
         $this->companyData = $system['companyData'];
     }
 
-	/**
-	 * @return void
-	 */
+    /**
+     * @return void
+     * @throws Exception
+     */
     public function init() {
         $systemCacheFile = component_core_system::basePath().'/var/caches/.system';
         if(file_exists($systemCacheFile)) $this->getCacheData($systemCacheFile);
