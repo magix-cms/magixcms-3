@@ -165,7 +165,11 @@ class backend_controller_files extends backend_db_files {
 							if (class_exists($plugin) && method_exists($plugin, 'getItemsImages')) {
 								$class = new $plugin();
 								$images = $class->getItemsImages();
+                                $attribute = $this->attribute ? $this->attribute : $this->module;
 								//$module = 'plugins';
+                                /*$log = new debug_logger(MP_LOG_DIR);
+                                $log->tracelog($plugin);
+                                $log->tracelog(json_encode($images));*/
 							}
 						}
 						if(isset($this->attribute) && !empty($this->attribute) && $this->attribute !== $this->module) $root .= '/'.$this->attribute;
@@ -174,6 +178,10 @@ class backend_controller_files extends backend_db_files {
 								'progress' => new component_core_feedback($this->template),
 								'template' => $this->template
 							]);
+                            /*$log = new debug_logger(MP_LOG_DIR);
+                            $log->tracelog(json_encode($attribute));
+                            $log->tracelog(json_encode($root));
+                            $log->tracelog('end imgs');*/
 						}
                     }
 					else {
