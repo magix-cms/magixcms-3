@@ -368,9 +368,6 @@ class frontend_db_news {
 								c.content_news,
 								c.published_news,
 								p.date_publish,
-								COALESCE(c.alt_img, c.name_news) as alt_img,
-								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
-								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
 								c.seo_title_news,
 								c.seo_desc_news,
 								lang.iso_lang
@@ -378,8 +375,8 @@ class frontend_db_news {
 							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
 							WHERE lang.iso_lang = :iso AND c.published_news = 1
-							AND (c.date_publish < :date_publish OR (c.date_publish = '".$params['date_publish']."' AND p.id_news < :id))
-							ORDER BY c.date_publish DESC LIMIT 1";
+							AND (p.date_publish < :date_publish OR (p.date_publish = '".$params['date_publish']."' AND p.id_news < :id))
+							ORDER BY p.date_publish DESC LIMIT 1";
 			    	break;
 			    case 'next_page':
 					$query = "SELECT c.id_news,
@@ -389,9 +386,6 @@ class frontend_db_news {
 								c.content_news,
 								c.published_news,
 								p.date_publish,
-								COALESCE(c.alt_img, c.name_news) as alt_img,
-								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,
-								COALESCE(c.caption_img, c.title_img, c.alt_img, c.name_news) as caption_img,
 								c.seo_title_news,
 								c.seo_desc_news,
 								lang.iso_lang
@@ -399,8 +393,8 @@ class frontend_db_news {
 							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
 							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)  
 							WHERE lang.iso_lang = :iso AND c.published_news = 1
-							AND (c.date_publish > :date_publish OR (c.date_publish = '".$params['date_publish']."' AND p.id_news > :id))
-							ORDER BY c.date_publish LIMIT 1";
+							AND (p.date_publish > :date_publish OR (p.date_publish = '".$params['date_publish']."' AND p.id_news > :id))
+							ORDER BY p.date_publish LIMIT 1";
 			    	break;
 				case 'count_news':
 					$where = '';
