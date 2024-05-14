@@ -78,18 +78,18 @@ class backend_db_theme {
 						LEFT JOIN mc_catalog_cat_content as cc ON c.id_cat = cc.id_cat AND cc.id_lang = l.id_lang
 						LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
 						ORDER BY m.order_link ASC";*/
-					$query = "SELECT 
+					/*$query = "SELECT
                         m.id_link, 
                         m.id_page, 
                         m.type_link as type_link, 
                         m.mode_link as mode_link, 
-                        lg.id_lang, 
+                        lg.id_lang,
                         COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
                         mc.title_link as title_link,
                         COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
                         COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
                         FROM mc_menu as m
-                        LEFT JOIN mc_menu_content as mc ON m.id_link = mc.id_link
+                        JOIN mc_menu_content as mc ON m.id_link = mc.id_link
                         LEFT JOIN mc_cms_page as p ON (m.id_page = p.id_pages AND m.type_link = 'pages')
                         LEFT JOIN mc_cms_page_content as pc ON (p.id_pages = pc.id_pages)
                         LEFT JOIN mc_about_page as ap ON (m.id_page = ap.id_pages AND m.type_link = 'about_page')
@@ -104,7 +104,30 @@ class backend_db_theme {
                         )
                         LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
                         WHERE lg.active_lang = 1
-                        ORDER BY m.order_link, lg.id_lang";
+                        ORDER BY m.order_link, lg.id_lang";*/
+                    $query = "SELECT 
+                        m.id_link, 
+                        m.id_page, 
+                        m.type_link as type_link, 
+                        m.mode_link as mode_link, 
+                        mc.id_lang, 
+                        COALESCE(mc.name_link, pc.name_pages, apc.name_pages, cc.name_cat, pl.name) as name_link, 
+                        mc.title_link as title_link,
+                        COALESCE(mc.url_link, pc.url_pages, apc.url_pages, cc.url_cat) as url_link,
+                        COALESCE(pc.published_pages, apc.published_pages, cc.published_cat, 1) as active_link
+                        FROM mc_menu as m
+                        JOIN mc_menu_content as mc ON m.id_link = mc.id_link
+                        JOIN mc_lang as lang ON (mc.id_lang = lang.id_lang)
+                        LEFT JOIN mc_cms_page as p ON (m.id_page = p.id_pages AND m.type_link = 'pages')
+                        LEFT JOIN mc_cms_page_content as pc ON (p.id_pages = pc.id_pages AND pc.id_lang = mc.id_lang)
+                        LEFT JOIN mc_about_page as ap ON (m.id_page = ap.id_pages AND m.type_link = 'about_page')
+                        LEFT JOIN mc_about_page_content as apc ON (ap.id_pages = apc.id_pages AND apc.id_lang = mc.id_lang)
+                        LEFT JOIN mc_catalog_cat as c ON (m.id_page = c.id_cat AND m.type_link = 'category')
+                        LEFT JOIN mc_catalog_cat_content as cc ON (c.id_cat = cc.id_cat AND m.type_link = 'category' AND cc.id_lang = mc.id_lang)
+                       
+                        LEFT JOIN mc_plugins as pl ON m.id_page = pl.id_plugins
+                        WHERE lang.active_lang = 1
+                        ORDER BY m.order_link, mc.id_lang";
 					break;
 				case 'link':
 					$query = "SELECT 
@@ -143,11 +166,10 @@ class backend_db_theme {
 						GROUP BY pt.id';*/
 					$query = 'SELECT p.id_pages AS id, p.id_parent AS parent, pc.name_pages AS name
 						FROM mc_cms_page AS p
-						LEFT JOIN mc_cms_page_content AS pc
-						USING ( id_pages ) 
+						LEFT JOIN mc_cms_page_content AS pc ON (p.id_pages = pc.id_pages)
 						LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
 						WHERE p.menu_pages = 1
-						AND pc.published_pages = 1
+						AND pc.published_pages = 1 AND pc.id_lang = :default_lang
 						ORDER BY p.id_pages, l.default_lang DESC';
 					break;
 				case 'about_page':
@@ -164,11 +186,10 @@ class backend_db_theme {
 						GROUP BY pt.id';*/
 					$query = 'SELECT p.id_pages as id, p.id_parent as parent, pc.name_pages as name
 						FROM mc_about_page as p
-						LEFT JOIN mc_about_page_content as pc
-						USING(id_pages)
+						LEFT JOIN mc_about_page_content as pc ON (p.id_pages = pc.id_pages)
 						LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
 						WHERE p.menu_pages =1
-						AND pc.published_pages =1
+						AND pc.published_pages =1 AND pc.id_lang = :default_lang
 						ORDER BY p.id_pages, l.default_lang DESC';
 					break;
 				case 'category':
@@ -184,10 +205,9 @@ class backend_db_theme {
 						GROUP BY pt.id';*/
 					$query = 'SELECT p.id_cat as id, p.id_parent as parent, pc.name_cat as name
 						FROM mc_catalog_cat as p
-						LEFT JOIN mc_catalog_cat_content as pc
-						USING(id_cat)
-						LEFT JOIN mc_lang AS l ON pc.id_lang = l.id_lang
-						WHERE pc.published_cat =1
+						LEFT JOIN mc_catalog_cat_content as pc ON(p.id_cat = pc.id_cat)
+						JOIN mc_lang AS l ON pc.id_lang = l.id_lang
+						WHERE pc.published_cat =1 AND pc.id_lang = :default_lang
 						ORDER BY p.id_cat, l.default_lang DESC';
 					break;
 				case 'plugin':

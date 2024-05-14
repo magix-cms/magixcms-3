@@ -445,9 +445,9 @@ class backend_controller_theme extends backend_db_theme {
 							$this->template->assign('links',$plugins);
 						}
 						else {
-							//$defaultLanguage = $this->collectionLanguage->fetchData(['context'=>'one','type'=>'default']);
-							//$this->setPagesTree($this->getItems($this->content,['idlang'=>$defaultLanguage['id_lang']],'all',false));
-							$this->setPagesTree($this->getItems($this->content,[],'all',false));
+							$defaultLanguage = $this->collectionLanguage->fetchData(['context'=>'one','type'=>'default']);
+							$this->setPagesTree($this->getItems($this->content,['default_lang'=>$defaultLanguage['id_lang']],'all',false));
+							//$this->setPagesTree($this->getItems($this->content,[],'all',false));
 						}
 						$this->template->display('theme/loop/page.tpl');
 					}
