@@ -273,7 +273,7 @@ class backend_controller_about extends backend_db_about{
 		$params = array();
 
 		if($this->edit) {
-			$results = $this->getItems('pagesChild',$this->edit,'all',false);
+			$results = $this->getItems('pagesChild',array('id'=>$this->edit,'default_lang'=>$defaultLanguage['id_lang']),'all',false);
 		}
 		else {
 			$results = $this->getItems('pages',array('default_lang'=>$defaultLanguage['id_lang']),'all',false,true);
@@ -760,13 +760,14 @@ class backend_controller_about extends backend_db_about{
                                     'menu_pages',
                                     'date_register'
                                 );*/
+                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
+
                                 $this->data->getScheme(
                                     array('mc_about_page', 'mc_about_page_content'),
                                     array('id_pages', 'name_pages', 'resume_pages', 'content_pages', 'seo_title_pages', 'seo_desc_pages', 'menu_pages', 'date_register'),
                                     $this->tableconfig['parent']);
-                                $pageChild = $this->getItems('pagesChild', $this->edit, 'all');
+                                $pageChild = $this->getItems('pagesChild', array('id'=>$this->edit,'default_lang'=>$defaultLanguage['id_lang']), 'all');
 
-                                $defaultLanguage = $this->collectionLanguage->fetchData(array('context' => 'one', 'type' => 'default'));
                                 $this->getItems('pagesSelect', array('default_lang' => $defaultLanguage['id_lang']), 'all');
                                 $this->template->display('about/pages/edit.tpl');
                             }

@@ -134,7 +134,7 @@ class backend_db_about {
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								LEFT JOIN mc_about_page AS pa ON ( p.id_parent = pa.id_pages )
 								LEFT JOIN mc_about_page_content AS ca ON ( pa.id_pages = ca.id_pages AND ca.id_lang = c.id_lang ) 
-								WHERE p.id_parent = :id $cond";
+								WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond";
 					break;
 				case 'pagesSelect':
 					$query = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
