@@ -36,10 +36,13 @@
                         {$promo_price = $product.promo_price}
                     {/if}
                 {/if}
+                {if $product.price !== '0.00'}
                 <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <span itemprop="price" content="{if $product.promo_price !== '0.00'}{$promo_price|round:2|number_format:2:',':' '|decimal_trim:','}{else}{$price|round:2|number_format:2:',':' '|decimal_trim:','}{/if}"></span>
+                    <meta itemprop="availability" content="https://schema.org/{$product.properties.availability}" />
+                    <span itemprop="price" content="{if $product.promo_price !== '0.00'}{$promo_price|round:2|number_format:2:'.':' '|decimal_trim:','}{else}{$price|round:2|number_format:2:'.':' '|decimal_trim:','}{/if}"></span>
                     <span itemprop="priceCurrency" content="EUR"></span>
                 </span>
+                {/if}
             </header>
             <div itemprop="category" itemscope itemtype="http://schema.org/Series">
                 <meta itemprop="name" content="{$parent.name}">

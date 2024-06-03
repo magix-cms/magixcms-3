@@ -251,6 +251,7 @@ class frontend_db_catalog {
                         'p.price_p',
                         'p.price_promo_p',
                         'p.reference_p',
+                        'p.availability_p',
                         //'pc.longname_p',
                         'pc.resume_p',
                         'pc.content_p',

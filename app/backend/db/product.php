@@ -396,7 +396,8 @@ class backend_db_product {
                           width_p = :width_p, 
                           weight_p = :weight_p, 
                           depth_p = :depth_p, 
-                          height_p= :height_p
+                          height_p= :height_p,
+                          availability_p = :availability_p
                         WHERE id_product = :id_product';
                 break;
 			case 'imgContent':

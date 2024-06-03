@@ -625,6 +625,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_product` (
   `height_p` decimal(10,2) NOT NULL DEFAULT '0.00',
   `depth_p` decimal(10,2) NOT NULL DEFAULT '0.00',
   `weight_p` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `availability_p` varchar(30) DEFAULT 'InStock',
   `date_register` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_product`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

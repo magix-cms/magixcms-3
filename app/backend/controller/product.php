@@ -378,6 +378,7 @@ class backend_controller_product extends backend_db_product {
 					'height_p' => $page['height_p'],
 					'depth_p' => $page['depth_p'],
 					'weight_p' => $page['weight_p'],
+                    'availability_p' => $page['availability_p'],
 					'date_register' => $page['date_register']
 				];
 			}
@@ -924,6 +925,7 @@ class backend_controller_product extends backend_db_product {
                                             $this->productData['weight'] = !empty($this->productData['weight']) ? number_format(str_replace(",", ".", $this->productData['weight']), 2, '.', '') : '0';
                                             $this->productData['depth'] = !empty($this->productData['depth']) ? number_format(str_replace(",", ".", $this->productData['depth']), 2, '.', '') : '0';
                                             $this->productData['height'] = !empty($this->productData['height']) ? number_format(str_replace(",", ".", $this->productData['height']), 2, '.', '') : '0';
+                                            $this->productData['availability'] = (!empty($this->productData['availability']) ? $this->productData['availability'] : 'InStock');
 
                                             $this->upd(array(
                                                 'type' => 'properties',
@@ -932,7 +934,8 @@ class backend_controller_product extends backend_db_product {
                                                     'width_p' => $this->productData['width'],
                                                     'weight_p' => $this->productData['weight'],
                                                     'depth_p' => $this->productData['depth'],
-                                                    'height_p' => $this->productData['height']
+                                                    'height_p' => $this->productData['height'],
+                                                    'availability_p' => $this->productData['availability']
                                                 )
                                             ));
                                             $this->message->json_post_response(true, 'update', array('result' => $this->id_product));

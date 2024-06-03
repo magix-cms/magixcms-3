@@ -123,7 +123,8 @@ class frontend_model_product {
                 'width' => $row['width_p'] ?? null,
                 'height' => $row['height_p'] ?? null,
                 'depth' => $row['depth_p'] ?? null,
-                'weight' => $row['weight_p'] ?? null
+                'weight' => $row['weight_p'] ?? null,
+                'availability' => $row['availability_p'] ?? null
             ];
 			$data['content']   = $row['content_p'] ?? null;
 			$data['resume']    = $row['resume_p'] ?? (($row['content_p']) ? $string_format->clearHTMLTemplate($row['content_p']) : '');

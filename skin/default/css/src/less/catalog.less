@@ -14,4 +14,27 @@
 	.text ~ .h2 {
 		.main-title();
 	}
+	.text{
+		margin-bottom: var(--spacer);
+	}
+	.product-list{
+		.product-price{
+			display: flex;
+			align-content: center;
+			justify-content: center;
+			gap: var(--spacer);
+			.crossed-price{
+				color: var(--sd-color);
+				.strike{
+					text-decoration: line-through;
+				}
+				.currency-pack{
+					text-decoration: none;
+				}
+			}
+			.price{
+				font-size: var(--fz-h3);
+			}
+		}
+	}
 }
