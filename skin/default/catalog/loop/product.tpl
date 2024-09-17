@@ -26,9 +26,16 @@
                         {$price = $item.price * (1 + ($setting.vat_rate/100))}
                         {$promo_price = $item.promo_price * (1 + ($setting.vat_rate/100))}
                         <meta itemprop="availability" content="https://schema.org/{$item.properties.availability}" />
-                        <span itemprop="price" class="price" content="{if $promo_price != '0.00'}{$promo_price|round:2|number_format:2:'.':' '|decimal_trim:','}{else}{$price|round:2|number_format:2:'.':' '|decimal_trim:','}{/if}">
-                            {if $item.price != '0.00'}{if $promo_price != '0.00'}{$promo_price|round:2|number_format:2:',':' '|decimal_trim:','}{else}{$price|round:2|number_format:2:',':' '|decimal_trim:','}{/if}&nbsp;€{/if}
-                        </span>
+                        <div itemprop="price" class="product-price" content="{if $promo_price != '0.00'}{$promo_price|round:2|number_format:2:'.':' '|decimal_trim:','}{else}{$price|round:2|number_format:2:'.':' '|decimal_trim:','}{/if}">
+                            {if $item.price != '0.00'}
+                                {if $promo_price != '0.00'}
+                                <span class="price">{$promo_price|round:2|number_format:2:',':' '|decimal_trim:','}<span class="currency">€</span></span>
+                                <span class="crossed-price"><span class="strike">{$price|round:2|number_format:2:',':' '|decimal_trim:','}</span><span class="currency">€</span></span>
+                                {else}
+                                    <span class="price">{$price|round:2|number_format:2:',':' '|decimal_trim:','}<span class="currency">€</span></span>
+                                {/if}
+                            {/if}
+                        </div>
                         <span itemprop="priceCurrency" content="EUR"></span>
                     </div>
                 </div>
