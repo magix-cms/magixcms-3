@@ -29,7 +29,7 @@ class backend_db_category {
 								JOIN mc_catalog_cat_content AS c USING ( id_cat )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								WHERE c.id_lang = :default_lang AND p.id_parent IS NULL  
-							ORDER BY p.order_cat".$limit;
+							ORDER BY p.order_cat ASC".$limit;
 
 					if(isset($config['search'])) {
 						$cond = '';
@@ -70,7 +70,7 @@ class backend_db_category {
 										LEFT JOIN mc_catalog_cat AS pa ON ( p.id_parent = pa.id_cat )
 										LEFT JOIN mc_catalog_cat_content AS ca ON ( pa.id_cat = ca.id_cat ) 
 										WHERE c.id_lang = :default_lang $cond
-									ORDER BY p.order_cat".$limit;
+									ORDER BY p.order_cat ASC".$limit;
 						}
 					}
 					break;
@@ -106,7 +106,7 @@ class backend_db_category {
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_catalog_cat AS pa ON ( p.id_parent = pa.id_cat )
 							LEFT JOIN mc_catalog_cat_content AS ca ON ( pa.id_cat = ca.id_cat and ca.id_lang = c.id_lang ) 
-							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond";
+							WHERE p.id_parent = :id AND c.id_lang = :default_lang $cond ORDER BY p.order_cat ASC";
 					break;
 				case 'pagesSelect':
 					$query = "SELECT p.id_parent,p.id_cat, c.name_cat , ca.name_cat AS parent_cat
