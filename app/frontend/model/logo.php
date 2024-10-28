@@ -100,7 +100,7 @@ class frontend_model_logo extends frontend_db_logo {
                     $newData['img'][$value['type']]['w'] = $value['resize'] === 'basic' ? $imginfo['width'] : $value['width'];
                     $newData['img'][$value['type']]['h'] = $value['resize'] === 'basic' ? $imginfo['height'] : $value['height'];
                     $newData['img'][$value['type']]['crop'] = $value['resize'];
-                    $newData['img'][$value['type']]['ext'] = mime_content_type(component_core_system::basePath().'/img/logo/'.$value['prefix'].'_'.$filename.'@'.$value['width'].'.'.$extension);
+                    $newData['img'][$value['type']]['ext'] = mime_content_type(component_core_system::basePath().'img/logo/'.$value['prefix'].'_'.$filename.'@'.$value['width'].'.'.$extension);
                 }
             }
         }

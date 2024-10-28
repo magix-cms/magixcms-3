@@ -311,16 +311,20 @@ class frontend_controller_news extends frontend_db_news {
                     foreach ($this->tagsData as $tag) {
                         $tags[$tag['id_tag']] = $tag;
                     }
+                    //print_r($this->tagsData);
+                    //print_r($collection);
                     foreach($collection as $key => &$value){
                         $tags_ids = explode(',',$value['tags_ids']);
                         $itemTags = array_intersect_key($tags,array_flip($tags_ids));
                         //$itemTags = array_intersect_ukey($tags,array_flip($tags_ids),function($a,$b){ return $a == $b; });
                         if(!empty($itemTags)) {
                             $value['tags'] = $itemTags;
+                        }else{
+                            $value['tags'] = null;
                         }
+                        //print_r($value);
                     }
                 }
-
 				if(empty($newtableArray)) {
 					foreach ($collection as &$item) {
 						$newSetArray[] = $this->modelNews->setItemData($item, []);
@@ -339,13 +343,14 @@ class frontend_controller_news extends frontend_db_news {
 							$extendFormArray[] = $newtableArray['collection'];
 						}
 						$extendFormData = $this->modelModule->extendDataArray('news','extendListNews', $collection);
+                        $extendFormData = array_filter($extendFormData);
 
-						foreach ($collection as $key => $value){
+                        foreach ($collection as $key => &$value){
 							foreach ($extendFormData as $key1 => $value1) {
 								$collection[$key][$extendFormArray[$key1]] = $value1[$key];
 							}
 						}
-
+                        //print_r($collection);
 						$newRow = $newtableArray['newRow'];
 						foreach ($collection as &$item) {
 							$newSetArray[] = $this->modelNews->setItemData($item, [], $newRow);
@@ -353,6 +358,7 @@ class frontend_controller_news extends frontend_db_news {
 					}
 				}
 			}
+            //print_r($newSetArray);
 			return $newSetArray;
 		}
 		else {
@@ -363,10 +369,131 @@ class frontend_controller_news extends frontend_db_news {
 			];
 		}
 	}
+    public function getNewsData(int $id = null) : array
+    {
+        if ($id !== null) $this->id = $id;
+        $newTableArray = [];
+        $override = $this->modelModule->extendDataArray('news', __FUNCTION__);
+        if ($override) {
+            foreach ($override as $value) {
+                $newTableArray = array_merge_recursive($newTableArray, $value);
+            }
+        }
+        if(!$newTableArray){
+            $collection = $this->getItems('news', array('id' => $this->id, 'iso' => $this->lang), 'one', false);
+        }
+        else{
+            $extendQueryParams = [];
+            $extendQueryParams[] = $newTableArray['extendQueryParams'];
 
+            $params = [];
+            if(!empty($extendQueryParams)) {
+                foreach ($extendQueryParams as $extendParams) {
+                    if(isset($extendParams['select']) && !empty($extendParams['select'])) $params['select'][] = $extendParams['select'];
+                    if(isset($extendParams['join']) && !empty($extendParams['join'])) $params['join'][] = $extendParams['join'];
+                    if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
+                }
+            }
+            $collection = $this->getItems('news', array_merge(array('id' => $this->id, 'iso' => $this->lang),$params), 'one', false);
+        }
+        $imgCollection = $this->getItems('imgs', array('id' => $this->id, 'iso' => $this->lang), 'all', false);
+
+        if ($imgCollection != null) $collection['img'] = $imgCollection;
+        if(!empty($this->tagsData)) {
+            $tags = [];
+            foreach ($this->tagsData as $tag) {
+                $tags[$tag['id_tag']] = $tag;
+            }
+            $tags_ids = explode(',',$collection['tags_ids']);
+            $itemTags = array_intersect_key($tags,array_flip($tags_ids));
+            if(!empty($itemTags)) {
+                $collection['tags'] = $itemTags;
+            }
+        }
+
+        $collection['prev'] = null;
+        $prev = $this->getItems('prev_page', array('id' => $this->id, 'iso' => $this->lang, 'date_publish' => $collection['date_publish']), 'one', false);
+        if ($prev) {
+            $collection['prev']['title'] = $prev['name_news'];
+            $collection['prev']['url'] = $this->routingUrl->getBuildUrl(array(
+                'type' => 'news',
+                'iso' => $prev['iso_lang'],
+                'date' => $prev['date_publish'],
+                'id' => $prev['id_news'],
+                'url' => $prev['url_news']
+            ));
+        }
+
+        $collection['next'] = null;
+        $next = $this->getItems('next_page', array('id' => $this->id, 'iso' => $this->lang, 'date_publish' => $collection['date_publish']), 'one', false);
+        if ($next) {
+            $collection['next']['title'] = $next['name_news'];
+            $collection['next']['url'] = $this->routingUrl->getBuildUrl(array(
+                'type' => 'news',
+                'iso' => $next['iso_lang'],
+                'date' => $next['date_publish'],
+                'id' => $next['id_news'],
+                'url' => $next['url_news']
+            ));
+        }
+        if(!$newTableArray){
+            $extendProductData = $this->modelModule->extendDataArray('news','extendNewsData', $collection);
+            $newRow = [];
+            if($extendProductData) {
+                $extendRow = [];
+                foreach ($extendProductData as $value) {
+                    foreach ($value['newRow'] as $key => $item) {
+                        $extendRow['newRow'][$key] = $item;
+                        $extendRow['collection'][$key] = $value['collection'];
+                        $extendRow['data'][$key] = $value['data'];
+                        $collection[$value['collection']] = $value['data'];
+                    }
+                }
+                $newRow = $extendRow['newRow'];
+            }
+            return $this->modelNews->setItemData($collection, [], $newRow);
+        }
+        else{
+
+            if(isset($newTableArray['collection'])){
+                $extendFormArray = [];
+                if(is_array($newTableArray['collection'])) {
+                    foreach ($newTableArray['collection'] as $key => $value) {
+                        $extendFormArray[] = $value;
+                    }
+                }else{
+                    $extendFormArray[] = $newTableArray['collection'];
+                }
+                $extendFormData = $this->modelModule->extendDataArray('news','extendNews', $collection);
+                foreach ($extendFormData as $key => $value) {
+                    $collection[$extendFormArray[$key]] = $value;
+                }
+            }
+
+            $extendProductData = $this->modelModule->extendDataArray('news','extendNewsData', $collection);
+            if($extendProductData) {
+                $extendRow = [];
+                foreach ($extendProductData as $value) {
+                    foreach ($value['newRow'] as $key => $item) {
+                        $extendRow['newRow'][$key] = $item;
+                        $extendRow['collection'][$key] = $value['collection'];
+                        $extendRow['data'][$key] = $value['data'];
+                        $collection[$value['collection']] = $value['data'];
+                    }
+                }
+                $newRow = array_merge($newTableArray['newRow'], $extendRow['newRow']);
+            }
+            else{
+                $newRow = $newTableArray['newRow'];
+            }
+
+            return $this->modelNews->setItemData($collection, [], $newRow);
+        }
+    }
     /**
      * set Data from database
      * @access private
+     * @deprecated
      */
     private function getBuildNewsItems()
     {
@@ -448,9 +575,9 @@ class frontend_controller_news extends frontend_db_news {
                 $this->template->breadcrumb->addItem($this->template->getConfigVars('theme').': '.$data['name']);
                 break;
             case 'id':
-                $data = $this->getBuildNewsItems();
+                $data = $this->getNewsData($this->id);//$this->getBuildNewsItems();
                 //print_r($data);
-                $this->template->breadcrumb->addItem($data['name']);
+                //$this->template->breadcrumb->addItem($data['name']);
                 $hreflang = $this->getBuildLangItems();
                 $this->template->assign('news',$data,true);
                 $this->template->assign('hreflang',$hreflang,true);

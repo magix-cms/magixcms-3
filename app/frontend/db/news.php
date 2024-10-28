@@ -299,6 +299,61 @@ class frontend_db_news {
 		}
 		elseif($config['context'] === 'one') {
 			switch ($config['type']) {
+                case 'news':
+                    $cond = '';
+                    if(isset($params['where'])) {
+                        unset($params['where']);
+                    }
+
+                    $select = ['c.*' ,
+                        'p.id_news',
+                        'c.name_news',
+                        'c.longname_news',
+                        'c.url_news',
+                        'c.resume_news',
+                        'c.content_news',
+                        'c.published_news',
+                        'p.date_register',
+                        'p.date_publish',
+                        'p.date_event_start',
+                        'p.date_event_end',
+                        'c.link_label_news',
+                        'c.link_title_news',
+                        'c.seo_title_news',
+                        'c.seo_desc_news',
+                        'lang.iso_lang',
+                        'tagrel.tags_ids'
+                    ];
+                    if(isset($params['select'])) {
+                        foreach ($params['select'] as $extendSelect) {
+                            $select = array_merge($select, $extendSelect);
+                        }
+                        unset($params['select']);
+                    }
+
+                    $joins = '';
+                    if(isset($params['join']) && is_array($params['join'])) {
+                        $newJoin = [];
+
+                        foreach ($params['join'] as $key => $value) {
+                            $newJoin = array_merge($newJoin, $value);
+                        }
+                        foreach ($newJoin as $join) {
+                            $joins .= ' '.$join['type'].' '.$join['table'].' '.$join['as'].' ON ('.$join['on']['table'].'.'.$join['on']['key'].' = '.$join['as'].'.'.$join['on']['key'].') ';
+                        }
+
+                        unset($params['join']);
+                    }
+
+                    $query = "SELECT ".implode(',', $select)."
+                        FROM mc_news AS p
+							JOIN mc_news_content AS c ON(c.id_news = p.id_news)
+                            LEFT JOIN (
+                                SELECT mn.id_news, GROUP_CONCAT(mntr.id_tag SEPARATOR ',') as tags_ids FROM mc_news as mn LEFT JOIN mc_news_tag_rel as mntr on (mn.id_news = mntr.id_news) GROUP BY mn.id_news
+                            ) tagrel ON(tagrel.id_news = p.id_news)
+							JOIN mc_lang AS lang ON(c.id_lang = lang.id_lang)".$joins."
+							WHERE p.id_news = :id AND lang.iso_lang = :iso AND c.published_news = 1";
+                    break;
 			    case 'page':
                     //COALESCE(c.alt_img, c.name_news) as alt_img,
                     //								COALESCE(c.title_img, c.alt_img, c.name_news) as title_img,

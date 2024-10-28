@@ -200,7 +200,9 @@ class frontend_model_module extends frontend_db_module {
                     //$mods[] = $item['name'];
                     $modClass = 'plugins_' . $item['name'] . '_public';
 
-                    if(class_exists($modClass)) $active_mods[$item['name']] = $this->get_call_class($modClass);
+                    if(class_exists($modClass)) {
+                        $active_mods[$item['name']] = $this->get_call_class($modClass);
+                    };
                 }
             }
             return $active_mods;
@@ -236,6 +238,7 @@ class frontend_model_module extends frontend_db_module {
         if(!empty($this->mods)) {
             foreach ($this->mods as $mod){
                 //print $mod;
+                //var_dump(method_exists($mod,$method));
                 if(method_exists($mod,$method)){
                     $loadMethod[] = call_user_func_array(
                         [$mod, $method],

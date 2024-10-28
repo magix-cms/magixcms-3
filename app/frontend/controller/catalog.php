@@ -533,7 +533,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
                             $extendFormArray[] = $newTableArray['collection'];
                         }
                         $extendFormData = $this->modelModule->extendDataArray('product','extendListProduct', $collection);
-
+                        $extendFormData = array_filter($extendFormData);
                         foreach ($collection as $key => $value){
                             foreach ($extendFormData as $key1 => $value1) {
                                 $collection[$key][$extendFormArray[$key1]] = $value1[$key];
