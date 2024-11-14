@@ -254,6 +254,33 @@ class backend_controller_logo extends backend_db_logo {
         $settingsData = $this->getItems('placeholder',NULL,'all',false);
         return empty($settingsData) ? [] : array_column($settingsData,'value','name');
     }
+    private function social($fetchRootData){
+        $settingsData = $this->settingsData();
+        $ext = '.jpg';
+        $dirImgArray = $this->routingUrl->dirUpload('img/social',true);
+        $logo = $this->imagesComponent->imageManager->make(
+            $this->routingUrl->basePath('img/logo/') . $fetchRootData['img_logo']
+        );
+
+        $percentage = $settingsData['logo_percent'] ?? 50;
+        $width = ($percentage / 100) * 250;
+        $height = ($percentage / 100) * 250;
+
+        $logo->resize($width, $height, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+        $logo->save($dirImgArray . 'logo.png');
+        $image = $this->imagesComponent->imageManager->canvas(250, 250, $settingsData['holder_bg_color']);
+        $image->save($dirImgArray . 'social' . $ext);
+        $watermark = $this->imagesComponent->imageManager->make($dirImgArray . 'logo.png');
+        $image->insert($watermark, 'center');
+        $image->save($dirImgArray . 'social' . $ext, 80);
+        if(function_exists('imagewebp')) $image->save($dirImgArray . 'social.webp', 80);
+        if (file_exists($dirImgArray . 'logo.png')) {
+            $this->makeFiles->remove($dirImgArray . 'logo.png');
+        }
+    }
     /**
      * @throws Exception
      */
@@ -445,7 +472,7 @@ class backend_controller_logo extends backend_db_logo {
                                              }
                                          }
                                      }
-
+                                     $this->social($fetchRootData);
                                      $color = $this->holder_bg_color === 'transparent' ? 'rgba(0, 0, 0, 0)' : $this->holder_bg_color;
                                      $ext = $this->holder_bg_color === 'transparent' ? '.png' : '.jpg';
                                      $logo = $this->imagesComponent->imageManager->make(
