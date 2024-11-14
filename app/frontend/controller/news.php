@@ -369,6 +369,129 @@ class frontend_controller_news extends frontend_db_news {
 			];
 		}
 	}
+
+    /**
+     * @param $limit
+     * @param array $filter
+     * @return array
+     * @throws Exception
+     */
+    public function getNewsCount($limit = false, array $filter = []) : array {
+        if(isset($this->filter)) $filter = $this->filter;
+
+        $newtableArray = [];
+
+        $override = $this->modelModule->extendDataArray('news',__FUNCTION__, $filter);
+
+        if(!empty($override)) {
+            foreach ($override as $value) {
+                $newtableArray = array_merge_recursive($newtableArray, $value);
+            }
+        }
+
+        $params = ['iso' => $this->lang];
+        $joins = [];
+        $conditions = [];
+
+        if(isset($this->tag) || isset($this->tags)) {
+            if(isset($this->tags)) $this->tags = collections_ArrayTools::ArrayCleaner($this->tags);
+
+            if(!empty($this->tag) || !empty($this->tags)) {
+                $joins[] = [
+                    'type' => 'LEFT JOIN',
+                    'table' => 'mc_news_tag_rel',
+                    'as' => 'mntr',
+                    'on' => [
+                        'table' => 'mn',
+                        'key' => 'id_news'
+                    ]
+                ];
+
+                if (!empty($this->tags)) {
+                    $conditions[] = [
+                        'type' => 'AND',
+                        'condition' => 'mntr.id_tag IN('.implode(',',$this->tags).')'
+                    ];
+                }
+                elseif (!empty($this->tag)) {
+                    $conditions[] = [
+                        'type' => 'AND',
+                        'condition' => 'mntr.id_tag = :tag'
+                    ];
+                    $params['tag'] = $this->tag;
+                }
+            }
+        }
+        if(isset($this->date)) {
+            $conditions[] = [
+                'type' => 'AND',
+                'condition' => 'mn.date_publish = :date'
+            ];
+            $params['date'] = $this->dateFormat->SQLDate($this->date);
+        }
+        elseif(isset($this->year)) {
+            $conditions[] = [
+                'type' => 'AND',
+                'condition' => 'YEAR(mn.date_publish) = :yr'
+            ];
+            $params['yr'] = $this->year;
+
+            if (isset($this->month)) {
+                $conditions[] = [
+                    'type' => 'AND',
+                    'condition' => 'MONTH(mn.date_publish) = :mth'
+                ];
+                $params['mth'] = $this->month;
+            }
+        }
+        else {
+            $conditions[] = [
+                'type' => 'AND',
+                'condition' => 'mn.date_publish <= :date'
+            ];
+            $params['date'] = $this->dateFormat->SQLDate();
+        }
+
+        //if(!$count) $limit = !$limit ? [($this->page * $this->offset) . ', ' . $this->offset] : [$limit] ;
+
+        if(!empty($joins)) $params['join'] = [$joins];
+        if(!empty($conditions)) $params['where'] = [$conditions];
+        if(!empty($limit)) $params['limit'] = $limit;
+
+        if(!empty($newtableArray)) {
+            $extendQueryParams = [];
+            $extendQueryParams[] = $newtableArray['extendQueryParams'];
+
+            if(!empty($extendQueryParams)) {
+                foreach ($extendQueryParams as $extendParams) {
+                    if(isset($extendParams['select']) && !empty($extendParams['select'])) $params['select'][] = $extendParams['select'];
+                    if(isset($extendParams['join']) && !empty($extendParams['join'])) $params['join'][] = $extendParams['join'];
+                    if(isset($extendParams['where']) && !empty($extendParams['where'])) $params['where'][] = $extendParams['where'];
+                    if(isset($extendParams['order']) && !empty($extendParams['order'])) $params['order'][] = $extendParams['order'];
+                    if(isset($extendParams['group']) && !empty($extendParams['group'])) $params['group'][] = $extendParams['group'];
+                    if(isset($extendParams['having']) && !empty($extendParams['having'])) $params['having'][] = $extendParams['having'];
+                    if(isset($extendParams['limit']) && !empty($extendParams['limit'])) $params['limit'][] = $extendParams['limit'];
+
+                    if(!empty($filter)){
+                        if(isset($extendParams['filter']) && !empty($extendParams['filter'])) $params['where'][] = is_array($extendParams['where']) ? array_merge($extendParams['where'],$extendParams['filter']) : $extendParams['filter'];
+                    }
+                }
+            }
+        }
+
+        $collection = $this->getItems('count_news',$params, 'one', false);
+        return [
+            'total' => empty($collection) ? 0 : $collection['total'],
+            'nbp' => empty($collection) ? 1 : ceil(($collection['total'] / $this->offset))
+        ];
+
+    }
+
+    /**
+     * @param int|null $id
+     * @return array
+     * @throws Exception
+     */
     public function getNewsData(int $id = null) : array
     {
         if ($id !== null) $this->id = $id;
@@ -659,7 +782,7 @@ class frontend_controller_news extends frontend_db_news {
         else {
 			$this->template->assign('archives',$this->getBuildArchive());
 			$this->template->assign('news',$this->getNewsList());
-			$this->template->assign('nbp',$this->getNewsList(true));
+			$this->template->assign('nbp',$this->getNewsCount());
 			$this->template->assign('rootSeo',$this->modelNews->rootSeo());
 
 			if(isset($this->year) OR isset($this->month) OR isset($this->date)) {

@@ -316,13 +316,14 @@ class frontend_controller_pages extends frontend_db_pages {
 			}
         }
         $setTree = !empty($newTree) ? $newTree : 'root';
-        /*print '<pre>' ;
+        /*print '<pre>';
         print_r($collection);
         print '</pre>';*/
 
         $newSetArray = [];
         if(!empty($collection)) {
             $newSetArray = $this->data->setPagesTree($collection,'pages', $id_parent ?? $setTree ,'all',$this->modelPages,false,$newRow);
+            //$newSetArray = $newSetArray ?? [];
             /*print '<pre>';
             print_r($newSetArray);
             print '</pre>';*/

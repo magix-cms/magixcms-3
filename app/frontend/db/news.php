@@ -549,7 +549,7 @@ class frontend_db_news {
 						unset($params['limit']);
 					}
 
-					$query = 'SELECT COUNT(mn.id_news) as total
+                    $query = 'SELECT COUNT(mn.id_news) as total
 						FROM mc_news mn
 							JOIN mc_news_content mnc ON mn.id_news = mnc.id_news
 							JOIN mc_lang ml ON mnc.id_lang = ml.id_lang
