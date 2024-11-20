@@ -41,7 +41,7 @@
                         <span class="show-less"><i class="material-icons ico ico-remove"></i></span>
                     </button>
                 {/if}
-                <a itemprop="url" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown"{/if}>
+                <a itemprop="url" href="{$item.url_link}" title="{if empty($item.title_link)}{$item.name_link}{else}{$item.title_link}{/if}"{if $item.subdata} class="has-dropdown" {else}{if $item.type_link eq "external"} class="targetblank"{/if}{/if}>
                     <span itemprop="name">{$item.name_link}</span>
                 </a>
                 {*if !$mobile && $item.subdata}
