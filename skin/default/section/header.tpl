@@ -11,7 +11,7 @@
         <div class="site-name">
             {if $logo && $logo.img.active eq 1}
                 {capture name="sizes"}{$logo.img.small.w}px{/capture}
-                <a href="{$url}/{$lang}/" title="{if !empty($logo.img.title)}{$logo.img.title|ucfirst}{else}{#logo_link_title#|ucfirst}{/if}">
+                <a href="{if $dataLang != null && count($dataLang) > 1}{$url}/{$lang}/{else}{$url}/{/if}" title="{if !empty($logo.img.title)}{$logo.img.title|ucfirst}{else}{#logo_link_title#|ucfirst}{/if}">
                     {strip}
                         <picture>
                         <!--[if IE 9]><video style="display: none;"><![endif]-->
@@ -23,7 +23,7 @@
                 </a>
                 {else}
                 {capture name="sizes"}229px{/capture}
-                <a href="{$url}/{$lang}/" title="{#logo_link_title#|ucfirst}">
+                <a href="{if $dataLang != null && count($dataLang) > 1}{$url}/{$lang}/{else}{$url}/{/if}" title="{#logo_link_title#|ucfirst}">
                     {strip}
                         <picture>
                         <!--[if IE 9]><video style="display: none;"><![endif]-->
