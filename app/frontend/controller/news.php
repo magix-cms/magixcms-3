@@ -700,7 +700,7 @@ class frontend_controller_news extends frontend_db_news {
             case 'id':
                 $data = $this->getNewsData($this->id);//$this->getBuildNewsItems();
                 //print_r($data);
-                //$this->template->breadcrumb->addItem($data['name']);
+                $this->template->breadcrumb->addItem($data['name']);
                 $hreflang = $this->getBuildLangItems();
                 $this->template->assign('news',$data,true);
                 $this->template->assign('hreflang',$hreflang,true);
