@@ -97,8 +97,8 @@ class frontend_db_pages {
                         }
                         unset($params['join']);
                     }
-                    if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY cat.order_pages';
-                    $order = '';
+                    if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY p.order_pages';
+                    //$order = '';
                     if(isset($params['order']) && is_array($params['order'])){
                         $order = ' ORDER BY ';
                         $orders = [];

@@ -127,11 +127,21 @@ class backend_model_plugins{
                             }
                             if (method_exists($class, 'getTabsAvailable')) {
                                 $ext = new $class();
+                                //print_r($ext->getTabsAvailable());
                                 if(in_array($this->controller_name,$ext->getTabsAvailable())){
-                                    $newsItems[] = $item;
-                                    $this->template->assign('setTabsPlugins', $newsItems);
-                                    $coreComponent = new component_format_array();
-                                    $coreComponent->array_sortBy('title', $newsItems);
+                                    if (method_exists($class, 'getTabsRoot')) {
+                                        if(isset($_GET['action'])){
+                                            $newsItems[] = $item;
+                                            $this->template->assign('setTabsPlugins', $newsItems);
+                                            $coreComponent = new component_format_array();
+                                            $coreComponent->array_sortBy('title', $newsItems);
+                                        }
+                                    }else{
+                                        $newsItems[] = $item;
+                                        $this->template->assign('setTabsPlugins', $newsItems);
+                                        $coreComponent = new component_format_array();
+                                        $coreComponent->array_sortBy('title', $newsItems);
+                                    }
                                 }
                             }else{
                                 if (method_exists($class, 'getTabsRoot')) {

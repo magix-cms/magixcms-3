@@ -129,7 +129,7 @@ class backend_db_pages {
 							JOIN mc_cms_page_content mcpc USING ( id_pages )
 							JOIN mc_lang ml ON ( mcpc.id_lang = ml.id_lang )
                             LEFT JOIN mc_cms_page_img mcpi ON ( mcp.id_pages = mcpi.id_pages AND mcpi.default_img = 1 )
-							WHERE mcp.id_parent = :id AND mcpc.id_lang = :default_lang $cond";
+							WHERE mcp.id_parent = :id AND mcpc.id_lang = :default_lang $cond ORDER BY mcp.order_pages ASC";
 					break;
 				case 'pagesSelect':
 					$query = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages

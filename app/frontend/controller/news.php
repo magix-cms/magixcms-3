@@ -240,7 +240,7 @@ class frontend_controller_news extends frontend_db_news {
 				}
 			}
 		}
-		if(isset($this->date)) {
+		if(isset($this->date) && !isset($this->id)) {
 			$conditions[] = [
 				'type' => 'AND',
 				'condition' => 'mn.date_publish = :date'
