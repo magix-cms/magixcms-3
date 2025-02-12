@@ -84,7 +84,7 @@ class frontend_controller_home extends frontend_db_home
 				'content' => $collection['content_page'],
 				'seo' => [
 					'title' => $collection['seo_title_page'] ?: ($collection['title_page'] ?: $this->template->getConfigVars('home')),
-					'description' => $collection['seo_desc_page'] ?: ($collection['content_page'] ? $string_format->truncate(strip_tags($collection['content_page'])) : ($collection['title_page'] ?: $this->template->getConfigVars('home')))
+					'description' => $collection['seo_desc_page'] ?: ($collection['content_page'] ? $string_format->clearHTMLTemplate($collection['content_page']) : ($collection['title_page'] ?: $this->template->getConfigVars('home')))
 				]
 			];
 		}

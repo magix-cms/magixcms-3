@@ -1336,7 +1336,7 @@ tbody.collapse.in {
   bottom: 100%;
   margin-bottom: 2px;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar-right .dropdown-menu {
     left: auto;
     right: 0;
@@ -1455,7 +1455,7 @@ tbody.collapse.in {
   margin-bottom: var(--spacer);
   border: 1px solid transparent;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar {
     border-radius: 0.5rem;
   }
@@ -1471,7 +1471,7 @@ tbody.collapse.in {
 .navbar-collapse.in {
   overflow-y: auto;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar-collapse {
     width: auto;
     border-top: 0;
@@ -1498,7 +1498,7 @@ tbody.collapse.in {
   margin-right: 0rem;
   margin-left: 0rem;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .container > .navbar-collapse,
   .container-fluid > .navbar-collapse {
     margin-right: 0;
@@ -1530,7 +1530,7 @@ tbody.collapse.in {
 .navbar-toggle .icon-bar + .icon-bar {
   margin-top: 4px;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar-toggle {
     display: none;
   }
@@ -3141,7 +3141,7 @@ article ol {
   color: var(--white);
   background: var(--main-color);
 }
-@media (max-width: 47.999em) {
+@media (max-width: 61.999em) {
   #header #toolbar {
     display: none;
   }
@@ -3175,7 +3175,7 @@ article ol {
 .site-name {
   text-align: center;
 }
-@media (max-width: 47.999em) {
+@media (max-width: 61.999em) {
   .site-name {
     flex: 1;
   }
@@ -3221,7 +3221,7 @@ article ol {
   position: relative;
   top: -2px;
 }
-@media (max-width: 47.999em) {
+@media (max-width: 61.999em) {
   #menu {
     display: block;
     position: fixed;
@@ -3396,7 +3396,7 @@ article ol {
 .menu .navbar-toggle:not(.collapsed) .show-more > i {
   transform: scale(1, 0);
 }
-@media (min-width: 48em) and (max-width: 47.999em) {
+@media (min-width: 48em) and (max-width: 61.999em) {
   #header .toggle-menu > span {
     width: 20px;
     border-radius: 0;
@@ -3440,7 +3440,7 @@ article ol {
     bottom: auto;
   }
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .menu :is(.dropdown,.megadropdown) {
     min-width: 100%;
     position: absolute;
@@ -3605,7 +3605,7 @@ article ol {
   flex-wrap: wrap;
   margin: 0 0 1.5rem;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .sharebox > .material-icons {
     color: var(--light-grey);
     float: left;
@@ -3753,6 +3753,13 @@ article ol {
   --btn-brd-s: 47.82608696%;
   --btn-brd-l: 45.09803922%;
   --btn-brd-a: 1;
+  background-color: var(--main-color);
+  border: 1px solid var(--main-color);
+  border-radius: 0;
+}
+#footbar .btn:hover {
+  background-color: var(--main-color-light);
+  border: 1px solid var(--main-color-light);
 }
 #footbar .material-icons {
   font-size: 1.5rem;
@@ -3867,7 +3874,7 @@ article ol {
     text-align: center;
   }
 }
-@media (max-width: 47.999em) {
+@media (max-width: 61.999em) {
   #footbar {
     position: fixed;
     bottom: 0;
@@ -4123,7 +4130,7 @@ ul.label-list > li:before {
 #error .fa-pulse {
   font-size: 90%;
 }
-@media (min-width: 48em) and (max-width: 47.999em) {
+@media (min-width: 48em) and (max-width: 61.999em) {
   #header .toggle-menu > span {
     width: 20px;
     border-radius: 0;
@@ -4167,7 +4174,7 @@ ul.label-list > li:before {
     bottom: auto;
   }
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   #sidebar header {
     display: none;
   }
@@ -4180,8 +4187,26 @@ ul.label-list > li:before {
   #menu {
     margin-left: auto;
   }
+  /*.menu{
+		> ul{
+			> li{
+				> a{
+					position: relative;
+					// For icône in before
+					&:before {
+						display: inline-block;
+						transform: scale(1, 1);
+						content: " ";
+						position: absolute;
+						margin-left: -.7rem;
+						font-weight: bold;
+					}
+				}
+			}
+		}
+	}*/
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .sharebox > .material-icons {
     color: var(--light-grey);
     float: left;
@@ -4263,7 +4288,7 @@ ul.label-list > li:before {
     text-align: left;
   }
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   :root {
     --footbar-h: var(--grid-gutter);
   }

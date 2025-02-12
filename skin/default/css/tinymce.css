@@ -1656,7 +1656,7 @@ tbody.collapse.in {
   bottom: 100%;
   margin-bottom: 2px;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar-right .dropdown-menu {
     left: auto;
     right: 0;
@@ -1775,7 +1775,7 @@ tbody.collapse.in {
   margin-bottom: var(--spacer);
   border: 1px solid transparent;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar {
     border-radius: 0.5rem;
   }
@@ -1791,7 +1791,7 @@ tbody.collapse.in {
 .navbar-collapse.in {
   overflow-y: auto;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar-collapse {
     width: auto;
     border-top: 0;
@@ -1818,7 +1818,7 @@ tbody.collapse.in {
   margin-right: 0rem;
   margin-left: 0rem;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .container > .navbar-collapse,
   .container-fluid > .navbar-collapse {
     margin-right: 0;
@@ -1850,7 +1850,7 @@ tbody.collapse.in {
 .navbar-toggle .icon-bar + .icon-bar {
   margin-top: 4px;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .navbar-toggle {
     display: none;
   }
@@ -2630,7 +2630,7 @@ dd {
   margin-bottom: 0.5rem;
   margin-left: 0;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .dl-horizontal dt {
     float: left;
     width: 160px;
@@ -2684,7 +2684,7 @@ dd {
 .link-bar li:last-child a {
   border-bottom: none;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .link-bar {
     flex-direction: row;
   }

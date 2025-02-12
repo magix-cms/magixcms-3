@@ -442,7 +442,7 @@ dd {
   margin-bottom: 0.5rem;
   margin-left: 0;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .dl-horizontal dt {
     float: left;
     width: 160px;
@@ -496,7 +496,7 @@ dd {
 .link-bar li:last-child a {
   border-bottom: none;
 }
-@media (min-width: 48em) {
+@media (min-width: 62em) {
   .link-bar {
     flex-direction: row;
   }
@@ -1541,7 +1541,7 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
 .display > :is(.container,.container-fluid) > .row {
   align-items: center;
 }
-@media (max-width: 47.999em) {
+@media (max-width: 61.999em) {
   .display {
     padding: 1rem calc(var(--grid-gutter)/2);
   }
