@@ -34,7 +34,7 @@ window.addEventListener('DOMContentLoaded', function () {
     }*/
 
     function affixHead() {
-        let pos = window.pageYOffset,
+        let pos = window.scrollY,
             header = document.getElementById('header'),
             atTop = header.classList.contains('at-top');
 
