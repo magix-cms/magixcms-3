@@ -826,6 +826,8 @@ class backend_controller_product extends backend_db_product {
                                             'data' => $content
                                         ));
                                     } else {
+                                        unset($content['link_label_p']);
+                                        unset($content['link_title_p']);
                                         $this->add(array(
                                             'type' => 'newContent',
                                             'data' => $content
