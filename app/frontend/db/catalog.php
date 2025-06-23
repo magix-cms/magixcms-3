@@ -58,7 +58,7 @@ class frontend_db_catalog {
 						JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )
 						JOIN mc_catalog_product AS p ON ( c.id_product = p.id_product )
 						JOIN mc_catalog_product_content AS pc ON ( p.id_product = pc.id_product )
-						JOIN mc_lang AS lang ON ( pc.id_lang = lang.id_lang )
+						JOIN mc_lang AS lang ON ( (pc.id_lang = lang.id_lang) AND (cat.id_lang = lang.id_lang) )
 						WHERE p.id_product = :id AND cat.published_cat =1 AND pc.published_p =1';
 					break;
 				/*case 'product_ws':
