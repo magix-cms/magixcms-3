@@ -19,7 +19,7 @@
                     {$dataLang[$k]['url'] = "{$url}/{$lang.iso_lang}/"}
                 {/if}
             {/if}{/strip}
-            <li><a href="{$dataLang[$k]['url']}">{$lang.iso_lang|upper}</a></li>
+            <li><a {if $defaultLang eq $lang.iso_lang}hreflang="x-default" {else}hreflang="{$lang.iso_lang}" {/if} rel="alternate" href="{$dataLang[$k]['url']}">{$lang.iso_lang|upper}</a></li>
         {/foreach}
     </ul>
 </div>
