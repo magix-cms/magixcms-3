@@ -1,0 +1,26 @@
+//
+// Keyframe CSS
+//
+/* example */
+/*.class1 {
+
+  .keyframes(fade-in;{
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  });
+
+  .animation(fade-in 0.2s linear infinite alternate)
+  https://codepen.io/zvuc/pen/xxeyvJ
+}*/
+
+.keyframes(@name; @arguments) {
+  @-moz-keyframes @name { @arguments(); }
+  @-webkit-keyframes @name { @arguments(); }
+  @keyframes @name { @arguments(); }
+}
+
+.animation(@arguments) {
+  -webkit-animation: @arguments;
+  -moz-animation: @arguments;
+  animation: @arguments;
+}

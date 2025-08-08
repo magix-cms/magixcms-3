@@ -433,7 +433,7 @@ class frontend_model_about extends frontend_db_about {
 									$link = 'https://www.twitter.com/'. $about[$social_name];
 									break;
 								case 'youtube':
-									$link = 'https://www.youtube.com/channel/'.$about[$social_name];
+                                    $link = 'https://www.youtube.com/'.(strpos($about[$social_name],'channel/') === false ? '@' : '').$about[$social_name];
 									break;
 								case 'linkedin':
 									$link = 'https://www.linkedin.com/'.(strpos($about[$social_name],'company/') === false ? 'in/' : '').$about[$social_name];

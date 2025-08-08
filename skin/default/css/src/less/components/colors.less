@@ -365,7 +365,9 @@
 	.setBase(@hue,@sat,@val,@step) when (@val = 100%) {
 		@base: hsv(@hue, if((@sat = 0),0,min((@sat + (@step * 2)),100%)),max((@val - (@step * 2)),0%));
 	}
-	.setBase(@hue,@sat,@val,@step);
+	// Modification pour avoir la couleur de base reel
+	.setBase(@hue,@sat,@val,0);
+	//.setBase(@hue,@sat,@val,@step);
 	//@base: ~'hsv(@{hue},@{sat},@{val})';
 }
 .getVariant(@color) {

@@ -29,10 +29,10 @@
   --green-color: #5cb75c;
   --green-color-light: #8ddb8d;
   --green-color-lighter: #c7fec7;
-  --default-color-darker: #707070;
-  --default-color-dark: #949494;
-  --default-color: #b8b8b8;
-  --default-color-light: #dbdbdb;
+  --default-color-darker: #b8b8b8;
+  --default-color-dark: #dbdbdb;
+  --default-color: #ffffff;
+  --default-color-light: #ffffff;
   --default-color-lighter: #ffffff;
   --default-brd-h: 0;
   --default-brd-s: 0%;

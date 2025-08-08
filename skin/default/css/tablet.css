@@ -1209,6 +1209,17 @@ tbody.collapse.in {
   transition-duration: 0.35s;
   transition-timing-function: ease;
 }
+/* example */
+/*.class1 {
+
+  .keyframes(fade-in;{
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  });
+
+  .animation(fade-in 0.2s linear infinite alternate)
+  https://codepen.io/zvuc/pen/xxeyvJ
+}*/
 .caret {
   display: inline-block;
   width: 0;
