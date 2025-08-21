@@ -120,7 +120,8 @@ class frontend_model_about extends frontend_db_about {
 			'github' => NULL,
 			'soundcloud' => NULL,
 			'tumblr' => NULL,
-			'tiktok' => NULL
+			'tiktok' => NULL,
+            'dailymotion' => NULL,
 		],
 		'openinghours' => '0',
 		'specifications' => [
@@ -458,6 +459,9 @@ class frontend_model_about extends frontend_db_about {
 									break;
 								case 'tiktok':
 									$link = 'https://www.tiktok.com/@'.$about[$social_name];
+									break;
+                                case 'dailymotion':
+									$link = 'https://www.dailymotion.com/'.$about[$social_name];
 									break;
 							}
                             $social = [

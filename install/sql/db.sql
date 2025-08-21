@@ -411,6 +411,7 @@ INSERT INTO `mc_about` (`id_info`, `name_info`, `value_info`) VALUES
 (NULL, 'github', NULL),
 (NULL, 'soundcloud', NULL),
 (NULL, 'viadeo', NULL),
+(NULL, 'dailymotion', NULL),
 (NULL, 'openinghours', '0');
 
 CREATE TABLE IF NOT EXISTS `mc_about_data` (

@@ -77,6 +77,13 @@
                 <small class="help-block">https://www.tiktok.com/@<strong>tiktok+ID</strong></small>
             </div>
         </div>
+        <div class="col-ph-12 col-xs-6 col-sm-4 col-md-3 col-lg-2">
+            <div class="form-group">
+                <label for="social_dailymotion">{#socials_dailymotion#|ucfirst}</label>
+                <input type="text" class="form-control" id="social_dailymotion" name="company_socials[dailymotion]" {if $companyData.socials.dailymotion}value="{$companyData.socials.dailymotion}" {/if}placeholder="{#socials_dailymotion_ph#|ucfirst}">
+                <small class="help-block">https://www.dailymotion.com/<strong>dailymotion+ID</strong></small>
+            </div>
+        </div>
     </div>
     <input type="hidden" id="data_type" name="data_type" value="socials">
     <button class="btn btn-main-theme" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
