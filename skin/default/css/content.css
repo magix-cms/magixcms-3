@@ -1404,7 +1404,7 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   font-size: 1.5rem;
 }
 .btn.btn-pdf:before {
-  content: "\e933";
+  content: "\e916";
 }
 .btn-invert-white {
   --btn-color: var(--white);
@@ -1551,7 +1551,8 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
 }
 @font-face {
   font-family: 'Icofont';
-  src: url('../fonts/Icofont.ttf?64p4bc') format('truetype'), url('../fonts/Icofont.woff?64p4bc') format('woff'), url('../fonts/Icofont.svg?64p4bc#Icofont') format('svg');
+  src: url('../fonts/Icofont.eot?rfkdwx');
+  src: url('../fonts/Icofont.eot?rfkdwx#iefix') format('embedded-opentype'), url('../fonts/Icofont.ttf?rfkdwx') format('truetype'), url('../fonts/Icofont.woff?rfkdwx') format('woff'), url('../fonts/Icofont.svg?rfkdwx#Icofont') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -1569,8 +1570,11 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.ico-tools:before {
-  content: "\e914";
+.ico-dailymotion:before {
+  content: "\e938";
+}
+.ico-tiktok:before {
+  content: "\e92a";
 }
 .ico-schedule:before {
   content: "\e90c";
@@ -1591,7 +1595,7 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   content: "\e91c";
 }
 .ico-assignment:before {
-  content: "\e932";
+  content: "\e931";
 }
 .ico-check:before {
   content: "\e91d";
@@ -1602,11 +1606,8 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
 .ico-copyright:before {
   content: "\e91e";
 }
-.ico-edit:before {
+.ico-crop_square:before {
   content: "\e937";
-}
-.ico-credit_card:before {
-  content: "\e92c";
 }
 .ico-directions:before {
   content: "\e91f";
@@ -1644,14 +1645,8 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
 .ico-label:before {
   content: "\e90a";
 }
-.ico-shopping_cart:before {
-  content: "\e91a";
-}
 .ico-print:before {
   content: "\e901";
-}
-.ico-shipping:before {
-  content: "\e928";
 }
 .ico-location:before {
   content: "\e929";
@@ -1678,13 +1673,13 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   content: "\e913";
 }
 .ico-storefront:before {
-  content: "\e92a";
+  content: "\e917";
 }
 .ico-toc:before {
   content: "\e930";
 }
 .ico-verified_user:before {
-  content: "\e931";
+  content: "\e91a";
 }
 .ico-warning:before {
   content: "\e902";
@@ -1692,8 +1687,17 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
 .ico-at:before {
   content: "\e900";
 }
+.ico-credit-card:before {
+  content: "\e914";
+}
+.ico-edit:before {
+  content: "\e92c";
+}
 .ico-file-pdf:before {
-  content: "\e933";
+  content: "\e916";
+}
+.ico-shopping-cart:before {
+  content: "\e915";
 }
 .ico-spinner:before {
   content: "\e905";
@@ -1704,8 +1708,8 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
 .ico-tags:before {
   content: "\e907";
 }
-.ico-tiktok:before {
-  content: "\e915";
+.ico-tools:before {
+  content: "\e932";
 }
 .ico-facebook:before {
   content: "\e908";
@@ -1726,7 +1730,7 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   content: "\e90f";
 }
 .ico-tumblr:before {
-  content: "\e916";
+  content: "\e933";
 }
 .ico-twitter:before {
   content: "\e910";
@@ -1735,7 +1739,7 @@ input:is([type="submit"],[type="reset"],[type="button"]).btn-block {
   content: "\e911";
 }
 .ico-youtube:before {
-  content: "\e917";
+  content: "\e928";
 }
 @font-face {
   font-family: 'Icofont';
