@@ -375,6 +375,14 @@ ALTER TABLE `mc_cms_page_img_content`
     ADD CONSTRAINT `mc_cms_page_img_content_ibfk_1` FOREIGN KEY (`id_img`) REFERENCES `mc_cms_page_img` (`id_img`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `mc_cms_page_img_content_ibfk_2` FOREIGN KEY (`id_lang`) REFERENCES `mc_lang` (`id_lang`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- mc_cms_page_content
+CREATE INDEX idx_cms_page_content_lang
+    ON mc_cms_page_content(id_pages, id_lang);
+
+-- mc_cms_page_img
+CREATE INDEX idx_cms_page_img_default
+    ON mc_cms_page_img(id_pages, default_img);
+
 CREATE TABLE IF NOT EXISTS `mc_about` (
   `id_info` smallint(2) unsigned NOT NULL AUTO_INCREMENT,
   `name_info` varchar(30) NOT NULL,
@@ -570,6 +578,22 @@ CREATE TABLE IF NOT EXISTS `mc_news_tag_rel` (
 ALTER TABLE `mc_news_tag_rel`
   ADD CONSTRAINT `mc_news_tag_rel_ibfk_2` FOREIGN KEY (`id_news`) REFERENCES `mc_news` (`id_news`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `mc_news_tag_rel_ibfk_1` FOREIGN KEY (`id_tag`) REFERENCES `mc_news_tag` (`id_tag`) ON DELETE CASCADE ON UPDATE CASCADE;
+                                                                                                               
+-- mc_news_content
+CREATE INDEX idx_news_content_lang
+    ON mc_news_content(id_news, id_lang);
+
+-- mc_news
+CREATE INDEX idx_news_dates
+    ON mc_news(date_publish, date_event_start, date_event_end);
+
+-- mc_news_img
+CREATE INDEX idx_news_img_default
+    ON mc_news_img(id_news, default_img);
+
+-- mc_news_tag_rel
+CREATE INDEX idx_news_tag_rel_lookup
+    ON mc_news_tag_rel(id_news, id_tag);
 
 CREATE TABLE IF NOT EXISTS `mc_catalog_cat` (
   `id_cat` int(7) unsigned NOT NULL AUTO_INCREMENT,
@@ -696,6 +720,31 @@ CREATE TABLE IF NOT EXISTS `mc_catalog` (
 ALTER TABLE `mc_catalog`
   ADD CONSTRAINT `mc_catalog_ibfk_2` FOREIGN KEY (`id_cat`) REFERENCES `mc_catalog_cat` (`id_cat`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `mc_catalog_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `mc_catalog_product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- mc_catalog_cat_content : accès rapide par catégorie + langue
+CREATE INDEX idx_cat_content_cat_lang
+    ON mc_catalog_cat_content(id_cat, id_lang);
+
+-- mc_catalog_product_content : accès rapide par produit + langue
+CREATE INDEX idx_product_content_product_lang
+    ON mc_catalog_product_content(id_product, id_lang);
+
+-- mc_catalog_product_img : accès rapide par produit + image par défaut
+CREATE INDEX idx_product_img_default
+    ON mc_catalog_product_img(id_product, default_img);
+
+-- mc_catalog_product_img_content : déjà un composite (id_img, id_lang),
+-- on garde mais on ajoute aussi un index direct sur id_lang si besoin
+CREATE INDEX idx_product_img_content_lang
+    ON mc_catalog_product_img_content(id_lang);
+
+-- mc_catalog : souvent utilisé pour trouver la catégorie par produit et inversement
+CREATE INDEX idx_catalog_product_cat
+    ON mc_catalog(id_product, id_cat);
+
+-- mc_catalog : optimisation si on filtre sur la catégorie seule
+CREATE INDEX idx_catalog_cat
+    ON mc_catalog(id_cat, default_c);
 
 CREATE TABLE IF NOT EXISTS `mc_webservice` (
   `id_ws` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
