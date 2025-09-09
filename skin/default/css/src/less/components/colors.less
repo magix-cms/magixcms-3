@@ -391,3 +391,67 @@
 	light: .getVariant(@cbase)[@light];
 	lighter: .getVariant(@cbase)[@lighter];
 }
+/*.hex-to-rgba(@hex, @opacity) {
+    @hex-clean: replace(@hex, '#', ''); // Nettoie le #
+
+    @r: unit(hex-to-decimal(extract(@hex-clean, 1)), 1); // Conversion HEX vers décimal
+    @g: unit(hex-to-decimal(extract(@hex-clean, 2)), 1);
+    @b: unit(hex-to-decimal(extract(@hex-clean, 3)), 1);
+
+    background-color: rgba(@r, @g, @b, @opacity);
+}*/
+// Fonction utilitaire pour convertir un chiffre HEX en décimal
+.hex-to-decimal(@hex-char) {
+  @decimal-value: 0;
+
+  // Conversion
+  & when (isstring(@hex-char)) {
+    @char-upper: `@{hex-char}.toUpperCase()`;
+    @char-val: `parseInt(@{char-upper}, 16)`;
+    @decimal-value: @char-val;
+  }
+}
+
+// Mixin pour convertir HEX en RGBA
+.hex-to-rgba(@hex, @opacity: 1) {
+  @hex-clean: replace(@hex, '#', '');
+
+  // S'assurer que le format est correct (6 caractères)
+  & when (length(@hex-clean) = 6) {
+    @r-hex: substring(@hex-clean, 1, 2);
+    @g-hex: substring(@hex-clean, 3, 2);
+    @b-hex: substring(@hex-clean, 5, 2);
+
+    .hex-to-decimal(@r-hex); @r: @decimal-value;
+    .hex-to-decimal(@g-hex); @g: @decimal-value;
+    .hex-to-decimal(@b-hex); @b: @decimal-value;
+
+    background-color: rgba(@r, @g, @b, @opacity);
+  }
+
+  // Gestion du format court (3 caractères)
+  & when (length(@hex-clean) = 3) {
+    @r-hex: substring(@hex-clean, 1, 1);
+    @g-hex: substring(@hex-clean, 2, 1);
+    @b-hex: substring(@hex-clean, 3, 1);
+
+    @r-hex-expanded: e(`'@{r-hex}@{r-hex}'`);
+    @g-hex-expanded: e(`'@{g-hex}@{g-hex}'`);
+    @b-hex-expanded: e(`'@{b-hex}@{b-hex}'`);
+
+    .hex-to-decimal(@r-hex-expanded); @r: @decimal-value;
+    .hex-to-decimal(@g-hex-expanded); @g: @decimal-value;
+    .hex-to-decimal(@b-hex-expanded); @b: @decimal-value;
+
+    background-color: rgba(@r, @g, @b, @opacity);
+  }
+}
+
+// Exemple d'utilisation
+/*.mon-element {
+  .hex-to-rgba(#3498db, 0.7);
+}
+
+.un-autre-element {
+  .hex-to-rgba(#f0c, 0.5);
+}*/
