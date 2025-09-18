@@ -464,10 +464,11 @@ class frontend_controller_catalog extends frontend_db_catalog {
      * @param int|NULL $id_cat
      * @param bool $count
      * @param array $filter
+     * @param string|NULL $listids
      * @return array
      * @throws Exception
      */
-    public function getProductList(int $id_cat = NULL, bool $count = false, array $filter = []) : array {
+    public function getProductList(int $id_cat = NULL, bool $count = false, array $filter = [], string $listids = NULL) : array {
         if(isset($this->filter)) $filter = $this->filter;
 
         $newTableArray = [];
@@ -483,6 +484,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
         $params = ['iso' => $this->lang];
 
         if(!empty($id_cat)) $params['id_cat'] = $id_cat;
+        if(!empty($listids)) $params['listids'] = $listids;
 
         //if(!$count) $limit = [($this->page * $this->offset) . ', ' . $this->offset];
         //if(!empty($limit)) $params['limit'] = $limit;
@@ -511,7 +513,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
         if(!$count) {
             //print !$count ? '! count':'count';
             //print_r($params);
-            $collection = $this->getItems('product',$params, 'all', false);
+            $collection = $this->getItems('product', $params, 'all', false);
             //print_r($collection);
             $newSetArray = [];
             if(!empty($collection)) {

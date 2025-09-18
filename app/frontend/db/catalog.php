@@ -289,10 +289,19 @@ class frontend_db_catalog {
                         unset($params['join']);
                     }
                     if(isset($params['id_cat'])){
-                        $cat = 'AND catalog.default_c = 1 AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat)';
+                        $cat = 'AND catalog.default_c = 1 AND catalog.id_product IN (SELECT id_product FROM mc_catalog WHERE id_cat = :id_cat) ';
                     }else{
                         $cat = '';
                     }
+
+                    if(isset($params['listids'])) {
+                        $listids = 'AND catalog.id_product IN ('.$params['listids'].') ';
+                        //' AND catalog.id_product IN (:listids)';
+                        unset($params['listids']);
+                    }else{
+                        $listids = '';
+                    }
+
                     if(!isset($params['order']) || !is_array($params['order'])) {
                         $order = ' ORDER BY catalog.order_p ASC';
                     }
@@ -331,8 +340,9 @@ class frontend_db_catalog {
 						 WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 AND cat.published_cat = 1 AND catalog.default_c = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL) 
-						 '.$cat.$where
+						 '.$cat.$listids.$where
                         .$order.$limit;
+                    //$params = array();
 					break;
 				case 'rand_product':
 					$config["conditions"] ? $conditions = $config["conditions"] : $conditions = '';
