@@ -114,7 +114,7 @@ class backend_db_category {
 							JOIN mc_catalog_cat_content AS c USING ( id_cat )
 							JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 							LEFT JOIN mc_catalog_cat AS pa ON ( p.id_parent = pa.id_cat )
-							LEFT JOIN mc_catalog_cat_content AS ca ON ( pa.id_cat = ca.id_cat ) 
+							LEFT JOIN mc_catalog_cat_content AS ca ON (pa.id_cat = ca.id_cat AND ca.id_lang = c.id_lang)
 							WHERE c.id_lang = :default_lang 
 						ORDER BY p.id_cat DESC";
 					break;
