@@ -589,7 +589,7 @@ class frontend_db_catalog {
 
                         unset($params['join']);
                     }
-                    $sql = 'SELECT count(catalog.id_catalog) AS nb_product
+                    $sql = 'SELECT COUNT(DISTINCT catalog.id_product) AS nb_product
                     FROM mc_catalog AS catalog 
                     JOIN mc_catalog_cat AS c ON ( catalog.id_cat = c.id_cat )
                     JOIN mc_catalog_cat_content AS cat ON ( c.id_cat = cat.id_cat )

@@ -391,6 +391,7 @@
 	light: .getVariant(@cbase)[@light];
 	lighter: .getVariant(@cbase)[@lighter];
 }
+
 /*.hex-to-rgba(@hex, @opacity) {
     @hex-clean: replace(@hex, '#', ''); // Nettoie le #
 
@@ -432,3 +433,104 @@
 .un-autre-element {
   .hex-to-rgba(#f0c, 0.5);
 }*/
+
+.create-gradient(@dir, @hex1, @hex2, @opac1: 1, @opac2: 1, @pos1: 0%, @pos2: 100%) {
+  // 1. Conversion de la première couleur HEX vers RGBA
+  @r1: red(color(@hex1));
+  @g1: green(color(@hex1));
+  @b1: blue(color(@hex1));
+  @color1: ~"rgba(@{r1}, @{g1}, @{b1}, @{opac1})"; // Chaîne RGBA brute
+
+  // 2. Conversion de la seconde couleur HEX vers RGBA
+  @r2: red(color(@hex2));
+  @g2: green(color(@hex2));
+  @b2: blue(color(@hex2));
+  @color2: ~"rgba(@{r2}, @{g2}, @{b2}, @{opac2})"; // Chaîne RGBA brute
+
+  // 3. Construction de la chaîne d'arguments
+  @gradient-args: @{dir}, @{color1} @{pos1}, @{color2} @{pos2};
+
+
+  // 4. Application du dégradé (Linéaire ou Radial)
+  & when (@dir = circle) or (@dir = ellipse) {
+    background: ~"radial-gradient(@{gradient-args})";
+  }
+
+  & when not (@dir = circle) and not (@dir = ellipse) {
+    background: ~"linear-gradient(@{gradient-args})";
+  }
+}
+// Exemple d'utilisation
+/*
+.mon-element {
+  // Direction: 90deg, Couleur 1: #F2F1EF (opaque), Couleur 2: #DCDEDD (opaque)
+  .create-gradient(90deg, #F2F1EF, #DCDEDD);
+}
+.bouton-flou {
+    // Dégradé du coin supérieur gauche vers le coin inférieur droit, transparent au départ
+    .create-gradient(to bottom right, #FF0000, #0000FF, 0.2, 0.8, 10%, 90%);
+}
+.bouton-flou {
+    // Dégradé du coin supérieur gauche vers le coin inférieur droit, transparent au départ
+    .create-gradient(circle, #FF0000, #0000FF, 0.2, 0.8, 10%, 90%);
+}
+*/
+// ---- Conversion hex vers hsl
+.hex-to-hsl(@hex) {
+  // La fonction color() convertit le code hexadécimal en un objet couleur LESS.
+  @less-color: color(@hex);
+
+  // On extrait les composants Teinte (Hue), Saturation et Luminosité (Lightness).
+  @h: hue(@less-color);
+  @s: saturation(@less-color);
+  @l: lightness(@less-color);
+
+  // On applique la couleur HSL
+  color: hsl(@h, @s, @l);
+}
+// Exemple d'utilisation
+/*.mon-element {
+  // Convertir un hexadécimal en HSL pour la couleur du texte
+  .hex-to-hsl(#e74c3c);
+}*/
+
+.hex-to-hsla(@hex, @opacity: 1) {
+  // La fonction color() convertit le code hexadécimal en un objet couleur LESS.
+  @less-color: color(@hex);
+
+  // On extrait les composants Teinte (Hue), Saturation et Luminosité (Lightness).
+  @h: hue(@less-color);
+  @s: saturation(@less-color);
+  @l: lightness(@less-color);
+
+  // On applique la couleur HSLA
+  color: hsla(@h, @s, @l, @opacity);
+}
+
+// Exemple d'utilisation
+/*
+.boite-transparente {
+  // Convertir un hexadécimal en HSLA avec 50% d'opacité
+  .hex-to-hsla(#e74c3c, 0.5);
+}
+.element-opaque {
+    .hex-to-hsla(#3498db);
+}
+ */
+// Mixin qui retourne une valeur HSL
+.get-hsl-from-hex(@hex) {
+  @less-color: color(@hex);
+  @h: hue(@less-color);
+  @s: saturation(@less-color);
+  @l: lightness(@less-color);
+  hsl(@h, @s, @l);
+}
+
+// Mixin qui retourne une valeur HSLA
+.get-hsla-from-hex(@hex, @opacity: 1) {
+  @less-color: color(@hex);
+  @h: hue(@less-color);
+  @s: saturation(@less-color);
+  @l: lightness(@less-color);
+  hsla(@h, @s, @l, @opacity);
+}
