@@ -128,7 +128,7 @@ a:active {
   color: var(--link-color, var(--main-color));
   text-decoration: var(--link-deco, none);
 }
-a:is(:hover, :focus) {
+a:where(:hover, :focus) {
   text-decoration: var(--link-hover-deco, underline);
   color: var(--link-hover-color, var(--main-color-dark));
 }

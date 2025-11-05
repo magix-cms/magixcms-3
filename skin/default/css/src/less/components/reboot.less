@@ -278,7 +278,7 @@ a {
     text-decoration: var(--link-deco, @link-decoration);
   }
 
-  &:is(:hover, :focus) {
+  &:where(:hover, :focus) {
     text-decoration: var(--link-hover-deco, @link-hover-decoration);
     color: var(--link-hover-color, @link-hover-color);
   }

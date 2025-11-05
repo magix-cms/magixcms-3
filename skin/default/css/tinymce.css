@@ -58,6 +58,9 @@
   --footer-bg: var(--dark-color);
   --brd-default: rgba(0, 0, 0, 0.15);
   --ph-color: var(--main-color);
+  --link-color: var(--main-color);
+  --link-hover-deco: var(--main-color);
+  --link-hover-color: var(--main-color);
   --fz-h1: 2rem;
   --fz-h2: 1.8rem;
   --fz-h3: 1.6rem;
@@ -140,6 +143,9 @@
     --text-color: var(--text-light);
     --brd-default: rgba(0, 0, 0, 0.5);
     --heading-color: var(--dark-color);
+    --link-color: var(--text-light);
+    --link-hover-deco: var(--text-light);
+    --link-hover-color: var(--text-light);
     /*each(@theme-color-dark, {
 			//--@{key}-color-h: hsvhue(@value);
 			//--@{key}-color-s: hsvsaturation(@value);
@@ -290,7 +296,7 @@ a:active {
   color: var(--link-color, var(--main-color));
   text-decoration: var(--link-deco, none);
 }
-a:is(:hover, :focus) {
+a:where(:hover, :focus) {
   text-decoration: var(--link-hover-deco, underline);
   color: var(--link-hover-color, var(--main-color-dark));
 }
