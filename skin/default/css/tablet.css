@@ -3341,7 +3341,7 @@ article ol {
 }
 .menu > a:active,
 .menu li.active > a {
-  color: var(--link-hover-color);
+  color: var(--link-active-color);
   background: transparent;
 }
 .menu > ul {
@@ -3351,7 +3351,7 @@ article ol {
   position: relative;
 }
 .menu li.active > a {
-  color: var(--link-hover-color);
+  color: var(--link-active-color);
 }
 .menu li li {
   --link-font: var(--font-family);
@@ -3392,7 +3392,7 @@ article ol {
 }
 .menu li li a:active,
 .menu li li.active > a {
-  color: var(--link-hover-color);
+  color: var(--link-active-color);
   background: transparent;
 }
 .menu .navbar-collapse {

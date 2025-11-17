@@ -61,6 +61,7 @@
   --link-color: var(--main-color);
   --link-hover-deco: var(--main-color);
   --link-hover-color: var(--main-color);
+  --link-active-color: var(--main-color);
   --fz-h1: 2rem;
   --fz-h2: 1.8rem;
   --fz-h3: 1.6rem;
@@ -146,6 +147,7 @@
     --link-color: var(--text-light);
     --link-hover-deco: var(--text-light);
     --link-hover-color: var(--text-light);
+    --link-active-color: var(--text-light);
     /*each(@theme-color-dark, {
 			//--@{key}-color-h: hsvhue(@value);
 			//--@{key}-color-s: hsvsaturation(@value);
