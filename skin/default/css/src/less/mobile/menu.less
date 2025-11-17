@@ -95,8 +95,11 @@
 		padding: 1rem;
 		background-color: transparent;
 	}
-	
-	.normalize-link(@menu-color, @menu-hover-color, none);
+
+   .normalize-link(@menu-color, @menu-hover-color, none);
+    @media (prefers-color-scheme: dark) {
+      .normalize-link(var(--text-light), var(--main-color), none);
+    }
 
 	a:hover,
 	a:focus {
@@ -142,6 +145,9 @@
 			}
 			
 			.normalize-link(@submenu-color, @submenu-hover-color, none);
+            @media (prefers-color-scheme: dark) {
+              .normalize-link(var(--text-light), var(--main-color), none);
+            }
 
 			a:hover,
 			a:focus {

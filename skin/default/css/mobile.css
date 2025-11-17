@@ -3319,12 +3319,21 @@ article ol {
   --link-weight: var(--font-weight);
   --link-color: var(--text-color);
   --link-hover-deco: none;
-  --link-hover-color: var(--main-color);
+  --link-hover-color: var(--link-hover-color);
 }
 .menu a {
   display: block;
   padding: 1rem;
   background-color: transparent;
+}
+@media (prefers-color-scheme: dark) {
+  .menu {
+    --link-font: var(--font-family);
+    --link-weight: var(--font-weight);
+    --link-color: var(--text-light);
+    --link-hover-deco: none;
+    --link-hover-color: var(--main-color);
+  }
 }
 .menu a:hover,
 .menu a:focus {
@@ -3332,7 +3341,7 @@ article ol {
 }
 .menu > a:active,
 .menu li.active > a {
-  color: var(--main-color);
+  color: var(--link-hover-color);
   background: transparent;
 }
 .menu > ul {
@@ -3342,14 +3351,14 @@ article ol {
   position: relative;
 }
 .menu li.active > a {
-  color: var(--main-color);
+  color: var(--link-hover-color);
 }
 .menu li li {
   --link-font: var(--font-family);
   --link-weight: var(--font-weight);
   --link-color: var(--text-color);
   --link-hover-deco: none;
-  --link-hover-color: var(--main-color);
+  --link-hover-color: var(--link-hover-color);
 }
 @media (max-width: 74.999em) {
   .menu li li a {
@@ -3368,13 +3377,22 @@ article ol {
 .menu li li .navbar-toggle .show-less {
   top: 0;
 }
+@media (prefers-color-scheme: dark) {
+  .menu li li {
+    --link-font: var(--font-family);
+    --link-weight: var(--font-weight);
+    --link-color: var(--text-light);
+    --link-hover-deco: none;
+    --link-hover-color: var(--main-color);
+  }
+}
 .menu li li a:hover,
 .menu li li a:focus {
   background: transparent;
 }
 .menu li li a:active,
 .menu li li.active > a {
-  color: var(--main-color);
+  color: var(--link-hover-color);
   background: transparent;
 }
 .menu .navbar-collapse {
