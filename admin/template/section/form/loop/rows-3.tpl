@@ -33,8 +33,13 @@
                     {if $row[$name]}{$row[$name]|string_format:"%.2f"}&nbsp;<span class="fa fa-euro"></span>{elseif $row[$name] == null}&mdash;{else}{#price_0#|ucfirst}{/if}
                 {elseif $col.type == 'date'}
                     {if $row[$name]}{$row[$name]|date_format:'%d/%m/%Y'}{else}&mdash;{/if}
+                {elseif $col.type == 'datetime'}
+                    {if $row[$name]}{$row[$name]|date_format:'%d/%m/%Y %H:%M:%S'}{else}&mdash;{/if}
                 {elseif $col.type == 'img'}
                     {if $row[$name]}<img src="{$row[$name]}" class="img-responsive" />{else}&mdash;{/if}
+                {elseif $col.type == 'url'}
+                    {if $row[$name]}<a class="btn btn-link targetblank" href="{$row[$name]}"><span class="material-icons">zoom_in</span></a>{else}&mdash;{/if}
+                {else}
                 {else}
                     {if $row[$name]}{$row[$name]}{else}&mdash;{/if}
                 {/if}
