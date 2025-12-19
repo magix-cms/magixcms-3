@@ -736,7 +736,7 @@ fieldset[disabled] a.btn {
   --default-color-a: 1;
   --btn-hover-bg-color: var(--smooth-white);
   --btn-ahf-bg-color: #fff;
-  --btn-color: var(--text-color);
+  --btn-color: var(--main-color);
   --btn-bg-h: var(--default-color-h);
   --btn-bg-s: var(--default-color-s);
   --btn-bg-l: var(--default-color-l);
