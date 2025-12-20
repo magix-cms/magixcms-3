@@ -40,7 +40,6 @@
                 {elseif $col.type == 'url'}
                     {if $row[$name]}<a class="btn btn-link targetblank" href="{$row[$name]}"><span class="material-icons">zoom_in</span></a>{else}&mdash;{/if}
                 {else}
-                {else}
                     {if $row[$name]}{$row[$name]}{else}&mdash;{/if}
                 {/if}
             </td>
