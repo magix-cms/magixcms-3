@@ -252,6 +252,40 @@
 		}
 	}
 }
+.button-invert-transparent(@hv-color; @hv-txt: auto; @opacity: 0.7; @visual-brd-width: 2px) {
+	@final-txt-hover: if(@hv-txt = auto, contrast(@hv-color, #000, #fff, 73%), @hv-txt);
+	@real-brd-width: 1px;
+
+	// ... (votre logique de bordure habituelle)
+	border: @real-brd-width solid @hv-color;
+	box-sizing: border-box;
+	position: relative;
+	z-index: 2;
+
+	&:before {
+		content: '';
+		position: absolute;
+		height: calc(100% + (@real-brd-width * 2));
+		width: 0;
+		top: -@real-brd-width;
+		left: -@real-brd-width;
+
+		// UTILISATION DE VOTRE FONCTION ICI
+		.hex-to-rgba(#FFFFFF, @opacity);
+
+		z-index: -1;
+		transition: 0.25s;
+		border-radius: @btn-border-radius-base;
+	}
+
+	&:hover {
+		color: @final-txt-hover;
+		&:before {
+			width: calc(100% + (@real-brd-width * 2));
+			.hex-to-rgba(#000000, @opacity);
+		}
+	}
+}
 // Theme buttons Styles
 // Create 3 theme style :
 // - btn-{@name} | Simple flat button
@@ -292,6 +326,9 @@
 				}
 				&-invert {
 					.button-invert(var(@var); @txt-color; @invert-base; @invert-base);
+				}
+				&-invert-transparent {
+					.button-invert-transparent(var(@var); @txt-color);
 				}
 				&-white {
 					.button-invert(var(@var); @txt-color; @txt-color; @txt-color);
