@@ -83,7 +83,17 @@
 		margin-bottom: 1rem;
 	}
 }
-
+// ----- Align btn ------
+.btn-align{
+	margin-top: var(--grid-gutter);
+	display: flex;
+	gap: var(--spacer);
+}
+@media (max-width: .breakpoint(sm)[max]) {
+	.btn-align{
+		flex-direction: column;
+	}
+}
 //--------------------------------------------------------
 //                       Vignettes
 //--------------------------------------------------------
