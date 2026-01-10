@@ -8124,6 +8124,24 @@ h6,
 /*
  * Common rules for all pages
  */
+/* Ciblage spécifique du bouton de formulaire dans votre tableau */
+.action_on_record[aria-expanded="true"] .fa-plus:before {
+  content: "\f068";
+  /* Code Unicode FontAwesome pour le 'minus' (-) */
+}
+/* Transition pour que le changement soit moins brutal */
+.action_on_record .fa:before {
+  display: inline-block;
+  transition: transform 0.2s ease-in-out;
+}
+/*.action_on_record .fa-plus {
+  transition: transform 0.3s ease;
+}
+
+.action_on_record[aria-expanded="true"] .fa-plus {
+  transform: rotate(45deg);
+  color: #cc0000;
+}*/
 /*
  * Different block style
  */
@@ -9140,8 +9158,6 @@ form > .actions {
 	font-size: 20px;
 	color: rgba(0,0,0,.3);
 }*/
-@media (min-width: 480px) {
-}
 /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 @media print {
   *,
