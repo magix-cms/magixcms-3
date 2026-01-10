@@ -39,12 +39,17 @@
 }*/
 // Button gradient Style
 // @hv-color {color} background color on hover
-// @hv-txt {color} text color on hover
+// @hv-txt {color} text color on hover with auto by default
 // @base-color {color} base border color | default: main text color
 // @dark-color {color} second color
 // @base-txt {color} base text color | default: main text color
-.button-gradient(@hv-color; @hv-txt; @base-color; @dark-color; @base-txt) {
-	--btn-color: @hv-txt;
+.button-gradient(@hv-color; @hv-txt: auto; @base-color; @dark-color; @base-txt) {
+	// 1. Calcul automatique des contrastes pour chaque état
+	// On se base sur @hv-color pour le repos et @dark-color pour le hover
+	@final-txt-normal: if(@hv-txt = auto, contrast(@hv-color, #000, #fff), @hv-txt);
+	@final-txt-hover:  if(@hv-txt = auto, contrast(@dark-color, #000, #fff), @hv-txt);
+
+	--btn-color: @final-txt-normal;
 
 	background-origin: border-box;
 	background-clip: border-box;
@@ -52,25 +57,21 @@
 	position: relative;
 	z-index: 1;
 
-	// 1. On crée un dégradé "double" (0% à 50% = état normal / 50% à 100% = état hover)
+	// Dégradé "double" (Normal | Hover)
 	background-image: linear-gradient(90deg,
 	@hv-color 0%, @base-color 50%,
 	@dark-color 50%, @base-txt 100%
 	);
 
-	// 2. On l'étire à 200% pour que seule une moitié soit visible à la fois
 	background-size: 200% 100%;
-
-	// 3. On définit la position de départ (gauche)
 	background-position: left center;
+	color: var(--btn-color);
 
-	// 4. On anime la position
 	transition: background-position 0.25s ease, color 0.25s ease;
 
 	&:hover {
-		--btn-color: @hv-txt;
-
-		// 5. On fait glisser le dégradé vers la droite pour afficher la deuxième moitié
+		// On applique la couleur de texte calculée pour le hover
+		--btn-color: @final-txt-hover;
 		background-position: right center;
 	}
 }
@@ -80,25 +81,24 @@
 // @hv-txt {color} text color on hover
 // @base-color {color} base border color | default: main text color
 // @base-txt {color} base text color | default: main text color
-.button-invert(@hv-color; @hv-txt; @base-color: @text-color; @base-txt: @text-color; @visual-brd-width: 2px) {
+.button-invert(@hv-color; @hv-txt: auto; @base-color: @hv-color; @base-txt: @hv-color; @visual-brd-width: 2px) {
+	// 1. Calcul du contraste pour le texte AU SURVOL
+	@final-txt-hover: if(@hv-txt = auto, contrast(@hv-color, #000, #fff, 43%), @hv-txt);
+
+	// 2. Variables de couleurs (on utilise désormais les couleurs passées en paramètres)
 	--btn-color: @base-txt;
-	--btn-bg: transparent;
 	--btn-brd: @base-color;
 
-	// On définit la bordure physique réelle (celle du bouton de base)
 	@real-brd-width: 1px;
-
-	// On calcule l'épaisseur de l'ombre nécessaire pour atteindre la taille visuelle voulue
 	@shadow-width: (@visual-brd-width - @real-brd-width);
 
 	box-sizing: border-box;
 	position: relative;
 
-	// On garde la bordure de 1px (pour la taille du bouton)
+	// Garde la taille de 115px
 	border: @real-brd-width solid @base-color;
-
-	// On ajoute le complément via l'ombre interne
 	box-shadow: inset 0 0 0 @shadow-width @base-color;
+	color: var(--btn-color);
 
 	z-index: 2;
 	.auto-transition(.25s);
@@ -107,13 +107,10 @@
 		content: '';
 		position: absolute;
 		display: inline-block;
-
-		// On couvre la bordure réelle (1px de chaque côté = 2px)
 		height: calc(100% + (@real-brd-width * 2));
 		width: 0;
 		top: -@real-brd-width;
 		left: -@real-brd-width;
-
 		background-color: @hv-color;
 		z-index: -1;
 		transition: 0.25s;
@@ -121,17 +118,140 @@
 	}
 
 	&:hover {
-		color: @hv-txt;
+		color: @final-txt-hover;
 		border-color: @hv-color;
 		box-shadow: inset 0 0 0 @shadow-width @hv-color;
 
 		&:before {
-			// Largeur totale incluant la bordure réelle
 			width: calc(100% + (@real-brd-width * 2));
 		}
 	}
 }
+// Button ghost curtain Style
+// @color {color} background color on hover
+// @hv-txt {color} text color on hover
+// @visual-brd-width border size
+// 1. EFFET RIDEAU (Haut vers Bas)
+.button-ghost-curtain(@color; @hv-txt: auto; @visual-brd-width: 2px) {
+	@final-txt-hover: if(@hv-txt = auto, contrast(@color, #000, #fff, 43%), @hv-txt);
+	@real-brd-width: 1px;
+	@shadow-width: (@visual-brd-width - @real-brd-width);
 
+	--btn-color: @color;
+	box-sizing: border-box;
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	border: @real-brd-width solid @color;
+	box-shadow: inset 0 0 0 @shadow-width @color;
+	color: var(--btn-color);
+	.auto-transition(.3s);
+
+	&:before {
+		content: '';
+		position: absolute;
+		width: calc(100% + (@real-brd-width * 2));
+		height: 0;
+		top: -@real-brd-width;
+		left: -@real-brd-width;
+		background-color: @color;
+		z-index: -1;
+		transition: height 0.3s ease-in-out;
+		border-radius: @btn-border-radius-base;
+	}
+
+	&:hover {
+		color: @final-txt-hover;
+		&:before { height: calc(100% + (@real-brd-width * 2)); }
+	}
+}
+// Button ghost reveal Style
+// @color {color} background color on hover
+// @hv-txt {color} text color on hover
+// @visual-brd-width border size
+// 2. EFFET OUVERTURE (Expansion centrale)
+.button-ghost-reveal(@color; @hv-txt: auto; @visual-brd-width: 2px) {
+	@final-txt-hover: if(@hv-txt = auto, contrast(@color, #000, #fff, 43%), @hv-txt);
+	@real-brd-width: 1px;
+	@shadow-width: (@visual-brd-width - @real-brd-width);
+
+	--btn-color: @color;
+	box-sizing: border-box;
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	border: @real-brd-width solid @color;
+	box-shadow: inset 0 0 0 @shadow-width @color;
+	color: var(--btn-color);
+	.auto-transition(.3s);
+
+	&:before {
+		content: '';
+		position: absolute;
+		width: calc(100% + (@real-brd-width * 2));
+		height: calc(100% + (@real-brd-width * 2));
+		top: -@real-brd-width;
+		left: -@real-brd-width;
+		background-color: @color;
+		z-index: -1;
+		transform: scaleY(0);
+		transition: transform 0.3s ease-in-out;
+		border-radius: @btn-border-radius-base;
+	}
+
+	&:hover {
+		color: @final-txt-hover;
+		&:before { transform: scaleY(1); }
+	}
+}
+// Button ghost slide Style
+// @color {color} background color on hover
+// @hv-txt {color} text color on hover
+// @visual-brd-width border size
+.button-ghost-slide(@color; @hv-txt: auto; @visual-brd-width: 2px) {
+	// 1. Calcul du contraste (seuil 43% pour passer au blanc plus vite)
+	@final-txt-hover: if(@hv-txt = auto, contrast(@color, #000, #fff, 43%), @hv-txt);
+
+	@real-brd-width: 1px;
+	@shadow-width: (@visual-brd-width - @real-brd-width);
+
+	--btn-color: @color;
+	box-sizing: border-box;
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+
+	// Taille garantie (115px si votre base fait 115px)
+	border: @real-brd-width solid @color;
+	box-shadow: inset 0 0 0 @shadow-width @color;
+	color: var(--btn-color);
+	.auto-transition(.3s);
+
+	&:before {
+		content: '';
+		position: absolute;
+		// Toute la hauteur, mais largeur nulle au départ
+		height: calc(100% + (@real-brd-width * 2));
+		width: 0;
+
+		top: -@real-brd-width;
+		left: -@real-brd-width;
+		background-color: @color;
+		z-index: -1;
+
+		// Animation horizontale
+		transition: width 0.3s ease-in-out;
+		border-radius: @btn-border-radius-base;
+	}
+
+	&:hover {
+		color: @final-txt-hover;
+		&:before {
+			// Remplit toute la largeur au survol
+			width: calc(100% + (@real-brd-width * 2));
+		}
+	}
+}
 // Theme buttons Styles
 // Create 3 theme style :
 // - btn-{@name} | Simple flat button
@@ -175,6 +295,15 @@
 				}
 				&-white {
 					.button-invert(var(@var); @txt-color; @txt-color; @txt-color);
+				}
+				&-ghost-reveal {
+					.button-ghost-reveal(var(@var); @txt-color);
+				}
+				&-ghost-curtain {
+					.button-ghost-curtain(var(@var); @txt-color);
+				}
+				&-ghost-slide {
+					.button-ghost-slide(var(@var); @txt-color);
 				}
 			}
 		}
