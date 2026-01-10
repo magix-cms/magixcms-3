@@ -208,59 +208,63 @@
 // @color {color} background color on hover
 // @hv-txt {color} text color on hover
 // @visual-brd-width border size
-.button-ghost-slide(@color; @hv-txt: auto; @visual-brd-width: 2px) {
-	// 1. Calcul du contraste (seuil 43% pour passer au blanc plus vite)
-	@final-txt-hover: if(@hv-txt = auto, contrast(@color, #000, #fff, 43%), @hv-txt);
-
+.button-ghost-slide(@color-val; @hv-txt: auto; @visual-brd-width: 2px) {
+	@final-txt-hover: if(@hv-txt = auto, contrast(@color-val, #000, #fff, 43%), @hv-txt);
 	@real-brd-width: 1px;
 	@shadow-width: (@visual-brd-width - @real-brd-width);
 
-	--btn-color: @color;
+	--btn-color: @color-val;
 	box-sizing: border-box;
 	position: relative;
 	z-index: 2;
-	overflow: hidden;
+	overflow: hidden; // Crucial pour couper la diagonale qui dépasse
 
-	// Taille garantie (115px si votre base fait 115px)
-	border: @real-brd-width solid @color;
-	box-shadow: inset 0 0 0 @shadow-width @color;
+	border: @real-brd-width solid @color-val;
+	box-shadow: inset 0 0 0 @shadow-width @color-val;
 	color: var(--btn-color);
 	.auto-transition(.3s);
 
 	&:before {
 		content: '';
 		position: absolute;
-		// Toute la hauteur, mais largeur nulle au départ
-		height: calc(100% + (@real-brd-width * 2));
-		width: 0;
+		top: 0;
+		left: -150%; // On le sort loin à gauche
+		width: 120%; // Plus large pour couvrir la diagonale
+		height: 100%;
+		background-color: @color-val;
 
-		top: -@real-brd-width;
-		left: -@real-brd-width;
-		background-color: @color;
+		// L'astuce : On incline le fond de 25 degrés
+		transform: skewX(-25deg);
+
 		z-index: -1;
-
-		// Animation horizontale
-		transition: width 0.3s ease-in-out;
-		border-radius: @btn-border-radius-base;
+		transition: left 0.4s ease-in-out;
 	}
 
 	&:hover {
 		color: @final-txt-hover;
 		&:before {
-			// Remplit toute la largeur au survol
-			width: calc(100% + (@real-brd-width * 2));
+			left: -10%; // Il glisse pour recouvrir tout le bouton
 		}
 	}
 }
-.button-invert-transparent(@hv-color; @hv-txt: auto; @opacity: 0.7; @visual-brd-width: 2px) {
-	@final-txt-hover: if(@hv-txt = auto, contrast(@hv-color, #000, #fff, 73%), @hv-txt);
-	@real-brd-width: 1px;
+// Button invert Style
+// @color-val {color} background color on hover
+// @hv-txt {color} text color on hover
+// @opacity
+// @visual-brd-width: 2px
+.button-invert-transparent(@color-val; @hv-txt: auto; @opacity: 0.7; @visual-brd-width: 2px) {
+	// On utilise @color-val (la vraie couleur LESS) pour le contraste
+	@final-txt-hover: if(@hv-txt = auto, contrast(@color-val, #000, #fff, 43%), @hv-txt);
 
-	// ... (votre logique de bordure habituelle)
-	border: @real-brd-width solid @hv-color;
+	@real-brd-width: 1px;
+	@shadow-width: (@visual-brd-width - @real-brd-width);
+
 	box-sizing: border-box;
 	position: relative;
+	border: @real-brd-width solid @color-val;
+	box-shadow: inset 0 0 0 @shadow-width @color-val;
 	z-index: 2;
+	.auto-transition(.25s);
 
 	&:before {
 		content: '';
@@ -270,8 +274,8 @@
 		top: -@real-brd-width;
 		left: -@real-brd-width;
 
-		// UTILISATION DE VOTRE FONCTION ICI
-		.hex-to-rgba(#FFFFFF, @opacity);
+		// Utilisation de votre fonction d'opacité
+		.hex-to-rgba(@color-val, @opacity);
 
 		z-index: -1;
 		transition: 0.25s;
@@ -280,10 +284,7 @@
 
 	&:hover {
 		color: @final-txt-hover;
-		&:before {
-			width: calc(100% + (@real-brd-width * 2));
-			.hex-to-rgba(#000000, @opacity);
-		}
+		&:before { width: calc(100% + (@real-brd-width * 2)); }
 	}
 }
 // Theme buttons Styles
@@ -293,6 +294,83 @@
 // - btn-{@name}-invert | Button with background color on hover
 //
 // Requires a @{name}-colors list of colors
+.custom-button(@name, @txt-color: var(--white), @invert-base: var(--text-color)){
+	@class: ~".btn-@{name}";
+
+	// Variables de nommage pour les variables CSS
+	@var: ~'--@{name}-color';
+	@lighter: ~'--@{name}-color-lighter';
+	@light: ~'--@{name}-color-light';
+	@dark: ~'--@{name}-color-dark';
+
+	// Récupération de la couleur LESS pour les calculs (indispensable pour contrast/lighten)
+	@color: @theme-color[$@name];
+	@ch: hue(@color);
+	@cs: saturation(@color);
+	@cl: lightness(@color);
+	@ca: alpha(@color);
+
+	// Couleurs dérivées pour le gradient
+	@c-lighter: lighten(@color, 15%);
+	@c-light: lighten(@color, 5%);
+	@c-dark: darken(@color, 10%);
+
+	.create-btn-set(@name) when not (@name = default) {
+		.btn {
+			&@{class} {
+				// 1. VOTRE FONCTION DE BASE (Définit le bouton plein standard)
+				.button-variant(@txt-color, @ch, @cs, @cl, @ca, @ch, @cs, @cl, @ca);
+
+				// 2. LES VARIATIONS (Utilisent @color pour les calculs de contraste)
+				&-gradient {
+					// RESET : On désactive le fond solide pour laisser place au dégradé
+					--btn-bg-color: transparent;
+					--btn-hover-bg-color: transparent;
+					.button-gradient(@color; @txt-color; @c-lighter; @c-light; @c-dark);
+				}
+				&-outline {
+					.button-invert(@color; @txt-color; @color; @color);
+				}
+				&-invert {
+					// RESET : On force le fond de base à être transparent
+					--btn-bg-a: 0;
+					--btn-hover-bg-a: 0;
+					.button-invert(@color; @txt-color; @invert-base; @invert-base);
+				}
+				&-invert-transparent {
+					// Version avec opacité 0.7
+					.button-invert-transparent(@color; @txt-color; 0.7);
+				}
+				&-white {
+					.button-invert(@color; @txt-color; #ffffff; #ffffff);
+				}
+				&-ghost-reveal {
+					.button-ghost-reveal(@color; @txt-color);
+				}
+				&-ghost-curtain {
+					// RESET : Le ghost est transparent au repos
+					--btn-bg-a: 0;
+					--btn-hover-bg-a: 0;
+					.button-ghost-curtain(@color; @txt-color);
+				}
+				&-ghost-slide {
+					// La version diagonale (Skewed) pour se différencier de l'outline
+					.button-ghost-slide(@color; @txt-color);
+				}
+			}
+		}
+	};
+	.create-btn-set(@name);
+}
+
+// Theme buttons Styles
+// Create 3 theme style :
+// - btn-{@name} | Simple flat button
+// - btn-{@name}-gradient |Button with gradient background
+// - btn-{@name}-invert | Button with background color on hover
+//
+// Requires a @{name}-colors list of colors
+/*
 .custom-button(@name,@txt-color: var(--white),@invert-base: var(--text-color)){
 	@class: ~".btn-@{name}";
 
@@ -327,23 +405,11 @@
 				&-invert {
 					.button-invert(var(@var); @txt-color; @invert-base; @invert-base);
 				}
-				&-invert-transparent {
-					.button-invert-transparent(var(@var); @txt-color);
-				}
 				&-white {
 					.button-invert(var(@var); @txt-color; @txt-color; @txt-color);
-				}
-				&-ghost-reveal {
-					.button-ghost-reveal(var(@var); @txt-color);
-				}
-				&-ghost-curtain {
-					.button-ghost-curtain(var(@var); @txt-color);
-				}
-				&-ghost-slide {
-					.button-ghost-slide(var(@var); @txt-color);
 				}
 			}
 		}
 	};
 	.create-btn-set(@name);
-}
+}*/
