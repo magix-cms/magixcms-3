@@ -69,4 +69,7 @@
 #home main {
   padding-bottom: 1rem;
 }
+#home #last-news {
+  margin-bottom: calc(var(--spacer) * 2);
+}
 /*# sourceMappingURL=home.css.map */

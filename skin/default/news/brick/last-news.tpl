@@ -1,11 +1,19 @@
 {widget_news_data limit=3 assign="lastNews" scope="global"}
-{if $lastNews}
+{*{if $lastNews}
     <div id="last-news" class="container" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
         <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
             <p class="h3">{#last_news#|ucfirst}</p>
             <div class="tile-list row row-center">
-                {include file="news/loop/news.tpl" data=$lastNews classCol='news-tile col-12 col-xs-6 col-sm-4'}
+                {include file="news/loop/news.tpl" data=$lastNews classCol='news-tile col-12 col-xs-6 col-sm-4' nocache}
             </div>
         </div>
     </div>
+{/if}*}
+{if $lastNews}
+<div id="last-news" class="container" itemprop="hasPart" itemscope itemtype="http://schema.org/Periodical">
+    <p class="h3">{#last_news#|ucfirst}</p>
+    <div class="list-grid news-grid-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+        {include file="news/loop/news-grid.tpl" data=$lastNews classCol='news-card' nocache}
+    </div>
+</div>
 {/if}

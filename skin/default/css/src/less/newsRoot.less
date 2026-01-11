@@ -134,7 +134,6 @@
 
 	.panel {
 		position: relative;
-		
 		button {
 			position: absolute;
 			right: 0;
@@ -167,6 +166,15 @@
 			&.collapsing,
 			&.collapse.in {
 				border-top-color: var(--brd-default);
+			}
+		}
+	}
+	.panel.active, .active{
+		> a{
+			color: var(--white);
+
+			&:hover {
+				color: var(--white);
 			}
 		}
 	}

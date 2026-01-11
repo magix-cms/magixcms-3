@@ -37,7 +37,7 @@
                                     <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
                                 </button>{/strip}
                                 <ul class="dropdown-menu">
-                                    <li><a href="{$url}/{$lang}/news">{#all_news#}</a></li>
+                                    <li><a href="{$url}/{$lang}/news/">{#all_news#}</a></li>
                                     {nocache}
                                     {foreach $tags as $tag}
                                     <li{if $tag.id eq $smarty.get.tag} class="active"{/if}><a href="{$tag.url}">{$tag.name}</a></li>
@@ -57,7 +57,7 @@
                                     <span class="show-less"><i class="material-icons ico ico-arrow_drop_up"></i></span>
                                     </button>{/strip}
                                 <ul class="dropdown-menu">
-                                    <li><a href="{$url}/{$lang}/news">{#all_news#}</a></li>
+                                    <li><a href="{$url}/{$lang}/news/">{#all_news#}</a></li>
                                     {nocache}
                                     {foreach $archives as $year}
                                         <li class="panel{if isset($smarty.get.year) && $smarty.get.year == $year.year} active{/if}">
@@ -90,10 +90,13 @@
         {/block}
         {block name='article:content'}
             {if $news}
-            <div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+            {*<div class="news-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
                 <div class="tile-list row">
                     {include file="news/loop/news.tpl" data=$news classCol='news-tile col-12 col-xs-6 col-md-4' nocache}
                 </div>
+            </div>*}
+            <div class="list-grid news-grid-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                {include file="news/loop/news-grid.tpl" data=$news classCol='news-card' nocache}
             </div>
             {/if}
         {/block}

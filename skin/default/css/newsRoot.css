@@ -320,4 +320,12 @@
 #header-news .panel ul.collapse.in {
   border-top-color: var(--brd-default);
 }
+#header-news .panel.active > a,
+#header-news .active > a {
+  color: var(--white);
+}
+#header-news .panel.active > a:hover,
+#header-news .active > a:hover {
+  color: var(--white);
+}
 /*# sourceMappingURL=newsRoot.css.map */
