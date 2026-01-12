@@ -134,10 +134,10 @@ class backend_db_pages {
 				case 'pagesSelect':
 					$query = "SELECT p.id_parent,p.id_pages, c.name_pages , ca.name_pages AS parent_pages
 							FROM mc_cms_page AS p
-								JOIN mc_cms_page_content AS c USING ( id_pages )
+								JOIN mc_cms_page_content AS c ON ( p.id_pages = c.id_pages )
 								JOIN mc_lang AS lang ON ( c.id_lang = lang.id_lang )
 								LEFT JOIN mc_cms_page AS pa ON ( p.id_parent = pa.id_pages )
-								LEFT JOIN mc_cms_page_content AS ca ON ( pa.id_pages = ca.id_pages ) 
+								LEFT JOIN mc_cms_page_content AS ca ON (pa.id_pages = ca.id_pages AND ca.id_lang = c.id_lang)
 								WHERE c.id_lang = :default_lang
 							ORDER BY p.id_pages DESC";
 					break;
