@@ -9,7 +9,7 @@
 {block name='article'}
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content' nocache}
-            <div class="row">
+            {*<div class="row">
                 <div class="col-12 col-md-8 col-lg-9 push-md-4 push-lg-3 content">
                     <h1 itemprop="name">{$pages.name}</h1>
                     {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
@@ -43,17 +43,26 @@
                         {include file="section/loop/toc.tpl" pages=$pagesTree}
                     </ul>
                 </div>
+            </div>*}
+            <h1 itemprop="name">{$pages.name}</h1>
+            {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
+            {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
+            <div itemprop="text clearfix">
+                {include file="img/loop/gallery.tpl" imgs=$pages.imgs}
+                {$pages.content}
             </div>
-            {*{if $childs}
-                *}{*<h3>{#subcategories#|ucfirst}</h3>*}{*
-                <div class="vignette-list">
-                    <div class="section-block">
-                        <div class="row row-center">
-                            {include file="pages/loop/pages.tpl" data=$childs classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4 col-xl-3'}
-                        </div>
-                    </div>
-                </div>
-            {/if}*}
         {/block}
     </article>
+{/block}
+{block name="main:after"}
+    {if $childs}
+        {*<h3>{#subcategories#|ucfirst}</h3>*}
+        <div class="container vignette-list">
+            <div class="section-block">
+                <div class="row row-center">
+                    {include file="pages/loop/pages.tpl" data=$childs classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4 col-xl-3'}
+                </div>
+            </div>
+        </div>
+    {/if}
 {/block}

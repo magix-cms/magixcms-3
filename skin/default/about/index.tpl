@@ -10,7 +10,7 @@
 {block name='article'}
     <article class="container cms" id="article" itemprop="mainContentOfPage" itemscope itemtype="http://schema.org/WebPageElement">
         {block name='article:content' nocache}
-        <div class="row">
+        {*<div class="row">
             <div class="col-12 col-md-8 col-lg-9 push-md-4 push-lg-3 content">
                 <h1 itemprop="name">{$pages.name}</h1>
                 {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
@@ -27,8 +27,8 @@
                         <li class="dropdown-header active">
                             <a href="{$url}/{$lang}/about/" title="{#about_footer#}">{#about_footer#}</a>
                             <button class="btn btn-link open" type="button" data-toggle="collapse" data-target="#aboutPages">
-                                <span class="show-more"><i class="material-icons ico ico-add">{*keyboard_arrow_right*}</i></span>
-                                <span class="show-less"><i class="material-icons ico ico-remove">{*keyboard_arrow_up*}</i></span>
+                                <span class="show-more"><i class="material-icons ico ico-add"></i></span>
+                                <span class="show-less"><i class="material-icons ico ico-remove"></i></span>
                             </button>
                         </li>
                         <li class="submenu">
@@ -44,7 +44,13 @@
                     {include file="section/loop/toc.tpl" pages=$pagesTree}
                 </ul>
             </div>
-        </div>
+        </div>*}
+            <h1 itemprop="name">{$pages.name}</h1>
+            {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
+            {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
+            <div itemprop="text">
+                {$pages.content}
+            </div>
         {/block}
     </article>
 {/block}
