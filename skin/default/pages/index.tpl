@@ -57,11 +57,16 @@
 {block name="main:after"}
     {if $childs}
         {*<h3>{#subcategories#|ucfirst}</h3>*}
-        <div class="container vignette-list">
+        {*<div class="container vignette-list">
             <div class="section-block">
                 <div class="row row-center">
                     {include file="pages/loop/pages.tpl" data=$childs classCol='vignette col-12 col-xs-8 col-sm-6 col-md-4 col-xl-3'}
                 </div>
+            </div>
+        </div>*}
+        <div class="card-list container">
+            <div class="list-grid pages-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                {include file="pages/loop/pages-grid.tpl" data=$childs classCol='page-card' nocache}
             </div>
         </div>
     {/if}
