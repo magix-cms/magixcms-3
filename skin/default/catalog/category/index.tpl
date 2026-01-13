@@ -27,14 +27,16 @@
             {/nocache}
             {if $categories}
                 <p class="h2">{#categories#}</p>
-                <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/category.tpl" data=$categories classCol='vignette' nocache}
+                <div class="list-grid category-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                    {*{include file="catalog/loop/category.tpl" data=$categories classCol='vignette' nocache}*}
+                    {include file="catalog/loop/category-grid.tpl" data=$categories classCol='category-card' nocache}
                 </div>
             {/if}
             {if $products}
                 <p class="h2">{#products#|ucfirst}</p>
                 <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                    {include file="catalog/loop/product.tpl" data=$products classCol='vignette' nocache}
+                    {*{include file="catalog/loop/product.tpl" data=$products classCol='vignette' nocache}*}
+                    {include file="catalog/loop/product-grid.tpl" data=$products classCol='product-card' nocache}
                 </div>
             {/if}
         {/block}

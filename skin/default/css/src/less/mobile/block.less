@@ -131,6 +131,78 @@
 		}
 	}
 }
+@media (max-width: .breakpoint(sm)[max]) {
+	.vignette {
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+//--------------------------------------------------------
+//                       Category List
+//--------------------------------------------------------
+.category-list {
+	/**
+	 * User input values.
+	 */
+	--grid-column-count: 4;
+	--grid-gap: var(--grid-gutter);
+	--grid-item--min-width: 300px;
+
+	/**
+	 * Calculated values.
+	 */
+	--gap-count: calc(var(--grid-column-count) - 1);
+	--total-gap-width: calc(var(--gap-count) * var(--grid-gap));
+	--grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--grid-column-count));
+
+	grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
+}
+.category-card{
+	.figure {
+		min-height: 100%;
+		position: relative;
+		display: grid;
+		grid-template-rows: subgrid;
+		grid-row: span 2;
+		//.shadow(2);
+		box-shadow: rgba(17, 17, 26, 0.05) 0 1px 0, rgba(17, 17, 26, 0.1) 0 0 8px;
+		h3 {
+			margin: 0;//0 0 calc(var(--spacer) / 2) 0;
+			// On verrouille la hauteur pour 2 lignes de titre
+			min-height: 3em;
+			//line-height: 1.5em;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			--heading-color: var(--text-color);
+			transition: color .25s ease-in-out;
+		}
+		.desc {
+			grid-row: 2;
+			padding: 1rem;
+			background-color: var(--body-bg);
+
+			p {
+				color: var(--light-grey);
+				font-size: .89rem;
+			}
+		}
+		&:hover, &:focus {
+			h3 {
+				// Ou si vous utilisez votre variable de titre :
+				--heading-color: var(--main-color);
+			}
+			.caption {
+				opacity: 1;
+			}
+		}
+	}
+}
+//--------------------------------------------------------
+//                       Product List
+//--------------------------------------------------------
 .product-list {
 	/**
 	 * User input values.
@@ -148,14 +220,75 @@
 
 	grid-template-columns: repeat(auto-fill, minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr));
 }
-@media (max-width: .breakpoint(sm)[max]) {
-	.vignette {
-		&:last-child {
-			margin-bottom: 0;
+.product-card{
+	.figure {
+		min-height: 100%;
+		position: relative;
+		display: grid;
+		grid-template-rows: subgrid;
+		grid-row: span 3;
+		//.shadow(2);
+		box-shadow: rgba(17, 17, 26, 0.05) 0 1px 0, rgba(17, 17, 26, 0.1) 0 0 8px;
+		h3 {
+			margin: 0;//0 0 calc(var(--spacer) / 2) 0;
+			// On verrouille la hauteur pour 2 lignes de titre
+			min-height: 3em;
+			//line-height: 1.5em;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			--heading-color: var(--text-color);
+			transition: color .25s ease-in-out;
+		}
+		.desc {
+			grid-row: 2;
+			padding: 1rem;
+			background-color: var(--body-bg);
+
+			p {
+				color: var(--light-grey);
+				font-size: .89rem;
+			}
+		}
+		.product-price{
+			grid-row: 3;
+			display: flex;
+			align-content: center;
+			justify-content: center;
+			gap: var(--spacer);
+			padding-bottom: var(--spacer);
+			&:empty {
+				min-height: 4em;
+			}
+			.crossed-price{
+				color: var(--sd-color);
+				.strike{
+					text-decoration: line-through;
+				}
+				.currency-pack{
+					text-decoration: none;
+				}
+			}
+			.price{
+				font-size: var(--fz-h3);
+				transition: color .25s ease-in-out;
+			}
+		}
+		&:hover, &:focus {
+			h3 {
+				// Ou si vous utilisez votre variable de titre :
+				--heading-color: var(--main-color);
+			}
+			.price {
+				color: var(--main-color);
+			}
+			.caption {
+				opacity: 1;
+			}
 		}
 	}
 }
-
 //--------------------------------------------------------
 //                     Custom News lists
 //--------------------------------------------------------

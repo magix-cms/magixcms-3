@@ -17,8 +17,9 @@
             {/nocache}
             {if $categories}
             <p class="h2">{#categories#}</p>
-            <div class="list-grid product-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
-                {include file="catalog/loop/category.tpl" data=$categories classCol='vignette' nocache}
+            <div class="list-grid category-list" itemprop="mainEntity" itemscope itemtype="http://schema.org/ItemList">
+                {*{include file="catalog/loop/category.tpl" data=$categories classCol='vignette' nocache}*}
+                {include file="catalog/loop/category-grid.tpl" data=$categories classCol='category-card' nocache}
             </div>
             {/if}
             {if $products}
