@@ -225,7 +225,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function getCategoryList($id_parent = NULL, array $filter = []) : array {
+	public function getCategoryList($id_parent = NULL, string $listids = NULL, $order = NULL, array $filter = []) : array {
 		if(isset($this->filter)){
 			$filter = $this->filter;
 		}
@@ -250,7 +250,11 @@ class frontend_controller_catalog extends frontend_db_catalog {
                 ]
             ]*/
         ];
-
+        if(!empty($listids)) $params['listids'] = $listids;
+        if ($order !== NULL) {
+            // On l'adapte au format attendu par votre fonction db (tableau de tableaux)
+            $params['order'] = is_array($order) ? $order : [[$order]];
+        }
 		/*if(is_null($id_parent)) {
             $params['where'][] = [
                 'type' => 'AND',

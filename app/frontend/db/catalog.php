@@ -128,14 +128,69 @@ class frontend_db_catalog {
                         }
                         unset($params['join']);
                     }
-                    if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY cat.order_cat';
+
+                    $listids = '';
+                    $order = ''; // Chaîne finale pour le SQL
+
+                    if (isset($params['listids']) && !empty($params['listids'])) {
+                        $ids = explode(',', $params['listids']);
+                        $in_placeholders = [];
+                        $field_placeholders = [];
+
+                        foreach ($ids as $index => $id) {
+                            $val = trim($id);
+
+                            // 1. Marqueurs pour le filtrage (IN)
+                            $in_key = 'id_in_' . $index;
+                            $in_placeholders[] = ':' . $in_key;
+                            $params[$in_key] = $val;
+
+                            if (!isset($params['order'])) {
+                                // 2. Marqueurs pour le tri (FIELD) - CLÉS DIFFÉRENTES
+                                $fld_key = 'id_fld_' . $index;
+                                $field_placeholders[] = ':' . $fld_key;
+                                $params[$fld_key] = $val;
+                            }
+                        }
+
+                        // On construit la clause IN
+                        $listids = 'AND cat.id_cat IN (' . implode(',', $in_placeholders) . ') ';
+
+                        // 3. On définit l'ordre directement si aucun ordre n'est passé
+                        // On évite ainsi de toucher au tableau $params['order'] qui fait planter la boucle
+                        if (!isset($params['order'])) {
+                            $order = ' ORDER BY FIELD(cat.id_cat, ' . implode(',', $field_placeholders) . ')';
+                        }
+
+                        unset($params['listids']);
+                    }
+
+                    if (empty($order)) {
+                        if (!isset($params['order']) || !is_array($params['order'])) {
+                            $order = ' ORDER BY cat.order_cat';
+                        } else {
+                            $order = ' ORDER BY ';
+                            $orders = [];
+                            foreach ($params['order'] as $extendOrder) {
+                                if (is_array($extendOrder)) {
+                                    $orders = array_merge($orders, $extendOrder);
+                                } else {
+                                    $orders[] = (string)$extendOrder;
+                                }
+                            }
+                            $order .= implode(',', $orders);
+                            unset($params['order']);
+                        }
+                    }
+
+                    /*if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY cat.order_cat';
                     if(isset($params['order']) && is_array($params['order'])){
                         $order = ' ORDER BY ';
                         $orders = [];
                         foreach ($params['order'] as $extendOrder) { $orders = array_merge($orders, $extendOrder); }
                         $order .= ' '.implode(',', $orders);
                         unset($params['order']);
-                    }
+                    }*/
                     $limit = '';
                     if(isset($params['limit']) && is_array($params['limit'])){
                         foreach ($params['limit'] as $item) { $limit = ' LIMIT '.$item; }
@@ -176,7 +231,7 @@ class frontend_db_catalog {
                                 ".$nbwhere."
                                 GROUP BY id_cat, id_lang
                             ) as products ON (cat.id_cat = products.id_cat AND products.id_lang = lang.id_lang)".$joins." WHERE lang.iso_lang = :iso AND catc.published_cat = 1 ".$where
-                        .$order.$limit;
+                        .$listids.$order.$limit;
                     break;
 				case 'rand_category':
 					$queries = array(
