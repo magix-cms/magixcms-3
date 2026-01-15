@@ -97,15 +97,60 @@ class frontend_db_pages {
                         }
                         unset($params['join']);
                     }
-                    if(!isset($params['order']) || !is_array($params['order'])) $order = ' ORDER BY p.order_pages';
-                    //$order = '';
-                    if(isset($params['order']) && is_array($params['order'])){
-                        $order = ' ORDER BY ';
-                        $orders = [];
-                        foreach ($params['order'] as $extendOrder) { $orders = array_merge($orders, $extendOrder); }
-                        $order .= ' '.implode(',', $orders);
-                        unset($params['order']);
+                    $listids = '';
+                    $order = ''; // Chaîne finale pour le SQL
+
+                    if (isset($params['listids']) && !empty($params['listids'])) {
+                        $ids = explode(',', $params['listids']);
+                        $in_placeholders = [];
+                        $field_placeholders = [];
+
+                        foreach ($ids as $index => $id) {
+                            $val = trim($id);
+
+                            // 1. Marqueurs pour le filtrage (IN)
+                            $in_key = 'id_in_' . $index;
+                            $in_placeholders[] = ':' . $in_key;
+                            $params[$in_key] = $val;
+
+                            if (!isset($params['order'])) {
+                                // 2. Marqueurs pour le tri (FIELD) - CLÉS DIFFÉRENTES
+                                $fld_key = 'id_fld_' . $index;
+                                $field_placeholders[] = ':' . $fld_key;
+                                $params[$fld_key] = $val;
+                            }
+                        }
+
+                        // On construit la clause IN
+                        $listids = 'AND p.id_pages IN (' . implode(',', $in_placeholders) . ') ';
+
+                        // 3. On définit l'ordre directement si aucun ordre n'est passé
+                        // On évite ainsi de toucher au tableau $params['order'] qui fait planter la boucle
+                        if (!isset($params['order'])) {
+                            $order = ' ORDER BY FIELD(p.id_pages, ' . implode(',', $field_placeholders) . ')';
+                        }
+
+                        unset($params['listids']);
                     }
+
+                    if (empty($order)) {
+                        if (!isset($params['order']) || !is_array($params['order'])) {
+                            $order = ' ORDER BY p.order_pages';
+                        } else {
+                            $order = ' ORDER BY ';
+                            $orders = [];
+                            foreach ($params['order'] as $extendOrder) {
+                                if (is_array($extendOrder)) {
+                                    $orders = array_merge($orders, $extendOrder);
+                                } else {
+                                    $orders[] = (string)$extendOrder;
+                                }
+                            }
+                            $order .= implode(',', $orders);
+                            unset($params['order']);
+                        }
+                    }
+
                     $limit = '';
                     if(isset($params['limit']) && is_array($params['limit'])){
                         foreach ($params['limit'] as $item) { $limit = ' LIMIT '.$item; }
@@ -121,7 +166,7 @@ class frontend_db_pages {
 							LEFT JOIN mc_cms_page_img AS img ON (p.id_pages = img.id_pages)
 							LEFT JOIN mc_cms_page_img_content AS imgc ON (imgc.id_img = img.id_img and pc.id_lang = imgc.id_lang)
 							JOIN mc_lang AS lang ON(pc.id_lang = lang.id_lang) ".$joins." WHERE lang.iso_lang = :iso AND pc.published_pages = 1 AND (img.default_img = 1 OR img.default_img IS NULL) "
-                        .$where.$order.$limit;
+                        .$where.$listids.$order.$limit;
 
                     break;
 				case 'rand_pages':

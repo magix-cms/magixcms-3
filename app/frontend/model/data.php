@@ -138,66 +138,79 @@ class frontend_model_data{
 	 * @param array $newRow
 	 * @return array|mixed
 	 */
-	public function setPagesTree(array $data, string $type, string $branch = 'root', $deepness = 'all', $parser = false, $shortParser = false, array $newRow = []) {
-		$childs = [];
-		$kept = [];
-		$id = 'id_'.$type;
+    public function setPagesTree(array $data, string $type, string $branch = 'root', $deepness = 'all', $parser = false, $shortParser = false, array $newRow = []) {
+        // On s'assure que root existe toujours
+        $childs = ['root' => []];
+        $kept = [];
+        $idKey = 'id_'.$type;
 
-		foreach ($data as &$item) {
+        // --- BOUCLE 1 : INDEXATION ---
+        foreach ($data as &$item) {
+            $parentId = $item['id_parent'] ?? null;
 
-			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all'){
-				if($parser !== false) {
-					if($shortParser) $item = method_exists($parser, 'setItemShortData') ? $parser->setItemShortData($item) : $item;
-					else $item = method_exists($parser, 'setItemData') ? $parser->setItemData($item,[],$newRow) : $item;
-				}
+            // Sécurité de profondeur
+            $canEnter = ($deepness === 'all' || !isset($childs[$parentId]) || $childs[$parentId]['deepness'] < $deepness);
 
-                if(!isset($item[$id])) $id = 'id';
-				$childs[$item[$id]] = &$item;
-				$childs[$item[$id]]['subdata'] = [];
-				$childs[$item[$id]]['deepness'] = !isset($childs[$item['id_parent']]) ? 0 : $childs[$item['id_parent']]['deepness'] +1;
-				$kept[] = &$item;
-			}
-		}
-		unset($item);
+            if($canEnter){
+                if($parser !== false) {
+                    if($shortParser) $item = method_exists($parser, 'setItemShortData') ? $parser->setItemShortData($item) : $item;
+                    else $item = method_exists($parser, 'setItemData') ? $parser->setItemData($item,[],$newRow) : $item;
+                }
 
-		foreach($kept as &$item) {
-			if(!isset($childs[$item['id_parent']]) || $childs[$item['id_parent']]['deepness'] < $deepness || $deepness === 'all') {
-				$k = $item['id_parent'] == null ? 'root' : $item['id_parent'];
-				if (!isset($item[$id])) $id = 'id';
+                // Identification de la clé ID
+                $realIdKey = isset($item[$idKey]) ? $idKey : 'id';
+                $currentId = $item[$realIdKey];
 
-				if ($k === 'root')
-					$childs[$k][] = &$item;
-				else
-					$childs[$k]['subdata'][] = &$item;
-			}
-		}
-		unset($item);
+                $childs[$currentId] = &$item;
+                $childs[$currentId]['subdata'] = [];
 
-		foreach($kept as &$item) {
-			if (isset($childs[$item[$id]])) {
-				$item['subdata'] = $childs[$item[$id]]['subdata'];
-			}
-		}
+                // Calcul de la profondeur (si parent absent, on repart de 0)
+                $childs[$currentId]['deepness'] = (empty($parentId) || !isset($childs[$parentId])) ? 0 : $childs[$parentId]['deepness'] + 1;
 
-		if($branch === 'tree') {
-			return $childs;
-		}
-		elseif($branch === 'root') {
-			return $childs[$branch];
-		}
-		else {
-			if(is_array($branch)) {
-				$d = array();
-				foreach ($branch as $k) {
-					$d[] = $childs[$k];
-				}
-				return $d;
-			}
-			else {
-				return array($childs[$branch]);
-			}
-		}
-	}
+                $kept[] = &$item;
+            }
+        }
+        unset($item);
+
+        // --- BOUCLE 2 : ARCHITECTURE ---
+        foreach($kept as &$item) {
+            $realIdKey = isset($item[$idKey]) ? $idKey : 'id';
+            $parentId = $item['id_parent'];
+
+            // LOGIQUE ORPHELIN : Si le parent est absent, on rattache à ROOT
+            if (empty($parentId) || !isset($childs[$parentId])) {
+                $k = 'root';
+            } else {
+                $k = $parentId;
+            }
+
+            // On évite de s'auto-parenter
+            if ($k !== 'root' && $k == $item[$realIdKey]) {
+                $k = 'root';
+            }
+
+            if ($k === 'root') {
+                $childs[$k][] = &$item;
+            } else {
+                $childs[$k]['subdata'][] = &$item;
+            }
+        }
+        unset($item);
+
+        // --- BOUCLE 3 : LIAISON ---
+        foreach($kept as &$item) {
+            $realIdKey = isset($item[$idKey]) ? $idKey : 'id';
+            if (isset($childs[$item[$realIdKey]])) {
+                $item['subdata'] = $childs[$item[$realIdKey]]['subdata'];
+            }
+        }
+
+        // --- RETOUR SÉCURISÉ ---
+        if($branch === 'tree') return $childs;
+        if($branch === 'root') return $childs['root'] ?? [];
+
+        return isset($childs[$branch]) ? [$childs[$branch]] : ($childs['root'] ?? []);
+    }
 
 	/**
 	 * @param $id

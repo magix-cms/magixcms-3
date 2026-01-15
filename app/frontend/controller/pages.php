@@ -228,21 +228,27 @@ class frontend_controller_pages extends frontend_db_pages {
 
     /**
      * @param $id_parent
+     * @param string|NULL $listids
+     * @param $order
      * @param array $filter
      * @return array
-     * @throws Exception
      */
-    public function getPagesList($id_parent = NULL, array $filter = []) : array {
+    public function getPagesList($id_parent = NULL, string $listids = NULL, $order = NULL, array $filter = []) : array {
         if(isset($this->filter)) $filter = $this->filter;
 
         $newTableArray = [];
         $override = $this->modelModule->extendDataArray('pages',__FUNCTION__, $filter);
 
-        if($override) {
+        /*if($override) {
             foreach ($override as $key => $value) {
                 $newTableArray = array_merge_recursive($newTableArray, $value);
             }
 
+        }*/
+        if(!empty($override)) {
+            foreach ($override as $value) {
+                $newTableArray = array_merge_recursive($newTableArray, $value);
+            }
         }
 
         $params = [
@@ -259,6 +265,12 @@ class frontend_controller_pages extends frontend_db_pages {
                 ]
             ]*/
         ];
+
+        if(!empty($listids)) $params['listids'] = $listids;
+        if ($order !== NULL) {
+            // On l'adapte au format attendu par votre fonction db (tableau de tableaux)
+            $params['order'] = is_array($order) ? $order : [[$order]];
+        }
 
         if($newTableArray) {
             //print_r(array_merge($newTableArray['extendQueryParams'], $newTableArray['filterQueryParams']));

@@ -294,11 +294,24 @@ class frontend_db_catalog {
                         $cat = '';
                     }
 
-                    if(isset($params['listids'])) {
-                        $listids = 'AND catalog.id_product IN ('.$params['listids'].') ';
-                        //' AND catalog.id_product IN (:listids)';
+                    if (isset($params['listids']) && !empty($params['listids'])) {
+                        // 1. On transforme la chaîne "1,2,3" en tableau
+                        $ids = explode(',', $params['listids']);
+                        $placeholders = [];
+
+                        // 2. On génère les marqueurs dynamiquement
+                        foreach ($ids as $index => $id) {
+                            $key = 'id_item_' . $index; // On crée une clé unique
+                            $placeholders[] = ':' . $key;
+                            $params[$key] = trim($id); // On ajoute la valeur au tableau $params pour le futur bind
+                        }
+
+                        // 3. On construit la clause SQL avec les marqueurs (:id_item_0, :id_item_1...)
+                        $listids = 'AND catalog.id_product IN (' . implode(',', $placeholders) . ') ';
+
+                        // 4. On supprime l'ancienne chaîne brute pour ne pas perturber le bind
                         unset($params['listids']);
-                    }else{
+                    } else {
                         $listids = '';
                     }
 
@@ -340,8 +353,7 @@ class frontend_db_catalog {
 						 WHERE lang.iso_lang = :iso 
 						AND pc.published_p = 1 AND cat.published_cat = 1 AND catalog.default_c = 1 
 						AND (img.default_img = 1 OR img.default_img IS NULL) 
-						 '.$cat.$listids.$where
-                        .$order.$limit;
+						 '.$where.$cat.$listids.$order.$limit;
                     //$params = array();
 					break;
 				case 'rand_product':
