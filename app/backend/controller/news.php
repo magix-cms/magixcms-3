@@ -12,7 +12,7 @@ class backend_controller_news extends backend_db_news {
 		'seo_desc_news' => ['title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null],
 		'last_update' => ['title' => 'last_update', 'input' => ['type' => 'text', 'class' => 'date-input']],
 		'date_publish',
-		'published_news'
+		'published_news' => ['type' => 'bin']
 	];
 
     /**

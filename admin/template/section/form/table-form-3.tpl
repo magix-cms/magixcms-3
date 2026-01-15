@@ -72,13 +72,32 @@
                     <th>
                         <div class="form-group">
                             <label for="search[{$name}]" class="sr-only"></label>
-                            {if $col.input.type == 'select'}
+                            {*{if $col.input.type == 'select'}
                             <select name="search[{$name}]" id="search[{$name}]" class="form-control" >
                                 <option value="" selected>--</option>
                                 {foreach $col.input.values as $val}
                                 <option value="{$val.v}"{if isset($smarty.get.search[$name]) && $smarty.get.search[$name] === $val.v} selected{/if}>{if $col.input.var || !isset($val.name) || empty($val.name)}{$value = $col.enum|cat:$val.v}{#$value#}{else}{$val.name}{/if}</option>
                                 {/foreach}
-                            </select>
+                            </select>*}
+                            {*{if $col.input.type == 'select' || $col.type == 'bin'}
+
+                                <select name="search[{$name}]" id="search[{$name}]" class="form-control">
+                                    <option value="" selected>--</option>
+                                    Si input.values n'existe pas (cas erreur PHP), on met les valeurs par défaut
+                                    {$opts = $col.input.values|default:[['v'=>0],['v'=>1]]}
+
+                                    {foreach $opts as $val}
+                                        <option value="{$val.v}"{if isset($smarty.get.search[$name]) && $smarty.get.search[$name] === $val.v} selected{/if}>
+
+                                            {if isset($col.input.var) || !isset($val.name) || empty($val.name)}
+                                                {$enumKey = $col.enum|default:'bin_'|cat:$val.v}
+                                                {#$enumKey#}
+                                            {else}
+                                                {$val.name}
+                                            {/if}
+                                        </option>
+                                    {/foreach}
+                                </select>
                             {elseif $col.input.type == 'text'}
                             <input type="text"
                                    id="search[{$name}]"
@@ -86,6 +105,34 @@
                                    class="form-control{if $col.input.class !== ''} {$col.input.class}{/if}"
                                    {if isset($smarty.get.search[$name])} value="{$smarty.get.search[$name]}"{/if}
                                     {if isset($col.input.placeholder)} placeholder="{$col.input.placeholder}"{/if}/>
+                            {/if}*}
+                            {if isset($col.input) && $col.input !== null}
+
+                                <label for="search[{$name}]" class="sr-only"></label>
+
+                                {* Cas Select / Bin *}
+                                {if $col.input.type == 'select'}
+                                    <select name="search[{$name}]" id="search[{$name}]" class="form-control">
+                                        <option value="" selected>--</option>
+                                        {foreach $col.input.values as $val}
+                                            {* Votre logique d'affichage des options *}
+                                            <option value="{$val.v}"{if isset($smarty.get.search[$name]) && $smarty.get.search[$name] === $val.v} selected{/if}>{if $col.input.var || !isset($val.name) || empty($val.name)}{$value = $col.enum|cat:$val.v}{#$value#}{else}{$val.name}{/if}</option>
+                                        {/foreach}
+                                    </select>
+
+                                    {* Cas Input Text *}
+                                {elseif $col.input.type == 'text'}
+                                    <input type="text"
+                                           id="search[{$name}]"
+                                           name="search[{$name}]"
+                                           class="form-control{if isset($col.input.class)} {$col.input.class}{/if}"
+                                            {if isset($smarty.get.search[$name])} value="{$smarty.get.search[$name]}"{/if}
+                                            {if isset($col.input.placeholder)} placeholder="{$col.input.placeholder}"{/if}/>
+                                {/if}
+
+                            {else}
+                                {* Optionnel : un espace insécable ou vide pour garder la hauteur *}
+                                &nbsp;
                             {/if}
                         </div>
                     </th>

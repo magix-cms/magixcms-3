@@ -13,7 +13,7 @@ class backend_controller_pages extends backend_db_pages {
 			'content_pages' => array('type' => 'bin', 'input' => null),
 			'seo_title_pages' => array('title' => 'seo_title', 'class' => '', 'type' => 'bin', 'input' => null),
 			'seo_desc_pages' => array('title' => 'seo_desc', 'class' => '', 'type' => 'bin', 'input' => null),
-			'menu_pages',
+			'menu_pages' => array('type' => 'bin'),
 			'date_register'
 		),
 		'parent' => array(
@@ -24,7 +24,7 @@ class backend_controller_pages extends backend_db_pages {
 			'content_pages' => array('class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
 			'seo_title_pages' => array('title' => 'seo_title', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
 			'seo_desc_pages' => array('title' => 'seo_desc', 'class' => 'fixed-td-lg', 'type' => 'bin', 'input' => null),
-			'menu_pages',
+			'menu_pages' => array('type' => 'bin'),
 			'date_register'
 		)
 	);
