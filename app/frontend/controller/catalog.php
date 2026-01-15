@@ -362,7 +362,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
         $newSetArray = [];
         if(!empty($collection)) {
 			$collection = array_map(function(&$row){
-				$row['products'] = $this->getProductList($row['id_cat'],false,[]);
+				$row['products'] = $this->getProductList($row['id_cat'],false, NULL,NULL,[]);
 				return $row;
 			},$collection);
 			//$newRow[] = ['products' => 'products'];
@@ -472,7 +472,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
      * @return array
      * @throws Exception
      */
-    public function getProductList(int $id_cat = NULL, bool $count = false, array $filter = [], string $listids = NULL) : array {
+    public function getProductList(int $id_cat = NULL, bool $count = false, string $listids = NULL, $order = NULL, array $filter = []) : array {
         if(isset($this->filter)) $filter = $this->filter;
 
         $newTableArray = [];
@@ -489,6 +489,10 @@ class frontend_controller_catalog extends frontend_db_catalog {
 
         if(!empty($id_cat)) $params['id_cat'] = $id_cat;
         if(!empty($listids)) $params['listids'] = $listids;
+        if ($order !== NULL) {
+            // On l'adapte au format attendu par votre fonction db (tableau de tableaux)
+            $params['order'] = is_array($order) ? $order : [[$order]];
+        }
 
         //if(!$count) $limit = [($this->page * $this->offset) . ', ' . $this->offset];
         //if(!empty($limit)) $params['limit'] = $limit;
@@ -801,7 +805,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
             case 'cat':
                 $data = $this->getCategoryData();
 				$cats = $this->getCategoryList($this->id);
-				$products = $this->getProductList($this->id,false,$this->filter ?? []);
+				$products = $this->getProductList($this->id,false, NULL,NULL,$this->filter ?? []);
 				//$this->template->assign('nbp',$this->getProductList($this->id,true,$this->filter ?? []));
 				$this->template->assign('cat',$data,true);
 				$this->template->assign('categories',$cats,true);

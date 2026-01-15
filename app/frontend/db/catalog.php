@@ -348,43 +348,58 @@ class frontend_db_catalog {
                     }else{
                         $cat = '';
                     }
+                    $listids = '';
+                    $order = ''; // Chaîne finale pour le SQL
 
                     if (isset($params['listids']) && !empty($params['listids'])) {
-                        // 1. On transforme la chaîne "1,2,3" en tableau
                         $ids = explode(',', $params['listids']);
-                        $placeholders = [];
+                        $in_placeholders = [];
+                        $field_placeholders = [];
 
-                        // 2. On génère les marqueurs dynamiquement
                         foreach ($ids as $index => $id) {
-                            $key = 'id_item_' . $index; // On crée une clé unique
-                            $placeholders[] = ':' . $key;
-                            $params[$key] = trim($id); // On ajoute la valeur au tableau $params pour le futur bind
+                            $val = trim($id);
+
+                            // 1. Marqueurs pour le filtrage (IN)
+                            $in_key = 'id_in_' . $index;
+                            $in_placeholders[] = ':' . $in_key;
+                            $params[$in_key] = $val;
+
+                            if (!isset($params['order'])) {
+                                // 2. Marqueurs pour le tri (FIELD) - CLÉS DIFFÉRENTES
+                                $fld_key = 'id_fld_' . $index;
+                                $field_placeholders[] = ':' . $fld_key;
+                                $params[$fld_key] = $val;
+                            }
                         }
 
-                        // 3. On construit la clause SQL avec les marqueurs (:id_item_0, :id_item_1...)
-                        $listids = 'AND catalog.id_product IN (' . implode(',', $placeholders) . ') ';
+                        // On construit la clause IN
+                        $listids = 'AND catalog.id_product IN (' . implode(',', $in_placeholders) . ') ';
 
-                        // 4. On supprime l'ancienne chaîne brute pour ne pas perturber le bind
+                        // 3. On définit l'ordre directement si aucun ordre n'est passé
+                        // On évite ainsi de toucher au tableau $params['order'] qui fait planter la boucle
+                        if (!isset($params['order'])) {
+                            $order = ' ORDER BY FIELD(catalog.id_product, ' . implode(',', $field_placeholders) . ')';
+                        }
+
                         unset($params['listids']);
-                    } else {
-                        $listids = '';
                     }
 
-                    if(!isset($params['order']) || !is_array($params['order'])) {
-                        $order = ' ORDER BY catalog.order_p ASC';
-                    }
-
-                    if(isset($params['order']) && is_array($params['order'])){
-                        $order = ' ORDER BY ';
-						$orders = [];
-
-						foreach ($params['order'] as $extendOrder) {
-							$orders = array_merge($orders, $extendOrder);
-						}
-
-                        $order .= ' '.implode(',', $orders);
-
-                        unset($params['order']);
+                    if (empty($order)) {
+                        if (!isset($params['order']) || !is_array($params['order'])) {
+                            $order = ' ORDER BY catalog.order_p ASC';
+                        } else {
+                            $order = ' ORDER BY ';
+                            $orders = [];
+                            foreach ($params['order'] as $extendOrder) {
+                                if (is_array($extendOrder)) {
+                                    $orders = array_merge($orders, $extendOrder);
+                                } else {
+                                    $orders[] = (string)$extendOrder;
+                                }
+                            }
+                            $order .= implode(',', $orders);
+                            unset($params['order']);
+                        }
                     }
 
                     $limit = '';
