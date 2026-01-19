@@ -78,6 +78,7 @@
             {title: 'btn-main-ghost-slide', value: 'btn btn-main-ghost-slide'},
             {title: 'btn-main-ghost-curtain', value: 'btn btn-main-ghost-curtain'},
             {title: 'btn-main-ghost-reveal', value: 'btn btn-main-ghost-reveal'},
+            {title: 'btn-main-invert-transparent', value: 'btn btn-main-invert-transparent'},
             {title: 'btn-white', value: 'btn btn-white'},
             {title: 'btn-invert-white', value: 'btn btn-invert-white'},
             {title: 'btn-sd', value: 'btn btn-sd'},
