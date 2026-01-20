@@ -1,0 +1,13 @@
+tinymce.addI18n('fr_FR', {
+	"Snippet Library": "Bibliothèque de Modèles",
+	"Search (Title or Description)": "Rechercher (Titre ou Description)",
+	"Filter snippets...": "Filtrer les modèles...",
+	"Found snippets ({0})": "Modèles trouvés ({0})",
+	"No matching snippets found.": "Aucun modèle ne correspond.",
+	"Insert": "Insérer",
+	"Cancel": "Annuler",
+	"Snippet...": "Modèle...",
+	"Insert snippet": "Insérer un modèle",
+	"Open Snippets": "Ouvrir les modèles",
+	"Error: snippets_url not configured.": "Erreur : snippets_url non configuré."
+});
