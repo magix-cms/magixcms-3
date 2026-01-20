@@ -1,36 +1,36 @@
 ;(function ( $, window, document, undefined ) {
     var tinyLanguage;
     switch(iso){
-        case 'fr':
-            tinyLanguage = 'fr_FR';
-            break;
-        case 'en':
-            tinyLanguage = 'en_EN';
-            break;
-        default :
-            tinyLanguage = iso;
-            break;
+        case 'fr': tinyLanguage = 'fr_FR'; break;
+        case 'en': tinyLanguage = 'en_US'; break;
+        //default : tinyLanguage = iso; break;
     }
+
     $('.mceEditor').tinymce({
-        // Location of TinyMCE script
+        // IMPORTANT : Vérifiez que ce chemin pointe bien vers le fichier .js
         script_url : '/'+baseadmin+'/template/js/vendor/tiny_mce.'+editor_version+'/tinymce.min.js',
+
+        // Paramètres TinyMCE 7
+        license_key: 'gpl', // Requis pour la v7 gratuite
+        promotion: false,
+        branding: false,
+        language : tinyLanguage,
         theme: 'silver',
         skin: "oxide",
+        min_height: 400,
         mobile: {
-            //theme: 'mobile',
             menubar: true,
-            plugins:  'lists autolink responsivefilemanager' ,
-            toolbar: 'formatselect undo bold italic styleselect responsivefilemanager'
+            plugins: 'lists autolink responsivefilemanager',
+            toolbar: 'undo bold italic blocks responsivefilemanager' // 'blocks' remplace 'formatselect'
         },
         relative_urls : false,
         //convert_urls: false,
         entity_encoding : "raw",
-        promotion: false,
         plugins: [
             'advlist', 'lists','clists','link','image','charmap','preview','anchor',
             'searchreplace','visualblocks','code','fullscreen','wordcount','directionality','codesample',
-            'media','table','template','codesample','youtube','loremipsum','responsivefilemanager',
-            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion'
+            'media','table','codesample','youtube','loremipsum','responsivefilemanager',
+            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion','snippets'
         ],
         toolbar: 'link unlink image code | blocks | '
             +'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | '
@@ -38,7 +38,7 @@
         menu : {
             view   : {title : 'View'  , items : 'code | visualaid visualblocks | preview fullscreen'},
             edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall | searchreplace'},
-            insert : {title : 'Insert', items : 'link anchor | image media youtube | tabpanel | template | table | hr | loremipsum | codesample'},
+            insert : {title : 'Insert', items : 'link anchor | snippets | image media youtube | tabpanel | table | hr | loremipsum | codesample'},
             format : {title : 'Format', items : 'styles | lazyloadimage cryptmail'},
             table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
             tools  : {title : 'Tools' , items : 'code'}
@@ -50,14 +50,24 @@
             urlFileManager: '/'+baseadmin+'/template/js/vendor/flmngr/flmngr.php',
             urlFiles: '/media/'
         },*/
-        file_picker_types: 'file image media',
-        file_picker_callback: function() { },
-        external_filemanager_path: '/'+baseadmin+'/template/js/vendor/filemanager/',
-        filemanager_title: "Responsive Filemanager",
         external_plugins: {
             "filemanager" : '/'+baseadmin+'/template/js/vendor/filemanager/plugin.min.js'
         },
-        min_height: 400,
+        // Configuration Filemanager
+        external_filemanager_path: '/'+baseadmin+'/template/js/vendor/filemanager/',
+        filemanager_title: "Responsive Filemanager",
+        file_picker_types: 'file image media',
+        file_picker_callback: function(callback, value, meta) {
+            // Intégration standard si nécessaire
+        },
+        // Configuration de votre plugin Snippets
+        snippets_url: '/' + baseadmin + '/index.php?controller=setting&action=getSnippet',
+        // Nettoyage et Schéma
+        schema: "html5",
+        table_use_colgroups: false,
+        table_default_attributes: {
+            class: 'table'
+        },
         image_dimensions: true,
         image_class_list: [
             {title: 'None', value: ''},
@@ -247,17 +257,8 @@
             {title: 'Table Hover', value: 'table table-hover'},
             {title: 'Table Striped', value: 'table table-striped'},
         ],
-        //style_formats_merge : true,
-        table_use_colgroups: false,
-        //table_style_by_css: true,
-        table_default_styles: {},
-        table_default_attributes: {
-            class: 'table'
-        },
-        templates : '/'+baseadmin+'/index.php?controller=setting&action=getSnippet',
-        language : tinyLanguage,
-        schema: "html5",
         extended_valid_elements: "+img[class|src|srcset|sizes|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|loading],+svg[*],+g[*],+path[*],+span[*],+i[*],+div[*],+ul[*],+li[*],+iframe[src|width|height|name|align|class],+strong[*]",
-        content_css : content_css
+        // Variable content_css sécurisée
+        content_css : (typeof content_css !== 'undefined') ? content_css : ''
     });
 })( jQuery, window, document );
