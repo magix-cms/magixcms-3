@@ -1,6 +1,6 @@
 /**
  * YouTube for tinyMCE - Magix CMS
- * Version 2.0.0 - Compatible TinyMCE 7
+ * Version 5.0
  */
 tinymce.PluginManager.requireLangPack("youtube");
 tinymce.PluginManager.add("youtube", function (editor, url) {

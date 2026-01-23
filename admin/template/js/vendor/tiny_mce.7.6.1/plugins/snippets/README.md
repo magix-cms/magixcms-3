@@ -62,6 +62,8 @@ Votre point de terminaison (snippets_url) doit retourner un tableau JSON structu
 
 Note : L'URL fournie pour chaque snippet doit retourner du HTML brut (sans balises <html> ou <body>).
 
+<img width="1200" height="651" alt="Image" src="https://github.com/user-attachments/assets/1b58ef75-ffa6-44df-b027-deec662ffb35" />
+
 ## Licence
 Ce projet est sous licence MIT.
 Développé par Gerits Aurélien.

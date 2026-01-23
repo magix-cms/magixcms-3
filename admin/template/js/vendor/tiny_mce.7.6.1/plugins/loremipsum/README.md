@@ -2,12 +2,15 @@
 
 **Lorem Ipsum Pro** est un plugin pour TinyMCE permettant de générer instantanément des paragraphes de texte factice. La version 2.0 introduit un générateur dynamique permettant de choisir la quantité de texte à insérer.
 
-## 📊 Version & Compatibilité
+## Version & Compatibilité
 
 * **Version 2.x** (Actuelle) : Compatible avec **TinyMCE 6** et **TinyMCE 7**.
 * **Version 1.x** : Compatible avec **TinyMCE 5**.
 
 [![release](https://img.shields.io/github/release/gtraxx/tinymce-lorem-ipsum.svg)](https://github.com/gtraxx/tinymce-lorem-ipsum/releases)
+![Version TinyMCE](https://img.shields.io/badge/TinyMCE-6%20%7C%207-blue)
+![Licence](https://img.shields.io/badge/licence-MIT-green)
+![Statut](https://img.shields.io/badge/projet-Open%20Source-orange)
 
 > [!IMPORTANT]
 > Si vous utilisez encore **TinyMCE 5**, veuillez télécharger la **Version 1.0** disponible dans les [Releases GitHub](https://github.com/gtraxx/tinymce-lorem-ipsum/releases/tag/v1.0.0).
