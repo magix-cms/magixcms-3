@@ -30,9 +30,9 @@
             'advlist', 'lists','clists','link','image','charmap','preview','anchor',
             'searchreplace','visualblocks','code','fullscreen','wordcount','directionality','codesample',
             'media','table','codesample','youtube','loremipsum','responsivefilemanager',
-            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion','snippets'
+            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion','snippets','advreplace'
         ],
-        toolbar: 'link unlink image code | blocks | '
+        toolbar: 'link unlink image code advreplace | blocks | '
             +'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | '
             +'bullist numlist | blockquote | removeformat forecolor | mc_pages mc_cat mc_news mc_product | fullscreen',
         menu : {
@@ -41,7 +41,7 @@
             insert : {title : 'Insert', items : 'link anchor | snippets | image media youtube | tabpanel | table | hr | loremipsum | codesample'},
             format : {title : 'Format', items : 'styles | lazyloadimage cryptmail'},
             table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
-            tools  : {title : 'Tools' , items : 'code'}
+            tools  : {title : 'Tools' , items : 'code advreplace'}
         },
         menubar: 'view edit insert format table tools',
         image_advtab: true,
