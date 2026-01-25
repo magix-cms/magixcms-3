@@ -101,6 +101,7 @@ class frontend_model_pages extends frontend_db_pages {
                     $data['parent'] = $this->setItemShortData($parentData);
                 }
 				$data['name'] = $row['name_pages'];
+                $data['long_name'] = $row['longname_pages'] ?? null;
 				$data['iso'] = $row['iso_lang'];
 				$data['url'] = $this->routingUrl->getBuildUrl([
 					'type' => 'pages',

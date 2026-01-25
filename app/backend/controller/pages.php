@@ -235,6 +235,7 @@ class backend_controller_pages extends backend_db_pages {
 				'id_lang' => $page['id_lang'],
 				'iso_lang' => $page['iso_lang'],
 				'name_pages' => $page['name_pages'],
+                'longname_pages' => $page['longname_pages'],
 				'url_pages' => $page['url_pages'],
 				'link_label_pages' => $page['link_label_pages'],
 				'link_title_pages' => $page['link_title_pages'],
@@ -287,11 +288,12 @@ class backend_controller_pages extends backend_db_pages {
      */
 	private function saveContent(int $id) {
 		$extendData = [];
-
+        $revisions = new backend_controller_revisions();
 		foreach ($this->content as $lang => $content) {
 			$content['id_lang'] = $lang;
 			$content['id_pages'] = $id;
 			$content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
+            $content['longname_pages'] = (!empty($content['longname_pages']) ? $content['longname_pages'] : NULL);
 			$content['resume_pages'] = (!empty($content['resume_pages']) ? $content['resume_pages'] : NULL);
 			$content['content_pages'] = (!empty($content['content_pages']) ? $content['content_pages'] : NULL);
 			$content['link_label_pages'] = (!empty($content['link_label_pages']) ? $content['link_label_pages'] : NULL);
@@ -330,7 +332,9 @@ class backend_controller_pages extends backend_db_pages {
 				]);
 			}
 
-			if(isset($this->id_pages)) {
+            $revisions->saveRevision($this->controller, $content['id_pages'], $lang,'content_pages',$content['content_pages']);
+
+            if(isset($this->id_pages)) {
 				$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);
 				$setEditData = $this->setItemData($setEditData);
 				$extendData[$lang] = $setEditData[$this->id_pages]['content'][$lang]['public_url'];

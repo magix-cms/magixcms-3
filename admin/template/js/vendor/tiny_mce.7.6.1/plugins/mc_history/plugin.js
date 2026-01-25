@@ -1,0 +1,151 @@
+tinymce.PluginManager.requireLangPack("mc_history");
+tinymce.PluginManager.add('mc_history', function(editor, url) {
+
+    const openHistoryDialog = function() {
+        const textarea = editor.getElement();
+
+        // Récupération des données avec fallback
+        const controller = textarea.getAttribute('data-controller') || 'custom';
+        const itemId = textarea.getAttribute('data-itemid') || '1';
+        const lang = textarea.getAttribute('data-lang') || '1';
+        const field = textarea.getAttribute('data-field') || 'content';
+
+        const apiUrl = `/admin/index.php?controller=revisions&action=get_list&type=${controller}&item_id=${itemId}&id_lang=${lang}&field=${field}`;
+
+        const dialog = editor.windowManager.open({
+            title: editor.translate('Revision History'),
+            size: 'medium',
+            body: {
+                type: 'panel',
+                items: [
+                    {
+                        type: 'htmlpanel',
+                        html: '<div id="mc-history-list" style="min-height: 200px; width: 100%;">' + editor.translate('Loading...') + '</div>'
+                    },
+                    {
+                        type: 'htmlpanel',
+                        html: `<div style="margin-top: 15px; padding: 10px; background: #f0f7ff; border-left: 4px solid #007bff; font-size: 12px; color: #444;">
+                            <strong>${editor.translate('Tip:')}</strong> ${editor.translate('Restoring a version replaces the current text. You can use Undo (Ctrl+Z) if you change your mind.')}
+                        </div>`
+                    }
+                ]
+            },
+            buttons: [{ type: 'cancel', text: editor.translate('Close'), primary: true }]
+        });
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error('Server error');
+                return response.json();
+            })
+            .then(data => {
+                const container = document.getElementById('mc-history-list');
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div style="padding:20px; text-align:center;">${editor.translate('No revisions available for this content.')}</div>`;
+                } else {
+                    renderHistoryHtml(data, dialog, { controller, itemId, lang, field });
+                }
+            })
+            .catch(err => {
+                const container = document.getElementById('mc-history-list');
+                if (container) {
+                    container.innerHTML = `<div style="padding:20px; color: #d9534f; text-align:center;">${editor.translate('Impossible to load history.')}</div>`;
+                }
+            });
+    };
+
+    const renderHistoryHtml = function(data, dialogApi, params) {
+        const container = document.getElementById('mc-history-list');
+        if (!container) return;
+
+        // Icône Poubelle SVG intégrée
+        const trashIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
+
+        // Bouton Vider l'historique (Style Rouge conservé)
+        let html = `
+            <div style="text-align: right; margin-bottom: 10px;">
+                <button type="button" id="mc-clear-history" 
+                    style="display: inline-flex; align-items: center; padding: 5px 12px; cursor: pointer; background: #d9534f; color: white; border: none; border-radius: 3px; font-weight: bold; font-size: 11px;">
+                    ${trashIcon}
+                    ${editor.translate('Clear history')}
+                </button>
+            </div>`;
+
+        // Tableau (Style et Largeur conservés)
+        html += '<table style="width: 100%; border-collapse: collapse; font-family: sans-serif; font-size: 13px;">';
+        html += `
+            <tr style="background: #eee;">
+                <th style="padding: 10px; text-align: left; font-weight: bold; border-bottom: 2px solid #ccc;">${editor.translate('Modification Date')}</th>
+                <th style="padding: 10px; text-align: right; font-weight: bold; border-bottom: 2px solid #ccc;">${editor.translate('Action')}</th>
+            </tr>`;
+
+        data.forEach(rev => {
+            const dateObj = new Date(rev.date_register);
+            const dateFormatee = dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const heureFormatee = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            html += `
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; color: #333;">
+                        <span style="font-weight: bold;">${dateFormatee}</span> 
+                        <span style="color: #666; font-size: 12px; margin-left: 8px;">${heureFormatee}</span>
+                    </td>
+                    <td style="padding: 8px; text-align: right;">
+                        <button type="button" class="mc-restore-btn" data-id="${rev.id}" 
+                            style="padding: 5px 12px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 3px; font-weight: bold;">
+                            ${editor.translate('Restore')}
+                        </button>
+                    </td>
+                </tr>`;
+        });
+
+        html += '</table>';
+        container.innerHTML = html;
+
+        // Event : Vider l'historique
+        container.querySelector('#mc-clear-history').addEventListener('click', function() {
+            if (confirm(editor.translate('Are you sure you want to delete all revisions for this language?'))) {
+                fetch(`/admin/index.php?controller=revisions&action=clear_history&type=${params.controller}&item_id=${params.itemId}&id_lang=${params.lang}&field=${params.field}`)
+                    .then(res => res.json())
+                    .then(resData => {
+                        if (resData.success) {
+                            dialogApi.close();
+                            editor.notificationManager.open({ text: editor.translate('History cleared.'), type: 'success', timeout: 3000 });
+                        }
+                    });
+            }
+        });
+
+        // Event : Restaurer (Style Bleu conservé)
+        container.querySelectorAll('.mc-restore-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const rid = this.getAttribute('data-id');
+                if (confirm(editor.translate('Do you want to restore this version?'))) {
+                    fetch(`/admin/index.php?controller=revisions&action=get_content&id=${rid}`)
+                        .then(res => res.json())
+                        .then(resData => {
+                            if (resData.content !== undefined) {
+                                editor.setContent(resData.content);
+                                editor.undoManager.add();
+                                dialogApi.close();
+                            }
+                        });
+                }
+            });
+        });
+    };
+
+    // Icône du Plugin
+    editor.ui.registry.addIcon('revision-icon', '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 3C8.03 3 4 7.03 4 12H1L4.89 15.89L4.96 16.03L9 12H6C6 8.13 9.13 5 13 5C16.87 5 20 8.13 20 12C20 15.87 16.87 19 13 19C11.07 19 9.32 18.21 8.06 16.94L6.64 18.36C8.27 19.99 10.51 21 13 21C17.97 21 22 16.97 22 12C22 7.03 17.97 3 13 3ZM12 8V13L16.28 15.54L17 14.33L13.5 12.25V8H12Z" fill="currentColor"/></svg>');
+
+    // Menu Item
+    editor.ui.registry.addMenuItem('mc_history', {
+        text: editor.translate('Revision History'),
+        icon: 'revision-icon',
+        shortcut: 'Meta+H',
+        onAction: openHistoryDialog
+    });
+
+    // Raccourci Clavier
+    editor.addShortcut('meta+h', 'Open Revision History', openHistoryDialog);
+});

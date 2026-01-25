@@ -269,8 +269,8 @@ class backend_db_pages {
 						SELECT :id_parent,:menu_pages,COUNT(id_pages),NOW() FROM mc_cms_page WHERE id_parent".$cond;
 				break;
 			case 'content':
-				$query = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,link_label_pages,link_title_pages,seo_title_pages,seo_desc_pages,published_pages) 
-				  		VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:link_label_pages,:link_title_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
+				$query = 'INSERT INTO `mc_cms_page_content`(id_pages,id_lang,name_pages,longname_pages,url_pages,resume_pages,content_pages,link_label_pages,link_title_pages,seo_title_pages,seo_desc_pages,published_pages) 
+				  		VALUES (:id_pages,:id_lang,:name_pages,:longname_pages,:url_pages,:resume_pages,:content_pages,:link_label_pages,:link_title_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
 				break;
             case 'newImg':
                 $query = 'INSERT INTO `mc_cms_page_img`(id_pages,name_img,order_img,default_img) 
@@ -313,6 +313,7 @@ class backend_db_pages {
 				$query = 'UPDATE mc_cms_page_content 
 						SET 
 							name_pages = :name_pages,
+							longname_pages= :longname_pages,
 							url_pages = :url_pages,
 							resume_pages = :resume_pages,
 							content_pages = :content_pages,

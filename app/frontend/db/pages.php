@@ -348,6 +348,7 @@ class frontend_db_pages {
                     $select = [
                         'h.*',
                         'c.name_pages',
+                        'c.longname_pages',
                         'c.url_pages',
                         'c.link_label_pages',
                         'c.link_title_pages',

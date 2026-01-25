@@ -30,7 +30,8 @@
             'advlist', 'lists','clists','link','image','charmap','preview','anchor',
             'searchreplace','visualblocks','code','fullscreen','wordcount','directionality','codesample',
             'media','table','codesample','youtube','loremipsum','responsivefilemanager',
-            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion','snippets','advreplace'
+            'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion','snippets',
+            'advreplace','mc_history'
         ],
         toolbar: 'link unlink image code advreplace | blocks | '
             +'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | '
@@ -41,7 +42,7 @@
             insert : {title : 'Insert', items : 'link anchor | snippets | image media youtube | tabpanel | table | hr | loremipsum | codesample'},
             format : {title : 'Format', items : 'styles | lazyloadimage cryptmail'},
             table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
-            tools  : {title : 'Tools' , items : 'code advreplace'}
+            tools  : {title : 'Tools' , items : 'code advreplace mc_history'}
         },
         menubar: 'view edit insert format table tools',
         image_advtab: true,
