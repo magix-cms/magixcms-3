@@ -334,7 +334,7 @@ class plugins_contact_admin extends plugins_contact_db {
                                 $root = parent::fetchData(array('context' => 'one', 'type' => 'root_page'));
                             }
                             $id = $root['id_page'];
-
+                            $revisions = new backend_controller_revisions();
                             foreach ($this->content as $lang => $content) {
                                 if (empty($content['id'])) $content['id'] = $id;
                                 $rootLang = $this->getItems('content_page', array('id' => $id, 'id_lang' => $lang), 'one', false);
@@ -348,6 +348,9 @@ class plugins_contact_admin extends plugins_contact_db {
                                 );
 
                                 ($rootLang) ? $this->upd($config) : $this->add($config);
+                                if($rootLang) {
+                                    $revisions->saveRevision($this->controller, $id, $lang, 'content_page', $content['content_page']);
+                                }
                             }
                             $this->message->json_post_response(true, 'update');
                         }

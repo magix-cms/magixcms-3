@@ -282,6 +282,7 @@ class backend_controller_news extends backend_db_news {
 	private function saveContent($id)
 	{
 		$extendData = array();
+        $revisions = new backend_controller_revisions();
 
 		foreach ($this->content as $lang => $content) {
 			$data = $content;
@@ -356,7 +357,7 @@ class backend_controller_news extends backend_db_news {
 						}
 					}
 				}
-
+                $revisions->saveRevision($this->controller, $data['id_news'], $lang,'content_news',$data['content_news']);
 				$setEditData = $this->getItems('page', array('edit'=>$this->id_news),'all',false);
 				$setEditData = $this->setItemData($setEditData);
 				$extendData[$lang] = $setEditData[$this->id_news]['content'][$lang]['public_url'];

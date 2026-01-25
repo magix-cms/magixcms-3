@@ -1,5 +1,5 @@
 <div class="row">
-    <form id="add_snippet" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" method="post" class="validate_form add_form col-ph-12 col-lg-8 collapse in">
+    <form id="add_snippet" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=add" method="post" class="validate_form add_form col-ph-12 collapse in">
         <div class="row">
             <div class="col-ph-12 col-md-6">
                 <div class="form-group">

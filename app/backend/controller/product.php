@@ -791,6 +791,7 @@ class backend_controller_product extends backend_db_product {
                                 ));
 
                                 $extendData = array();
+                                $revisions = new backend_controller_revisions();
 
                                 foreach ($this->content as $lang => $content) {
                                     $content['id_product'] = $this->id_product;
@@ -833,7 +834,7 @@ class backend_controller_product extends backend_db_product {
                                             'data' => $content
                                         ));
                                     }
-
+                                    $revisions->saveRevision($this->controller, $content['id_product'], $lang,'content_p',$content['content_p']);
                                     /*$setEditData = parent::fetchData(
                                         array('context' => 'all', 'type' => 'page'),
                                         array('edit' => $this->id_product)

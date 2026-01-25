@@ -459,6 +459,7 @@ class backend_controller_about extends backend_db_about{
     private function saveContent($idpage)
     {
         $extendData = array();
+        $revisions = new backend_controller_revisions();
 
         foreach ($this->content as $lang => $content) {
             $content['id_lang'] = $lang;
@@ -495,6 +496,7 @@ class backend_controller_about extends backend_db_about{
                         'data' => $content
                     )
                 );
+                $revisions->saveRevision($this->controller, $content['id_pages'], $lang,'content_pages',$content['content_pages']);
             }
             else {
                 $this->add(
@@ -776,6 +778,7 @@ class backend_controller_about extends backend_db_about{
                         else {
                             switch ($this->dataType) {
                                 case 'text':
+                                    $revisions = new backend_controller_revisions();
                                     foreach ($this->content as $lang => $content) {
                                         $config = array(
                                             'context' => 'about',
@@ -792,6 +795,7 @@ class backend_controller_about extends backend_db_about{
 
                                         if (parent::fetchData(array('context' => 'one', 'type' => 'content'), array('id_lang' => $lang))) {
                                             $this->upd($config);
+                                            $revisions->saveRevision($this->controller, 1, $lang,'company_content',$content['company_content']);
                                         } else {
                                             $this->add($config);
                                         }

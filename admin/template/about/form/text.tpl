@@ -22,7 +22,12 @@
                     </div>
                     <div class="form-group">
                         <label for="content[{$id}][company_content]">{#content#|ucfirst} :</label>
-                        <textarea name="content[{$id}][company_content]" id="content[{$id}][company_content]" class="form-control mceEditor">{call name=cleantextarea field=$contentData.{$id}.content}</textarea>
+                        <textarea name="content[{$id}][company_content]" id="content[{$id}][company_content]"
+                                  class="form-control mceEditor"
+                                  data-controller="{$smarty.get.controller}"
+                                  data-itemid="1"
+                                  data-lang="{$id}"
+                                  data-field="company_content">{call name=cleantextarea field=$contentData.{$id}.content}</textarea>
                     </div>
                     <div class="form-group">
                         <button class="btn collapsed btn-collapse" role="button" data-toggle="collapse" data-parent="#accordion" href="#metas-{$id}" aria-expanded="true" aria-controls="metas-{$id}">

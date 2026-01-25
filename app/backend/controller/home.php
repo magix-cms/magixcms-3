@@ -96,6 +96,7 @@ class backend_controller_home extends backend_db_home{
      */
     private function save()
     {
+        $revisions = new backend_controller_revisions();
         $fetchRootData = parent::fetchData(array('context'=>'one','type'=>'root'));
         if($fetchRootData != null){
             $id_page = $fetchRootData['id_page'];
@@ -119,6 +120,7 @@ class backend_controller_home extends backend_db_home{
                             'id_lang'           => $lang
                         )
                     );
+                    $revisions->saveRevision($this->controller, $id_page, $lang,'content_page',$content['content_page']);
                 } else {
                     parent::insert(array('type' => 'newContent'), array(
                             'title_page'        => $content['title_page'],
@@ -130,6 +132,7 @@ class backend_controller_home extends backend_db_home{
                             'id_lang'           => $lang
                         )
                     );
+
                 }
             }
             $this->message->json_post_response(true, 'update', $id_page);

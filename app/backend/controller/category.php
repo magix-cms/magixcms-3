@@ -289,6 +289,7 @@ class backend_controller_category extends backend_db_category {
 	private function saveContent($id)
 	{
 		$extendData = array();
+        $revisions = new backend_controller_revisions();
 
 		foreach ($this->content as $lang => $content) {
 			$content['id_lang'] = $lang;
@@ -329,7 +330,8 @@ class backend_controller_category extends backend_db_category {
 						'data' => $content
 					)
 				);
-			}
+                $revisions->saveRevision($this->controller, $content['id_cat'], $lang,'content_cat',$content['content_cat']);
+            }
 			else {
 				$this->add(
 					array(

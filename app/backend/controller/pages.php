@@ -324,15 +324,14 @@ class backend_controller_pages extends backend_db_pages {
 					'type' => 'content',
 					'data' => $content
 				]);
-			}
+                $revisions->saveRevision($this->controller, $content['id_pages'], $lang,'content_pages',$content['content_pages']);
+            }
 			else {
 				$this->add([
 					'type' => 'content',
 					'data' => $content
 				]);
 			}
-
-            $revisions->saveRevision($this->controller, $content['id_pages'], $lang,'content_pages',$content['content_pages']);
 
             if(isset($this->id_pages)) {
 				$setEditData = $this->getItems('page', array('edit'=>$this->edit),'all',false);

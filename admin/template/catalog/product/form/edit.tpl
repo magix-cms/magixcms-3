@@ -104,7 +104,12 @@
                 </div>
                 <div class="form-group">
                     <label for="content[{$id}][content_p]">{#content#|ucfirst} :</label>
-                    <textarea name="content[{$id}][content_p]" id="content[{$id}][content_p]" class="form-control mceEditor">{call name=cleantextarea field=$page.content[{$id}].content_p}</textarea>
+                    <textarea name="content[{$id}][content_p]" id="content[{$id}][content_p]"
+                              class="form-control mceEditor"
+                              data-controller="{$smarty.get.controller}"
+                              data-itemid="{$smarty.get.edit}"
+                              data-lang="{$id}"
+                              data-field="content_p">{call name=cleantextarea field=$page.content[{$id}].content_p}</textarea>
                 </div>
 
                 <div class="form-group">
