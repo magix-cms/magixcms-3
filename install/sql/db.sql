@@ -515,6 +515,7 @@ CREATE TABLE IF NOT EXISTS `mc_about_page_content` (
     `id_pages` int(7) unsigned NOT NULL,
     `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
     `name_pages` varchar(150) DEFAULT NULL,
+    `longname_pages` varchar(150) DEFAULT NULL,
     `url_pages` varchar(150) DEFAULT NULL,
     `resume_pages` text,
     `content_pages` text,
