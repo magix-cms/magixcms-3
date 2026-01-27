@@ -440,6 +440,7 @@ class backend_controller_about extends backend_db_about{
                 'id_lang'           => $page['id_lang'],
                 'iso_lang'          => $page['iso_lang'],
                 'name_pages'        => $page['name_pages'],
+                'longname_pages'    => $page['longname_pages'],
                 'resume_pages'      => $page['resume_pages'],
                 'url_pages'         => $page['url_pages'],
                 'content_pages'     => $page['content_pages'],
@@ -465,6 +466,7 @@ class backend_controller_about extends backend_db_about{
             $content['id_lang'] = $lang;
             $content['id_pages'] = $idpage;
             $content['published_pages'] = (!isset($content['published_pages']) ? 0 : 1);
+            $content['longname_pages'] = (!empty($content['longname_pages']) ? $content['longname_pages'] : NULL);
             if (empty($content['url_pages'])) {
                 $content['url_pages'] = http_url::clean($content['name_pages'],
                     array(

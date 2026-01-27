@@ -125,6 +125,7 @@ class frontend_db_about {
 					$query = 'SELECT
 								h.*,
 								c.name_pages,
+								c.longname_pages,
 								c.url_pages,
 								c.resume_pages,
 								c.content_pages,

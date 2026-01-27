@@ -241,8 +241,8 @@ class backend_db_about {
 						SELECT :id_parent,:menu_pages,COUNT(id_pages),NOW() FROM mc_about_page WHERE id_parent".$cond;
                     break;
                 case 'content':
-                    $query = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
-						VALUES (:id_pages,:id_lang,:name_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
+                    $query = 'INSERT INTO `mc_about_page_content`(id_pages,id_lang,name_pages,longname_pages,url_pages,resume_pages,content_pages,seo_title_pages,seo_desc_pages,published_pages) 
+						VALUES (:id_pages,:id_lang,:name_pages,:longname_pages,:url_pages,:resume_pages,:content_pages,:seo_title_pages,:seo_desc_pages,:published_pages)';
                     break;
             }
         }
@@ -433,6 +433,7 @@ class backend_db_about {
                     $query = 'UPDATE mc_about_page_content 
 						SET 
 							name_pages = :name_pages,
+							longname_pages = :longname_pages,
 							url_pages = :url_pages,
 							resume_pages = :resume_pages,
 							content_pages = :content_pages,

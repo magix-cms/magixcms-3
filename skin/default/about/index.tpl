@@ -45,7 +45,8 @@
                 </ul>
             </div>
         </div>*}
-            <h1 itemprop="name">{$pages.name}</h1>
+            {if !empty($pages.long_name)}<meta itemprop="name" content="{$pages.name}">{/if}
+            <h1 itemprop="{if !empty($pages.long_name)}alternateName{else}name{/if}">{if !empty($pages.long_name)}{$pages.long_name}{else}{$pages.name}{/if}</h1>
             {if $pages.date.register}<time datetime="{$pages.date.register}" itemprop="datePublished"></time>{/if}
             {if $pages.date.update}<time datetime="{$pages.date.update}" itemprop="dateModified"></time>{/if}
             <div itemprop="text">

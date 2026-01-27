@@ -256,6 +256,7 @@ class frontend_model_about extends frontend_db_about {
 				$data['id'] = $row['id_pages'];
 				$data['id_parent'] = !is_null($row['id_parent']) ? $row['id_parent'] : NULL;
 				$data['name'] = $row['name_pages'];
+                $data['long_name'] = $row['longname_pages'] ?? null;
 				$data['iso'] = $row['iso_lang'];
 				$data['url'] = $this->routingUrl->getBuildUrl([
 					'type' => 'about',
