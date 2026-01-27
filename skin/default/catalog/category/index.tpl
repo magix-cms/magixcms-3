@@ -10,7 +10,8 @@
     <article class="catalog container" itemprop="mainContentOfPage">
         {block name='article:content'}
             {nocache}
-            <h1 itemprop="name">{$cat.name}</h1>
+            {if !empty($cat.long_name)}<meta itemprop="name" content="{$cat.name}">{/if}
+            <h1 itemprop="{if !empty($cat.long_name)}alternateName{else}name{/if}">{if !empty($cat.long_name)}{$cat.long_name}{else}{$cat.name}{/if}</h1>
             <div class="text clearfix" itemprop="text">
                 {if isset($cat.img.name)}
                 <a href="{$cat.img.large.src}" class="img-zoom img-float float-right" title="{$cat.img.title}" data-caption="{$cat.img.caption}">

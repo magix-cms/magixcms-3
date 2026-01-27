@@ -111,6 +111,7 @@ class frontend_model_category {
 			$data['id_lang']   = $row['id_lang'];
 			$data['iso']       = $row['iso_lang'];
 			$data['name']      = $row['name_cat'];
+            $data['long_name'] = $row['longname_cat'] ?? null;
 			$data['content']   = $row['content_cat'];
 			$data['resume']    = $row['resume_cat'] ?: ($row['content_cat'] ? $string_format->clearHTMLTemplate($row['content_cat']) : '');
 			$data['menu']      = $row['menu_cat'];

@@ -1,5 +1,5 @@
 <div class="row">
-    <form id="edit_news" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}" method="post" class="validate_form edit_form_extend col-ph-12 col-md-10">
+    <form id="edit_news" action="{$smarty.server.SCRIPT_NAME}?controller={$smarty.get.controller}&amp;action=edit&edit={$page.id_news}" method="post" class="validate_form edit_form_extend col-ph-12">
         <div class="row">
             <div class="col-ph-12 col-sm-6">
                 <div class="form-group">

@@ -98,6 +98,7 @@ class frontend_db_catalog {
                     $select = [
                             'cat.*',
                             'catc.name_cat',
+                            'catc.longname_cat',
                             'catc.url_cat',
                             'catc.resume_cat',
                             'catc.content_cat',
@@ -691,6 +692,7 @@ class frontend_db_catalog {
 
                     $select = ['cat.*',
                                'catc.name_cat',
+                               'catc.longname_cat',
                                'catc.url_cat',
                                'catc.resume_cat',
                                'catc.content_cat',

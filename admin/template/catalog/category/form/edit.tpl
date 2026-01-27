@@ -78,6 +78,21 @@
                     <div class="row">
                         <div class="col-ph-12 col-sm-8">
                             <div class="form-group">
+                                <label for="content[{$id}][longname_cat]">{#longname_pages#|ucfirst}</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="content[{$id}][longname_cat]" name="content[{$id}][longname_cat]" value="{$page.content[{$id}].longname_cat}" maxlength="125"/>
+                                    <span class="input-group-addon">
+                                        <a href="#" class="text-info" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="{#longname_pages_info#}">
+                                            <span class="fa fa-question-circle"></span>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-ph-12 col-sm-8">
+                            <div class="form-group">
                                 <label for="content[{$id}][url_cat]">{#url_rewriting#|ucfirst}</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="content[{$id}][url_cat]" name="content[{$id}][url_cat]" readonly="readonly" size="30" value="{$page.content[{$id}].url_cat}" />

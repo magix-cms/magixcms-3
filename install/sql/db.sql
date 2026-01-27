@@ -622,6 +622,7 @@ CREATE TABLE IF NOT EXISTS `mc_catalog_cat_content` (
     `id_cat` int(7) unsigned NOT NULL,
     `id_lang` smallint(3) unsigned NOT NULL DEFAULT '1',
     `name_cat` varchar(150) DEFAULT NULL,
+    `longname_cat` varchar(150) DEFAULT NULL,
     `url_cat` varchar(150) DEFAULT NULL,
     `resume_cat` text,
     `content_cat` text,

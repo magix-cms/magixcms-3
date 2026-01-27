@@ -266,6 +266,7 @@ class backend_controller_category extends backend_db_category {
                 'id_lang'           => $page['id_lang'],
                 'iso_lang'          => $page['iso_lang'],
                 'name_cat'          => $page['name_cat'],
+                'longname_cat'      => $page['longname_cat'],
                 'url_cat'           => $page['url_cat'],
                 'resume_cat'        => $page['resume_cat'],
                 'content_cat'       => $page['content_cat'],
@@ -295,6 +296,7 @@ class backend_controller_category extends backend_db_category {
 			$content['id_lang'] = $lang;
 			$content['id_cat'] = $id;
 			$content['published_cat'] = (!isset($content['published_cat']) ? 0 : 1);
+            $content['longname_cat'] = (!empty($content['longname_cat']) ? $content['longname_cat'] : NULL);
 			$content['resume_cat'] = (!empty($content['resume_cat']) ? $content['resume_cat'] : NULL);
 			$content['content_cat'] = (!empty($content['content_cat']) ? $content['content_cat'] : NULL);
 			$content['link_label_cat'] = (!empty($content['link_label_cat']) ? $content['link_label_cat'] : NULL);

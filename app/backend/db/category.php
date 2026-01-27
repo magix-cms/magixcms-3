@@ -240,8 +240,8 @@ class backend_db_category {
 						SELECT :id_parent,:menu_cat,count(order_cat),NOW() FROM mc_catalog_cat WHERE id_parent $cond ORDER BY order_cat desc LIMIT 0,1";
 				break;
 			case 'content':
-				$query = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,url_cat,resume_cat,content_cat,link_label_cat,link_title_cat,seo_title_cat,seo_desc_cat,published_cat) 
-				  		VALUES (:id_cat,:id_lang,:name_cat,:url_cat,:resume_cat,:content_cat,:link_label_cat,:link_title_cat,:seo_title_cat,:seo_desc_cat,:published_cat)';
+				$query = 'INSERT INTO `mc_catalog_cat_content`(id_cat,id_lang,name_cat,longname_cat,url_cat,resume_cat,content_cat,link_label_cat,link_title_cat,seo_title_cat,seo_desc_cat,published_cat) 
+				  		VALUES (:id_cat,:id_lang,:name_cat,:longname_cat,:url_cat,:resume_cat,:content_cat,:link_label_cat,:link_title_cat,:seo_title_cat,:seo_desc_cat,:published_cat)';
 				break;
 			default:
 				return false;
@@ -276,6 +276,7 @@ class backend_db_category {
 				$query = 'UPDATE mc_catalog_cat_content 
                         SET 
                             name_cat = :name_cat, 
+                            longname_cat= :longname_cat,
                             url_cat = :url_cat, 
                             resume_cat = :resume_cat, 
                             content_cat = :content_cat, 
