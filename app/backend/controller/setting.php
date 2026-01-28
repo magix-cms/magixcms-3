@@ -237,7 +237,8 @@ class backend_controller_setting extends backend_db_setting {
 									'cache' => $this->setting['cache'],
 									'mode' => $this->setting['mode'],
 									'amp' => isset($this->setting['amp']) ? '1' : '0',
-									'maintenance' => isset($this->setting['maintenance']) ? '1' : '0'
+									'maintenance' => isset($this->setting['maintenance']) ? '1' : '0',
+                                    'geminiai' => isset($this->setting['geminiai']) ? '1' : '0'
 								];
 								break;
 						    case 'css_inliner':
