@@ -254,7 +254,8 @@ INSERT INTO `mc_setting` (`id_setting`, `name`, `value`, `type`, `label`, `categ
       (NULL, 'amp', '0', 'int', 'amp', 'advanced'),
       (NULL, 'maintenance', '0', 'int', 'Mode maintenance', 'advanced'),
       (NULL, 'holder_bg_color', '#ffffff', 'string', 'color bg replacement image', 'advanced'),
-      (NULL, 'logo_percent', '50', 'int', 'Logo size percentage', 'advanced');
+      (NULL, 'logo_percent', '50', 'int', 'Logo size percentage', 'advanced'),
+      (NULL, 'geminiai', '0', 'int', 'Gemini AI', 'advanced');
 
 -- --------------------------------------------------------
 

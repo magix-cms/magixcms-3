@@ -519,8 +519,11 @@ class backend_controller_category extends backend_db_category {
                             if(isset($this->img)) {
                                 //$resultUpload = $this->upload->setImageUpload('img', $settings, $dirs, false);
 								$resultUpload = $this->upload->imageUpload(
-									'catalog','category','upload/catalog/category',["$this->id_cat"],[
-									'name' => $this->name_img !== '' ? $this->name_img : $page['url_cat']
+									'catalog',
+                                    'category',
+                                    'upload/catalog/category',
+                                    ["$this->id_cat"]
+                                    ,['name' => $this->name_img !== '' ? $this->name_img : $page['url_cat']
 								],false);
 
                                 $filename = $resultUpload['file'];

@@ -3,7 +3,41 @@
     switch(iso){
         case 'fr': tinyLanguage = 'fr_FR'; break;
         case 'en': tinyLanguage = 'en_US'; break;
-        //default : tinyLanguage = iso; break;
+        default : tinyLanguage = iso; break;
+    }
+
+    let magixPlugins = [
+        'advlist', 'lists','clists','link','image','charmap','preview','anchor',
+        'searchreplace','visualblocks','code','fullscreen','wordcount','directionality',
+        'media','table','codesample','youtube','loremipsum','responsivefilemanager',
+        'mc_pages','mc_cat','mc_news','mc_product','lazyloadimage','cryptmail','tabpanel','accordion','snippets',
+        'advreplace','mc_history'
+    ];
+
+    let magixToolbar = 'link unlink image code advreplace | blocks | '
+        +'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | '
+        +'bullist numlist | blockquote | removeformat forecolor | mc_pages mc_cat mc_news mc_product | fullscreen';
+
+    let magixMenu = {
+        view   : {title : 'View'  , items : 'code | visualaid visualblocks | preview fullscreen'},
+        edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall | searchreplace'},
+        insert : {title : 'Insert', items : 'link anchor | snippets | image media youtube | tabpanel | table | hr | loremipsum | codesample'},
+        format : {title : 'Format', items : 'styles | lazyloadimage cryptmail'},
+        table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
+        tools  : {title : 'Tools' , items : 'code advreplace mc_history'}
+    };
+    if (window.MagixCMS && window.MagixCMS.ai_enabled) {
+        // Ajout du plugin
+        magixPlugins.push('mc_ai_gemini');
+
+        // Ajout à la barre d'outils (à la fin, avant fullscreen ou après)
+        magixToolbar += ' | mc_ai_gemini';
+
+        // Ajout au menu "Insert" (idéal pour la création)
+        magixMenu.insert.items += ' | mc_ai_gemini';
+
+        // Optionnel : Ajout au menu "Tools" (idéal pour l'édition/correction)
+        magixMenu.tools.items += ' mc_ai_gemini';
     }
 
     $('.mceEditor').tinymce({
@@ -26,7 +60,7 @@
         relative_urls : false,
         //convert_urls: false,
         entity_encoding : "raw",
-        plugins: [
+        /*plugins: [
             'advlist', 'lists','clists','link','image','charmap','preview','anchor',
             'searchreplace','visualblocks','code','fullscreen','wordcount','directionality','codesample',
             'media','table','codesample','youtube','loremipsum','responsivefilemanager',
@@ -43,7 +77,10 @@
             format : {title : 'Format', items : 'styles | lazyloadimage cryptmail'},
             table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
             tools  : {title : 'Tools' , items : 'code advreplace mc_history'}
-        },
+        },*/
+        plugins: magixPlugins,
+        toolbar: magixToolbar,
+        menu: magixMenu,
         menubar: 'view edit insert format table tools',
         image_advtab: true,
         /*Flmngr: {

@@ -152,6 +152,23 @@
             </label>
         </div>
     </fieldset>
+    <fieldset>
+        <legend>{#geminiai_setting#}</legend>
+        <div class="form-group">
+            <div class="switch">
+                <input type="checkbox" id="geminiai" name="setting[geminiai]" class="switch-native-control"{if isset($settings.geminiai) && $settings.geminiai eq '1'} checked{/if} />
+                <div class="switch-bg">
+                    <div class="switch-knob"></div>
+                </div>
+            </div>
+            <label for="maintenance">
+                {#enable_geminiai#}&nbsp;?
+                <a href="#" class="text-warning" data-trigger="hover" data-toggle="popover" data-placement="right" data-content="{#geminiai_warning#}">
+                    <span class="fa fa-question-circle"></span>
+                </a>
+            </label>
+        </div>
+    </fieldset>
     <div id="submit">
         <input type="hidden" id="type" name="type" value="advanced">
         <button class="btn btn-main-theme pull-right" type="submit" name="action" value="edit">{#save#|ucfirst}</button>
