@@ -264,7 +264,7 @@ class backend_model_sitemap{
                                 )
                             );
                         }*/
-                        print 'test';
+                        //print 'test';
                         if ($dataNewsImg != null) {
                             // Multi images
                             foreach ($dataNewsImg as $img) {

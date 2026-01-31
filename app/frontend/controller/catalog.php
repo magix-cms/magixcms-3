@@ -359,6 +359,8 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			}
 		}
         $setTree = !empty($newTree) ? $newTree : 'root';
+        $isFlatMode = !empty($listids);
+
         $newSetArray = [];
         if(!empty($collection)) {
 			$collection = array_map(function(&$row){
@@ -368,7 +370,7 @@ class frontend_controller_catalog extends frontend_db_catalog {
 			//$newRow[] = ['products' => 'products'];
 			//$newRow[] = ['products'];
 			$newRow['products'] = 'products';
-            $newSetArray = $this->data->setPagesTree($collection,'cat', $id_parent ?? $setTree ,'all',$this->modelCatalog,false,$newRow);
+            $newSetArray = $this->data->setPagesTree($collection,'cat', $id_parent ?? $setTree ,'all',$this->modelCatalog,false, $newRow, $isFlatMode);
             /*print '<pre>';
             print_r($newSetArray);
             print '</pre>';*/

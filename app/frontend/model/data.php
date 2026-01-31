@@ -128,18 +128,18 @@ class frontend_model_data{
 		return null;
 	}
 
-	/**
-	 * @param array $data
-	 * @param string $type
-	 * @param string $branch
-	 * @param string|int $deepness
-	 * @param bool|object $parser
-	 * @param bool|object $shortParser
-	 * @param array $newRow
-	 * @return array|mixed
-	 */
-    public function setPagesTree(array $data, string $type, string $branch = 'root', $deepness = 'all', $parser = false, $shortParser = false, array $newRow = []) {
-        // On s'assure que root existe toujours
+    /**
+     * @param array $data
+     * @param string $type
+     * @param string $branch
+     * @param $deepness
+     * @param $parser
+     * @param $shortParser
+     * @param array $newRow
+     * @param bool $flat
+     * @return array|array[]|mixed
+     */
+    public function setPagesTree(array $data, string $type, string $branch = 'root', $deepness = 'all', $parser = false, $shortParser = false, array $newRow = [], bool $flat = false) {
         $childs = ['root' => []];
         $kept = [];
         $idKey = 'id_'.$type;
@@ -177,8 +177,9 @@ class frontend_model_data{
             $realIdKey = isset($item[$idKey]) ? $idKey : 'id';
             $parentId = $item['id_parent'];
 
-            // LOGIQUE ORPHELIN : Si le parent est absent, on rattache à ROOT
-            if (empty($parentId) || !isset($childs[$parentId])) {
+            // Si on est en mode $flat, on force le rattachement à root,
+            // peu importe si le parent existe ou non.
+            if ($flat === true || empty($parentId) || !isset($childs[$parentId])) {
                 $k = 'root';
             } else {
                 $k = $parentId;
