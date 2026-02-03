@@ -213,6 +213,8 @@
   color: var(--text-color);
   border-bottom: 1px solid var(--main-color);
   position: relative;
+  /* Ciblage du menu dropdown spécifique aux thèmes/tags */
+  /* Personnalisation de la barre de défilement pour une intégration propre */
 }
 #header-news .row {
   align-items: flex-end;
@@ -285,6 +287,30 @@
 }
 #header-news .filter > .dropdown-menu {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+#header-news .dropdown.filter .dropdown-menu {
+  max-height: 400px;
+  /* Limite la hauteur à 400px */
+  overflow-y: auto;
+  /* Active le scroll vertical si nécessaire */
+  overflow-x: hidden;
+  /* Évite tout scroll horizontal parasite */
+}
+#header-news .dropdown.filter .dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+#header-news .dropdown.filter .dropdown-menu::-webkit-scrollbar-thumb {
+  background-color: var(--main-color);
+  border-radius: 4px;
+}
+#header-news .dropdown.filter .dropdown-menu::-webkit-scrollbar-track {
+  background: #f9f9f9;
+}
+#header-news .dropdown-menu li {
+  border-bottom: 1px solid var(--brd-default);
+}
+#header-news .dropdown-menu li:last-child {
+  border: none;
 }
 #header-news .dropdown-menu li {
   border-bottom: 1px solid var(--brd-default);

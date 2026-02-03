@@ -121,7 +121,35 @@
 			box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 		}
 	}
+	/* Ciblage du menu dropdown spécifique aux thèmes/tags */
+	.dropdown.filter .dropdown-menu {
+		max-height: 400px; /* Limite la hauteur à 400px */
+		overflow-y: auto;  /* Active le scroll vertical si nécessaire */
+		overflow-x: hidden; /* Évite tout scroll horizontal parasite */
+	}
 
+	/* Personnalisation de la barre de défilement pour une intégration propre */
+	.dropdown.filter .dropdown-menu::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.dropdown.filter .dropdown-menu::-webkit-scrollbar-thumb {
+		background-color: var(--main-color);
+		border-radius: 4px;
+	}
+
+	.dropdown.filter .dropdown-menu::-webkit-scrollbar-track {
+		background: #f9f9f9;
+	}
+	.dropdown-menu {
+		li {
+			border-bottom: 1px solid var(--brd-default);
+
+			&:last-child {
+				border: none;
+			}
+		}
+	}
 	.dropdown-menu {
 		li {
 			border-bottom: 1px solid var(--brd-default);
