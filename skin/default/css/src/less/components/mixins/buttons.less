@@ -88,7 +88,10 @@
 	// 2. Variables de couleurs (on utilise désormais les couleurs passées en paramètres)
 	--btn-color: @base-txt;
 	--btn-brd: @base-color;
-
+	@media (prefers-color-scheme: dark) {
+		--btn-color: #fff;
+		--btn-brd: #fff;
+	}
 	@real-brd-width: 1px;
 	@shadow-width: (@visual-brd-width - @real-brd-width);
 
@@ -96,8 +99,8 @@
 	position: relative;
 
 	// Garde la taille de 115px
-	border: @real-brd-width solid @base-color;
-	box-shadow: inset 0 0 0 @shadow-width @base-color;
+	border: @real-brd-width solid var(--btn-brd);
+	box-shadow: inset 0 0 0 @shadow-width var(--btn-brd);
 	color: var(--btn-color);
 
 	z-index: 2;
