@@ -7,8 +7,7 @@ Magix CMS dans sa version 3, un cms optimisé pour le référencement.
 
 ### License
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
 ## Soutenir le projet
 
@@ -79,3 +78,11 @@ error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT
  * [terser](https://github.com/terser-js/terser) >= 5.7.1 (ou terser-js à la place de Uglify)
  * [sass](https://sass-lang.com/install) >= 1.20.1
  * [mjml](https://mjml.io/download) >= 4.12.0
+
+## Licence
+
+Ce projet est sous licence **GPLv3**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+Copyright (C) 2008 - 2026 Gerits Aurelien (Magix CMS)
+Ce programme est un logiciel libre ; vous pouvez le redistribuer et/ou le modifier selon les termes de la Licence Publique Générale GNU telle que publiée par la Free Software Foundation ; soit la version 3 de la Licence, ou (à votre discrétion) toute version ultérieure.
+
+---
