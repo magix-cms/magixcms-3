@@ -1,0 +1,92 @@
+[
+  {
+    "name": "ChatGPT: Remove start/end tags",
+    "find": "\\s+(data-)?(start|end)=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove all inline styles",
+    "find": "\\s+style=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove all IDs",
+    "find": "\\s+id=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove empty spans",
+    "find": "<span[^>]*>(\\s|&nbsp;)*</span>",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove width attributes",
+    "find": "\\s+width=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove height attributes",
+    "find": "\\s+height=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove JS events (onclick, etc.)",
+    "find": "\\s+on[a-z]+=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove script tags",
+    "find": "<script[\\s\\S]*?<\\/script>",
+    "replace": ""
+  },
+  {
+    "name": "Clean: Remove iframes",
+    "find": "<iframe[^>]*>.*?<\\/iframe>",
+    "replace": ""
+  },
+  {
+    "name": "Gemini: Remove path and index data",
+    "find": "\\s+(data-)?(path-to-node|index-in-node)=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Gemini: Remove index-in-node only",
+    "find": "\\s+(data-)?index-in-node=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Gemini: Remove empty data- attributes",
+    "find": "\\s+data-=[\"'][^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "SEO: HTTP to HTTPS conversion",
+    "find": "href=\"http://",
+    "replace": "href=\"https://"
+  },
+  {
+    "name": "SEO: Add loading='lazy' to images",
+    "find": "(<img\\s+)",
+    "replace": "$1loading=\"lazy\" "
+  },
+  {
+    "name": "SEO: Force target='_blank' (External)",
+    "find": "(<a\\s+href=\"http[^\"]*\")([^>]*>)",
+    "replace": "$1 target=\"_blank\"$2"
+  },
+  {
+    "name": "SEO: Remove target='_blank'",
+    "find": "\\s+target=[\"']_blank[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Word: Remove Mso classes",
+    "find": "\\s+class=[\"']Mso[^\"']*[\"']",
+    "replace": ""
+  },
+  {
+    "name": "Image: Change old-folder to new-folder",
+    "find": "src=\"([^\"]*)/old-folder/",
+    "replace": "src=\"$1/new-folder/"
+  }
+]

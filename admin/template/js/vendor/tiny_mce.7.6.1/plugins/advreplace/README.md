@@ -1,7 +1,8 @@
 # Plugin : advreplace pour tinyMCE
 
+[![release](https://img.shields.io/github/release/gtraxx/tinymce-advreplace.svg)](https://github.com/gtraxx/tinymce-advreplace/releases/latest)
 ![Version TinyMCE](https://img.shields.io/badge/TinyMCE-6%20%7C%207-blue)
-![Licence](https://img.shields.io/badge/licence-MIT-green)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 ![Statut](https://img.shields.io/badge/projet-Open%20Source-orange)
 ![Langue](https://img.shields.io/badge/langue-FR%20%7C%20EN-brightgreen)
 
@@ -12,25 +13,45 @@
 ## Description
 **advreplace** est un outil puissant permettant d'effectuer des modifications chirurgicales dans le code HTML généré par l'éditeur, sans obliger l'utilisateur à basculer manuellement en vue "Code Source". Il est capable de nettoyer des attributs invisibles, de reformater des balises et de corriger des liens en masse.
 
+## Soutenir le projet
+
+Si vous souhaitez soutenir le développement, vous pouvez faire un don via PayPal :
+
+[![Faire un don](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/donate/?business=BQBYN3XYGMDML&no_recurring=0&currency_code=EUR)
+
+## Structure du dossier
+Le dossier `plugins/advreplace` doit contenir les fichiers suivants pour fonctionner :
+* `plugin.js` (Cœur du plugin)
+* `formulas.json` (Votre bibliothèque de règles)
+* `langs/fr_FR.js` (Fichier de traduction)
+
 ### Initialization
 Add the plugin to your TinyMCE setup. It is highly recommended to also include the native `code` plugin to enable the auto-verification feature.
 
 ```javascript
 tinymce.init({
     selector: '#editor',
-    
+
     // 1. Register the plugin
-    plugins: 'code advreplace', 
-    
+    plugins: 'code advreplace',
+
     // 2. Add the button to your toolbar
     toolbar: 'undo redo | advreplace code | bold italic',
-    
+
     // 3. (Optional) Add to the menu bar
     menu: {
         tools: { title: 'Tools', items: 'advreplace code' }
     }
 });
 ```
+## Nouveautés de la v2.0
+
+La version 2.0 transforme cet utilitaire en une véritable **station de nettoyage intelligente**, idéale pour traiter le contenu généré par IA (ChatGPT, Gemini) ou les copier-coller depuis Word.
+
+* **Bibliothèque Externe (JSON)** : Plus besoin de toucher au code JS. Toutes vos formules Regex sont stockées dans `formulas.json`.
+* **Recherche Dynamique** : Filtrez instantanément parmi des dizaines de règles (ex: tapez "SEO" ou "Gemini").
+* **Auto-Remplissage** : La sélection d'un preset remplit automatiquement les champs de recherche et de remplacement.
+* **Internationalisation** : Support natif des fichiers de langue (fr_FR inclus par défaut).
 
 ## Guide d'utilisation rapide
 
@@ -80,34 +101,32 @@ Voici une liste de formules Regex courantes pour la maintenance de contenu :
 | **Passer les liens HTTP en HTTPS** | `href="http://` | `href="https://` |
 | **Corriger les chemins d'images absolus** | `src="http://monsite.com/img/` | `src="/img/` |
 
+## Personnalisation (formulas.json)
+Vous pouvez ajouter vos propres règles dans le fichier formulas.json à la racine du plugin.
+
+### Format attendu :
+
+```json
+{
+  "name": "Catégorie : Nom de l'action",
+  "find": "Votre_Regex_Echappée",
+  "replace": "Valeur_de_Remplacement"
+}
+```
+⚠️ Important : En JSON, les backslashes doivent être doublés.
+
+* Pour cibler un espace `\s`, écrivez `\\s`.
+* Pour cibler une quote `"`, échappez-la `\"`.
+
 ## Sécurité et Annulation
 
 * **Mode Interne :** Ce plugin travaille uniquement sur le contenu chargé dans l'éditeur. Il ne modifie rien sur le serveur tant que vous n'avez pas enregistré la page.
 * **Historique (Undo) :** En cas d'erreur de manipulation ou si le résultat de la Regex ne convient pas, utilisez simplement le raccourci **Ctrl+Z** (ou le bouton Annuler) pour revenir instantanément à l'état précédent.
 
 ## Licence
-Ce projet est sous licence MIT.
-Développé par Gerits Aurélien.
-Copyright (c) 2026, Magix CMS.
 
-MIT License
+Ce projet est sous licence **GPLv3**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+Copyright (C) 2008 - 2026 Gerits Aurelien (Magix CMS)
+Ce programme est un logiciel libre ; vous pouvez le redistribuer et/ou le modifier selon les termes de la Licence Publique Générale GNU telle que publiée par la Free Software Foundation ; soit la version 3 de la Licence, ou (à votre discrétion) toute version ultérieure.
 
-Copyright (c) 2026 Gerits Aurélien (Magix CMS)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+---
