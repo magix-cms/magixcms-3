@@ -100,6 +100,7 @@
         },
         // Configuration de votre plugin Snippets
         snippets_url: '/' + baseadmin + '/index.php?controller=setting&action=getSnippet',
+        toolbar_mode: 'sliding',
         // Nettoyage et Schéma
         schema: "html5",
         table_use_colgroups: false,
