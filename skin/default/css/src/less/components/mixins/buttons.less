@@ -290,6 +290,59 @@
 		&:before { width: calc(100% + (@real-brd-width * 2)); }
 	}
 }
+// Button Glass Style (Glassmorphism)
+// @color-val {color} background color on hover (and text color on rest)
+// @hv-txt {color} text color on hover
+.button-glass(@color-val; @hv-txt: auto) {
+	// 1. Calcul du contraste pour le texte au SURVOL (quand le bouton se remplit)
+	@final-txt-hover: if(@hv-txt = auto, contrast(@color-val, #000, #fff), @hv-txt);
+
+	// 2. Variables initiales
+	// Note : Au repos, le texte prend la couleur du thème pour le contraste sur fond blanc
+	--btn-color: @color-val;
+	--btn-hover-txt: @final-txt-hover;
+
+	position: relative;
+	z-index: 2;
+	box-sizing: border-box;
+
+	// 3. Le style "Verre"
+	background-color: rgba(255, 255, 255, 0.7); // Votre demande
+	border: 1px solid rgba(255, 255, 255, 0.4); // Bordure subtile
+	backdrop-filter: blur(5px);                 // Le flou magique
+	-webkit-backdrop-filter: blur(5px);         // Compatibilité Safari
+
+	color: var(--btn-color);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); // Ombre légère pour décoller du fond
+
+	.auto-transition(.3s);
+
+	// 4. Interaction (Hover / Focus)
+	&:hover, &:focus {
+		// Le bouton se "remplit" avec la couleur du thème
+		background-color: @color-val;
+		border-color: @color-val;
+		color: @final-txt-hover; // Le texte devient blanc (ou contrasté)
+
+		// Petit effet de levée
+		transform: translateY(-2px);
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+	}
+
+	// 5. Gestion Dark Mode
+	@media (prefers-color-scheme: dark) {
+		// En dark mode, on inverse : fond noir transparent, texte blanc
+		background-color: rgba(0, 0, 0, 0.6);
+		border-color: rgba(255, 255, 255, 0.1);
+		--btn-color: #fff;
+
+		&:hover, &:focus {
+			background-color: @color-val;
+			border-color: @color-val;
+			color: @final-txt-hover;
+		}
+	}
+}
 // Theme buttons Styles
 // Create 3 theme style :
 // - btn-{@name} | Simple flat button
@@ -343,6 +396,11 @@
 				&-invert-transparent {
 					// Version avec opacité 0.7
 					.button-invert-transparent(@color; @txt-color; 0.7);
+				}
+				&-glass {
+					// On passe @color pour que le texte soit coloré au repos
+					// et le fond coloré au survol.
+					.button-glass(@color; @txt-color);
 				}
 				&-white {
 					.button-invert(@color; @txt-color; #ffffff; #ffffff);

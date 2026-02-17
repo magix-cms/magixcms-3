@@ -2313,6 +2313,41 @@ button.close {
 .btn.btn-main-invert-transparent:hover:before {
   width: calc(100% + (1px * 2));
 }
+.btn.btn-main-glass {
+  --btn-color: #3c62aa;
+  --btn-hover-txt: var(--white);
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: var(--btn-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease 0s;
+}
+.btn.btn-main-glass:hover,
+.btn.btn-main-glass:focus {
+  background-color: #3c62aa;
+  border-color: #3c62aa;
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+@media (prefers-color-scheme: dark) {
+  .btn.btn-main-glass {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    --btn-color: #fff;
+  }
+  .btn.btn-main-glass:hover,
+  .btn.btn-main-glass:focus {
+    background-color: #3c62aa;
+    border-color: #3c62aa;
+    color: var(--white);
+  }
+}
 .btn.btn-main-white {
   --btn-color: #ffffff;
   --btn-brd: #ffffff;
@@ -2574,6 +2609,41 @@ button.close {
 }
 .btn.btn-sd-invert-transparent:hover:before {
   width: calc(100% + (1px * 2));
+}
+.btn.btn-sd-glass {
+  --btn-color: #808285;
+  --btn-hover-txt: var(--white);
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: var(--btn-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease 0s;
+}
+.btn.btn-sd-glass:hover,
+.btn.btn-sd-glass:focus {
+  background-color: #808285;
+  border-color: #808285;
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+@media (prefers-color-scheme: dark) {
+  .btn.btn-sd-glass {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    --btn-color: #fff;
+  }
+  .btn.btn-sd-glass:hover,
+  .btn.btn-sd-glass:focus {
+    background-color: #808285;
+    border-color: #808285;
+    color: var(--white);
+  }
 }
 .btn.btn-sd-white {
   --btn-color: #ffffff;
@@ -2837,6 +2907,41 @@ button.close {
 .btn.btn-dark-invert-transparent:hover:before {
   width: calc(100% + (1px * 2));
 }
+.btn.btn-dark-glass {
+  --btn-color: #333333;
+  --btn-hover-txt: var(--white);
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: var(--btn-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease 0s;
+}
+.btn.btn-dark-glass:hover,
+.btn.btn-dark-glass:focus {
+  background-color: #333333;
+  border-color: #333333;
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+@media (prefers-color-scheme: dark) {
+  .btn.btn-dark-glass {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    --btn-color: #fff;
+  }
+  .btn.btn-dark-glass:hover,
+  .btn.btn-dark-glass:focus {
+    background-color: #333333;
+    border-color: #333333;
+    color: var(--white);
+  }
+}
 .btn.btn-dark-white {
   --btn-color: #ffffff;
   --btn-brd: #ffffff;
@@ -3098,6 +3203,41 @@ button.close {
 }
 .btn.btn-green-invert-transparent:hover:before {
   width: calc(100% + (1px * 2));
+}
+.btn.btn-green-glass {
+  --btn-color: #5cb75c;
+  --btn-hover-txt: var(--white);
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: var(--btn-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease 0s;
+}
+.btn.btn-green-glass:hover,
+.btn.btn-green-glass:focus {
+  background-color: #5cb75c;
+  border-color: #5cb75c;
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+@media (prefers-color-scheme: dark) {
+  .btn.btn-green-glass {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    --btn-color: #fff;
+  }
+  .btn.btn-green-glass:hover,
+  .btn.btn-green-glass:focus {
+    background-color: #5cb75c;
+    border-color: #5cb75c;
+    color: var(--white);
+  }
 }
 .btn.btn-green-white {
   --btn-color: #ffffff;
