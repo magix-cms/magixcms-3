@@ -44,3 +44,20 @@ body {
 
 // Set selection style
 .text-select(var(--main-color),var(--white));
+
+
+// Animate scroll
+.animate-on-scroll {
+	/* Initialement invisible avec une opacité de 0 */
+	opacity: 0;
+	/* Translation initiale de 50 pixels vers le bas */
+	transform: translateY(50px);
+	/* Animation pour la transparence et la translation */
+	transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+.animate-on-scroll.is-visible {
+	/* Devenir visible avec une opacité de 1 */
+	opacity: 1;
+	/* Translation initiale de 0 pixels */
+	transform: translateY(0);
+}

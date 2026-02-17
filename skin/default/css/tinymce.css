@@ -5171,6 +5171,20 @@ article ol {
   color: var(--white);
   background: var(--main-color);
 }
+.animate-on-scroll {
+  /* Initialement invisible avec une opacité de 0 */
+  opacity: 0;
+  /* Translation initiale de 50 pixels vers le bas */
+  transform: translateY(50px);
+  /* Animation pour la transparence et la translation */
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+.animate-on-scroll.is-visible {
+  /* Devenir visible avec une opacité de 1 */
+  opacity: 1;
+  /* Translation initiale de 0 pixels */
+  transform: translateY(0);
+}
 .grid {
   display: grid;
   grid-gap: var(--grid-gutter);
@@ -5776,5 +5790,29 @@ ul.label-list > li:before {
   #cookies .btns {
     margin-left: auto;
   }
+}
+#gallery-holder {
+  margin-top: var(--spacer);
+  margin-bottom: calc(var(--grid-gutter) * 2);
+  break-inside: avoid;
+}
+@media (min-width: 48em) {
+  #gallery-holder {
+    column-gap: 0.2rem;
+    column-count: 3;
+  }
+}
+#gallery-holder .img-holder {
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+#gallery-holder .img-holder img {
+  width: 100%;
+  /*height: 16rem;*/
+  object-fit: cover;
+  transition-duration: 300ms;
+}
+#gallery-holder .img-holder img:hover {
+  transform: scale(1.1);
 }
 /*# sourceMappingURL=tinymce.css.map */

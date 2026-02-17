@@ -170,4 +170,27 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // *** Owl Carousel in plugins
     // *** Add here the content of the public.js file of the plugins using owl-carousel
+    // Sélectionne tous les éléments avec la classe "animate-on-scroll"
+    const elements = document.querySelectorAll(".animate-on-scroll");
+    // Options pour l'observateur d'intersection
+    const options = {
+        threshold: 0.35
+    };
+    // Instanciation de l'observateur d'intersection
+    const observer = new IntersectionObserver(function (entries, observer) {
+        // Boucle sur chaque entrée pour traiter les intersections
+        entries.forEach(entry => {
+            // Si l'entrée est en train d'intersecter avec la zone visible
+            if (entry.isIntersecting) {
+                // Ajouter la classe "is-visible" pour déclencher l'animation
+                entry.target.classList.add("is-visible");
+                // Cesser d'observer cet élément
+                observer.unobserve(entry.target);
+            }
+        });
+    }, options);
+    // Observer chaque élément
+    elements.forEach(element => {
+        observer.observe(element);
+    });
 });

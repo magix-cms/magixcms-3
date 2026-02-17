@@ -731,3 +731,31 @@ ul {
 		}
 	}
 }
+// -------------------------------------------------------
+//                     gallery-holder
+// -------------------------------------------------------
+#gallery-holder {
+	margin-top: var(--spacer);
+	margin-bottom: calc(var(--grid-gutter) * 2);
+	@media (min-width: .breakpoint(sm)[min]) {
+		column-gap: .2rem;
+		column-count: 3;
+	}
+	break-inside: avoid;
+	.img-holder {
+		margin-bottom: .5rem;
+		overflow: hidden;
+	}
+
+	.img-holder img {
+		//display: block;
+		width: 100%;
+		/*height: 16rem;*/
+		object-fit: cover;
+		transition-duration: 300ms;
+	}
+
+	.img-holder img:hover {
+		transform: scale(1.1);
+	}
+}
